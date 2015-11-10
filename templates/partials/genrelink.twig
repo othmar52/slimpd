@@ -1,0 +1,4 @@
+{% set gs = genreIds|split(',') %}
+{% for g in gs %}
+	<a class="genre-link item-link" href="/library/genre/{{renderitems.genres[g].id}}">{{renderitems.genres[g].title}}</a>{% if loop.last == false %},{% endif %}
+{% endfor%}

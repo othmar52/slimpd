@@ -1,0 +1,30 @@
+
+
+{% if artistIds %}
+	{% set itemIds = artistIds|split(',') %}
+	{% if itemIds|length > 1 %}
+		{% for itemId in itemIds %}
+			<a class="artist-link item-link" href="/library/artist/{{renderitems.artists[itemId].id}}">{{renderitems.artists[itemId].title}}</a>
+			
+			{% if loop.last == false %}
+			<a class="artist-link item-link" href="/library/artist/{{artistIds}}">
+				<span class="artist_all">&amp;</span></a>
+			{% endif %}
+		{% endfor%}
+	{% else %}
+		<a class="artist-link item-link" href="/library/artist/{{renderitems.artists[artistIds].id}}">{{renderitems.artists[artistIds].title}}</a>
+	{% endif %}
+	{% if item.featuringId %}
+		(ft.
+		{% set itemIds = item.featuringId|split(',') %}
+		{% for itemId in itemIds %}
+			<a class="artist-link item-link" href="/library/artist/{{renderitems.artists[itemId].id}}">{{renderitems.artists[itemId].title}}</a>{% if loop.last == false %}, {% endif %}{% endfor %})
+	{% endif %}
+{% else %}
+	{% set dirs = filepath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   {{dir}}
+		{% endif %}
+	{% endfor%}
+{% endif %}

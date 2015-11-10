@@ -1,2 +1,4 @@
 # slimpd
-PHP/JS based MPD-web-client for huge music collections
+PHP/JS/MySQL based MPD-web-client for large music collections
+heavily inspired by http://ompd.pl
+

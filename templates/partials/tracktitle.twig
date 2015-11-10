@@ -1,0 +1,19 @@
+{% if titlestring %}	
+	{% if item.remixerId %}
+		{% set titleparts = titlestring|split('%s') %}
+		{% set remixerIds = item.remixerId|split(',') %}
+		{% for index,titlepart in titleparts %}
+			{{ titlepart }}{% if loop.last == false %}<a class="item-link artist-link" href="/library/artist/{{ remixerIds[index] }}">{{ renderitems.artists[remixerIds[index]].title }}</a>
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		{{titlestring}}
+	{% endif %}
+{% else %}
+	{% set dirs = filepath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   {{dir}}
+		{% endif %}
+	{% endfor%}
+{% endif %}
