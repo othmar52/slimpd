@@ -1303,7 +1303,8 @@ class Importer {
 		$this->jobPhase = 7;
 		
 		if(isset($app->config['label-parent-directories']) === FALSE) {
-			die('not configured');
+			cliLog('aborting setDefaultLabels() no label directories configured');
+			return;
 		}
 		
 		$this->beginJob(array(
