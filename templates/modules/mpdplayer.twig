@@ -1,0 +1,101 @@
+
+    <div class="col-sm-9 col-md-5">
+    	<div class="mpd-status-progressbar">
+    	
+    	</div>
+    	{# TODO: create preloader for waveformimage as it can take very long for large files #}
+    	<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.id }}" type="image/svg+xml">
+    	</object>
+    	<div class="mpd-status-timestring" style="text-align: center;">
+    		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
+    		<span class="mpd-status-total">0:00</span>
+    	</div>
+    	
+    	<div class="mpd-ctrl-seekbar">
+    	
+    	</div>
+    	
+	</div>
+    <div class="col-sm-3 col-md-1">
+    	<div class="row">
+			<div class="col-sm-4">
+				<a href="/mpdctrl/previous" class="ajax-link">
+					<i class="fa fa-chevron-left sign-ctrl"></i>
+				</a>
+			</div>
+			<div class="col-sm-4">
+				<a href="/mpdctrl/pause" class="ajax-link" style="font-size: 1.5em;">
+					<i class="fa fa-pause sign-ctrl mpd-status-playpause"></i>
+				</a>
+			</div>
+			<div class="col-sm-4">
+				<a href="/mpdctrl/next" class="ajax-link">
+					<i class="fa fa-chevron-right sign-ctrl"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row">
+			
+			
+			<div class="col-sm-4 mpd-status-random">
+				<a href="/mpdctrl/toggleRandom" class="ajax-link" title="toggle random">
+					<i class="fa fa-random sign-ctrl"></i>
+				</a>
+			</div>
+			<div class="col-sm-4 mpd-status-repeat">
+				<a href="/mpdctrl/toggleRepeat" class="ajax-link" title="toggle repeat">
+					<i class="fa fa-repeat sign-ctrl"></i>
+				</a>
+			</div>
+			<div class="col-sm-4 mpd-status-consume">
+				<a href="/mpdctrl/toggleConsume" class="ajax-link" title="toggle consume">
+					<i class="fa fa-fire sign-ctrl"></i>
+				</a>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 small">
+				<a href="/playlist">Warteschlange</a>
+			</div>
+    	</div>
+    
+    
+    </div>
+    <div class="col-sm-7 col-md-1">
+    	<a href="/library/album/{{ item.albumId }}">
+    		<img src="/image-100/album/{{ item.albumId }}" />
+    	</a>
+    </div>
+    <div class="col-sm-5">
+    	<div class="row">
+			<div class="col-sm-4">{% include 'partials/artistlink.twig' with {  'artistIds': item.artistId } %}</div>
+			<div class="col-sm-4">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
+			<div class="col-sm-4">{% include 'partials/yearlink.twig' %}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-4">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %}</div>
+			<div class="col-sm-4">{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</div>
+			<div class="col-sm-4">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 small">
+				{# TODO: remove external liking as soon we have implemented a proper functionality #}
+				<a class="ajax-link" href="{{ temp_likerurl }}" title="temp ixwax +1">+1</a>
+				</div>
+    	</div>
+    </div>
+    {# TODO: find another way to highlight each occurance of now-playing-track (preferable without javascript) #}
+    {# TODO: apply same solution for playing tracks does not exist in app-mysql-db  #}
+    <style type="text/css" media="all">
+    .track-id-{{ item.id }}:after {
+    	content: ' ';
+    	width: 40px;
+    	height: 50px;
+    	display: block;
+    	position: absolute;
+    	top: 0px;
+    	left: 50px;
+    	background: url({{ config.absRefPrefix }}skin/default/img/playing.gif);
+    	background-size: 40px 50px;
+    }
+    </style>

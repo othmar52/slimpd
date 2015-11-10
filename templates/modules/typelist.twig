@@ -1,0 +1,49 @@
+
+
+<h2>{{ type }}list</h2>
+<form action="/alphasearch/" method="post">
+	<input name="searchterm" value="" placeholder="{{type}}search alpha (az09*)"/>
+	<input name="searchtype" value="{{type}}" type="hidden"/>
+	<input name="debug" value="1" type="hidden"/>
+	<button type="submit">
+	<i id="iconSearchToggler" class="fa fa-search fa-lg"></i>
+	</button>
+</form>
+
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+<div class="{{ type }}s_container">
+	
+	{% if itemlist|length  %}
+	<div class="container-fluid">
+	
+	  {% set itemsPerColumn = (itemlist|length / 4)|round(0, 'ceil') %}
+	
+	  {% for item in itemlist %}
+	
+	    {% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}
+	      {% spaceless %}
+	        <div class="col-md-3">
+	      {% endspaceless %}
+	    {% endif %}
+	
+	            <a href="/library/{{ type }}/{{item.id}}">{{item.title}}
+				<span style="font-size: 0.7em; color:#888;">(<strong style="color:#777;">{{ item.trackCount }}</strong>)</span>
+				</a><br />
+	
+	    {% if loop.last or loop.index % itemsPerColumn == 0 -%}
+	      {% spaceless %}
+	        </div>
+	      {% endspaceless %}
+	    {% endif %}
+	
+	  {% endfor %}
+
+
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% else %}
+		no {{ type }}s found
+		{{ dump(itemlist)}}
+	{% endif %}
+</div>
+
+

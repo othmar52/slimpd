@@ -1,0 +1,5 @@
+
+{# TODO: which attributes should be passed to discogs search (especially when we do not have much info) #}
+<a href="http://www.discogs.com/search/?{{
+ {'q': renderitems.artists[album.artistId].title ~ ' ' ~ album.title , 'type': 'all' }|url_encode
+}}" target="_blank">Discogs</a>

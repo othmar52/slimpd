@@ -1,0 +1,13 @@
+/**
+ * WAVEFORM LINE COLOUR
+ */
+
+line.l {
+  stroke: rgb(255,156,1);
+  stroke-width: 2px;
+}
+
+line.b {
+  stroke: rgba(0,0,0,0);
+  stroke-width: 1px;
+}

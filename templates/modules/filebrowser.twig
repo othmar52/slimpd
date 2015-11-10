@@ -1,0 +1,109 @@
+<div class="row">
+	<div class="col-md-12">
+		
+		
+		<ol class="breadcrumb bg-col2">
+			<li class="" title="List basedirs">
+				<a href="/filebrowser">root</a>
+			</li>
+			{% for item in breadcrumb %}
+				<li class="" title="{{ item.name }}">
+					<a href="/filebrowser{{ item.fullpath }}" class="">{{ item.name }}</a>
+				</li>
+			{% endfor %}
+			<li class="small">
+				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
+			</li>
+			<li>
+				<a href="/mpdctrl/addSelect/{{ directory~item.name|url_encode }}" class="ajax-link" title add this directory to playlist>
+				<i class="fa fa-plus-circle fa-lg"></i>Add whole directory
+				</a>
+			</li>
+			
+	</div>
+</div>
+
+{% if hotlinks %}
+	<h4>hotlinks</h4>
+	{% for item in hotlinks %}
+	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+		<div class="col-md-12">
+			<a href="/filebrowser/{{ item }}">
+				<i class="fa fa-folder-open fa-lg"></i> {{ item }}</div>
+			</a>
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% if subDirectories %}
+	<h4><i class="fa fa-folder-open fa-lg"></i> directories</h4>
+	{% for item in subDirectories %}
+	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+		<div class="col-md-10">
+			<a href="/filebrowser/{{ directory~item.name }}">
+				<i class="fa fa-folder-open fa-lg"></i> {{ item.name }}
+			</a>
+		</div>
+		<div class="col-md-2">
+			<a href="/mpdctrl/addSelect/{{ directory~item.name~''|url_encode }}" class="ajax-link" title="add and play immediately">
+				<i class="fa fa-plus fa-lg"></i>
+			</a>
+			<a href="#" title="update database">TODO:<i class="fa fa-refresh fa-lg"></i></a>
+			<!--a href="#" title="add to playlist"><i class="fa fa-plus fa-lg"></i></a-->
+			
+		</div>
+			
+	</div>
+	{% endfor %}
+{% endif %}
+
+{% if files %}
+	<h4>files</h4>
+	
+	{# music files #}
+	{% for item in files %}
+		{% if item.ext in ['mp3','m4a','flac','wav', 'aif', 'aiff'] %}
+		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+			<div class="col-md-10">
+			
+				<a href="/filebrowser/{{ directory~item.name }}">
+				<i class="fa fa-music fa-lg"></i>
+				{{ item.name }}</a>
+			</div>
+			<div class="col-md-2">
+			
+				<a href="/mpdctrl/addSelect/{{ directory~item.name|url_encode }}" class="ajax-link">
+				<i class="fa fa-play fa-lg"></i>
+				</a>
+			</div>
+		</div>
+		
+		{% endif %}
+	{% endfor %}
+	
+	{% for item in files %}
+		{% if item.ext in ['png','jpg','jpeg','gif', 'bmp'] %}
+	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+		<div class="col-md-12">
+			<a href="/filebrowser/{{ directory~item.name }}">
+			<i class="fa fa-image fa-lg"></i> 
+			{{ item.name }}</a>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+	
+	{% for item in files %}
+		{% if item.ext  not in ['mp3','m4a','flac','wav', 'png','jpg','jpeg','gif', 'bmp', 'aif', 'aiff'] %}
+	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+		<div class="col-md-12">
+			<a href="/filebrowser/{{ directory~item.name }}">
+			<i class="fa fa-file fa-lg"></i> 
+			{{ item.name }}</a>
+		</div>
+	</div>
+	{% endif %}
+	{% endfor %}
+	
+	
+{% endif %}

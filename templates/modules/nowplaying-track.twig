@@ -1,0 +1,41 @@
+
+<h2>Aktueller Titel: {% include 'partials/tracktitle.twig' with { 'item': nowplaying, 'titlestring': nowplaying.title, 'filepath': nowplaying.relativePath  } %}</h2>
+<div class="row">
+	<div class="col-md-4">
+		<a href="/library/album/{{ nowplaying.albumId }}">
+			<img id="image_in" src="/image-300/album/{{ nowplaying.albumId }}" alt="" style="top: 0px;">
+		</a>
+	</div>
+	<div class="col-md-8">
+		<div class="row" style="font-size: 1.6em; padding-top: 3em;">
+			<div class="col-md-6">
+				{% include 'partials/artistlink.twig' with { 'artistIds': nowplaying.artistId, 'artists': renderitems.artists } %}
+			</div>
+			<div class="col-md-3">
+				{% include 'partials/labellink.twig' with { 'item': nowplaying_album } %}
+			</div>
+			<div class="col-md-3">
+				{% include 'partials/genrelink.twig' with { 'genreIds': nowplaying.genreId, 'genres': renderitems.genres } %}
+			</div>
+		</div>
+		<div class="row" style="font-size: 1.6em;">
+			<div class="col-md-6">
+				{% include 'partials/albumlink.twig' with { 'item': nowplaying_album } %}
+			</div>
+			<div class="col-md-3">
+				cat
+			</div>
+			<div class="col-md-3">
+				stil
+			</div>
+		</div>
+		<div class="row" style="font-size: 1.6em;">
+			<div class="col-md-6">
+				{% include 'partials/yearlink.twig' with { 'item': nowplaying } %}
+			</div>
+			<div class="col-md-6">
+				
+			</div>
+		</div>
+	</div>
+</div>
