@@ -1,0 +1,9 @@
+{% if itemlist|length > 0 %}
+	{% for item in itemlist %}
+		<a href="/image-1000/id/{{ item.id }}"><img src="/image-50/id/{{ item.id }}" /></a>
+	{% endfor %}
+{% else %}
+no images...
+{% endif %}
+
+

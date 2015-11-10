@@ -1,0 +1,22 @@
+{% if artiststring %}
+	{% set artists = artiststring|split(' & ') %}
+	{% if artists|length > 1 %}
+		{% for artist in artists %}
+			<a href="/library/artist/{{artist}}">{{artist}}</a>
+			
+			{% if loop.last == false %}
+			<a href="/library/artist/{{artiststring}}">
+				<span class="artist_all">&amp;</span></a>
+			{% endif %}
+		{% endfor%}
+	{% else %}
+		<a href="/library/artist/{{artiststring}}">{{artiststring}}</a>
+	{% endif %}
+{% else %}
+	{% set dirs = filepath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   {{dir}}
+		{% endif %}
+	{% endfor%}
+{% endif %}

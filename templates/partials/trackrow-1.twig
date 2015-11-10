@@ -1,0 +1,17 @@
+
+<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+	<div class="col-md-1"><img src="/image-100/album/{{ item.albumId }}" alt="" width="100%" height="100%"></div>
+	<div class="col-md-1 ">{{ item.number }}</div>
+	<div class="col-md-3 ">
+		{% include 'partials/artistlink.twig' with { 'artistIds': item.artistId, 'artists': renderitems.artists, 'filepath': item.relativePath  } %}
+	</div>
+	<div class="col-md-3 ">
+		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	</div>
+	<div class="col-md-1 ">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}</div>
+	<div class="col-md-1 ">{% include 'partials/yearlink.twig' with { 'item': item } %}</div>
+	<div class="col-md-1 ">{{ item.miliseconds|formatMiliseconds }}</div>
+	<div class="col-md-1" style="font-size: 1em;">
+		<a href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link"><i class="fa fa-play-circle-o"></i></a>
+	</div>
+</div>

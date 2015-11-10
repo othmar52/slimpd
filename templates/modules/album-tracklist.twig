@@ -1,0 +1,128 @@
+<div id="playlist">
+	<span class="playlist-title">Tracklist</span>
+	<table cellspacing="0" cellpadding="0" class="border">
+		<tr class="header">
+			<td class="icon"></td><!-- track menu -->
+			<td class="icon"></td>
+			<td class="trackNumber">#</td>
+			<td>Title</td>
+			<td class="track-list-artist">Artist</td>
+			<td class="textspace track-list-artist"></td>
+			<td></td><!-- optional featuring -->
+			<td></td>
+			<td align="right" class="time">Time</td>
+			<td class="space right">
+				<div class="space"></div>
+			</td>
+		</tr>
+		{% for item in currentplaylist %}
+		<tr class="{{ cycle(['even','odd'],loop.index) }} mouseover">
+			
+			<td class="icon">
+				<span id="menu-track{{ loop.index }}">
+					<div onclick="toggleMenuSub({{ loop.index }});">
+						<i id="menu-icon1" class="fa fa-bars icon-small"></i>
+					</div>
+				</span>
+			</td>
+			
+			<td class="icon">
+				<span>
+					<a href="javascript:ajaxRequest('play.php?action=addSelect&amp;track_id={{ item.trackId }}');" onmouseover="return overlib('Add track {{ item.number }}');" onmouseout="return nd();">
+						<i class="fa fa-plus-circle fa-fw icon-small"></i>
+					</a>
+				</span>
+			</td>
+				
+			<td class="trackNumber">
+				<a href="javascript:ajaxRequest('play.php?action=insertSelect&amp;playAfterInsert=yes&amp;track_id={{ item.trackId }}');" onmouseover="return overlib('Play track {{ item.number }}');" onmouseout="return nd();">
+					{{ item.number }}
+				</a>
+			</td>
+			<td>
+				<a href="javascript:ajaxRequest('play.php?action=insertSelect&amp;playAfterInsert=yes&amp;track_id={{ item.trackId }}');" onmouseover="return overlib('Play track {{ item.number }}');" onmouseout="return nd();">
+				{{ item.title }}</a>	<span class="track-list-artist-narrow">by {{ item.artist }}</span>		
+			</td>
+			
+			<td class="track-list-artist">
+				{% include 'partials/artistlink.twig' with { 'artiststring': item.artist } %}	
+			</td>
+			<td class="track-list-artist"></td>
+			<td></td>
+				
+			<td onclick="
+				var action = '';
+				if ($('#favorite_star-{{ item.trackId }}').attr('class') == 'fa fa-star-o') {
+					action = 'add';
+					}
+				else {
+					action = 'remove';
+				}
+				ajaxRequest('ajax-favorite.php?action=' + action + '&amp;track_id={{ item.trackId }}', setFavorite);
+			" class="pl-favorites">
+			<i class="fa fa-star-o" id="favorite_star-{{ item.trackId }}"></i>
+			</td>
+			<td align="right">{{ (item.miliseconds/1000)|date("i:s") }}</td>
+			<td></td>
+		</tr>
+		<tr class="line">
+			<td></td>
+			<td colspan="16"></td>
+		</tr>
+		{% endfor %}
+		
+			
+<script type="text/javascript">
+
+function setBarLength() {
+	$('#bar_popularity').css('width',function() { return (100 * 1/100 * $('#bar-popularity-out').width())} );
+	//document.getElementById('bar_popularity').style.width="50px";
+	return(true);
+};
+
+function setAlbumInfoWidth() {
+	$('#album-info').css('maxWidth', function() {return ($(window).width() - 10 +'px')});
+};
+
+function setFavorite(data) {
+	if (data.action == "add") {
+		$("#favorite_star-" + data.track_id).removeClass("fa fa-star-o").addClass("fa fa-star");
+	}
+	else if (data.action == "remove") {
+		$("#favorite_star-" + data.track_id).removeClass("fa fa-star").addClass("fa fa-star-o");
+	}
+};
+
+window.onload = function () {
+    //setAlbumInfoWidth();
+	setBarLength();
+	$.ajax({
+		url: 'image.php?album_id=ewkq95nqpn&quality=hq&action=viewall'
+	}).done(function(response) {
+		$("#image_all").html(response)
+	});
+	$("#cover-spinner").hide();
+	
+	/* var im = "image.php?image_id=no_image_n7pn07xy22z8&quality=hq"
+	
+	$('#bgTemp').remove();
+	
+	//$('head').append('<style id="bgTemp">#back-ground:before{background-image:url(' + im + ') !important;}</style>');
+	
+	$("#back-ground-img").attr("src",im); */
+	
+	return(true);
+};
+
+/*window.onresize = function () {
+    //setAlbumInfoWidth();
+	//setBarLength();
+	return(true);
+};
+*/
+
+
+</script>
+</tbody></table><div><h1><div class="total-time">Total: 1:19:38</div></h1>
+</div>
+</div>

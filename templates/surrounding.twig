@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Leierkasten</title>
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="HandheldFriendly" content="True">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    	
+    	<link rel="shortcut icon" href="{{ config.absRefPrefix }}assets/images/icons/favicon.ico">
+    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{ config.absRefPrefix }}assets/images/icons/app-icon.png" />
+    	
+		<link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/twbs/bootstrap/dist/css/bootstrap.min.css" />
+		<!--link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css" /-->
+		<link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/components/font-awesome/css/font-awesome.min.css" />
+		
+		<!--link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}assets/fonts/typicons/typicons.css"-->
+		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/typicons_.css" media="all">
+		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/waveform-1.css" media="all">
+	
+		<link rel="stylesheet" type="text/css" href="/skin/default/styles.css" />
+	</head>
+	{% set vars = {'config': config} %}
+	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
+		<div class="container">
+			
+			{% include 'modules/header-menu.twig' with vars %}
+		
+
+			<div class="row">
+  				<div class="col-md-12">
+  				
+					{% include 'modules/errorbox.twig' %}
+					
+					
+					{% for type in ['genre', 'artist', 'label'] %}
+						{% if action == 'library.'~type~'s' %}
+							{% include 'modules/typelist.twig' with { 'config': config, 'll': ll, 'itemlist': itemlist } %}
+						{% endif %}
+						
+						
+						{% if action == 'library.'~type %}
+							<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">
+								<a href="/library/{{type}}/{{ item.id-1 }}"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
+								<span class="small"><a href="/library/{{type}}s/page/1">{{ type~'s' }}</a></span>
+								<a href="/library/{{type}}/{{ item.id+1 }}"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
+								{{ item.title }} </h2>
+							{% include 'modules/albumlist.twig' with { 'config': config, 'll': ll, 'itemlist': albumlist } %}
+						{% endif %}
+					
+					
+					{% endfor%}
+					
+					{% if action == 'landing' %}
+					
+					<div class="container">
+						<div class="row">
+					  
+					      <div class="col-md-3 col-sm-4 col-xs-6">
+					        <div class="dummy"></div>
+					        <a href="/library/genres/page/1" class="link-tile bg-col2">Genres</a>
+					      </div>
+					      <div class="col-md-3 col-sm-4 col-xs-6">
+					        <div class="dummy"></div>
+					        <a href="/library/labels/page/1" class="link-tile bg-col2">Labels</a>
+					      </div>
+					      <div class="col-md-3 col-sm-4 col-xs-6">
+					        <div class="dummy"></div>
+					        <a href="/library/artists/page/1" class="link-tile bg-col2">Artists</a>
+						   </div>
+					       <div class="col-md-3 col-sm-4 col-xs-6">
+					        <div class="dummy"></div>
+					        <a href="#/library/albums/page/1" class="link-tile bg-col2">Albums</a>
+						   </div>
+					       
+					      
+					  	</div>
+					</div>
+					{% endif %}
+					
+					{% if action == 'filebrowser' %}
+						{% include 'modules/filebrowser.twig' %}
+					{% endif %}
+	
+					
+					{% if action == 'library.year' %}
+						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
+						{% include 'modules/albumlist.twig' with { 'config': config, 'll': ll, 'itemlist': albumlist } %}
+					{% endif %}
+					
+					{% if action == 'importer' %}
+						{% include 'modules/importer.twig' with { 'config': config, 'll': ll, 'itemlist': itemlist } %}
+					{% endif %}
+					
+					
+					{% if action == '404' %}
+						{% include 'modules/404.twig' %}
+					{% endif %}
+					
+					
+					
+					{% if action == 'album.detail' %}
+						{% include 'album.twig' %}
+					{% endif %}
+					
+					{% if action == 'playlist' %}
+						{% set vars = {'config': config, 'nowplaying': nowplaying, 'currentplaylist' : currentplaylist, 'genrearray': genrearray} %}
+						{% include 'modules/nowplaying-track.twig' with vars %}
+						{% include 'modules/nowplaying-list.twig' with vars %}
+					{% endif %}
+					
+  				</div>
+			</div>
+		</div>
+		
+		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom">
+			{% include 'modules/mpdplayer.twig'%}
+		</div>
+	    
+		
+		
+		
+		
+		<a href class="to-top"></a>
+		
+		
+		<script src="/vendor/components/jquery/jquery.min.js"></script>
+		<script src="/vendor/components/jqueryui/jquery-ui.min.js" />
+		<script src="/vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script src="/js/app.js"></script>
+		
+	</body>
+</html>
+
