@@ -1,0 +1,29 @@
+
+
+{% if artistIds %}
+	{% set itemIds = artistIds|split(',') %}
+	{% if itemIds|length > 1 %}
+		{% for itemId in itemIds %}
+			{{renderitems.artists[itemId].title}}
+			
+			{% if loop.last == false %}
+				&amp;
+			{% endif %}
+		{% endfor%}
+	{% else %}
+		{{renderitems.artists[artistIds].title}}
+	{% endif %}
+	{% if item.featuringId %}
+		(ft.
+		{% set itemIds = item.featuringId|split(',') %}
+		{% for itemId in itemIds %}
+			{{renderitems.artists[itemId].title}}{% if loop.last == false %}, {% endif %}{% endfor %})
+	{% endif %}
+{% else %}
+	{% set dirs = filepath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   {{dir}}
+		{% endif %}
+	{% endfor%}
+{% endif %}

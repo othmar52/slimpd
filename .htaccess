@@ -1,0 +1,39 @@
+<Files  ~ "\.ini$">
+  Order allow,deny
+  Deny from all
+</Files>
+
+<Files  ~ "\.twig$">
+  Order allow,deny
+  Deny from all
+</Files>
+
+<Files  ~ "\.sh$">
+  Order allow,deny
+  Deny from all
+</Files>
+
+
+#Header add Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Origin "*"
+Header add Access-Control-Allow-Methods "GET,POST,OPTIONS,DELETE,PUT"
+Header add Access-Control-Allow-Headers "origin, x-requested-with, content-type"
+
+
+AddType text/cache-manifest .appcache
+
+RewriteEngine On
+RewriteBase /
+
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond $0#%{REQUEST_URI} ([^#]*)#(.*)\1$
+RewriteRule ^.*$ %2index.php [QSA,L]
+
+
+
+<FilesMatch "\.(ttf|otf|svg|eot)$">
+    <IfModule mod_headers.c>
+        Header set Access-Control-Allow-Origin "*"
+    </IfModule>
+</FilesMatch>

@@ -1,0 +1,23 @@
+
+{% if labelIds %}
+	{% set itemIds = labelIds|split(',') %}
+	{% if itemIds|length > 1 %}
+		{% for itemId in itemIds %}
+			<a class="item-link label-link" href="/library/label/{{renderitems.labels[itemId].id}}">{{renderitems.labels[itemId].title}}</a>
+			
+			{% if loop.last == false %}
+			<a class="item-link label-link" href="/library/label/{{labelIds}}">
+				<span class="label_all">&amp;</span></a>
+			{% endif %}
+		{% endfor%}
+	{% else %}
+		<a class="item-link label-link" href="/library/label/{{renderitems.labels[labelIds].id}}">{{renderitems.labels[labelIds].title}}</a>
+	{% endif %}
+{% else %}
+	{% set dirs = filepath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   {{dir}}
+		{% endif %}
+	{% endfor%}
+{% endif %}

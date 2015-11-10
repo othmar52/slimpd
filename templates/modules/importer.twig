@@ -1,0 +1,142 @@
+
+<meta http-equiv="refresh" content="5; URL=/importer?debug=1">
+<h2>Recent importer jobs</h2>
+
+
+
+<table style="width: 100%;">
+	<tr class="header">
+		<th>Phase</th>
+		<th>Progress</th>
+		<th>Fertig in</th>
+		<th>Gesamtdauer</th>
+		<th>Items/min</th>
+		<th>Items/h</th>
+		<th>total</th>
+		<th>checked</th>
+		<th>processed</th>
+		<th>additional info</th>
+	</tr>
+	
+	{% set statusWording = 'dead' %}
+	{% set statusImage = '' %}
+	{% for item in itemlist %}
+	<tr class="{{ cycle(['bg-col2','bg-col3'],loop.index) }}">
+		{% if loop.first == true %}
+			{% if (servertime - item.jobLastUpdate) < 6 %}
+				{% set statusWording = 'running' %}
+				{% set statusImage = '<img src="{{ config.absRefPrefix }}skin/default/img/playing.gif" />' %}
+			{% endif %}
+		{% else %}
+			{% set statusWording = 'dead' %}
+			{% set statusImage = '' %}
+		{% endif %}
+		<td title="{{ item.id }}">{{ item.jobPhase }}</td>
+		<td>{{ item.jobStatistics.progressPercent|round }}%{{ statusImage|raw }}</td>
+		<td>{{ item.jobStatistics.estimatedRemainingMinutes|round }} min</td>
+		<td>{{ item.jobStatistics.estimatedTotalRuntime }}</td>
+		<td>{{ item.jobStatistics.speedItemsPerMinute }}
+		<td>{{ item.jobStatistics.speedItemsPerHour }}</td>
+		</td>
+		<td>{{ item.jobStatistics.itemCountTotal }}</td>
+		<td>{{ item.jobStatistics.itemCountChecked }}</td>
+		<td>{{ item.jobStatistics.itemCountProcessed }}</td>
+		<td>
+			{% if item.jobStatistics.extractedImages %}
+				<strong>extractedImages:</strong> {{ item.jobStatistics.extractedImages }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.insertedImages %}
+				<strong>insertedImages:</strong> {{ item.jobStatistics.insertedImages }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.deletedFileSize %}
+				<strong>deletedFileSize:</strong> {{ item.jobStatistics.deletedFileSize }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.insertedAlbums %}
+				<strong>insertedAlbums:</strong> <a href="/library/album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums }}</a><br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.updatedAlbums %}
+				<strong>updatedAlbums:</strong> {{ item.jobStatistics.updatedAlbums }}<br /> 
+			{% endif %}
+			
+			{% if item.jobStatistics.deadfiles %}
+				<strong>deadfiles:</strong> {{ item.jobStatistics.deadfiles }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.unmodified_files %}
+				<strong>unmodified_files:</strong> {{ item.jobStatistics.unmodified_files }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.directorycount %}
+				<strong>directorycount:</strong> {{ item.jobStatistics.directorycount }}<br/> 
+			{% endif %}
+			
+			
+		</td>
+	
+	</tr>
+	{% if item.jobStatistics.currentItem %}
+	<tr class="headerX">
+		<td colspan="10" style="font-size: 0.7em; color:#888;">
+			<strong>currentItem:</strong> {{ item.jobStatistics.currentItem }}<br/>
+		</td> 
+	{% endif %}
+	
+	<tr class="line"><td colspan="10"></td></tr>
+	{% endfor %}
+</table>
+
+<div style="font-size: 0.6em; padding-top: 70px;">
+
+{% set statusWording = 'dead' %}
+{% set statusImage = '' %}
+{% for item in itemlist %}
+	{% if loop.first == true %}
+		{% if (servertime - item.jobLastUpdate) < 6 %}
+			{% set statusWording = 'running' %}
+			{% set statusImage = '<img src="{{ config.absRefPrefix }}skin/default/img/playing.gif" />' %}
+		{% endif %}
+	{% else %}
+		{% set statusWording = 'dead' %}
+		{% set statusImage = '' %}
+	{% endif %}
+	<h3>Phase {{ item.jobPhase }} {{ item.jobStart|date('H:i:s') }} -
+		{{ statusImage|raw}}{{ (item.jobEnd == 0) ? statusWording~' (' ~ item.jobStatistics.progressPercent|round ~'%)'  :  item.jobEnd|date('H:i:s') }}
+	</h3>
+	<table>
+	{% for idx,value in item.jobStatistics %}
+		<tr>
+			<th style="width: 150px;">{{ idx }}:</th><td>{{ value }}</td>
+		</tr>
+	{% endfor %}
+	</table>		
+	<hr />
+{% endfor %}
+
+</div>
+
+<h2>Phase 0: MPD-Database Update</h2>
+<p>this is completely handeled by MPD itself and has nothing to so with slimpd. The starting point for slimpd is the textbased database-file of mpd</p>
+
+<h2>Phase 1: process MPD Database file</h2>
+<p>all information (filepath, artist, title, duration, filemtime,...) stored by mpd gets collected and inserted in table:rawtagdata.<br />
+in case filemtime has not changed there also will be no update of the correspondending rawtagdata-record.</p>
+
+<h2>Phase 2: scanMusicFileTags</h2>
+<p>all tracks of rawtagdata-table whichs last scantimes are older than filemtime gets scanned by getid3.php<br />
+those fetched informations gets stored in rawtagdata-table without modifying anything (like setting default values)<br />
+in case [config][images][read_embeded] is set to "1" the extracted image data gets stored to a file in the folder "/embedded/" and a correpondendig database-record in table:bitmap will be created</p>
+
+<h2>Phase 3: migrateRawTagData()</h2>
+<p>we have a table:tracks which is very similar to table:rawtagdata.
+with the raw tag-information as a basis the track-records gets default values and some modifications like title="My Super Song (%s & %s VIP Mix)" remixerId="123,456"<br />
+artist+label+genre information gets stored in separate tables.<br />
+bitmap-records gets completed with an albumId
+</p>
+
+<h2>Phase 4: deleteExtractedImageDupes()</h2>
+<p>In most cases all tracks of an album have identical images embeded in id3v2-tags. there is no need to store so much image-dupes to an album.<br />
+slimpd makes a - maybe a bit fuzzy - comparison and deletes the dupes in filesystem and table:bitmap</p>

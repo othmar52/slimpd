@@ -1,0 +1,185 @@
+body {
+	padding-top: 60px;
+	padding-bottom: 120px;
+}
+
+.bg-col1 {
+	background-color: #1A1A1A;
+	
+}
+.bg-col2 {
+	background-color: #353535;
+	
+}
+
+.bg-col3 {
+	background-color: #2D2D2D;
+	
+}
+
+.bg-col4 {
+	background-color: #000;
+	
+}
+
+.col1 {
+	color: #FFF;
+}
+
+a {
+	color: #FFF;
+}
+
+
+.darker-links a {
+	color: #696969;
+}
+.fa {
+	color: #888;
+}
+
+.active .fa,
+.fa:hover {
+	color: #FFF;
+}
+
+.col2, .col2 a {
+	color: #FF9C01;
+}
+
+
+.main-nav .form-control {
+	background-color: #2D2D2D;
+	border:none;
+	width: 100%;
+	display:block;
+	margin-top: 0.7em;
+}
+
+.main-nav .active {
+	border-bottom: 3px solid #FFF;
+}
+
+.dummy {
+    margin-top: 100%;
+}
+.link-tile {
+    position: absolute;
+    top: 15px;
+    bottom: 0;
+    left: 15px;
+    right: 0;
+    text-align:center;
+    padding-top:calc(50% - 30px);
+}
+
+.tile-square {
+	margin-bottom: 2.5em;
+	overflow: hidden;
+}
+
+.tile-square a{
+	height: 100%;
+}
+
+
+.tile-img img {
+	width: 100%;
+	height: 100%;
+}
+
+.tile-info-bottom {
+	padding-top: 0;
+	top: auto;
+}
+
+
+/* same height for all columns inside row*/
+.main-nav .row{
+    overflow: hidden; 
+}
+.main-nav [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+.tile-hover-data {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+.equal, .equal > div[class*='col-'] {  
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
+}
+
+.pagination>li:first-child>a,
+.pagination>li:first-child>span,
+.pagination>li:last-child>a,
+.pagination>li:last-child>span,
+.pagination {
+	border-radius: 0;
+}
+
+.pagination>li>a,
+.pagination>li>span {
+	color: #FFF;
+	background-color: inherit;
+}
+
+
+
+.item-link {
+}
+.item-link:after {
+	content: " >";
+	color: #444;
+}
+.item-link:hover {
+	background-color: #000;
+	color: #FFF;
+	text-decoration: none;
+}
+
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+
+.permaplayer {
+	border-top: 4px solid #000;
+	box-shadow: 0 -30px 30px -30px #000;
+}
+
+/* mpd player */
+
+.mpd-status-progressbar {
+	position: absolute;
+	background: rgba(255,156,1,0.3);
+	background: rgba(0,0,0,0.7);
+	width: 0;
+	height: 50px;
+	border-right: 1px solid rgba(255, 255, 255, 1);
+}
+
+.mpd-ctrl-seekbar{
+	position: absolute;
+	top: 0;
+	left: 0;
+	
+	/* TODO: how to respect parents padding on absolute positioned div with width 100% ?*/
+	width: calc(100% - 15px);
+
+	height: 50px;
+	opacity: 0;
+}
+.rotate2 {
+  -webkit-transform: rotate(-2deg);
+    -moz-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -ms-transform: rotate(-2deg);
+    transform: rotate(-2deg);
+}
