@@ -549,7 +549,7 @@ class Importer {
 	
 	private function calculateSpeed(&$data) {
 		$data['runtimeSeconds'] = time() - $this->jobBegin;
-		if($this->itemCountChecked > 0) {
+		if($this->itemCountChecked > 0 && $this->itemCountTotal > 0) {
 			$seconds = microtime(TRUE) - $this->jobBegin;
 			
 			$itemsPerMinute = $this->itemCountChecked/$seconds*60;
