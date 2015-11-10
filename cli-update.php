@@ -92,34 +92,34 @@ $app->get('/', function () use ($app) {
 	$importer = new \Slimpd\importer();
 	
 	// phase 1: parse mpd database and insert/update table:rawtagdata
-	#$importer->processMpdDatabasefile();
+	$importer->processMpdDatabasefile();
 	
 	// phase 2: scan id3 tags and insert into table:rawtagdata of all new or modified files
-	#$importer->scanMusicFileTags();
+	$importer->scanMusicFileTags();
 	
 	
 	// phase 3: migrate table rawtagdata to table track,album,artist,label
-	#$importer->migrateRawtagdataTable();
+	$importer->migrateRawtagdataTable();
 	
 	
 	// phase 4: delete dupes of extracted embedded images
-	#$importer->destroyExtractedImageDupes();
+	$importer->destroyExtractedImageDupes();
 	
 	
 	// phase 5: get images
-	#$importer->searchImagesInFilesystem();
+	$importer->searchImagesInFilesystem();
 	
 	// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
-	#$importer->fixAlbumGenres();
+	$importer->fixAlbumGenres();
 	
 	// phase 7: check configured label-directories and update table:track:labelId
-	#$importer->setDefaultLabels();
+	$importer->setDefaultLabels();
 	
 	// phase 8: makes sure each album record gets all labelIds which appears on albumTracks
-	#$importer->fixAlbumLabels();
+	$importer->fixAlbumLabels();
 	
 	// phase 9:
-	#$importer->updateCounterCache();
+	$importer->updateCounterCache();
 	
 	// phase 10
 	$importer->extractAllMp3FingerPrints();
