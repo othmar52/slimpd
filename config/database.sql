@@ -853,8 +853,8 @@ INSERT INTO `server` VALUES ('latest_version_idle_time', '0');
 -- Default artist
 --
 
-INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist');
-INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists');
+INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist',0,0);
+INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists',0,0);
 
 -- --------------------------------------------------------
 
@@ -862,7 +862,7 @@ INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists');
 -- Default genre
 --
 
-INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown');
+INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown',0,0);
 
 -- --------------------------------------------------------
 
@@ -870,6 +870,6 @@ INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown');
 -- Default label
 --
 
-INSERT INTO `label` VALUES ('1', 'Unknown Label', 'unknownlabel');
+INSERT INTO `label` VALUES ('1', 'Unknown Label', 'unknownlabel',0,0);
 
   
