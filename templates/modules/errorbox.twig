@@ -1,7 +1,7 @@
 {% if flash.error %}
-	<div class="errorbox" style=" position:absolute; border: 1px solid red; padding: 2em; background-color: #FFF; z-index: 33">
-		{{ flash.error }}
-	</div>
-{% else %}
-
+<div class="alert alert-danger" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  {{ flash.error }}
+</div>
 {% endif %}

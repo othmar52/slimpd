@@ -9,7 +9,7 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 
 --
--- table structure  `album`
+-- table structure `album`
 --
 
 CREATE TABLE IF NOT EXISTS `album` (
@@ -44,7 +44,7 @@ ALTER TABLE `album`
 -- --------------------------------------------------------
 
 --
--- table structure  `bitmap`
+-- table structure `bitmap`
 --
 	
 CREATE TABLE IF NOT EXISTS `bitmap` (
@@ -77,7 +77,7 @@ ALTER TABLE `bitmap`
 -- --------------------------------------------------------
 
 --
--- table structure  `cache`
+-- table structure `cache`
 --
 
 CREATE TABLE IF NOT EXISTS `cache` (
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS `cache` (
 -- --------------------------------------------------------
 
 --
--- table structure  `counter`
+-- table structure `counter`
 --
 
 CREATE TABLE IF NOT EXISTS `counter` (
@@ -120,7 +120,7 @@ CREATE TABLE IF NOT EXISTS `counter` (
 -- --------------------------------------------------------
 
 --
--- table structure  `country`
+-- table structure `country`
 --
 
 CREATE TABLE IF NOT EXISTS `country` (
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `country` (
 -- --------------------------------------------------------
 
 --
--- table structure  `favorite`
+-- table structure `favorite`
 --
 
 CREATE TABLE IF NOT EXISTS `favorite` (
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `favorite` (
 -- --------------------------------------------------------
 
 --
--- table structure  `favoriteitem`
+-- table structure `favoriteitem`
 --
 
 CREATE TABLE IF NOT EXISTS `favoriteitem` (
@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `favoriteitem` (
 -- --------------------------------------------------------
 
 --
--- table structure  `artist`
+-- table structure `artist`
 --
 
 CREATE TABLE IF NOT EXISTS `artist` (
@@ -182,7 +182,7 @@ CREATE TABLE IF NOT EXISTS `artist` (
 -- --------------------------------------------------------
 
 --
--- table structure  `genre`
+-- table structure `genre`
 --
 
 CREATE TABLE IF NOT EXISTS `genre` (
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `genre` (
 -- --------------------------------------------------------
 
 --
--- table structure  `label`
+-- table structure `label`
 --
 
 CREATE TABLE IF NOT EXISTS `label` (
@@ -219,7 +219,7 @@ CREATE TABLE IF NOT EXISTS `label` (
 -- --------------------------------------------------------
 
 --
--- table structure  `player`
+-- table structure `player`
 --
 
 CREATE TABLE IF NOT EXISTS `player` (
@@ -238,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `player` (
 -- --------------------------------------------------------
 
 --
--- table structure  `random`
+-- table structure `random`
 --
 
 CREATE TABLE IF NOT EXISTS `random` (
@@ -255,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `random` (
 -- --------------------------------------------------------
 
 --
--- table structure  `server`
+-- table structure `server`
 --
 
 CREATE TABLE IF NOT EXISTS `server` (
@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS `server` (
 -- --------------------------------------------------------
 
 --
--- table structure  `session`
+-- table structure `session`
 --
 
 CREATE TABLE IF NOT EXISTS `session` (
@@ -300,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `session` (
 -- --------------------------------------------------------
 
 --
--- table structure  `share_download`
+-- table structure `share_download`
 --
 
 CREATE TABLE IF NOT EXISTS `share_download` (
@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS `share_download` (
 -- --------------------------------------------------------
 
 --
--- table structure  `share_stream`
+-- table structure `share_stream`
 --
 
 CREATE TABLE IF NOT EXISTS `share_stream` (
@@ -334,7 +334,7 @@ CREATE TABLE IF NOT EXISTS `share_stream` (
 -- --------------------------------------------------------
 
 --
--- table structure  `track`
+-- table structure `track`
 --
 
 CREATE TABLE IF NOT EXISTS `track` (
@@ -401,7 +401,7 @@ ALTER TABLE `track`
 -- --------------------------------------------------------
 
 --
--- table structure  `rawtagdata`
+-- table structure `rawtagdata`
 --
 
 CREATE TABLE IF NOT EXISTS `rawtagdata` (
@@ -482,7 +482,7 @@ ALTER TABLE `rawtagdata`
 -- --------------------------------------------------------
 
 --
--- table structure  `playnext`
+-- table structure `playnext`
 --
 
 CREATE TABLE IF NOT EXISTS `playnext` (
@@ -503,7 +503,7 @@ CREATE TABLE IF NOT EXISTS `playnext` (
 -- --------------------------------------------------------
 
 --
--- table structure  `user`
+-- table structure `user`
 --
 
 CREATE TABLE IF NOT EXISTS `user` (
@@ -532,7 +532,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- --------------------------------------------------------
 
 --
--- table structure  `editorial`
+-- table structure `editorial`
 --
 
 CREATE TABLE IF NOT EXISTS `editorial` (
@@ -555,7 +555,7 @@ CREATE TABLE IF NOT EXISTS `editorial` (
 -- --------------------------------------------------------
 
 --
--- table structure  `importer`
+-- table structure `importer`
 --
 
 CREATE TABLE IF NOT EXISTS `importer` (
