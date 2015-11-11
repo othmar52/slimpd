@@ -187,7 +187,7 @@ $app->get('/library/album/:albumId', function($albumId) use ($app, $config){
 		'labels' => \Slimpd\Label::getInstancesForRendering($config['album'], $config['itemlist']),
 		'artists' => \Slimpd\Artist::getInstancesForRendering($config['album'], $config['itemlist'])
 	);
-		
+	$config['totalitems'] = \Slimpd\Album::getCountAll();
 	$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 		array('albumId' => $albumId)
 	);
@@ -288,9 +288,11 @@ $app->get('/markup/mpdplayer', function() use ($app, $config){
 		'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
 	);
 	// TODO: remove external liking as soon we have implemented a proper functionality
-	$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-	urlencode($config['mpd']['alternative_musicdir'] .
-	$config['item']->getRelativePath()); 
+	if(is_null($config['item']) === FALSE) {
+		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
+		urlencode($config['mpd']['alternative_musicdir'] .
+		$config['item']->getRelativePath()); 
+		}
 	$app->render('modules/mpdplayer.twig', $config);
 	$app->stop();
 });
@@ -338,7 +340,7 @@ $app->get('/importer(/)', function() use ($app, $config){
 	$config['action'] = 'importer';
 	$config['servertime'] = time();;
 	
-	$query = "SELECT * FROM importer ORDER BY jobStart DESC LIMIT 10;";
+	$query = "SELECT * FROM importer ORDER BY jobStart DESC,id DESC LIMIT 10;";
 	$result = $app->db->query($query);
 	while($record = $result->fetch_assoc() ) {
 		$record['jobStatistics'] = unserialize($record['jobStatistics']);
@@ -398,6 +400,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 		'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
 		'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
 	);
+	$config['totalitems'] = \Slimpd\Track::getCountAll();
 	$app->render('surrounding.twig', $config);
 });
 
