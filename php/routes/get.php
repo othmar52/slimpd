@@ -382,4 +382,24 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 });
 
 
+$app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $config){
+	$config['action'] = 'maintainance.trackdebug';
+	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
+		$search = array('id' => (int)$itemParams[0]);
+	}
+	if(count($itemParams)>1) {
+		$search = array('relativePathHash' => getFilePathHash(join(DS, $itemParams)));
+	}
+	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
+	$config['renderitems'] = array(
+		'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
+		'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
+		'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
+		'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
+	);
+	$app->render('surrounding.twig', $config);
+});
+
+
 

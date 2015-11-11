@@ -26,7 +26,7 @@
 			
 		<span style="font-size: 1.7em;">{{album.title}}</span>
 		<div id="album-info-artist">
-			{{ll.artist}}: {% include 'partials/artistlink.twig' with { 'artistIds': album.artistId } %}
+			{{ll.artist}}: {% include 'partials/artist/link.twig' with { 'item': album } %}
 		</div>
 		<p style="font-size: 0.7em; color: #999;"><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
 			
@@ -124,7 +124,7 @@
 	</div>
 	<div class="col-md-1 ">{{ item.number }}</div>
 	<div class="col-md-3 ">
-		{% include 'partials/artistlink.twig' with { 'artistIds': item.artistId, 'filepath': item.relativePath  } %}
+		{% include 'partials/artist/link.twig' %}
 	</div>
 	<div class="col-md-3 ">
 		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}

@@ -9,7 +9,7 @@
 	<div class="col-md-8">
 		<div class="row" style="font-size: 1.6em; padding-top: 3em;">
 			<div class="col-md-6">
-				{% include 'partials/artistlink.twig' with { 'artistIds': nowplaying.artistId, 'artists': renderitems.artists } %}
+				{% include 'partials/artist/link.twig' with { 'item': nowplaying } %}
 			</div>
 			<div class="col-md-3">
 				{% include 'partials/labellink.twig' with { 'item': nowplaying_album } %}
