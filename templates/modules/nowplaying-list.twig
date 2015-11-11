@@ -31,7 +31,7 @@
 		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>
 	<div class="col-md-3">
-		{% include 'partials/artistlink.twig' with { 'artistIds': item.artistId, 'filepath': item.relativePath, 'artists': renderitems.artists } %}
+		{% include 'partials/artist/link.twig' %}
 	</div>
 	<div class="col-md-2">
 		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}

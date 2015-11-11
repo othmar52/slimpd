@@ -3,7 +3,7 @@
 	<div class="col-md-1"><img src="/image-100/album/{{ item.albumId }}" alt="" width="100%" height="100%"></div>
 	<div class="col-md-1 ">{{ item.number }}</div>
 	<div class="col-md-3 ">
-		{% include 'partials/artistlink.twig' with { 'artistIds': item.artistId, 'artists': renderitems.artists, 'filepath': item.relativePath  } %}
+		{% include 'partials/artist/link.twig' %}
 	</div>
 	<div class="col-md-3 ">
 		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}

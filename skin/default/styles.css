@@ -183,3 +183,9 @@ a {
     -ms-transform: rotate(-2deg);
     transform: rotate(-2deg);
 }
+
+.form-control[type=text] {
+	background-color: #2D2D2D;
+	border:none;
+	color: #AAA;
+}
