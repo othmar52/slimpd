@@ -6,7 +6,9 @@ current development status is pretty alpha because tons of basic features are mi
 
 ## goals
 * massive performance one large music collections - especially the database-update after the initial update
-* non-desturctive approach (your music-collection wont get touched at all)
+* unifiying of misspelled or different notations of tag information
+* extracting useable information from filesystem of music files with no tags
+* non-destructive approach (your music-collection wont get touched at all)
 * separate linking of each remixers and featured artists
 * localization of the whole frontend
 * mobile friendly
@@ -16,5 +18,5 @@ current development status is pretty alpha because tons of basic features are mi
 
 [Screenshots of current development status](https://github.com/othmar52/slimpd/wiki)
 
-[requirements & installation instructions](https://github.com/othmar52/slimpd/wiki)
+[requirements & installation instructions](https://github.com/othmar52/slimpd/wiki/Installation)
 
