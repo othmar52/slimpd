@@ -760,6 +760,9 @@ class Importer {
 			$app->stop();
 		}
 		
+		# TODO: check if mpd-database file is plaintext or gzipped or sqlite
+		# TODO: processing mpd-sqlite db or gzipped db
+		
 		$this->updateJob(array(
 			'msg' => $app->ll->str('importer.collecting.mysqlitems')
 		));
@@ -1427,10 +1430,12 @@ class Importer {
 	// TODO: where to move pythonscript?
 	// TODO: general wrapper for shell-executing stuff
 	public static function extractAudioFingerprint($absolutePath) {
+		
 		$ext = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
 		switch($ext) {
 			case 'mp3':
-				$cmd = 'python ' . APP_ROOT . "mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
+				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
+					' ' . APP_ROOT . "mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
 				break;
 			case 'flac':
 				die('# TODO: try to read flac fingerprint from tags via getId3-lib');
@@ -1457,7 +1462,7 @@ class Importer {
 		$this->jobPhase = 10;
 		
 		
-		if($app->config['modules']['enable_fingerprints'] == '1') {
+		if($app->config['modules']['enable_fingerprints'] !== '1') {
 			return;
 		}
 		// reset phase 
