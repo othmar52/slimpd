@@ -68,7 +68,7 @@
     </div>
     <div class="col-sm-5">
     	<div class="row">
-			<div class="col-sm-4">{% include 'partials/artistlink.twig' with {  'artistIds': item.artistId } %}</div>
+			<div class="col-sm-4">{% include 'partials/artist/link.twig' %}</div>
 			<div class="col-sm-4">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
 			<div class="col-sm-4">{% include 'partials/yearlink.twig' %}</div>
 		</div>

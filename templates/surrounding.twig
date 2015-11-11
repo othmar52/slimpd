@@ -52,6 +52,12 @@
 					
 					{% endfor%}
 					
+					
+					{% if action == 'maintainance.trackdebug' %}
+					{% include 'modules/trackdebug.twig' %}
+					{% endif %}
+					
+					
 					{% if action == 'landing' %}
 					
 					<div class="container">

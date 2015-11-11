@@ -30,7 +30,9 @@ class Localization
 			'importer.fixlabel.msg' => 'Updating album:%s with labels:%s',
 			
 			'general.artist' => 'Artist',
+			'general.albumartist' => 'Album artist',
 			'general.title' => 'Title',
+			'general.album' => 'Album',
 			'general.label' => 'Label',
 			'general.year' => 'Year',
 			'general.id' => 'ID',
@@ -38,6 +40,9 @@ class Localization
 			'general.genre' => 'Genre',
 			'general.fileformat' => 'File format',
 			'general.filetype' => 'File type',
+			'general.featured.artist' => 'Featured Artists',
+			'general.remix.artist' => 'Remixer',
+			'general.catnr' => 'Cat#',
 		),
 		'de' => array(
 			'menu.library' => 'Sammlung',
