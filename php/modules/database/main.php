@@ -12,6 +12,10 @@ try {
 			);
 		} catch (\Exception $e) {
 			$app = \Slim\Slim::getInstance();
+			if(PHP_SAPI === 'cli') {
+				cliLog($app->ll->str('database.connect'), 1, 'red');
+				$app->stop();
+			}
 			$app->flash('error', $app->ll->str('database.connect'));
 			$app->redirect('/');
 		}
