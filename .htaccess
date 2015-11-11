@@ -1,17 +1,23 @@
-<Files  ~ "\.ini$">
-  Order allow,deny
-  Deny from all
-</Files>
 
-<Files  ~ "\.twig$">
-  Order allow,deny
-  Deny from all
-</Files>
+# TODO
+# create sample vHosts for apache-2.2, apache-2.4 and nginx
+# with blacklist for ini|twig|sh
+# with non-logging mpd-status-poll-request
 
-<Files  ~ "\.sh$">
-  Order allow,deny
-  Deny from all
-</Files>
+#<Files  ~ "\.ini$">
+#  Order allow,deny
+#  Deny from all
+#</Files>
+#
+#<Files  ~ "\.twig$">
+#  Order allow,deny
+#  Deny from all
+#</Files>
+#
+#<Files  ~ "\.sh$">
+#  Order allow,deny
+#  Deny from all
+#</Files>
 
 
 RewriteEngine On
