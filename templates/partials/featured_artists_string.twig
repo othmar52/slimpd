@@ -1,5 +1,0 @@
-{% if item.featuringId %}
-	{% set itemIds = item.featuringId|split(',') %}
-	{% for itemId in itemIds %}
-		{{renderitems.artists[itemId].title}}{% if loop.last == false %}, {% endif %}{% endfor %}
-{% endif %}
