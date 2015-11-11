@@ -1,0 +1,126 @@
+
+
+
+
+<div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
+	<a href="/maintainance/trackdebug/{{ item.id-1 }}">
+		<i class="fa fa-chevron-left fa-lg"></i>
+	</a>
+	<a href="/maintainance/trackdebug/{{ random(175781) }}">
+		<i class="fa fa-random fa-lg"></i></a>
+	<a href="/maintainance/trackdebug/{{ item.id+1 }}">
+		<i class="fa fa-chevron-right fa-lg"></i>
+	</a>
+</div>
+
+
+
+<h3>Track-debug<br>
+<span class="small">
+	{% set dirs = item.relativePath|split('/') %}
+	{% for dir in dirs %}
+		{% if loop.last == true %}
+		   <br />{{dir}}
+		{% else %}  
+			{{dir}} / 
+		{% endif %}
+	{% endfor%}
+</span>
+</h3>
+<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-3"><strong>Rawtagdata</strong></div>
+	<div class="col-md-3"><strong>Track-Entry</strong></div>
+	<div class="col-md-4"><strong>Edit</strong></div>
+</div>
+<hr />
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.title }}</strong></div>
+	<div class="col-md-3">{{ itemraw.title }}</div>
+	<div class="col-md-3">{{ item.title }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ item.title }}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.artist }}</strong></div>
+	<div class="col-md-3">{{ itemraw.artist }}</div>
+	<div class="col-md-3">
+		{% include 'partials/artist/without_ft_link.twig' %}
+	</div>
+	<div class="col-md-4"><input name="artist" type="text" value="{% include 'partials/artist/without_ft_string.twig' %}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll['featured.artist'] }}</strong></div>
+	<div class="col-md-3"></div>
+	{% set ftItem = { 'artistId' : item.featuringId }%}
+	<div class="col-md-3">
+		{% include 'partials/artist/link.twig' with { 'item': ftItem } %}
+	</div>
+	<div class="col-md-4"><input name="featuring" type="text" value="{% include 'partials/artist/string.twig' with { 'item': ftItem } %}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll['remix.artist'] }}</strong></div>
+	<div class="col-md-3"></div>
+	{% set rmxItem = { 'artistId' : item.remixerId }%}
+	<div class="col-md-3">
+		{% include 'partials/artist/link.twig' with { 'item': rmxItem } %}
+	</div>
+	<div class="col-md-4"><input name="remixer" type="text" value="{% include 'partials/artist/string.twig' with { 'item': rmxItem } %}" class="form-control" /></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.albumartist }}</strong></div>
+	<div class="col-md-3">{{ itemraw.albumArtist }}</div>
+	<div class="col-md-3">
+		
+		{% include 'partials/artist/link.twig' with { 'item': renderitems.albums[item.albumId] } %}
+	</div>
+	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.twig' with { 'item': renderitems.albums[item.albumId] } %}" class="form-control" /></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.album }}</strong></div>
+	<div class="col-md-3">{{ itemraw.album }}</div>
+	<div class="col-md-3">{{ renderitems.albums[item.albumId].title }}</div>
+	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumId].title }}" class="form-control" /></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.year }}</strong></div>
+	<div class="col-md-3">{{ itemraw.year }}</div>
+	<div class="col-md-3">{{ item.year }}</div>
+	<div class="col-md-4"><input name="year" type="text" value="{{ item.year }}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.genre }}</strong></div>
+	<div class="col-md-3">{{ itemraw.genre }}</div>
+	<div class="col-md-3">
+		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}
+	</div>
+	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genrestring.twig' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.label }}</strong></div>
+	<div class="col-md-3">{{ itemraw.publisher }}</div>
+	<div class="col-md-3">
+		{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}
+	</div>
+	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/labelstring.twig' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.catnr }}</strong></div>
+	<div class="col-md-3">{{ itemraw.textCatalogNumber }}</div>
+	<div class="col-md-3">
+		{{ item.catalogNumber }}
+	</div>
+	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNumber }}" class="form-control" /></div>
+</div>

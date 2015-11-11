@@ -1,0 +1,14 @@
+{# no indentation because it will be insertet in input fields #}
+{% if item.artistId %}
+{% set itemIds = item.artistId|split(',') %}
+{% for itemId in itemIds %}
+{% include 'partials/artist/single-string.twig' %}
+{% if loop.last == false %} &amp; {% endif %}
+{% endfor%}
+{% endif %}
+{% if item.featuringId %}
+(ft.
+{% set itemIds = item.featuringId|split(',') %}
+{% for itemId in itemIds %}
+{% include 'partials/artist/single-string.twig' %}{% if loop.last == false %}, {% endif %}{% endfor %})
+{% endif %}

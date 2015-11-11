@@ -1,0 +1,10 @@
+{% if item.artistId %}
+{% set itemIds = item.artistId|split(',') %}
+{% for itemId in itemIds %}
+	{% include 'partials/artist/single-link.twig' %}
+	{% if loop.last == false %}
+	<a class="artist-link item-link" href="/library/artist/{{item.artistId}}">
+		<span class="artist_all">&amp;</span></a>
+	{% endif %}
+{% endfor %}
+{% endif %}
