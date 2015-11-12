@@ -113,11 +113,18 @@ class mpd
 				
 				if(is_file($config['musicdir'].$item)===FALSE) {
 					// error - invalid $item or $item is a directory
+					# TODO: send warning to client?
 					return FALSE;
 				}
 				
 				// now we have to find the nearest parent directory that already exists in mpd-database
 				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($item);
+				
+				// special case when we try to play a single new file (without parent-dir) out of mpd root
+				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
+					# TODO: send warning to client?
+					return FALSE;
+				}
 				if($closestExistingItemInMpdDatabase !== $item) {
 					$this->cmd('update', $closestExistingItemInMpdDatabase);
 					// TODO: replace dirty sleep with mpd-status-poll and continue as soon as the item is imported
@@ -229,17 +236,27 @@ class mpd
 			return $item;
 		}
 		$item = explode(DS, $item);
+		// single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
+		if(count($item) === 1 && is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $item[0])) {
+			return NULL;
+		}
+		
 		$itemCopy = $item;
 		for($i=count($item); $i>=0; $i--) {
 			if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", join(DS, $itemCopy)) . '"') !== FALSE) {
 				// we found the closest existing directory
+				
+				// dont add a trailing slash in case we have a new root directory
+				$prefix = (count($itemCopy) > 0) ? join(DS, $itemCopy) . DS : '';
+				
 				// append one single deeper level and return the path
-				return join(DS, $itemCopy) . DS . $item[$i];
+				return $prefix . $item[$i];
 			}
-			// shorten path by one level
+			
+			// shorten path by one level in every loop
 			array_pop($itemCopy);
 		}
-		return '';
+		return NULL;
 	}
 
 	private function playlistStatus() {
