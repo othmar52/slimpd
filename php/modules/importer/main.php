@@ -543,7 +543,7 @@ class Importer {
 	
 	private function beginJob($data = array()) {
 		$app = \Slim\Slim::getInstance();
-		$this->jobBegin = time();
+		$this->jobBegin = microtime(TRUE);
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
 		$this->itemCountTotal = 0;
@@ -556,34 +556,38 @@ class Importer {
 	}
 	
 	private function updateJob($data = array()) {
-		if(time() - $this->lastJobStatusUpdate < $this->jobStatusInterval) {
+		$microtime = microtime(TRUE);
+		if($microtime - $this->lastJobStatusUpdate < $this->jobStatusInterval) {
 			return;
 		}
 		
 		$data['progressPercent'] = 0;
+		$data['microTimestamp'] = $microtime;
 		$this->calculateSpeed($data);
 		
 		$query = "UPDATE importer
 			SET jobStatistics='" .serialize($data)."',
-			jobLastUpdate=".time()."
+			jobLastUpdate=".$microtime."
 			WHERE id=" . $this->jobId;
 		\Slim\Slim::getInstance()->db->query($query);
-		$this->lastJobStatusUpdate = time();
+		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
 	
 	private function finishJob($data = array()) {
+		$microtime = microtime(TRUE);
 		$data['progressPercent'] = 100;
+		$data['microTimestamp'] = $microtime;
 		$this->calculateSpeed($data);
 		
 		$query = "UPDATE importer
-			SET jobEnd=".time().",
-			jobLastUpdate=".time().",
+			SET jobEnd=".$microtime.",
+			jobLastUpdate=".$microtime.",
 			jobStatistics='" .serialize($data)."' WHERE id=" . $this->jobId;
 		
 		\Slim\Slim::getInstance()->db->query($query);
 		$this->jobId = 0;
-		$this->lastJobStatusUpdate = time();
+		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
 	
@@ -592,14 +596,18 @@ class Importer {
 		$data['itemCountProcessed'] = $this->itemCountProcessed;
 		$data['itemCountTotal'] = $this->itemCountTotal;
 		
+		// this spped will be relevant for javascript animated progressbar
+		$data['speedPercentPerSecond'] = 0;
 		
-		$data['runtimeSeconds'] = time() - $this->jobBegin;
+		
+		$data['runtimeSeconds'] = $data['microTimestamp'] - $this->jobBegin;
 		if($this->itemCountChecked > 0 && $this->itemCountTotal > 0) {
 			$seconds = microtime(TRUE) - $this->jobBegin;
 			
 			$itemsPerMinute = $this->itemCountChecked/$seconds*60;
 			$data['speedItemsPerMinute'] = floor($itemsPerMinute);
 			$data['speedItemsPerHour'] = floor($itemsPerMinute*60);
+			$data['speedPercentPerSecond'] = ($itemsPerMinute/60)/($this->itemCountTotal/100);
 			
 			$minutesRemaining = ($this->itemCountTotal - $this->itemCountChecked) / $itemsPerMinute;
 			if($data['progressPercent'] === 0) {
