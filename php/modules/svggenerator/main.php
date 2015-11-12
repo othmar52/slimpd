@@ -11,6 +11,9 @@ class Svggenerator {
 	
 	
 	public function __construct($arg) {
+		if(count($arg) === 1) {
+			$arg = $arg[0];
+		}
 		if(is_array($arg) === TRUE) {
 			$c = \Slim\Slim::getInstance()->config['mpd'];
 			$path = join(DS, $arg);
@@ -72,7 +75,7 @@ class Svggenerator {
 	
 	public function generateSvg($pixel=300) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			die($peakFilePath . ' does not exist');	
+			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');	
 		}
 		$svg  = "<?xml version=\"1.0\"?>\n";
 	    $svg .= "<?xml-stylesheet href=\"/skin/default/waveform-1.css\" type=\"text/css\"?>\n";
