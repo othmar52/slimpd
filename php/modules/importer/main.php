@@ -869,8 +869,12 @@ class Importer {
 					case 'song_end':
 						$this->itemCountChecked++;
 						
-						$directoryHash = getFilePathHash($currentDirectory . DS);
-						$trackHash = getFilePathHash($currentDirectory . DS . $currentSong);
+						// single music files directly in mpd-musicdir must not get a leading slash
+						$dirRelativePath = ($currentDirectory === '') ? '' : $currentDirectory . DS;
+						$directoryHash = getFilePathHash($dirRelativePath);
+						
+						$trackRelativePath =  $dirRelativePath . $currentSong;
+						$trackHash = getFilePathHash($trackRelativePath);
 						
 						$this->updateJob(array(
 							'msg' => 'processed ' . $this->itemCountChecked . ' files',
@@ -906,9 +910,9 @@ class Importer {
 							$t->setYear($date);
 							$t->setTrackNumber($track);
 								
-							$t->setRelativePath($currentDirectory . DS . $currentSong);
+							$t->setRelativePath($trackRelativePath);
 							$t->setRelativePathHash($trackHash);
-							$t->setRelativeDirectoryPath($currentDirectory . DS);
+							$t->setRelativeDirectoryPath($dirRelativePath);
 							$t->setRelativeDirectoryPathHash($directoryHash);
 							
 							$t->setDirectoryMtime($mtimeDirectory);
