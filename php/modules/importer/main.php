@@ -373,8 +373,49 @@ class Importer {
 		if(trim($out) === '')	{ return FALSE; }
 		return trim($out);
 	}
+	
+	public function deleteOrphanedBitmapRecords() {
+		$this->jobPhase = 11;
+		$this->beginJob(array('msg' => 'collecting records to check from table:bitmap' ));
+		
+		$app = \Slim\Slim::getInstance();
+		
+		$query = "SELECT count(id) AS itemCountTotal FROM bitmap";
+		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		
+		$deletedRecords = 0;
+		$query = "SELECT id, relativePath, embedded FROM bitmap;";
+		$result = $app->db->query($query);
+		while($record = $result->fetch_assoc()) {
+			$this->itemCountChecked++;
+			$prefix = ($record['embedded'] == '1')
+				? APP_ROOT.'embedded'
+				: $app->config['mpd']['musicdir'];
+			if(is_file($prefix . $record['relativePath']) === TRUE) {
+				cliLog('keeping database-entry for ' . $record['relativePath'], 3);
+			} else {
+				cliLog('deleting database-entry for ' . $record['relativePath']);
+				$bitmap = new \Slimpd\Bitmap();
+				$bitmap->setId($record['id']);
+				$bitmap->delete(); 
+				$deletedRecords++;
+			}
+			$this->itemCountProcessed++;
+			$this->updateJob(array(
+				'currentItem' => $record['relativePath'],
+				'deletedRecords' => $deletedRecords
+			));
+		}
+		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
+		$this->finishJob(array(
+			'deletedRecords' => $deletedRecords
+		));
+	}
+	
 
 	public function searchImagesInFilesystem() {
+		
+		# TODO: in case an image gets replaced with same filename, the database record should get updated 
 		
 		$this->jobPhase = 5;
 		$this->beginJob(array('msg' => 'collecting directories to scan from table:albums' ));
@@ -387,13 +428,10 @@ class Importer {
 		// make sure that a single directory will not be scanned twice
 		$scannedDirectories = array();
 		
-		// TODO get timestamps of all images from mysql database
-		$imageTimestampsMysql = array();
-		
 		if($app->config['images']['look_cover_directory'] == TRUE) {
 			$this->pluralizeCommonArtworkDirectoryNames(
 				$app->config['images']['common_artwork_dir_names']
-			);	
+			);
 		}
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album WHERE lastScan <= filemtime;";
@@ -1305,10 +1343,26 @@ class Importer {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 7;
 		
+		// check config
 		if(isset($app->config['label-parent-directories']) === FALSE) {
 			cliLog('aborting setDefaultLabels() no label directories configured');
 			return;
 		}
+		// validate config
+		$foundValidDirectories = FALSE;
+		foreach($app->config['label-parent-directories'] as $dir) {
+			if(is_dir($app->config['mpd']['musicdir'] . $dir) === FALSE) {
+				cliLog('WARNING: label-parent-directory ' . $dir . ' does not exist', 2, 'yellow');
+			} else {
+				$foundValidDirectories = TRUE;
+			}
+		}
+		
+		if($foundValidDirectories === FALSE) {
+			cliLog('aborting setDefaultLabels() no valid label directories configured', 2, 'red');
+			return;
+		}
+
 		
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
