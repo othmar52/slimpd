@@ -74,6 +74,10 @@
 				<strong>directorycount:</strong> {{ item.jobStatistics.directorycount }}<br/> 
 			{% endif %}
 			
+			{% if item.jobStatistics.deletedRecords %}
+				<strong>deletedRecords:</strong> {{ item.jobStatistics.deletedRecords }}<br/> 
+			{% endif %}
+			
 			
 		</td>
 	

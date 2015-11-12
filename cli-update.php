@@ -123,6 +123,9 @@ $app->get('/', function () use ($app) {
 	
 	// phase 10
 	$importer->extractAllMp3FingerPrints();
+	
+	// phase 11: delete all bitmap-database-entries that does not exist in filesystem
+	$importer->deleteOrphanedBitmapRecords();
 
 	
 	// phase XXX:

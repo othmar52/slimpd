@@ -285,6 +285,32 @@ abstract class AbstractModel {
 		$query = substr($query,0,-1) . ' WHERE id=' . (int)$this->getId() . ";";
 		$app->db->query($query);
 	}
+	
+	public function delete() {
+		if($this->getId() > 0) {
+			// we already have an id ...
+		} else {
+			// check if we have a record with this path
+			$classPath = get_called_class();
+			$i2 = new $classPath;
+			if(method_exists($classPath, 'getRelativePath') === TRUE) {
+				$i2 = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+			}
+			
+			if(method_exists($classPath, 'getAz09') === TRUE) {
+				$i2 = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+			}
+			if($i2 !== NULL && $i2->getId() > 0) {
+				$this->setId($i2->getId());
+			} else {
+				// no idea which database item should be deleted...
+				return FALSE;
+			}
+		}
+		\Slim\Slim::getInstance()->db->query(
+			'DELETE FROM '. self::getTableName() . ' WHERE id=' . (int)$this->getId()
+		);
+	}
 
 	public static function getIdsByString($itemString) {
 		if(trim($itemString) === '') {
