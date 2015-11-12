@@ -11,31 +11,28 @@ class Svggenerator {
 	
 	
 	public function __construct($arg) {
-		if(count($arg) === 1) {
-			$arg = $arg[0];
-		}
-		if(is_array($arg) === TRUE) {
-			$c = \Slim\Slim::getInstance()->config['mpd'];
-			$path = join(DS, $arg);
-			if(is_file($c['alternative_musicdir'] . $path) === TRUE) {
-				$arg = $c['alternative_musicdir'] . $path;
-			}
-			if(is_file($c['musicdir'] . $path) === TRUE) {
-				$arg = $c['musicdir'] . $path;
-			}
-		}
-		if(is_string($arg) && is_file($arg) === TRUE) {
-			$this->absolutePath = $arg;
-			$this->ext = pathinfo($arg, PATHINFO_EXTENSION);
-		}
+		$config = \Slim\Slim::getInstance()->config['mpd'];
+		$arg = join(DS, $arg);
 		if(is_numeric($arg) === TRUE) {
-			$t = \Slimpd\Track::getInstanceByAttributes(array('id' => $arg));
+			$t = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$arg));
 			if(is_object($t) === TRUE) {
-				$this->absolutePath = \Slim\Slim::getInstance()->config['mpd']['musicdir'] . $t->getRelativePath();
+				$this->absolutePath = $config['musicdir'] . $t->getRelativePath();
 				$this->fingerprint = $t->getFingerprint();
 				$this->ext = $t->getAudioDataFormat();
 			}
+		} else {
+			if(is_file($config['alternative_musicdir'].$arg) === TRUE) {
+				$arg = $config['alternative_musicdir'].$arg;
+			}
+			if(is_file($config['musicdir'].$arg) === TRUE) {
+				$arg = $config['musicdir'].$arg;
+			}
+			if(is_file($arg) === TRUE) {
+				$this->absolutePath = $arg;
+				$this->ext = pathinfo($arg, PATHINFO_EXTENSION);
+			}
 		}
+		
 		if(is_file($this->absolutePath) === FALSE) {
 			// TODO: should we serve a default waveform svg?
 			return NULL;
@@ -53,8 +50,6 @@ class Svggenerator {
 		$this->setPeakFilePath();
 		if(is_file($this->peakValuesFilePath) === FALSE) {
 			session_write_close(); // do not block other requests during processing
-			
-			
 			$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
 			if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
 				# make sure same file isnt processed twice simultaneously by different client-requests...
@@ -75,14 +70,9 @@ class Svggenerator {
 	
 	public function generateSvg($pixel=300) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');	
+			# TODO: send a dummy svg to client?
+			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');
 		}
-		$svg  = "<?xml version=\"1.0\"?>\n";
-	    $svg .= "<?xml-stylesheet href=\"/skin/default/waveform-1.css\" type=\"text/css\"?>\n";
-	    $svg .= "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n";
-	    $svg .= "<svg width=\"100%\" height=\"100%\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n";
-		$svg .= "<svg y=\"0%\" width=\"100%\" height=\"100%\">";
-		
 		
 		$values = explode("\n", file_get_contents($this->peakValuesFilePath));
 		$values = array_map('trim', $values);
@@ -96,6 +86,8 @@ class Svggenerator {
 		$strokeCounter = 0;
 		$avgPeak = 0;
 		
+		$renderValues = array();
+		
 		foreach($values as $i => $v) {
 			$strokeCounter++;
 			$avgPeak += $v;
@@ -106,24 +98,24 @@ class Svggenerator {
 				continue;
 			}
 			$percent = $avgPeak/($max/100);
+			
 			// increase difference between low peak and high peak
 			$percent = $percent*0.01*$percent;
-			
 			$diffPercent = 100 - $percent;
-			$x = $i/($amount/100);
-			$y1 = number_format($diffPercent/2, 2);
-			$y2 = number_format($diffPercent/2 + $percent, 2);
 			
-			$svg .= "<line class=\"l\" x1=\"{$x}%\" y1=\"{$y1}%\" x2=\"{$x}%\" y2=\"{$y2}%\" />";
-			$svg .= "<line class=\"b\" x1=\"{$x}%\" y1=\"{$y1}%\" x2=\"{$x}%\" y2=\"{$y2}%\" />"; 
+			$renderValues[] = array(
+				'x' => $i/($amount/100),
+				'y1' => number_format($diffPercent/2, 2),
+				'y2' => number_format($diffPercent/2 + $percent, 2)
+			);
 		}
-		$svg .= "</svg>\n";
-		$svg .= "\n</svg>";
     
 		header("Content-Type: image/svg+xml");
-		print $svg;
+		\Slim\Slim::getInstance()->render(
+			'modules/waveform-svg.twig',
+			array('peakvalues' => $renderValues)
+		);
 		exit;
-
 	}
 	
 	public function setPeakFilePath() {
