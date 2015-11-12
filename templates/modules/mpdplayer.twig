@@ -4,7 +4,12 @@
     	
     	</div>
     	{# TODO: create preloader for waveformimage as it can take very long for large files #}
-    	<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.id }}" type="image/svg+xml">
+    	{% if not item.id %}
+    		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.relativePath }}" type="image/svg+xml">
+    	{% else %}
+    		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.id }}" type="image/svg+xml">
+    	{% endif %}
+    	
     	</object>
     	<div class="mpd-status-timestring" style="text-align: center;">
     		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
