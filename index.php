@@ -40,6 +40,7 @@ $twig = $app->view->getInstance();
 $filter = new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
 	return gmdate(($miliseconds > 3600000) ? "H:i:s" : "i:s", ($miliseconds/1000));
 });
+$twig->addFilter($filter);
 
 $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 	$format = "H:i:s";
@@ -54,8 +55,8 @@ $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 	}
 	return gmdate($format, $seconds) . ' ' . $suffix;
 });
-
 $twig->addFilter($filter);
+
 $filter = new \Twig_SimpleFilter('shorty', function ($number) {
 	if($number < 990) {
 		return $number;
