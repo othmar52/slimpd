@@ -281,18 +281,25 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 $app->get('/markup/mpdplayer', function() use ($app, $config){
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$config['item'] = $mpd->getCurrentlyPlayedTrack();
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
-	);
+	
+	
+	if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
+		$config['renderitems'] = array(
+			'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
+			'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
+			'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
+			'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
+		);
+	} else {
+		// playing track has not been imported in slimpd database yet...
+		// so we are not able to get any renderitems
+	}
+	
 	// TODO: remove external liking as soon we have implemented a proper functionality
-	if(is_null($config['item']) === FALSE) {
-		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
+	$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
 		urlencode($config['mpd']['alternative_musicdir'] .
-		$config['item']->getRelativePath()); 
-		}
+		$config['item']->getRelativePath());
+	
 	$app->render('modules/mpdplayer.twig', $config);
 	$app->stop();
 });
@@ -351,7 +358,7 @@ $app->get('/importer(/)', function() use ($app, $config){
 
 
 
-$app->get('/audiosvg/width/:width/:itemParam', function($width, $itemParam) use ($app, $config){
+$app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use ($app, $config){
 	$svgGenerator = new \Slimpd\Svggenerator($itemParam);
 	$svgGenerator->generateSvg($width);
 });
