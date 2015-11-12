@@ -560,7 +560,9 @@ class Importer {
 			return;
 		}
 		
+		$data['progressPercent'] = 0;
 		$this->calculateSpeed($data);
+		
 		$query = "UPDATE importer
 			SET jobStatistics='" .serialize($data)."',
 			jobLastUpdate=".time()."
@@ -571,9 +573,9 @@ class Importer {
 	}
 	
 	private function finishJob($data = array()) {
+		$data['progressPercent'] = 100;
 		$this->calculateSpeed($data);
 		
-		$data['progressPercent'] = 100;
 		$query = "UPDATE importer
 			SET jobEnd=".time().",
 			jobLastUpdate=".time().",
@@ -586,6 +588,11 @@ class Importer {
 	}
 	
 	private function calculateSpeed(&$data) {
+		$data['itemCountChecked'] = $this->itemCountChecked;
+		$data['itemCountProcessed'] = $this->itemCountProcessed;
+		$data['itemCountTotal'] = $this->itemCountTotal;
+		
+		
 		$data['runtimeSeconds'] = time() - $this->jobBegin;
 		if($this->itemCountChecked > 0 && $this->itemCountTotal > 0) {
 			$seconds = microtime(TRUE) - $this->jobBegin;
@@ -595,14 +602,18 @@ class Importer {
 			$data['speedItemsPerHour'] = floor($itemsPerMinute*60);
 			
 			$minutesRemaining = ($this->itemCountTotal - $this->itemCountChecked) / $itemsPerMinute;
-			$data['progressPercent'] = floor($this->itemCountChecked / ($this->itemCountTotal/100));
-			if($data['progressPercent']>99 && $data['progressPercent']<100) {
-				$data['progressPercent'] = 99;
+			if($data['progressPercent'] === 0) {
+				$data['progressPercent'] = floor($this->itemCountChecked / ($this->itemCountTotal/100));
+				// make sure we don not display 100% in case it is not finished
+				$data['progressPercent'] = ($data['progressPercent']>99) ? 99 : $data['progressPercent'];
+				
+				$data['estimatedRemainingSeconds'] = round($minutesRemaining*60);
+				$data['estimatedTotalRuntime'] = round($this->itemCountTotal/$itemsPerMinute*60);
+			} else {
+				$data['estimatedRemainingSeconds'] = 0;
+				$data['estimatedTotalRuntime'] = $data['runtimeSeconds'];
 			}
-			$data['estimatedRemainingSeconds'] = round($minutesRemaining*60);
-			$data['estimatedRemainingMinutes'] = number_format($minutesRemaining,1, '.', '');
-			$data['estimatedRemainingHours'] = number_format($minutesRemaining/60,1, '.', '');
-			$data['estimatedTotalRuntime'] = number_format($this->itemCountTotal/$itemsPerMinute,1, '.', '') . " minutes";
+			
 
 		}
 	}
@@ -1012,6 +1023,7 @@ class Importer {
 		
 		
 		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
+		$this->itemCountTotal = $this->itemCountChecked;
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemCountChecked . ' files',
 			'directorycount' => $dircount,

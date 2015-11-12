@@ -2,13 +2,21 @@
 <meta http-equiv="refresh" content="5; URL=/importer?debug=1">
 <h2>Recent importer jobs</h2>
 
+<style type="text/css">
 
+.importer-stats td,
+.importer-stats th {
+	text-align: center;
+}
+td.ar {
+	te_xt-align: right;
+}
+</style>
 
-<table style="width: 100%;">
+<table style="width: 100%;" class="importer-stats">
 	<tr class="header">
 		<th>Phase</th>
 		<th>Progress</th>
-		<th>Fertig in</th>
 		<th>Gesamtdauer</th>
 		<th>Items/min</th>
 		<th>Items/h</th>
@@ -25,18 +33,24 @@
 		{% if loop.first == true %}
 			{% if (servertime - item.jobLastUpdate) < 6 %}
 				{% set statusWording = 'running' %}
-				{% set statusImage = '<img src="{{ config.absRefPrefix }}skin/default/img/playing.gif" />' %}
+				{% set statusImage = '<img src="'~config.absRefPrefix~'skin/default/img/playing.gif" />' %}
 			{% endif %}
 		{% else %}
 			{% set statusWording = 'dead' %}
 			{% set statusImage = '' %}
 		{% endif %}
 		<td title="{{ item.id }}">{{ item.jobPhase }}</td>
-		<td>{{ item.jobStatistics.progressPercent|round }}%{{ statusImage|raw }}</td>
-		<td>{{ item.jobStatistics.estimatedRemainingMinutes|round }} min</td>
-		<td>{{ item.jobStatistics.estimatedTotalRuntime }}</td>
-		<td>{{ item.jobStatistics.speedItemsPerMinute }}
-		<td>{{ item.jobStatistics.speedItemsPerHour }}</td>
+		
+		{% if item.jobStatistics.progressPercent == 100 %}
+		<td>100%</td>
+		<td>{{ item.jobStatistics.runtimeSeconds|formatSeconds }}</td>
+		{% else %}
+		<td>{{item.jobStatistics.progressPercent}}% (~{{ item.jobStatistics.estimatedRemainingSeconds|formatSeconds }} left)</td>
+		<td>{{ item.jobStatistics.estimatedTotalRuntime|formatSeconds }}</td>
+		{% endif %}
+		
+		<td class="ar" title="{{ item.jobStatistics.speedItemsPerMinute }}">{{ item.jobStatistics.speedItemsPerMinute|shorty }}
+		<td class="ar" title="{{ item.jobStatistics.speedItemsPerHour }}">{{ item.jobStatistics.speedItemsPerHour|shorty }}</td>
 		</td>
 		<td>{{ item.jobStatistics.itemCountTotal }}</td>
 		<td>{{ item.jobStatistics.itemCountChecked }}</td>
@@ -101,7 +115,7 @@
 	{% if loop.first == true %}
 		{% if (servertime - item.jobLastUpdate) < 6 %}
 			{% set statusWording = 'running' %}
-			{% set statusImage = '<img src="{{ config.absRefPrefix }}skin/default/img/playing.gif" />' %}
+			{% set statusImage = '<img src="'~config.absRefPrefix~'skin/default/img/playing.gif" />' %}
 		{% endif %}
 	{% else %}
 		{% set statusWording = 'dead' %}

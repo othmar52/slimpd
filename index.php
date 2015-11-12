@@ -35,10 +35,36 @@ $view->parserOptions = array('debug' => $debug);
 #####################################################################################
 # TODO: where is the right place for twig-filters?
 # TODO: does it make sense to generate all href's in a twig-filter instead of having hardcoded routes in twig templates/partials?
+
+$twig = $app->view->getInstance();
 $filter = new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
 	return gmdate(($miliseconds > 3600000) ? "H:i:s" : "i:s", ($miliseconds/1000));
 });
-$twig = $app->view->getInstance();
+
+$filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
+	$format = "H:i:s";
+	$suffix = "h";
+	if($seconds < 3600) {
+		$format = "i:s";
+		$suffix = "min";
+	}
+	if($seconds < 60) {
+		$format = "s";
+		$suffix = "sec";
+	}
+	return gmdate($format, $seconds) . ' ' . $suffix;
+});
+
+$twig->addFilter($filter);
+$filter = new \Twig_SimpleFilter('shorty', function ($number) {
+	if($number < 990) {
+		return $number;
+	}
+	if($number < 990000) {
+		return number_format($number/1000,0) . " K";
+	}
+	return number_format($number/1000000,1) . " M";
+});
 $twig->addFilter($filter);
 #####################################################################################
 
