@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Leierkasten</title>
+		<title>{{ config.title }}</title>
 		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,11 +21,10 @@
 	
 		<link rel="stylesheet" type="text/css" href="/skin/default/styles.css" />
 	</head>
-	{% set vars = {'config': config} %}
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
 		<div class="container">
 			
-			{% include 'modules/header-menu.twig' with vars %}
+			{% include 'modules/header-menu.twig' %}
 		
 
 			<div class="row">
@@ -36,7 +35,7 @@
 					
 					{% for type in ['genre', 'artist', 'label'] %}
 						{% if action == 'library.'~type~'s' %}
-							{% include 'modules/typelist.twig' with { 'config': config, 'll': ll, 'itemlist': itemlist } %}
+							{% include 'modules/typelist.twig' %}
 						{% endif %}
 						
 						
@@ -46,7 +45,7 @@
 								<span class="small"><a href="/library/{{type}}s/page/1">{{ type~'s' }}</a></span>
 								<a href="/library/{{type}}/{{ item.id+1 }}"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
 								{{ item.title }} </h2>
-							{% include 'modules/albumlist.twig' with { 'config': config, 'll': ll, 'itemlist': albumlist } %}
+							{% include 'modules/albumlist.twig' with { 'itemlist': albumlist } %}
 						{% endif %}
 					
 					
@@ -92,11 +91,11 @@
 					
 					{% if action == 'library.year' %}
 						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
-						{% include 'modules/albumlist.twig' with { 'config': config, 'll': ll, 'itemlist': albumlist } %}
+						{% include 'modules/albumlist.twig' with { 'itemlist': albumlist } %}
 					{% endif %}
 					
 					{% if action == 'importer' %}
-						{% include 'modules/importer.twig' with { 'config': config, 'll': ll, 'itemlist': itemlist } %}
+						{% include 'modules/importer.twig' %}
 					{% endif %}
 					
 					
@@ -111,9 +110,8 @@
 					{% endif %}
 					
 					{% if action == 'playlist' %}
-						{% set vars = {'config': config, 'nowplaying': nowplaying, 'currentplaylist' : currentplaylist, 'genrearray': genrearray} %}
-						{% include 'modules/nowplaying-track.twig' with vars %}
-						{% include 'modules/nowplaying-list.twig' with vars %}
+						{% include 'modules/nowplaying-track.twig' %}
+						{% include 'modules/nowplaying-list.twig' %}
 					{% endif %}
 					
   				</div>
