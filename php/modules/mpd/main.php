@@ -10,6 +10,14 @@ class mpd
 		$listlength		= $status['playlistlength'];
 		if($listlength > 0) { 
 			$track = \Slimpd\Track::getInstanceByPath($files[$listpos]);
+			// obviously the played track is not imported in slimpd-database...
+			// TODO: trigger whole update procedure for this single track
+			// for now we simply create a dummy instance
+			if($track === NULL) {
+				$track = new \Slimpd\Track();
+				$track->setRelativePath($files[$listpos]);
+				$track->setRelativePathHash(getFilePathHash($files[$listpos]));
+			}
 			return $track;
 		}
 		return NULL;
@@ -86,6 +94,37 @@ class mpd
 					return FALSE;
 				}
 				return $this->mpd('update "' . str_replace("\"", "\\\"", $item) . '"');
+				
+			// tracks that hasnt been importet in mpd database have to get inserted befor playing
+			// TODO: should this also trigger a mysql-db-insert of this track?
+			// TODO: should we allow this also for directories or limit this function to single music files?
+			case 'updateMpdAndPlay':
+				$config = \Slim\Slim::getInstance()->config['mpd'];
+				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
+				if(!$item && $config['disallow_full_database_update'] == '0') {
+					return $this->mpd($cmd);
+				}
+				if(is_string($item) === TRUE) {
+					$item = $item;
+				}
+				if(is_array($item) === TRUE) {
+					$item = join(DS, $item);
+				}
+				
+				if(is_file($config['musicdir'].$item)===FALSE) {
+					// error - invalid $item or $item is a directory
+					return FALSE;
+				}
+				
+				// now we have to find the nearest parent directory that already exists in mpd-database
+				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($item);
+				if($closestExistingItemInMpdDatabase !== $item) {
+					$this->cmd('update', $closestExistingItemInMpdDatabase);
+					// TODO: replace dirty sleep with mpd-status-poll and continue as soon as the item is imported
+					sleep(1);
+				}
+				return $this->cmd('addSelect', $item);
+				
 			
 			case 'seekPercent':
 				
@@ -124,6 +163,9 @@ class mpd
 				# TODO: general handling of playing immediately or simply appending to playlist
 				
 				$path = '';
+				if(is_string($item) === TRUE) {
+					$path = $item;
+				}
 				if(is_numeric($item) === TRUE) {
 					$path = \Slimpd\Track::getInstanceByAttributes(array('id' => $item))->getRelativePath();
 				}
@@ -173,6 +215,31 @@ class mpd
 				die('unsupported');
 				break;
 		}
+	}
+
+	/*
+	 * function findClosestExistingDirectory
+	 * play() file, that does not exist in mpd database does not work
+	 * so we have to update the mpd db
+	 * update() with a path as argument whichs parent does not exist in mpd db will also not work
+	 * with this function we search for the closest directory that exists in mpd-db
+	 */
+	private function findClosestExistingItem($item) {
+		if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
+			return $item;
+		}
+		$item = explode(DS, $item);
+		$itemCopy = $item;
+		for($i=count($item); $i>=0; $i--) {
+			if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", join(DS, $itemCopy)) . '"') !== FALSE) {
+				// we found the closest existing directory
+				// append one single deeper level and return the path
+				return join(DS, $itemCopy) . DS . $item[$i];
+			}
+			// shorten path by one level
+			array_pop($itemCopy);
+		}
+		return '';
 	}
 
 	private function playlistStatus() {
