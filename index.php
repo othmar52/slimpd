@@ -38,12 +38,12 @@ $view->parserOptions = array('debug' => $debug);
 
 $twig = $app->view->getInstance();
 $filter = new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
-	return gmdate(($miliseconds > 3600000) ? "H:i:s" : "i:s", ($miliseconds/1000));
+	return gmdate(($miliseconds > 3600000) ? "G:i:s" : "i:s", ($miliseconds/1000));
 });
 $twig->addFilter($filter);
 
 $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
-	$format = "H:i:s";
+	$format = "G:i:s";
 	$suffix = "h";
 	if($seconds < 3600) {
 		$format = "i:s";
@@ -53,7 +53,11 @@ $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 		$format = "s";
 		$suffix = "sec";
 	}
-	return gmdate($format, $seconds) . ' ' . $suffix;
+	if($seconds < 1) {
+		return(round($seconds*1000)) . ' ms';
+	}
+	//ltrim(date('i:s'), 0);
+	return ltrim(gmdate($format, $seconds) . ' ' . $suffix, 0);
 });
 $twig->addFilter($filter);
 
