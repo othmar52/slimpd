@@ -561,9 +561,9 @@ CREATE TABLE IF NOT EXISTS `editorial` (
 CREATE TABLE IF NOT EXISTS `importer` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `jobPhase` int(11) NOT NULL DEFAULT '0',
-  `jobStart` int(11) NOT NULL DEFAULT '0',
-  `jobLastUpdate` int(11) NOT NULL DEFAULT '0',
-  `jobEnd` int(11) NOT NULL DEFAULT '0',
+  `jobStart` DOUBLE NOT NULL,
+  `jobLastUpdate` DOUBLE NOT NULL,
+  `jobEnd` DOUBLE NOT NULL,
   `jobStatistics` longtext NOT NULL,
   PRIMARY KEY (`id`),
   KEY `jobStart` (`jobStart`),

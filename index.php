@@ -56,7 +56,7 @@ $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 	if($seconds < 1) {
 		return(round($seconds*1000)) . ' ms';
 	}
-	//ltrim(date('i:s'), 0);
+	// remove leading zero
 	return ltrim(gmdate($format, $seconds) . ' ' . $suffix, 0);
 });
 $twig->addFilter($filter);
