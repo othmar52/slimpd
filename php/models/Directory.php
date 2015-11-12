@@ -4,6 +4,7 @@ class _Directory {
 	
 	public $fullpath;
 	public $name;
+	public $hash;
 
 	
 	
@@ -13,6 +14,7 @@ class _Directory {
 		try {
 			$this->fullpath = $directory;
 			$this->name = basename($directory);
+			$this->hash = getFilePathHash($this->name);
 		} catch (Exception $e) {
 			
 		}
