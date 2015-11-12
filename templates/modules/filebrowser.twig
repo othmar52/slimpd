@@ -6,9 +6,12 @@
 			<li class="" title="List basedirs">
 				<a href="/filebrowser">root</a>
 			</li>
-			{% for item in breadcrumb %}
+			{% for idx,item in breadcrumb %}
+			{# add hash of the next item and add a scroll link #}
+			{# TODO: correction of scrollposition due to sticky header #}
+			{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}
 				<li class="" title="{{ item.name }}">
-					<a href="/filebrowser{{ item.fullpath }}" class="">{{ item.name }}</a>
+					<a href="/filebrowser{{ item.fullpath~deeplink }}" class="">{{ item.name }}</a>
 				</li>
 			{% endfor %}
 			<li class="small">
@@ -38,6 +41,7 @@
 {% if subDirectories %}
 	<h4><i class="fa fa-folder-open fa-lg"></i> directories</h4>
 	{% for item in subDirectories %}
+	<a id="d{{ item.hash }}"/>
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-10">
 			<a href="/filebrowser/{{ directory~item.name }}">
