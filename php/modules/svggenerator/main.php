@@ -11,6 +11,16 @@ class Svggenerator {
 	
 	
 	public function __construct($arg) {
+		if(is_array($arg) === TRUE) {
+			$c = \Slim\Slim::getInstance()->config['mpd'];
+			$path = join(DS, $arg);
+			if(is_file($c['alternative_musicdir'] . $path) === TRUE) {
+				$arg = $c['alternative_musicdir'] . $path;
+			}
+			if(is_file($c['musicdir'] . $path) === TRUE) {
+				$arg = $c['musicdir'] . $path;
+			}
+		}
 		if(is_string($arg) && is_file($arg) === TRUE) {
 			$this->absolutePath = $arg;
 			$this->ext = pathinfo($arg, PATHINFO_EXTENSION);
@@ -23,7 +33,6 @@ class Svggenerator {
 				$this->ext = $t->getAudioDataFormat();
 			}
 		}
-		
 		if(is_file($this->absolutePath) === FALSE) {
 			// TODO: should we serve a default waveform svg?
 			return NULL;
