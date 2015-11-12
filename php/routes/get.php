@@ -340,7 +340,7 @@ $app->get('/importer(/)', function() use ($app, $config){
 	$config['action'] = 'importer';
 	$config['servertime'] = time();;
 	
-	$query = "SELECT * FROM importer ORDER BY jobStart DESC,id DESC LIMIT 10;";
+	$query = "SELECT * FROM importer ORDER BY jobStart DESC,id DESC LIMIT 30;";
 	$result = $app->db->query($query);
 	while($record = $result->fetch_assoc() ) {
 		$record['jobStatistics'] = unserialize($record['jobStatistics']);

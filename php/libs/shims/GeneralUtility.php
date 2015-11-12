@@ -9,8 +9,13 @@ function sortHelper($a,$b){
 }
 
 function cliLog($msg, $verbosity=1, $color="default") {
+	// TODO: configure verbosity in config file
+	$activeVerbosity = 1;
+	if($verbosity > $activeVerbosity) {
+		return;
+	}
 	
-	// TODO: check colors (especially linebreaks)
+	// TODO: check colors (especially the color after linebreaks)
 	$black 		= "33[0;30m";
 	$darkgray 	= "33[1;30m";
 	$blue 		= "33[0;34m";
