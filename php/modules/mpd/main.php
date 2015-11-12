@@ -68,6 +68,24 @@ class mpd
 		
 		// validate commans
 		switch($cmd) {
+			case 'update':
+				$config = \Slim\Slim::getInstance()->config['mpd'];
+				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
+				if(!$item && $config['disallow_full_database_update'] == '0') {
+					return $this->mpd($cmd);
+				}
+				if(is_string($item) === TRUE) {
+					$item = $item;
+				}
+				if(is_array($item) === TRUE) {
+					$item = join(DS, $item);
+				}
+				
+				if(is_file($config['musicdir'].$item)===FALSE && is_dir($config['musicdir'].$item)===FALSE) {
+					// error - invalid $item
+					return FALSE;
+				}
+				return $this->mpd('update "' . str_replace("\"", "\\\"", $item) . '"');
 			
 			case 'seekPercent':
 				
