@@ -341,6 +341,17 @@ foreach (array(50,100,300,1000) as $imagesize) {
 		$image->dump($imagesize);
 	});
 	
+	// missing track or album paramter caused by items that are not imported in slimpd yet
+	# TODO: maybe use another fallback image for those items...
+	$app->get('/image-'.$imagesize.'/album/', function() use ($app, $config, $imagesize){
+		$image = \Slimpd\Bitmap::getFallbackImage();
+		$image->dump($imagesize);
+	});
+	$app->get('/image-'.$imagesize.'/track/', function() use ($app, $config, $imagesize){
+		$image = \Slimpd\Bitmap::getFallbackImage();
+		$image->dump($imagesize);
+	});
+	
 }
 
 $app->get('/importer(/)', function() use ($app, $config){
