@@ -23,10 +23,10 @@
 				{% include 'partials/albumlink.twig' with { 'item': nowplaying_album } %}
 			</div>
 			<div class="col-md-3">
-				cat
+				TODO: #CAT
 			</div>
 			<div class="col-md-3">
-				stil
+				TODO: STYLE
 			</div>
 		</div>
 		<div class="row" style="font-size: 1.6em;">
@@ -34,6 +34,14 @@
 				{% include 'partials/yearlink.twig' with { 'item': nowplaying } %}
 			</div>
 			<div class="col-md-6">
+				
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<a href="/maintainance/trackdebug/{{ nowplaying.relativePath }}">edit</a>
+			</div>
+			<div class="col-md-10">
 				
 			</div>
 		</div>

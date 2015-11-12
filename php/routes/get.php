@@ -406,8 +406,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	$config['action'] = 'maintainance.trackdebug';
 	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
 		$search = array('id' => (int)$itemParams[0]);
-	}
-	if(count($itemParams)>1) {
+	} else {
 		$search = array('relativePathHash' => getFilePathHash(join(DS, $itemParams)));
 	}
 	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
