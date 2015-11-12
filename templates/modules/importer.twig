@@ -45,7 +45,8 @@ td.ar {
 		<td>100%</td>
 		<td>{{ item.jobStatistics.runtimeSeconds|formatSeconds }}</td>
 		{% else %}
-		<td>{{item.jobStatistics.progressPercent}}% (~{{ item.jobStatistics.estimatedRemainingSeconds|formatSeconds }} left)</td>
+		{# TODO: animate progressbar with "item.jobStatistics.progressPercent" and "item.jobStatistics.speedPercentPerSecond" #}
+		<td>{{ item.jobStatistics.progressPercent }}% (~{{ item.jobStatistics.estimatedRemainingSeconds|formatSeconds }} left)</td>
 		<td>{{ item.jobStatistics.estimatedTotalRuntime|formatSeconds }}</td>
 		{% endif %}
 		
@@ -107,34 +108,6 @@ td.ar {
 	{% endfor %}
 </table>
 
-<div style="font-size: 0.6em; padding-top: 70px;">
-
-{% set statusWording = 'dead' %}
-{% set statusImage = '' %}
-{% for item in itemlist %}
-	{% if loop.first == true %}
-		{% if (servertime - item.jobLastUpdate) < 6 %}
-			{% set statusWording = 'running' %}
-			{% set statusImage = '<img src="'~config.absRefPrefix~'skin/default/img/playing.gif" />' %}
-		{% endif %}
-	{% else %}
-		{% set statusWording = 'dead' %}
-		{% set statusImage = '' %}
-	{% endif %}
-	<h3>Phase {{ item.jobPhase }} {{ item.jobStart|date('H:i:s') }} -
-		{{ statusImage|raw}}{{ (item.jobEnd == 0) ? statusWording~' (' ~ item.jobStatistics.progressPercent|round ~'%)'  :  item.jobEnd|date('H:i:s') }}
-	</h3>
-	<table>
-	{% for idx,value in item.jobStatistics %}
-		<tr>
-			<th style="width: 150px;">{{ idx }}:</th><td>{{ value }}</td>
-		</tr>
-	{% endfor %}
-	</table>		
-	<hr />
-{% endfor %}
-
-</div>
 
 <h2>Phase 0: MPD-Database Update</h2>
 <p>this is completely handeled by MPD itself and has nothing to so with slimpd. The starting point for slimpd is the textbased database-file of mpd</p>
