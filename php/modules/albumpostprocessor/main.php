@@ -8,6 +8,7 @@ class AlbumPostProcessor {
 	
 	
 	protected $handleAsAlbum;
+	protected $handleAsAlbumScore;
 	
 	
 	protected $albumTitles;
@@ -26,6 +27,7 @@ class AlbumPostProcessor {
 	protected $numbers;
 	
 	
+	protected $filenameCases;
 	protected $filenameSchemes;
 	protected $titleSchemes;
 	protected $numberSchemes;
@@ -50,11 +52,13 @@ class AlbumPostProcessor {
 		$this->albumHash = '';
 		$this->album = NULL;
 		$this->handleAsAlbum = NULL;
+		$this->handleAsAlbumScore = 0;
 	}
 	
 	
 	private function setHandleAsAlbum() {
 		
+		#TODO: case of filename
 		
 		// collect specific data 
 		foreach($this->tracks as $t) {
@@ -72,17 +76,17 @@ class AlbumPostProcessor {
 			$this->audioFormats[] = $t->getAudioDataformat();
 			$this->comments[] = $t->getComment();
 			
+			$this->filenameCases[] = $this->getFilenameCase( basename($t->getRelativePath()) );
 			$this->filenames[] = basename($t->getRelativePath());
 			$this->titles[] = $t->getTitle();
 			$this->numbers[] = $t->getNumber();
 			
-			$this->filenameSchemes[] = $this->getFilenameScheme(basename($t->getRelativePath()));
+			$this->filenameSchemes[] = $this->getFilenameScheme( basename($t->getRelativePath()) );
 			#$this->titleScheme[] = $t->getTitleScheme();
 			$this->numberSchemes[] = $this->getNumberScheme($t->getNumber());
 		}
 		
 		// check similarity of collected data
-		$score = 0;
 		$trackCount = count($this->tracks);
 		
 		// TODO: check if we should move this to top of method...
@@ -91,34 +95,40 @@ class AlbumPostProcessor {
 			return;
 		}
 		
-		// define some weightening - no idea if those values makes sense
+		# define some weightening
+		# TODO: testing, testing, testing - no idea if those values makes sense
+		
+		# TODO: check if we find gapless chronological tracknumbers (in attributes: number or artist or title or filename)
+		# case yes -> generously add score
 		$scoreTable = array(
 			'artists' => 0.7,
 			'labels' => 1,
-			'years' => 1,
+			'years' => 1.5,
 			'audioFormats' => 0.2,
 			'comments' => 1,
 			// TODO: titleScheme
 			'filenameSchemes' => 3,
+			'filenameCases' => 2,
 			'numberSchemes' => 2
 		);
+		$decisionBoundry = 5;
 		
 		foreach(array_keys($scoreTable) as $property) {
-			$bestMatch = uniqueArrayOrderedByRelevance($this->$property);
+			$bestMatch = uniqueArrayOrderedByRelevance($this->$property)[0];
 			#cliLog("bestmatch" . $bestMatch , 1, 'purple'); #die();
 			$propScore = $scoreTable[$property];
 			foreach($this->$property as $i) {
-				// missing attributes should not get scored
-				if($i == '') {
-					#continue;
-				}
-				$score += ($i == $bestMatch[0]) ? $propScore : $propScore*-1;
+				// does it make sense to exclude missing attributes from scoring?
+				#if($i == '') {
+				#	#continue;
+				#}
+				$this->handleAsAlbumScore += ($i == $bestMatch) ? $propScore : $propScore*-1;
 			}
 		}
 		
-		$score = $score/$trackCount;
-		$this->handleAsAlbum = ($score>2) ? TRUE : FALSE;
-		cliLog("Score " . $score , 1, 'purple'); #die();
+		$this->handleAsAlbumScore /= $trackCount;
+		$this->handleAsAlbum = ($this->handleAsAlbumScore>$decisionBoundry) ? TRUE : FALSE;
+		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 1, 'purple'); #die();
 		
 		
 		
@@ -177,6 +187,15 @@ class AlbumPostProcessor {
 		$result = "nomatch";
 		cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'red');
 		return $result;
+	}
+
+	private function getFilenameCase($value) {
+		// exclude the file-extension
+		$value = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value);
+		
+		if(strtolower($value) === $value) { return 'lower'; }
+		if(strtoupper($value) === $value) { return 'upper'; }
+		return 'mixed';
 	}
 	
 	private function getNumberScheme($value) {

@@ -679,7 +679,7 @@ class Importer {
 		$updatedAlbums = array(/* pathhash => id */);
 		$insertedAlbums = 0;
 		
-		// well be used for post-processing album record and track records
+		// will be used for post-processing album record and track records
 		$previousAlbum = new \Slimpd\AlbumPostProcessor();
 		
 		// Tryout 1
@@ -693,7 +693,7 @@ class Importer {
 			
 			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getAlbumHash()) {
 				// guessing of missing data or obviously invalid data
-				//$previousAlbum->run();
+				$previousAlbum->run();
 				$previousAlbum->reset();
 				$previousAlbum->setAlbumHash($record['relativeDirectoryPathHash']);
 			}
@@ -746,12 +746,6 @@ class Importer {
 			'insertedAlbums' => $insertedAlbums
 		));
 	}
-
-	public function postProcessAlbumTracks($input) {
-		print_r($input);
-		die();
-	}
-
 
 	public function migrateNonRelationalData($rawArray) {
 		
