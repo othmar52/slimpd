@@ -646,10 +646,12 @@ class Importer {
 		}
 	}
 
-	public function migrateRawtagdataTable() {
+	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
 		
-		# only for development but make this optional to force re-migration
-		$this->tempResetMigrationPhase();
+		# only for development
+		if($resetMigrationPhase === TRUE) {
+			$this->tempResetMigrationPhase();
+		}
 		
 		$this->jobPhase = 3;
 		$this->beginJob(array(
@@ -658,7 +660,7 @@ class Importer {
 		$app = \Slim\Slim::getInstance();
 		
 		
-		// get all existing albumIds to avouid queries
+		// get all existing albumIds to avoid queries
 		$albumIds = array();
 		$query = "SELECT id,relativePathHash FROM album";
 		$result = $app->db->query($query);
@@ -670,22 +672,35 @@ class Importer {
 		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		
-		$query = "SELECT * FROM rawtagdata ";
+		$query = "SELECT * FROM rawtagdata ORDER BY relativeDirectoryPathHash ";
 		$result = $app->db->query($query);
 		
 		# IMPORTANT TODO: decide if an album should be updated or not
 		$updatedAlbums = array(/* pathhash => id */);
 		$insertedAlbums = 0;
 		
-		#die('are you sure? begin job is not active' . "\n");
+		// well be used for post-processing album record and track records
+		$previousAlbum = new \Slimpd\AlbumPostProcessor();
+		
 		// Tryout 1
 		// blind update every album without checking if it exists or not
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
+			
+			if($this->itemCountChecked === 1) {
+				$previousAlbum->setAlbumHash($record['relativeDirectoryPathHash']);
+			}
+			
+			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getAlbumHash()) {
+				// guessing of missing data or obviously invalid data
+				//$previousAlbum->run();
+				$previousAlbum->reset();
+				$previousAlbum->setAlbumHash($record['relativeDirectoryPathHash']);
+			}
+			
 			$this->updateJob(array(
 				'currentItem' => $record['relativePath'],
 				'insertedAlbums' => $insertedAlbums
-				
 			));
 			
 			$t = $this->migrateNonRelationalData($record);
@@ -708,6 +723,7 @@ class Importer {
 				$albumId = $a->getId();
 				$albumIds[ $record['relativeDirectoryPathHash'] ] = $albumId;
 				$insertedAlbums++;
+				$previousAlbum->setAlbum($a);
 			}
 			
 			// check if we do have an album
@@ -716,6 +732,7 @@ class Importer {
 			// make sure to use identical ids in table:rawtagdata and table:track
 			\Slimpd\Track::ensureRecordIdExists($t->getId());
 			$t->update();
+			$previousAlbum->addTrack($t);
 			
 			// make sure extracted images will be referenced to an album
 			\Slimpd\Bitmap::addAlbumIdToTrackId($t->getId(), $albumId);
@@ -729,6 +746,12 @@ class Importer {
 			'insertedAlbums' => $insertedAlbums
 		));
 	}
+
+	public function postProcessAlbumTracks($input) {
+		print_r($input);
+		die();
+	}
+
 
 	public function migrateNonRelationalData($rawArray) {
 		
