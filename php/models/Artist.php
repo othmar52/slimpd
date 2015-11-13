@@ -5,6 +5,7 @@ class Artist extends AbstractModel
 {
 	protected $id;
 	protected $title;
+	protected $article;
 	protected $az09;
 	protected $trackCount;
 	protected $albumCount;
@@ -29,6 +30,9 @@ class Artist extends AbstractModel
 	public function setTitle($value) {
 		$this->title = $value;
 	}
+	public function setArticle($value) {
+		$this->article = $value;
+	}
 	public function setAz09($value) {
 		$this->az09 = $value;
 	}
@@ -46,6 +50,9 @@ class Artist extends AbstractModel
 	}
 	public function getTitle() {
 		return $this->title;
+	}
+	public function getArticle() {
+		return $this->article;
 	}
 	public function getAz09() {
 		return $this->az09;

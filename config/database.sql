@@ -29,13 +29,21 @@ CREATE TABLE IF NOT EXISTS `album` (
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `albumDr` tinyint(3) unsigned  DEFAULT NULL,
   `trackCount` smallint(5) unsigned  DEFAULT '0',
+  `isMixed` smallint(1) unsigned DEFAULT NULL,
+  `isJumble` smallint(1) unsigned DEFAULT NULL,
+  `discogsId` varchar(64) NOT NULL DEFAULT '',
+  `rolldabeatsId` varchar(64) NOT NULL DEFAULT '',
+  `beatportId` varchar(64) NOT NULL DEFAULT '',
+  `junoId` varchar(64) NOT NULL DEFAULT '',
+  `catalogNr` varchar(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `artistId` (`artistId`),
   KEY `year` (`year`,`month`),
   KEY `labelId` (`labelId`),
   KEY `genreId` (`genreId`),
   KEY `added` (`added`),
-  KEY `importStatus` (`importStatus`)
+  KEY `importStatus` (`importStatus`),
+  KEY `isMixed` (`isMixed`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `album`
@@ -170,6 +178,7 @@ CREATE TABLE IF NOT EXISTS `favoriteitem` (
 CREATE TABLE IF NOT EXISTS `artist` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
+  `article` varchar(24) NOT NULL DEFAULT '',
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
@@ -345,10 +354,12 @@ CREATE TABLE IF NOT EXISTS `track` (
   `remixerId` varchar(255) NOT NULL DEFAULT '',
   `relativePath` text NOT NULL,
   `relativePathHash` varchar(11) NOT NULL,
+  
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `mimeType` varchar(64) NOT NULL DEFAULT '',
   `filesize` bigint(20) unsigned NOT NULL DEFAULT '0',
   `filemtime` int(10) unsigned NOT NULL DEFAULT '0',
+  
   `miliseconds` int(10) unsigned NOT NULL DEFAULT '0',
   `audioBitrate` int(10) unsigned NOT NULL DEFAULT '0',
   `audioBitsPerSample` int(10) unsigned NOT NULL DEFAULT '0',
@@ -359,13 +370,15 @@ CREATE TABLE IF NOT EXISTS `track` (
   `audioDataformat` varchar(64) NOT NULL DEFAULT '',
   `audioEncoder` varchar(64) NOT NULL DEFAULT '',
   `audioProfile` varchar(64) NOT NULL DEFAULT '',
+  
   `videoDataformat` varchar(64) NOT NULL DEFAULT '',
   `videoCodec` varchar(64) NOT NULL DEFAULT '',
   `videoResolutionX` int(10) unsigned NOT NULL DEFAULT '0',
   `videoResolutionY` int(10) unsigned NOT NULL DEFAULT '0',
   `videoFramerate` int(10) unsigned NOT NULL DEFAULT '0',
+  
   `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `number` smallint(5) unsigned DEFAULT NULL,
+  `number` varchar(8) unsigned DEFAULT NULL,
   `error` varchar(255) NOT NULL DEFAULT '',
   `albumId` varchar(11) NOT NULL DEFAULT '',
   `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -373,8 +386,16 @@ CREATE TABLE IF NOT EXISTS `track` (
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `genreId` varchar(255) NOT NULL DEFAULT '',
   `labelId` varchar(255) NOT NULL DEFAULT '',
+  `catalogNr` varchar(64) NOT NULL DEFAULT '',
   `comment` text NOT NULL,
   `year` smallint(4) unsigned DEFAULT NULL,
+  
+  `isMixed` smallint(1) unsigned DEFAULT NULL,
+  `discogsId` varchar(64) NOT NULL DEFAULT '',
+  `rolldabeatsId` varchar(64) NOT NULL DEFAULT '',
+  `beatportId` varchar(64) NOT NULL DEFAULT '',
+  `junoId` varchar(64) NOT NULL DEFAULT '',
+  
   `dr` tinyint(3) unsigned  DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `artistId` (`artistId`),
