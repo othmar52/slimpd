@@ -12,13 +12,23 @@ class Album extends \Slimpd\AbstractModel
 	protected $month;
 	protected $genreId;
 	protected $labelId;
+	
 	protected $filemtime;
 	protected $added;
 	protected $discs;
+	
 	protected $importStatus;
 	protected $lastScan;
 	protected $albumDr;
 	protected $trackCount;
+	
+	protected $isMixed;
+	protected $isJumble;
+	
+	protected $discogsId;
+	protected $rolldabeatsId;
+	protected $beatportId;
+	protected $junoId;
 	
 	public static $tableName = 'album';
 	
@@ -91,6 +101,28 @@ class Album extends \Slimpd\AbstractModel
 	}
 	
 	
+	public function setIsMixed($value) {
+		$this->isMixed = $value;
+	}
+	public function setIsJumble($value) {
+		$this->isJumble = $value;
+	}
+	
+	
+	public function setDiscogsId($value) {
+		$this->discogsId = $value;
+	}
+	public function setRolldabeatsId($value) {
+		$this->rolldabeatsId = $value;
+	}
+	public function setBeatportId($value) {
+		$this->beatportId = $value;
+	}
+	public function setJunoId($value) {
+		$this->junoId = $value;
+	}
+	
+	
 	
 	// getter
 	public function getId() {
@@ -142,5 +174,24 @@ class Album extends \Slimpd\AbstractModel
 		return $this->trackCount;
 	}
 	
+	public function getIsMixed() {
+		return $this->isMixed;
+	}
+	public function getIsJumble() {
+		return $this->isJumble;
+	}
+	
+	public function getDiscogsId() {
+		return $this->discogsId;
+	}
+	public function getRolldabeatsId() {
+		return $this->rolldabeatsId;
+	}
+	public function getBeatportId() {
+		return $this->beatportId;
+	}
+	public function getJunoId() {
+		return $this->junoId;
+	}
 	
 }
