@@ -19,6 +19,7 @@ class AlbumPostProcessor {
 	protected $years;
 	protected $bitrates;
 	protected $audioFormats;
+	protected $audioEncoders;
 	protected $comments;
 	
 	
@@ -74,6 +75,7 @@ class AlbumPostProcessor {
 			$this->years[] = $t->getYear();
 			$this->bitrates[] = intval($t->getAudioBitrate());
 			$this->audioFormats[] = $t->getAudioDataformat();
+			$this->audioEncoders[] = $t->getAudioEncoder();
 			$this->comments[] = $t->getComment();
 			
 			$this->filenameCases[] = $this->getFilenameCase( basename($t->getRelativePath()) );
@@ -82,7 +84,7 @@ class AlbumPostProcessor {
 			$this->numbers[] = $t->getNumber();
 			
 			$this->filenameSchemes[] = $this->getFilenameScheme( basename($t->getRelativePath()) );
-			#$this->titleScheme[] = $t->getTitleScheme();
+			#$this->titleSchemes[] = $t->getTitleScheme($t->getTitle());
 			$this->numberSchemes[] = $this->getNumberScheme($t->getNumber());
 		}
 		
@@ -105,6 +107,7 @@ class AlbumPostProcessor {
 			'labels' => 1,
 			'years' => 1.5,
 			'audioFormats' => 0.2,
+			'audioEncoders' => 1,
 			'comments' => 1,
 			// TODO: titleScheme
 			'filenameSchemes' => 3,
@@ -135,6 +138,61 @@ class AlbumPostProcessor {
 		return;
 		$this->tracks = NULL;print_r($this); ob_flush();print_r(uniqueArrayOrderedByRelevance($this->bitrates));die();
 	}
+
+
+	private function getTitleScheme($value) {
+		#$value = "B2-Aaron_Dilloway-Untitled-sour.mp3";
+		
+		if($value == '') {
+			return 'missing';
+		}
+		
+		// regex groups
+		$gNum    = "([\d]{1,3})";
+		$gVinyl  = "([A-M\d]{1,3})"; // a1, AA2,
+		$gGlue   = "([ .\-_]{1,4})"; // "_-_", ". ", "-",
+		$gExt    = "\.([a-z\d]{2,4})";
+		$gScene  = "-([^\s\-]+)";
+		$gNoMinus= "([^-]+)";
+		
+		
+		// regex delims
+		$dStart  = "/^";
+		$dEnd    = "$/i";
+		
+		$iHateRegex = array(
+			// 01-Aaron_Dilloway-Untitled.mp3
+			'classic' => $dStart.$gNum.$gGlue.$gNoMinus."-".$gNoMinus.$gExt.$dEnd,
+			// A1-Aaron_Dilloway-Untitled.mp3
+			'classic-vinyl' => $dStart.$gVinyl.$gGlue.$gNoMinus."-".$gNoMinus.$gExt.$dEnd,
+			// 112-Aaron_Dilloway-Untitled.mp3
+			'classicscene' => $dStart.$gNum.$gGlue.$gNoMinus."-".$gNoMinus.$gScene.$gExt.$dEnd,
+			// B2-Aaron_Dilloway-Untitled-sour.mp3
+			'classicscene-vinyl' => $dStart.$gVinyl.$gGlue.$gNoMinus."-".$gNoMinus.$gScene.$gExt.$dEnd,
+			// 05-Voodoo_Man.mp3
+			'noartist' => $dStart.$gNum.$gGlue.$gNoMinus.$gExt.$dEnd,
+			// B2-Voodoo_Man_(Last_Break_Mix).mp3
+			'noartist-vinyl' => $dStart.$gVinyl.$gGlue.$gNoMinus.$gExt.$dEnd,
+			
+			// Aaron_Dilloway_-_Voodoo_Man_(Last_Break_Mix).mp3
+			'nonumber' => $dStart.$gNoMinus."-".$gNoMinus.$gExt.$dEnd,
+			
+			// Voodoo_Man.mp3
+			'nonumber-noartist' => $dStart.$gNoMinus.$gExt.$dEnd,
+		);
+		foreach($iHateRegex as $result => $pattern) {
+			#cliLog($pattern);
+			if(preg_match($pattern, $value, $m)) {
+				#print_r($m); die();
+				cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'green');
+				return $result; // 01-Aaron_Dilloway-Untitled.mp3
+			}
+		}
+		$result = "nomatch";
+		cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'red');
+		return $result;
+	}
+
 
 	private function getFilenameScheme($value) {
 		#$value = "B2-Aaron_Dilloway-Untitled-sour.mp3";

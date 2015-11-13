@@ -10,8 +10,9 @@ class Track extends \Slimpd\AbstractModel
 	protected $featuringId;
 	protected $remixerId;
 	protected $albumId;
-	protected $labelId;
 	protected $genreId;
+	protected $labelId;
+	protected $catalogNr;
 	
 	protected $relativePath;
 	protected $relativePathHash;
@@ -30,6 +31,7 @@ class Track extends \Slimpd\AbstractModel
 	protected $audioDataformat;
 	protected $audioEncoder;
 	protected $audioProfile;
+	
 	protected $videoDataformat;
 	protected $videoCodec;
 	protected $videoResolutionX;
@@ -46,6 +48,14 @@ class Track extends \Slimpd\AbstractModel
 	
 	protected $comment;
 	protected $year;
+	protected $isMixed;
+	
+	protected $discogsId;
+	protected $rolldabeatsId;
+	protected $beatportId;
+	protected $junoId;
+	
+	
 	protected $dr;
 	
 	public static $tableName = 'track';
@@ -843,6 +853,9 @@ class Track extends \Slimpd\AbstractModel
 	public function setLabelId($value) {
 		$this->labelId = $value;
 	}
+	public function setCatalogNr($value) {
+		$this->catalogNr = $value;
+	}
 	public function setTranscoded($value) {
 		$this->transcoded = $value;
 	}
@@ -864,6 +877,25 @@ class Track extends \Slimpd\AbstractModel
 	public function setYear($value) {
 		$this->year = $value;
 	}
+	
+	
+	public function setIsMixed($value) {
+		$this->isMixed = $value;
+	}
+	
+	public function setDiscogsId($value) {
+		$this->discogsId = $value;
+	}
+	public function setRolldabeatsId($value) {
+		$this->rolldabeatsId = $value;
+	}
+	public function setBeatportId($value) {
+		$this->beatportId = $value;
+	}
+	public function setJunoId($value) {
+		$this->junoId = $value;
+	}
+	
 	public function setDr($value) {
 		$this->dr = $value;
 	}
@@ -936,6 +968,7 @@ class Track extends \Slimpd\AbstractModel
 	public function getAudioProfile() {
 		return $this->audioProfile;
 	}
+	
 	public function getVideoDataformat() {
 		return $this->videoDataformat;
 	}
@@ -967,6 +1000,10 @@ class Track extends \Slimpd\AbstractModel
 	public function getLabelId() {
 		return $this->labelId;
 	}
+	public function getCatalogNr() {
+		return $this->catalogNr;
+	}
+	
 	public function getTranscoded() {
 		return $this->transcoded;
 	}
@@ -988,6 +1025,24 @@ class Track extends \Slimpd\AbstractModel
 	public function getYear() {
 		return $this->year;
 	}
+	
+	public function getIsMixed() {
+		return $this->isMixed;
+	}
+	
+	public function getDiscogsId() {
+		return $this->discogsId;
+	}
+	public function getRolldabeatsId() {
+		return $this->rolldabeatsId;
+	}
+	public function getBeatportId() {
+		return $this->beatportId;
+	}
+	public function getJunoId() {
+		return $this->junoId;
+	}
+	
 	public function getDr() {
 		return $this->dr;
 	}
