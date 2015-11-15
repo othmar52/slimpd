@@ -641,8 +641,8 @@ class Importer {
 			"TRUNCATE track;",
 			"TRUNCATE label;",
 			"TRUNCATE album;",
-			"INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist', '', 0, 0);",
-			"INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists', '', 0, 0);",
+			"INSERT INTO `artist` VALUES ('1', 'Unknown Artist', '', 'unknownartist', 0, 0);",
+			"INSERT INTO `artist` VALUES ('2', 'Various Artists', '', 'variousartists', 0, 0);",
 			"INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown', 0, 0);",
 			"INSERT INTO `label` VALUES ('1', 'Unknown Label', 'unknownlabel', 0, 0);"
 		);

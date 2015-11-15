@@ -55,6 +55,13 @@
 				{% include 'partials/labellink.twig' with { 'labelIds': album.labelId } %}
 			</div>
 			
+			<div class="col-md-2">
+				{{ll.catnr}}: 
+			</div>
+			<div class="col-md-10">
+				{{ album.catalogNr }}
+			</div>
+			
 			
 			
 			<div class="col-md-12">&nbsp;</div>
@@ -134,6 +141,7 @@
 	<div class="col-md-1 ">{{ item.miliseconds|formatMiliseconds }}</div>
 	<div class="col-md-1" style="font-size: 2em;">
 		<a class="ajax-link" href="/mpdctrl/addSelect/{{ item.id }}" title="play"><i class="fa fa-play-circle-o"></i></a>
+		<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
 	</div>
 </div>
 <div class="row">&nbsp;</div>

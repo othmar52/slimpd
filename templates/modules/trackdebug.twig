@@ -17,14 +17,18 @@
 
 <h3>Track-debug<br>
 <span class="small">
+	<a href="/filebrowser/{{ item.relativePath }}"><i class="fa fa-folder-open fa-lg"></i></a>
 	{% set dirs = item.relativePath|split('/') %}
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br />{{dir}}
+		   <br /><a href="/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}" class="ajax-link">
+				<i class="fa fa-play fa-lg"></i>
+				</a>{{dir}}
 		{% else %}  
 			{{dir}} / 
 		{% endif %}
 	{% endfor%}
+	
 </span>
 </h3>
 <div class="row">
@@ -120,7 +124,7 @@
 	<div class="col-md-2"><strong>{{ ll.catnr }}</strong></div>
 	<div class="col-md-3">{{ itemraw.textCatalogNumber }}</div>
 	<div class="col-md-3">
-		{{ item.catalogNumber }}
+		{{ item.catalogNr }}
 	</div>
 	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNumber }}" class="form-control" /></div>
 </div>
