@@ -64,7 +64,7 @@ class Importer {
 		$query = "
 			SELECT COUNT(*) AS itemCountTotal
 			FROM rawtagdata WHERE lastScan < filemtime";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 			
 			
 		$query = "
@@ -200,7 +200,8 @@ class Importer {
 	}
 
 
-	// TODO: instead of setting initial values on instance define default values in mysql-fields 
+	// TODO: instead of setting initial values on instance define default values in mysql-fields
+	// TODO: move this to models/Rawtagdata.php
 	private function mapTagsToRawtagdataInstance(&$t, $data) {
 		
 		$baseTags = array(
@@ -381,7 +382,7 @@ class Importer {
 		$app = \Slim\Slim::getInstance();
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM bitmap";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		$deletedRecords = 0;
 		$query = "SELECT id, relativePath, embedded FROM bitmap;";
@@ -412,7 +413,11 @@ class Importer {
 		));
 	}
 	
-
+	
+	
+	# TODO: it makes sense to search for other files (like discogs-links) during
+	# this scan process to avoid multiple scan-processes of the same directory
+	 
 	public function searchImagesInFilesystem() {
 		
 		# TODO: in case an image gets replaced with same filename, the database record should get updated 
@@ -435,7 +440,7 @@ class Importer {
 		}
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album WHERE lastScan <= filemtime;";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		$query = "SELECT id, relativePath, relativePathHash, filemtime FROM album WHERE lastScan <= filemtime;";
 		$result = $app->db->query($query);
@@ -645,10 +650,49 @@ class Importer {
 			$db->query($query);
 		}
 	}
+	
+	
+	/**
+	 * this will be applied for already migrated data
+	 * extracts the most recent timestamp for an album(directory)
+	 * no matter if it is from the track itself or from the albumdirectory
+	 * 
+	 * purpose:
+	 * in case a single track had been updated in filesystem the whole album will get re-migrated afterwards
+	 *  
+	 * @return array 'directoryHash' => 'most-recent-timestamp' 
+	 */
+	public static function getMostRecentAlbumTimstampOfMigratedData() {
+		$db = \Slim\Slim::getInstance()->db;
+		$timestampsMysql = array();
+		
+		$query = "SELECT relativePathHash,filemtime FROM album";
+		$result = $db->query($query);
+		while($record = $result->fetch_assoc()) {
+			if(isset($timestampsMysql[ $record['relativePathHash'] ]) === FALSE) {
+				$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
+			}
+		}
+		
+		$query = "SELECT directoryPathHash,filemtime FROM track";
+		$result = $db->query($query);
+		while($record = $result->fetch_assoc()) {
+			if(isset($timestampsMysql[ $record['directoryPathHash'] ]) === FALSE) {
+				$timestampsMysql[ $record['directoryPathHash'] ] = 0;
+			}
+			if($record['filemtime'] > $timestampsMysql[ $record['directoryPathHash'] ]) {
+				$timestampsMysql[ $record['directoryPathHash'] ] = $record['filemtime'];
+			}
+		}
+		return $timestampsMysql;
+		
+		
+	}
 
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
 		
 		# only for development
+		# TODO: make this step optional controllable via gui
 		if($resetMigrationPhase === TRUE) {
 			$this->tempResetMigrationPhase();
 		}
@@ -659,161 +703,79 @@ class Importer {
 		));
 		$app = \Slim\Slim::getInstance();
 		
-		
-		// get all existing albumIds to avoid queries
-		$albumIds = array();
-		$query = "SELECT id,relativePathHash FROM album";
-		$result = $app->db->query($query);
-		while($a = $result->fetch_assoc()) {
-			$albumIds[$a['relativePathHash']] = $a['id'];
-		}
+		$mostRecentTimestampsMigrated = self::getMostRecentAlbumTimstampOfMigratedData();
+		$mostRecentTimestampsRawtagdata = 0;
+		$migratedAlbums = 0;
+		$previousAlbum = new \Slimpd\AlbumMigrator();
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM rawtagdata";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
-		
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		$query = "SELECT * FROM rawtagdata ORDER BY relativeDirectoryPathHash ";
 		$result = $app->db->query($query);
-		
-		# IMPORTANT TODO: decide if an album should be updated or not
-		$updatedAlbums = array(/* pathhash => id */);
-		$insertedAlbums = 0;
-		
-		// will be used for post-processing album record and track records
-		$previousAlbum = new \Slimpd\AlbumPostProcessor();
-		
-		// Tryout 1
-		// blind update every album without checking if it exists or not
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
-			
 			if($this->itemCountChecked === 1) {
-				$previousAlbum->setAlbumHash($record['relativeDirectoryPathHash']);
+				$previousAlbum->setDirectoryHash($record['relativeDirectoryPathHash']);
+				$mostRecentTimestampsRawtagdata = $record['directoryMtime'];
 			}
 			
-			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getAlbumHash()) {
-				// guessing of missing data or obviously invalid data
-				$previousAlbum->run();
+			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getDirectoryHash() ) {
+				
+				// decide if we have to process album or if we can skip it
+				if(isset($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']]) === FALSE) {
+					// album does NOT exist in migrated data
+					$previousAlbum->run();
+					$migratedAlbums++;
+				} else {
+					// album exists in migrated data - lets compare last modification timestamps
+					if($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']] < $mostRecentTimestampsRawtagdata) {
+						$previousAlbum->run();
+						$migratedAlbums++;
+					}
+				}
+				
 				$previousAlbum->reset();
-				$previousAlbum->setAlbumHash($record['relativeDirectoryPathHash']);
+				$previousAlbum->setDirectoryHash($record['relativeDirectoryPathHash']);
+				$mostRecentTimestampsRawtagdata = $record['directoryMtime'];
 			}
 			
 			$this->updateJob(array(
 				'currentItem' => $record['relativePath'],
-				'insertedAlbums' => $insertedAlbums
+				'migratedAlbums' => $migratedAlbums
 			));
 			
-			$t = $this->migrateNonRelationalData($record);
-			if(array_key_exists($record['relativeDirectoryPathHash'], $albumIds) === TRUE) {
-				$albumId = $albumIds[ $record['relativeDirectoryPathHash'] ];
-			} else {
-				// TODO: find & handle orphaned album racords
-				$a = new Album();
-				$a->setRelativePath($record['relativeDirectoryPath']);
-				$a->setRelativePathHash($record['relativeDirectoryPathHash']);
-				$a->setTitle($record['album']); // process albumtitle
-				$a->setYear($record['year']);
-				$a->setAdded($record['directoryMtime']);
-				$a->setArtistId($t->getArtistId());
-				$a->setLabelId($t->getLabelId());
-				$a->setGenreId($t->getGenreId());
-				$a->setFilemtime($record['directoryMtime']);
-				
-				$a->insert();
-				$albumId = $a->getId();
-				$albumIds[ $record['relativeDirectoryPathHash'] ] = $albumId;
-				$insertedAlbums++;
-				$previousAlbum->setAlbum($a);
+			// increase last modified in case tracks's file-modified-time is more recent 
+			if($record['filemtime'] > $mostRecentTimestampsRawtagdata) {
+				$mostRecentTimestampsRawtagdata = $record['filemtime']; 
 			}
-			
-			// check if we do have an album
-			$t->setAlbumId($albumId);
-			
-			// make sure to use identical ids in table:rawtagdata and table:track
-			\Slimpd\Track::ensureRecordIdExists($t->getId());
-			$t->update();
-			$previousAlbum->addTrack($t);
-			
-			// make sure extracted images will be referenced to an album
-			\Slimpd\Bitmap::addAlbumIdToTrackId($t->getId(), $albumId);
+			$previousAlbum->addTrack($record);
 			
 			cliLog("#" . $this->itemCountChecked . " " . $record['relativePath']);
+			
+			// dont forget to check the last one
+			if($this->itemCountChecked === $this->itemCountTotal) {
+				if(isset($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']]) === FALSE) {
+					// album does NOT exist in migrated data
+					$previousAlbum->run();
+					$migratedAlbums++;
+				} else {
+					// album exists in migrated data - lets compare last modification timestamps
+					if($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']] < $mostRecentTimestampsRawtagdata) {
+						$previousAlbum->run();
+						$migratedAlbums++;
+					}
+				}
+			}
 		}
 
 		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemCountChecked . ' files',
-			'insertedAlbums' => $insertedAlbums
+			'migratedAlbums' => $migratedAlbums
 		));
 	}
 
-	public function migrateNonRelationalData($rawArray) {
-		
-		$t = new Track();
-		$t->setId($rawArray['id']);
-		$t->setArtistId($rawArray['artist']); // currently the string insted of an artistId
-		$t->setTitle($rawArray['title']);
-		
-		$t->setFeaturedArtistsAndRemixers();
-			# setFeaturedArtistsAndRemixers() is processing:
-			# $t->setArtistId();
-			# $t->setFeaturngId();
-			# $t->setRemixerId();
-			
-		$t->setGenreId(join(",", Genre::getIdsByString($rawArray['genre'])));
-		$t->setLabelId(join(",", Label::getIdsByString($rawArray['publisher'])));
-			
-		$t->setRelativePath($rawArray['relativePath']);
-		$t->setRelativePathHash($rawArray['relativePathHash']);
-		$t->setFingerprint($rawArray['fingerprint']);
-		$t->setMimeType($rawArray['mimeType']);
-		$t->setFilesize($rawArray['filesize']);
-		$t->setFilemtime($rawArray['filemtime']);
-		$t->setMiliseconds(round($rawArray['miliseconds']*1000));
-			// ...
-			
-		$t->setAudioDataformat($rawArray['audioDataformat']);
-		$t->setAudioCompressionRatio($rawArray['audioCompressionRatio']);
-		
-		$t->setAudioEncoder(($rawArray['audioEncoder']) ? $rawArray['audioEncoder'] : 'Unknown encoder');
-		
-		if ($rawArray['audioLossless']) {
-			$t->setAudioLossless($rawArray['audioLossless']);
-			if ($rawArray['audioCompressionRatio'] == 1) {
-				$t->setAudioProfile('Losless');
-			} else {
-				$t->setAudioProfile('Losless compression');
-			}
-		}
-		
-		$t->setAudioBitrate(round($rawArray['audioBitrate'])); // integer in database
-		if(!$t->getAudioProfile()) {
-			$t->setAudioProfile($rawArray['audioBitrateMode'] . " " . round($t->getAudioBitrate()/ 1000, 1) . " kbps");
-		}
-		$t->setAudioBitsPerSample(($rawArray['audioBitsPerSample'] ? $rawArray['audioBitsPerSample'] : 16));
-		$t->setAudioSampleRate(($rawArray['audioSampleRate'] ? $rawArray['audioSampleRate'] : 44100));
-		$t->setAudioChannels(($rawArray['audioChannels'] ? $rawArray['audioChannels'] : 2));
-		
-
-		$t->setVideoDataformat($rawArray['videoDataformat']);
-		$t->setVideoCodec($rawArray['videoCodec']);
-		$t->setVideoResolutionX($rawArray['videoResolutionX']);
-		$t->setVideoResolutionY($rawArray['videoResolutionY']);
-		$t->setVideoFramerate($rawArray['videoFramerate']);
-			// ...
-		#$t->setDisc($rawArray['disc']);
-		$t->setNumber($rawArray['trackNumber']);
-		$t->setError($rawArray['error']);
-		#$t->setTranscoded($rawArray['transcoded']);
-			
-		$t->setImportStatus($rawArray['importStatus']);
-		$t->setLastScan($rawArray['lastScan']);
-			
-		$t->setComment($rawArray['comment']);
-		$t->setYear($rawArray['year']);
-		$t->setDr($rawArray['dynamicRange']);
-		return $t;
-	}
 
 	
 	
@@ -905,12 +867,20 @@ class Importer {
 					case 'song_end':
 						$this->itemCountChecked++;
 						
-						// single music files directly in mpd-musicdir must not get a leading slash
+						// single music files directly in mpd-musicdir-root must not get a leading slash
 						$dirRelativePath = ($currentDirectory === '') ? '' : $currentDirectory . DS;
 						$directoryHash = getFilePathHash($dirRelativePath);
 						
+						// further we have to read directory-modified-time manually because there is no info
+						// about mpd-root-directory in mpd-database-file
+						$mtimeDirectory = ($currentDirectory === '')
+							? filemtime($app->config['mpd']['musicdir'])
+							:  $mtimeDirectory;
+						
 						$trackRelativePath =  $dirRelativePath . $currentSong;
 						$trackHash = getFilePathHash($trackRelativePath);
+						
+						
 						
 						$this->updateJob(array(
 							'msg' => 'processed ' . $this->itemCountChecked . ' files',
@@ -1035,6 +1005,11 @@ class Importer {
 			}
 		}
 
+		// delete dead items in table:rawtagdata
+		if(count($deadMysqlFiles) > 0) {
+			\Slimpd\Rawtagdata::deleteRecordsByIds($deadMysqlFiles);
+		}
+
 		
 
 
@@ -1045,6 +1020,7 @@ class Importer {
 		# TODO: flag&handle dead items in mysql-database
 		//cliLog("dead dirs: " . count($deadMysqlDirectories));
 		cliLog("dead songs: " . count($deadMysqlFiles));
+		#print_r($deadMysqlFiles);
 		
 		
 		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
@@ -1052,7 +1028,7 @@ class Importer {
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemCountChecked . ' files',
 			'directorycount' => $dircount,
-			'deadfiles' => count($deadMysqlFiles),
+			'deletedRecords' => count($deadMysqlFiles),
 			'unmodified_files' => $unmodifiedFiles
 		));
 		
@@ -1072,7 +1048,7 @@ class Importer {
 		$app = \Slim\Slim::getInstance();
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM  bitmap WHERE error=0 AND trackId > 0";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		$query = "
 			SELECT
 				id,
@@ -1147,7 +1123,7 @@ class Importer {
 		));
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album" .(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<3 " : "");
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		// collect all genreIds provided by tracks
 		$genreIdsFromTracks = '';
@@ -1223,7 +1199,7 @@ class Importer {
 		));
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album" .(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<4 " : "");
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		// collect all genreIds provided by tracks
 		$labelIdsFromTracks = '';
@@ -1572,7 +1548,7 @@ class Importer {
 			SELECT count(id) AS itemCountTotal
 			FROM rawtagdata
 			WHERE audioDataFormat='mp3' AND fingerprint=''";
-		$this->itemCountTotal = $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		
 		$query = "
