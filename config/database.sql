@@ -876,8 +876,8 @@ INSERT INTO `server` VALUES ('latest_version_idle_time', '0');
 -- Default artist
 --
 
-INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist', '', 0,0);
-INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists', '', 0,0);
+INSERT INTO `artist` VALUES ('1', 'Unknown Artist', '', 'unknownartist', 0,0);
+INSERT INTO `artist` VALUES ('2', 'Various Artists', '', 'variousartists', 0,0);
 
 -- --------------------------------------------------------
 

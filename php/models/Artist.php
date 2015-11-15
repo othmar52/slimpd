@@ -21,6 +21,94 @@ class Artist extends AbstractModel
 		return $return;
 	}
 	
+	
+	public static function getIdsByString($itemString) {
+		if(trim($itemString) === '') {
+			return array("1"); // Unknown
+		}
+		
+		$app = \Slim\Slim::getInstance();
+		$classPath = get_called_class();
+		if(preg_match("/\\\([^\\\]*)$/", $classPath, $m)) {
+			$class = strtolower($m[1]);
+		} else {
+			$class = strtolower($classPath);
+		}
+		if(isset($GLOBALS['unified' . $class . 's']) === FALSE) {
+			if(method_exists($classPath, 'unifyItemnames')) {
+				if(isset($app->config[$class .'s'])) {
+					$GLOBALS['unified' . $class . 's'] = $classPath::unifyItemnames($app->config[$class .'s']);
+				} else {
+					$GLOBALS['unified' . $class . 's'] = array();
+				}
+			} else {
+				$GLOBALS['unified' . $class . 's'] = array();
+			}
+		}
+		
+		if(isset($GLOBALS[$class . 'Cache']) === FALSE) {
+			$GLOBALS[$class . 'Cache'] = array();
+		}
+		
+		$itemIds = array();
+		$tmpGlue = "tmpGlu3";
+		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
+			$az09 = az09($itemPart);
+			
+			if($az09 === '' || preg_match("/^hash0x([a-f0-9]{7})$/", $az09)) {
+				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
+				$itemIds[1] = 1;
+			} else {
+				$artistArticle = '';
+				if(preg_match("/^the (.*)$/i", $itemPart, $m)) {
+					$artistArticle = 'The ';
+					$itemPart = $m[1];
+					$az09 = az09($itemPart);
+					#var_dump($itemString); die('prefixed-the');
+				}
+				if(preg_match("/^(.*)([\ ,]+)the$/i", $itemPart, $m)) {
+					$artistArticle = 'The ';
+					$itemPart = remU($m[1]);
+					$az09 = az09($itemPart);
+					#var_dump($m); die('suffixed-the');
+				}
+				
+				// unify items based on config
+				if (array_key_exists($az09, $GLOBALS['unified' . $class . 's']) === TRUE) {
+					$itemPart = $GLOBALS['unified' . $class . 's'][$az09];
+					$az09 = az09($itemPart);
+				}
+				
+				// check if we alread have an id
+				// permformance improvement ~8%
+				if(isset($GLOBALS[$class . 'Cache'][$az09]) === TRUE) {
+					$itemIds[$GLOBALS[$class . 'Cache'][$az09]] = $GLOBALS[$class . 'Cache'][$az09];
+					continue;
+				}
+				
+				$query = "SELECT id FROM artist WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+				$result = $app->db->query($query);
+				$record = $result->fetch_assoc();
+				if($record) {
+					$itemId = $record['id'];
+				} else {
+					$g = new $classPath();
+					$g->setTitle(ucwords(strtolower($itemPart)));
+					$g->setAz09($az09);
+					$g->setArticle($artistArticle);
+					$g->insert();
+					$itemId = $app->db->insert_id;
+				}
+				$itemIds[$itemId] = $itemId;
+				$GLOBALS[$class .'Cache'][$az09] = $itemId;
+			}
+		}
+		return $itemIds;
+		
+	}
+
+
+	
 
 
 	//setter
