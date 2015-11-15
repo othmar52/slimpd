@@ -12,6 +12,7 @@ class Album extends \Slimpd\AbstractModel
 	protected $month;
 	protected $genreId;
 	protected $labelId;
+	protected $catalogNr;
 	
 	protected $filemtime;
 	protected $added;
@@ -24,6 +25,7 @@ class Album extends \Slimpd\AbstractModel
 	
 	protected $isMixed;
 	protected $isJumble;
+	protected $isLive;
 	
 	protected $discogsId;
 	protected $rolldabeatsId;
@@ -78,6 +80,9 @@ class Album extends \Slimpd\AbstractModel
 	public function setLabelId($value) {
 		$this->labelId = $value;
 	}
+	public function setCatalogNr($value) {
+		$this->catalogNr = $value;
+	}
 	public function setFilemtime($value) {
 		$this->filemtime = $value;
 	}
@@ -106,6 +111,9 @@ class Album extends \Slimpd\AbstractModel
 	}
 	public function setIsJumble($value) {
 		$this->isJumble = $value;
+	}
+	public function setIsLive($value) {
+		$this->isLive = $value;
 	}
 	
 	
@@ -152,6 +160,9 @@ class Album extends \Slimpd\AbstractModel
 	public function getLabelId() {
 		return $this->labelId;
 	}
+	public function getCatalogNr() {
+		return $this->catalogNr;
+	}
 	public function getFilemtime() {
 		return $this->filemtime;
 	}
@@ -179,6 +190,9 @@ class Album extends \Slimpd\AbstractModel
 	}
 	public function getIsJumble() {
 		return $this->isJumble;
+	}
+	public function getIsLive() {
+		return $this->isLive;
 	}
 	
 	public function getDiscogsId() {

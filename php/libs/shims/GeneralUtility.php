@@ -8,6 +8,11 @@ function sortHelper($a,$b){
     return strlen($b)-strlen($a);
 }
 
+function remU($input){
+    return trim(preg_replace('!\s+!', ' ', str_replace("_", " ", $input)));
+}
+
+
 function cliLog($msg, $verbosity=1, $color="default") {
 	// TODO: configure verbosity in config file
 	$activeVerbosity = 1;
@@ -35,7 +40,7 @@ function cliLog($msg, $verbosity=1, $color="default") {
 		
 		
 		
-	$shellColorize = TRUE;
+	$shellColorize = FALSE;
 	$prefix = "";
 	$suffix = "";
 	if($shellColorize == TRUE) {
@@ -282,5 +287,3 @@ function uniqueArrayOrderedByRelevance(array $input) {
 	$result=array_keys($acv);
 	return $result;	
 }
-
-
