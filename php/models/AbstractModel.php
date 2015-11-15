@@ -464,4 +464,13 @@ abstract class AbstractModel {
 		$result = $db->query($query);
 		return $db->query($query)->fetch_assoc()['itemCountTotal'];
 	}
+	
+	public static function deleteRecordsByIds(array $idArray) {
+		if(count($idArray) === 0) {
+			return;
+		}
+		$query = "DELETE FROM " . self::getTableName() . " WHERE id IN (" . join(',', $idArray) . ");";
+		\Slim\Slim::getInstance()->db->query($query);
+	}
+
 }
