@@ -24,6 +24,7 @@ require_once 'vendor' . DS . 'autoload.php';
 require_once 'php' . DS . 'autoload.php';
 require_once 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
 require_once 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
+require_once 'php' . DS . 'libs' . DS . 'shims' . DS . 'RegexHelper.php';
 date_default_timezone_set('Europe/Vienna');
 
 
@@ -110,7 +111,7 @@ $app->get('/', function () use ($app) {
 	$importer->searchImagesInFilesystem();
 	
 	// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
-	$importer->fixAlbumGenres();
+	#$importer->fixAlbumGenres();
 	
 	// phase 7: check configured label-directories and update table:track:labelId
 	$importer->setDefaultLabels();

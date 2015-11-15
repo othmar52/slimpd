@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `album` (
   `trackCount` smallint(5) unsigned  DEFAULT '0',
   `isMixed` smallint(1) unsigned DEFAULT NULL,
   `isJumble` smallint(1) unsigned DEFAULT NULL,
+  `isLive` smallint(1) unsigned DEFAULT NULL,
   `discogsId` varchar(64) NOT NULL DEFAULT '',
   `rolldabeatsId` varchar(64) NOT NULL DEFAULT '',
   `beatportId` varchar(64) NOT NULL DEFAULT '',
@@ -354,6 +355,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `remixerId` varchar(255) NOT NULL DEFAULT '',
   `relativePath` text NOT NULL,
   `relativePathHash` varchar(11) NOT NULL,
+  `directoryPathHash` varchar(11) NOT NULL,
   
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `mimeType` varchar(64) NOT NULL DEFAULT '',
@@ -378,7 +380,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `videoFramerate` int(10) unsigned NOT NULL DEFAULT '0',
   
   `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(8) unsigned DEFAULT NULL,
+  `number` varchar(8) DEFAULT NULL,
   `error` varchar(255) NOT NULL DEFAULT '',
   `albumId` varchar(11) NOT NULL DEFAULT '',
   `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -874,8 +876,8 @@ INSERT INTO `server` VALUES ('latest_version_idle_time', '0');
 -- Default artist
 --
 
-INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist',0,0);
-INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists',0,0);
+INSERT INTO `artist` VALUES ('1', 'Unknown Artist', 'unknownartist', '', 0,0);
+INSERT INTO `artist` VALUES ('2', 'Various Artists', 'variousartists', '', 0,0);
 
 -- --------------------------------------------------------
 
