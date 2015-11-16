@@ -15,9 +15,8 @@ class AlbumMigrator {
 	protected $directoryHash;
 	protected $tracks;
 	
-	protected $handleAsAlbum;
-	protected $handleAsAlbumScore;
-	
+	protected $handleAsAlbum = NULL;
+	protected $handleAsAlbumScore = 0;
 	
 	// pluralized array_keys of relevant rawTagData-array
 	protected $artists;
@@ -69,13 +68,9 @@ class AlbumMigrator {
 	protected $r;
 	
 	// attribute with highest score from recommendations
-	protected $mostScored;
+	protected $mostScored = array();
+	protected $defaultScoreForRealTagAttrs = 5;
 	
-	
-	
-	public function __construct() {
-		$this->reset();
-	}
 	
 	private function getMostScored($idx, $attrName) {
 		if(isset($this->r[$idx][$attrName]) === FALSE) {
@@ -210,19 +205,7 @@ class AlbumMigrator {
 		
 		return;
 		print_r($this->r); #die();
-		#$t = $this->migrateTechData($record);
-		
-		
-		return;
-		
-		
-		
 
-		
-		
-		
-		return;
-		print_r($this); die();
 	}
 
 	/**
@@ -272,19 +255,6 @@ class AlbumMigrator {
 		$t->setDr($rawArray['dynamicRange']);
 		return $t;
 	}
-
-
-	
-	public function reset() {
-		foreach ($this as &$value) {
-		    $value = array();
-		}
-		$this->albumHash = '';
-		$this->album = NULL;
-		$this->handleAsAlbum = NULL;
-		$this->handleAsAlbumScore = 0;
-	}
-	
 	
 	private function postProcessRecommendations() {
 		$attrNames = array(
@@ -377,21 +347,20 @@ class AlbumMigrator {
 			
 			
 			// add score for given attributes
-			$defaultScore = 5;
-			$this->scoreAttribute($idx, 'artist', $t['artist'], $defaultScore);
-			$this->scoreAttribute($idx, 'artist', $t['albumArtist'], $defaultScore);
-			$this->scoreAttribute($idx, 'title', $t['title'], $defaultScore);
-			$this->scoreAttribute($idx, 'genre', $t['genre'], $defaultScore);
-			$this->scoreAttribute($idx, 'comment', $t['comment'], $defaultScore);
-			$this->scoreAttribute($idx, 'year', $t['year'], $defaultScore);
-			$this->scoreAttribute($idx, 'label', $t['publisher'], $defaultScore);
-			$this->scoreAttribute($idx, 'catalogNr', $t['textCatalogNumber'], $defaultScore);
-			$this->scoreAttribute($idx, 'discogsId', $t['textDiscogsReleaseId'], $defaultScore);
-			$this->scoreAttribute($idx, 'source', $t['textSource'], $defaultScore);
-			$this->scoreAttribute($idx, 'urlUser', $t['textUrlUser'], $defaultScore);
-			$this->scoreAttribute('album', 'title', $t['album'], $defaultScore);
-			$this->scoreAttribute('album', 'artist', $t['albumArtist'], $defaultScore);
-			$this->scoreAttribute('album', 'artist', $t['artist'], $defaultScore);
+			$this->scoreAttribute($idx, 'artist', $t['artist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'artist', $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'title', $t['title'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'genre', $t['genre'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'comment', $t['comment'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'year', $t['year'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'label', $t['publisher'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'catalogNr', $t['textCatalogNumber'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'discogsId', $t['textDiscogsReleaseId'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'source', $t['textSource'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'urlUser', $t['textUrlUser'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute('album', 'title', $t['album'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute('album', 'artist', $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute('album', 'artist', $t['artist'], $this->defaultScoreForRealTagAttrs);
 
 			
 			
@@ -501,9 +470,9 @@ class AlbumMigrator {
 		
 		$iHateRegex = array(
 			// 01 - Super Tracktitle
-			'prefixed-number' => $rx->dStart.$rx->num.$rx->glue.$rx->noMinus.$rx->dEndInsens,
+			'prefixed-number' => $rx->dStart.$rx->mayBracket.$rx->num.$rx->mayBracket.$rx->glue.$rx->noMinus.$rx->dEndInsens,
 			// B2. Super Tracktitle
-			'prefixed-vinyl' => $rx->dStart.$rx->vinyl.$rx->glue.$rx->noMinus.$rx->dEndInsens,
+			'prefixed-vinyl' => $rx->dStart.$rx->mayBracket.$rx->vinyl.$rx->mayBracket.$rx->glue.$rx->noMinus.$rx->dEndInsens,
 			
 			// Artist - Super Tracktitle
 			'artist-title' => $rx->dStart.$rx->noMinus."-".$rx->noMinus.$rx->dEnd,
@@ -524,10 +493,12 @@ class AlbumMigrator {
 						break;
 					case 'prefixed-number':
 					case 'prefixed-vinyl':
+						#print_r($m); die($result);
 						$this->recommend($idx, array(
-							'number' => $m[1],
-							$artistOrTitle => $m[2]
+							'number' => $m[2],
+							$artistOrTitle => $m[4]
 						));
+						#$this->scoreAttribute($idx, $artistOrTitle, $value, ($this->defaultScoreForRealTagAttrs*(-1)));
 						break;
 					case 'artist-title':
 						$this->recommend($idx, array(
@@ -547,7 +518,7 @@ class AlbumMigrator {
 				if(stripos($result, 'vinyl') !== FALSE) {
 					$this->recommend($idx, array('source' => 'Vinyl'));
 				}
-				#cliLog(__FUNCTION__ ." ".$result .": " . $value ,1 , 'red');
+				cliLog(__FUNCTION__ ." ".$result .": " . $value ,1 , 'red');
 				return $result;
 			} else {
 				$this->recommend($idx, array($artistOrTitle => $value));
@@ -638,11 +609,11 @@ class AlbumMigrator {
 	}
 
 
-	private function recommend($idx, $attrArray) {
+	private function recommend($idx, $attrArray, $score = 1) {
 		$rx = new \Slimpd\RegexHelper();
 		
 		foreach($attrArray as $attrName => $attrValue) {
-			$this->scoreAttribute($idx, $attrName, $attrValue, 1);
+			$this->scoreAttribute($idx, $attrName, $attrValue, $score);
 		}
 		if(isset($attrArray['artist']) && self::isVA($attrArray['artist']) === TRUE) {
 			$this->scoreAttribute($idx, 'artist', 'Various Artists', -1);
@@ -774,6 +745,8 @@ class AlbumMigrator {
 				break;
 			case 'artist':
 				if($rx->seemsArtistly($attrValue) === FALSE) {
+					$this->r[$idx][$attrName][$attrValue] -= $this->defaultScoreForRealTagAttrs;
+					print_r($this->r[$idx][$attrName][$attrValue]); die();
 					return;
 				}
 				break;
