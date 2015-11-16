@@ -374,7 +374,16 @@ class Importer {
 		return trim($out);
 	}
 	
+	// TODO: performance tweaking by processing it vice versa:
+	// read all images in embedded-directory and check if a db-record exists
+	// skip the check for non-embedded/non-extracted images at all and delete db-record in case delivering fails
+	// for now: skip this import phase ...
+
 	public function deleteOrphanedBitmapRecords() {
+		
+		# TODO: remove this line after refactoring
+		return;
+		
 		$this->jobPhase = 11;
 		$this->beginJob(array('msg' => 'collecting records to check from table:bitmap'), __FUNCTION__);
 		
