@@ -32,7 +32,7 @@ class Importer {
 		# TODO: which speed-calculation makes sense? itemsChecked/minutute or itemsProcessed/minute or both?
 		 
 		$this->jobPhase = 2;
-		$this->beginJob(array('msg' => 'collecting tracks to scan from mysql database' ));
+		$this->beginJob(array('msg' => 'collecting tracks to scan from mysql database' ), __FUNCTION__);
 		
 		$app = \Slim\Slim::getInstance();
 		
@@ -78,7 +78,7 @@ class Importer {
 		$extractedImages = 0;
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
-			cliLog($record['id'] . ' ' . $record['relativePath']);
+			cliLog($record['id'] . ' ' . $record['relativePath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemCountChecked . ' files',
 				'currentItem' => $record['relativePath'],
@@ -192,10 +192,9 @@ class Importer {
 			}
 		}
 
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'extractedImages' => $extractedImages
-		));
+		), __FUNCTION__);
 		return;
 	}
 
@@ -375,9 +374,18 @@ class Importer {
 		return trim($out);
 	}
 	
+	// TODO: performance tweaking by processing it vice versa:
+	// read all images in embedded-directory and check if a db-record exists
+	// skip the check for non-embedded/non-extracted images at all and delete db-record in case delivering fails
+	// for now: skip this import phase ...
+
 	public function deleteOrphanedBitmapRecords() {
+		
+		# TODO: remove this line after refactoring
+		return;
+		
 		$this->jobPhase = 11;
-		$this->beginJob(array('msg' => 'collecting records to check from table:bitmap' ));
+		$this->beginJob(array('msg' => 'collecting records to check from table:bitmap'), __FUNCTION__);
 		
 		$app = \Slim\Slim::getInstance();
 		
@@ -395,7 +403,7 @@ class Importer {
 			if(is_file($prefix . $record['relativePath']) === TRUE) {
 				cliLog('keeping database-entry for ' . $record['relativePath'], 3);
 			} else {
-				cliLog('deleting database-entry for ' . $record['relativePath']);
+				cliLog('deleting database-entry for ' . $record['relativePath'], 3);
 				$bitmap = new \Slimpd\Bitmap();
 				$bitmap->setId($record['id']);
 				$bitmap->delete(); 
@@ -407,10 +415,9 @@ class Importer {
 				'deletedRecords' => $deletedRecords
 			));
 		}
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'deletedRecords' => $deletedRecords
-		));
+		), __FUNCTION__);
 	}
 	
 	
@@ -423,7 +430,7 @@ class Importer {
 		# TODO: in case an image gets replaced with same filename, the database record should get updated 
 		
 		$this->jobPhase = 5;
-		$this->beginJob(array('msg' => 'collecting directories to scan from table:albums' ));
+		$this->beginJob(array('msg' => 'collecting directories to scan from table:albums'), __FUNCTION__);
 		
 		
 		$app = \Slim\Slim::getInstance();
@@ -448,7 +455,7 @@ class Importer {
 		
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
-			cliLog($record['id'] . ' ' . $record['relativePath']);
+			cliLog($record['id'] . ' ' . $record['relativePath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemCountChecked . ' files',
 				'currentItem' => $record['relativePath'],
@@ -530,11 +537,10 @@ class Importer {
 			}
 			$a->update();
 		}
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemCountChecked . ' directories',
 			'insertedImages' => $insertedImages
-		));
+		), __FUNCTION__);
 		unset($scannedDirectories);
 		return;
 	}
@@ -546,7 +552,8 @@ class Importer {
 		}
 	}
 	
-	private function beginJob($data = array()) {
+	private function beginJob($data = array(), $function = '') {
+		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$app = \Slim\Slim::getInstance();
 		$this->jobBegin = microtime(TRUE);
 		$this->itemCountChecked = 0;
@@ -575,11 +582,13 @@ class Importer {
 			jobLastUpdate=".$microtime."
 			WHERE id=" . $this->jobId;
 		\Slim\Slim::getInstance()->db->query($query);
+		cliLog('progress:' . $data['progressPercent'] . '%', 1);
 		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
 	
-	private function finishJob($data = array()) {
+	private function finishJob($data = array(), $function = '') {
+		cliLog("FINISHED import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$microtime = microtime(TRUE);
 		$data['progressPercent'] = 100;
 		$data['microTimestamp'] = $microtime;
@@ -634,7 +643,7 @@ class Importer {
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		$db = \Slim\Slim::getInstance()->db;
-		
+		cliLog('truncating alle tables with migrated data', 1, 'red');
 		$queries = array(
 			"TRUNCATE artist;",
 			"TRUNCATE genre;",
@@ -652,41 +661,33 @@ class Importer {
 	}
 	
 	
-	/**
-	 * this will be applied for already migrated data
-	 * extracts the most recent timestamp for an album(directory)
-	 * no matter if it is from the track itself or from the albumdirectory
-	 * 
-	 * purpose:
-	 * in case a single track had been updated in filesystem the whole album will get re-migrated afterwards
-	 *  
+	/** 
 	 * @return array 'directoryHash' => 'most-recent-timestamp' 
 	 */
-	public static function getMostRecentAlbumTimstampOfMigratedData() {
+	public static function getMigratedAlbumTimstamps() {
 		$db = \Slim\Slim::getInstance()->db;
 		$timestampsMysql = array();
 		
 		$query = "SELECT relativePathHash,filemtime FROM album";
 		$result = $db->query($query);
 		while($record = $result->fetch_assoc()) {
-			if(isset($timestampsMysql[ $record['relativePathHash'] ]) === FALSE) {
-				$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
-			}
+			$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
 		}
 		
-		$query = "SELECT directoryPathHash,filemtime FROM track";
+		return $timestampsMysql;
+	}
+
+	public static function getMigratedTrackTimstamps() {
+		$db = \Slim\Slim::getInstance()->db;
+		$timestampsMysql = array();
+		
+		$query = "SELECT relativePathHash,filemtime FROM track";
 		$result = $db->query($query);
 		while($record = $result->fetch_assoc()) {
-			if(isset($timestampsMysql[ $record['directoryPathHash'] ]) === FALSE) {
-				$timestampsMysql[ $record['directoryPathHash'] ] = 0;
-			}
-			if($record['filemtime'] > $timestampsMysql[ $record['directoryPathHash'] ]) {
-				$timestampsMysql[ $record['directoryPathHash'] ] = $record['filemtime'];
-			}
+			$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
+			
 		}
 		return $timestampsMysql;
-		
-		
 	}
 
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
@@ -700,11 +701,13 @@ class Importer {
 		$this->jobPhase = 3;
 		$this->beginJob(array(
 			'msg' => "migrateRawtagdataTable"
-		));
+		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
 		
-		$mostRecentTimestampsMigrated = self::getMostRecentAlbumTimstampOfMigratedData();
-		$mostRecentTimestampsRawtagdata = 0;
+		$migratedAlbumTimstamps = self::getMigratedAlbumTimstamps();
+		$migratedTrackTimstamps = self::getMigratedTrackTimstamps();
+		$triggerAlbumMigration = FALSE;
+
 		$migratedAlbums = 0;
 		$previousAlbum = new \Slimpd\AlbumMigrator();
 		
@@ -717,27 +720,31 @@ class Importer {
 			$this->itemCountChecked++;
 			if($this->itemCountChecked === 1) {
 				$previousAlbum->setDirectoryHash($record['relativeDirectoryPathHash']);
-				$mostRecentTimestampsRawtagdata = $record['directoryMtime'];
 			}
 			
 			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getDirectoryHash() ) {
 				
 				// decide if we have to process album or if we can skip it
-				if(isset($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']]) === FALSE) {
-					// album does NOT exist in migrated data
-					$previousAlbum->run();
-					$migratedAlbums++;
+				if(isset($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
+					cliLog('album does NOT exist in migrated data. migrating: ' . $record['relativeDirectoryPath'], 5);
+					$triggerAlbumMigration = TRUE;
 				} else {
-					// album exists in migrated data - lets compare last modification timestamps
-					if($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']] < $mostRecentTimestampsRawtagdata) {
-						$previousAlbum->run();
-						$migratedAlbums++;
+					if($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ] < $record['directoryMtime']) {
+						cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $record['relativeDirectoryPath'], 5);
+						$triggerAlbumMigration = TRUE;
 					}
 				}
 				
-				$previousAlbum->reset();
+				if($triggerAlbumMigration === TRUE) {
+					$previousAlbum->run();
+					$migratedAlbums++;
+				} else {
+					cliLog('skipping migration for: ' . $record['relativeDirectoryPath'], 5);
+				}
+				unset($previousAlbum);
+				$previousAlbum = new \Slimpd\AlbumMigrator();
 				$previousAlbum->setDirectoryHash($record['relativeDirectoryPathHash']);
-				$mostRecentTimestampsRawtagdata = $record['directoryMtime'];
+				$triggerAlbumMigration = FALSE;
 			}
 			
 			$this->updateJob(array(
@@ -745,35 +752,52 @@ class Importer {
 				'migratedAlbums' => $migratedAlbums
 			));
 			
-			// increase last modified in case tracks's file-modified-time is more recent 
-			if($record['filemtime'] > $mostRecentTimestampsRawtagdata) {
-				$mostRecentTimestampsRawtagdata = $record['filemtime']; 
+			
+			
+			
+			// decide if we have to process album based on single-track-change or if we can skip it
+			if(isset($migratedTrackTimstamps[ $record['relativePathHash'] ]) === FALSE) {
+				cliLog('track does NOT exist in migrated data. migrating: ' . $record['relativeDirectoryPath'], 5);
+				$triggerAlbumMigration = TRUE;
+			} else {
+				if($migratedTrackTimstamps[ $record['relativePathHash'] ] < $record['filemtime']) {
+					cliLog('track-imestamp raw is more recent than migrated. migrating: ' . $record['relativeDirectoryPath'], 5);
+					$triggerAlbumMigration = TRUE;
+				}
 			}
+				
+			
 			$previousAlbum->addTrack($record);
 			
-			cliLog("#" . $this->itemCountChecked . " " . $record['relativePath']);
+			cliLog("#" . $this->itemCountChecked . " " . $record['relativePath'],2);
 			
 			// dont forget to check the last one
-			if($this->itemCountChecked === $this->itemCountTotal) {
-				if(isset($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']]) === FALSE) {
-					// album does NOT exist in migrated data
+			if($this->itemCountChecked === $this->itemCountTotal && $this->itemCountTotal > 1) {
+				// decide if we have to process album or if we can skip it
+				if(isset($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
+					cliLog('album does NOT exist in migrated data. migrating: ' . $record['relativeDirectoryPath'], 5);
+					$triggerAlbumMigration = TRUE;
+				} else {
+					if($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ] < $record['directoryMtime']) {
+						cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $record['relativeDirectoryPath'], 5);
+						$triggerAlbumMigration = TRUE;
+					}
+				}
+				
+				if($triggerAlbumMigration === TRUE) {
 					$previousAlbum->run();
 					$migratedAlbums++;
 				} else {
-					// album exists in migrated data - lets compare last modification timestamps
-					if($mostRecentTimestampsMigrated[$record['relativeDirectoryPathHash']] < $mostRecentTimestampsRawtagdata) {
-						$previousAlbum->run();
-						$migratedAlbums++;
-					}
+					cliLog('skipping migration for: ' . $record['relativeDirectoryPath'], 5);
 				}
+				unset($previousAlbum);
 			}
 		}
 
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemCountChecked . ' files',
 			'migratedAlbums' => $migratedAlbums
-		));
+		), __FUNCTION__);
 	}
 
 
@@ -784,12 +808,12 @@ class Importer {
 		$app = \Slim\Slim::getInstance();
 		$this->beginJob(array(
 			'msg' => $app->ll->str('importer.processing.mpdfile')
-		));
+		), __FUNCTION__);
 		
 		// check if mpd_db_file exists
 		if(is_file($app->config['mpd']['dbfile']) == FALSE || is_readable($app->config['mpd']['dbfile']) === FALSE) {
 			$msg = $app->ll->str('error.mpd.dbfile', array($app->config['mpd']['dbfile']));
-			cliLog($msg);
+			cliLog($msg, 1, 'red', TRUE);
 			$this->finishJob(array(
 				'msg' => $msg
 			));
@@ -816,8 +840,17 @@ class Importer {
 		while($record = $result->fetch_assoc()) {
 			$deadMysqlFiles[ $record['relativePathHash'] ] = $record['id'];
 			$fileTimestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
-			$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime'];
+			
+			
+			// get the oldest directory timestamp stored in rawtagdata
+			if(isset($directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
+				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = 9999999999;
+			}
+			if($record['directoryMtime'] < $directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) {
+				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime']; 
+			}
 		}
+		#print_r($directoryTimestampsMysql); die();
 		
 		$dbfile = explode("\n", file_get_contents($app->config['mpd']['dbfile']));
 		$currentDirectory = "";
@@ -889,16 +922,32 @@ class Importer {
 							'unmodified_files' => $unmodifiedFiles
 						));
 						
+						$insertOrUpdateRawtagData = FALSE;
+						// compare timestamps of mysql-database-entry(rawtagdata) and mpddatabase
+						if(isset($fileTimestampsMysql[$trackHash]) === FALSE) {
+							cliLog('mpd-file does not exist in rawtagdata: ' . $trackRelativePath, 5);
+							$insertOrUpdateRawtagData = TRUE;
+						} else {
+							if($mtime > $fileTimestampsMysql[$trackHash]) {
+								cliLog('mpd-file timestamp is newer: ' . $trackRelativePath, 5);
+								$insertOrUpdateRawtagData = TRUE;
+							}
+						}
 						
-						// compare timestamps of mysqldatabase and mpddatabase
-						if(isset($fileTimestampsMysql[$trackHash]) && $mtime <= $fileTimestampsMysql[$trackHash]
-							&& isset($directoryTimestampsMysql[$directoryHash]) && $mtimeDirectory <= $directoryTimestampsMysql[$directoryHash]) {
+						if(isset($directoryTimestampsMysql[$directoryHash]) === FALSE) {
+							cliLog('mpd-directory does not exist in rawtagdata: ' . $dirRelativePath, 5);
+							$insertOrUpdateRawtagData = TRUE;
+						} else {
+							if($mtimeDirectory > $directoryTimestampsMysql[$directoryHash]) {
+								cliLog('mpd-directory timestamp is newer: ' . $trackRelativePath, 5);
+								$insertOrUpdateRawtagData = TRUE;
+							}
+						}
+						
+						if($insertOrUpdateRawtagData === FALSE) {
 							// track has not been modified - no need for updating
 							unset($fileTimestampsMysql[$trackHash]);
-							if(isset($deadMysqlFiles[$trackHash])) {
-								// file is alive - remove it from dead items
-								unset($deadMysqlFiles[$trackHash]);
-							}
+							unset($deadMysqlFiles[$trackHash]);
 							$unmodifiedFiles++;
 						} else {
 							
@@ -929,14 +978,14 @@ class Importer {
 							$t->setlastScan(0);
 							
 							$t->setImportStatus(1);
-							$t->insert();
+							$t->update();
 							
 							unset($t);
 							
 							$this->itemCountProcessed++;
 						}
 
-						cliLog("#" . $this->itemCountChecked . " " . $currentDirectory . DS . $currentSong);
+						cliLog("#" . $this->itemCountChecked . " " . $currentDirectory . DS . $currentSong, 2);
 						
 						//$songs[] = $currentDirectory . DS . $currentSong;
 						$currentSong = "";
@@ -1005,9 +1054,10 @@ class Importer {
 			}
 		}
 
-		// delete dead items in table:rawtagdata
+		// delete dead items in table:rawtagdata & table:track
 		if(count($deadMysqlFiles) > 0) {
 			\Slimpd\Rawtagdata::deleteRecordsByIds($deadMysqlFiles);
+			\Slimpd\Track::deleteRecordsByIds($deadMysqlFiles);
 		}
 
 		
@@ -1022,15 +1072,13 @@ class Importer {
 		cliLog("dead songs: " . count($deadMysqlFiles));
 		#print_r($deadMysqlFiles);
 		
-		
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->itemCountTotal = $this->itemCountChecked;
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemCountChecked . ' files',
 			'directorycount' => $dircount,
 			'deletedRecords' => count($deadMysqlFiles),
 			'unmodified_files' => $unmodifiedFiles
-		));
+		), __FUNCTION__);
 		
 		// destroy large arrays
 		unset($deadMysqlFiles);
@@ -1044,7 +1092,7 @@ class Importer {
 		$this->jobPhase = 4;
 		$this->beginJob(array(
 			'msg' => "searching extracted image-dupes in database ..."
-		));
+		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM  bitmap WHERE error=0 AND trackId > 0";
@@ -1078,7 +1126,7 @@ class Importer {
 			$this->itemCountChecked++;
 			if($this->itemCountChecked === 1) {
 				$previousKey = $record['dupes'];
-				cliLog($app->ll->str('importer.image.keep', array($record['relativePath'])));
+				cliLog($app->ll->str('importer.image.keep', array($record['relativePath'])), 3);
 				continue;
 			}
 			if($record['dupes'] === $previousKey) {
@@ -1095,18 +1143,17 @@ class Importer {
 			} else {
 				$msg = $app->ll->str('importer.image.keep', array($record['relativePath']));
 			}
-			cliLog($msg);
+			cliLog($msg, 3);
 			$previousKey = $record['dupes'];
 		}
 		
 		$msg = $app->ll->str('importer.destroyimages.result', array($this->itemCountProcessed, formatByteSize($deletedFilesize)));
 		cliLog($msg);
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		
 		$this->finishJob(array(
 			'msg' => $msg,
 			'deletedFileSize' => formatByteSize($deletedFilesize)
-		));
+		), __FUNCTION__);
 		return;
 	}
 
@@ -1120,7 +1167,7 @@ class Importer {
 		$this->jobPhase = 6;
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-genres for inserting into table:album ..."
-		));
+		), __FUNCTION__);
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album" .(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<3 " : "");
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
@@ -1170,7 +1217,7 @@ class Importer {
 						)
 					)
 				);
-				cliLog($app->ll->str('importer.fixgenre.msg', array($album->getId(), $album->getGenreId())));
+				cliLog($app->ll->str('importer.fixgenre.msg', array($album->getId(), $album->getGenreId())), 3);
 				$album->update();
 				$this->itemCountChecked++;
 				$this->itemCountProcessed++;
@@ -1179,10 +1226,9 @@ class Importer {
 			}
 			$previousKey = $record['albumId'];
 		}
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'updatedAlbums' => $this->itemCountProcessed,
-		));
+		), __FUNCTION__);
 		return;
 	}
 
@@ -1196,7 +1242,7 @@ class Importer {
 		
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
-		));
+		), __FUNCTION__);
 		
 		$query = "SELECT count(id) AS itemCountTotal FROM album" .(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<4 " : "");
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
@@ -1245,7 +1291,7 @@ class Importer {
 						)
 					)
 				);
-				cliLog($app->ll->str('importer.fixlabel.msg', array($album->getId(), $album->getLabelId())));
+				cliLog($app->ll->str('importer.fixlabel.msg', array($album->getId(), $album->getLabelId())), 3);
 				$album->update();
 				$this->itemCountChecked++;
 				unset($album);
@@ -1253,10 +1299,9 @@ class Importer {
 			}
 			$previousKey = $record['albumId'];
 		}
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'updatedAlbums' => $this->itemCountProcessed
-		));
+		), __FUNCTION__);
 		return;
 	}
 
@@ -1265,7 +1310,7 @@ class Importer {
 		$this->jobPhase = 9;
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
-		));
+		), __FUNCTION__);
 		foreach(array('album', 'artist', 'genre', 'label') as $table) {
 			$query = "SELECT count(id) AS itemCountTotal FROM " . $table;
 			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
@@ -1346,12 +1391,11 @@ class Importer {
 					'currentItem' => $msg
 				));
 				
-				cliLog($msg);
+				cliLog($msg, 3);
 			}
 		}
 		unset($tables);
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
-		$this->finishJob();
+		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
 
@@ -1362,14 +1406,14 @@ class Importer {
 		
 		// check config
 		if(isset($app->config['label-parent-directories']) === FALSE) {
-			cliLog('aborting setDefaultLabels() no label directories configured');
+			cliLog('aborting setDefaultLabels() no label directories configured',2);
 			return;
 		}
 		// validate config
 		$foundValidDirectories = FALSE;
 		foreach($app->config['label-parent-directories'] as $dir) {
 			if(is_dir($app->config['mpd']['musicdir'] . $dir) === FALSE) {
-				cliLog('WARNING: label-parent-directory ' . $dir . ' does not exist', 2, 'yellow');
+				cliLog('WARNING: label-parent-directory ' . $dir . ' does not exist', 2, 'yellow',2);
 			} else {
 				$foundValidDirectories = TRUE;
 			}
@@ -1383,14 +1427,14 @@ class Importer {
 		
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
-		));
+		), __FUNCTION__);
 		
 		foreach($app->config['label-parent-directories'] as $labelDir) {
 			if(substr($labelDir, -1) !== DS) { $labelDir .= DS; } // append trailingSlash
 			$query = "SELECT count(id) as itemCountTotal FROM track WHERE relativePath LIKE \"". $labelDir ."%\" ";
 			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 			$msg = "found " . $this->itemCountTotal . " to check"; 
-			cliLog($msg);
+			cliLog($msg, 2);
 		}
 		
 		$updatedTracks = 0;
@@ -1469,7 +1513,7 @@ class Importer {
 					} else {
 						$msg = "updating with ID: " . $foundMatchingDatabaseLabelId;
 					}
-					cliLog($msg);
+					cliLog($msg,3);
 					
 					// update all tracks with labelId's
 					if(count($updateTrackIds) > 0) {
@@ -1491,10 +1535,9 @@ class Importer {
 			}
 		}
 		
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
 		$this->finishJob(array(
 			'updatedTracks' => $updatedTracks
-		));
+		), __FUNCTION__);
 		return;
 	}
 
@@ -1542,7 +1585,7 @@ class Importer {
 		
 		$this->beginJob(array(
 			'currentItem' => "fetching mp3 files with missing fingerprint attribute"
-		));
+		), __FUNCTION__);
 		
 		$query = "
 			SELECT count(id) AS itemCountTotal
@@ -1584,14 +1627,13 @@ class Importer {
 				$i->setFingerprint($fp);
 				$i->update();
 				
-				cliLog("fingerprint: " . $fp . " for " . $record['relativePath']);
+				cliLog("fingerprint: " . $fp . " for " . $record['relativePath'],3);
 			} else {
 				cliLog("ERROR: regex fingerprint result " . $record['relativePath'], 1, 'red');
 				continue;
 			}
 		}
-		cliLog("FINISHED import phase " . $this->jobPhase . " " . __FUNCTION__ . '()');
-		$this->finishJob();
+		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
 
