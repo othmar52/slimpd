@@ -20,6 +20,10 @@ class Importer {
 	protected $itemCountProcessed = 0;
 	protected $itemCountTotal = 0;
 	
+	// waiting until mpd has finished his internal database-update
+	protected $waitingLoop = 0;
+	protected $maxWaitingTime = 60; // seconds
+	
 	protected $directoryHashes = array(/* dirhash -> albumId */);
 	protected $updatedAlbums = array(/* id -> NULL */); 
 	
@@ -1636,6 +1640,29 @@ class Importer {
 		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
+
+	public function waitForMpd() {
+		$this->jobPhase = 0;
+		$mpd = new \Slimpd\modules\mpd\mpd();
+		$status = $mpd->cmd('status');
+		if(isset($status['updating_db'])) {
+			if($this->waitingLoop === 0) {
+				$this->waitingLoop = time();
+			}
+			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
+				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);
+				\Slim\Slim::getInstance()->stop();
+			}
+			cliLog('waiting '. (time()-$this->waitingLoop - $this->maxWaitingTime)*-1 .' sec. until mpd\'s internal database-update has finished');
+			sleep(5);
+			// recursion
+			return $this->waitForMpd();
+		}
+		if($this->waitingLoop > 0) {
+			cliLog('mpd seems to be ready. continuing...', 1, 'green');
+		}
+		return;
+	} 
 
 
 
