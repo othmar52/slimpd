@@ -242,8 +242,8 @@ class Bitmap extends AbstractModel
 		$phpThumb->setParameter('config_imagemagick_path', '/usr/bin/convert');
 		$phpThumb->setParameter('config_allow_src_above_docroot', true);
 		
-		$phpThumb->setParameter('config_cache_directory', APP_ROOT. '..'. DS .'cache');
-		$phpThumb->setParameter('config_temp_directory',  APP_ROOT. '..'. DS .'cache');
+		$phpThumb->setParameter('config_cache_directory', APP_ROOT .'cache');
+		$phpThumb->setParameter('config_temp_directory',  APP_ROOT .'cache');
 		$phpThumb->setParameter('config_cache_prefix', 'phpThumb_cache');
 		#$phpThumb->setParameter('config_cache_force_passthru', FALSE);
 		#$phpThumb->setParameter('config_cache_maxage', NULL);
