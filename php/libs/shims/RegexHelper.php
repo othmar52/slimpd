@@ -60,7 +60,9 @@ class RegexHelper {
 			'various',
 			'artist',
 			'artists',
-			'originalmix'
+			'originalmix',
+			'unknownartist',
+			'unbekannterinterpret'
 		);
 		if(isset($blacklist[az09($input)]) === TRUE) {
 			return FALSE;
