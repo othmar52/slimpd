@@ -64,6 +64,7 @@ class AlbumMigrator {
 	protected $extractedTrackNumbers;
 	protected $extractedTotalTracks;
 	
+	
 	// recommendations
 	protected $r;
 	
@@ -104,7 +105,7 @@ class AlbumMigrator {
 		// further this method is adding score to several attributes which will be migrated to production db-table
 		$this->setHandleAsAlbum();
 		
-		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 1, 'purple'); #die();
+		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 3, 'purple'); #die();
 		
 		
 		#if($this->tracks[0]['relativePath'] == 'newroot/crse002cd--Calibre-Musique_Concrete-2CD-CRSE002CD-2001-sour/101-calibre-deep_everytime.mp3') {
@@ -518,7 +519,7 @@ class AlbumMigrator {
 				if(stripos($result, 'vinyl') !== FALSE) {
 					$this->recommend($idx, array('source' => 'Vinyl'));
 				}
-				cliLog(__FUNCTION__ ." ".$result .": " . $value ,1 , 'red');
+				cliLog(__FUNCTION__ ." ".$result .": " . $value ,6 , 'red');
 				return $result;
 			} else {
 				$this->recommend($idx, array($artistOrTitle => $value));
@@ -746,7 +747,7 @@ class AlbumMigrator {
 			case 'artist':
 				if($rx->seemsArtistly($attrValue) === FALSE) {
 					$this->r[$idx][$attrName][$attrValue] -= $this->defaultScoreForRealTagAttrs;
-					print_r($this->r[$idx][$attrName][$attrValue]); die();
+					#print_r($this->r[$idx][$attrName][$attrValue]); die();
 					return;
 				}
 				break;
@@ -1019,12 +1020,12 @@ class AlbumMigrator {
 					));
 				}		
 					
-				cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'green');
+				cliLog(__FUNCTION__ ." ".$result .": " . $value ,6 , 'green');
 				return $result; // 01-Aaron_Dilloway-Untitled.mp3
 			}
 		}
 		$result = "nomatch";
-		cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'red');
+		cliLog(__FUNCTION__ ." ".$result .": " . $value ,6 , 'red');
 		return $result;
 	}
 
@@ -1068,7 +1069,7 @@ class AlbumMigrator {
 			}
 			return 'vinyl';	// AA1, B2, C34, A-1, A/4
 		}
-		cliLog(__FUNCTION__ ."(" . $value . ") unknown",3 , 'red');
+		cliLog(__FUNCTION__ ."(" . $value . ") unknown",6 , 'red');
 		return 'unknown';
 	}
 	

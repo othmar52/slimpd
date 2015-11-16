@@ -13,10 +13,8 @@ function remU($input){
 }
 
 
-function cliLog($msg, $verbosity=1, $color="default") {
-	// TODO: configure verbosity in config file
-	$activeVerbosity = 1;
-	if($verbosity > $activeVerbosity) {
+function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
+	if($verbosity > \Slim\Slim::getInstance()->config['config']['cli-verbosity'] && $fatal === FALSE) {
 		return;
 	}
 	
@@ -40,7 +38,7 @@ function cliLog($msg, $verbosity=1, $color="default") {
 		
 		
 		
-	$shellColorize = FALSE;
+	$shellColorize = TRUE;
 	$prefix = "";
 	$suffix = "";
 	if($shellColorize == TRUE) {
