@@ -735,7 +735,7 @@ class Importer {
 					}
 				}
 				
-				$previousAlbum->reset();
+				$previousAlbum = new \Slimpd\AlbumMigrator();
 				$previousAlbum->setDirectoryHash($record['relativeDirectoryPathHash']);
 				$mostRecentTimestampsRawtagdata = $record['directoryMtime'];
 			}
