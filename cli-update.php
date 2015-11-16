@@ -100,7 +100,7 @@ $app->get('/', function () use ($app) {
 	
 	
 	// phase 3: migrate table rawtagdata to table track,album,artist,label
-	$importer->migrateRawtagdataTable();
+	$importer->migrateRawtagdataTable(FALSE);
 	
 	
 	// phase 4: delete dupes of extracted embedded images
