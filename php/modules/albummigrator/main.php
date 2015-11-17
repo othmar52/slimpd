@@ -10,7 +10,18 @@ namespace Slimpd;
  * 
  * of course this fucks up some attributes but the majority of invalid tagged files will profit enourmously
  * 
+ * TODO: make whole guessing stuff optional or semi-optional 
+ * TODO: handle disc thingy on tracks and albums
+ * TODO: add trackCount immediately and remove it from importer-phase?8?
+ * TODO: add isMixed attrribute based on
+ * 	* configured mix-directory config_local.ini
+ *  * common strings like "mixed by" in directory name
+ *  * cue-sheet with same filename as musicfile
+ *  * music file duration greater than X
+ * 
+ * TODO: override label-attribute (based on dirs in config_local.ini) immediatly and remove it from inporter phase ?7?
  */
+
 class AlbumMigrator {
 	protected $directoryHash;
 	protected $tracks;

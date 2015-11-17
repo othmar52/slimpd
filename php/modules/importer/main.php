@@ -15,7 +15,7 @@ class Importer {
 	protected $jobStatusInterval = 5; 	// seconds
 	protected $lastJobStatusUpdate = 0; // timestamp
 	
-	// counters needed for calculating estimated time and spped [Tracks/minute]
+	// counters needed for calculating estimated time and speed [Tracks/minute]
 	protected $itemCountChecked = 0;	
 	protected $itemCountProcessed = 0;
 	protected $itemCountTotal = 0;
@@ -27,6 +27,15 @@ class Importer {
 	protected $directoryHashes = array(/* dirhash -> albumId */);
 	protected $updatedAlbums = array(/* id -> NULL */); 
 	
+	# TODO: cronjob functionality
+	#   request from frontend
+	#     creates a triggerfile in filesystem
+	#     triggers the mpd-internal database update
+	#   cronjob (executed every minute)
+	#     checks if another import process is running
+	#     checks for triggerfiles
+	#     processes slimpd-update based on trigger-file
+	#     deletes processed trigger-file
 	# TODO: unset all big arrays at the end of each method
 	
 	
@@ -652,7 +661,7 @@ class Importer {
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		$db = \Slim\Slim::getInstance()->db;
-		cliLog('truncating alle tables with migrated data', 1, 'red');
+		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
 		$queries = array(
 			"TRUNCATE artist;",
 			"TRUNCATE genre;",
@@ -698,7 +707,10 @@ class Importer {
 		}
 		return $timestampsMysql;
 	}
-
+	/**
+	 * TODO: how to deal with album-orphans?
+	 * TODO: reset album:lastScan for each migrated album 
+	 */
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
 		
 		# only for development
@@ -859,7 +871,6 @@ class Importer {
 				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime']; 
 			}
 		}
-		#print_r($directoryTimestampsMysql); die();
 		
 		$dbfile = explode("\n", file_get_contents($app->config['mpd']['dbfile']));
 		$currentDirectory = "";
