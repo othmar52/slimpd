@@ -382,6 +382,8 @@ class Importer {
 	// read all images in embedded-directory and check if a db-record exists
 	// skip the check for non-embedded/non-extracted images at all and delete db-record in case delivering fails
 	// for now: skip this import phase ...
+	
+	// TODO: is it really necessary to execute this step on each import? maybe some manually triggered mainainance steps would make sense
 
 	public function deleteOrphanedBitmapRecords() {
 		
@@ -562,7 +564,7 @@ class Importer {
 		$this->jobBegin = microtime(TRUE);
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
-		$this->itemCountTotal = 0;
+		//$this->itemCountTotal = 0;
 		$query = "INSERT INTO importer
 			(jobPhase, jobStart, jobLastUpdate, jobStatistics)
 			VALUES (".(int)$this->jobPhase.", ". $this->jobBegin.", ". $this->jobBegin. ",'" .serialize($data)."')";
@@ -605,6 +607,9 @@ class Importer {
 		
 		\Slim\Slim::getInstance()->db->query($query);
 		$this->jobId = 0;
+		$this->itemCountChecked = 0;
+		$this->itemCountProcessed = 0;
+		$this->itemCountTotal = 0;
 		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
@@ -1643,23 +1648,33 @@ class Importer {
 
 	public function waitForMpd() {
 		$this->jobPhase = 0;
+		$recursionInterval = 3; // seconds
 		$mpd = new \Slimpd\modules\mpd\mpd();
 		$status = $mpd->cmd('status');
 		if(isset($status['updating_db'])) {
 			if($this->waitingLoop === 0) {
 				$this->waitingLoop = time();
+				// fake total items with total seconds
+				$this->itemCountTotal = (int)$this->maxWaitingTime;
+				$this->beginJob(array(), __FUNCTION__);
 			}
 			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
 				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);
+				$this->finishJob(NULL, __FUNCTION__);
 				\Slim\Slim::getInstance()->stop();
 			}
-			cliLog('waiting '. (time()-$this->waitingLoop - $this->maxWaitingTime)*-1 .' sec. until mpd\'s internal database-update has finished');
-			sleep(5);
+			$this->itemCountProcessed = time()-$this->waitingLoop;
+			$this->itemCountChecked = time()-$this->waitingLoop;
+			$this->updateJob(array(), __FUNCTION__);
+			//cliLog('waiting '. (time()-$this->waitingLoop - $this->maxWaitingTime)*-1 .' sec. until mpd\'s internal database-update has finished');
+			sleep($recursionInterval);
 			// recursion
 			return $this->waitForMpd();
 		}
 		if($this->waitingLoop > 0) {
+			$this->itemCountProcessed = $this->itemCountTotal;
 			cliLog('mpd seems to be ready. continuing...', 1, 'green');
+			$this->finishJob(NULL, __FUNCTION__);
 		}
 		return;
 	} 
