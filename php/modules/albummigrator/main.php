@@ -10,7 +10,20 @@ namespace Slimpd;
  * 
  * of course this fucks up some attributes but the majority of invalid tagged files will profit enourmously
  * 
+ * TODO: make whole guessing stuff optional or semi-optional 
+ * TODO: handle disc thingy on tracks and albums
+ * TODO: add trackCount immediately and remove it from importer-phase?8?
+ * TODO: add isMixed attrribute based on
+ * 	* configured mix-directory config_local.ini
+ *  * common strings like "mixed by" in directory name
+ *  * cue-sheet with same filename as musicfile
+ *  * music file duration greater than X
+ * 
+ * TODO (outside of this class): create a a link in gui for remigrating a single album
+ *
+ * TODO: override label-attribute (based on dirs in config_local.ini) immediatly and remove it from importer phase ?7?
  */
+
 class AlbumMigrator {
 	protected $directoryHash;
 	protected $tracks;
@@ -150,6 +163,9 @@ class AlbumMigrator {
 		$a->setYear($this->mostScored['album']['year']);
 		
 		$a->setIsJumble(($this->handleAsAlbum === TRUE) ? 0:1);
+		
+		$a->setTrackCount(count($this->tracks));
+		
 		#print_r($a); die();
 		$a->update();
 		
@@ -347,19 +363,19 @@ class AlbumMigrator {
 			$this->numberSchemes[$idx] = $this->getNumberScheme($t['trackNumber'], $idx);
 			
 			
-			// add score for given attributes
-			$this->scoreAttribute($idx, 'artist', $t['artist'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'artist', $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'title', $t['title'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'genre', $t['genre'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'comment', $t['comment'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'year', $t['year'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'label', $t['publisher'], $this->defaultScoreForRealTagAttrs);
+			// add score for real unmodified attributes
+			$this->scoreAttribute($idx, 'artist',    $t['artist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'artist',    $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'title',     $t['title'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'genre',     $t['genre'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'comment',   $t['comment'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'year',      $t['year'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'label',     $t['publisher'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'catalogNr', $t['textCatalogNumber'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'discogsId', $t['textDiscogsReleaseId'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'source', $t['textSource'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'urlUser', $t['textUrlUser'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute('album', 'title', $t['album'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'source',    $t['textSource'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'urlUser',   $t['textUrlUser'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute('album', 'title',  $t['album'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute('album', 'artist', $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute('album', 'artist', $t['artist'], $this->defaultScoreForRealTagAttrs);
 
@@ -442,7 +458,7 @@ class AlbumMigrator {
 				if($i == '' && count($bestMatch) == 1) {
 					continue;
 				}
-				// it makes no senseto compare vbr bitrates on vbr's
+				// it makes no sense to compare bitrates on vbr's
 				if($property === 'audioBitrateModes' && $this->audioBitrateModes[$idx] === 'vbr') {
 					continue;
 				}
@@ -1132,7 +1148,10 @@ class AlbumMigrator {
 	
 	
 	
-	
+	/**
+	 * TODO: remove this strange syntax "goto" of copy/pasted method
+	 * 
+	 */
 	private function extractNumericRangeness($input) {
 		
 		//last value is dropped so add something useless to be dropped
