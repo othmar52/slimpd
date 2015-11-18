@@ -43,6 +43,7 @@ class Localization
 			'general.featured.artist' => 'Featured Artists',
 			'general.remix.artist' => 'Remixer',
 			'general.catnr' => 'Cat#',
+			'general.number' => 'Number',
 		),
 		'de' => array(
 			'menu.library' => 'Sammlung',

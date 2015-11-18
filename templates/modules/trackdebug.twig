@@ -33,8 +33,8 @@
 </h3>
 <div class="row">
 	<div class="col-md-2"></div>
-	<div class="col-md-3"><strong>Rawtagdata</strong></div>
-	<div class="col-md-3"><strong>Track-Entry</strong></div>
+	<div class="col-md-3"><strong>Rawtagdata</strong><br /><span class="dark">real tag attributes</span></div>
+	<div class="col-md-3"><strong>Track-Entry</strong><br /><span class="dark">auto-corrected tag attributes</span></div>
 	<div class="col-md-4"><strong>Edit</strong></div>
 </div>
 <hr />
@@ -67,7 +67,7 @@
 
 <div class="row">
 	<div class="col-md-2"><strong>{{ ll['remix.artist'] }}</strong></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-3">{{ itemraw.remixer }}</div>
 	{% set rmxItem = { 'artistId' : item.remixerId }%}
 	<div class="col-md-3">
 		{% include 'partials/artist/link.twig' with { 'item': rmxItem } %}
@@ -126,5 +126,13 @@
 	<div class="col-md-3">
 		{{ item.catalogNr }}
 	</div>
-	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNumber }}" class="form-control" /></div>
+	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNr }}" class="form-control" /></div>
+</div>
+<div class="row">
+	<div class="col-md-2"><strong>{{ ll.number }}</strong></div>
+	<div class="col-md-3">{{ itemraw.trackNumber }}</div>
+	<div class="col-md-3">
+		{{ item.number }}
+	</div>
+	<div class="col-md-4"><input name="number" type="text" value="{{ item.number }}" class="form-control" /></div>
 </div>
