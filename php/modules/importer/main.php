@@ -1325,6 +1325,9 @@ class Importer {
 		return;
 	}
 
+	/**
+	 * TODO: remove album:setTrackCount as its already been set in albummigrator
+	 */
 	public function updateCounterCache() {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 9;
