@@ -92,6 +92,9 @@ $app->config = $config;
 $app->get('/', function () use ($app) {
 	$importer = new \Slimpd\importer();
 	
+	// phase 0: check if mpd database update is running and wait if required
+	$importer->waitForMpd();
+	
 	// phase 1: parse mpd database and insert/update table:rawtagdata
 	$importer->processMpdDatabasefile();
 	
