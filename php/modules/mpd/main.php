@@ -139,6 +139,7 @@ class mpd
 				$cmd = 'seek ' .$currentSong['Pos'] . ' ' . round($item * ($currentSong['Time']/100)) . '';
 				$this->mpd($cmd);
 			case 'status':
+			case 'stats':
 			case 'currentsong':
 				return $this->mpd($cmd);
 				
