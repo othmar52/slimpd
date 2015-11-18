@@ -15,14 +15,27 @@ class Importer {
 	protected $jobStatusInterval = 5; 	// seconds
 	protected $lastJobStatusUpdate = 0; // timestamp
 	
-	// counters needed for calculating estimated time and spped [Tracks/minute]
+	// counters needed for calculating estimated time and speed [Tracks/minute]
 	protected $itemCountChecked = 0;	
 	protected $itemCountProcessed = 0;
 	protected $itemCountTotal = 0;
 	
+	// waiting until mpd has finished his internal database-update
+	protected $waitingLoop = 0;
+	protected $maxWaitingTime = 60; // seconds
+	
 	protected $directoryHashes = array(/* dirhash -> albumId */);
 	protected $updatedAlbums = array(/* id -> NULL */); 
 	
+	# TODO: cronjob functionality
+	#   request from frontend
+	#     creates a triggerfile in filesystem
+	#     triggers the mpd-internal database update
+	#   cronjob (executed every minute)
+	#     checks if another import process is running
+	#     checks for triggerfiles
+	#     processes slimpd-update based on trigger-file
+	#     deletes processed trigger-file
 	# TODO: unset all big arrays at the end of each method
 	
 	
@@ -378,6 +391,8 @@ class Importer {
 	// read all images in embedded-directory and check if a db-record exists
 	// skip the check for non-embedded/non-extracted images at all and delete db-record in case delivering fails
 	// for now: skip this import phase ...
+	
+	// TODO: is it really necessary to execute this step on each import? maybe some manually triggered mainainance steps would make sense
 
 	public function deleteOrphanedBitmapRecords() {
 		
@@ -558,7 +573,7 @@ class Importer {
 		$this->jobBegin = microtime(TRUE);
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
-		$this->itemCountTotal = 0;
+		//$this->itemCountTotal = 0;
 		$query = "INSERT INTO importer
 			(jobPhase, jobStart, jobLastUpdate, jobStatistics)
 			VALUES (".(int)$this->jobPhase.", ". $this->jobBegin.", ". $this->jobBegin. ",'" .serialize($data)."')";
@@ -601,6 +616,9 @@ class Importer {
 		
 		\Slim\Slim::getInstance()->db->query($query);
 		$this->jobId = 0;
+		$this->itemCountChecked = 0;
+		$this->itemCountProcessed = 0;
+		$this->itemCountTotal = 0;
 		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
@@ -643,7 +661,7 @@ class Importer {
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		$db = \Slim\Slim::getInstance()->db;
-		cliLog('truncating alle tables with migrated data', 1, 'red');
+		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
 		$queries = array(
 			"TRUNCATE artist;",
 			"TRUNCATE genre;",
@@ -689,7 +707,10 @@ class Importer {
 		}
 		return $timestampsMysql;
 	}
-
+	/**
+	 * TODO: how to deal with album-orphans?
+	 * TODO: reset album:lastScan for each migrated album 
+	 */
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
 		
 		# only for development
@@ -850,7 +871,6 @@ class Importer {
 				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime']; 
 			}
 		}
-		#print_r($directoryTimestampsMysql); die();
 		
 		$dbfile = explode("\n", file_get_contents($app->config['mpd']['dbfile']));
 		$currentDirectory = "";
@@ -1305,6 +1325,9 @@ class Importer {
 		return;
 	}
 
+	/**
+	 * TODO: remove album:setTrackCount as its already been set in albummigrator
+	 */
 	public function updateCounterCache() {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 9;
@@ -1636,6 +1659,39 @@ class Importer {
 		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
+
+	public function waitForMpd() {
+		$this->jobPhase = 0;
+		$recursionInterval = 3; // seconds
+		$mpd = new \Slimpd\modules\mpd\mpd();
+		$status = $mpd->cmd('status');
+		if(isset($status['updating_db'])) {
+			if($this->waitingLoop === 0) {
+				$this->waitingLoop = time();
+				// fake total items with total seconds
+				$this->itemCountTotal = (int)$this->maxWaitingTime;
+				$this->beginJob(array(), __FUNCTION__);
+			}
+			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
+				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);
+				$this->finishJob(NULL, __FUNCTION__);
+				\Slim\Slim::getInstance()->stop();
+			}
+			$this->itemCountProcessed = time()-$this->waitingLoop;
+			$this->itemCountChecked = time()-$this->waitingLoop;
+			$this->updateJob(array(), __FUNCTION__);
+			//cliLog('waiting '. (time()-$this->waitingLoop - $this->maxWaitingTime)*-1 .' sec. until mpd\'s internal database-update has finished');
+			sleep($recursionInterval);
+			// recursion
+			return $this->waitForMpd();
+		}
+		if($this->waitingLoop > 0) {
+			$this->itemCountProcessed = $this->itemCountTotal;
+			cliLog('mpd seems to be ready. continuing...', 1, 'green');
+			$this->finishJob(NULL, __FUNCTION__);
+		}
+		return;
+	} 
 
 
 
