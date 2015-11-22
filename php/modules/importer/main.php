@@ -876,12 +876,13 @@ class Importer {
 			if($record['relativeDirectoryPathHash'] !== $previousAlbum->getRelativeDirectoryPathHash() ) {
 				
 				// decide if we have to process album or if we can skip it
-				if(isset($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
+				if(isset($migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ]) === FALSE) {
 					cliLog('album does NOT exist in migrated data. migrating: ' . $previousAlbum->getRelativeDirectoryPath(), 5);
 					$triggerAlbumMigration = TRUE;
 				} else {
-					if($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ] < $previousAlbum->getDirectoryMtime()) {
+					if($migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ] < $previousAlbum->getDirectoryMtime()) {
 						cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $previousAlbum->getRelativeDirectoryPath(), 5);
+						cliLog('dir-timestamps mig1: '. $migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ] .' raw: ' . $previousAlbum->getDirectoryMtime(), 10, 'yellow');
 						$triggerAlbumMigration = TRUE;
 					}
 				}
@@ -899,7 +900,7 @@ class Importer {
 				$previousAlbum->setRelativeDirectoryPath($record['relativeDirectoryPath']);
 				$previousAlbum->setDirectoryMtime($record['directoryMtime']);
 				
-				cliLog('adding hash of dir '. $record['relativeDirectoryPath'] .' to previousAlbum', 10);
+				cliLog('  adding hash of dir '. $record['relativeDirectoryPath'] .' to previousAlbum', 10);
 				$triggerAlbumMigration = FALSE;
 			}
 			
@@ -913,11 +914,11 @@ class Importer {
 			
 			// decide if we have to process album based on single-track-change or if we can skip it
 			if(isset($migratedTrackTimstamps[ $record['relativePathHash'] ]) === FALSE) {
-				cliLog('track does NOT exist in migrated data. migrating: ' . $record['relativeDirectoryPath'], 5);
+				cliLog('track does NOT exist in migrated data. migrating: ' . $record['relativePath'], 5);
 				$triggerAlbumMigration = TRUE;
 			} else {
 				if($migratedTrackTimstamps[ $record['relativePathHash'] ] < $record['filemtime']) {
-					cliLog('track-imestamp raw is more recent than migrated. migrating: ' . $record['relativeDirectoryPath'], 5);
+					cliLog('track-imestamp raw is more recent than migrated. migrating: ' . $record['relativePath'], 5);
 					$triggerAlbumMigration = TRUE;
 				}
 			}
@@ -931,12 +932,13 @@ class Importer {
 			// dont forget to check the last one
 			if($this->itemCountChecked === $this->itemCountTotal && $this->itemCountTotal > 1) {
 				// decide if we have to process album or if we can skip it
-				if(isset($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
+				if(isset($migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ]) === FALSE) {
 					cliLog('album does NOT exist in migrated data. migrating: ' . $previousAlbum->getRelativeDirectoryPath(), 5);
 					$triggerAlbumMigration = TRUE;
 				} else {
-					if($migratedAlbumTimstamps[ $record['relativeDirectoryPathHash'] ] < $previousAlbum->getDirectoryMtime()) {
+					if($migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ] < $previousAlbum->getDirectoryMtime()) {
 						cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $previousAlbum->getRelativeDirectoryPath(), 5);
+						cliLog('dir-timestamps mig: '. $migratedAlbumTimstamps[ $previousAlbum->getRelativeDirectoryPathHash() ] .' raw: ' . $previousAlbum->getDirectoryMtime(), 10, 'yellow');
 						$triggerAlbumMigration = TRUE;
 					}
 				}
