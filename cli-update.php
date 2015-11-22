@@ -102,6 +102,13 @@ $app->get('/', function () use ($app, $importer) {
     echo "Hello, kitty\n"; exit;
 });
 
+
+$app->get('/debugmig', function () use ($app, $importer) {
+	\Slimpd\importer::queDirectoryUpdate('mu/usr/lehrbub/');
+	$importer->migrateRawtagdataTable();
+});
+
+
 $app->get('/standard', function () use ($app, $importer) {
 	$importer->triggerImport();
 });
