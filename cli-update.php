@@ -104,7 +104,7 @@ $app->get('/', function () use ($app, $importer) {
 
 
 $app->get('/debugmig', function () use ($app, $importer) {
-	\Slimpd\importer::queDirectoryUpdate('mu/usr/lehrbub/');
+	$importer->checkQue();
 	$importer->migrateRawtagdataTable();
 });
 
