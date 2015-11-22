@@ -367,6 +367,9 @@ $app->get('/importer(/)', function() use ($app, $config){
 	$app->render('surrounding.twig', $config);
 });
 
+$app->get('/importer/triggerUpdate', function() use ($app, $config){
+	\Slimpd\importer::queStandardUpdate();
+});
 
 
 $app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use ($app, $config){
