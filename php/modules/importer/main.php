@@ -27,18 +27,59 @@ class Importer {
 	protected $directoryHashes = array(/* dirhash -> albumId */);
 	protected $updatedAlbums = array(/* id -> NULL */); 
 	
-	# TODO: cronjob functionality
-	#   request from frontend
-	#     creates a triggerfile in filesystem
-	#     triggers the mpd-internal database update
-	#   cronjob (executed every minute)
-	#     checks if another import process is running
-	#     checks for triggerfiles
-	#     processes slimpd-update based on trigger-file
-	#     deletes processed trigger-file
 	# TODO: unset all big arrays at the end of each method
 	
-	
+	public function triggerImport() {
+			
+		// phase 2: check if mpd database update is running and simply wait if required
+		$this->waitForMpd();
+		
+		// phase 3: parse mpd database and insert/update table:rawtagdata
+		$this->processMpdDatabasefile();
+		
+		// phase 4: scan id3 tags and insert into table:rawtagdata of all new or modified files
+		$this->scanMusicFileTags();
+		
+		
+		// phase 5: migrate table rawtagdata to table track,album,artist,genre,label
+		$this->migrateRawtagdataTable(FALSE);
+		
+		// phase 6: delete dupes of extracted embedded images
+		$this->destroyExtractedImageDupes();
+		
+		
+		// phase 7: get images
+		// TODO: extend directory scan with additional relevant files
+		$this->searchImagesInFilesystem();
+		
+		// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
+		#$importer->fixAlbumGenres();
+		
+		// phase 7: check configured label-directories and update table:track:labelId
+		# TODO: move this funtionality to album-migrator
+		$this->setDefaultLabels();
+		
+		// phase 8: makes sure each album record gets all labelIds which appears on albumTracks
+		# TODO: move this funtionality to album-migrator
+		$this->fixAlbumLabels();
+		
+		// phase 9:
+		$this->updateCounterCache();
+		
+		// phase 10
+		$this->extractAllMp3FingerPrints();
+		
+		
+		// phase X: add trackcount to albumRecords
+		
+		// phase X: add trackcount & albumcount to genre records
+		
+		// phase X: add fingerprint to rawtagdata+track table
+		
+		// phase 9
+			
+		
+	}
 	public function scanMusicFileTags() {
 		# TODO: handle orphaned records
 		# TODO: displaying itemsChecked / itemsProcessed is incorrect
@@ -210,7 +251,6 @@ class Importer {
 		), __FUNCTION__);
 		return;
 	}
-
 
 	// TODO: instead of setting initial values on instance define default values in mysql-fields
 	// TODO: move this to models/Rawtagdata.php
@@ -566,6 +606,84 @@ class Importer {
 			$this->commonArtworkDirectoryNames[] = az09($dirname) . 's';
 		}
 	}
+
+	/**
+	 * decrease timestamps - so all tracks will get remigrated on next standard-update-run
+	 * 
+	 */
+	public function modifyDirectoryTimestamps($relativeDirectoryPath) {
+		$db = \Slim\Slim::getInstance()->db;
+		$query = "
+			UPDATE album
+			SET
+				lastScan = lastScan-1,
+				filemtime = filemtime-1
+			WHERE
+				relativePath LIKE '". $db->real_escape_string($relativeDirectoryPath)."%'";
+		$db->query($query);
+		return;
+	}
+	
+	/**
+	 * 
+	 */
+	public function checkQue() {
+		
+		// check if we really have something to process
+		$runImporter = FALSE;
+		$query = "SELECT id, relativePath FROM importer
+			WHERE jobPhase=0 AND jobEnd=0";
+			
+		$result = \Slim\Slim::getInstance()->db->query($query);
+		$directories = array();
+		while($record = $result->fetch_assoc()) {
+			$runImporter = TRUE;
+			if(strlen($record['relativePath']) > 0) {
+				$directories[ $record['relativePath'] ] = $record['relativePath'];
+			}
+			$this->jobId = $record['id'];
+			$this->finishJob(array(), __FUNCTION__);
+		}
+		// process unified directories
+		foreach($directories as $dir) {
+			$this->modifyDirectoryTimestamps($dir);
+		}
+		$this->jobId = 0;
+		return $runImporter;
+	}
+
+	/**
+	 * inserts a database record which will be processed by cli-update.php
+	 */
+	public static function queDirectoryUpdate($relativePath) {
+		$app = \Slim\Slim::getInstance();
+		if(is_dir($app->config['mpd']['musicdir'] .$relativePath ) === FALSE) {
+			// no need to process invalid directory
+			return;
+		}
+		
+		$data = array(
+			'relativePath' => $relativePath
+		);
+		$importer = new self();
+		$importer->jobPhase = 0;
+		$importer->beginJob($data, __FUNCTION__);
+		return;
+	}
+	
+	/**
+	 * inserts a database record which will be processed by cli-update.php
+	 */
+	public static function queStandardUpdate() {
+		$app = \Slim\Slim::getInstance();
+		$data = array(
+			'standardUpdate' => 1
+		);
+		$importer = new self();
+		$importer->jobPhase = 0;
+		$importer->beginJob($data, __FUNCTION__);
+		return;
+	}
 	
 	private function beginJob($data = array(), $function = '') {
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
@@ -573,10 +691,19 @@ class Importer {
 		$this->jobBegin = microtime(TRUE);
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
+		
+		$relativePath = (isset($data['relativePath']) === TRUE)
+			? $app->db->real_escape_string($data['relativePath'])
+			: '';
 		//$this->itemCountTotal = 0;
 		$query = "INSERT INTO importer
-			(jobPhase, jobStart, jobLastUpdate, jobStatistics)
-			VALUES (".(int)$this->jobPhase.", ". $this->jobBegin.", ". $this->jobBegin. ",'" .serialize($data)."')";
+			(jobPhase, jobStart, jobLastUpdate, jobStatistics, relativePath)
+			VALUES (
+				".(int)$this->jobPhase.",
+				". $this->jobBegin.",
+				". $this->jobBegin. ",
+				'" .serialize($data)."',
+				'". $relativePath ."')";
 		$app->db->query($query);
 		$this->jobId = $app->db->insert_id;
 		$this->lastJobStatusUpdate = $this->jobBegin;
@@ -1661,7 +1788,7 @@ class Importer {
 	}
 
 	public function waitForMpd() {
-		$this->jobPhase = 0;
+		$this->jobPhase = 1;
 		$recursionInterval = 3; // seconds
 		$mpd = new \Slimpd\modules\mpd\mpd();
 		$status = $mpd->cmd('status');
@@ -1691,7 +1818,8 @@ class Importer {
 			$this->finishJob(NULL, __FUNCTION__);
 		}
 		return;
-	} 
+	}
+
 
 
 

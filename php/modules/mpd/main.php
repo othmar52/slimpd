@@ -74,7 +74,7 @@ class mpd
 		// TODO: check access
 		// @see: http://www.musicpd.org/doc/protocol/playback_commands.html
 		
-		// validate commans
+		// validate commands
 		switch($cmd) {
 			case 'update':
 				$config = \Slim\Slim::getInstance()->config['mpd'];
@@ -93,6 +93,8 @@ class mpd
 					// error - invalid $item
 					return FALSE;
 				}
+				
+				\Slimpd\importer::queDirectoryUpdate($item);
 				return $this->mpd('update "' . str_replace("\"", "\\\"", $item) . '"');
 				
 			// tracks that hasnt been importet in mpd database have to get inserted befor playing
