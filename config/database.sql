@@ -588,6 +588,7 @@ CREATE TABLE IF NOT EXISTS `importer` (
   `jobLastUpdate` DOUBLE NOT NULL,
   `jobEnd` DOUBLE NOT NULL,
   `jobStatistics` longtext NOT NULL,
+  `relativePath` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `jobStart` (`jobStart`),
   KEY `jobEnd` (`jobEnd`)
