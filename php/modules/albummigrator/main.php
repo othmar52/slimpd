@@ -25,7 +25,10 @@ namespace Slimpd;
  */
 
 class AlbumMigrator {
-	protected $directoryHash;
+	protected $relativeDirectoryPathHash;
+	protected $relativeDirectoryPath;
+	public $directoryMtime;
+	
 	protected $tracks;
 	
 	protected $handleAsAlbum = NULL;
@@ -117,6 +120,7 @@ class AlbumMigrator {
 		// treated as an album or as a bunch of loose tracks
 		// further this method is adding score to several attributes which will be migrated to production db-table
 		$this->setHandleAsAlbum();
+		#print_r($this->r);
 		
 		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 3, 'purple'); #die();
 		
@@ -328,7 +332,6 @@ class AlbumMigrator {
 	private function setHandleAsAlbum() {
 		
 
-		
 		// collect specific data for comparison
 		foreach($this->tracks as $idx => $t) {
 			
@@ -735,6 +738,13 @@ class AlbumMigrator {
 
 
 	private function scoreAttribute($idx, $attrName, $attrValue, $score = 1) {
+		#cliLog($idx, 10, 'purple');
+		#cliLog($attrName, 10, 'purple');
+		#cliLog($attrValue, 10, 'purple');
+		#cliLog($score, 10, 'purple');
+		#print_r($this->r);
+		#cliLog('---------', 10);
+		
 		$rx = new \Slimpd\RegexHelper();
 		
 		
@@ -762,6 +772,9 @@ class AlbumMigrator {
 				break;
 			case 'artist':
 				if($rx->seemsArtistly($attrValue) === FALSE) {
+					if(isset($this->r[$idx][$attrName][$attrValue]) === FALSE) {
+						$this->r[$idx][$attrName][$attrValue] = 0;
+					}
 					$this->r[$idx][$attrName][$attrValue] -= $this->defaultScoreForRealTagAttrs;
 					#print_r($this->r[$idx][$attrName][$attrValue]); die();
 					return;
@@ -1108,7 +1121,7 @@ class AlbumMigrator {
 		if(preg_match("/^([0-9]+)$/", $joined) === 0) {
 			
 			# TODO: does it make sense to guess a valid range of A1, AA1,...
-			# some labels does not use A,B,... as letters
+			# some labels does not use A,B,... as letteHashrs
 			# for now ignore any range but score in case really all extracted tracknumbers are vinyl-schemed
 			$isVinylPattern = TRUE;
 			foreach($this->extractedTrackNumbers as $i) {
@@ -1187,8 +1200,16 @@ class AlbumMigrator {
 	
 	
 	// setter
-	public function setDirectoryHash($value) {
-		$this->directoryHash = $value;
+	public function setRelativeDirectoryPathHash($value) {
+		$this->relativeDirectoryPathHash = $value;
+	}
+	
+	public function setRelativeDirectoryPath($value) {
+		$this->relativeDirectoryPath = $value;
+	}
+	
+	public function setDirectoryMtime($value) {
+		$this->directoryMtime = $value;
 	}
 	
 	
@@ -1197,7 +1218,16 @@ class AlbumMigrator {
 	}
 	
 	// getter
-	public function getDirectoryHash() {
-		return $this->directoryHash;
+	public function getRelativeDirectoryPathHash() {
+		return $this->relativeDirectoryPathHash;
+	}
+	
+	public function getRelativeDirectoryPath() {
+		return $this->relativeDirectoryPath;
+	}
+	
+	public function getDirectoryMtime() {
+		return $this->directoryMtime;
 	}
 }
+	
