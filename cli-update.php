@@ -87,64 +87,31 @@ $configLoader = $app->configLoaderINI;
 $config = $configLoader->loadConfig('master.ini');
 $app->config = $config;
 
+$importer = new \Slimpd\importer();
 
-// routes - as per normal - no HTML though!
-$app->get('/', function () use ($app) {
-	$importer = new \Slimpd\importer();
-	
-	// phase 0: check if mpd database update is running and wait if required
-	$importer->waitForMpd();
-	
-	// phase 1: parse mpd database and insert/update table:rawtagdata
-	$importer->processMpdDatabasefile();
-	
-	// phase 2: scan id3 tags and insert into table:rawtagdata of all new or modified files
-	$importer->scanMusicFileTags();
-	
-	
-	// phase 3: migrate table rawtagdata to table track,album,artist,label
-	$importer->migrateRawtagdataTable(FALSE);
-	
-	
-	// phase 4: delete dupes of extracted embedded images
-	$importer->destroyExtractedImageDupes();
-	
-	
-	// phase 5: get images
-	$importer->searchImagesInFilesystem();
-	
-	// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
-	#$importer->fixAlbumGenres();
-	
-	// phase 7: check configured label-directories and update table:track:labelId
-	$importer->setDefaultLabels();
-	
-	// phase 8: makes sure each album record gets all labelIds which appears on albumTracks
-	$importer->fixAlbumLabels();
-	
-	// phase 9:
-	$importer->updateCounterCache();
-	
-	// phase 10
-	$importer->extractAllMp3FingerPrints();
-	
-	// phase 11: delete all bitmap-database-entries that does not exist in filesystem
-	$importer->deleteOrphanedBitmapRecords();
 
+
+// IMPORTANT TODO: avoid simultaneously executet updates
+
+$app->get('/', function () use ($app, $importer) {
 	
-	// phase XXX:
-	#$importer->genreMergerV2();
-	
-	
-	
-	// phase X: add trackcount to albumRecords
-	
-	// phase X: add trackcount & albumcount to genre records
-	
-	// phase X: add fingerprint to rawtagdata+track table
-	
-	// phase 9
+	// check if we have something to process
+	if($importer->checkQue() === TRUE) {
+		$importer->triggerImport();
+	}
     echo "Hello, kitty\n"; exit;
+});
+
+$app->get('/standard', function () use ($app, $importer) {
+	$importer->triggerImport();
+});
+
+$app->get('/database-cleaner', function () use ($app) {
+	// phase 11: delete all bitmap-database-entries that does not exist in filesystem
+	// TODO: limit this to embedded images only
+	$importer->deleteOrphanedBitmapRecords();
+	
+	// TODO: delete orphaned artists + genres + labels
 });
 
 // run!
