@@ -1449,7 +1449,7 @@ class Importer {
 						)
 					)
 				);
-				cliLog($app->ll->str('importer.fixlabel.msg', array($album->getId(), $album->getLabelId())), 3);
+				cliLog($app->ll->str('importer.fixlabel.msg', array($album->getId(), $album->getLabelId())), 7);
 				$album->update();
 				$this->itemCountChecked++;
 				unset($album);
@@ -1464,7 +1464,7 @@ class Importer {
 	}
 
 	/**
-	 * TODO: remove album:setTrackCount as its already been set in albummigrator
+	 * fills databasefields trackCount & albumCount of tables: artist,genre,label
 	 */
 	public function updateCounterCache() {
 		$app = \Slim\Slim::getInstance();
@@ -1472,22 +1472,17 @@ class Importer {
 		$this->beginJob(array(
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
 		), __FUNCTION__);
-		foreach(array('album', 'artist', 'genre', 'label') as $table) {
+		foreach(array('artist', 'genre', 'label') as $table) {
 			$query = "SELECT count(id) AS itemCountTotal FROM " . $table;
 			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		}
 		
 		// collect all genreIds, labelIds, artistIds, remixerIds, featuringIds provided by tracks
 		$tables = array(
-			'Album' => array(),
 			'Artist' => array(),
 			'Genre' => array(),
 			'Label' => array()
 		);
-		$genres = array();
-		$labels = array();
-		$artists = array();
-		
 		
 		// to be able to display a progress status
 		$all = array();
@@ -1498,9 +1493,6 @@ class Importer {
 		
 		while($record = $result->fetch_assoc()) {
 			$all['al' . $record['albumId']] = NULL;
-			
-			$tables['Album'][ $record['albumId'] ]['tracks'][ $record['id'] ] = NULL;
-			
 			$this->itemCountChecked = count($all);
 			
 			$this->updateJob(array(
@@ -1528,11 +1520,12 @@ class Importer {
 				$tables['Label'][$itemId]['albums'][ $record['albumId'] ] = NULL;
 				$all['la' . $itemId] = NULL;
 			}
-			
 		}
 
 		
 		foreach($tables as $className => $tableData) {
+			$msg = "updating table:".$className." with trackCount and albumCount";
+			cliLog($msg, 3);
 			foreach($tableData as $itemId => $data) {
 				
 				$classPath = "\\Slimpd\\" . $className;
@@ -1541,10 +1534,8 @@ class Importer {
 				$item->setTrackCount( count($data['tracks']) );
 				
 				$msg = "updating ".$className.": " . $itemId . " with trackCount:" .  $item->getTrackCount();
-				if($className !== 'Album') {
-					$item->setAlbumCount( count($data['albums']) );
-					$msg .= ", albumCount:" .  $item->getAlbumCount();
-				}
+				$item->setAlbumCount( count($data['albums']) );
+				$msg .= ", albumCount:" .  $item->getAlbumCount();
 				$item->update();
 				$this->itemCountProcessed++;
 				$this->itemCountChecked = count($all);
@@ -1552,10 +1543,11 @@ class Importer {
 					'currentItem' => $msg
 				));
 				
-				cliLog($msg, 3);
+				cliLog($msg, 7);
 			}
 		}
 		unset($tables);
+		unset($all);
 		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
