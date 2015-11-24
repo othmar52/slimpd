@@ -16,7 +16,7 @@ class RegexHelper {
 	public $scene  = "-([^\s\-]+)";
 	public $year  = "((?:[1920]{2})(?:[0-9]{2}))";
 	#public $year  = "([0-9]{4})";
-	public $catNr  = "((?:([\(\[]{1})?((?:[A-Z]{2,8})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
+	public $catNr  = "((?:([\(\[]{1})?((?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
 	public $source  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
 	public $noMinus= "([^-]+)";
 	public $anything= "(.*)";
