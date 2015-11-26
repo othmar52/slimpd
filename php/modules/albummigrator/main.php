@@ -149,8 +149,6 @@ class AlbumMigrator {
 			? 'Various Artists'
 			: $mergedFromTracks['artist'];
 		
-		#print_r($mergedFromTracks); die();
-		$a = new \Slimpd\Album();
 		$a = new Album();
 		
 		$a->setArtistId(join(",", Artist::getIdsByString($albumArtists)));
@@ -158,10 +156,10 @@ class AlbumMigrator {
 		#$a->setLabelId(join(",", Label::getIdsByString($mergedFromTracks['label'])));
 		$a->setCatalogNr($this->mostScored['album']['catalogNr']);
 		
-		$a->setRelativePath($this->tracks[0]['relativeDirectoryPath']);
-		$a->setRelativePathHash($this->tracks[0]['relativeDirectoryPathHash']);
-		$a->setAdded($this->tracks[0]['directoryMtime']);
-		$a->setFilemtime($this->tracks[0]['directoryMtime']);
+		$a->setRelativePath($this->getRelativeDirectoryPath());
+		$a->setRelativePathHash($this->getRelativeDirectoryPathHash());
+		$a->setAdded($this->getDirectoryMtime());
+		$a->setFilemtime($this->getDirectoryMtime());
 		
 		$a->setTitle($this->mostScored['album']['title']);
 		$a->setYear($this->mostScored['album']['year']);
@@ -188,7 +186,7 @@ class AlbumMigrator {
 			$t->setFeaturedArtistsAndRemixers();
 				# setFeaturedArtistsAndRemixers() is processing:
 				# $t->setArtistId();
-				# $t->setFeaturngId();
+				# $t->setFeaturingId();
 				# $t->setRemixerId();
 				
 			$t->setGenreId(join(",", Genre::getIdsByString($this->getMostScored($idx, 'genre'))));
