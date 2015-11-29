@@ -780,7 +780,7 @@ class AlbumMigrator {
 				break;
 			case 'number':
 				$attrValue = ltrim($attrValue, '0');
-				// in case we have letters make sure no combinations of different letters get scored (like 'if')
+				// in case we have letters make sure no combinations of different letters get scored (like 'if', 'be', ...)
 				if(is_numeric($attrValue) === FALSE) {
 					$letterVariations = count(array_unique(str_split($attrValue)));
 					if($letterVariations > 1) {

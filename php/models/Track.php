@@ -79,6 +79,8 @@ class Track extends \Slimpd\AbstractModel
 	}
 		
 	public function setFeaturedArtistsAndRemixers() {
+		$artistBlacklist = \Slimpd\Artist::getArtistBlacklist();
+
 		$inputArtistString = $this->getArtistId();
 		$inputTitleString = $this->getTitle();
 		
@@ -273,6 +275,7 @@ class Track extends \Slimpd\AbstractModel
 		
 		$tests = array(
 			array("placeholder index 0"),
+			array("Stel", "Your Parents Are Here (Ian F. Remix)", "Stel_-_Your_Parents_Are_Here-(JLYLTD015)-WEB-2009-WiTF"),
 			array("Shotgun Club", "Fake Fake", "08_shotgun_club-fake_fake.mp3", "Shotgun_Club-Love_Under_The_Gun-2011-FWYH"),
 			array("Friction", "Long Gone Memory (Ft. Arlissa) (Ulterior Motive Remix)"),
 			array("Friction", "Long Gone Memory Ft Arlissa & Gandalf Stein (Extended Mix)"),
@@ -406,12 +409,15 @@ class Track extends \Slimpd\AbstractModel
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
-			$titleString = str_replace(
-				$m[2] .$m[3] . ' ' . $m[4],
-				" ",
-				$titleString
-			);
-			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$m[2] .$m[3] . ' ' . $m[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
 		}
 		
 		// parse TITLE string for featured artists REGEX 2
@@ -421,18 +427,15 @@ class Track extends \Slimpd\AbstractModel
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
-			$titleString = str_replace(
-				$m[2] .$m[3] . $m[4],
-				" ",
-				$titleString
-			);
-			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$m[2] .$m[3] . $m[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
 		}
-		
-		
-		
-		
-
 
 		// parse title string for remixer regex 1
 		if(preg_match($regexRemix, $titleString, $m)) {
@@ -445,51 +448,25 @@ class Track extends \Slimpd\AbstractModel
 		}
 		
 		// clean up extracted remixer-names with common strings
-		#TODO: move to customizeable config
-		$common = array(
-			"original",
-			"vip",
-			"vip instrumental",
-			"12 inch",
-			"12'",
-			"12\"",
-			"7 inch",
-			"7'",
-			"7\"",
-			"radio edit",
-			"radio",
-			"digital exclusive",
-			"digital exclusiv",
-			"exclusive",
-			"exclusiv",
-			"extended club",
-			"extended",
-			"unreleased",
-			"full vocal",
-			"vocal",
-			"club",
-			"instrumental",
-			"full length",
-			"full continous dj",
-			"2step",
-			"4x4",
-			"12'",
-			"album",
-			"unreleased"
-		);
-		$commonSuffix = array();
-		foreach($common as $c) {
-			$commonSuffix[] = " " . $c;
-		}
-		
 		$tmp = array();
 		foreach($remixerArtists as $remixerArtist) {
-			if(in_array(strtolower($remixerArtist), $common) === TRUE) {
+			if(isset($artistBlacklist[ strtolower($remixerArtist)]) === TRUE) {
 				continue;
 			}
-			$tmp[] = str_ireplace($commonSuffix, "", $remixerArtist);
+			$tmp[] = str_ireplace($artistBlacklist, "", $remixerArtist);
 		}
 		$remixerArtists = $tmp;
+		
+		
+		// clean up extracted featuring-names with common strings
+		$tmp = array();
+		foreach($featuredArtists as $featuredArtist) {
+			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
+				continue;
+			}
+			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
+		}
+		$featuredArtists = $tmp;
 		
 		
 		$regularArtists = array_unique(array_filter($regularArtists));
