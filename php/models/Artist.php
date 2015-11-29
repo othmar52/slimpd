@@ -22,6 +22,24 @@ class Artist extends AbstractModel
 	}
 	
 	
+	public static function getArtistBlacklist() {
+		$app = \Slim\Slim::getInstance();
+		// get unified common-genres
+		if(isset($GLOBALS['artist-blacklist']) === TRUE) {
+			return $GLOBALS['artist-blacklist'];
+		}
+		$GLOBALS['artist-blacklist'] = array();	
+		if(isset($app->config['artist-blacklist']) === FALSE) {
+			return $GLOBALS['artist-blacklist'];
+		}
+		foreach($app->config['artist-blacklist'] as $term) {
+			$GLOBALS['artist-blacklist'][$term] = 1;
+			$GLOBALS['artist-blacklist'][' ' . $term] = 1;
+		}
+		return $GLOBALS['artist-blacklist'];
+	}
+	
+	
 	public static function getIdsByString($itemString) {
 		if(trim($itemString) === '') {
 			return array("1"); // Unknown
