@@ -363,7 +363,7 @@ class Track extends \Slimpd\AbstractModel
 		
 		// assign all string-parts to category
 		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
-		$groupFeat2 = "([\ \(\.])(feat.|ft.)"; // without trailing whitespace
+		$groupFeat2 = "([\ \(\.])(feat.|ft.|f.)"; // without trailing whitespace
 		$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
 		
 		if($artistString == "") {
@@ -650,7 +650,7 @@ class Track extends \Slimpd\AbstractModel
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
 		foreach($remixerArtists as $remixerArtist) {
-			if(in_array(strtolower($remixerArtist), array('original','vip', 'vocal', 'instrumental', 'vip instrumental')) === TRUE) {
+			if(in_array(strtolower($remixerArtist), array('original','vip', 'vocal', 'instrumental', 'vip instrumental', 'alternative')) === TRUE) {
 				continue;
 			}
 			$tmp[] = str_ireplace(
@@ -671,7 +671,8 @@ class Track extends \Slimpd\AbstractModel
 					" full continous dj",
 					" 2step",
 					" 4x4",
-					" album"
+					" album",
+					" alternative"
 					
 				),
 				"",
