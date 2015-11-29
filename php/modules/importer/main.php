@@ -1473,6 +1473,10 @@ class Importer {
 			'currentItem' => "fetching all track-labels for inserting into table:album ..."
 		), __FUNCTION__);
 		foreach(array('artist', 'genre', 'label') as $table) {
+			// reset all counters
+			$query = "UPDATE " . $table . " SET trackCount=0, albumCount=0";
+			$app->db->query($query);
+			
 			$query = "SELECT count(id) AS itemCountTotal FROM " . $table;
 			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		}
@@ -1545,6 +1549,13 @@ class Importer {
 				
 				cliLog($msg, 7);
 			}
+			// delete all items which does not have any trackCount or albumCount
+			$query = "DELETE FROM " . strtolower($className) . " WHERE trackCount=0 AND albumCount=0";
+			$msg = "deleting ".$className."s  with trackCount=0 AND albumCount=0";
+			cliLog($msg, 3);
+			$app->db->query($query);
+			
+			
 		}
 		unset($tables);
 		unset($all);
