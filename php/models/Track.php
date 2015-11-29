@@ -273,6 +273,7 @@ class Track extends \Slimpd\AbstractModel
 		
 		$tests = array(
 			array("placeholder index 0"),
+			array("Shotgun Club", "Fake Fake", "08_shotgun_club-fake_fake.mp3", "Shotgun_Club-Love_Under_The_Gun-2011-FWYH"),
 			array("Friction", "Long Gone Memory (Ft. Arlissa) (Ulterior Motive Remix)"),
 			array("Friction", "Long Gone Memory Ft Arlissa & Gandalf Stein (Extended Mix)"),
 			array("Friction", "Long Gone Memory with Arlissa & Gandalf Stein (Extended Mix"),
@@ -363,7 +364,7 @@ class Track extends \Slimpd\AbstractModel
 		
 		// assign all string-parts to category
 		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
-		$groupFeat2 = "([\ \(\.])(feat.|ft.|f.)"; // without trailing whitespace
+		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
 		$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
 		
 		if($artistString == "") {
@@ -532,9 +533,18 @@ class Track extends \Slimpd\AbstractModel
 		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
 		if(count($featuredArtists) > 0) { 
 			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
+		} else {
+			# TODO: currently empty values are ignored in AbstractModel::update()
+			# this is relevant for old exisiting database-items which already have an invalid featuringId-value 
+			$this->setFeaturingId('');
 		}
+		
 		if(count($remixerArtists) > 0) {
 			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
+		} else {
+			# TODO: currently empty values are ignored in AbstractModel::update()
+			# this is relevant for old exisiting database-items which already have an invalid remixerId-value
+			$this->setRemixerId('');
 		}
 		
 		// replace multiple whitespace with a single whitespace
@@ -588,163 +598,6 @@ class Track extends \Slimpd\AbstractModel
 
 	# TODO: extract catNr from labelString
 	public function setLabelAndCatalogueNr() {
-		$labelString = $this->getLabelId();
-		$catNrString = $this->getTextCatalo();
-		
-		
-
-		
-		$regexCatnr = "/^(.*)\((.*)\)$/i";
-		
-		
-		
-		// in case artist string is missing try to get it from title string
-		if($artistString == "" && $titleString != "") {
-			$tmp = trimExplode(" - ", $titleString, TRUE, 2);
-			if(count($tmp) == 2) {
-				$artistString = $tmp[0];
-				$titleString = $tmp[1];
-			}
-		}
-		
-		// in case title string is missing try to get it from artist string
-		if($artistString != "" && $titleString == "") {
-			$tmp = trimExplode(" - ", $artistString, TRUE, 2);
-			if(count($tmp) == 2) {
-				$artistString = $tmp[0];
-				$titleString = $tmp[1];
-			}
-		}
-		$artistString = str_replace("[", "(", $artistString);
-		$artistString = str_replace("]", ")", $artistString);
-		$titleString = str_replace("[", "(", $titleString);
-		$titleString = str_replace("]", ")", $titleString);
-		
-		// parse artist string
-		if($artistString == "") {
-			$regularArtists[] = "Unknown Artist";
-		} else {
-			$featSplit = preg_split($regexFeat, $artistString);
-			$regularArtists = preg_split($regexArtist, $featSplit[0]);
-			if(count($featSplit) > 1) {
-				$featuredArtists = preg_split($regexArtist, $featSplit[1]);
-			}
-		}
-		
-		// parse title string
-		$featSplit = preg_split($regexFeat, $titleString);
-		if(count($featSplit) > 1) {
-			if(preg_match($regexRemix, $featSplit[1], $m)) {
-				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $m[1]));
-				$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $m[2]));
-				
-			} else {
-				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $featSplit[1]));
-			}
-		}
-		
-		if(preg_match($regexRemix, $titleString, $m)) {
-			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $m[2]));
-		}	
-		
-		// clean up extracted remixer-names with common strings
-		$tmp = array();
-		foreach($remixerArtists as $remixerArtist) {
-			if(in_array(strtolower($remixerArtist), array('original','vip', 'vocal', 'instrumental', 'vip instrumental', 'alternative')) === TRUE) {
-				continue;
-			}
-			$tmp[] = str_ireplace(
-				array(
-					" 12 inch",
-					" 7 inch",
-					" radio edit",
-					" radio",
-					" digital exclusive",
-					" digital exclusiv",
-					" exclusive",
-					" exclusiv",
-					" unreleased",
-					" full vocal",
-					" vocal",
-					" instrumental",
-					" full length",
-					" full continous dj",
-					" 2step",
-					" 4x4",
-					" album",
-					" alternative"
-					
-				),
-				"",
-				$remixerArtist
-			);
-		}
-		$remixerArtists = $tmp;
-		
-		
-		$regularArtists = array_unique($regularArtists);
-		$featuredArtists = array_unique($featuredArtists);
-		$remixerArtists = array_unique($remixerArtists);
-		
-		
-		$titlePattern = str_replace(
-			array_merge($regularArtists, $featuredArtists, $remixerArtists),
-			"%s",
-			$titleString
-		);
-		
-		$titlePattern = str_ireplace(
-			array(
-				"featuring %s",
-				"feat %s",
-				"feat. %s",
-				"feat.%s",
-				"ft %s",
-				"ft. %s",
-				"ft.%s"
-			),
-			"",
-			$titlePattern
-		);
-		
-		
-		// remove brackets from featuredArtists
-		$tmp = array();
-		foreach($featuredArtists as $featuredArtist) {
-			$tmp[] = str_replace(array("(", ")"), "", $featuredArtist);
-		}
-		$featuredArtists = $tmp;
-		
-		if(substr_count($titlePattern, "%s") !== count($remixerArtists)) {
-			// oh no - we have a problem
-			// reset extracted remixers
-			$titlePattern = $titleString;
-			$remixerArtists = array();
-		}
-		
-		// remove " (" from titlepateern in case that are the last 2 chars
-		if(preg_match("/(.*)\ \($/", $titlePattern, $m)) {
-			$titlePattern = $m[1];
-		}
-		
-		
-		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
-		if(count($featuredArtists) > 0) { 
-			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
-		}
-		if(count($remixerArtists) > 0) {
-			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
-		}
-		$this->setTitle($titlePattern);
-		return;
-		
-		echo "inputArtist: " . $artistString . "\n";
-		echo "inputTitle: " . $titleString . "\n";
-		echo "regular: " . print_r($regularArtists,1);
-		echo "feat: " . print_r($featuredArtists,1);
-		echo "remixer: " . print_r($remixerArtists,1);
-		echo "titlePattern: " . $titlePattern . "\n";
-		die();
 		
 	}
 
