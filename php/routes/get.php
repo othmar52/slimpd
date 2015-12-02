@@ -425,4 +425,50 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 });
 
 
+// very basic partly functional search...
+$app->get('/search/', function() use ($app, $config){
+	
+	$cl = new \SphinxClient();
+	$cl->SetServer(
+		$app->config['sphinx']['host'], 
+		intval($app->config['sphinx']['port'])
+	);
+	
+	# SPHINX MATCH MODES
+	#$cl->SetMatchMode( SPH_MATCH_ALL );       //	Match all query words (default mode).
+	$cl->SetMatchMode( SPH_MATCH_ANY );       //	Match any of query words.
+	#$cl->SetMatchMode( SPH_MATCH_PHRASE );    //	Match query as a phrase, requiring perfect match.
+	#$cl->SetMatchMode( SPH_MATCH_BOOLEAN );   //	Match query as a boolean expression.
+	$cl->SetMatchMode( SPH_MATCH_EXTENDED );  //	Match query as an expression in Sphinx internal query language.
+	#$cl->SetMatchMode( SPH_MATCH_FULLSCAN );  //	Enables fullscan.
+	#$cl->SetMatchMode( SPH_MATCH_EXTENDED2 ); //	The same as SPH_MATCH_EXTENDED plus ranking and quorum searching support.
+	
+	$cl->SetLimits(
+		0,
+		50
+	);
+	$searchterm = $app->request()->params('q');
+		
+	$result = $cl->Query( '+' . $searchterm, $app->config['sphinx']['trackindex']);
+	$config['currentplaylist'] = array();
+	$config['action'] = 'searchresult';
+	if(isset($result['matches']) === FALSE) {
+		$app->render('surrounding.twig', $config);
+		return;
+	}
+	foreach($result['matches'] as $id => $foo) {
+		$config['currentplaylist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
+	}
+	
+	// get all relational items we need for rendering
+	$config['renderitems'] = array(
+		'genres' => \Slimpd\Genre::getInstancesForRendering($config['currentplaylist']),
+		'labels' => \Slimpd\Label::getInstancesForRendering($config['currentplaylist']),
+		'artists' => \Slimpd\Artist::getInstancesForRendering($config['currentplaylist']),
+		'albums' => \Slimpd\Album::getInstancesForRendering($config['currentplaylist'])
+	);
+
+	$app->render('surrounding.twig', $config);
+});	
+
 
