@@ -174,7 +174,7 @@ class AlbumMigrator {
 		$albumId = $a->getId();
 		
 		
-		unset($this->r['album']);
+		
 		foreach($this->tracks as $idx => $rawTagData) {
 			$t = $this->migrateNonGuessableData($rawTagData);
 			
@@ -211,10 +211,15 @@ class AlbumMigrator {
 			$t->update();
 			
 			// make sure extracted images will be referenced to an album
-			\Slimpd\Bitmap::addAlbumIdToTrackId($t->getId(), $albumId);
+			\Slimpd\Bitmap::addAlbumIdToTrackId($t->getId(), $albumId);#
+			
+			
+			// add the whole bunch of valid and indvalid attributes to trackindex table
+			$this->updateTrackIndex($t->getId(), $idx);
 				
 		}
 		
+		unset($this->r['album']);
 		
 		if($this->handleAsAlbum === TRUE) {
 		
@@ -225,6 +230,30 @@ class AlbumMigrator {
 		return;
 		print_r($this->r); #die();
 
+	}
+
+	private function updateTrackIndex($trackId, $idx) {
+		$indexChunks = "";
+		foreach($this->r[$idx] as $attrType => $scoreCombo) {
+			$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+		}
+		foreach($this->r['album'] as $attrType => $scoreCombo) {
+			$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+		}
+		$indexChunks .= join(" ", $this->mostScored[$idx]) . " ";
+		$indexChunks .= join(" ", $this->mostScored['album']) . " ";
+		$indexChunks .= $this->tracks[$idx]['relativePath'] . " ";
+		$indexChunks .= str_replace(
+			array('/', '_', '-', '.'),
+			' ',
+			$this->tracks[$idx]['relativePath']
+		);
+		// make sure to use identical ids in table:trackindex and table:track
+		\Slimpd\Trackindex::ensureRecordIdExists($trackId);
+		$ti = new \Slimpd\Trackindex();
+		$ti->setId($trackId);
+		$ti->setData($indexChunks);
+		$ti->update();
 	}
 
 	/**

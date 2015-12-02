@@ -420,6 +420,20 @@ ALTER TABLE `track`
   ADD FULLTEXT KEY `relativePath` (`relativePath`);
   
   
+-- --------------------------------------------------------
+
+--
+-- table structure `trackindex`
+--
+
+CREATE TABLE IF NOT EXISTS `trackindex` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `data` mediumtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `trackindex`
+  ADD FULLTEXT KEY `data` (`data`);
   
 -- --------------------------------------------------------
 
