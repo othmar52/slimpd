@@ -431,7 +431,7 @@ $app->get('/search/', function() use ($app, $config){
 	$cl = new \SphinxClient();
 	$cl->SetServer(
 		$app->config['sphinx']['host'], 
-		intval($app->config['sphinx']['port'])
+		(int)$app->config['sphinx']['port']
 	);
 	
 	# SPHINX MATCH MODES
@@ -450,22 +450,28 @@ $app->get('/search/', function() use ($app, $config){
 	$searchterm = $app->request()->params('q');
 		
 	$result = $cl->Query( '+' . $searchterm, $app->config['sphinx']['trackindex']);
-	$config['currentplaylist'] = array();
-	$config['action'] = 'searchresult';
+	
+	$config['search']['total'] = $result['total'];
+	$config['search']['time'] = $result['time'];
+	$config['search']['term'] = $searchterm; 
+	
+	#echo "<pre>" . print_r($result,1); die();
+	$config['tracklist'] = array();
+	$config['action'] = 'searchresult.tracks';
 	if(isset($result['matches']) === FALSE) {
 		$app->render('surrounding.twig', $config);
 		return;
 	}
 	foreach($result['matches'] as $id => $foo) {
-		$config['currentplaylist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
+		$config['tracklist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
 	}
 	
 	// get all relational items we need for rendering
 	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['currentplaylist']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['currentplaylist']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['currentplaylist']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['currentplaylist'])
+		'genres' => \Slimpd\Genre::getInstancesForRendering($config['tracklist']),
+		'labels' => \Slimpd\Label::getInstancesForRendering($config['tracklist']),
+		'artists' => \Slimpd\Artist::getInstancesForRendering($config['tracklist']),
+		'albums' => \Slimpd\Album::getInstancesForRendering($config['tracklist'])
 	);
 
 	$app->render('surrounding.twig', $config);
