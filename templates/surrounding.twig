@@ -115,9 +115,8 @@
 					{% endif %}
 					
 					
-					{% if action == 'searchresult' %}
-						<h3>Searchresults</h3>
-						{% include 'modules/nowplaying-list.twig' %}
+					{% if action == 'searchresult.tracks' %}
+						{% include 'modules/searchresult.twig' %}
 					{% endif %}
 					
   				</div>
