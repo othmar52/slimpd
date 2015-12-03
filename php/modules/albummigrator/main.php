@@ -234,11 +234,16 @@ class AlbumMigrator {
 
 	private function updateTrackIndex($trackId, $idx) {
 		$indexChunks = "";
-		foreach($this->r[$idx] as $attrType => $scoreCombo) {
-			$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+		
+		if(isset($this->r[$idx]) === TRUE) {
+			foreach($this->r[$idx] as $attrType => $scoreCombo) {
+				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+			}
 		}
-		foreach($this->r['album'] as $attrType => $scoreCombo) {
-			$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+		if(isset($this->r['album']) === TRUE) {
+			foreach($this->r['album'] as $attrType => $scoreCombo) {
+				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+			}
 		}
 		$indexChunks .= join(" ", $this->mostScored[$idx]) . " ";
 		$indexChunks .= join(" ", $this->mostScored['album']) . " ";
