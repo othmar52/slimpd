@@ -1,21 +1,26 @@
-
-<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+<div class="row {{ cycle(['bgX-col2','bgX-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 	<div class="col-md-1">
+		<div style="position: absolute; width: 50px; height: 50px; z-index:1;" class="track-id-{{ item.id }}"> </div>
+		{# TODO: which css shizzle blocks this link? #}
 		<a href="/library/album/{{ item.albumId }}">
-			<img src="/image-100/album/{{ item.albumId }}" alt="" width="100%" height="100%">
+		<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
 		</a></div>
-	<div class="col-md-1 ">{{ item.number }}</div>
-	<div class="col-md-3 ">
+	<div class="col-md-3">
+		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		<br />
+		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
+	</div>
+	<div class="col-md-3">
 		{% include 'partials/artist/link.twig' %}
 	</div>
-	<div class="col-md-3 ">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	<div class="col-md-2">
+		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-md-1 ">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}</div>
-	<div class="col-md-1 ">{% include 'partials/yearlink.twig' with { 'item': item } %}</div>
-	<div class="col-md-1 ">{{ item.miliseconds|formatMiliseconds }}</div>
-	<div class="col-md-1" style="font-size: 1em;">
+	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
+	<div class="col-md-1" style="font-size: 1.4em;">
 		<a href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link"><i class="fa fa-play-circle-o"></i></a>
 		<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
 	</div>
 </div>
+<div class="row">&nbsp;</div>
