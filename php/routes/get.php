@@ -426,13 +426,19 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 
 
 // very basic partly functional search...
-$app->get('/search/', function() use ($app, $config){
+$app->get('/search/page/:num', function($num) use ($app, $config){
 	
 	$cl = new \SphinxClient();
 	$cl->SetServer(
 		$app->config['sphinx']['host'], 
 		(int)$app->config['sphinx']['port']
 	);
+	
+	
+	$itemsPerPage = 50;
+	$currentPage = $num;
+		
+		
 	
 	# SPHINX MATCH MODES
 	#$cl->SetMatchMode( SPH_MATCH_ALL );       //	Match all query words (default mode).
@@ -444,8 +450,9 @@ $app->get('/search/', function() use ($app, $config){
 	#$cl->SetMatchMode( SPH_MATCH_EXTENDED2 ); //	The same as SPH_MATCH_EXTENDED plus ranking and quorum searching support.
 	
 	$cl->SetLimits(
-		0,
-		50
+		($currentPage-1)*$itemsPerPage,
+		$itemsPerPage,
+		1000000
 	);
 	$searchterm = $app->request()->params('q');
 		
@@ -465,6 +472,17 @@ $app->get('/search/', function() use ($app, $config){
 	foreach($result['matches'] as $id => $foo) {
 		$config['tracklist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
 	}
+	
+	
+	
+	$urlPattern = '/search/page/(:num)?q=' . $searchterm;
+	$config['paginator_params'] = new JasonGrimes\Paginator(
+		$config['search']['total'],
+		$itemsPerPage,
+		$currentPage,
+		$urlPattern
+	);
+
 	
 	// get all relational items we need for rendering
 	$config['renderitems'] = array(
