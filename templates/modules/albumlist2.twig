@@ -1,0 +1,63 @@
+
+
+
+
+<div class="albums_container">
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+
+<div class="container">
+	
+	{% if itemlist|length  %}
+		{% for row in itemlist|batch(3) %}
+		<div class="row">
+			{% for item in row %}
+				<div class="col-md-4 bg-col2">
+		   			<div class="row">
+		   				<div class="col-md-3">
+							<a href="/library/album/{{item.id}}" class="" style="">
+								<img src="/image-100/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
+							</a>
+						</div>
+						<div class="col-md-1"> </div>
+						<div class="col-md-8">
+							{% include 'partials/artist/link.twig' %} - {{item.title}}<br />
+							
+								{{item.year}}
+								({{ item.trackCount }} tracks)
+						</div>
+					
+					</div>
+				</div>
+			{% endfor%}
+		
+		</div>
+		<div class="row"> &nbsp;</div>
+		{% endfor %}
+	
+
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% else %}
+		no albums found
+		{{ dump(itemlist)}}
+	{% endif %}
+</div>
+
+
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	
+
+
+
+{% if tracklist|length > 0 %}
+<h2>Tracks with artist {{ item.title }}</h2>
+<div class="tracks_container">
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+<br />
+	{% for item in tracklist %}
+		{% include 'partials/trackrow-1.twig' %}
+	{% endfor %}
+	<div class="clearfix"> </div>
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	
+</div>
+{% endif %}
