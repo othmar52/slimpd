@@ -173,6 +173,9 @@ class AlbumMigrator {
 		
 		$albumId = $a->getId();
 		
+		// add the whole bunch of valid and indvalid attributes to albumindex table
+		$this->updateAlbumIndex($albumId);
+		
 		
 		
 		foreach($this->tracks as $idx => $rawTagData) {
@@ -257,7 +260,34 @@ class AlbumMigrator {
 		\Slimpd\Trackindex::ensureRecordIdExists($trackId);
 		$ti = new \Slimpd\Trackindex();
 		$ti->setId($trackId);
-		$ti->setData($indexChunks);
+		$ti->setArtist($this->mostScored[$idx]['artist']);
+		$ti->setTitle($this->mostScored[$idx]['title']);
+		$ti->setAllchunks($indexChunks);
+		$ti->update();
+	}
+
+
+	private function updateAlbumIndex($albumId) {
+		$indexChunks = "";
+		if(isset($this->r['album']) === TRUE) {
+			foreach($this->r['album'] as $attrType => $scoreCombo) {
+				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
+			}
+		}
+		$indexChunks .= join(" ", $this->mostScored['album']) . " ";
+		$indexChunks .= $this->tracks[0]['relativeDirectoryPath'] . " ";
+		$indexChunks .= str_replace(
+			array('/', '_', '-', '.'),
+			' ',
+			$this->tracks[0]['relativeDirectoryPath']
+		);
+		// make sure to use identical ids in table:trackindex and table:track
+		\Slimpd\Albumindex::ensureRecordIdExists($albumId);
+		$ti = new \Slimpd\Albumindex();
+		$ti->setId($albumId);
+		$ti->setArtist($this->mostScored['album']['artist']);
+		$ti->setTitle($this->mostScored['album']['title']);
+		$ti->setAllchunks($indexChunks);
 		$ti->update();
 	}
 
@@ -510,6 +540,7 @@ class AlbumMigrator {
 
 	/**
 	 * can be used for processing artist or title tag
+	 * TODO: remove title-score for "AudioTrack XX", "Unbekannter Titel", "Track XX", "Piste XX"
 	 */
 	
 	private function getArtistOrTitleScheme($value, $idx, $artistOrTitle) {

@@ -1,14 +1,14 @@
 <?php
 namespace Slimpd;
 
-class Trackindex extends AbstractModel
+class Albumindex extends AbstractModel
 {
 	protected $id;
 	protected $artist;
 	protected $title;
 	protected $allchunks;
 	
-	public static $tableName = 'trackindex';
+	public static $tableName = 'albumindex';
 	
 	
 	public static function ensureRecordIdExists($id) {

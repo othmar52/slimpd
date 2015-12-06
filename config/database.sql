@@ -428,12 +428,36 @@ ALTER TABLE `track`
 
 CREATE TABLE IF NOT EXISTS `trackindex` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `data` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  `artist` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `allchunks` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `artist` (`artist`),
+  KEY `title` (`title`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `trackindex`
-  ADD FULLTEXT KEY `data` (`data`);
+  ADD FULLTEXT KEY `allchunks` (`allchunks`);
+  
+  
+-- --------------------------------------------------------
+
+--
+-- table structure `albumindex`
+--
+
+CREATE TABLE IF NOT EXISTS `albumindex` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `artist` varchar(255) NOT NULL DEFAULT '',
+  `title` varchar(255) NOT NULL DEFAULT '',
+  `allchunks` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `artist` (`artist`),
+  KEY `title` (`title`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+ALTER TABLE `albumindex`
+  ADD FULLTEXT KEY `allchunks` (`allchunks`);
   
 -- --------------------------------------------------------
 
