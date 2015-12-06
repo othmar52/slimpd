@@ -425,74 +425,134 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 });
 
 
-// very basic partly functional search...
-$app->get('/search/page/:num', function($num) use ($app, $config){
-	
-	$cl = new \SphinxClient();
-	$cl->SetServer(
-		$app->config['sphinx']['host'], 
-		(int)$app->config['sphinx']['port']
-	);
-	
-	
-	$itemsPerPage = 50;
-	$currentPage = $num;
+foreach(array('all', 'artist', 'track', 'album') as $currenttype) {	
+	// very basic partly functional search...
+	$app->get('/search'. $currenttype .'/page/:num', function($num) use ($app, $config, $currenttype){
+		
+		
+		$searchterm = $app->request()->params('q');
+		
+		$cl = new \SphinxClient();
+		$cl->SetServer(
+			$app->config['sphinx']['host'], 
+			(int)$app->config['sphinx']['port']
+		);
+		$matches = array();
+		foreach(array('all', 'artist', 'track', 'album') as $type) {
+			$itemsPerPage = 1;
+			$currentPage = 1;
+			switch($type) {
+				case 'all' :
+					$indexname = $app->config['sphinx']['trackindex'];
+					$query = '+' . $searchterm;
+					break;
+				case 'artist' :
+					$indexname = $app->config['sphinx']['artistindex'];
+					$query = '+' . $searchterm;
+					break;
+				case 'track' :
+					$indexname = $app->config['sphinx']['trackindex'];
+					$query = '@title +' . $searchterm;
+					break;
+				case 'album' :
+					$indexname = $app->config['sphinx']['albumindex'];
+					$query = '+' . $searchterm;
+					break;
+			}
+			if($type == $currenttype) {
+				$itemsPerPage = 50;
+				$currentPage = $num;
+			}
+		
+			
+		
+			# SPHINX MATCH MODES
+			#$cl->SetMatchMode( SPH_MATCH_ALL );       //	Match all query words (default mode).
+			$cl->SetMatchMode( SPH_MATCH_ANY );       //	Match any of query words.
+			#$cl->SetMatchMode( SPH_MATCH_PHRASE );    //	Match query as a phrase, requiring perfect match.
+			#$cl->SetMatchMode( SPH_MATCH_BOOLEAN );   //	Match query as a boolean expression.
+			$cl->SetMatchMode( SPH_MATCH_EXTENDED );  //	Match query as an expression in Sphinx internal query language.
+			#$cl->SetMatchMode( SPH_MATCH_FULLSCAN );  //	Enables fullscan.
+			#$cl->SetMatchMode( SPH_MATCH_EXTENDED2 ); //	The same as SPH_MATCH_EXTENDED plus ranking and quorum searching support.
+			
+			$cl->SetLimits(
+				($currentPage-1)*$itemsPerPage,
+				$itemsPerPage,
+				1000000
+			);
+			
+				
+			$result = $cl->Query( $query, $indexname);
+			#echo "<pre>" . print_r($result,1); #die();
+			$config['search'][$type]['total'] = $result['total'];
+			$config['search'][$type]['time'] = $result['time'];
+			$config['search'][$type]['term'] = $searchterm;
+			
+			if($type == $currenttype) {
+				$itemsPerPage = 50;
+				$currentPage = $num;
+
+				$urlPattern = '/search'.$type.'/page/(:num)?q=' . $searchterm;
+				$config['paginator_params'] = new JasonGrimes\Paginator(
+					$config['search'][$type]['total'],
+					$itemsPerPage,
+					$currentPage,
+					$urlPattern
+				);
+				
+				
+				switch($currenttype) {
+					case 'all':
+					case 'track':
+						
+						$config['tracklist'] = array();
+						foreach($result['matches'] as $id => $foo) {
+							$config['tracklist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
+						}
+						// get all relational items we need for rendering
+						$config['renderitems'] = array(
+							'genres' => \Slimpd\Genre::getInstancesForRendering($config['tracklist']),
+							'labels' => \Slimpd\Label::getInstancesForRendering($config['tracklist']),
+							'artists' => \Slimpd\Artist::getInstancesForRendering($config['tracklist']),
+							'albums' => \Slimpd\Album::getInstancesForRendering($config['tracklist'])
+						);
+						break;
+					case 'album':
+						$config['itemlist'] = array();
+						foreach($result['matches'] as $id => $foo) {
+							$config['itemlist'][] = \Slimpd\Album::getInstanceByAttributes(array('id' => $id));
+						}
+						$config['renderitems'] = array(
+							'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist']),
+							'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist']),
+							'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist']),
+							'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'])
+						);
+						break;
+				}
+			}
+			
+			
+			
+		}
+		
+		#echo "<pre>" . print_r($result,1); die();
+		
+		$config['action'] = 'searchresult.' . $currenttype;
+		#if(isset($result['matches']) === FALSE) {
+		#	$app->render('surrounding.twig', $config);
+		#	return;
+		#}
+		
+		
+		
+
+		
+		
 		
 		
 	
-	# SPHINX MATCH MODES
-	#$cl->SetMatchMode( SPH_MATCH_ALL );       //	Match all query words (default mode).
-	$cl->SetMatchMode( SPH_MATCH_ANY );       //	Match any of query words.
-	#$cl->SetMatchMode( SPH_MATCH_PHRASE );    //	Match query as a phrase, requiring perfect match.
-	#$cl->SetMatchMode( SPH_MATCH_BOOLEAN );   //	Match query as a boolean expression.
-	$cl->SetMatchMode( SPH_MATCH_EXTENDED );  //	Match query as an expression in Sphinx internal query language.
-	#$cl->SetMatchMode( SPH_MATCH_FULLSCAN );  //	Enables fullscan.
-	#$cl->SetMatchMode( SPH_MATCH_EXTENDED2 ); //	The same as SPH_MATCH_EXTENDED plus ranking and quorum searching support.
-	
-	$cl->SetLimits(
-		($currentPage-1)*$itemsPerPage,
-		$itemsPerPage,
-		1000000
-	);
-	$searchterm = $app->request()->params('q');
-		
-	$result = $cl->Query( '+' . $searchterm, $app->config['sphinx']['trackindex']);
-	
-	$config['search']['total'] = $result['total'];
-	$config['search']['time'] = $result['time'];
-	$config['search']['term'] = $searchterm; 
-	
-	#echo "<pre>" . print_r($result,1); die();
-	$config['tracklist'] = array();
-	$config['action'] = 'searchresult.tracks';
-	if(isset($result['matches']) === FALSE) {
 		$app->render('surrounding.twig', $config);
-		return;
-	}
-	foreach($result['matches'] as $id => $foo) {
-		$config['tracklist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
-	}
-	
-	
-	
-	$urlPattern = '/search/page/(:num)?q=' . $searchterm;
-	$config['paginator_params'] = new JasonGrimes\Paginator(
-		$config['search']['total'],
-		$itemsPerPage,
-		$currentPage,
-		$urlPattern
-	);
-
-	
-	// get all relational items we need for rendering
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['tracklist']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['tracklist']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['tracklist']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['tracklist'])
-	);
-
-	$app->render('surrounding.twig', $config);
-});	
-
+	});
+}
 
