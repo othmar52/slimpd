@@ -189,3 +189,14 @@ a {
 	border:none;
 	color: #AAA;
 }
+
+
+/* album list 2 (wide boxes) begin */
+.box {
+  border-right: 1em solid #1a1a1a;
+}
+
+.box .img-col {
+	padding-left: 0;
+}
+/* album list 2 (wide boxes) end */
