@@ -1,0 +1,18 @@
+
+
+{% if tracklist|length > 0 %}
+
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+
+<div class="tracks_container">
+<br />
+	{% for item in tracklist %}
+		{% include 'partials/trackrow-1.twig' %}
+	{% endfor %}
+	<div class="clearfix"> </div>
+	
+</div>
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+{% else %}
+<h3>nothing found...</h3>
+{% endif %}

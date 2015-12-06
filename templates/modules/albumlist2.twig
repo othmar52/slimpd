@@ -19,7 +19,8 @@
 							{% include 'partials/artist/link.twig' %} - {{item.title}}<br />
 							
 								{{item.year}}
-								({{ item.trackCount }} tracks)
+								({{ item.trackCount }} tracks) <br />
+								{% include 'partials/genrelink.twig' with {'genreIds': item.genreId, 'limit' : 3} %}
 						</div>
 					
 					</div>
