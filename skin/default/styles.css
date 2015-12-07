@@ -1,6 +1,21 @@
+@font-face {
+	font-family: 'slim1';
+	src: url('./fonts/Share-Regular/Share-Regular.eot');
+	src: local('slim1'), url('./fonts/Share-Regular/Share-Regular.ttf') format('truetype');
+} 
+
+@font-face {
+	font-family: 'slim2';
+	src: url('./fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+} 
+
+
 body {
 	padding-top: 60px;
 	padding-bottom: 120px;
+	font-family: "slim1", "sans-serif";
+	font-size: 1.7em;
+	letter-spacing: -0.3pt;
 }
 
 .bg-col1 {
