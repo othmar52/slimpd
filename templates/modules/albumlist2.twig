@@ -1,6 +1,5 @@
-<div class="albums_container">
+<div class="albums_container container">
 {% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
-<div class="container">
 	{% if itemlist|length  %}
 		{% for row in itemlist|batch(2) %}
 		<div class="row">
