@@ -44,19 +44,3 @@
 
 {% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
 	
-
-
-
-{% if tracklist|length > 0 %}
-<h2>Tracks with artist {{ item.title }}</h2>
-<div class="tracks_container">
-{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
-<br />
-	{% for item in tracklist %}
-		{% include 'partials/trackrow-1.twig' %}
-	{% endfor %}
-	<div class="clearfix"> </div>
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
-	
-</div>
-{% endif %}
