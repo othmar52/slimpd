@@ -5,11 +5,20 @@
 {% else %}
 	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
 {% endif %}
-{{ dump(paginator_params)}}
-<h2>Searchresults &quot;{{ search.all.term }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
-{{ startnum }} - {{ endnum }} of {{ searchcurrent.total }} results in {{ searchcurrent.time }}s</span></h2>
 
-<a href="/searchall/page/1?q={{ search.all.term }}">All ({{ search.all.total }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="/searchtrack/page/1?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="/searchartist/page/1?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;
-<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a><br />
+<h2>Searchresults &quot;{{ search.all.term }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
+{{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} results in {{ search[searchcurrent].time }}s</span></h2>
+<ul class="nav nav-tabs">
+	<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}"> 
+		<a href="/searchall/page/1?q={{ search.all.term }}">All ({{ search.all.total }})</a>
+	</li>
+	<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}"> 
+		<a href="/searchtrack/page/1?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
+	</li>
+	<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}"> 
+		<a href="/searchartist/page/1?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
+	</li>
+	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}"> 
+		<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
+	</li>
+</ul>
