@@ -9,16 +9,16 @@
 <h2>Searchresults &quot;{{ search.all.term }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
 {{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} results in {{ search[searchcurrent].time }}s</span></h2>
 <ul class="nav nav-tabs">
-	<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}"> 
+	<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}{{ (search.all.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchall/page/1?q={{ search.all.term }}">All ({{ search.all.total }})</a>
 	</li>
-	<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}"> 
+	<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchtrack/page/1?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
 	</li>
-	<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}"> 
+	<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchartist/page/1?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
 	</li>
-	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}"> 
+	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
 	</li>
 </ul>
