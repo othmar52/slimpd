@@ -123,17 +123,17 @@
 					
 					
 					{% if action == 'searchresult.all' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : search.all } %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all' } %}
 						{% include 'modules/searchresult-tracks.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.track' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : search.track } %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track' } %}
 						{% include 'modules/searchresult-tracks.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.album' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : search.album } %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album' } %}
 						{% include 'modules/albumlist2.twig' %}
 					{% endif %}
 					
