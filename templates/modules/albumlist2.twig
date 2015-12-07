@@ -4,19 +4,20 @@
 <div class="container">
 	
 	{% if itemlist|length  %}
-		{% for row in itemlist|batch(3) %}
+		{% for row in itemlist|batch(2) %}
 		<div class="row">
 			<div class="row-height">
 			{% for item in row %}
-				<div class="col-md-4 ">
+				<div class="col-md-6 ">
 		   			<div class="row inside-full-height bg-col2 box">
-		   				<div class="col-md-4 img-col">
+		   				<div class="col-md-2 img-col">
 							<a href="/library/album/{{item.id}}" class="" style="">
 								<img src="/image-100/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
 							</a>
 						</div>
-						<div class="col-md-8">
-							{% include 'partials/artist/link.twig' %} - {{item.title}}<br />
+						<div class="col-md-10">
+							<strong>{{item.title}}</strong><br />
+							{% include 'partials/artist/link.twig' %}<br />
 							
 								{{item.year}}
 								({{ item.trackCount }} tracks) <br />
