@@ -7,16 +7,7 @@
 		<a href="/mpdctrl/clearPlaylist" class="ajax-link"><i class="fa fa-trash sign"></i> Clear Playlist</a>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-1"></div>
-	<div class="col-md-3">Titel &amp; Album</div>
-	<div class="col-md-3">Artist</div>
-	<div class="col-md-2">Genre</div>
-	<div class="col-md-1">year</div>
-	<div class="col-md-1">time</div>
-	<div class="col-md-1"></div>
-</div>
-<hr />
+{% include 'partials/trackrow-1-header.twig' %}
 
 {% set totalTime = 0 %}
 {% for mpdidx,item in currentplaylist %}
