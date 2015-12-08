@@ -35,15 +35,10 @@
 	        </div>
 	      {% endspaceless %}
 	    {% endif %}
-	
 	  {% endfor %}
-
-
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
 	{% else %}
 		no {{ type }}s found
 		{{ dump(itemlist)}}
 	{% endif %}
 </div>
-
-
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
