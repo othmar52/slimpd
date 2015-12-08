@@ -531,6 +531,13 @@ foreach(array('all', 'artist', 'track', 'album') as $currenttype) {
 							'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'])
 						);
 						break;
+						
+					case 'artist':
+						$config['itemlist'] = array();
+						foreach($result['matches'] as $id => $foo) {
+							$config['itemlist'][] = \Slimpd\Artist::getInstanceByAttributes(array('id' => $id));
+						}
+						break;
 				}
 			}
 			

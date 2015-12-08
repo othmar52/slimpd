@@ -137,6 +137,11 @@
 						{% include 'modules/albumlist2.twig' %}
 					{% endif %}
 					
+					{% if action == 'searchresult.artist' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
+						{% include 'modules/artistlist.twig' %}
+					{% endif %}
+					
   				</div>
 			</div>
 		</div>
