@@ -47,10 +47,7 @@
 								<a href="/library/{{type}}/{{ item.id+1 }}"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
 								{{ item.title }} </h2>
 							{% include 'modules/albumlist2.twig' with { 'itemlist': albumlist } %}
-							
-							{% if type == 'artist' %}
-								{% include 'partials/tracklist-1.twig' %}
-							{% endif %}
+							{% include 'partials/tracklist-1.twig' %}
 							
 							
 						{% endif %}
