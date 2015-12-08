@@ -160,7 +160,8 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		$config['renderitems'] = array(
 			'genres' => \Slimpd\Genre::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
 			'labels' => \Slimpd\Label::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
-			'artists' => \Slimpd\Artist::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist'])
+			'artists' => \Slimpd\Artist::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
+			'albums' => \Slimpd\Album::getInstancesForRendering($config['item'], $config['tracklist'])
 		);
 		
 	    $app->render('surrounding.twig', $config);
