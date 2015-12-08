@@ -1,5 +1,14 @@
 
 {# TODO: which attributes should be passed to discogs search (especially when we do not have much info) #}
-<a href="http://www.discogs.com/search/?{{
- {'q': renderitems.artists[album.artistId].title ~ ' ' ~ album.title , 'type': 'all' }|url_encode
-}}" target="_blank">Discogs</a>
+{% set searchstring = renderitems.artists[album.artistId].title ~ ' ' ~ album.title %}
+<a
+ title="Search discogs for &quot;{{ searchstring }}&quot;"
+ style="background: url(/skin/default/img/discogs-white.png) top left no-repeat;
+ background-size: 40px 16px;
+ width: 40px;
+ height: 16px;
+ display:inline-block;
+ opacity: 0.2;"
+ href="http://www.discogs.com/search/?{{
+ {'q': searchstring , 'type': 'all' }|url_encode
+}}" target="_blank"></a>
