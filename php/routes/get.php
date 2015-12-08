@@ -145,13 +145,18 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			'/library/'.$className.'/'.$itemId.'/page/(:num)'
 		);
 		
+		$searchInAttributes = array(
+			'artistId' => $itemId,
+			'remixerId' => $itemId,
+			'featuringId' => $itemId
+		);
+	
+		if($className == 'label') { $searchInAttributes = array('labelId' => $itemId); }
+		if($className == 'genre') { $searchInAttributes = array('genreId' => $itemId); }
+		
 		// tracklist
 		$config['tracklist'] = \Slimpd\Track::getInstancesByFindInSetAttributes(
-			array(
-				'artistId' => $itemId,
-				'remixerId' => $itemId,
-				'featuringId' => $itemId
-			),
+			$searchInAttributes,
 			$itemsPerPage,
 			$currentPage
 		);
