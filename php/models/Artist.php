@@ -78,17 +78,21 @@ class Artist extends AbstractModel
 				$itemIds[1] = 1;
 			} else {
 				$artistArticle = '';
-				if(preg_match("/^the (.*)$/i", $itemPart, $m)) {
-					$artistArticle = 'The ';
-					$itemPart = $m[1];
-					$az09 = az09($itemPart);
-					#var_dump($itemString); die('prefixed-the');
-				}
-				if(preg_match("/^(.*)([\ ,]+)the$/i", $itemPart, $m)) {
-					$artistArticle = 'The ';
-					$itemPart = remU($m[1]);
-					$az09 = az09($itemPart);
-					#var_dump($m); die('suffixed-the');
+				foreach(array('The', 'Die', ) as $matchArticle) {
+					// search for prefixed article
+					if(preg_match("/^".$matchArticle." (.*)$/i", $itemPart, $m)) {
+						$artistArticle = $matchArticle.' ';
+						$itemPart = $m[1];
+						$az09 = az09($itemPart);
+						#var_dump($itemString); die('prefixed-article');
+					}
+					// search for suffixed article
+					if(preg_match("/^(.*)([\ ,]+)".$matchArticle."/i", $itemPart, $m)) {
+						$artistArticle = $matchArticle.' ';
+						$itemPart = remU($m[1]);
+						$az09 = az09($itemPart);
+						#var_dump($m); die('suffixed-article');
+					}
 				}
 				
 				// unify items based on config
