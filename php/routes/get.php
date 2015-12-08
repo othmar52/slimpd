@@ -500,7 +500,9 @@ foreach(array('all', 'artist', 'track', 'album') as $currenttype) {
 					$urlPattern
 				);
 				
-				
+				if(isset($result['matches']) === FALSE) {
+					$result['matches'] = array();
+				}
 				switch($currenttype) {
 					case 'all':
 					case 'track':
