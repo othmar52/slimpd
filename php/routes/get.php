@@ -431,6 +431,33 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 });
 
 
+$app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $config){
+	$config['action'] = 'maintainance.albumdebug';
+	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
+		$search = array('id' => (int)$itemParams[0]);
+	}
+	
+	$config['album'] = \Slimpd\Album::getInstanceByAttributes($search);
+	
+	$trackInstances =  $config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
+	
+	foreach($trackInstances as $t) {
+		$config['itemlist'][$t->getId()] = $t;
+		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' =>$t->getId())); 
+	} 
+	 
+	
+	#echo "<pre>" . print_r($config['album'],1); die();
+	$config['renderitems'] = array(
+		'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist'], $config['album']),
+		'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist'], $config['album']),
+		'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist'], $config['album']),
+		'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'], $config['album'])
+	);
+	$config['totalitems'] = \Slimpd\Album::getCountAll();
+	$app->render('surrounding.twig', $config);
+});
+
 foreach(array('all', 'artist', 'track', 'album') as $currenttype) {	
 	// very basic partly functional search...
 	$app->get('/search'. $currenttype .'/page/:num', function($num) use ($app, $config, $currenttype){

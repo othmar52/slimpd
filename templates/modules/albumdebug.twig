@@ -1,0 +1,48 @@
+
+<div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
+	<a href="/maintainance/albumdebug/{{ item.id-1 }}">
+		<i class="fa fa-chevron-left fa-lg"></i>
+	</a>
+	<a href="/maintainance/albumdebug/{{ random(totalitems-1)+1 }}">
+		<i class="fa fa-random fa-lg"></i></a>
+	<a href="/maintainance/albumdebug/{{ item.id+1 }}">
+		<i class="fa fa-chevron-right fa-lg"></i>
+	</a>
+</div>
+
+
+
+<h3>Album-debug<br>
+<span class="small">
+	{% set dirs = album.relativePath|split('/') %}
+	<a href="/filebrowser/{{ itemraw.relativeDirectoryPath }}"><i class="fa fa-folder-open fa-lg"></i></a>
+	
+	{% for dir in dirs %}
+		{{dir}}
+		{% if loop.last == false %} / {% endif %}
+	{% endfor%}
+</span>
+</h3>
+
+
+{% for item in itemlistraw %}
+	
+	
+<div class="row">
+	<div class="col-md-5">
+		{% set dirs = item.relativePath|split('/') %}
+  		{% for dir in dirs %}
+		{% if loop.last == true %}
+			{{ dir }}
+		{% endif %}
+	{% endfor %}
+	<br />
+	{{ item.artist }} - {{ item.title }}
+	<br />
+	<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
+  	</div>
+  	<div class="col-md-4">
+  	</div>
+</div>
+<hr />
+{% endfor %}
