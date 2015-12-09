@@ -60,6 +60,9 @@
 					{% include 'modules/trackdebug.twig' %}
 					{% endif %}
 					
+					{% if action == 'maintainance.albumdebug' %}
+					{% include 'modules/albumdebug.twig' %}
+					{% endif %}
 					
 					{% if action == 'landing' %}
 					
