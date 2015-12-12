@@ -6,25 +6,41 @@
 	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
 {% endif %}
 
+
+
+
 <h2>Searchresults &quot;{{ search.all.term }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
 {{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} results in {{ search[searchcurrent].time }}s</span></h2>
-<ul class="nav nav-tabs">
-	<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}{{ (search.all.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchall/page/1?q={{ search.all.term }}">All ({{ search.all.total }})</a>
-	</li>
-	<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchtrack/page/1?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
-	</li>
-	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
-	</li>
-	<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchartist/page/1?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
-	</li>
-	<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }}{{ (search.genre.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchgenre/page/1?q={{ search.all.term }}">Genres ({{ search.genre.total }})</a>
-	</li>
-	<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchlabel/page/1?q={{ search.all.term }}">Labels ({{ search.label.total }})</a>
-	</li>
-</ul>
+
+
+<div class="row">
+	<div class="col-md-10">
+		<ul class="nav nav-tabs">
+			<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}{{ (search.all.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}">All ({{ search.all.total }})</a>
+			</li>
+			<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
+			</li>
+			<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
+			</li>
+			<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
+			</li>
+			<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }}{{ (search.genre.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}">Genres ({{ search.genre.total }})</a>
+			</li>
+			<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}">Labels ({{ search.label.total }})</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-1">
+		Sort by
+	</div>
+	<div class="col-md-1">
+		{% include 'partials/dropdown-search-sorting.twig' %}
+		
+	</div>
+</div>
