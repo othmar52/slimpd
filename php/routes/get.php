@@ -443,7 +443,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	
 	foreach($trackInstances as $t) {
 		$config['itemlist'][$t->getId()] = $t;
-		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' =>$t->getId())); 
+		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' =>$t->getId()));
 	} 
 	 
 	
@@ -458,22 +458,49 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	$app->render('surrounding.twig', $config);
 });
 
-foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $currenttype) {	
+
+$sortfields = array(
+	'all' => array('title', 'artist', 'year', 'added'),
+	'track' => array('title', 'artist', 'year', 'added'),
+	'album' => array('year', 'title', 'added', 'artist', 'trackCount'),
+	'artist' => array('title', 'trackCount', 'albumCount'),
+	'genre' => array('title', 'trackCount', 'albumCount'),
+	'label' => array('title', 'trackCount', 'albumCount'),
+);
+
+
+foreach(array_keys($sortfields) as $currenttype) {	
 	// very basic partly functional search...
-	$app->get('/search'. $currenttype .'/page/:num', function($num) use ($app, $config, $currenttype){
+	$app->get(
+		'/search'. $currenttype .'/page/:num/sort/:sort/:direction',
+		function($num, $sort, $direction)
+		use ($app, $config, $currenttype, $sortfields
+	) {
 		
 		
 		$searchterm = $app->request()->params('q');
+		
+		
 		
 		$cl = new \SphinxClient();
 		$cl->SetServer(
 			$app->config['sphinx']['host'], 
 			(int)$app->config['sphinx']['port']
 		);
+		
+		$sortfield = (in_array($sort, $sortfields[$currenttype]) === TRUE) ? $sort : 'relevance';
+		
+		#echo $sortfield; die(); exit;
 		$matches = array();
-		foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $type) {
+		foreach(array_keys($sortfields) as $type) {
 			$itemsPerPage = 1;
 			$currentPage = 1;
+			
+			if($sortfield !== 'relevance' && $type == $currenttype) {
+				$cl->SetSortMode((($direction == 'asc') ? SPH_SORT_ATTR_ASC : SPH_SORT_ATTR_DESC), $sortfield);
+			} else {
+				$cl->SetSortMode(SPH_SORT_RELEVANCE);
+			}
 			switch($type) {
 				case 'all' :
 					$indexname = $app->config['sphinx']['trackindex'];
@@ -486,6 +513,8 @@ foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $currentty
 				case 'album' :
 					$indexname = $app->config['sphinx']['albumindex'];
 					$query = '+' . $searchterm;
+					
+					
 					break;
 				case 'artist' :
 					$indexname = $app->config['sphinx']['artistindex'];
@@ -533,7 +562,7 @@ foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $currentty
 				$itemsPerPage = 50;
 				$currentPage = $num;
 
-				$urlPattern = '/search'.$type.'/page/(:num)?q=' . $searchterm;
+				$urlPattern = '/search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $searchterm;
 				$config['paginator_params'] = new JasonGrimes\Paginator(
 					$config['search'][$type]['total'],
 					$itemsPerPage,
