@@ -458,7 +458,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	$app->render('surrounding.twig', $config);
 });
 
-foreach(array('all', 'artist', 'track', 'album') as $currenttype) {	
+foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $currenttype) {	
 	// very basic partly functional search...
 	$app->get('/search'. $currenttype .'/page/:num', function($num) use ($app, $config, $currenttype){
 		
@@ -471,16 +471,12 @@ foreach(array('all', 'artist', 'track', 'album') as $currenttype) {
 			(int)$app->config['sphinx']['port']
 		);
 		$matches = array();
-		foreach(array('all', 'artist', 'track', 'album') as $type) {
+		foreach(array('all', 'artist', 'track', 'album', 'genre', 'label') as $type) {
 			$itemsPerPage = 1;
 			$currentPage = 1;
 			switch($type) {
 				case 'all' :
 					$indexname = $app->config['sphinx']['trackindex'];
-					$query = '+' . $searchterm;
-					break;
-				case 'artist' :
-					$indexname = $app->config['sphinx']['artistindex'];
 					$query = '+' . $searchterm;
 					break;
 				case 'track' :
@@ -489,6 +485,18 @@ foreach(array('all', 'artist', 'track', 'album') as $currenttype) {
 					break;
 				case 'album' :
 					$indexname = $app->config['sphinx']['albumindex'];
+					$query = '+' . $searchterm;
+					break;
+				case 'artist' :
+					$indexname = $app->config['sphinx']['artistindex'];
+					$query = '+' . $searchterm;
+					break;
+				case 'genre' :
+					$indexname = $app->config['sphinx']['genreindex'];
+					$query = '+' . $searchterm;
+					break;
+				case 'label' :
+					$indexname = $app->config['sphinx']['labelindex'];
 					$query = '+' . $searchterm;
 					break;
 			}
@@ -569,6 +577,20 @@ foreach(array('all', 'artist', 'track', 'album') as $currenttype) {
 						$config['itemlist'] = array();
 						foreach($result['matches'] as $id => $foo) {
 							$config['itemlist'][] = \Slimpd\Artist::getInstanceByAttributes(array('id' => $id));
+						}
+						break;
+						
+					case 'genre':
+						$config['itemlist'] = array();
+						foreach($result['matches'] as $id => $foo) {
+							$config['itemlist'][] = \Slimpd\Genre::getInstanceByAttributes(array('id' => $id));
+						}
+						break;
+						
+					case 'label':
+						$config['itemlist'] = array();
+						foreach($result['matches'] as $id => $foo) {
+							$config['itemlist'][] = \Slimpd\Label::getInstanceByAttributes(array('id' => $id));
 						}
 						break;
 				}

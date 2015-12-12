@@ -139,7 +139,17 @@
 					
 					{% if action == 'searchresult.artist' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
-						{% include 'modules/artistlist.twig' %}
+						{% include 'modules/typelist2.twig' with { 'type': 'artist' } %}
+					{% endif %}
+					
+					{% if action == 'searchresult.label' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label' } %}
+						{% include 'modules/typelist2.twig' with { 'type': 'label' } %}
+					{% endif %}
+					
+					{% if action == 'searchresult.genre' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
+						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
 					{% endif %}
 					
   				</div>
