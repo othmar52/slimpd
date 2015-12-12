@@ -15,10 +15,16 @@
 	<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchtrack/page/1?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
 	</li>
+	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
+		<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
+	</li>
 	<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
 		<a href="/searchartist/page/1?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
 	</li>
-	<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
-		<a href="/searchalbum/page/1?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
+	<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }}{{ (search.genre.total == 0) ? 'disabled' : '' }}"> 
+		<a href="/searchgenre/page/1?q={{ search.all.term }}">Genres ({{ search.genre.total }})</a>
+	</li>
+	<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
+		<a href="/searchlabel/page/1?q={{ search.all.term }}">Labels ({{ search.label.total }})</a>
 	</li>
 </ul>
