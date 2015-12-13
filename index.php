@@ -71,6 +71,12 @@ $filter = new \Twig_SimpleFilter('shorty', function ($number) {
 	return number_format($number/1000000,1) . " M";
 });
 $twig->addFilter($filter);
+
+$filter = new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array()) use($app) {
+	return $app->ll->str($hans, $vars);
+});
+$twig->addFilter($filter);
+
 #####################################################################################
 
 // LOAD MODULES
