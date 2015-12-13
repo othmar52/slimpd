@@ -43,14 +43,14 @@
 <hr />
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.title }}</strong></div>
+	<div class="col-md-2"><strong>{{'title'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.title }}</div>
 	<div class="col-md-4"><input name="title" type="text" value="{{ item.title }}" class="form-control" /></div>
 	<div class="col-md-3">{{ item.title }}</div>
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.artist }}</strong></div>
+	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.artist }}</div>
 	<div class="col-md-4"><input name="artist" type="text" value="{% include 'partials/artist/without_ft_string.twig' %}" class="form-control" /></div>
 	<div class="col-md-3">
@@ -59,7 +59,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll['featured.artist'] }}</strong></div>
+	<div class="col-md-2"><strong>{{'featured.artist'|ll}}</strong></div>
 	<div class="col-md-3"></div>
 	{% set ftItem = { 'artistId' : item.featuringId }%}
 	<div class="col-md-4"><input name="featuring" type="text" value="{% include 'partials/artist/string.twig' with { 'item': ftItem } %}" class="form-control" /></div>
@@ -69,7 +69,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll['remix.artist'] }}</strong></div>
+	<div class="col-md-2"><strong>{{'remix.artist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.remixer }}</div>
 	{% set rmxItem = { 'artistId' : item.remixerId }%}
 	<div class="col-md-4"><input name="remixer" type="text" value="{% include 'partials/artist/string.twig' with { 'item': rmxItem } %}" class="form-control" /></div>
@@ -80,7 +80,7 @@
 
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.albumartist }}</strong></div>
+	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.albumArtist }}</div>
 	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.twig' with { 'item': renderitems.albums[item.albumId] } %}" class="form-control" /></div>
 	<div class="col-md-3">
@@ -90,7 +90,7 @@
 
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.album }}</strong></div>
+	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.album }}</div>
 	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumId].title }}" class="form-control" /></div>
 	<div class="col-md-3">{% include 'partials/albumlink.twig' with {'item': renderitems.albums[item.albumId]} %}</div>
@@ -98,14 +98,14 @@
 
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.year }}</strong></div>
+	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.year }}</div>
 	<div class="col-md-4"><input name="year" type="text" value="{{ item.year }}" class="form-control" /></div>
 	<div class="col-md-3">{% include 'partials/yearlink.twig' %}</div>
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.genre }}</strong></div>
+	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.genre }}</div>
 	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genrestring.twig' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
 	<div class="col-md-3">
@@ -114,7 +114,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.label }}</strong></div>
+	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.publisher }}</div>
 	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/labelstring.twig' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
 	<div class="col-md-3">
@@ -123,7 +123,7 @@
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.catnr }}</strong></div>
+	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.textCatalogNumber }}</div>
 	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNr }}" class="form-control" /></div>
 	<div class="col-md-3">
@@ -131,7 +131,7 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-md-2"><strong>{{ ll.number }}</strong></div>
+	<div class="col-md-2"><strong>{{'number'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.trackNumber }}</div>
 	<div class="col-md-4"><input name="number" type="text" value="{{ item.number }}" class="form-control" /></div>
 	<div class="col-md-3">
