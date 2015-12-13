@@ -42,7 +42,6 @@ $config['mainmenu']= array(
     'url' => $config['absRefPrefix'] . 'importer'
   ),
 );
-$config['ll'] = $app->ll->getAllCommonTranslationItems('general');
 
 
 
