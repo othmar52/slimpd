@@ -1550,7 +1550,11 @@ class Importer {
 				cliLog($msg, 7);
 			}
 			// delete all items which does not have any trackCount or albumCount
-			$query = "DELETE FROM " . strtolower($className) . " WHERE trackCount=0 AND albumCount=0";
+			// but preserve default entries
+			$andWhere = ($className === 'artist') ? ' AND uid>2' : ' AND uid > 1';
+			
+			
+			$query = "DELETE FROM " . strtolower($className) . " WHERE trackCount=0 AND albumCount=0 " . $andWhere;
 			$msg = "deleting ".$className."s  with trackCount=0 AND albumCount=0";
 			cliLog($msg, 3);
 			$app->db->query($query);

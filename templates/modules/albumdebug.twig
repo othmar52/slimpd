@@ -12,7 +12,7 @@
 
 
 
-<h3>Album-debug<br>
+<h3>Album editor<br>
 <span class="small">
 	{% set dirs = album.relativePath|split('/') %}
 	<a href="/filebrowser/{{ itemraw.relativeDirectoryPath }}"><i class="fa fa-folder-open fa-lg"></i></a>
@@ -25,24 +25,181 @@
 </h3>
 
 
-{% for item in itemlistraw %}
-	
-	
+<pre>AA{{ dump(discogstracks)}}</pre>
+
 <div class="row">
-	<div class="col-md-5">
-		{% set dirs = item.relativePath|split('/') %}
-  		{% for dir in dirs %}
-		{% if loop.last == true %}
-			{{ dir }}
-		{% endif %}
-	{% endfor %}
-	<br />
-	{{ item.artist }} - {{ item.title }}
-	<br />
-	<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
-  	</div>
-  	<div class="col-md-4">
-  	</div>
+	<div class="col-md-9">
+	
+	</div>
+	<div class="col-md-2">
+		<form action="" method="get">
+			<input name="discogsid" type="text" placeholder="submit Discogs-release-ID" class="form-control"/>
+			
+		</form>
+	</div>
+	<div class="col-md-1">
+		{% include 'partials/extlink-discogs.twig' %}
+	</div>
 </div>
-<hr />
-{% endfor %}
+
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
+	<div class="col-md-3">{{ album.title }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ album.title }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
+	<div class="col-md-3">{% include 'partials/artist/link.twig' with { 'item': album } %}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/artist/string.twig' with { 'item': album } %}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
+	<div class="col-md-3">{{ album.year }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ album.year }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
+	<div class="col-md-3">{{ album.genre }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/genrestring.twig' with { 'genreIds': album.genreId } %}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
+	<div class="col-md-3">{{ album.label }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/labelstring.twig' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
+	<div class="col-md-3">{{ album.ctalogNr }}</div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ album.catalogNr}}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+
+
+<div class="row">
+	<div class="col-md-12">
+		<hr/>
+		<ul class="nav nav-tabs inline-tab-nav">
+			<li class="active"> 
+				<a href="#filenames">Filenames</a>
+			</li>
+			<li class=""> 
+				<a href="#tagdata">Tagdata</a>
+			</li>
+			<li class=""> 
+				<a href="#rawtagdata">Raw tagdata</a>
+			</li>
+			<li class=""> 
+				<a href="#editall">Edit all</a>
+			</li>
+			
+		</ul>
+	</div>
+</div>
+
+<div class="tab-content">
+	<br />
+	<div class="tab-pane active" id="filenames">
+	
+		
+		<div class="row">
+			
+			<div class="col-md-6">
+				{% for idx,item in itemlist %}	
+					{% set dirs = item.relativePath|split('/') %}
+		  			{% for dir in dirs %}
+						{% if loop.last == true %}<div class="well well-sm">{{ dir }}</div>{% endif %}
+					{% endfor %}
+				{% endfor %}
+			</div>
+			<div class="col-md-6 grid">
+				{% for idx,item in discogstracks %}	
+				   <div class="well well-sm">{{ item }}</div>
+				{% endfor %}
+			</div>
+		</div>
+		
+	</div>
+	<div class="tab-pane" id="tagdata">
+
+		{% for idx,item in itemlist %}
+		<div class="row">
+			<div class="col-md-12">	
+		
+			{{ item.artist }} - {{ item.title }}
+		
+			<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
+		  	</div>
+		  	<div class="col-md-4">
+		  	</div>
+		</div>
+		{% endfor %}
+	</div>
+	<div class="tab-pane active" id="rawtagdata">
+	
+	
+	</div>
+	<div class="tab-pane" id="editall">
+		
+		<div class="row">
+			<div class="col-md-1">{{'number'|ll}}</div>
+			<div class="col-md-2">{{'artist'|ll}}</div>
+			<div class="col-md-2">{{'title'|ll}}</div>
+			<div class="col-md-2">{{'remix.artist'|ll}}</div>
+			<div class="col-md-2">{{'featured.artist'|ll}}</div>
+			<div class="col-md-2">{{'genre'|ll}}</div>
+		</div>
+			
+		{% for idx,item in itemlist %}
+			
+			
+		<div class="row">
+			<div class="col-md-1">
+				<input name="number[{{item.fingerprint}}]" type="text" value="{{ item.number}}" class="form-control" />
+			</div>
+			<div class="col-md-2">
+				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' %}" class="form-control" />
+			</div>
+			<div class="col-md-2">
+				<input name="title[{{item.fingerprint}}]" type="text" value="{{ item.title}}" class="form-control" />
+			</div>
+			<div class="col-md-2">
+				{% set rmxItem = { 'artistId' : item.remixerId }%}
+				<input name="remixer[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' with { 'item': rmxItem } %}" class="form-control" />
+			</div>
+			<div class="col-md-2">
+				{% set ftItem = { 'artistId' : item.featuringId }%}
+				<input name="feat[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' with { 'item': ftItem } %}" class="form-control" />
+			</div>
+			<div class="col-md-2">
+				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/genrestring.twig' with {'genreIds': item.genreId} %}" class="form-control" />
+			</div>	
+		</div>
+		
+		{% endfor %}
+	</div>
+
+	<style type="text/css">
+	
+	.placeholder {
+	    border: 1px solid green;
+	    background-color: white;
+	    -webkit-box-shadow: 0px 0px 10px #888;
+	    -moz-box-shadow: 0px 0px 10px #888;
+	    box-shadow: 0px 0px 10px #888;
+	}
+	</style>
