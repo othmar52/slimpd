@@ -17,7 +17,6 @@ class Localization
 			\Slim\Slim::getInstance()->config['config']['langkey'],
 			'en' // fallback language
 		);
-		// TODO: get from separate langfiles
 		foreach($checkLanguages as $langkey) {
 			if(isset(self::$lang[$langkey . '.' . $itemkey])) {
 				if(count($vars) === 0) {
