@@ -9,4 +9,5 @@ return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Slim' => array($vendorDir . '/slim/slim'),
     'JasonGrimes' => array($vendorDir . '/jasongrimes/paginator/src'),
+    'Discogs' => array($vendorDir . '/ricbra/php-discogs-api/lib'),
 );

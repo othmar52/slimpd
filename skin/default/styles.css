@@ -63,6 +63,10 @@ a {
 }
 
 
+.well {
+	color: #000;
+}
+
 .main-nav .form-control {
 	background-color: #2D2D2D;
 	border:none;
