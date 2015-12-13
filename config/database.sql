@@ -459,6 +459,26 @@ CREATE TABLE IF NOT EXISTS `albumindex` (
 ALTER TABLE `albumindex`
   ADD FULLTEXT KEY `allchunks` (`allchunks`);
   
+  
+  
+-- --------------------------------------------------------
+
+--
+-- table structure `discogsapicache`
+--
+
+CREATE TABLE IF NOT EXISTS `discogsapicache` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tstamp` int(11) unsigned NOT NULL,
+  `type` varchar(255) NOT NULL DEFAULT '',
+  `extid` int(11) unsigned NOT NULL,
+  `response` mediumtext NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `type` (`type`),
+  KEY `extid` (`extid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+  
 -- --------------------------------------------------------
 
 --

@@ -169,7 +169,6 @@ abstract class AbstractModel {
 			$query .= ' ORDER BY ' . $orderBy . ' ';
 		}
 		$query .= ' LIMIT 1';
-		
 		$result = $db->query($query);
 		if($result->num_rows == 0) {
 			return $instance;
@@ -212,6 +211,7 @@ abstract class AbstractModel {
 		foreach($array as $dbfield => $value) {
 			$setter = 'set'.ucfirst($dbfield);
 			if(method_exists(get_called_class(), $setter)) {
+				#echo $setter . $value ."<br>";
 				$this->$setter($value);
 			}
 		}
