@@ -29,6 +29,19 @@ $(document).ready(function(){
     	$('.mpd-status-progressbar').css('width', 'calc('+ percent+'% - 15px)');
 	});
 	
+	
+	/* route /maintainance/albumdebug */
+    $('.inline-tab-nav a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $(".grid").sortable({
+        tolerance: 'pointer',
+        revert: 'invalid',
+        placeholder: 'span2 well placeholder tile',
+        forceHelperSize: true
+    });
+	
 		
 });
 

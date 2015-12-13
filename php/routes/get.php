@@ -438,11 +438,69 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	
 	$config['album'] = \Slimpd\Album::getInstanceByAttributes($search);
 	
-	$trackInstances =  $config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
 	
+	$tmp = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
+	foreach($tmp as $t) {
+		$trackInstances[$t->getId()] = $t;
+	}
+	unset($tmp);
+	
+	$discogsId = $app->request->get('discogsid');
+	
+	$config['discogstracks'] = array();
+	if($discogsId !== NULL) {
+		$discogsItem = new \Slimpd\Discogsitem($discogsId);
+		$discogsTracks = $discogsItem->trackstrings;
+		
+		$indexRecords = array();
+		
+		
+		$matchMatrix = array();
+		
+		// check similarity
+		foreach($trackInstances as $t) {
+			$chunks = \Slimpd\Trackindex::getInstanceByAttributes(['id' => $t->getId()])->getAllchunks();
+			#echo 'score for [ ' . $t->getId() . ' ] ' . basename($t->getRelativePath()). "<br />";
+			foreach($discogsTracks as $dIndex => $d) {
+				$percent = similar_text($d, $chunks);
+				$matchMatrix[$dIndex][$t->getId()] = $percent;
+				#echo $percent . ' ' . $d . "<br />";
+			}
+			#echo "--------------------------<br>";
+		}
+		$bestMatches = array();
+		$removeTrackId = 0;
+		foreach($matchMatrix as $dId => $trackScorePair) {
+			if(isset($trackScorePair[$removeTrackId]) === TRUE) {
+				unset($trackScorePair[$removeTrackId]);
+			}
+			foreach($trackScorePair as $tId => $tScore) {
+				if(isset($bestMatches[$dId]) === FALSE) {
+					$bestMatches[$dId][$tId] = $tScore;
+					$removeTrackId = $tId;
+				}
+				$h = reset($bestMatches[$dId]);
+				if($tScore > $h) {
+					$bestMatches[$dId] = array($tId => $tScore);
+					$removeTrackId = $tId;
+				}
+			}
+		}
+		unset($matchMatrix);# echo "<pre>" . print_r($matchMatrix,1) . "</pre>";
+		#echo "<pre>" . print_r($bestMatches,1) . "</pre>";
+		
+	}
+	foreach($bestMatches as $dId => $trackScorePair) {
+		$tId = key($trackScorePair);
+		$config['itemlist'][$tId] = $trackInstances[$tId];
+		$config['itemlistraw'][$tId] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => (int)$tId));
+		$config['discogstracks'][$tId] = $discogsTracks[$dId];
+		unset($trackInstances[$tId]);
+	}
+	// add orphaned track instances in case iscogs release has less items
 	foreach($trackInstances as $t) {
 		$config['itemlist'][$t->getId()] = $t;
-		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' =>$t->getId()));
+		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => $t->getId()));
 	} 
 	 
 	
@@ -453,6 +511,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 		'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist'], $config['album']),
 		'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'], $config['album'])
 	);
+	#echo "<pre>" . print_r($config['album'],1); die();
 	$config['totalitems'] = \Slimpd\Album::getCountAll();
 	$app->render('surrounding.twig', $config);
 });
