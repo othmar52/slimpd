@@ -34,8 +34,10 @@ class Discogsitem extends AbstractModel
 	
 	public function extractTracknames() {
 		$data = $this->getResponse(TRUE);
+		$counter = 0;
 		foreach($data['tracklist'] as $t) {
-			$trackindex = $this->getExtid() . '-' . $t['position']; 
+			$counter++;
+			$trackindex = $this->getExtid() . '-' . $counter; 
 			$trackstring = $t['position'] . '. ';
 			$trackArtists = (isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists'];
 			foreach($trackArtists as $a) {
@@ -77,6 +79,90 @@ class Discogsitem extends AbstractModel
 		
 		$this->insert();
 	}
+
+	public function guessTrackMatch($rawTagDataInstances) {
+		$matchScore = array();
+		$data = $this->getResponse(TRUE);
+		
+		foreach($rawTagDataInstances as $rawId => $rawItem) {
+			
+			
+			$filename = basename($rawItem->getRelativePath());
+			
+			$counter = 0;
+			foreach($data['tracklist'] as $t) {
+				$counter++;
+				$extIndex = $this->getExtid() . '-' . $counter;
+				
+				$extArtists = (isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists'];
+				$extArtistString = '';
+				foreach($extArtists as $a) {
+					$extArtistString .= $a['name'];
+				}
+				
+				
+				
+				
+				if(isset($matchScore[$rawItem->getId()][$extIndex]) === FALSE) {
+					$matchScore[$rawItem->getId()][$extIndex] = 0;
+				}
+				
+				// search discogsArtist in supposable rawItem fields
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getArtist(), $extArtistString);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getArtist(), $filename);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getArtist(), $t['title']);
+				
+				
+				// search discogsTitle in supposable rawItem fields
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTitle(), $extArtistString);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTitle(), $filename);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTitle(), $t['title']);
+				
+				// search discogsNumber in supposable rawItem fields
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTrackNumber(), $extArtistString);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTrackNumber(), $filename);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTrackNumber(), $t['title']);
+				$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($rawItem->getTrackNumber(), $t['position']);
+				
+				// in case we have a discogs duration compare durations
+				if(strlen($t['duration']) > 0) {
+					$extSeconds = timeStringToSeconds($t['duration']);
+					if($rawItem->getMiliseconds() > $extSeconds) {
+						$higher = $rawItem->getMiliseconds();
+						$lower =  $extSeconds;
+					} else {
+						$higher = $extSeconds;
+						$lower =  $rawItem->getMiliseconds();
+					}
+					$matchScore[$rawItem->getId()][$extIndex] += floor($lower/($higher/100));
+				}
+			}
+		}
+		$return = array();
+		foreach($matchScore as $rawIndex => $scorePairs) {
+			arsort($scorePairs);
+			$return[$rawIndex] = $scorePairs;
+		}
+		return $return;
+		
+
+
+		echo "<pre>" . print_r($return,1); die();
+		echo "<pre>" . print_r($rawItem,1); die();
+		
+	}
+	
+	private function getMatchStringScore($string1, $string2) {
+		if(strtolower($string1) == strtolower($string2)) {
+			return 100;
+		}
+		return similar_text($string1, $string2);
+		
+		echo "<pre>".$string1 . "\n" . $string2;die();
+		
+	}
+
+
 	
 	//setter
 	public function setId($value) {

@@ -440,69 +440,45 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	
 	
 	$tmp = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
+	$trackInstances = array();
+	$rawTagDataInstances = array();
 	foreach($tmp as $t) {
-		$trackInstances[$t->getId()] = $t;
+		$config['itemlist'][$t->getId()] = $t;
+		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => (int)$t->getId()));
 	}
+	#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
 	unset($tmp);
 	
-	$discogsId = $app->request->get('discogsid');
 	
 	$config['discogstracks'] = array();
+	$config['matchmapping'] = array();
+	
+	$discogsId = $app->request->get('discogsid');
 	if($discogsId !== NULL) {
+		
+		/* possible usecases:
+		 * we have same track amount on local side and discogs side
+		 *   each local track matches to one discogs track
+		 *   one ore more local track does not have a match on the discogs side
+		 *   two local tracks matches one discogs-track 
+		 * 
+		 * we have more tracks on the local side
+		 *   we have dupes on the local side
+		 *   we have tracks on the local side that dous not exist on the discogs side
+		 * 
+		 * we have more tracks on the discogs side
+		 *   all local tracks exists on the discogs side
+		 *   some local tracks does not have a track on the discogs side
+		 * 
+		 * 
+		 */
+		
 		$discogsItem = new \Slimpd\Discogsitem($discogsId);
-		$discogsTracks = $discogsItem->trackstrings;
+		$config['matchmapping'] = $discogsItem->guessTrackMatch($config['itemlistraw']);
+		$config['discogstracks'] = $discogsItem->trackstrings;
 		
-		$indexRecords = array();
 		
-		
-		$matchMatrix = array();
-		
-		// check similarity
-		foreach($trackInstances as $t) {
-			$chunks = \Slimpd\Trackindex::getInstanceByAttributes(['id' => $t->getId()])->getAllchunks();
-			#echo 'score for [ ' . $t->getId() . ' ] ' . basename($t->getRelativePath()). "<br />";
-			foreach($discogsTracks as $dIndex => $d) {
-				$percent = similar_text($d, $chunks);
-				$matchMatrix[$dIndex][$t->getId()] = $percent;
-				#echo $percent . ' ' . $d . "<br />";
-			}
-			#echo "--------------------------<br>";
-		}
-		$bestMatches = array();
-		$removeTrackId = 0;
-		foreach($matchMatrix as $dId => $trackScorePair) {
-			if(isset($trackScorePair[$removeTrackId]) === TRUE) {
-				unset($trackScorePair[$removeTrackId]);
-			}
-			foreach($trackScorePair as $tId => $tScore) {
-				if(isset($bestMatches[$dId]) === FALSE) {
-					$bestMatches[$dId][$tId] = $tScore;
-					$removeTrackId = $tId;
-				}
-				$h = reset($bestMatches[$dId]);
-				if($tScore > $h) {
-					$bestMatches[$dId] = array($tId => $tScore);
-					$removeTrackId = $tId;
-				}
-			}
-		}
-		unset($matchMatrix);# echo "<pre>" . print_r($matchMatrix,1) . "</pre>";
-		#echo "<pre>" . print_r($bestMatches,1) . "</pre>";
-		
-	}
-	foreach($bestMatches as $dId => $trackScorePair) {
-		$tId = key($trackScorePair);
-		$config['itemlist'][$tId] = $trackInstances[$tId];
-		$config['itemlistraw'][$tId] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => (int)$tId));
-		$config['discogstracks'][$tId] = $discogsTracks[$dId];
-		unset($trackInstances[$tId]);
-	}
-	// add orphaned track instances in case iscogs release has less items
-	foreach($trackInstances as $t) {
-		$config['itemlist'][$t->getId()] = $t;
-		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => $t->getId()));
 	} 
-	 
 	
 	#echo "<pre>" . print_r($config['album'],1); die();
 	$config['renderitems'] = array(

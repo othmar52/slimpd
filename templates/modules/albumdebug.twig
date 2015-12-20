@@ -25,8 +25,6 @@
 </h3>
 
 
-<pre>AA{{ dump(discogstracks)}}</pre>
-
 <div class="row">
 	<div class="col-md-9">
 	
@@ -122,14 +120,16 @@
 				{% for idx,item in itemlist %}	
 					{% set dirs = item.relativePath|split('/') %}
 		  			{% for dir in dirs %}
-						{% if loop.last == true %}<div class="well well-sm">{{ dir }}</div>{% endif %}
+						{% if loop.last == true %}<div class="well well-sm">{{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
 					{% endfor %}
 				{% endfor %}
 			</div>
 			<div class="col-md-6 grid">
-				{% for idx,item in discogstracks %}	
-				   <div class="well well-sm">{{ item }}</div>
+				
+				{% for idx,item in itemlist %}
+					<div class="well well-sm">{{ discogstracks[ matchmapping[idx]|keys|first] }}</div>
 				{% endfor %}
+		
 			</div>
 		</div>
 		
