@@ -476,6 +476,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 		$discogsItem = new \Slimpd\Discogsitem($discogsId);
 		$config['matchmapping'] = $discogsItem->guessTrackMatch($config['itemlistraw']);
 		$config['discogstracks'] = $discogsItem->trackstrings;
+		$config['discogsalbum'] = $discogsItem->albumAttributes;
 		
 		
 	} 
