@@ -9,6 +9,7 @@ class Discogsitem extends AbstractModel
 	protected $extid;
 	protected $response;
 	public $trackstrings;
+	public $albumAttributes;
 	
 	public static $tableName = 'discogsapicache';
 	
@@ -28,12 +29,50 @@ class Discogsitem extends AbstractModel
 		#var_dump($this);
 		#die('nutte');
 		$this->extractTracknames();
+		$this->extractAlbumAttributes();
 		
 		return $this;
 	}
 	
 	public function extractTracknames() {
 		$data = $this->getResponse(TRUE);
+		$counter = 0;
+		foreach($data['tracklist'] as $t) {
+			$counter++;
+			$trackindex = $this->getExtid() . '-' . $counter; 
+			$trackstring = $t['position'] . '. ';
+			$trackArtists = (isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists'];
+			foreach($trackArtists as $a) {
+				$trackstring .= $a['name'];
+			}
+			
+			$trackstring .= ' - ' . $t['title'];#
+			if(strlen($t['duration']) > 0) {
+				$trackstring .= ' [' . $t['duration'] . ']';
+			}
+			$this->trackstrings[$trackindex] = $trackstring;
+		}
+	}
+	
+	public function extractAlbumAttributes() {
+		$data = $this->getResponse(TRUE);
+		$this->albumAttributes['artist'] = '';
+		foreach($data['artists'] as $a) {
+			$this->albumAttributes['artist'] .= $a['name'] . ",";
+		}
+		$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
+		$this->albumAttributes['title'] = $data['title'];
+		$this->albumAttributes['genre'] = join(",", array_merge($data['genres'], $data['styles']));
+		$this->albumAttributes['year'] = $data['released'];
+		
+		// only take the first label/CatNo - no matter how many are provided by discogs
+		if(isset($data['labels'][0]) === TRUE) {
+			$this->albumAttributes['label'] = $data['labels'][0]['name'];
+			$this->albumAttributes['catalogNr'] = $data['labels'][0]['catno'];
+		}
+		return;
+		
+		echo "<pre>" . print_r($data,1); die();
 		$counter = 0;
 		foreach($data['tracklist'] as $t) {
 			$counter++;
