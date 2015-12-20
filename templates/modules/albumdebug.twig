@@ -45,29 +45,31 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
 	<div class="col-md-3">{{ album.title }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ album.title }}" class="form-control" /></div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
 	<div class="col-md-3">{% include 'partials/artist/link.twig' with { 'item': album } %}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/artist/string.twig' with { 'item': album } %}" class="form-control" /></div>
+	{% set value %}{% include 'partials/artist/string.twig' with { 'item': album } %}{% endset %}
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
 	<div class="col-md-3">{{ album.year }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ album.year }}" class="form-control" /></div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.year ? album.year : discogsalbum.year }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	<div class="col-md-3">{{ album.genre }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/genrestring.twig' with { 'genreIds': album.genreId } %}" class="form-control" /></div>
+	<div class="col-md-3">{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}</div>
+	{% set value %}{% include 'partials/genrestring.twig' with { 'genreIds': album.genreId } %}{% endset %}
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.genre ? value : discogsalbum.genre }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
@@ -75,14 +77,15 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ album.label }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{% include 'partials/labelstring.twig' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+	{% set value %}{% include 'partials/labelstring.twig' with { 'labelIds': album.labelId } %}{% endset %}
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
 	<div class="col-md-3">{{ album.ctalogNr }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ album.catalogNr}}" class="form-control" /></div>
+	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.catalogNr ? album.catalogNr : discogsalbum.catalogNr }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
@@ -187,11 +190,13 @@
 			</div>
 			<div class="col-md-2">
 				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/genrestring.twig' with {'genreIds': item.genreId} %}" class="form-control" />
-			</div>	
+			</div>
 		</div>
 		
 		{% endfor %}
 	</div>
+	
+	<hr /><br /><br />
 
 	<style type="text/css">
 	
