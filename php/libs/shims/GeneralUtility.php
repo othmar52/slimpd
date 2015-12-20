@@ -12,6 +12,11 @@ function remU($input){
     return trim(preg_replace('!\s+!', ' ', str_replace("_", " ", $input)));
 }
 
+function timeStringToSeconds($time) {
+    $sec = 0;
+    foreach (array_reverse(explode(':', $time)) as $k => $v) $sec += pow(60, $k) * $v;
+    return $sec;
+}
 
 function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if($verbosity > \Slim\Slim::getInstance()->config['config']['cli-verbosity'] && $fatal === FALSE) {
