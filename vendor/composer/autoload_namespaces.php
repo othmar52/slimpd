@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Slim' => array($vendorDir . '/slim/slim'),
+    'OAuth\\Unit' => array($vendorDir . '/lusitanian/oauth/tests'),
+    'OAuth' => array($vendorDir . '/lusitanian/oauth/src'),
     'JasonGrimes' => array($vendorDir . '/jasongrimes/paginator/src'),
     'Discogs' => array($vendorDir . '/ricbra/php-discogs-api/lib'),
 );
