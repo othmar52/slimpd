@@ -12,6 +12,7 @@
         "components/font-awesome": "^4.4",
         "neutron/sphinxsearch-api": "^2.0",
         "jasongrimes/paginator": "^1.0",
-        "ricbra/php-discogs-api": "^1.0@dev"
+        "ricbra/php-discogs-api": "^1.0@dev",
+        "lusitanian/oauth": "^0.1.0@dev"
     }
 }
