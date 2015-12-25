@@ -898,7 +898,7 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/734d6b2a3192e210a9a33beec49604392f3ca11c",
+            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/769fea1bb53845c7b03cca97cbdd0708e9ec26da",
             "reference": "734d6b2a3192e210a9a33beec49604392f3ca11c",
             "shasum": ""
         },
@@ -955,5 +955,40 @@
             "oauth",
             "security"
         ]
+    },
+    {
+        "name": "nicolasbize/faviconx",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nicolasbize/faviconx.git",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+            "shasum": ""
+        },
+        "time": "2014-10-16 18:24:29",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "faviconx.js"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
+        "homepage": "http://nicolasbize.com/faviconx",
+        "support": {
+            "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
+            "issues": "https://github.com/nicolasbize/faviconx/issues"
+        }
     }
 ]
