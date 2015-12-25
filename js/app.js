@@ -73,14 +73,26 @@ function pollMpdData(){
 			$('.mpd-status-playpause').addClass('fa-play');
 		}
 		
-		
-    	
     	$('.mpd-status-elapsed').text(formatTime(data.elapsed));
     	$('.mpd-status-total').text(formatTime(data.duration));
     	
     	// TODO: simulate seamless progressbar-growth and seamless secondscounter
     	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
     	$('.mpd-status-progressbar').css('width', 'calc('+ data.percent+'% - 15px)');
+    	
+    	//console.log(data);
+    	FavIconX.config({
+    	  updateTitle: false,
+    	  shape: 'doughnut',
+    	  doughnutDiameter: 7.5,
+    	  overlay: ((data.state == 'play')? 'play' : 'pause'),
+    	  overlayColor: '#777',
+    	  borderColor: '#278DBA',
+    	  fillColor: '#278DBA',
+    	  titleRenderer: function(v, t){
+			return t;
+		  }
+		}).setValue(data.percent);
     	
     	
     	// update trackinfo only onTrackChange()
