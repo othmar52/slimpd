@@ -278,7 +278,8 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	
 	$config['mpd']['status'] = $mpd->cmd('status');
 	$config['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
-	$config['mpd']['status']['percent'] = $config['mpd']['status']['elapsed'] / ($config['mpd']['status']['duration']/100); 
+	$percent = $config['mpd']['status']['elapsed'] / ($config['mpd']['status']['duration']/100);
+	$config['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0; 
 	echo json_encode($config['mpd']['status']);
 	$app->stop();
 });
