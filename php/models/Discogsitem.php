@@ -56,10 +56,13 @@ class Discogsitem extends AbstractModel
 	
 	public function extractAlbumAttributes() {
 		$data = $this->getResponse(TRUE);
+		#echo "<pre>" . print_r($data,1); die();
 		$this->albumAttributes['artist'] = '';
 		foreach($data['artists'] as $a) {
 			$this->albumAttributes['artist'] .= $a['name'] . ",";
 		}
+		
+		$data['styles'] = (isset($data['styles']) === TRUE) ? $data['styles'] : array();
 		$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
 		$this->albumAttributes['title'] = $data['title'];
 		$this->albumAttributes['genre'] = join(",", array_merge($data['genres'], $data['styles']));
