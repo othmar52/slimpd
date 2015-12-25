@@ -24,6 +24,9 @@ var FavIconX = (function() {
 
     // default values for properties accessed through .config() method:
     var shape;
+    var doughnutDiameter;
+    var overlay;
+    var overlayColor;
     var animated;
     var animationSpeed; // ms to go from one value to the one from setValue
     var borderColor;
@@ -37,6 +40,9 @@ var FavIconX = (function() {
 
     function setDefaults(){
         shape = 'circle';
+        doughnutDiameter = 6;
+        overlay = false;
+        overlayColor = '#000';
         animated = false;
         animationSpeed = 2000;
         animCallback = null;
@@ -62,6 +68,35 @@ var FavIconX = (function() {
             generateDoughnut(v);
         } else if(shape === 'square'){
             generateSquare(v);
+        }
+    }
+    
+    // Generates the overlay shape
+    // TODO: support overlay functionality for square-shape
+    function generateOverlay(ctx, w, h){
+        ctx.strokeStyle = overlayColor;
+        ctx.fillStyle = overlayColor;
+        if(overlay === 'play'){
+            ctx.beginPath();
+            ctx.moveTo(w*0.38, h*0.3);
+            ctx.lineTo(w*0.38, h*0.7);
+            ctx.lineTo(w*0.75, h*0.5);
+            ctx.lineTo(w*0.38, h*0.3);
+            ctx.closePath();
+            ctx.fill();
+        } else if(overlay === 'pause'){
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(w*0.38,h*0.3);
+            ctx.lineTo(w*0.38,h*0.7);
+            ctx.closePath();
+            ctx.stroke();
+            
+            ctx.beginPath();
+            ctx.moveTo(w*0.62,h*0.3);
+            ctx.lineTo(w*0.62,h*0.7);
+            ctx.closePath();
+            ctx.stroke();
         }
     }
 
@@ -123,6 +158,7 @@ var FavIconX = (function() {
             context.closePath();
             context.fill();
         }
+        generateOverlay(context, canvas.width, canvas.height);
     }
 
     // spelling doughnut just feels wrong
@@ -137,18 +173,19 @@ var FavIconX = (function() {
             context.lineWidth = borderWidth;
             context.strokeStyle = shadowColor;
             context.beginPath();
-            context.arc(centerX, centerY, 6, 0, toRad(360), false);
-            context.arc(centerX, centerY, 6 - borderWidth, 0, toRad(360), true);
+            context.arc(centerX, centerY, doughnutDiameter, 0, toRad(360), false);
+            context.arc(centerX, centerY, doughnutDiameter - borderWidth, 0, toRad(360), true);
             context.closePath();
             context.stroke();
 
             context.strokeStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
             context.beginPath();
-            context.arc(centerX, centerY, 6, toRad(-90), toRad(deg), false);
-            context.arc(centerX, centerY, 6 - borderWidth, toRad(deg), toRad(-90), true);
+            context.arc(centerX, centerY, doughnutDiameter, toRad(-90), toRad(deg), false);
+            context.arc(centerX, centerY, doughnutDiameter - borderWidth, toRad(deg), toRad(-90), true);
             context.closePath();
             context.stroke();
         }
+        generateOverlay(context, canvas.width, canvas.height);
     }
 
     // something a bit more fancy
@@ -202,6 +239,7 @@ var FavIconX = (function() {
             context.closePath();
             context.fill();
         }
+        generateOverlay(context, canvas.width, canvas.height);
     }
 
     // draw me a check mark
@@ -324,6 +362,9 @@ var FavIconX = (function() {
         // a helper to configure mucho settings at once
         config: function(cfg){
             shape = cfg.shape || shape;
+            doughnutDiameter = cfg.doughnutDiameter || doughnutDiameter;
+            overlay = cfg.overlay || overlay;
+            overlayColor = cfg.overlayColor || overlayColor;
             isReset = false;
             animated = cfg.animated || animated;
             animationSpeed = cfg.animationSpeed || animationSpeed;
