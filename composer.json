@@ -4,15 +4,22 @@
         "slim/slim": "2.*",
         "twig/twig": "~1.0",
         "slim/views": "0.1.*",
-	"james-heinrich/getid3": "1.*",
-	"components/jquery": "2.*",
-	"james-heinrich/phpThumb": "1.*",
+        "james-heinrich/getid3": "1.*",
+        "components/jquery": "2.*",
+        "james-heinrich/phpThumb": "1.*",
         "twbs/bootstrap": "^3.3",
         "components/jqueryui": "^1.11",
         "components/font-awesome": "^4.4",
         "neutron/sphinxsearch-api": "^2.0",
         "jasongrimes/paginator": "^1.0",
         "ricbra/php-discogs-api": "^1.0@dev",
-        "lusitanian/oauth": "^0.1.0@dev"
-    }
+        "lusitanian/oauth": "^0.1.0@dev",
+        "nicolasbize/faviconx": "^1.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/nicolasbize/faviconx.git"
+        }
+    ]
 }
