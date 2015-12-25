@@ -84,7 +84,7 @@ function pollMpdData(){
     	FavIconX.config({
     	  updateTitle: false,
     	  shape: 'doughnut',
-    	  doughnutDiameter: 7.5,
+    	  doughnutRadius: 7.5,
     	  overlay: ((data.state == 'play')? 'play' : 'pause'),
     	  overlayColor: '#777',
     	  borderColor: '#278DBA',

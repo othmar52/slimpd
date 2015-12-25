@@ -24,7 +24,7 @@ var FavIconX = (function() {
 
     // default values for properties accessed through .config() method:
     var shape;
-    var doughnutDiameter;
+    var doughnutRadius;
     var overlay;
     var overlayColor;
     var animated;
@@ -40,7 +40,7 @@ var FavIconX = (function() {
 
     function setDefaults(){
         shape = 'circle';
-        doughnutDiameter = 6;
+        doughnutRadius = 6;
         overlay = false;
         overlayColor = '#000';
         animated = false;
@@ -173,15 +173,15 @@ var FavIconX = (function() {
             context.lineWidth = borderWidth;
             context.strokeStyle = shadowColor;
             context.beginPath();
-            context.arc(centerX, centerY, doughnutDiameter, 0, toRad(360), false);
-            context.arc(centerX, centerY, doughnutDiameter - borderWidth, 0, toRad(360), true);
+            context.arc(centerX, centerY, doughnutRadius, 0, toRad(360), false);
+            context.arc(centerX, centerY, doughnutRadius - borderWidth, 0, toRad(360), true);
             context.closePath();
             context.stroke();
 
             context.strokeStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
             context.beginPath();
-            context.arc(centerX, centerY, doughnutDiameter, toRad(-90), toRad(deg), false);
-            context.arc(centerX, centerY, doughnutDiameter - borderWidth, toRad(deg), toRad(-90), true);
+            context.arc(centerX, centerY, doughnutRadius, toRad(-90), toRad(deg), false);
+            context.arc(centerX, centerY, doughnutRadius - borderWidth, toRad(deg), toRad(-90), true);
             context.closePath();
             context.stroke();
         }
@@ -362,7 +362,7 @@ var FavIconX = (function() {
         // a helper to configure mucho settings at once
         config: function(cfg){
             shape = cfg.shape || shape;
-            doughnutDiameter = cfg.doughnutDiameter || doughnutDiameter;
+            doughnutRadius = cfg.doughnutRadius || doughnutRadius;
             overlay = cfg.overlay || overlay;
             overlayColor = cfg.overlayColor || overlayColor;
             isReset = false;
