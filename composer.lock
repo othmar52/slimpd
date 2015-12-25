@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "98bb0c6da4a5e2ad1eb1fddb8e6e50a4",
-    "content-hash": "371c147c974e6c6371825f6e4eed60aa",
+    "hash": "08a453fe4105f39f45d1f2baafad08e4",
+    "content-hash": "3c1af8864f02f0043a53c6776b59103b",
     "packages": [
         {
             "name": "components/font-awesome",
@@ -564,7 +564,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/734d6b2a3192e210a9a33beec49604392f3ca11c",
+                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/769fea1bb53845c7b03cca97cbdd0708e9ec26da",
                 "reference": "734d6b2a3192e210a9a33beec49604392f3ca11c",
                 "shasum": ""
             },
@@ -662,6 +662,39 @@
                 "search-engine"
             ],
             "time": "2013-08-07 18:06:02"
+        },
+        {
+            "name": "nicolasbize/faviconx",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nicolasbize/faviconx.git",
+                "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+                "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "faviconx.js"
+                    ]
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
+            "homepage": "http://nicolasbize.com/faviconx",
+            "support": {
+                "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
+                "issues": "https://github.com/nicolasbize/faviconx/issues"
+            },
+            "time": "2014-10-16 18:24:29"
         },
         {
             "name": "ricbra/php-discogs-api",
