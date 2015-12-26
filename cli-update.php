@@ -113,6 +113,11 @@ $app->get('/standard', function () use ($app, $importer) {
 	$importer->triggerImport();
 });
 
+
+$app->get('/builddictsql', function () use ($app, $importer) {
+	$importer->buildDictionarySql();
+});
+
 $app->get('/database-cleaner', function () use ($app) {
 	// phase 11: delete all bitmap-database-entries that does not exist in filesystem
 	// TODO: limit this to embedded images only
