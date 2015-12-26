@@ -90,7 +90,7 @@ function pollMpdData(){
     	  borderColor: '#278DBA',
     	  fillColor: '#278DBA',
     	  titleRenderer: function(v, t){
-			return t;
+			return $('.now-playing-string').text();
 		  }
 		}).setValue(data.percent);
     	
