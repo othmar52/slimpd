@@ -729,7 +729,7 @@ $app->get('/autocomplete/:term', function($term) use ($app, $config) {
 			}
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
-		var_dump($suggest);
+		#var_dump($suggest);
 		if($suggest !== FALSE) {
 			#header('Location: /autocomplete?q=' . $suggest);
 			#return;
