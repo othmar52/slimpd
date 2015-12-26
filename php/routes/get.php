@@ -589,6 +589,9 @@ foreach(array_keys($sortfields) as $currenttype) {
 			
 				
 			$result = $cl->Query( $query, $indexname);
+			if($result === FALSE) {
+				$app->flashNow('error', $app->ll->str('error.sphinxconnect'));
+			}
 			#echo "<pre>" . print_r($result,1); #die();
 			$config['search'][$type]['total'] = $result['total'];
 			$config['search'][$type]['time'] = $result['time'];
