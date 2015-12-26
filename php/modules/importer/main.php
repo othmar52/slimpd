@@ -1839,8 +1839,59 @@ class Importer {
 	}
 
 
-
-
+	public function buildDictionarySql() {
+		$app = \Slim\Slim::getInstance();
+		foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
+		}
+		
+		$in  = fopen ("php://stdin", "r");
+		$out = fopen ("php://stdout", "w+");
+		
+		$used_keywords = array();
+		fwrite ( $out, "
+			DROP TABLE IF EXISTS suggest;
+			CREATE TABLE suggest (
+				id      int(11) unsigned NOT NULL AUTO_INCREMENT,
+				keyword varchar(255) NOT NULL,
+				trigrams varchar(255) NOT NULL,
+				freq    int(11) unsigned NOT NULL,
+				PRIMARY KEY (id) );" );
+		$n = 0;
+		$m = 0;
+		while ( $line = fgets( $in, 1024 ) ) {
+			list ( $keyword, $freq ) = explode ( " ", trim ( $line ) );
+			
+			$keyword = trim($keyword);
+			if (
+				strlen($keyword) < 2
+				|| $keyword === ''
+				|| $freq<FREQ_THRESHOLD
+				|| strstr ( $keyword, "_" )!==FALSE
+				|| strstr ( $keyword, "'" )!==FALSE
+				|| array_key_exists($keyword,$used_keywords) === TRUE ) {
+					continue;
+				}
+			
+			$trigrams = buildTrigrams ( $keyword );
+			$used_keywords[$keyword] = NULL;
+			fwrite ( $out, (( !$m ) ? "INSERT INTO suggest VALUES\n" : ",\n"));
+			
+			$n++;
+			fwrite ( $out, "( 0, '$keyword', '$trigrams', $freq )" );
+			$m++;
+			if ( ( $m % 10000 )==0 ) {
+				fwrite ( $out,  ";\n");
+				$m = 0;
+			}
+		}
+	
+		if ( $m ) {
+			fwrite ( $out, ";" );
+		}
+		fwrite ( $out,  "\n");
+		$app->stop();
+	}
 
 	public function extractInfosFromAlbumFiles() {
 		

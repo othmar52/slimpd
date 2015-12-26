@@ -688,3 +688,61 @@ foreach(array_keys($sortfields) as $currenttype) {
 	});
 }
 
+
+$app->get('/autocomplete/:term', function($term) use ($app, $config) {
+	foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
+	}
+	
+	$start =0;
+	$offset =20;
+	$current = 1;
+	
+	
+	$result = [ 'suggestions' => []];
+	$result = [];
+	
+	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	$stmt = $ln_sph->prepare("SELECT * FROM slimpdautocomplete WHERE MATCH(:match)  LIMIT $start,$offset OPTION ranker=sph04");
+	$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+	$stmt->execute();
+	$rows = $stmt->fetchAll();
+	
+	$meta = $ln_sph->query("SHOW META")->fetchAll();
+	foreach($meta as $m) {
+	    $meta_map[$m['Variable_name']] = $m['Value'];
+	}
+	
+	
+	if(count($rows) === 0) {
+		$words = array();
+		foreach($meta_map as $k=>$v) {
+			if(preg_match('/keyword\[\d+]/', $k)) {
+				preg_match('/\d+/', $k,$key);
+				$key = $key[0];
+				$words[$key]['keyword'] = $v;
+			}
+			if(preg_match('/docs\[\d+]/', $k)) {
+				preg_match('/\d+/', $k,$key);
+				$key = $key[0];
+				$words[$key]['docs'] = $v;
+			}
+		}
+		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+		var_dump($suggest);
+		if($suggest !== FALSE) {
+			#header('Location: /autocomplete?q=' . $suggest);
+			#return;
+			#echo "redirecting..."; die();
+			$app->response->redirect($app->urlFor('autocomplete', array('term' => $suggest)));
+			$app->stop();
+		}
+	} else {
+		foreach($rows as $row) {
+			#$result['suggestions'][] = ['value' => $row['phrase']];
+			$result[] = $row['phrase'];
+		}
+	}
+	#echo "<pre>" . print_r($rows,1); die();
+	echo json_encode($result); exit;
+})->name('autocomplete');
