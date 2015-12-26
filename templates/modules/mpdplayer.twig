@@ -89,6 +89,7 @@
 				</div>
     	</div>
     </div>
+    <div class="now-playing-string" style="display: none;">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
     {# TODO: find another way to highlight each occurance of now-playing-track (preferable without javascript) #}
     {# TODO: apply same solution for playing tracks does not exist in app-mysql-db  #}
     <style type="text/css" media="all">
