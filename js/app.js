@@ -41,8 +41,32 @@ $(document).ready(function(){
         placeholder: 'span2 well placeholder tile',
         forceHelperSize: true
     });
-	
+    
+    $('#mainsearch').autocomplete({
+		source: function( request, response ) {
+			$.ajax({
+				url: "/autocomplete/" + $('#mainsearch').val(),
+          		dataType: "json",
+          		type: 'get',
+          		success: function( data ) {
+					response( data );
+				}
+			});
+		},
+		minLength: 3,
+		select: function( event, ui ) {
+			console.log( ui.item ?
+				"Selected: " + ui.item.label :
+				"Nothing selected, input was " + this.value);
+		},
+		open: function() {
+			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+		},
+		close: function() {
+			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+		}
 		
+	});	
 });
 
 function refreshInterval() {
