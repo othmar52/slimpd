@@ -54,19 +54,20 @@ $(document).ready(function(){
 			});
 		},
 		minLength: 3,
+		focus: function( event, ui ) {
+			ui.item.value = stripTags(ui.item.value);
+		},
 		select: function( event, ui ) {
-			console.log( ui.item ?
-				"Selected: " + ui.item.label :
-				"Nothing selected, input was " + this.value);
-		},
-		open: function() {
-			$( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-		},
-		close: function() {
-			$( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+			if(ui.item) {
+				$('#searchform').submit();
+			}
 		}
-		
-	});	
+	}).data("ui-autocomplete")._renderItem = function (ul, item) {
+         return $("<li></li>")
+             .data("item.autocomplete", item)
+             .append(item.label)
+             .appendTo(ul);
+     };	
 });
 
 function refreshInterval() {
@@ -169,6 +170,9 @@ function zeroPad(number, n) {
 	return zeroPad;
 }
 
-
+function stripTags( str ) {
+    str=str.toString();
+    return str.replace(/<\/?[^>]+>/gi, '');
+}
 
 
