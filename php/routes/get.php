@@ -713,7 +713,7 @@ $app->get('/autocomplete/:term', function($term) use ($app, $config) {
 	$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
-	
+	#echo "<pre>" . print_r($rows,1); die();
 	$meta = $ln_sph->query("SHOW META")->fetchAll();
 	foreach($meta as $m) {
 	    $meta_map[$m['Variable_name']] = $m['Value'];
@@ -735,22 +735,36 @@ $app->get('/autocomplete/:term', function($term) use ($app, $config) {
 			}
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
-		#var_dump($suggest);
 		if($suggest !== FALSE) {
-			#header('Location: /autocomplete?q=' . $suggest);
-			#return;
-			#echo "redirecting..."; die();
 			$app->response->redirect($app->urlFor('autocomplete', array('term' => $suggest)));
 			$app->stop();
 		}
 	} else {
+		$cl = new SphinxClient();
 		foreach($rows as $row) {
-			#$result['suggestions'][] = ['value' => $row['phrase']];
-			$result[] = $row['phrase'];
+			$excerped = $cl->BuildExcerpts([$row['phrase']], 'slimpdautocomplete', $term);
+			
+			$entry = [
+				'label' => $excerped[0],
+				'url' => (($row['type'] === 'track')
+					? '/searchall/page/1/sort/relevance/desc?q=' . $row['phrase']
+					: '/library/' . $row['type'] . '/' . $row['itemid']),
+				'type' => $app->ll->str($row['type'])
+			];
+			switch($row['type']) {
+				case 'artist':
+				case 'label':
+					$entry['img'] = '/skin/default/img/icon-'. $row['type'] .'.png';
+					break;
+				case 'album':
+				case 'track':
+					$entry['img'] = '/image-50/'. $row['type'] .'/' . $row['itemid'];
+					break;
+			}
+			$result[] = $entry;
 		}
 	}
-	$cl = new SphinxClient();
-	$result = $cl->BuildExcerpts($result, 'slimpdautocomplete', $term);
+	#echo "<pre>" . print_r($result,1); die();
 	#echo "<pre>" . print_r($rows,1); die();
 	echo json_encode($result); exit;
 })->name('autocomplete');
