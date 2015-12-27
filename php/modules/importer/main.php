@@ -1849,14 +1849,7 @@ class Importer {
 		$out = fopen ("php://stdout", "w+");
 		
 		$used_keywords = array();
-		fwrite ( $out, "
-			DROP TABLE IF EXISTS suggest;
-			CREATE TABLE suggest (
-				id      int(11) unsigned NOT NULL AUTO_INCREMENT,
-				keyword varchar(255) NOT NULL,
-				trigrams varchar(255) NOT NULL,
-				freq    int(11) unsigned NOT NULL,
-				PRIMARY KEY (id) );" );
+		fwrite ( $out, "TRUNCATE suggest;\n");
 		$n = 0;
 		$m = 0;
 		while ( $line = fgets( $in, 1024 ) ) {
