@@ -690,7 +690,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 }
 
 
-$app->get('/autocomplete/:term', function($term) use ($app, $config) {
+$app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config) {
 	foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 	}
@@ -704,13 +704,18 @@ $app->get('/autocomplete/:term', function($term) use ($app, $config) {
 	$result = [];
 	
 	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	
 	$stmt = $ln_sph->prepare("
 		SELECT * FROM slimpdautocomplete
 		WHERE MATCH(:match)
+		" . (($type !== 'all') ? ' AND type=:type ' : '') . "
 		GROUP BY phrase
 		LIMIT $start,$offset
 		OPTION ranker=sph04");
 	$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+	if(($type !== 'all')) {
+		$stmt->bindValue(':type', $type, PDO::PARAM_STR);
+	}
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
 	#echo "<pre>" . print_r($rows,1); die();
@@ -739,6 +744,12 @@ $app->get('/autocomplete/:term', function($term) use ($app, $config) {
 			$app->response->redirect($app->urlFor('autocomplete', array('term' => $suggest)));
 			$app->stop();
 		}
+		$result[] = [
+			'label' => 'nothing found',
+			'url' => '#',
+			'type' => '',
+			'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
+		];
 	} else {
 		$cl = new SphinxClient();
 		foreach($rows as $row) {

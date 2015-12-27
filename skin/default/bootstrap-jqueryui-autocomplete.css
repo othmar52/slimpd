@@ -15,3 +15,7 @@
 .ui-autocomplete .ui-menu-item {
 	border-bottom: 1px solid #AAA;
 }
+
+.ac-nav butXton {
+	background-color: black;
+}
