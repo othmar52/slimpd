@@ -11,3 +11,7 @@
 	background-color: #353535;
 	outline: 1px solid #AAA;
 }
+
+.ui-autocomplete .ui-menu-item {
+	border-bottom: 1px solid #AAA;
+}
