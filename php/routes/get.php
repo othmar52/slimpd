@@ -587,7 +587,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 			$query = str_replace(" - ", " ", $query);
 			
 			// TODO: check how to escape those special chars in sphinx-ql
-			$query = str_replace("!", "", $query);
+			$query = str_replace(["!", "(", ")"], "", $query);
 			
 			$result = $cl->Query( $query, $indexname);
 			if($result === FALSE) {
