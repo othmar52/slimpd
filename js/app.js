@@ -58,14 +58,19 @@ $(document).ready(function(){
 			ui.item.value = stripTags(ui.item.value);
 		},
 		select: function( event, ui ) {
+			//console.log(ui.item);
 			if(ui.item) {
+				document.location.href = ui.item.url;
+				return false;
 				$('#searchform').submit();
 			}
 		}
 	}).data("ui-autocomplete")._renderItem = function (ul, item) {
+		var markup = '<div class="row"><div class="col-md-1"><img src="'+item.img+'" width="50" height="50"/></div>';
+		markup += '<div class="col-md-11"><a href="'+ item.url +'">'+ item.label+'</a><br /><span class="dark">'+ item.type+'</span></div></div>';
          return $("<li></li>")
              .data("item.autocomplete", item)
-             .append(item.label)
+             .append(markup)
              .appendTo(ul);
      };	
 });
