@@ -705,6 +705,14 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	
 	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
 	
+	// those values have to match sphinxindex:srcslimpdautocomplete
+	$filterTypeMapping = array(
+		'artist' => 1,
+		'album' => 2,
+		'label' => 3,
+		'track' => 4,
+	);
+	
 	$stmt = $ln_sph->prepare("
 		SELECT * FROM slimpdautocomplete
 		WHERE MATCH(:match)
@@ -714,7 +722,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		OPTION ranker=sph04");
 	$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 	if(($type !== 'all')) {
-		$stmt->bindValue(':type', $type, PDO::PARAM_STR);
+		$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 	}
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
@@ -751,25 +759,26 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 			'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
 		];
 	} else {
+		$filterTypeMapping = array_flip($filterTypeMapping);
 		$cl = new SphinxClient();
 		foreach($rows as $row) {
 			$excerped = $cl->BuildExcerpts([$row['phrase']], 'slimpdautocomplete', $term);
-			
+			$filterType = $filterTypeMapping[$row['type']];
 			$entry = [
 				'label' => $excerped[0],
-				'url' => (($row['type'] === 'track')
+				'url' => (($filterType === 'track')
 					? '/searchall/page/1/sort/relevance/desc?q=' . $row['phrase']
-					: '/library/' . $row['type'] . '/' . $row['itemid']),
-				'type' => $app->ll->str($row['type'])
+					: '/library/' . $filterType . '/' . $row['itemid']),
+				'type' => $app->ll->str($filterType)
 			];
-			switch($row['type']) {
+			switch($filterType) {
 				case 'artist':
 				case 'label':
-					$entry['img'] = '/skin/default/img/icon-'. $row['type'] .'.png';
+					$entry['img'] = '/skin/default/img/icon-'. $filterType .'.png';
 					break;
 				case 'album':
 				case 'track':
-					$entry['img'] = '/image-50/'. $row['type'] .'/' . $row['itemid'];
+					$entry['img'] = '/image-50/'. $filterType .'/' . $row['itemid'];
 					break;
 			}
 			$result[] = $entry;
