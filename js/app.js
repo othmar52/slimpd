@@ -42,10 +42,10 @@ $(document).ready(function(){
         forceHelperSize: true
     });
     
-    $('#mainsearch').autocomplete({
+    var tabbedAutocomplete = $('#mainsearch').autocomplete({
 		source: function( request, response ) {
 			$.ajax({
-				url: "/autocomplete/" + $('#mainsearch').val(),
+				url: "/autocomplete/all/" + $('#mainsearch').val(),
           		dataType: "json",
           		type: 'get',
           		success: function( data ) {
@@ -53,9 +53,12 @@ $(document).ready(function(){
 				}
 			});
 		},
+		sourceCategory: 'all',
 		minLength: 3,
 		focus: function( event, ui ) {
-			ui.item.value = stripTags(ui.item.value);
+			if(typeof ui.item !== 'undefined') {
+				ui.item.value = stripTags(ui.item.value);
+			}
 		},
 		select: function( event, ui ) {
 			//console.log(ui.item);
@@ -65,15 +68,55 @@ $(document).ready(function(){
 				$('#searchform').submit();
 			}
 		}
-	}).data("ui-autocomplete")._renderItem = function (ul, item) {
+	}).data("ui-autocomplete");
+     /* custom boostrap markup for items */
+     tabbedAutocomplete._renderItem = function (ul, item) {
 		var markup = '<div class="row"><div class="col-md-1"><img src="'+item.img+'" width="50" height="50"/></div>';
 		markup += '<div class="col-md-11"><a href="'+ item.url +'">'+ item.label+'</a><br /><span class="dark">'+ item.type+'</span></div></div>';
          return $("<li></li>")
              .data("item.autocomplete", item)
              .append(markup)
              .appendTo(ul);
-     };	
+     };
+     // create a few filter links in autocomplete widget
+    tabbedAutocomplete._renderMenu = function( ul, items, type ) {
+		var that = this;
+		var markup = $('<div>').attr('class', 'nav nav-pills ac-nav');
+		var filterLinks = ["all", "artist", "album", "label"];
+		//console.log('type=');
+		//console.log(this.options.sourceCategory);
+		var cat = this.options.sourceCategory;
+		filterLinks.forEach(function(filter){
+			//console.log(cat);
+			$('<button>').attr('type', 'button')
+			.attr('class', 'btn btn-primary' + ((cat === filter)?'active':''))
+			.text(filter).bind('click', function(){
+				changeAutocompleteUrl(filter);
+			}).appendTo(markup);
+		});
+		$(markup).wrapAll($('<li>').attr('class', 'ui-state-disabled')).appendTo(ul);
+		
+		$.each( items, function( index, item ) {
+			that._renderItemData( ul, item );
+		});
+	};
 });
+
+
+function changeAutocompleteUrl(type) {
+	$('#mainsearch').autocomplete('option', 'source', function( request, response ) {
+		$.ajax({
+			url: "/autocomplete/"+ type+"/" + $('#mainsearch').val(),
+      		dataType: "json",
+      		type: 'get',
+      		success: function( data ) {
+				response( data );
+			}
+		});
+	});
+	$('#mainsearch').autocomplete('option', 'sourceCategory', type);
+	$('#mainsearch').autocomplete().data("ui-autocomplete")._search();
+}
 
 function refreshInterval() {
 	clearInterval(pollInterval);
