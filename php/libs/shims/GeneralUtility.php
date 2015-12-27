@@ -355,6 +355,7 @@ function MakePhaseSuggestion($words,$query,$ln_sph) {
 		return FALSE;
 	}
 	$llimf = $llimf / ($i * $i);
+	$mis = [];
 	foreach ($words  as $key => $word) {
 		if ($word['docs'] == 0 | $word['docs'] < $llimf) {
 			$mis[] = $word['keyword'];
