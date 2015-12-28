@@ -83,13 +83,11 @@ $(document).ready(function(){
 		var that = this;
 		var markup = $('<div>').attr('class', 'nav nav-pills ac-nav');
 		var filterLinks = ["all", "artist", "album", "label"];
-		//console.log('type=');
-		//console.log(this.options.sourceCategory);
 		var cat = this.options.sourceCategory;
 		filterLinks.forEach(function(filter){
-			//console.log(cat);
 			$('<button>').attr('type', 'button')
 			.attr('class', 'btn btn-primary' + ((cat === filter)?'active':''))
+			.attr('data-filter', filter)
 			.text(filter).bind('click', function(){
 				changeAutocompleteUrl(filter);
 			}).appendTo(markup);
@@ -100,10 +98,40 @@ $(document).ready(function(){
 			that._renderItemData( ul, item );
 		});
 	};
+	
+	// arrow left right for switching between tabs
+	$('#mainsearch').keydown( function( event ) {
+		
+		// check if widget is visile
+		var isOpen = $( this ).autocomplete( "widget" ).is( ":visible" ),
+		
+		// TODO: limit functionality on focused item
+		//focused = $('#mainsearch').data("ui-autocomplete").menu.element.find("li.ui-state-focus").length;
+		
+		if ( isOpen /*&& focused == 1*/ && event.keyCode == $.ui.keyCode.LEFT) {
+			var prev = $('.ac-nav button.btn-primaryactive').prev();
+			if(prev.length) {
+				changeAutocompleteUrl(prev.attr('data-filter'));
+				return false;
+			}
+		}
+		
+		if ( isOpen /*&& focused == 1*/ && event.keyCode == $.ui.keyCode.RIGHT) {
+			var next = $('.ac-nav button.btn-primaryactive').next();
+			if(next.length) {
+				changeAutocompleteUrl(next.attr('data-filter'));
+				return false;
+			}
+		}
+	});
 });
 
 
 function changeAutocompleteUrl(type) {
+	// set input value to initial searchterm
+	$('#mainsearch').val($('#mainsearch').data("ui-autocomplete").term);
+	
+	// change ajax-url
 	$('#mainsearch').autocomplete('option', 'source', function( request, response ) {
 		$.ajax({
 			url: "/autocomplete/"+ type+"/" + $('#mainsearch').val(),
@@ -114,7 +142,11 @@ function changeAutocompleteUrl(type) {
 			}
 		});
 	});
+	
+	// store active filter in variable
 	$('#mainsearch').autocomplete('option', 'sourceCategory', type);
+	
+	// trigger refresh with new ajax-url
 	$('#mainsearch').autocomplete().data("ui-autocomplete")._search();
 }
 

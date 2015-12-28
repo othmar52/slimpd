@@ -668,6 +668,10 @@ foreach(array_keys($sortfields) as $currenttype) {
 			
 			
 		}
+
+		//if($config['search']['all']['total'] == 0) {
+		// TODO: suggest query with fuzzy input
+		//}
 		
 		#echo "<pre>" . print_r($result,1); die();
 		
@@ -676,15 +680,6 @@ foreach(array_keys($sortfields) as $currenttype) {
 		#	$app->render('surrounding.twig', $config);
 		#	return;
 		#}
-		
-		
-		
-
-		
-		
-		
-		
-	
 		$app->render('surrounding.twig', $config);
 	});
 }
@@ -698,9 +693,6 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	$start =0;
 	$offset =20;
 	$current = 1;
-	
-	
-	$result = [ 'suggestions' => []];
 	$result = [];
 	
 	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
