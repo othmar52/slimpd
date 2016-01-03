@@ -103,7 +103,7 @@ $(document).ready(function(){
 	$('#mainsearch').keydown( function( event ) {
 		
 		// check if widget is visile
-		var isOpen = $( this ).autocomplete( "widget" ).is( ":visible" ),
+		var isOpen = $( this ).autocomplete( "widget" ).is( ":visible" );
 		
 		// TODO: limit functionality on focused item
 		//focused = $('#mainsearch').data("ui-autocomplete").menu.element.find("li.ui-state-focus").length;
