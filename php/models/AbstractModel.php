@@ -265,6 +265,9 @@ abstract class AbstractModel {
 			
 			if(method_exists($classPath, 'getRelativePathHash') === TRUE) {
 				$i2 = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
+				if($i2 === NULL && $this->getRelativePathHash() !== '') {
+					return $this->insert();
+				}
 			}
 			
 			
