@@ -1,5 +1,5 @@
 
-    <div class="col-sm-9 col-md-5">
+    <div class="col-sm-12 col-md-5">
     	<div class="mpd-status-progressbar">
     	
     	</div>
@@ -21,7 +21,7 @@
     	</div>
     	
 	</div>
-    <div class="col-sm-3 col-md-1">
+    <div class="hidden-xs col-md-1">
     	<div class="row">
 			<div class="col-sm-4">
 				<a href="/mpdctrl/previous" class="ajax-link">
@@ -73,14 +73,14 @@
     </div>
     <div class="col-sm-5">
     	<div class="row">
-			<div class="col-sm-4">{% include 'partials/artist/link.twig' %}</div>
-			<div class="col-sm-4">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
-			<div class="col-sm-4">{% include 'partials/yearlink.twig' %}</div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.twig' %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/yearlink.twig' %}</span></div>
 		</div>
 		<div class="row">
-			<div class="col-sm-4">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %}</div>
-			<div class="col-sm-4">{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</div>
-			<div class="col-sm-4">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</span></div>
 		</div>
 		<div class="row">
 			<div class="col-sm-12 small">
@@ -89,6 +89,8 @@
 				</div>
     	</div>
     </div>
+    
+    
     <div class="now-playing-string" style="display: none;">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
     {# TODO: find another way to highlight each occurance of now-playing-track (preferable without javascript) #}
     {# TODO: apply same solution for playing tracks does not exist in app-mysql-db  #}
