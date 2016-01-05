@@ -219,3 +219,15 @@ a {
 	padding-left: 0;
 }
 /* album list 2 (wide boxes) end */
+
+
+/* mpd player shorten text begin */
+.shorten {
+    -o-text-overflow: ellipsis;   /* Opera */
+    text-overflow:    ellipsis;   /* IE, Safari (WebKit) */
+    overflow:hidden;              /* don't show excess chars */
+    white-space:nowrap;           /* force single line */
+    width:100%;                 /* fixed width */
+    display:block;
+}
+
