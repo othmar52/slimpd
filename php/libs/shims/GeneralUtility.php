@@ -382,3 +382,11 @@ function MakePhaseSuggestion($words,$query,$ln_sph) {
 	return FALSE;
 }
 
+
+function testBinary($filePath) {
+	// return mime type ala mimetype extension
+	$finfo = finfo_open(FILEINFO_MIME);
+	
+	//check to see if the mime-type starts with 'text'
+	return (substr(finfo_file($finfo, $filePath), 0, 4) == 'text') ? FALSE : TRUE;
+}
