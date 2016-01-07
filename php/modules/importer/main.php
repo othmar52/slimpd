@@ -1010,7 +1010,30 @@ class Importer {
 			}
 		}
 		
-		$dbfile = explode("\n", file_get_contents($app->config['mpd']['dbfile']));
+		
+		$dbFilePath = $app->config['mpd']['dbfile'];
+
+		// decompress databasefile
+		if($app->config['mpd']['dbgzipped'] === '1') {
+			$bufferSize = 4096; // read 4kb at a time (raising this value may increase performance)
+			$outFileName = APP_ROOT . 'cache/mpd-database-plaintext'; 
+			// Open our files (in binary mode)
+			$inFile = gzopen($app->config['mpd']['dbfile'], 'rb');
+			$outFile = fopen($outFileName, 'wb'); 
+			// Keep repeating until the end of the input file
+			while(!gzeof($inFile)) {
+			// Read buffer-size bytes
+			// Both fwrite and gzread and binary-safe
+			  fwrite($outFile, gzread($inFile, $bufferSize));
+			}  
+			// Files are done, close files
+			fclose($outFile);
+			gzclose($inFile);
+			$dbFilePath = $outFileName;
+		}
+		
+		
+		$dbfile = explode("\n", file_get_contents($dbFilePath));
 		$currentDirectory = "";
 		$currentSong = "";
 		$currentPlaylist = "";
