@@ -990,5 +990,30 @@
             "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
             "issues": "https://github.com/nicolasbize/faviconx/issues"
         }
+    },
+    {
+        "name": "webfontkit/open-sans",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/webfontkit/open-sans.git",
+            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/webfontkit/open-sans/zipball/00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+            "shasum": ""
+        },
+        "time": "2014-08-20 20:43:34",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "Open Sans is a humanist sans serif typeface designed by Steve Matteson, Type Director of Ascender Corp. This version contains the complete 897 character set, which includes the standard ISO Latin 1, Latin CE, Greek and Cyrillic character sets. Open Sans was designed with an upright stress, open forms and a neutral, yet friendly appearance. It was optimized for print, web, and mobile interfaces, and has excellent legibility characteristics in its letterforms.",
+        "homepage": "http://www.google.com/fonts/specimen/Open+Sans"
     }
 ]

@@ -13,9 +13,11 @@
 body {
 	padding-top: 60px;
 	padding-bottom: 120px;
-	font-family: "slim1", "sans-serif";
-	font-size: 1.7em;
-	letter-spacing: -0.3pt;
+	font-family: "open sans", "sans-serif";
+	font-size: 1.4em;
+	letter-spacXing: -0.3pt;
+	font-weiXght: bold;
+	color #BBB;
 }
 
 .bg-col1 {
@@ -38,11 +40,16 @@ body {
 }
 
 .col1 {
-	color: #FFF;
+	color: #BBB;
 }
 
 a {
-	color: #FFF;
+	color: #BBB;
+}
+
+.artist-link {
+	color: #FF9C01;
+	font-weight: bold;
 }
 
 .dark,
@@ -150,15 +157,16 @@ a {
 
 
 .item-link {
+	border-bottom: 1px solid #333;
 }
-.item-link:after {
+.item-linkXXXXXXXXXXX:after {
 	content: " >";
 	color: #444;
 }
 .item-link:hover {
-	background-color: #000;
 	color: #FFF;
 	text-decoration: none;
+	border-bottom: 1px solid #FFF;
 }
 
 

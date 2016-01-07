@@ -1,0 +1,28 @@
+/* 
+    Created on : 20/08/2014, 17:30:52
+    Author     : Davidson Alencar
+*/
+.font-face-opensans(@file-name, @weight, @style){
+    @path-fonts: 'fonts';
+    @font-face {
+        font-family: 'open sans';
+        src:url('@{path-fonts}/@{file-name}.eot');
+        src:url('@{path-fonts}/@{file-name}.eot?#iefix') format('embedded-opentype'),
+            url('@{path-fonts}/@{file-name}.woff') format('woff'),
+            url('@{path-fonts}/@{file-name}.ttf') format('truetype'),
+            url('@{path-fonts}/@{file-name}.svg#open+sans') format('svg');
+        font-weight: @weight;
+        font-style: @style;
+    }
+}
+
+.font-face-opensans('opensans-light', 300, normal);
+.font-face-opensans('opensans-lightitalic', 300, italic);
+.font-face-opensans('opensans-regular', 400, normal);
+.font-face-opensans('opensans-italic', 400, italic);
+.font-face-opensans('opensans-semibold', 600, normal);
+.font-face-opensans('opensans-semibolditalic', 600, italic);
+.font-face-opensans('opensans-bold', 700, normal);
+.font-face-opensans('opensans-bolditalic', 700, italic);
+.font-face-opensans('opensans-extrabold', 800, normal);
+.font-face-opensans('opensans-extrabolditalic', 800, italic);
