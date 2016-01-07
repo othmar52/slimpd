@@ -14,7 +14,8 @@
         "jasongrimes/paginator": "^1.0",
         "ricbra/php-discogs-api": "^1.0@dev",
         "lusitanian/oauth": "^0.1.0@dev",
-        "nicolasbize/faviconx": "^1.0"
+        "nicolasbize/faviconx": "^1.0",
+        "webfontkit/open-sans": "^1.0"
     },
     "repositories": [
         {
