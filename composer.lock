@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "08a453fe4105f39f45d1f2baafad08e4",
-    "content-hash": "3c1af8864f02f0043a53c6776b59103b",
+    "hash": "e1bda97eceabae172cb1783b83034288",
+    "content-hash": "462e53e74af1178cb9de1a73c0e77e34",
     "packages": [
         {
             "name": "components/font-awesome",
@@ -960,6 +960,29 @@
                 "templating"
             ],
             "time": "2015-10-13 07:07:02"
+        },
+        {
+            "name": "webfontkit/open-sans",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webfontkit/open-sans.git",
+                "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webfontkit/open-sans/zipball/00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+                "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Open Sans is a humanist sans serif typeface designed by Steve Matteson, Type Director of Ascender Corp. This version contains the complete 897 character set, which includes the standard ISO Latin 1, Latin CE, Greek and Cyrillic character sets. Open Sans was designed with an upright stress, open forms and a neutral, yet friendly appearance. It was optimized for print, web, and mobile interfaces, and has excellent legibility characteristics in its letterforms.",
+            "homepage": "http://www.google.com/fonts/specimen/Open+Sans",
+            "time": "2014-08-20 20:43:34"
         }
     ],
     "packages-dev": [],
