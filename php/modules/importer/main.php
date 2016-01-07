@@ -1012,14 +1012,20 @@ class Importer {
 		
 		
 		$dbFilePath = $app->config['mpd']['dbfile'];
+		
+		// check if we have a plaintext or gzipped mpd-databasefile
+		$isBinary = testBinary(APP_ROOT . 'cache/mpd-database-plaintext');
 
-		// decompress databasefile
-		if($app->config['mpd']['dbgzipped'] === '1') {
+		
+		if($isBinary === TRUE) {
+			// decompress databasefile
 			$bufferSize = 4096; // read 4kb at a time (raising this value may increase performance)
-			$outFileName = APP_ROOT . 'cache/mpd-database-plaintext'; 
+			$outFileName = APP_ROOT . 'cache/mpd-database-plaintext';
+			
 			// Open our files (in binary mode)
 			$inFile = gzopen($app->config['mpd']['dbfile'], 'rb');
-			$outFile = fopen($outFileName, 'wb'); 
+			$outFile = fopen($outFileName, 'wb');
+			
 			// Keep repeating until the end of the input file
 			while(!gzeof($inFile)) {
 			// Read buffer-size bytes
