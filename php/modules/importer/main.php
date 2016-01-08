@@ -1014,8 +1014,7 @@ class Importer {
 		$dbFilePath = $app->config['mpd']['dbfile'];
 		
 		// check if we have a plaintext or gzipped mpd-databasefile
-		$isBinary = testBinary(APP_ROOT . 'cache/mpd-database-plaintext');
-
+		$isBinary = testBinary($app->config['mpd']['dbfile']);
 		
 		if($isBinary === TRUE) {
 			// decompress databasefile
