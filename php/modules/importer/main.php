@@ -1012,11 +1012,17 @@ class Importer {
 		
 		
 		$dbFilePath = $app->config['mpd']['dbfile'];
+		$this->updateJob(array(
+                        'msg' => $app->ll->str('importer.testdbfile')
+                ));
 		
 		// check if we have a plaintext or gzipped mpd-databasefile
-		$isBinary = testBinary($app->config['mpd']['dbfile']);
+		$isBinary = testBinary($dbFilePath);
 		
 		if($isBinary === TRUE) {
+			$this->updateJob(array(
+	                        'msg' => $app->ll->str('importer.gunzipdbfile')
+	                ));
 			// decompress databasefile
 			$bufferSize = 4096; // read 4kb at a time (raising this value may increase performance)
 			$outFileName = APP_ROOT . 'cache/mpd-database-plaintext';
