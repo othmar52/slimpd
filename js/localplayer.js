@@ -12,7 +12,6 @@ $(document).ready(function(){
         keyEnabled: true,
         remainingDuration: false,
         toggleDuration: true,
-        //solution: 'flash,html',
         ended: function() {
             localPlayer({'action': 'soundEnded'});
         }
@@ -32,21 +31,21 @@ function localPlayer(conf) {
 	//console.log(conf);
 	switch (conf.action) {
 		case 'play':
-			//console.log('playing ' + conf.item);
+		
+			// TODO: check why conf.ext is sometimes 'vorbis' instead of 'ogg' 			
+			conf.ext = (conf.ext == 'vorbis') ? 'ogg' : conf.ext;
 			
-			setMediaOptions = {};
-			//setMediaOptions.title = 'testtitle';
-			console.log(conf.ext);
-			switch(conf.ext) {
-				case 'flac': setMediaOptions.flac = '/deliver/' + conf.item; break;
-				case 'mp3': setMediaOptions.mp3 = '/deliver/' + conf.item; break;
-				case 'wav': setMediaOptions.wav = '/deliver/' + conf.item; break;
-				case 'm4a': setMediaOptions.m4a = '/deliver/' + conf.item; break;
-				case 'ogg': setMediaOptions.ogg = '/deliver/' + conf.item; break;
-			}
-			setMediaOptions.supplied = conf.ext;
-			console.log(setMediaOptions);
-			$('#jquery_jplayer_1').jPlayer('setMedia', setMediaOptions);
+			// WARNING: jPlayer's essential Audio formats: mp3 or m4a.
+			// wav, flac, ogg, m4a plays fine in chrome but we have to add an unused mp3-property...
+			// TODO: really provide alternative urls instead of adding a non-functional dummy
+			$('#jquery_jplayer_1').jPlayer(
+				'setMedia',
+				{
+					[conf.ext] : '/deliver/' + conf.item,
+					'mp3' : '/deliver/' + conf.item,
+					'supplied': conf.ext + ',mp3'
+				}
+			);
 			
 			// fetch markup with trackinfos
 			$.ajax({
@@ -58,9 +57,6 @@ function localPlayer(conf) {
     			
     			// re-bind controls
     			$("#jquery_jplayer_1").jPlayer({cssSelectorAncestor: "#jp_container_1"});
-    			
-    			
-    			
     		});
 			break;
 		case 'togglePause':
