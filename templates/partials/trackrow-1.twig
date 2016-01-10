@@ -19,7 +19,7 @@
 	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
 	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
 	<div class="col-md-1" style="font-size: 1.4em;">
-		<a href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o"></i></a>
+		<a href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link is-playlink" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o"></i></a>
 		<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
 	</div>
 </div>
