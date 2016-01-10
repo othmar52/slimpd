@@ -12,4 +12,6 @@ return array(
     'OAuth' => array($vendorDir . '/lusitanian/oauth/src'),
     'JasonGrimes' => array($vendorDir . '/jasongrimes/paginator/src'),
     'Discogs' => array($vendorDir . '/ricbra/php-discogs-api/lib'),
+    'ComponentInstaller' => array($vendorDir . '/robloach/component-installer/src'),
+    'Assetic' => array($vendorDir . '/kriswallsmith/assetic/src'),
 );

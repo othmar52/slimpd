@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
     'Slim\\Views\\' => array($vendorDir . '/slim/views'),
     'GuzzleHttp\\Subscriber\\Oauth\\' => array($vendorDir . '/guzzlehttp/oauth-subscriber/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),

@@ -284,32 +284,41 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-$app->get('/markup/mpdplayer', function() use ($app, $config){
-	$mpd = new \Slimpd\modules\mpd\mpd();
-	$config['item'] = $mpd->getCurrentlyPlayedTrack();
-	
-	
-	if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
-		$config['renderitems'] = array(
-			'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
-			'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
-			'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
-			'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
-		);
-	} else {
-		// playing track has not been imported in slimpd database yet...
-		// so we are not able to get any renderitems
-	}
-	
-	// TODO: remove external liking as soon we have implemented a proper functionality
-	$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-		urlencode($config['mpd']['alternative_musicdir'] .
-		$config['item']->getRelativePath());
-	
-	$app->render('modules/mpdplayer.twig', $config);
-	$app->stop();
-});
+foreach(['mpd', 'local'] as $playerType ) {
 
+	$app->get('/markup/'.$playerType.'player', function() use ($app, $config, $playerType){
+		
+		if($playerType === 'mpd') {
+			$mpd = new \Slimpd\modules\mpd\mpd();
+			$config['item'] = $mpd->getCurrentlyPlayedTrack();
+		}
+		
+		if($playerType === 'local') {
+			$config['item'] = \Slimpd\Track::getInstanceByAttributes(['id' => $app->request->get('item')]);
+		}
+		
+		
+		if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
+			$config['renderitems'] = array(
+				'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
+				'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
+				'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
+				'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
+			);
+		} else {
+			// playing track has not been imported in slimpd database yet...
+			// so we are not able to get any renderitems
+		}
+		
+		// TODO: remove external liking as soon we have implemented a proper functionality
+		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
+			urlencode($config['mpd']['alternative_musicdir'] .
+			$config['item']->getRelativePath());
+		
+		$app->render('modules/'.$playerType.'player.twig', $config);
+		$app->stop();
+	});
+}
 
 
 
@@ -780,3 +789,16 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	#echo "<pre>" . print_r($rows,1); die();
 	echo json_encode($result); exit;
 })->name('autocomplete');
+
+
+
+$app->get('/deliver/:item+', function($item) use ($app, $config){
+	$path = join(DS, $item);
+	if(is_numeric($path)) {
+		$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$path));
+		$path = ($track === NULL) ? '' : $track->getRelativePath();
+	}
+	
+	deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
+	$app->stop();
+});

@@ -183,16 +183,19 @@ a {
 
 /* mpd player */
 
-.mpd-status-progressbar {
+.mpd-status-progressbar,
+.jp-play-bar {
 	position: absolute;
 	background: rgba(255,156,1,0.3);
 	background: rgba(0,0,0,0.7);
 	width: 0;
 	height: 50px;
 	border-right: 1px solid rgba(255, 255, 255, 1);
+	top: 0;
 }
 
-.mpd-ctrl-seekbar{
+.mpd-ctrl-seekbar,
+.jp-seek-bar{
 	position: absolute;
 	top: 0;
 	left: 0;

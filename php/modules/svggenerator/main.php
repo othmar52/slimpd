@@ -111,9 +111,13 @@ class Svggenerator {
 		}
     
 		header("Content-Type: image/svg+xml");
+		$colorIndex = \Slim\Slim::getInstance()->request->get('color');
 		\Slim\Slim::getInstance()->render(
 			'modules/waveform-svg.twig',
-			array('peakvalues' => $renderValues)
+			array(
+				'peakvalues' => $renderValues,
+				'colorIndex' => (($colorIndex) ? $colorIndex : '1')
+			)
 		);
 		exit;
 	}
