@@ -11,14 +11,17 @@ $(document).ready(function(){
         smoothPlayBar: true,
         keyEnabled: true,
         remainingDuration: false,
-        toggleDuration: true
+        toggleDuration: true,
+        ended: function() {
+            localPlayer({'action': 'soundEnded'});
+        }
       });
       
 	$("#jquery_jplayer_1").jPlayer("play");
 	
 	
 	$('.player-local').on('click', '.localplayer-play-pause', function(e){
-		localPlayer({'action': 'togglepause'});
+		localPlayer({'action': 'togglePause'});
 		e.preventDefault();
 	});
 	
@@ -60,7 +63,7 @@ function localPlayer(conf) {
     			
     		});
 			break;
-		case 'togglepause':
+		case 'togglePause':
 			var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
 			if(localPlayerStatus.paused === false) {
 				setPlayPauseState('pause');
@@ -68,6 +71,14 @@ function localPlayer(conf) {
 				setPlayPauseState('play');
 			}
 			
+			break;
+		case 'soundEnded':
+			// for now take any rendered track and play it
+			// TODO: add functionality "current playlist" (like mpd) for local player 
+			var playable = $( "a.is-playlink[data-localplayer]").length;
+			if(playable) {
+				$("a.is-playlink[data-localplayer]").eq(Math.floor(Math.random()*playable)).click();
+			}
 			break;
 		default:
 			console.log('invalid action: ' + conf.action);
