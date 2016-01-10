@@ -68,7 +68,7 @@
 	{# music files #}
 	{% for item in files %}
 		{% if item.ext in ['mp3','m4a','flac','wav', 'aif', 'aiff'] %}
-		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover rhash-{{ item.relativePathHash }}" id="track{{ loop.index }}">
 			<div class="col-md-1">
 			
 				<a href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" class="ajax-link is-playlink" data-localplayer='{"action":"play", "item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext}}"}'>
