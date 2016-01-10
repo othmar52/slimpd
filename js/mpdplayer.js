@@ -54,20 +54,11 @@ function pollMpdData(){
     	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
     	$('.mpd-status-progressbar').css('width', 'calc('+ data.percent+'% - 15px)');
     	
-    	//console.log(data);
-    	FavIconX.config({
-    	  updateTitle: false,
-    	  shape: 'doughnut',
-    	  doughnutRadius: 7.5,
-    	  overlay: ((data.state == 'play')? 'play' : 'pause'),
-    	  overlayColor: '#777',
-    	  borderColor: '#278DBA',
-    	  fillColor: '#278DBA',
-    	  titleRenderer: function(v, t){
-			return $('.now-playing-string').text();
-		  }
-		}).setValue(data.percent);
     	
+		// TODO: is this the right place for trigger local-player-favicon-update? - for now it is convenient to use this existing interval...
+    	drawFavicon(data.percent, data.state);
+
+
     	
     	// update trackinfo only onTrackChange()
     	if(nowPlayingSongId != data.songid) {
