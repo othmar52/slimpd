@@ -30,7 +30,7 @@
 	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
 	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
 	<div class="col-md-1" style="font-size: 1.4em;">
-		<a href="/mpdctrl/playIndex/{{ mpdidx }}" class="ajax-link" title="play now" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o sign"></i></a>
+		<a href="/mpdctrl/playIndex/{{ mpdidx }}" class="ajax-link is-playlink" title="play now" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o sign"></i></a>
 		<a href="#" title="play next"><i class="fa fa-plus sign"></i></a>
 		<a href="/mpdctrl/deleteIndex/{{ mpdidx }}" class="ajax-link" title="remove from playlist"><i class="fa fa-times-circle sign"></i></a>
 	</div>

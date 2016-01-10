@@ -12,6 +12,7 @@ $(document).ready(function(){
         keyEnabled: true,
         remainingDuration: false,
         toggleDuration: true,
+        //solution: 'flash,html',
         ended: function() {
             localPlayer({'action': 'soundEnded'});
         }
@@ -35,14 +36,16 @@ function localPlayer(conf) {
 			
 			setMediaOptions = {};
 			//setMediaOptions.title = 'testtitle';
+			console.log(conf.ext);
 			switch(conf.ext) {
-				case 'flac': setMediaOptions.flac = '/deliver/' + conf.item;
-				case 'mp3': setMediaOptions.mp3 = '/deliver/' + conf.item;
-				case 'wav': setMediaOptions.wav = '/deliver/' + conf.item;
-				case 'm4a': setMediaOptions.m4a = '/deliver/' + conf.item;
-				case 'ogg': setMediaOptions.ogg = '/deliver/' + conf.item;
+				case 'flac': setMediaOptions.flac = '/deliver/' + conf.item; break;
+				case 'mp3': setMediaOptions.mp3 = '/deliver/' + conf.item; break;
+				case 'wav': setMediaOptions.wav = '/deliver/' + conf.item; break;
+				case 'm4a': setMediaOptions.m4a = '/deliver/' + conf.item; break;
+				case 'ogg': setMediaOptions.ogg = '/deliver/' + conf.item; break;
 			}
 			setMediaOptions.supplied = conf.ext;
+			console.log(setMediaOptions);
 			$('#jquery_jplayer_1').jPlayer('setMedia', setMediaOptions);
 			
 			// fetch markup with trackinfos
