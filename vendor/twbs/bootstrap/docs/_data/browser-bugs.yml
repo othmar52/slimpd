@@ -1,6 +1,6 @@
 -
   browser: >
-    Internet Explorer 11
+    Internet Explorer 11 & Microsoft Edge
   summary: >
     Hovered element still remains in `:hover` state after scrolling away.
   upstream_bug: >
@@ -10,13 +10,33 @@
 
 -
   browser: >
-    Internet Explorer 11
+    Internet Explorer 11 & Microsoft Edge
   summary: >
     When hovering over a `<select>` menu item, the cursor for the element underneath the menu is displayed.
   upstream_bug: >
     IE#963961
   origin: >
     Bootstrap#14528
+
+-
+  browser: >
+    Internet Explorer 11 & Microsoft Edge
+  summary: >
+    CSS `border-radius` sometimes causes lines of bleed-through of the `background-color` of the parent element.
+  upstream_bug: >
+    IE#1463734
+  origin: >
+    Bootstrap#16671
+
+-
+  browser: >
+    Internet Explorer 11 & Microsoft Edge
+  summary: >
+    `background` of `<tr>` is only applied to first child cell instead of all cells in the row
+  upstream_bug: >
+    IE#2110930
+  origin: >
+    Bootstrap#18504
 
 -
   browser: >
@@ -40,16 +60,6 @@
 
 -
   browser: >
-    Firefox (Windows)
-  summary: >
-    Java applets that are descendants of elements with forced hardware acceleration using `translate3d(0,0,0)` are invisible.
-  upstream_bug: >
-    Mozilla#1048279
-  origin: >
-    Bootstrap#14124
-
--
-  browser: >
     Firefox
   summary: >
     Button elements with `width: 100%` become cropped in long tables.
@@ -67,6 +77,26 @@
     Mozilla#654072
   origin: >
     Bootstrap#793
+
+-
+  browser: >
+    Firefox
+  summary: >
+    `focus` events should not be fired at the `document` object
+  upstream_bug: >
+    Mozilla#1228802
+  origin: >
+    Bootstrap#18365
+
+-
+  browser: >
+    Firefox (Windows)
+  summary: >
+    Right border of `<select>` menu is sometimes missing when screen is set to uncommon resolution
+  upstream_bug: >
+    Mozilla#1139853
+  origin: >
+    Bootstrap#15990
 
 -
   browser: >
@@ -97,16 +127,6 @@
     Chromium#475128
   origin: >
     Bootstrap#16180
-
--
-  browser: >
-    Chrome
-  summary: >
-    `display: table;` within `display: block;` forces sibling content to new line.
-  upstream_bug: >
-    Chromium#309483
-  origin: >
-    Bootstrap#9950
 
 -
   browser: >
@@ -147,6 +167,16 @@
     Chromium#427994
   origin: >
     Bootstrap#16372
+
+-
+  browser: >
+    Chrome
+  summary: >
+    `table-cell` borders not overlapping despite `margin-right: -1px`
+  upstream_bug: >
+    Chromium#534750
+  origin: >
+    Bootstrap#17438, Bootstrap#14237
 
 -
   browser: >
@@ -194,16 +224,6 @@
   browser: >
     Safari (OS X)
   summary: >
-    `display: table-cell;` within media query renders incorrectly when resizing the window.
-  upstream_bug: >
-    WebKit#138167, Safari#18987206
-  origin: >
-    Bootstrap#9774
-
--
-  browser: >
-    Safari (OS X)
-  summary: >
     Small font size when printing webpage with fixed-width `.container`.
   upstream_bug: >
     WebKit#138192, Safari#19435018
@@ -214,41 +234,21 @@
   browser: >
     Safari (OS X)
   summary: >
-    Alpha linear-gradient has dark line at its edge.
-  upstream_bug: >
-    WebKit#139803, Safari#19434933
-  origin: >
-    Bootstrap#15205
-
--
-  browser: >
-    Safari (OS X)
-  summary: >
-    Caps Lock indicator not shown in `<input type="password">` with `display: block`
-  upstream_bug: >
-    WebKit#141804, Safari#19892433
-  origin: >
-    Bootstrap#15832
-
--
-  browser: >
-    Safari (OS X)
-  summary: >
     Focus ring of image map within a modal is displayed in the wrong location.
   upstream_bug: >
-    WebKit#143527
+    WebKit#143527, Safari#21908735
   origin: >
     Bootstrap#16180
 
 -
   browser: >
-    Safari (OS X)
+    Safari (iPad)
   summary: >
-    Unnecessary line-wrapping of `.navbar-brand` text for no apparent reason
+    `<select>` menu on iPad causes shifting of hit-testing areas
   upstream_bug: >
-    WebKit#144990, Safari#20950962
+    WebKit#150079, Safari#23082521
   origin: >
-    Bootstrap#15998
+    Bootstrap#14975
 
 -
   browser: >
@@ -274,8 +274,38 @@
   browser: >
     Safari (iOS)
   summary: >
+    Can't move cursor to start of text after entering long string of text into `<input type="text">`
+  upstream_bug: >
+    WebKit#148061, Safari#22299624
+  origin: >
+    Bootstrap#16988
+
+-
+  browser: >
+    Safari (iOS)
+  summary: >
     `display: block` causes text of temporal `<input>`s to become vertically misaligned
   upstream_bug: >
     WebKit#139848, Safari#19434878
   origin: >
     Bootstrap#11266, Bootstrap#13098
+
+-
+  browser: >
+    Safari (iOS)
+  summary: >
+    Tapping on `<body>` doesn't fire `click` events
+  upstream_bug: >
+    WebKit#151933
+  origin: >
+    Bootstrap#16028
+
+-
+  browser: >
+    Safari (iPad Pro)
+  summary: >
+    Rendering of descendants of `position: fixed` element gets clipped on iPad Pro in Landscape orientation
+  upstream_bug: >
+    WebKit#152637, Safari#24030853
+  origin: >
+    Bootstrap#18738
