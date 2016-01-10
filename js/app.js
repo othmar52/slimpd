@@ -37,6 +37,7 @@ $(document).ready(function(){
 	  		setPlayPauseState('pause');
 	  	}
 	  	$('.player-local,.player-mpd').toggle();
+	  	drawFavicon(false, false);
 	  });
 
 	
@@ -57,7 +58,36 @@ $(document).ready(function(){
 });
 
 
-
+function drawFavicon(percent, state) {
+	
+	var doghnutColor = '#278DBA';
+	var overlay;
+	var titleText;
+	if(playerMode === 'mpd') {
+		overlay = (state == 'play')? 'play' : 'pause';
+		titleText = $('.player-mpd .now-playing-string').text();
+	} else {
+		var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
+		//console.log(localPlayerStatus);
+		percent = localPlayerStatus.currentPercentAbsolute;
+		overlay = (localPlayerStatus.paused == false)? 'play' : 'pause';
+		doghnutColor = 'rgb(45,146,56)';
+		titleText = $('.player-local .now-playing-string').text();
+	}
+	
+	FavIconX.config({
+		updateTitle: false,
+		shape: 'doughnut',
+		doughnutRadius: 7.5,
+		overlay: overlay,
+		overlayColor: '#777',
+		borderColor: doghnutColor,
+		fillColor: doghnutColor,
+		titleRenderer: function(v, t){
+			return titleText;
+		}
+	}).setValue(percent);
+}
 
 //  +------------------------------------------------------------------------+
 //  | Formatted time                                                         |
