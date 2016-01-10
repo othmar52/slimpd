@@ -34,7 +34,7 @@ $(document).ready(function(){
 	  		$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
 	  		playerMode = "mpd";
 	  		// pause local player when switching to mpd
-	  		$('#jquery_jplayer_1').jPlayer( "pause");
+	  		setPlayPauseState('pause');
 	  	}
 	  	$('.player-local,.player-mpd').toggle();
 	  });
