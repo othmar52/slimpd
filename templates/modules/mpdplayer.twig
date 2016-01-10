@@ -106,4 +106,17 @@
     	background: url({{ config.absRefPrefix }}skin/default/img/playing.gif);
     	background-size: 40px 50px;
     }
+    
+    /* filebrowser */
+    .rhash-{{ item.relativePathHash}} .is-playlink:after {
+    	content: ' ';
+    	width: 20px;
+    	height: 20px;
+    	display: block;
+    	position: absolute;
+    	top: 0px;
+    	left: 50px;
+    	background: url({{ config.absRefPrefix }}skin/default/img/playing.gif);
+    	background-size: 20px 20px;
+    }
     </style>
