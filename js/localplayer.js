@@ -16,6 +16,12 @@ $(document).ready(function(){
       
 	$("#jquery_jplayer_1").jPlayer("play");
 	
+	
+	$('.player-local').on('click', '.localplayer-play-pause', function(e){
+		localPlayer({'action': 'togglepause'});
+		e.preventDefault();
+	});
+	
 });
 
 function localPlayer(conf) {
@@ -35,7 +41,8 @@ function localPlayer(conf) {
 			}
 			setMediaOptions.supplied = conf.ext;
 			$('#jquery_jplayer_1').jPlayer('setMedia', setMediaOptions);
-			$('#jquery_jplayer_1').jPlayer( "play");
+			//$('#jquery_jplayer_1').jPlayer( "play");
+			
 			
 			
 			// fetch markup with trackinfos
@@ -44,12 +51,22 @@ function localPlayer(conf) {
     		}).done(function(response){
     			// place markup in DOM
     			$('.player-local').html(response);
+    			setPlayPauseState('play');
     			
     			// re-bind controls
     			$("#jquery_jplayer_1").jPlayer({cssSelectorAncestor: "#jp_container_1"});
+    			
+    			// make sure we have the correct play or pause control
+    			
     		});
 			break;
 		case 'togglepause':
+			var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
+			if(localPlayerStatus.paused === false) {
+				setPlayPauseState('pause');
+			} else {
+				setPlayPauseState('play');
+			}
 			
 			break;
 		default:
@@ -57,3 +74,18 @@ function localPlayer(conf) {
 	}
 	//return false;
 }
+
+
+function setPlayPauseState(what) {
+	var player = $("#jquery_jplayer_1");
+	var control = $('.localplayer-play-pause');
+	if(what == 'play') {
+		$(player).jPlayer( "play");
+		$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl"></i>');
+	} else {
+		$(player).jPlayer( "pause");
+		$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl"></i>');
+	}
+	return false;
+}
+
