@@ -4,28 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "848272df3a8d172d1644bed40975efdb",
-    "content-hash": "667a915227ea467acc555c5a57a0b3a3",
+    "hash": "6e538ff151ec841f9925f0ddd2ea52cc",
+    "content-hash": "620e06e8f7e358a0d87831e4d1d0384c",
     "packages": [
         {
             "name": "components/font-awesome",
-            "version": "4.4.0",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "7dffacc72e566e5db6272244effc06f64fe9f185"
+                "reference": "069663a8419f9db90f9bec71e71ed4bb9d28d6ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/7dffacc72e566e5db6272244effc06f64fe9f185",
-                "reference": "7dffacc72e566e5db6272244effc06f64fe9f185",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/069663a8419f9db90f9bec71e71ed4bb9d28d6ee",
+                "reference": "069663a8419f9db90f9bec71e71ed4bb9d28d6ee",
                 "shasum": ""
             },
             "type": "component",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "4.4.x-dev"
-                },
                 "component": {
                     "styles": [
                         "css/font-awesome.css"
@@ -42,20 +39,20 @@
                 "OFL-1.1"
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
-            "time": "2015-07-30 02:38:45"
+            "time": "2015-11-24 10:33:56"
         },
         {
             "name": "components/jquery",
-            "version": "2.1.4",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "7b1d1104656a092423fbfba13c5920e9bbba290c"
+                "reference": "d8b2ac0c1978e9ed8602789123976b1c7161ef96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/7b1d1104656a092423fbfba13c5920e9bbba290c",
-                "reference": "7b1d1104656a092423fbfba13c5920e9bbba290c",
+                "url": "https://api.github.com/repos/components/jquery/zipball/d8b2ac0c1978e9ed8602789123976b1c7161ef96",
+                "reference": "d8b2ac0c1978e9ed8602789123976b1c7161ef96",
                 "shasum": ""
             },
             "type": "component",
@@ -84,7 +81,53 @@
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
-            "time": "2015-05-08 05:04:47"
+            "time": "2016-01-08 23:29:41"
+        },
+        {
+            "name": "components/jquery-cookie",
+            "version": "1.4.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Gta-Cool/jquery-cookie.git",
+                "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Gta-Cool/jquery-cookie/zipball/0a10666155fd3aab9be5735b0ba83a4dccf59d78",
+                "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78",
+                "shasum": ""
+            },
+            "require": {
+                "components/jquery": "*",
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "jquery.cookie.js"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Klaus Hartl",
+                    "homepage": "https://github.com/carhartl"
+                }
+            ],
+            "description": "A simple, lightweight jQuery plugin for reading, writing and deleting cookies",
+            "homepage": "https://github.com/carhartl/jquery-cookie",
+            "keywords": [
+                "JS",
+                "cookie",
+                "javascript",
+                "jquery"
+            ],
+            "time": "2014-07-02 18:35:35"
         },
         {
             "name": "components/jqueryui",
@@ -483,16 +526,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.10",
+            "version": "v1.9.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67"
+                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
-                "reference": "835a0db62993cb1d85925f9a8aefe13e4ebe2b67",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/da7c657f2bcc865ef1bef53cf90c2638f344469b",
+                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b",
                 "shasum": ""
             },
             "require": {
@@ -515,7 +558,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2015-09-14 05:42:21"
+            "time": "2015-12-24 10:50:02"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -615,39 +658,38 @@
         },
         {
             "name": "kriswallsmith/assetic",
-            "version": "v1.3.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "cb92b179dddfb8a3f341d53bd27e088f24d9c2e5"
+                "reference": "0c52d75a99b3a08402d0f3297e47f3df6703decc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/cb92b179dddfb8a3f341d53bd27e088f24d9c2e5",
-                "reference": "cb92b179dddfb8a3f341d53bd27e088f24d9c2e5",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/0c52d75a99b3a08402d0f3297e47f3df6703decc",
+                "reference": "0c52d75a99b3a08402d0f3297e47f3df6703decc",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.1",
-                "symfony/process": "~2.1"
+                "symfony/process": "~2.1|~3.0"
             },
             "conflict": {
-                "twig/twig": "<1.12"
+                "twig/twig": "<1.23"
             },
             "require-dev": {
-                "cssmin/cssmin": "*",
-                "joliclic/javascript-packer": "*",
-                "kamicane/packager": "*",
+                "cssmin/cssmin": "3.0.1",
+                "joliclic/javascript-packer": "1.1",
+                "kamicane/packager": "1.0",
                 "leafo/lessphp": "^0.3.7",
-                "leafo/scssphp": "*@dev",
-                "leafo/scssphp-compass": "*@dev",
-                "mrclay/minify": "*",
+                "leafo/scssphp": "~0.1",
+                "mrclay/minify": "~2.2",
                 "patchwork/jsqueeze": "~1.0|~2.0",
                 "phpunit/phpunit": "~4.8",
                 "psr/log": "~1.0",
-                "ptachoire/cssembed": "*",
-                "symfony/phpunit-bridge": "~2.7",
-                "twig/twig": "~1.8|~2.0"
+                "ptachoire/cssembed": "~1.0",
+                "symfony/phpunit-bridge": "~2.7|~3.0",
+                "twig/twig": "~1.23|~2.0"
             },
             "suggest": {
                 "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
@@ -689,7 +731,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2015-10-15 01:33:42"
+            "time": "2015-11-24 14:41:57"
         },
         {
             "name": "lusitanian/oauth",
@@ -697,12 +739,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-                "reference": "734d6b2a3192e210a9a33beec49604392f3ca11c"
+                "reference": "769fea1bb53845c7b03cca97cbdd0708e9ec26da"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/769fea1bb53845c7b03cca97cbdd0708e9ec26da",
-                "reference": "734d6b2a3192e210a9a33beec49604392f3ca11c",
+                "reference": "769fea1bb53845c7b03cca97cbdd0708e9ec26da",
                 "shasum": ""
             },
             "require": {
@@ -756,7 +798,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2015-12-15 22:47:45"
+            "time": "2015-12-21 00:06:34"
         },
         {
             "name": "neutron/sphinxsearch-api",
@@ -937,16 +979,16 @@
         },
         {
             "name": "slim/slim",
-            "version": "2.6.2",
+            "version": "2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37"
+                "reference": "26017599cb009b4df082dbbd091a29f466a84b93"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/20a02782f76830b67ae56a5c08eb1f563c351a37",
-                "reference": "20a02782f76830b67ae56a5c08eb1f563c351a37",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/26017599cb009b4df082dbbd091a29f466a84b93",
+                "reference": "26017599cb009b4df082dbbd091a29f466a84b93",
                 "shasum": ""
             },
             "require": {
@@ -979,7 +1021,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2015-03-08 18:41:17"
+            "time": "2015-10-09 07:51:59"
         },
         {
             "name": "slim/views",
@@ -1036,25 +1078,25 @@
         },
         {
             "name": "symfony/process",
-            "version": "2.8.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac"
+                "reference": "1cba8f04eb0a9e38184a8003e927a5fb2d62158a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
-                "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
+                "url": "https://api.github.com/repos/symfony/process/zipball/1cba8f04eb0a9e38184a8003e927a5fb2d62158a",
+                "reference": "1cba8f04eb0a9e38184a8003e927a5fb2d62158a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -1081,20 +1123,20 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-06 09:59:23"
+            "time": "2016-01-06 10:01:46"
         },
         {
             "name": "twbs/bootstrap",
-            "version": "v3.3.5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482"
+                "reference": "d533bf0cbc1f0c8c554a0023f2ae6086e3e93a42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/16b48259a62f576e52c903c476bd42b90ab22482",
-                "reference": "16b48259a62f576e52c903c476bd42b90ab22482",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/d533bf0cbc1f0c8c554a0023f2ae6086e3e93a42",
+                "reference": "d533bf0cbc1f0c8c554a0023f2ae6086e3e93a42",
                 "shasum": ""
             },
             "replace": {
@@ -1132,20 +1174,20 @@
                 "responsive",
                 "web"
             ],
-            "time": "2015-06-16 16:13:22"
+            "time": "2016-01-08 02:17:49"
         },
         {
             "name": "twig/twig",
-            "version": "v1.22.3",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540"
+                "reference": "dba78c81cd04ca8d6ecdf7b2d52b9414042dbeea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ebfc36b7e77b0c1175afe30459cf943010245540",
-                "reference": "ebfc36b7e77b0c1175afe30459cf943010245540",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/dba78c81cd04ca8d6ecdf7b2d52b9414042dbeea",
+                "reference": "dba78c81cd04ca8d6ecdf7b2d52b9414042dbeea",
                 "shasum": ""
             },
             "require": {
@@ -1158,7 +1200,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.22-dev"
+                    "dev-master": "1.23-dev"
                 }
             },
             "autoload": {
@@ -1193,7 +1235,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-10-13 07:07:02"
+            "time": "2016-01-07 21:43:28"
         },
         {
             "name": "webfontkit/open-sans",
