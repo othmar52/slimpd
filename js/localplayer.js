@@ -44,9 +44,6 @@ function localPlayer(conf) {
 			}
 			setMediaOptions.supplied = conf.ext;
 			$('#jquery_jplayer_1').jPlayer('setMedia', setMediaOptions);
-			//$('#jquery_jplayer_1').jPlayer( "play");
-			
-			
 			
 			// fetch markup with trackinfos
 			$.ajax({
