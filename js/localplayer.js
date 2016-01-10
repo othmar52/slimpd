@@ -56,7 +56,7 @@ function localPlayer(conf) {
     			// re-bind controls
     			$("#jquery_jplayer_1").jPlayer({cssSelectorAncestor: "#jp_container_1"});
     			
-    			// make sure we have the correct play or pause control
+    			
     			
     		});
 			break;
@@ -67,7 +67,6 @@ function localPlayer(conf) {
 			} else {
 				setPlayPauseState('play');
 			}
-			
 			break;
 		case 'soundEnded':
 			// for now take any rendered track and play it
@@ -94,6 +93,7 @@ function setPlayPauseState(what) {
 		$(player).jPlayer( "pause");
 		$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl"></i>');
 	}
+	drawFavicon(false, false);
 	return false;
 }
 
