@@ -24,12 +24,14 @@ $(document).ready(function(){
 	
 	
 	/* toggle between mpd-control and local player (jPlayer) */
-	  $('.playerModeToggle button').on('click', function () {
-	  	if($(this).hasClass('active') === true) {
-	  		$(this).html($(this).attr('data-label-local'));
+	  $('.playerModeToggle a').on('click', function () {
+	  	
+	  	if($(this).hasClass('active-mpd') === true) {
+	  		$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
+	  		
 	  		playerMode = "local";
 	  	} else {
-	  		$(this).html($(this).attr('data-label-mpd'));
+	  		$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
 	  		playerMode = "mpd";
 	  		// pause local player when switching to mpd
 	  		$('#jquery_jplayer_1').jPlayer( "pause");
