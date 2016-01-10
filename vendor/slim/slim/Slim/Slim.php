@@ -6,7 +6,7 @@
  * @copyright   2011 Josh Lockhart
  * @link        http://www.slimframework.com
  * @license     http://www.slimframework.com/license
- * @version     2.6.1
+ * @version     2.6.3
  * @package     Slim
  *
  * MIT LICENSE
@@ -54,7 +54,7 @@ class Slim
     /**
      * @const string
      */
-    const VERSION = '2.6.1';
+    const VERSION = '2.6.3';
 
     /**
      * @var \Slim\Helper\Set
@@ -1372,6 +1372,7 @@ class Slim
             $this->response()->write(ob_get_clean());
         } catch (\Exception $e) {
             if ($this->config('debug')) {
+                ob_end_clean();
                 throw $e;
             } else {
                 try {
