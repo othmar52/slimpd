@@ -394,7 +394,9 @@ function testBinary($filePath) {
 }
 
 
-
+/**
+ * IMPORTANT TODO: check why performance on huge files is so bad (seeking-performance in large mixes is pretty poor compared to serving the mp3-mix directly)
+ */
 function deliver($file, $app) {
 	
 	/**
