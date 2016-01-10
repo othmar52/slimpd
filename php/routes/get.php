@@ -293,8 +293,17 @@ foreach(['mpd', 'local'] as $playerType ) {
 			$config['item'] = $mpd->getCurrentlyPlayedTrack();
 		}
 		
+		// maybe we cant find item in mpd or mysql database because it has ben accessed via filebrowser
+		$itemRelativePath = '';
+		
 		if($playerType === 'local') {
-			$config['item'] = \Slimpd\Track::getInstanceByAttributes(['id' => $app->request->get('item')]);
+			if(is_numeric($app->request->get('item')) === TRUE) {
+				$search = array('id' => (int)$app->request->get('item'));
+			} else {
+				$search = array('relativePathHash' => getFilePathHash($app->request->get('item')));
+				$itemRelativePath = $app->request->get('item');
+			}
+			$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 		}
 		
 		
@@ -305,15 +314,18 @@ foreach(['mpd', 'local'] as $playerType ) {
 				'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
 				'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
 			);
+			$itemRelativePath = $config['item']->getRelativePath();
 		} else {
 			// playing track has not been imported in slimpd database yet...
 			// so we are not able to get any renderitems
+			$item = new \Slimpd\Track();
+			$item->setRelativePath($itemRelativePath);
+			$config['item'] = $item;
 		}
 		
 		// TODO: remove external liking as soon we have implemented a proper functionality
 		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-			urlencode($config['mpd']['alternative_musicdir'] .
-			$config['item']->getRelativePath());
+			urlencode($config['mpd']['alternative_musicdir'] . $itemRelativePath);
 		
 		$app->render('modules/'.$playerType.'player.twig', $config);
 		$app->stop();
