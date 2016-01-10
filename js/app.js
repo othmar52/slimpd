@@ -27,12 +27,12 @@ $(document).ready(function(){
 	  $('.playerModeToggle button').on('click', function () {
 	  	if($(this).hasClass('active') === true) {
 	  		$(this).html($(this).attr('data-label-local'));
-	  		//$('#waveform-css').attr('href', $('#waveform-css').attr('data-local'));
 	  		playerMode = "local";
 	  	} else {
 	  		$(this).html($(this).attr('data-label-mpd'));
-	  		//$('#waveform-css').attr('href', $('#waveform-css').attr('data-mpd'));
 	  		playerMode = "mpd";
+	  		// pause local player when switching to mpd
+	  		$('#jquery_jplayer_1').jPlayer( "pause");
 	  	}
 	  	$('.player-local,.player-mpd').toggle();
 	  });
