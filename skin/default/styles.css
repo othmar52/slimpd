@@ -63,6 +63,10 @@ a {
 	color: #888;
 }
 
+.uc {
+	text-transform: uppercase;
+}
+
 .active .fa,
 .fa:hover {
 	color: #FFF;
@@ -245,6 +249,15 @@ a {
     display:block;
 }
 
+/* player mode toggler */
+.active-local {
+	color: #000;
+	background-color: rgb(59,187,47);
+}
+.active-mpd {
+	color: #000;
+	background-color: rgb(255,156,1);
+}
 
 
 /* TODO: fix non-working popover inside modalbox ... */
