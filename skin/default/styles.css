@@ -260,6 +260,11 @@ a {
 }
 
 
+/* track widget*/
+.border-left {
+	border-left: 1px solid #353535;
+}
+
 /* TODO: fix non-working popover inside modalbox ... */
 .popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
 .popover .popover-title {border-radius: 0; }
