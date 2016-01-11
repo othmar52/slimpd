@@ -39,6 +39,12 @@ $(document).ready(function(){
 	  	$('.player-local,.player-mpd').toggle();
 	  	drawFavicon(false, false);
 	  });
+	  
+	  $('#global-modal').on('click', '.playerModeToggleTrigger', function(e) {
+	  	e.preventDefault();
+	  	$('.playerModeToggle a').trigger('click');
+	  });
+	  
 
 	$('.trigger-modal').click(function (e) {
         e.preventDefault();
