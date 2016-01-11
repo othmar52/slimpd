@@ -43,7 +43,7 @@ $config['mainmenu']= array(
   ),
 );
 
-
+$config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
 
 
 
