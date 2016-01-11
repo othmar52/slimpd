@@ -19,6 +19,10 @@ $(document).ready(function(){
 			}
 		},
 		select: function( event, ui ) {
+			// do not navigate away with visible modal
+			if($("#global-modal").hasClass('in')) {
+				return false;
+			}
 			//console.log(ui.item);
 			if(ui.item) {
 				document.location.href = ui.item.url;
@@ -36,12 +40,12 @@ $(document).ready(function(){
      		widgetLink = $('<a />')
      			.attr('class', 'trigger-modal')
      			.attr('href', '/markup/widget-trackcontrol?item='+ item.itemid )
-     			.html(' TODO: <i class="fa fa-plus-square"></i>')
+     			.html(' <i class="fa fa-plus-square"></i>')
      			.bind('click', function(e){
+     				// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
+     				$("#global-modal").addClass('in');
      				e.preventDefault();
-     				// TODO: unbind click event of whole item
      				// TODO: is it possible to use event listener which already exists on all .trigger-modal elements?
-     				//$(this).parent().parent().parent().parent().unbind('click');
 			        $.ajax({
 						url: $(this).attr('href')
 					}).done(function(response){
