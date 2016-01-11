@@ -3,14 +3,18 @@
 	<div class="row row-eq-height">
 		<div class="col-md-2">
 			<div class="navbar-header col2">
-				<a class="navbar-brand" href="/playlist">{{ config.logomarkup|raw }}</a>
+				<a id="logo" class="navbar-brand" href="/playlist">{{ config.logomarkup|raw }}</a>
 			</div>
 		</div>
 		<div class="col-md-5">
 			<ul class="nav navbar-nav">
 				{% for menu in mainmenu %}
 				<li class="{% if menu.url == current_url %} active{% endif %}">
-					<a href="{{menu.url}}">{{menu.title|raw}}</a>
+					{% if menu.url == '/playlists' %}
+						<a href="#" {{'niymarkup'|ll|raw}} >{{menu.title|raw}}</a>
+					{% else %}
+						<a href="{{menu.url}}">{{menu.title|raw}}</a>
+					{% endif %}
 				</li>
 				{% endfor %}
       		</ul>

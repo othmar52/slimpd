@@ -284,19 +284,17 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-foreach(['mpd', 'local'] as $playerType ) {
+foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) {
 
-	$app->get('/markup/'.$playerType.'player', function() use ($app, $config, $playerType){
-		
-		if($playerType === 'mpd') {
-			$mpd = new \Slimpd\modules\mpd\mpd();
-			$config['item'] = $mpd->getCurrentlyPlayedTrack();
-		}
+	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
 		// maybe we cant find item in mpd or mysql database because it has ben accessed via filebrowser
 		$itemRelativePath = '';
 		
-		if($playerType === 'local') {
+		if($markupSnippet === 'mpdplayer') {
+			$mpd = new \Slimpd\modules\mpd\mpd();
+			$config['item'] = $mpd->getCurrentlyPlayedTrack();
+		} else {
 			if(is_numeric($app->request->get('item')) === TRUE) {
 				$search = array('id' => (int)$app->request->get('item'));
 			} else {
@@ -327,7 +325,7 @@ foreach(['mpd', 'local'] as $playerType ) {
 		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
 			urlencode($config['mpd']['alternative_musicdir'] . $itemRelativePath);
 		
-		$app->render('modules/'.$playerType.'player.twig', $config);
+		$app->render('modules/'.$markupSnippet.'.twig', $config);
 		$app->stop();
 	});
 }
