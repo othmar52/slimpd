@@ -74,6 +74,7 @@ function pollMpdData(){
     		}).done(function(response){
     			//console.log(response);
     			$('.player-mpd').html(response);
+    			drawTimeGrid(data.duration, 'player-mpd');
     			
     		});
     	}

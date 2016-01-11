@@ -14,7 +14,13 @@ $(document).ready(function(){
         toggleDuration: true,
         ended: function() {
             localPlayer({'action': 'soundEnded'});
-        }
+        },
+        progress: function(e,data){
+        	// TODO: check why jPlayer event 'loadedmetadata' sometimes has no duration (timegrid fails to render)
+        	// draw the timegrid only once as soon as we know the total duration and remove the progress eventListener
+        	// @see: http://jplayer.org/latest/developer-guide/#jPlayer-events
+		  	drawTimeGrid($(this).data('jPlayer').status.duration, 'player-local');
+		}
       });
       
 	$("#jquery_jplayer_1").jPlayer("play");
@@ -35,9 +41,9 @@ function localPlayer(conf) {
 			// TODO: check why conf.ext is sometimes 'vorbis' instead of 'ogg' 			
 			conf.ext = (conf.ext == 'vorbis') ? 'ogg' : conf.ext;
 			
-			// WARNING: jPlayer's essential Audio formats: mp3 or m4a.
+			// WARNING: jPlayer's essential Audio formats are: mp3 or m4a.
 			// wav, flac, ogg, m4a plays fine in chrome but we have to add an unused mp3-property...
-			// TODO: really provide alternative urls instead of adding a non-functional dummy
+			// TODO: really provide alternative urls instead of adding an invalid url for mp3
 			$('#jquery_jplayer_1').jPlayer(
 				'setMedia',
 				{
