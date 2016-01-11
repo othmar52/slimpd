@@ -26,7 +26,7 @@
 			
 		<span style="font-size: 1.7em;">{{album.title}}</span>
 		<div id="album-info-artist">
-			{{'artist'|ll}}: {% include 'partials/artist/link.twig' with { 'item': album } %}
+			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.twig' with { 'item': album } %}
 		</div>
 		<p style="font-size: 0.7em; color: #999;"><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
 			
@@ -35,28 +35,28 @@
 			
 		<div class="row">
 			<div class="col-md-2">
-				{{'genre'|ll}}: 
+				<span class="dark uc small">{{'genre'|ll}}:</span>
 			</div>
 			<div class="col-md-10">
 				{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}
 			</div>
 			
 			<div class="col-md-2">
-				{{'year'|ll}}: 
+				<span class="dark uc small">{{'year'|ll}}:</span>
 			</div>
 			<div class="col-md-10">
 				{% include 'partials/yearlink.twig' with { 'item': album } %}
 			</div>
 			
 			<div class="col-md-2">
-				{{'label'|ll}}: 
+				<span class="dark uc small">{{'label'|ll}}:</span>
 			</div>
 			<div class="col-md-10">
 				{% include 'partials/labellink.twig' with { 'labelIds': album.labelId } %}
 			</div>
 			
 			<div class="col-md-2">
-				{{'catnr'|ll}}: 
+				<span class="dark uc small">{{'catnr'|ll}}:</span>
 			</div>
 			
 			<div class="col-md-10">
@@ -70,21 +70,21 @@
 			
 			
 			<div class="col-md-2">
-				{{'fileformat'|ll}}: 
+				<span class="dark uc small">{{'fileformat'|ll}}:</span>
 			</div>
 			<div class="col-md-10">
 				{{itemlist.0.audioBitsPerSample}}bit - {{itemlist.0.audioSampleRate}}kHz
 			</div>
 			
 			<div class="col-md-2">
-				{{'filetype'|ll}}: 
+				<span class="dark uc small">{{'filetype'|ll}}:</span>
 			</div>
 			<div class="col-md-10">
 				{{itemlist.0.audioDataformat}} - {{itemlist.0.audioProfile}}
 			</div>
 			
 			<div class="col-md-2">
-				Added at: 
+				<span class="dark uc small">Added at:</span>
 			</div>
 			<div class="col-md-10">
 				{{ album.added|date("m/d/Y") }}
@@ -115,12 +115,12 @@
 <div class="row">
 	<div class="col-md-1"></div>
 	<div class="col-md-1"></div>
-	<div class="col-md-3">Artist</div>
-	<div class="col-md-3">Title</div>
-	<div class="col-md-1">Genre</div>
-	<div class="col-md-1">year</div>
-	<div class="col-md-1">time</div>
-	<div class="col-md-1">play</div>
+	<div class="col-md-3">{{'artist'|ll}}</div>
+	<div class="col-md-3">{{'title'|ll}}</div>
+	<div class="col-md-1">{{'genre'|ll}}</div>
+	<div class="col-md-1">{{'year'|ll}}</div>
+	<div class="col-md-1">{{'duration'|ll}}</div>
+	<div class="col-md-1"></div>
 </div>
 <hr />
 {% set totalTime = 0 %}

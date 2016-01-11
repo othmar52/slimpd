@@ -1,6 +1,6 @@
   <div class="modal-body">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
-    <div class="small">Artist - Titel</div>
+    <div class="small dark uc">{{'artist'|ll}} - {{'title'|ll}}</div>
     <h3>
     	{% include 'partials/artist/link.twig' %}
     	- 
@@ -27,23 +27,23 @@
 	<div class="row">
 	
 	    <div class="col-md-2">
-	    	Länge<br />
+	    	<span class="dark uc small">{{'duration'|ll}}</span><br />
 	    	<strong>{{ item.miliseconds|formatMiliseconds }}</strong>
 	    </div>
 	    <div class="col-md-2">
-	    	Jahr<br />
+	    	<span class="dark uc small">{{'year'|ll}}</span><br />
 	    	<strong>{% include 'partials/yearlink.twig' %}</strong>
 	    </div>
 	    <div class="col-md-2">
-	    	Genre<br />
+	    	<span class="dark uc small">{{'genre'|ll}}</span><br />
 	    	<strong>{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</strong>
 	    </div>
 	    <div class="col-md-2">
-	    	Label<br />
+	    	<span class="dark uc small">{{'label'|ll}}</span><br />
 	    	<strong>{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</strong>
 	    </div>
 	    <div class="col-md-4">
-	    	Album<br />
+	    	<span class="dark uc small">{{'album'|ll}}</span><br />
 	    	<strong>{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</strong>
 	    </div>
 
