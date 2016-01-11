@@ -29,8 +29,48 @@ $(document).ready(function(){
 	}).data("ui-autocomplete");
      /* custom boostrap markup for items */
      tabbedAutocomplete._renderItem = function (ul, item) {
-		var markup = '<div class="row"><div class="col-md-1"><img src="'+item.img+'" width="50" height="50"/></div>';
-		markup += '<div class="col-md-11"><a href="'+ item.url +'">'+ item.label+'</a><br /><span class="dark">'+ item.type+'</span></div></div>';
+     	
+     	
+     	var widgetLink = '';
+     	if(item.type == 'track') {
+     		widgetLink = $('<a />')
+     			.attr('class', 'trigger-modal')
+     			.attr('href', '/markup/widget-trackcontrol?item='+ item.itemid )
+     			.html(' TODO: <i class="fa fa-plus-square"></i>')
+     			.bind('click', function(e){
+     				e.preventDefault();
+     				// TODO: unbind click event of whole item
+     				// TODO: is it possible to use event listener which already exists on all .trigger-modal elements?
+     				//$(this).parent().parent().parent().parent().unbind('click');
+			        $.ajax({
+						url: $(this).attr('href')
+					}).done(function(response){
+						$('#global-modal .modal-content').html(response);
+						$('#global-modal').modal('show');
+					});
+     			});
+     	}
+     	
+		var markup = $('<div />', {'class':'row'})
+		.append(
+			$('<div />', {'class':'col-md-2'}).append(
+				$('<img />', {'src':item.img, 'width': 50, 'height': 50})
+			)
+		)
+		.append(
+			$('<div />', {'class':'col-md-10'}).append(
+				$('<a />', {'href':item.url, html: item.label})
+			)
+			.append(
+				$('<br/>')
+			)
+			.append(
+				$('<span/>', {'class': 'dark', text:item.typelabel })
+			)
+			.append(
+				$(widgetLink)
+			)	
+		 );
          return $("<li></li>")
              .data("item.autocomplete", item)
              .append(markup)

@@ -780,7 +780,9 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 				'url' => (($filterType === 'track')
 					? '/searchall/page/1/sort/relevance/desc?q=' . $row['phrase']
 					: '/library/' . $filterType . '/' . $row['itemid']),
-				'type' => $app->ll->str($filterType)
+				'type' => $filterType,
+				'typelabel' => $app->ll->str($filterType),
+				'itemid' => $row['itemid']
 			];
 			switch($filterType) {
 				case 'artist':
