@@ -208,6 +208,20 @@ class mpd
 			case 'clearPlaylist':
 				$this->mpd('clear');
 				break;
+				
+			case 'clearPlaylistNotCurrent':
+				$status 		= $this->mpd('status');
+				$songId		= isset($status['songid']) ? $status['songid'] : 0;
+				if($songId > 0) {
+					// move current song to first position
+					$this->mpd('moveid ' . $songId . ' 0');
+					
+					$playlistLength		= isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+					if($playlistLength > 1) {
+						$this->mpd('delete 1:' . $playlistLength);
+					}
+				}
+				break;
 			
 			case 'playSelect': //		playSelect();
 			case 'addSelect': //		addSelect();
