@@ -30,10 +30,10 @@
 			{% include 'modules/header-menu.twig' %}
 			
 			<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 10px; z-index: 2000;">		
-				<a type="button" href="#" class="btn active-local"
+				<a type="button" href="#" class="btn active-{{ playerMode }}"
 				data-label-local="<i class='fa fa-map-marker fa-lg'></i> Local"
 				data-label-mpd="<i class='fa fa-cloud fa-lg'></i> MPD" >
-				  <i class='fa fa-map-marker fa-lg'></i> Local
+				  <i class='fa fa-map-marker fa-lg'></i> {{ (playerMode == 'local') ? 'Local' : 'MPD' }}
 				</a>
 			</div>
 		
@@ -167,11 +167,11 @@
 		</div>
 		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom">
+		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/localplayer.twig'%}
 		</div>
 		
-		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" style="display: none;">
+		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/mpdplayer.twig'%}
 		</div>
 	    
@@ -213,6 +213,7 @@
 		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/tab.js"></script>
 		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/popover.js"></script>
 		<script src="{{ config.absRefPrefix }}vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
+		<script src="{{ config.absRefPrefix }}vendor/components/jquery-cookie/jquery.cookie.js"></script>
 		<!--script src="{{ config.absRefPrefix }}vendor/nicolasbize/faviconx/faviconx-min.js"></script-->
 		<script src="{{ config.absRefPrefix }}js/faviconxmod.js"></script>
 		<script src="{{ config.absRefPrefix }}js/app.js"></script>
