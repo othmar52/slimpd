@@ -74,10 +74,8 @@
 				<a href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" class="ajax-link is-playlink" data-localplayer='{"action":"play", "item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext}}"}'>
 				<i class="fa fa-play fa-lg"></i>
 				</a>
-				
-				<a href="/maintainance/trackdebug/{{ directory }}{{ item.name }}">
-				<i class="fa fa-info-circle fa-lg"></i>
-				</a>
+
+				<a class="trigger-modal" href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}"><i class="fa fa-plus-square"></i></a>
 				
 			</div>
 			<div class="col-md-11">

@@ -20,7 +20,9 @@ body {
 	color #BBB;
 }
 
-.bg-col1 {
+.bg-col1,
+.popover,
+.popover .popover-title {
 	background-color: #1A1A1A;
 	
 }
@@ -42,6 +44,7 @@ body {
 .col1 {
 	color: #BBB;
 }
+
 
 a {
 	color: #BBB;
@@ -242,3 +245,8 @@ a {
     display:block;
 }
 
+
+
+/* TODO: fix non-working popover inside modalbox ... */
+.popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
+.popover .popover-title {border-radius: 0; }

@@ -24,11 +24,10 @@ $(document).ready(function(){
 	
 	
 	/* toggle between mpd-control and local player (jPlayer) */
-	  $('.playerModeToggle a').on('click', function () {
-	  	
+	  $('.playerModeToggle a').on('click', function(e) {
+	  	e.preventDefault();
 	  	if($(this).hasClass('active-mpd') === true) {
 	  		$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
-	  		
 	  		playerMode = "local";
 	  	} else {
 	  		$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
@@ -40,7 +39,17 @@ $(document).ready(function(){
 	  	drawFavicon(false, false);
 	  });
 
-	
+	$('.trigger-modal').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+			url: $(this).attr('href')
+		}).done(function(response){
+			$('#global-modal .modal-content').html(response);
+			$('#global-modal').modal('show');
+		});
+    });
+    
+    
 	/* route /maintainance/albumdebug */
     $('.inline-tab-nav a').click(function (e) {
         e.preventDefault();
@@ -55,6 +64,13 @@ $(document).ready(function(){
     
 	
 	$(".dropdown-toggle").dropdown();
+	
+	$('[data-toggle="popover"]').popover(); 
+});
+
+/* TODO: fix non-working popover inside modalbox ... */
+$(document).ajaxComplete(function() {
+  $("a[data-toggle=\"popover\"]").popover();
 });
 
 

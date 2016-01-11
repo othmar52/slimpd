@@ -143,7 +143,7 @@
 	<div class="col-md-1 ">{{ item.miliseconds|formatMiliseconds }}</div>
 	<div class="col-md-1" style="font-size: 2em;">
 		<a class="ajax-link is-playlink" href="/mpdctrl/addSelect/{{ item.id }}" title="play" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o"></i></a>
-		<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i></a>
+		<a class="trigger-modal" href="/markup/widget-trackcontrol?item={{ item.id }}"><i class="fa fa-plus-square"></i></a>
 	</div>
 </div>
 <div class="row">&nbsp;</div>
