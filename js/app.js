@@ -1,4 +1,4 @@
-var playerMode = "local";
+var playerMode = $.cookie("playerMode");
 
 $(document).ready(function(){
 	
@@ -35,6 +35,7 @@ $(document).ready(function(){
 	  		// pause local player when switching to mpd
 	  		setPlayPauseState('pause');
 	  	}
+	  	$.cookie("playerMode", playerMode, { expires : 365, path: '/' });
 	  	$('.player-local,.player-mpd').toggle();
 	  	drawFavicon(false, false);
 	  });
