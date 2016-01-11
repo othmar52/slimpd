@@ -39,6 +39,12 @@ function pollMpdData(){
 	    	}
 		});
 		
+		
+		// TODO: find out why this snippet does not work
+		//if(data.state !== 'play' && $('.mpd-status-playpause').hasClass('fa-pause')) {
+		//	$('.mpd-status-playpause').toggleClass('fa-pause fa-play');
+		//}
+		
 		if(data.state == 'play') {
 			$('.mpd-status-playpause').addClass('fa-pause');
 			$('.mpd-status-playpause').removeClass('fa-play');
@@ -71,7 +77,7 @@ function pollMpdData(){
     			
     		});
     	}
-    	
+    	delete data;
         pollInterval = setTimeout(pollMpdData, 2000);
     });
 }
