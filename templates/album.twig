@@ -12,15 +12,15 @@
 </div>
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<a href="#">
-			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px;">
+			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
 		</a>
 		<div id="image_all">
 			{% include 'modules/imagecarousel.twig' with { 'itemlist': albumimages } %}
 		</div>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-9">
 		<a href="/mpdctrl/addSelect/{{ album.relativePath }}" class="ajax-link" style="font-size: 3em;">
 			<i class="fa fa-plus-circle fa-lg"></i></a>
 			
@@ -30,72 +30,92 @@
 		</div>
 		<p style="font-size: 0.7em; color: #999;"><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
 			
-		<span id="track_number" class="pl-track-number">{{ nowplaying.number }} </span>
-		<span id="title">{{ nowplaying.title }}</span><br />
-			
 		<div class="row">
-			<div class="col-md-2">
-				<span class="dark uc small">{{'genre'|ll}}:</span>
+			<div class="col-md-6">
+				{% if album.genreId %}
+				<div class="col-md12">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'genre'|ll}}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}
+					</div>
+				</div>
+				{% endif %}
+				
+				
+				{% if album.year %}
+				<div class="col-md12">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'year'|ll}}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/yearlink.twig' with { 'item': album }|default('??') %}
+					</div>
+				</div>
+				{% endif %}
+				
+				{% if album.labelId %}
+				<div class="col-md12">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'label'|ll}}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/labellink.twig' with { 'labelIds': album.labelId } %}
+					</div>
+				</div>
+				{% endif %}
+				
+				{% if album.catalogNr %}
+				<div class="col-md12">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'catnr'|ll}}:</span>
+					</div>
+					
+					<div class="col-md-10">
+						{{ album.catalogNr }}
+					</div>
+				</div>
+				{% endif %}
 			</div>
-			<div class="col-md-10">
-				{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}
+					
+			<div class="col-md-6">
+					
+				<div class="col-md12">
+					
+					<div class="col-md-3">
+						<span class="dark uc small">{{'fileformat'|ll}}:</span>
+					</div>
+					<div class="col-md-9">
+						{{itemlist.0.audioBitsPerSample}}bit - {{itemlist.0.audioSampleRate}}kHz
+					</div>
+				</div>
+				<div class="col-md12">
+					
+					<div class="col-md-3">
+						<span class="dark uc small">{{'filetype'|ll}}:</span>
+					</div>
+					<div class="col-md-9">
+						{{itemlist.0.audioDataformat}} - {{itemlist.0.audioProfile}}
+					</div>
+				</div>
+				<div class="col-md12">
+					
+					<div class="col-md-3">
+						<span class="dark uc small">Added at:</span>
+					</div>
+					<div class="col-md-9">
+						{{ album.added|date("m/d/Y") }}
+					</div>
+				</div>
+				<div class="col-md12">
+					<div class="col-md-2">
+						{% include 'partials/extlink-discogs.twig' %}
+						<a href="/maintainance/albumdebug/{{album.id}}" title="edit album"><i class="fa fa-pencil"></i></a>
+					</div>
+				</div>
+			
 			</div>
-			
-			<div class="col-md-2">
-				<span class="dark uc small">{{'year'|ll}}:</span>
-			</div>
-			<div class="col-md-10">
-				{% include 'partials/yearlink.twig' with { 'item': album } %}
-			</div>
-			
-			<div class="col-md-2">
-				<span class="dark uc small">{{'label'|ll}}:</span>
-			</div>
-			<div class="col-md-10">
-				{% include 'partials/labellink.twig' with { 'labelIds': album.labelId } %}
-			</div>
-			
-			<div class="col-md-2">
-				<span class="dark uc small">{{'catnr'|ll}}:</span>
-			</div>
-			
-			<div class="col-md-10">
-				{{ album.catalogNr }}
-			</div>
-			
-			
-			
-			<div class="col-md-12">&nbsp;</div>
-			
-			
-			
-			<div class="col-md-2">
-				<span class="dark uc small">{{'fileformat'|ll}}:</span>
-			</div>
-			<div class="col-md-10">
-				{{itemlist.0.audioBitsPerSample}}bit - {{itemlist.0.audioSampleRate}}kHz
-			</div>
-			
-			<div class="col-md-2">
-				<span class="dark uc small">{{'filetype'|ll}}:</span>
-			</div>
-			<div class="col-md-10">
-				{{itemlist.0.audioDataformat}} - {{itemlist.0.audioProfile}}
-			</div>
-			
-			<div class="col-md-2">
-				<span class="dark uc small">Added at:</span>
-			</div>
-			<div class="col-md-10">
-				{{ album.added|date("m/d/Y") }}
-			</div>
-			<div class="col-md-2">
-				{% include 'partials/extlink-discogs.twig' %}
-				<a href="/maintainance/albumdebug/{{album.id}}" title="edit album"><i class="fa fa-pencil"></i></a>
-			</div>
-			
-			
-			
 		</div>
 		
 	</div>
