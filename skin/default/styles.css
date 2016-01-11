@@ -89,6 +89,16 @@ a {
 	margin-top: 0.7em;
 }
 
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+
 .main-nav .active {
 	border-bottom: 3px solid #FFF;
 }
