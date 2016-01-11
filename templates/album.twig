@@ -28,9 +28,10 @@
 		<div id="album-info-artist">
 			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.twig' with { 'item': album } %}
 		</div>
-		<p style="font-size: 0.7em; color: #999;"><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
+		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
 			
 		<div class="row">
+		
 			<div class="col-md-6">
 				{% if album.genreId %}
 				<div class="col-md12">
@@ -43,14 +44,13 @@
 				</div>
 				{% endif %}
 				
-				
 				{% if album.year %}
 				<div class="col-md12">
 					<div class="col-md-2">
 						<span class="dark uc small">{{'year'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/yearlink.twig' with { 'item': album }|default('??') %}
+						{% include 'partials/yearlink.twig' with { 'item': album } %}
 					</div>
 				</div>
 				{% endif %}
@@ -71,18 +71,16 @@
 					<div class="col-md-2">
 						<span class="dark uc small">{{'catnr'|ll}}:</span>
 					</div>
-					
 					<div class="col-md-10">
 						{{ album.catalogNr }}
 					</div>
 				</div>
 				{% endif %}
 			</div>
-					
+			
+			
 			<div class="col-md-6">
-					
 				<div class="col-md12">
-					
 					<div class="col-md-3">
 						<span class="dark uc small">{{'fileformat'|ll}}:</span>
 					</div>
@@ -91,7 +89,6 @@
 					</div>
 				</div>
 				<div class="col-md12">
-					
 					<div class="col-md-3">
 						<span class="dark uc small">{{'filetype'|ll}}:</span>
 					</div>
@@ -100,7 +97,6 @@
 					</div>
 				</div>
 				<div class="col-md12">
-					
 					<div class="col-md-3">
 						<span class="dark uc small">Added at:</span>
 					</div>
