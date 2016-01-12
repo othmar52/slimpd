@@ -278,3 +278,19 @@ a {
 /* TODO: fix non-working popover inside modalbox ... */
 .popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
 .popover .popover-title {border-radius: 0; }
+
+
+.no-side-padding {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.track-row {
+	margin-bottom: 0.3em;
+}
+
+.centered-icon {
+	display:block;
+	padding-top: 25%;
+}
+
