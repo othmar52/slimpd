@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% if not nosurrounding %}<!DOCTYPE html>
 <html>
 	<head>
 		<title>{{ config.title }}</title>
@@ -39,8 +39,8 @@
 		
 
 			<div class="row">
-  				<div class="col-md-12">
-  				
+  				<div class="col-md-12" id="main">
+{% endif %}	 				
 					{% include 'modules/errorbox.twig' %}
 					
 					
@@ -63,8 +63,7 @@
 						{% endif %}
 					
 					
-					{% endfor%}
-					
+					{% endfor%}				
 					
 					{% if action == 'maintainance.trackdebug' %}
 					{% include 'modules/trackdebug.twig' %}
@@ -161,7 +160,7 @@
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
 						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
 					{% endif %}
-					
+{% if not nosurrounding %}
   				</div>
 			</div>
 		</div>
@@ -224,4 +223,4 @@
 		
 	</body>
 </html>
-
+{% endif %}

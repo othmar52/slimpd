@@ -2,7 +2,7 @@
 <h2>Aktueller Titel: {% include 'partials/tracktitle.twig' with { 'item': nowplaying, 'titlestring': nowplaying.title, 'filepath': nowplaying.relativePath  } %}</h2>
 <div class="row">
 	<div class="col-md-4">
-		<a href="/library/album/{{ nowplaying.albumId }}">
+		<a href="/library/album/{{ nowplaying.albumId }}" data-ajaxtarget="#main" class="ajax-link">
 			<img id="image_in" src="/image-300/album/{{ nowplaying.albumId }}" alt="" style="top: 0px;">
 		</a>
 	</div>
@@ -39,7 +39,7 @@
 		</div>
 		<div class="row">
 			<div class="col-md-2">
-				<a href="/maintainance/trackdebug/{{ nowplaying.relativePath }}">edit</a>
+				<a href="/maintainance/trackdebug/{{ nowplaying.relativePath }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
 			</div>
 			<div class="col-md-10">
 				

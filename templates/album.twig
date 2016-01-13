@@ -1,12 +1,12 @@
 
 
 <div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
-	<a href="/library/album/{{ album.id-1 }}">
+	<a href="/library/album/{{ album.id-1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-left fa-lg"></i>
 	</a>
-	<a href="/library/album/{{ random(totalitems-1)+1 }}">
+	<a href="/library/album/{{ random(totalitems-1)+1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-random fa-lg"></i></a>
-	<a href="/library/album/{{ album.id+1 }}">
+	<a href="/library/album/{{ album.id+1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-right fa-lg"></i>
 	</a>
 </div>
@@ -28,7 +28,7 @@
 		<div id="album-info-artist">
 			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.twig' with { 'item': album } %}
 		</div>
-		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;">{{album.relativePath}}</a></p>
+		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;" data-ajaxtarget="#main" class="ajax-link">{{album.relativePath}}</a></p>
 			
 		<div class="row">
 		
@@ -107,7 +107,7 @@
 				<div class="col-md12">
 					<div class="col-md-2">
 						{% include 'partials/extlink-discogs.twig' %}
-						<a href="/maintainance/albumdebug/{{album.id}}" title="edit album"><i class="fa fa-pencil"></i></a>
+						<a href="/maintainance/albumdebug/{{album.id}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i></a>
 					</div>
 				</div>
 			
