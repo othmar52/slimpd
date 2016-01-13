@@ -1,8 +1,37 @@
 var playerMode = $.cookie("playerMode");
 
+/* on page load and on ajax content load */
+function initStuff() {
+	$('.trigger-modal').on('click', function (e) {
+        e.preventDefault();
+        $.ajax({
+			url: $(this).attr('href')
+		}).done(function(response){
+			$('#global-modal .modal-content').html(response);
+			$('#global-modal').modal('show');
+		});
+    });
+    
+    $(".dropdown-toggle").dropdown();
+}
+
+
 $(document).ready(function(){
 	
 	$('body').on('click', '.ajax-link', function(){
+		var ajaxTarget = $(this).attr('data-ajaxtarget');
+		if(ajaxTarget) {
+			// TODO: create proper curently loading visualizing
+			$('<div class="modal-backdrop fade in" id="loading-backdrop"></div>').appendTo(document.body);
+			$.ajax({
+				url: setGetParameter($(this).attr('href'), 'nosurrounding', '1')
+			}).done(function(response){
+				$(ajaxTarget).html(response);
+				$("#loading-backdrop").remove();
+				initStuff();
+				return;
+			});
+		}
 		var localObj = $(this).attr('data-localplayer');
 		if(typeof localObj == 'undefined' || playerMode !== 'local') {
 			$.ajax({
@@ -22,6 +51,30 @@ $(document).ready(function(){
 		return false;
 	});
 	
+	
+	$('.ajax-form').on('submit', function(e){
+		e.preventDefault();
+		var url = setGetParameter($(this).attr('action'), 'q', $('#mainsearch').val());
+		
+		// reset form to default action (has been modified by autocomplete)
+		$(this).attr("action", $(this).attr("data-defaultaction"));
+		
+		var ajaxTarget = $(this).attr('data-ajaxtarget');
+		// TODO: create proper curently loading visualizing
+		$('<div class="modal-backdrop fade in" id="loading-backdrop"></div>').appendTo(document.body);
+		$.ajax({
+			url: setGetParameter(url, 'nosurrounding', '1')
+		}).done(function(response){
+			$(ajaxTarget).html(response);
+			$("#mainsearch").autocomplete( "close" );
+			
+			// TODO: create proper curently loading visualizing
+			$("#loading-backdrop").remove();
+			
+			initStuff();
+			return;
+		});
+	});
 	
 	/* toggle between mpd-control and local player (jPlayer) */
 	  $('.playerModeToggle a').on('click', function(e) {
@@ -46,15 +99,7 @@ $(document).ready(function(){
 	  });
 	  
 
-	$('.trigger-modal').click(function (e) {
-        e.preventDefault();
-        $.ajax({
-			url: $(this).attr('href')
-		}).done(function(response){
-			$('#global-modal .modal-content').html(response);
-			$('#global-modal').modal('show');
-		});
-    });
+
     
     
 	/* route /maintainance/albumdebug */
@@ -70,9 +115,11 @@ $(document).ready(function(){
     });
     
 	
-	$(".dropdown-toggle").dropdown();
 	
-	$('[data-toggle="popover"]').popover(); 
+	
+	$('[data-toggle="popover"]').popover();
+	
+	initStuff(); 
 });
 
 /* TODO: fix non-working popover inside modalbox ... */
@@ -205,3 +252,29 @@ function drawTimeGrid(duration, target) {
   
 }
 
+
+/**
+ * adds get-paramter to url, respecting existing and not-existing params
+ * @param {string} urlstring
+ * @param {string} paramName
+ * @param {string} paramValue
+ */
+function setGetParameter(urlstring, paramName, paramValue)
+{
+    if (urlstring.indexOf(paramName + "=") >= 0)
+    {
+        var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
+        var suffix = urlstring.substring(urlstring.indexOf(paramName));
+        suffix = suffix.substring(suffix.indexOf("=") + 1);
+        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+        urlstring = prefix + paramName + "=" + paramValue + suffix;
+    }
+    else
+    {
+    if (urlstring.indexOf("?") < 0)
+        urlstring += "?" + paramName + "=" + paramValue;
+    else
+        urlstring += "&" + paramName + "=" + paramValue;
+    }
+    return urlstring;
+}

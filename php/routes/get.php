@@ -45,7 +45,7 @@ $config['mainmenu']= array(
 
 $config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
 
-
+$config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
 
 $app->get('/', function() use ($app,$config){
 	$config['action'] = "landing";
