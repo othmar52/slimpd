@@ -17,22 +17,22 @@
 	<div class="col-md-10">
 		<ul class="nav nav-tabs">
 			<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}{{ (search.all.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}">All ({{ search.all.total }})</a>
+				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">All ({{ search.all.total }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}">Tracks ({{ search.track.total }})</a>
+				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Tracks ({{ search.track.total }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}">Albums ({{ search.album.total }})</a>
+				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Albums ({{ search.album.total }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}">Artists ({{ search.artist.total }})</a>
+				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Artists ({{ search.artist.total }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }}{{ (search.genre.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}">Genres ({{ search.genre.total }})</a>
+				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Genres ({{ search.genre.total }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}">Labels ({{ search.label.total }})</a>
+				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Labels ({{ search.label.total }})</a>
 			</li>
 		</ul>
 	</div>
