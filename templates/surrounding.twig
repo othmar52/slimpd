@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+{% if not nosurrounding %}<!DOCTYPE html>
 <html>
 	<head>
 		<title>{{ config.title }}</title>
@@ -39,8 +39,8 @@
 		
 
 			<div class="row">
-  				<div class="col-md-12">
-  				
+  				<div class="col-md-12" id="main">
+{% endif %}	 				
 					{% include 'modules/errorbox.twig' %}
 					
 					
@@ -52,9 +52,9 @@
 						
 						{% if action == 'library.'~type %}
 							<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">
-								<a href="/library/{{type}}/{{ item.id-1 }}"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
-								<span class="small"><a href="/library/{{type}}s/page/1">{{ type~'s' }}</a></span>
-								<a href="/library/{{type}}/{{ item.id+1 }}"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
+								<a href="/library/{{type}}/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
+								<span class="small"><a href="/library/{{type}}s/page/1" data-ajaxtarget="#main" class="ajax-link">{{ type~'s' }}</a></span>
+								<a href="/library/{{type}}/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
 								{{ item.title }} </h2>
 							{% include 'modules/albumlist2.twig' with { 'itemlist': albumlist } %}
 							{% include 'partials/tracklist-1.twig' %}
@@ -63,8 +63,7 @@
 						{% endif %}
 					
 					
-					{% endfor%}
-					
+					{% endfor%}				
 					
 					{% if action == 'maintainance.trackdebug' %}
 					{% include 'modules/trackdebug.twig' %}
@@ -161,7 +160,7 @@
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
 						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
 					{% endif %}
-					
+{% if not nosurrounding %}
   				</div>
 			</div>
 		</div>
@@ -224,4 +223,4 @@
 		
 	</body>
 </html>
-
+{% endif %}

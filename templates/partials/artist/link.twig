@@ -3,7 +3,7 @@
 	{% for itemId in itemIds %}
 		{% include 'partials/artist/single-link.twig' %}
 		{% if loop.last == false %}
-		<a class="artist-link item-link" href="/library/artist/{{item.artistId}}">
+		<a class="artist-link item-link ajax-link" href="/library/artist/{{item.artistId}}" data-ajaxtarget="#main">
 			<span class="artist_all">&amp;</span></a>
 		{% endif %}
 	{% endfor%}
