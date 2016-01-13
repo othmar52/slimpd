@@ -2,6 +2,6 @@
 {% set limit = (limit) ? limit : 100 %}
 {% for g in gs %}
 	{% if loop.index <= limit %}
-		<a class="genre-link item-link" href="/library/genre/{{renderitems.genres[g].id}}">{{renderitems.genres[g].title}}</a>{% if loop.last == false %},{% endif %}
+		<a class="genre-link item-link ajax-link" data-ajaxtarget="#main" href="/library/genre/{{renderitems.genres[g].id}}">{{renderitems.genres[g].title}}</a>{% if loop.last == false %},{% endif %}
 	{% endif %}
 {% endfor%}

@@ -25,8 +25,7 @@ $(document).ready(function(){
 			}
 			//console.log(ui.item);
 			if(ui.item) {
-				document.location.href = ui.item.url;
-				return false;
+				$('#searchform').attr('action', ui.item.url);
 				$('#searchform').submit();
 			}
 		}
@@ -63,7 +62,7 @@ $(document).ready(function(){
 		)
 		.append(
 			$('<div />', {'class':'col-md-10'}).append(
-				$('<a />', {'href':item.url, html: item.label})
+				$('<a />', {'href':item.url, html: item.label, 'class': 'ajax-link', 'data-ajaxtarget': '#main'})
 			)
 			.append(
 				$('<br/>')
