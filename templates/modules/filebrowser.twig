@@ -4,14 +4,14 @@
 		
 		<ol class="breadcrumb bg-col2">
 			<li class="" title="List basedirs">
-				<a href="/filebrowser">root</a>
+				<a href="/filebrowser" data-ajaxtarget="#main" class="ajax-link">root</a>
 			</li>
 			{% for idx,item in breadcrumb %}
 			{# add hash of the next item and add a scroll link #}
 			{# TODO: correction of scrollposition due to sticky header #}
 			{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}
 				<li class="" title="{{ item.name }}">
-					<a href="/filebrowser{{ item.fullpath~deeplink }}" class="">{{ item.name }}</a>
+					<a href="/filebrowser{{ item.fullpath~deeplink }}" data-ajaxtarget="#main" class="ajax-link">{{ item.name }}</a>
 				</li>
 			{% endfor %}
 			<li class="small">
@@ -31,7 +31,7 @@
 	{% for item in hotlinks %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-12">
-			<a href="/filebrowser/{{ item }}">
+			<a href="/filebrowser/{{ item }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-folder-open fa-lg"></i> {{ item }}</div>
 			</a>
 	</div>
@@ -52,7 +52,7 @@
 			
 		</div>
 		<div class="col-md-11">
-			<a href="/filebrowser/{{ directory~item.name }}">
+			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-folder-open fa-lg"></i> {{ item.name }}
 			</a>
 		</div>
@@ -80,7 +80,7 @@
 			</div>
 			<div class="col-md-11">
 			
-				<a href="/filebrowser/{{ directory~item.name }}">
+				<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-music fa-lg"></i>
 				{{ item.name }}</a>
 			</div>
@@ -95,7 +95,7 @@
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-1"></div>
 		<div class="col-md-11">
-			<a href="/filebrowser/{{ directory~item.name }}">
+			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 			<i class="fa fa-image fa-lg"></i> 
 			{{ item.name }}</a>
 		</div>
@@ -108,7 +108,7 @@
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-1"></div>
 		<div class="col-md-11">
-			<a href="/filebrowser/{{ directory~item.name }}">
+			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 			<i class="fa fa-file fa-lg"></i> 
 			{{ item.name }}</a>
 		</div>

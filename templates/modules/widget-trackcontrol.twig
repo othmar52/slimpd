@@ -123,13 +123,13 @@
 	  			<h3>Editieren</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/maintainance/trackdebug/{{ item.id }}"><i class="fa fa-pencil"></i> Track</a>
+	  			<a href="/maintainance/trackdebug/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/maintainance/albumdebug/{{ item.albumId }}"><i class="fa fa-pencil"></i> Album</a>
+	  			<a href="/maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> Album</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/filebrowser/{{fullpath}}" title="{{fullpath}}/"><i class="fa fa-folder-open"></i> Ordner anzeigen</a>
+	  			<a href="/filebrowser/{{fullpath}}" title="{{fullpath}}/" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open"></i> Ordner anzeigen</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-refresh"></i> neu einlesen</a>

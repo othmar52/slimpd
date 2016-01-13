@@ -3,12 +3,12 @@
 
 
 <div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
-	<a href="/maintainance/trackdebug/{{ item.id-1 }}">
+	<a href="/maintainance/trackdebug/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-left fa-lg"></i>
 	</a>
-	<a href="/maintainance/trackdebug/{{ random(totalitems-1)+1 }}">
+	<a href="/maintainance/trackdebug/{{ random(totalitems-1)+1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-random fa-lg"></i></a>
-	<a href="/maintainance/trackdebug/{{ item.id+1 }}">
+	<a href="/maintainance/trackdebug/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-right fa-lg"></i>
 	</a>
 </div>
@@ -18,7 +18,7 @@
 <h3>Track-debug<br>
 <span class="small">
 	{% set dirs = item.relativePath|split('/') %}
-	<a href="/filebrowser/{{ itemraw.relativeDirectoryPath }}"><i class="fa fa-folder-open fa-lg"></i></a>
+	<a href="/filebrowser/{{ itemraw.relativeDirectoryPath }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
@@ -30,7 +30,7 @@
 		{% endif %}
 	{% endfor%}
 	<br />
-	<a href="/maintainance/albumdebug/{{item.albumId}}" title="edit album"><i class="fa fa-pencil"></i> edit album</a>
+	<a href="/maintainance/albumdebug/{{item.albumId}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
 </span>
 </h3>
 <div class="container">
