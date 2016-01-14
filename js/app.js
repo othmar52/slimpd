@@ -13,6 +13,24 @@ function initStuff() {
     });
     
     $(".dropdown-toggle").dropdown();
+    $('.toogle-tooltip').tooltip();
+    
+    
+    
+    /* route /maintainance/albumdebug */
+    $('.inline-tab-nav a').click(function (e) {
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $(".grid").sortable({
+        tolerance: 'pointer',
+        revert: 'invalid',
+        placeholder: 'span2 well placeholder tile',
+        forceHelperSize: true
+    });
+    
+    
+    
 }
 
 
@@ -102,18 +120,7 @@ $(document).ready(function(){
 
     
     
-	/* route /maintainance/albumdebug */
-    $('.inline-tab-nav a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show');
-    });
-    $(".grid").sortable({
-        tolerance: 'pointer',
-        revert: 'invalid',
-        placeholder: 'span2 well placeholder tile',
-        forceHelperSize: true
-    });
-    
+	
 	
 	
 	

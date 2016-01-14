@@ -69,12 +69,15 @@ function pollMpdData(){
     	// update trackinfo only onTrackChange()
     	if(nowPlayingSongId != data.songid) {
     		nowPlayingSongId = data.songid;
+    		$('.toogle-tooltip').tooltip('hide');
     		$.ajax({
     			url: '/markup/mpdplayer'
     		}).done(function(response){
     			//console.log(response);
     			$('.player-mpd').html(response);
     			drawTimeGrid(data.duration, 'player-mpd');
+    			
+    			initStuff();
     			
     		});
     	}
