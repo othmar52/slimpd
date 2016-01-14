@@ -128,48 +128,20 @@
 		<span class="playlist-title">Albumtracks <span class="pl-track-number">({{ itemlist|length }} Tracks)</span></span>
 	</div>
 </div>
-<div class="row">
-	<div class="col-md-1"></div>
-	<div class="col-md-1"></div>
-	<div class="col-md-3"><span class="dark uc small">{{'artist'|ll}}</span></div>
-	<div class="col-md-3"><span class="dark uc small">{{'title'|ll}}</span></div>
-	<div class="col-md-1"><span class="dark uc small">{{'genre'|ll}}</span></div>
-	<div class="col-md-1"><span class="dark uc small">{{'year'|ll}}</span></div>
-	<div class="col-md-1"><span class="dark uc small">{{'duration'|ll}}</span></div>
-	<div class="col-md-1"></div>
-</div>
-<hr />
+
+{% include 'partials/trackrow-albumview-header.twig' %}
 {% set totalTime = 0 %}
 {% for item in itemlist %}
+
+{% include 'partials/trackrow-albumview.twig' %}
+
 {% set totalTime = totalTime+item.miliseconds %}
-<div class="row {{ cycle(['bg-XXXcol2','bg-XXXcol3'],loop.index) }} mouseover">
-	<div class="col-md-1">
-		<div style="position: absolute; width: 50px; height: 50px;" class="track-id-{{ item.id }}"> </div>
-		<img src="/image-100/track/{{ item.id }}" alt="" style="width: 50px; height: 50px;">	
-	</div>
-	<div class="col-md-1 ">{{ item.number }}</div>
-	<div class="col-md-3 ">
-		{% include 'partials/artist/link.twig' %}
-	</div>
-	<div class="col-md-3 ">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-	</div>
-	<div class="col-md-1 ">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</div>
-	<div class="col-md-1 ">{% include 'partials/yearlink.twig' with { 'item': item } %}</div>
-	<div class="col-md-1 ">{{ item.miliseconds|formatMiliseconds }}</div>
-	<div class="col-md-1" style="font-size: 2em;">
-		<a class="ajax-link is-playlink" href="/mpdctrl/addSelect/{{ item.id }}" title="play" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o"></i></a>
-		<a class="trigger-modal" href="/markup/widget-trackcontrol?item={{ item.id }}"><i class="fa fa-plus-square"></i></a>
-	</div>
-</div>
-<div class="row">&nbsp;</div>
 {% endfor %}
 <hr />
 <div class="row">
-	<div class="col-md-9"></div>
+	<div class="col-md-10"></div>
 	<div class="col-md-1">total time</div>
 	<div class="col-md-1">{{ totalTime|formatMiliseconds }}</div>
-	<div class="col-md-1"></div>
 </div>
 
 
