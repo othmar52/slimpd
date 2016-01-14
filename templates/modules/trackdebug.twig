@@ -22,7 +22,7 @@
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br /><a href="/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}" class="ajax-link">
+		   <br /><a href="/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}" class="is-playlink ajax-link" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
 				<i class="fa fa-play fa-lg"></i>
 				</a>{{dir}}
 		{% else %}  
