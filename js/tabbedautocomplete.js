@@ -8,7 +8,11 @@ $(document).ready(function(){
           		type: 'get',
           		success: function( data ) {
 					response( data );
-				}
+				},
+				messages: {
+			        noResults: '',
+			        results: function() {}
+			    }
 			});
 		},
 		sourceCategory: 'all',
@@ -140,7 +144,11 @@ function changeAutocompleteUrl(type) {
       		type: 'get',
       		success: function( data ) {
 				response( data );
-			}
+			},
+			messages: {
+		        noResults: '',
+		        results: function() {}
+		    }
 		});
 	});
 	
