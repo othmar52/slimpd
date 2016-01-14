@@ -3,9 +3,7 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div style="position: absolute; width: 50px; height: 50px; z-index:1;" class="track-id-{{ item.id }}"> </div>
-				<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
-					<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
-				</a>
+				<div style="height: 50px; font-size: 2em; text-align:center;" class="dark">{{ item.number }}</div>
 			</div>
 			<div class="col-md-4 no-side-padding">
 				<a style="z-index:2;" href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link is-playlink centered-icon" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
@@ -23,8 +21,6 @@
 	
 	<div class="col-md-3">
 		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-		<br />
-		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>
 	<div class="col-md-3">
 		{% include 'partials/artist/link.twig' %}
