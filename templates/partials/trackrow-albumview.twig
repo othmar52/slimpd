@@ -1,34 +1,22 @@
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-	<div class="col-md-2 no-side-padding">
-		<div class="row">
-			<div class="col-md-4">
-				<div style="position: absolute; width: 50px; height: 50px; z-index:1;" class="track-id-{{ item.id }}"> </div>
-				<div style="height: 50px; font-size: 2em; text-align:center;" class="dark">{{ item.number }}</div>
-			</div>
-			<div class="col-md-4 no-side-padding">
-				<a style="z-index:2;" href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link is-playlink centered-icon" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
-					<i class="fa fa-play fa-lg"></i>
-				</a>
-			</div>
-			<div class="col-md-4 no-side-padding">
-				<a class="trigger-modal centered-icon" href="/markup/widget-trackcontrol?item={{ item.id }}">
-					<i class="fa fa-align-justify fa-lg"></i>
-				</a>
-			</div>
-			
-		</div>
+	<div class="col-xs-3 col-sm-2">
+		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+			<i class="fa fa-play fa-lg"></i>
+		</button>
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn trigger-modal">
+			<i class="fa fa-align-justify fa-lg"></i>
+		</button>
+		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark  hidden-xs">{{ item.number }} </span>
 	</div>
-	
-	<div class="col-md-3">
+	<div class="col-xs-2 col-sm-3">
 		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 	</div>
-	<div class="col-md-3">
+	<div class="col-xs-5 col-sm-3">
 		{% include 'partials/artist/link.twig' %}
 	</div>
-	<div class="col-md-2">
+	<div class="col-xs-2 hidden-xs">
 		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
-	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
-	
+	<div class="col-xs-1 hidden-xs">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-xs-1 hidden-xs">{{ item.miliseconds|formatMiliseconds }}</div>
 </div>

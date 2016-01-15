@@ -76,9 +76,9 @@ function localPlayer(conf) {
 		case 'soundEnded':
 			// for now take any rendered track and play it
 			// TODO: add functionality "current playlist" (like mpd) for local player 
-			var playable = $( "a.is-playlink[data-localplayer]").length;
+			var playable = $( ".is-playbtn[data-localplayer]").length;
 			if(playable) {
-				$("a.is-playlink[data-localplayer]").eq(Math.floor(Math.random()*playable)).click();
+				$(".is-playbtn[data-localplayer]").eq(Math.floor(Math.random()*playable)).click();
 			}
 			break;
 		default:
