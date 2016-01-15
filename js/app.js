@@ -5,7 +5,7 @@ function initStuff() {
 	$('.trigger-modal').on('click', function (e) {
         e.preventDefault();
         $.ajax({
-			url: $(this).attr('href')
+			url: $(this).attr('data-href')
 		}).done(function(response){
 			$('#global-modal .modal-content').html(response);
 			$('#global-modal').modal('show');
@@ -13,7 +13,7 @@ function initStuff() {
     });
     
     $(".dropdown-toggle").dropdown();
-    $('.toogle-tooltip').tooltip();
+    $('.toggle-tooltip').tooltip();
     
     
     
@@ -36,7 +36,7 @@ function initStuff() {
 
 $(document).ready(function(){
 	
-	$('body').on('click', '.ajax-link', function(){
+	$('body').on('click', '.ajax-btn, .ajax-link', function(){
 		var ajaxTarget = $(this).attr('data-ajaxtarget');
 		if(ajaxTarget) {
 			// TODO: create proper curently loading visualizing
@@ -53,7 +53,7 @@ $(document).ready(function(){
 		var localObj = $(this).attr('data-localplayer');
 		if(typeof localObj == 'undefined' || playerMode !== 'local') {
 			$.ajax({
-				url: $(this).attr('href')
+				url: $(this).attr('data-href')
 			}).done(function(response){
 				// TODO: notify or replace content
 				refreshInterval();
@@ -68,6 +68,7 @@ $(document).ready(function(){
 		}
 		return false;
 	});
+	
 	
 	
 	$('.ajax-form').on('submit', function(e){
