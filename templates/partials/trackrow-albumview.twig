@@ -1,12 +1,12 @@
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 	<div class="col-xs-3 col-sm-2">
-		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn trigger-modal">
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">
 			<i class="fa fa-align-justify fa-lg"></i>
 		</button>
-		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark  hidden-xs">{{ item.number }} </span>
+		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
 	</div>
 	<div class="col-xs-2 col-sm-3">
 		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
