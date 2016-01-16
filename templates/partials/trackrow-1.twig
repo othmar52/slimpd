@@ -3,7 +3,7 @@
 		<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
 			<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
 		</a>
-		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
 		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">
