@@ -34,6 +34,10 @@
 			<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
 				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Labels ({{ search.label.total }})</a>
 			</li>
+			<li>
+				{# TODO: tracking of users youtube-search #}
+				<a title="search on youtube" href="http://youtube.com/results?search_query={{ search.all.term|url_encode }}" target="_blank"><i class="fa fa-youtube-square fa-lg"></i> Youtube</a>
+			</li>
 		</ul>
 	</div>
 	<div class="col-md-1">
