@@ -18,9 +18,9 @@
 				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
 			</li>
 			<li>
-				<a href="/mpdctrl/addSelect/{{ directory~item.name|url_encode }}" class="ajax-link" title add this directory to playlist>
-				<i class="fa fa-plus-circle fa-lg"></i>Add whole directory
-				</a>
+				<button role="control" data-href="/mpdctrl/addSelect/{{ directory~item.name|url_encode }}" title="add this directory to playlist" class="btn btn-default ajax-btn" data-localplayer='{"action":"add-dir-to-playlist-not-implemented-yet"}'>
+					<i class="fa fa-plus"></i> Add directory to playlist
+				</button>
 			</li>
 			
 	</div>
@@ -43,7 +43,7 @@
 	{% for item in subDirectories %}
 	<a id="d{{ item.hash }}"/>
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-		<div class="col-md-1">
+		<div class="col-md-2">
 			<a href="/mpdctrl/addSelect/{{ directory~item.name~''|url_encode }}" class="ajax-link" title="add and play immediately">
 				<i class="fa fa-plus fa-lg"></i>
 			</a>
@@ -51,7 +51,7 @@
 			<!--a href="#" title="add to playlist"><i class="fa fa-plus fa-lg"></i></a-->
 			
 		</div>
-		<div class="col-md-11">
+		<div class="col-md-10">
 			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-folder-open fa-lg"></i> {{ item.name }}
 			</a>
@@ -69,16 +69,18 @@
 	{% for item in files %}
 		{% if item.ext in ['mp3','m4a','flac','wav', 'aif', 'aiff'] %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover rhash-{{ item.relativePathHash }}" id="track{{ loop.index }}">
-			<div class="col-md-1">
-			
-				<a href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" class="ajax-link is-playlink" data-localplayer='{"action":"play", "item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext}}"}'>
-				<i class="fa fa-play fa-lg"></i>
-				</a>
-
-				<a class="trigger-modal" href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}"><i class="fa fa-plus-square"></i></a>
+			<div class="col-md-2">
+				<button role="control" data-href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.audioDataformat }}"}'>
+					<i class="fa fa-play fa-lg"></i>
+				</button>
+				<button role="control" data-href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}" title="more" class="btn btn-default trigger-modal">
+					<i class="fa fa-align-justify fa-lg"></i>
+				</button>
+				
+				
 				
 			</div>
-			<div class="col-md-11">
+			<div class="col-md-10">
 			
 				<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-music fa-lg"></i>
@@ -93,8 +95,8 @@
 	{% for item in files %}
 		{% if item.ext in ['png','jpg','jpeg','gif', 'bmp'] %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-		<div class="col-md-1"></div>
-		<div class="col-md-11">
+		<div class="col-md-2"></div>
+		<div class="col-md-10">
 			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 			<i class="fa fa-image fa-lg"></i> 
 			{{ item.name }}</a>
@@ -106,8 +108,8 @@
 	{% for item in files %}
 		{% if item.ext  not in ['mp3','m4a','flac','wav', 'png','jpg','jpeg','gif', 'bmp', 'aif', 'aiff'] %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-		<div class="col-md-1"></div>
-		<div class="col-md-11">
+		<div class="col-md-2"></div>
+		<div class="col-md-10">
 			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
 			<i class="fa fa-file fa-lg"></i> 
 			{{ item.name }}</a>

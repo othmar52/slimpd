@@ -132,7 +132,7 @@ $(document).ready(function(){
 
 /* TODO: fix non-working popover inside modalbox ... */
 $(document).ajaxComplete(function() {
-  $("a[data-toggle=\"popover\"]").popover();
+  $("[data-toggle=\"popover\"]").popover();
 });
 
 

@@ -21,8 +21,9 @@
 		</div>
 	</div>
 	<div class="col-md-9">
-		<a href="/mpdctrl/addSelect/{{ album.relativePath }}" class="ajax-link" style="font-size: 3em;">
-			<i class="fa fa-plus-circle fa-lg"></i></a>
+		<button role="control" data-href="/mpdctrl/addSelect/{{ album.relativePath }}" title="add album to playlist" class="btn btn-default ajax-btn" data-localplayer='{"action":"add-album-to-playlist-not-implemented-yet"}'>
+			<i class="fa fa-plus"></i>
+		</button>
 			
 		<span style="font-size: 1.7em;">{{album.title}}</span>
 		<div id="album-info-artist">

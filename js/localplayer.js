@@ -93,10 +93,10 @@ function setPlayPauseState(what) {
 	var control = $('.localplayer-play-pause');
 	if(what == 'play') {
 		$(player).jPlayer( "play");
-		$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl"></i>');
+		$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl fa-lg"></i>');
 	} else {
 		$(player).jPlayer( "pause");
-		$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl"></i>');
+		$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
 	}
 	drawFavicon(false, false);
 	return false;
