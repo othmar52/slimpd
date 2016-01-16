@@ -532,12 +532,12 @@ $sortfields = array(
 );
 
 
-foreach(array_keys($sortfields) as $currenttype) {	
+foreach(array_keys($sortfields) as $currentType) {
 	// very basic partly functional search...
 	$app->get(
-		'/search'. $currenttype .'/page/:num/sort/:sort/:direction',
+		'/search'. $currentType .'/page/:num/sort/:sort/:direction',
 		function($num, $sort, $direction)
-		use ($app, $config, $currenttype, $sortfields
+		use ($app, $config, $currentType, $sortfields
 	) {		
 		$searchterm = $app->request()->params('q');
 
@@ -547,7 +547,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 			(int)$app->config['sphinx']['port']
 		);
 		
-		$sortfield = (in_array($sort, $sortfields[$currenttype]) === TRUE) ? $sort : 'relevance';
+		$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
 		
 		#echo $sortfield; die(); exit;
 		$matches = array();
@@ -555,7 +555,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 			$itemsPerPage = 1;
 			$currentPage = 1;
 			
-			if($sortfield !== 'relevance' && $type == $currenttype) {
+			if($sortfield !== 'relevance' && $type == $currentType) {
 				$cl->SetSortMode((($direction == 'asc') ? SPH_SORT_ATTR_ASC : SPH_SORT_ATTR_DESC), $sortfield);
 			} else {
 				$cl->SetSortMode(SPH_SORT_RELEVANCE);
@@ -588,7 +588,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 					$query = '+' . $searchterm;
 					break;
 			}
-			if($type == $currenttype) {
+			if($type == $currentType) {
 				$itemsPerPage = 50;
 				$currentPage = $num;
 			}
@@ -625,7 +625,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 			$config['search'][$type]['time'] = $result['time'];
 			$config['search'][$type]['term'] = $searchterm;
 			
-			if($type == $currenttype) {
+			if($type == $currentType) {
 				$itemsPerPage = 50;
 				$currentPage = $num;
 
@@ -640,7 +640,7 @@ foreach(array_keys($sortfields) as $currenttype) {
 				if(isset($result['matches']) === FALSE) {
 					$result['matches'] = array();
 				}
-				switch($currenttype) {
+				switch($currentType) {
 					case 'all':
 					case 'track':
 						
@@ -702,13 +702,142 @@ foreach(array_keys($sortfields) as $currenttype) {
 		
 		#echo "<pre>" . print_r($result,1); die();
 		
-		$config['action'] = 'searchresult.' . $currenttype;
+		$config['action'] = 'searchresult.' . $currentType;
 		#if(isset($result['matches']) === FALSE) {
 		#	$app->render('surrounding.twig', $config);
 		#	return;
 		#}
 		$app->render('surrounding.twig', $config);
 	});
+}
+
+foreach(array_keys($sortfields) as $currentType) {
+	$app->get(
+		'/newsearch'.$currentType.'/page/:currentPage/sort/:sort/:direction',
+		function($currentPage, $sort, $direction) use ($app, $config, $currentType, $sortfields){
+		foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
+		}
+		
+		$term = $app->request()->params('q');
+		
+		$start = 0;
+		$itemsPerPage = 20;
+		$result = [];
+		
+		$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+		
+		// those values have to match sphinxindex:srcslimpdautocomplete
+		$filterTypeMapping = array(
+			'artist' => 1,
+			'album' => 2,
+			'label' => 3,
+			'track' => 4,
+		);
+		
+		foreach(array_keys($sortfields) as $type) {
+			$stmt = $ln_sph->prepare("
+				SELECT count(*) AS ole FROM slimpdautocomplete
+				WHERE MATCH(:match)
+				" . (($type !== 'all') ? ' AND type=:type ' : '') . "
+				GROUP BY phrase
+				OPTION ranker=sph04");
+			$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+			if(($type !== 'all')) {
+				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
+			}
+			#echo "<pre>$type" . print_r($stmt,1); die();
+			$stmt->execute();
+			
+			$rows = $stmt->fetchAll();
+			
+			echo "<pre>" . print_r($rows,1); die();
+				
+		}
+		
+		$stmt = $ln_sph->prepare("
+			SELECT * FROM slimpdautocomplete
+			WHERE MATCH(:match)
+			" . (($currentType !== 'all') ? ' AND type=:type ' : '') . "
+			GROUP BY phrase
+			LIMIT :offset,:max
+			OPTION ranker=sph04");
+		$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+		$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
+		$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
+		if(($currentType !== 'all')) {
+			$stmt->bindValue(':type', $filterTypeMapping[$currentType], PDO::PARAM_INT);
+		}
+		
+		$stmt->execute();
+		#echo "<pre>" . print_r($stmt,1); die();
+		$rows = $stmt->fetchAll();
+		#echo "<pre>" . print_r($rows,1); die();
+		$meta = $ln_sph->query("SHOW META")->fetchAll();
+		foreach($meta as $m) {
+		    $meta_map[$m['Variable_name']] = $m['Value'];
+		}
+		
+		
+		if(count($rows) === 0) {
+			$words = array();
+			foreach($meta_map as $k=>$v) {
+				if(preg_match('/keyword\[\d+]/', $k)) {
+					preg_match('/\d+/', $k,$key);
+					$key = $key[0];
+					$words[$key]['keyword'] = $v;
+				}
+				if(preg_match('/docs\[\d+]/', $k)) {
+					preg_match('/\d+/', $k,$key);
+					$key = $key[0];
+					$words[$key]['docs'] = $v;
+				}
+			}
+			$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+			if($suggest !== FALSE) {
+				#print_r($suggest); die();
+				$app->response->redirect($app->urlFor(
+					'searchnew'.$currentType, ['type' => $currentType, 'currentPage' => $currentPage, 'sort' => $sort, 'direction' => $direction ])
+					.'?debug=1&q='.$suggest);
+				$app->stop();
+			}
+			$result[] = [
+				'label' => 'nothing found',
+				'url' => '#',
+				'type' => '',
+				'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
+			];
+		} else {
+			$filterTypeMapping = array_flip($filterTypeMapping);
+			$cl = new SphinxClient();
+			foreach($rows as $row) {
+				switch($filterTypeMapping[$row['type']]) {
+					case 'artist':
+					case 'label':
+						break;
+					case 'album':
+						$config['itemlist'][] = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
+						break; 
+					case 'track':
+						break;
+				} 
+			}
+		}
+		
+		$config['action'] = 'newsearchresult.' . $currentType;
+		$config['renderitems'] = array(
+			'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist']),
+			'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist']),
+			'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist']),
+			'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'])
+		);
+			#if(isset($result['matches']) === FALSE) {
+			#	$app->render('surrounding.twig', $config);
+			#	return;
+			#}
+		$app->render('surrounding.twig', $config);
+			
+	})->name('searchnew'.$currentType);
 }
 
 
