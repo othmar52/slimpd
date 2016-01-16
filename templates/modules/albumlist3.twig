@@ -1,0 +1,37 @@
+<div class="albums_container container">
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% if itemlist|length  %}
+
+	{% for item in itemlist %}
+		<div class="row bg-col3 track-row">
+			<div class="col-md-1">
+				<a href="/library/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+					<img src="/image-50/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
+				</a>
+			</div>
+			<div class="col-md-1">
+				play bla
+			</div>
+			<div class="col-md-3">
+				<a href="/library/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+				{{item.title}}
+				</a>
+			</div>
+			<div class="col-md-3">
+				{% include 'partials/artist/link.twig' %}
+			</div>
+			<div class="col-md-2">
+				{% include 'partials/genrelink.twig' with {'genreIds': item.genreId, 'limit' : 3} %}
+			</div>
+			<div class="col-md-1">
+				{% include 'partials/yearlink.twig' %}
+			</div>
+		</div>
+	{% endfor%}
+		
+		
+	{% else %}
+		no albums found
+	{% endif %}
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+</div>

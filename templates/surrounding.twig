@@ -164,6 +164,42 @@
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
 						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
 					{% endif %}
+					
+					
+					
+					
+					{% if action == 'newsearchresult.all' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all' } %}
+						{% include 'modules/searchresult-tracks.twig' %}
+					{% endif %}
+					
+					{% if action == 'newsearchresult.track' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track' } %}
+						{% include 'modules/searchresult-tracks.twig' %}
+					{% endif %}
+					
+					{% if action == 'newsearchresult.album' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album' } %}
+						{% include 'modules/albumlist3.twig' %}
+					{% endif %}
+					
+					{% if action == 'newsearchresult.artist' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
+						{% include 'modules/typelist2.twig' with { 'type': 'artist' } %}
+					{% endif %}
+					
+					{% if action == 'newsearchresult.label' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label' } %}
+						{% include 'modules/typelist2.twig' with { 'type': 'label' } %}
+					{% endif %}
+					
+					{% if action == 'newsearchresult.genre' %}
+						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
+						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
+					{% endif %}
+					
+					
+					
 {% if not nosurrounding %}
   				</div>
 			</div>
