@@ -77,6 +77,11 @@ function pollMpdData(){
     			$('.player-mpd').html(response);
     			drawTimeGrid(data.duration, 'player-mpd');
     			
+    			$('#css-mpdplayer').attr(
+    				'href',
+    				'/css/mpdplayer/'+ $('.player-mpd .now-playing-string').attr('data-hash')
+    			);
+    			
     			initStuff();
     			
     		});
