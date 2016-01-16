@@ -1,4 +1,4 @@
-<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2">
 		<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
 			<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">

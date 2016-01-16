@@ -5,7 +5,11 @@
     	</div>
     	{# TODO: create preloader for waveformimage as it can take very long for large files #}
     	{% if not item.id %}
-    		<object class="waveform" style="width: 100%; height: 50px;" data="/skin/default/img/notrack.svg" type="image/svg+xml">
+    		{% if not item.relativePath %}
+	    		<object class="waveform" style="width: 100%; height: 50px;" data="/skin/default/img/notrack.svg" type="image/svg+xml"></object>
+	    	{% else %}
+	    		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.relativePath }}" type="image/svg+xml"></object>
+	    	{% endif %}
     	{% else %}
     		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.id }}" type="image/svg+xml">
     	{% endif %}
@@ -91,32 +95,4 @@
     </div>
     
     
-    <div class="now-playing-string" style="display: none;">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
-    {# TODO: find another way to highlight each occurance of now-playing-track (preferable without javascript) #}
-    {# TODO: apply same solution for playing tracks does not exist in app-mysql-db  #}
-    <style type="text/css" media="all">
-    .track-id-{{ item.id }}:after {
-    	content: ' ';
-    	width: 40px;
-    	height: 50px;
-    	display: block;
-    	position: absolute;
-    	top: 0px;
-    	left: 50px;
-    	background: url({{ config.absRefPrefix }}skin/default/img/playing.gif);
-    	background-size: 40px 50px;
-    }
-    
-    /* filebrowser */
-    .rhash-{{ item.relativePathHash}} .is-playlink:after {
-    	content: ' ';
-    	width: 20px;
-    	height: 20px;
-    	display: block;
-    	position: absolute;
-    	top: 0px;
-    	left: 50px;
-    	background: url({{ config.absRefPrefix }}skin/default/img/playing.gif);
-    	background-size: 20px 20px;
-    }
-    </style>
+    <div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
