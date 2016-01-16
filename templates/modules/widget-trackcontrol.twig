@@ -78,45 +78,67 @@
 	  			<h3>Abspielen</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="ajax-link is-playlink" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play"></i> Sofort abspielen</a>
-	  		</div>
+		  		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+					<i class="fa fa-play"></i> Sofort abspielen
+				</button>
+			</div>
+			
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default" data-localplayer='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+					<i class="fa fa-play"></i> Als nächstes abspielen
+				</button>
+			</div>
+			
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default" data-localplayer='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+					<i class="fa fa-plus"></i> Zur Playlist hinzufügen
+				</button>
+			</div>
 	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-play"></i> Als nächstes abspielen</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-play"></i> Zur Playlist hinzufügen</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" class="playerModeToggleTrigger"><i class="fa fa-exchange"></i> Playermodus wechseln</a>
-	  		</div>
+		  		<button role="control" data-href="#" class="btn btn-default playerModeToggleTrigger">
+					<i class="fa fa-exchange"></i> Playermodus wechseln
+				</button>
+			</div>
 	  	</div>
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
 	  			<h3>Bewerten</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-star"></i> Toll</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-star-half-empty"></i> Uninteressant</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-eraser"></i> Furchtbar</a>
-	  		</div>
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-star"></i> Toll
+				</button>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-star-half-empty"></i> Uninteressant
+				</button>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-eraser"></i> Furchtbar
+				</button>
+			</div>
 	  	</div>
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
 	  			<h3>Auflegen</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-headphones"></i> Deck 1</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-headphones"></i> Deck 2</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-headphones"></i> Deck 3</a>
-	  		</div>
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-headphones"></i> Deck 1
+				</button>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-headphones"></i> Deck 2
+				</button>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
+					<i class="fa fa-headphones"></i> Deck 3
+				</button>
+			</div>
 	  	</div>
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
