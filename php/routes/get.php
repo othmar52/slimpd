@@ -294,6 +294,7 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) 
 		if($markupSnippet === 'mpdplayer') {
 			$mpd = new \Slimpd\modules\mpd\mpd();
 			$config['item'] = $mpd->getCurrentlyPlayedTrack();
+			$itemRelativePath = $config['item']->getRelativePath();
 		} else {
 			if(is_numeric($app->request->get('item')) === TRUE) {
 				$search = array('id' => (int)$app->request->get('item'));
@@ -318,6 +319,7 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) 
 			// so we are not able to get any renderitems
 			$item = new \Slimpd\Track();
 			$item->setRelativePath($itemRelativePath);
+			$item->setRelativePathHash(getFilePathHash($itemRelativePath));
 			$config['item'] = $item;
 		}
 		
@@ -327,6 +329,12 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) 
 		
 		$app->render('modules/'.$markupSnippet.'.twig', $config);
 		$app->stop();
+	});
+	
+	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $config, $markupSnippet){
+		$config['relativePathHash'] = $relativePathHash;
+		$app->response->headers->set('Content-Type', 'text/css');
+		$app->render('css/'.$markupSnippet.'.twig', $config);
 	});
 }
 

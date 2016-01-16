@@ -23,6 +23,10 @@
 		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/bootstrap-jqueryui-autocomplete.css" media="all">
 	
 		<link rel="stylesheet" type="text/css" href="/skin/default/styles.css" />
+		
+		{# add dynamic css for now-playing status #}
+		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}/css/localplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}/css/mpdplayer/0" />
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
 		<div class="container">
