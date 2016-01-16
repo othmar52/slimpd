@@ -1,6 +1,6 @@
-<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
+<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-xs-3 col-sm-2">
-		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
 		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">

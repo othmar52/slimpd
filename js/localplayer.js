@@ -64,6 +64,7 @@ function localPlayer(conf) {
     			// re-bind controls
     			$("#jquery_jplayer_1").jPlayer({cssSelectorAncestor: "#jp_container_1"});
     		});
+    		$('#css-localplayer').attr('href', '/css/localplayer/'+ ((conf.hash) ? conf.hash : '0'));
 			break;
 		case 'togglePause':
 			var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
