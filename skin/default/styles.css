@@ -280,8 +280,7 @@ a {
 .popover .popover-title {border-radius: 0; }
 
 
-.no-side-padding {
-	padding-left: 0;
+.no-padding-right {
 	padding-right: 0;
 }
 
@@ -294,3 +293,26 @@ a {
 	padding-top: 25%;
 }
 
+
+.btn-default {
+	background-color: #353535;
+	border: none;
+	border-radius: 0;
+	color: #888;
+}
+
+.bg-col2 .btn-default,
+.bg-col3 .btn-default {
+	background-color: #191919;
+}
+
+.btn-trnsp,
+.bg-col2 .btn-trnsp,
+.bg-col2 .btn-trnsp {
+	background-color: Transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}

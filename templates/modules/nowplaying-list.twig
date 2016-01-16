@@ -1,41 +1,23 @@
+<div class="row">&nbsp;</div>
 <div class="row">
-	<div class="col-md-10">
-		<span class="playlist-title">Playlist <span class="pl-track-number">({{ currentplaylist|length }} Tracks)</span></span>
-		
-	</div>
 	<div class="col-md-2">
-		<a href="/mpdctrl/clearPlaylistNotCurrent" class="ajax-link"><i class="fa fa-trash sign"></i> Clear Playlist</a>
+		<button role="control" data-href="/mpdctrl/clearPlaylistNotCurrent" title="clear playlist (but keep current track)" class="btn btn-default ajax-btn toggle-tooltip" data-localplayer='{"action":"clearPlaylistNotCurrent"}'>
+			<i class="fa fa-trash"></i> Clear Playlist <span class="uc" style="font-size:0.7em;">({{ currentplaylist|length }} tracks)</span>
+		</button>	
 	</div>
+	<div class="col-md-3"><span class="dark uc small">{{'title'|ll}} &amp; {{'album'|ll}}</span></div>
+	<div class="col-md-3"><span class="dark uc small">{{'artist'|ll}}</span></div>
+	<div class="col-md-2"><span class="dark uc small">{{'genre'|ll}}</span></div>
+	<div class="col-md-1"><span class="dark uc small">{{'year'|ll}}</span></div>
+	<div class="col-md-1"><span class="dark uc small">{{'duration'|ll}}</span></div>
 </div>
-{% include 'partials/trackrow-1-header.twig' %}
+<hr />
+
 
 {% set totalTime = 0 %}
 {% for mpdidx,item in currentplaylist %}
 {% set totalTime = totalTime+item.miliseconds %}
-<div class="row {{ cycle(['bgX-col2','bgX-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-	<div class="col-md-1">
-		<div style="position: absolute; width: 50px; height: 50px;" class="track-id-{{ item.id }}"> </div>
-		<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px;"></div>
-	<div class="col-md-3">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-		<br />
-		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
-	</div>
-	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' %}
-	</div>
-	<div class="col-md-2">
-		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
-	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
-	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
-	<div class="col-md-1" style="font-size: 1.4em;">
-		<a href="/mpdctrl/playIndex/{{ mpdidx }}" class="ajax-link is-playlink" title="play now" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'><i class="fa fa-play-circle-o sign"></i></a>
-		<a href="/mpdctrl/deleteIndex/{{ mpdidx }}" class="ajax-link" title="remove from playlist"><i class="fa fa-times-circle sign"></i></a>
-		<a class="trigger-modal" href="/markup/widget-trackcontrol?item={{ item.id }}"><i class="fa fa-plus-square"></i></a>
-	</div>
-</div>
-<div class="row">&nbsp;</div>
+{% include 'partials/trackrow-currentplaylist.twig' %}
 {% endfor %}
 <div class="row">
 	<div class="col-md-9"></div>
