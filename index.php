@@ -33,7 +33,7 @@ $view->parserExtensions = array(new \Twig_Extension_Debug());
 $view->parserOptions = array('debug' => $debug);
 
 #####################################################################################
-# TODO: where is the right place for twig-filters?
+# TODO: where is the right place for twig-filters and twig-tests?
 # TODO: does it make sense to generate all href's in a twig-filter instead of having hardcoded routes in twig templates/partials?
 
 $twig = $app->view->getInstance();
@@ -76,6 +76,34 @@ $filter = new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array(
 	return $app->ll->str($hans, $vars);
 });
 $twig->addFilter($filter);
+
+
+$test = new \Twig_SimpleTest('instanceofAlbum', function ($item) {
+	return $item instanceof \Slimpd\Album;
+});
+$twig->addTest($test);
+
+$test = new \Twig_SimpleTest('instanceofTrack', function ($item) {
+	return $item instanceof \Slimpd\Track;
+});
+$twig->addTest($test);
+
+$test = new \Twig_SimpleTest('instanceofLabel', function ($item) {
+	return $item instanceof \Slimpd\Label;
+});
+$twig->addTest($test);
+
+$test = new \Twig_SimpleTest('instanceofGenre', function ($item) {
+	return $item instanceof \Slimpd\Genre;
+});
+$twig->addTest($test);
+
+$test = new \Twig_SimpleTest('instanceofArtist', function ($item) {
+	return $item instanceof \Slimpd\Artist;
+});
+$twig->addTest($test);
+
+
 
 #####################################################################################
 

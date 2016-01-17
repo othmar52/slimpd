@@ -159,14 +159,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$itemsPerPage,
 			$currentPage
 		);
-		#print_r($config['tracklist'] ); die();
-		
-		$config['renderitems'] = array(
-			'genres' => \Slimpd\Genre::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
-			'labels' => \Slimpd\Label::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
-			'artists' => \Slimpd\Artist::getInstancesForRendering($config['albumlist'], $config['item'], $config['tracklist']),
-			'albums' => \Slimpd\Album::getInstancesForRendering($config['item'], $config['tracklist'])
-		);
+		$config['renderitems'] = getRenderItems($config['albumlist'], $config['item'], $config['tracklist']);
 		
 	    $app->render('surrounding.twig', $config);
 	});
@@ -187,11 +180,7 @@ $app->get('/library/album/:albumId', function($albumId) use ($app, $config){
 	
 	
 	// get all relational items we need for rendering
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['album'], $config['itemlist']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['album'], $config['itemlist']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['album'], $config['itemlist'])
-	);
+	$config['renderitems'] = getRenderItems($config['album'], $config['itemlist']);
 	$config['totalitems'] = \Slimpd\Album::getCountAll();
 	$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 		array('albumId' => $albumId)
@@ -208,13 +197,7 @@ $app->get('/library/year/:itemString', function($itemString) use ($app, $config)
 	);
 	
 	// get all relational items we need for rendering
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['albumlist']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['albumlist']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['albumlist'])
-	);
-	
-	
+	$config['renderitems'] = getRenderItems($config['albumlist']);
     $app->render('surrounding.twig', $config);
 });
 
@@ -252,12 +235,7 @@ $app->get('/playlist(/)', function() use ($app, $config){
 	$config['currentplaylist'] = $mpd->getCurrentPlaylist();
 	
 	// get all relational items we need for rendering
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['nowplaying_album'], $config['currentplaylist']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['nowplaying_album'], $config['currentplaylist']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['nowplaying_album'], $config['currentplaylist']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['nowplaying_album'], $config['currentplaylist'])
-	);
+	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
 		
     $app->render('surrounding.twig', $config);
 });
@@ -307,12 +285,7 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) 
 		
 		
 		if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
-			$config['renderitems'] = array(
-				'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
-				'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
-				'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
-				'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
-			);
+			$config['renderitems'] = getRenderItems($config['item']);
 			$itemRelativePath = $config['item']->getRelativePath();
 		} else {
 			// playing track has not been imported in slimpd database yet...
@@ -447,12 +420,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	}
 	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['item']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['item']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['item']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['item'])
-	);
+	$config['renderitems'] = getRenderItems($config['item']);
 	$config['totalitems'] = \Slimpd\Track::getCountAll();
 	$app->render('surrounding.twig', $config);
 });
@@ -510,12 +478,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	} 
 	
 	#echo "<pre>" . print_r($config['album'],1); die();
-	$config['renderitems'] = array(
-		'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist'], $config['album']),
-		'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist'], $config['album']),
-		'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist'], $config['album']),
-		'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'], $config['album'])
-	);
+	$config['renderitems'] = getRenderItems($config['itemlist'], $config['album']);
 	#echo "<pre>" . print_r($config['album'],1); die();
 	$config['totalitems'] = \Slimpd\Album::getCountAll();
 	$app->render('surrounding.twig', $config);
@@ -532,10 +495,11 @@ $sortfields = array(
 );
 
 
+// TODO: does it make sense to keep "old" search functionality?
 foreach(array_keys($sortfields) as $currentType) {
 	// very basic partly functional search...
 	$app->get(
-		'/search'. $currentType .'/page/:num/sort/:sort/:direction',
+		'/old_search'. $currentType .'/page/:num/sort/:sort/:direction',
 		function($num, $sort, $direction)
 		use ($app, $config, $currentType, $sortfields
 	) {		
@@ -649,24 +613,14 @@ foreach(array_keys($sortfields) as $currentType) {
 							$config['tracklist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $id));
 						}
 						// get all relational items we need for rendering
-						$config['renderitems'] = array(
-							'genres' => \Slimpd\Genre::getInstancesForRendering($config['tracklist']),
-							'labels' => \Slimpd\Label::getInstancesForRendering($config['tracklist']),
-							'artists' => \Slimpd\Artist::getInstancesForRendering($config['tracklist']),
-							'albums' => \Slimpd\Album::getInstancesForRendering($config['tracklist'])
-						);
+						$config['renderitems'] = getRenderItems($config['tracklist']);
 						break;
 					case 'album':
 						$config['itemlist'] = array();
 						foreach($result['matches'] as $id => $foo) {
 							$config['itemlist'][] = \Slimpd\Album::getInstanceByAttributes(array('id' => $id));
 						}
-						$config['renderitems'] = array(
-							'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist']),
-							'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist']),
-							'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist']),
-							'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'])
-						);
+						$config['renderitems'] = getRenderItems($config['itemlist']);
 						break;
 						
 					case 'artist':
@@ -713,7 +667,7 @@ foreach(array_keys($sortfields) as $currentType) {
 
 foreach(array_keys($sortfields) as $currentType) {
 	$app->get(
-		'/newsearch'.$currentType.'/page/:currentPage/sort/:sort/:direction',
+		'/search'.$currentType.'/page/:currentPage/sort/:sort/:direction',
 		function($currentPage, $sort, $direction) use ($app, $config, $currentType, $sortfields){
 		foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
@@ -723,6 +677,7 @@ foreach(array_keys($sortfields) as $currentType) {
 		
 		$start = 0;
 		$itemsPerPage = 20;
+		$maxCount = 100000;
 		$result = [];
 		
 		$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
@@ -733,15 +688,22 @@ foreach(array_keys($sortfields) as $currentType) {
 			'album' => 2,
 			'label' => 3,
 			'track' => 4,
+			'genre' => 5,
 		);
-		
+		$config['itemlist'] = [];
 		foreach(array_keys($sortfields) as $type) {
+			
+			
+			
+			
+			
 			$stmt = $ln_sph->prepare("
-				SELECT count(*) AS ole FROM slimpdautocomplete
+				SELECT * FROM slimpdautocomplete
 				WHERE MATCH(:match)
 				" . (($type !== 'all') ? ' AND type=:type ' : '') . "
-				GROUP BY phrase
-				OPTION ranker=sph04");
+				GROUP BY itemid,type
+				LIMIT ".$maxCount."
+				OPTION ranker=sph04, max_matches=".$maxCount.";");
 			$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
@@ -749,95 +711,138 @@ foreach(array_keys($sortfields) as $currentType) {
 			#echo "<pre>$type" . print_r($stmt,1); die();
 			$stmt->execute();
 			
-			$rows = $stmt->fetchAll();
 			
-			echo "<pre>" . print_r($rows,1); die();
+			$config['search'][$type]['total'] = $stmt->rowCount();
+			$config['search'][$type]['time'] = 0;
+			$config['search'][$type]['term'] = $term;
+			$config['search'][$type]['matches'] = [];
+			
+			
+			if($type == $currentType) {
+				$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
+				$direction = ($direction == 'asc') ? 'asc' : 'desc';
+				
+				// TODO: sorting is not possible since using autocomplete-index for regular search
+				$sortQuery = ($sortfield !== 'relevance')?  $sortfield . ' ' . $direction : '';
+				
+				$config['search'][$type]['time'] = microtime(TRUE);
+				$stmt = $ln_sph->prepare("
+					SELECT * FROM slimpdautocomplete
+					WHERE MATCH(:match)
+					" . (($currentType !== 'all') ? ' AND type=:type ' : '') . "
+					GROUP BY itemid,type
+					LIMIT :offset,:max
+					OPTION ranker=sph04");
+				$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
+				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
+				if(($currentType !== 'all')) {
+					$stmt->bindValue(':type', $filterTypeMapping[$currentType], PDO::PARAM_INT);
+				}
+				
+				
+				
+				
+				$urlPattern = '/search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $term;
+				$config['paginator_params'] = new JasonGrimes\Paginator(
+					$config['search'][$type]['total'],
+					$itemsPerPage,
+					$currentPage,
+					$urlPattern
+				);
+				
+				
+				
+				
+				$stmt->execute();
+				#echo "<pre>" . print_r($stmt,1); die();
+				$rows = $stmt->fetchAll();
+				#echo "<pre>" . print_r($rows,1); die();
+				$meta = $ln_sph->query("SHOW META")->fetchAll();
+				foreach($meta as $m) {
+				    $meta_map[$m['Variable_name']] = $m['Value'];
+				}
+				
+				
+				if(count($rows) === 0 && !$app->request()->params('nosuggestion')) {
+					$words = array();
+					foreach($meta_map as $k=>$v) {
+						if(preg_match('/keyword\[\d+]/', $k)) {
+							preg_match('/\d+/', $k,$key);
+							$key = $key[0];
+							$words[$key]['keyword'] = $v;
+						}
+						if(preg_match('/docs\[\d+]/', $k)) {
+							preg_match('/\d+/', $k,$key);
+							$key = $key[0];
+							$words[$key]['docs'] = $v;
+						}
+					}
+					$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+					if($suggest !== FALSE) {
+						#print_r($suggest); die();
+						$app->response->redirect($app->urlFor(
+							'search'.$currentType, ['type' => $currentType, 'currentPage' => $currentPage, 'sort' => $sort, 'direction' => $direction ])
+							.'?nosuggestion=1&q='.$suggest);
+						$app->stop();
+					}
+					$result[] = [
+						'label' => 'nothing found',
+						'url' => '#',
+						'type' => '',
+						'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
+					];
+				} else {
+					$config['search'][$type]['time'] = number_format(microtime(TRUE) - $config['search'][$type]['time'],3);
+					$filterTypeMappingF = array_flip($filterTypeMapping);
+					#echo "<pre>" . print_r($rows,1); die(); die('safgs');
+					foreach($rows as $row) {
+						switch($filterTypeMappingF[$row['type']]) {
+							case 'artist':
+								$obj = \Slimpd\Artist::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+							case 'label':
+								$obj = \Slimpd\Label::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+							case 'album':
+								$obj = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
+								break; 
+							case 'track':
+								$obj = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+							case 'genre':
+								$obj = \Slimpd\Genre::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+						}
+						$config['itemlist'][] = $obj;
+						
+						
+					}
+				}
+				
+				switch($currentType) {
+					case 'album':
+						
+				}
+				
+			}
+			
+			
+			#$rows = $stmt->fetchAll();
+			
+			#echo "<pre>\n\n\n" . print_r($stmt->rowCount(),1); die();
 				
 		}
 		
-		$stmt = $ln_sph->prepare("
-			SELECT * FROM slimpdautocomplete
-			WHERE MATCH(:match)
-			" . (($currentType !== 'all') ? ' AND type=:type ' : '') . "
-			GROUP BY phrase
-			LIMIT :offset,:max
-			OPTION ranker=sph04");
-		$stmt->bindValue(':match', $term, PDO::PARAM_STR);
-		$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
-		$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
-		if(($currentType !== 'all')) {
-			$stmt->bindValue(':type', $filterTypeMapping[$currentType], PDO::PARAM_INT);
-		}
-		
-		$stmt->execute();
-		#echo "<pre>" . print_r($stmt,1); die();
-		$rows = $stmt->fetchAll();
-		#echo "<pre>" . print_r($rows,1); die();
-		$meta = $ln_sph->query("SHOW META")->fetchAll();
-		foreach($meta as $m) {
-		    $meta_map[$m['Variable_name']] = $m['Value'];
-		}
+		#echo "<pre>\n\n\n" . print_r($config['search'],1); die();
 		
 		
-		if(count($rows) === 0) {
-			$words = array();
-			foreach($meta_map as $k=>$v) {
-				if(preg_match('/keyword\[\d+]/', $k)) {
-					preg_match('/\d+/', $k,$key);
-					$key = $key[0];
-					$words[$key]['keyword'] = $v;
-				}
-				if(preg_match('/docs\[\d+]/', $k)) {
-					preg_match('/\d+/', $k,$key);
-					$key = $key[0];
-					$words[$key]['docs'] = $v;
-				}
-			}
-			$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
-			if($suggest !== FALSE) {
-				#print_r($suggest); die();
-				$app->response->redirect($app->urlFor(
-					'searchnew'.$currentType, ['type' => $currentType, 'currentPage' => $currentPage, 'sort' => $sort, 'direction' => $direction ])
-					.'?debug=1&q='.$suggest);
-				$app->stop();
-			}
-			$result[] = [
-				'label' => 'nothing found',
-				'url' => '#',
-				'type' => '',
-				'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
-			];
-		} else {
-			$filterTypeMapping = array_flip($filterTypeMapping);
-			$cl = new SphinxClient();
-			foreach($rows as $row) {
-				switch($filterTypeMapping[$row['type']]) {
-					case 'artist':
-					case 'label':
-						break;
-					case 'album':
-						$config['itemlist'][] = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
-						break; 
-					case 'track':
-						break;
-				} 
-			}
-		}
 		
 		$config['action'] = 'newsearchresult.' . $currentType;
-		$config['renderitems'] = array(
-			'genres' => \Slimpd\Genre::getInstancesForRendering($config['itemlist']),
-			'labels' => \Slimpd\Label::getInstancesForRendering($config['itemlist']),
-			'artists' => \Slimpd\Artist::getInstancesForRendering($config['itemlist']),
-			'albums' => \Slimpd\Album::getInstancesForRendering($config['itemlist'])
-		);
-			#if(isset($result['matches']) === FALSE) {
-			#	$app->render('surrounding.twig', $config);
-			#	return;
-			#}
+		$config['renderitems'] = getRenderItems($config['itemlist']);
 		$app->render('surrounding.twig', $config);
 			
-	})->name('searchnew'.$currentType);
+	})->name('search'.$currentType);
 }
 
 
@@ -859,6 +864,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		'album' => 2,
 		'label' => 3,
 		'track' => 4,
+		'genre' => 5,
 	);
 	
 	$stmt = $ln_sph->prepare("
@@ -897,7 +903,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
 		if($suggest !== FALSE) {
-			$app->response->redirect($app->urlFor('autocomplete', array('term' => $suggest)));
+			$app->response->redirect($app->urlFor('autocomplete', array('type' => $type, 'term' => $suggest)));
 			$app->stop();
 		}
 		$result[] = [
@@ -910,7 +916,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		$filterTypeMapping = array_flip($filterTypeMapping);
 		$cl = new SphinxClient();
 		foreach($rows as $row) {
-			$excerped = $cl->BuildExcerpts([$row['phrase']], 'slimpdautocomplete', $term);
+			$excerped = $cl->BuildExcerpts([$row['display']], 'slimpdautocomplete', $term);
 			$filterType = $filterTypeMapping[$row['type']];
 			$entry = [
 				'label' => $excerped[0],
@@ -924,6 +930,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 			switch($filterType) {
 				case 'artist':
 				case 'label':
+				case 'genre':
 					$entry['img'] = '/skin/default/img/icon-'. $filterType .'.png';
 					break;
 				case 'album':

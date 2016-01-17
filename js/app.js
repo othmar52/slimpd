@@ -85,7 +85,9 @@ $(document).ready(function(){
 			url: setGetParameter(url, 'nosurrounding', '1')
 		}).done(function(response){
 			$(ajaxTarget).html(response);
-			$("#mainsearch").autocomplete( "close" );
+			if($("#mainsearch").data('ui-autocomplete') != undefined) {
+				$("#mainsearch").autocomplete( "close" );
+			}
 			
 			// TODO: create proper curently loading visualizing
 			$("#loading-backdrop").remove();

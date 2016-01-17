@@ -1,0 +1,36 @@
+
+
+{% if itemlist|length > 0 %}
+
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+
+<div class="tracks_container">
+{% include 'partials/trackrow-1-header.twig' %}
+
+	{% for item in itemlist %}
+		{% if item is instanceofAlbum %}
+			{% include 'partials/itemrow-album.twig' %}
+		{% endif %}
+		{% if item is instanceofTrack %}
+			{% include 'partials/trackrow-1.twig' %}
+		{% endif %}
+		
+		{% if item is instanceofLabel %}
+			{% include 'partials/itemrow-label.twig' %}
+		{% endif %}
+		{% if item is instanceofArtist %}
+			{% include 'partials/itemrow-artist.twig' %}
+		{% endif %}
+		{% if item is instanceofGenre %}
+			{% include 'partials/itemrow-genre.twig' %}
+		{% endif %}
+		
+		
+	{% endfor %}
+	<div class="clearfix"> </div>
+	
+</div>
+{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+{% else %}
+<h3>nothing found...</h3>
+{% endif %}
