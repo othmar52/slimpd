@@ -1,0 +1,22 @@
+<div class="row bg-col3 track-row">
+	<div class="col-md-2">
+		<a href="/library/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+			<img src="/image-50/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
+		</a>
+		<strong>&nbsp;&nbsp;&nbsp;&nbsp;ALBUM</strong>
+	</div>
+	<div class="col-md-3">
+		<a href="/library/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+		{{item.title}}
+		</a>
+	</div>
+	<div class="col-md-3">
+		{% include 'partials/artist/link.twig' %}
+	</div>
+	<div class="col-md-2">
+		{% include 'partials/genrelink.twig' with {'genreIds': item.genreId, 'limit' : 3} %}
+	</div>
+	<div class="col-md-1">
+		{% include 'partials/yearlink.twig' %}
+	</div>
+</div>

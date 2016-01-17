@@ -25,8 +25,8 @@
 		<link rel="stylesheet" type="text/css" href="/skin/default/styles.css" />
 		
 		{# add dynamic css for now-playing status #}
-		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}/css/localplayer/0" />
-		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}/css/mpdplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}css/localplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}css/mpdplayer/0" />
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
 		<div class="container">
@@ -170,32 +170,33 @@
 					
 					{% if action == 'newsearchresult.all' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all' } %}
-						{% include 'modules/searchresult-tracks.twig' %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'newsearchresult.track' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track' } %}
-						{% include 'modules/searchresult-tracks.twig' %}
+						ggg
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'newsearchresult.album' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album' } %}
-						{% include 'modules/albumlist3.twig' %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'newsearchresult.artist' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'artist' } %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'newsearchresult.label' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'label' } %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'newsearchresult.genre' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					
