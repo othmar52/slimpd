@@ -382,6 +382,75 @@ function MakePhaseSuggestion($words,$query,$ln_sph) {
 	return FALSE;
 }
 
+// TODO: recursify and remove identical codeblocks
+function getRenderItems() {
+	$args = func_get_args();
+	$return = array(
+		'genres' => call_user_func_array(array('\\Slimpd\\Genre','getInstancesForRendering'), $args),
+		'labels' => call_user_func_array(array('\\Slimpd\\Label','getInstancesForRendering'), $args),
+		'artists' => call_user_func_array(array('\\Slimpd\\Artist','getInstancesForRendering'), $args),
+		'albums' => call_user_func_array(array('\\Slimpd\\Album','getInstancesForRendering'), $args),
+	);
+	
+	foreach($args as $i) {
+		if(is_object($i)) {
+			switch(get_class($i)) {
+				case 'Slimpd\Album':
+					if(isset($return['albums'][$i->getId()]) === FALSE) {
+						$return['albums'][$i->getId()] = $i;
+					}
+					break;
+				case 'Slimpd\Artist':
+					if(isset($return['artists'][$i->getId()]) === FALSE) {
+						$return['artists'][$i->getId()] = $i;
+					}
+					break;
+				case 'Slimpd\Label':
+					if(isset($return['labels'][$i->getId()]) === FALSE) {
+						$return['labels'][$i->getId()] = $i;
+					}
+					break;
+				case 'Slimpd\Genre':
+					if(isset($return['genres'][$i->getId()]) === FALSE) {
+						$return['genres'][$i->getId()] = $i;
+					}
+					break;
+			}
+		}
+		if(is_array($i)) {
+			foreach($i as $ii) {
+				if(is_object($ii)) {
+					switch(get_class($ii)) {
+						case 'Slimpd\Album':
+							if(isset($return['albums'][$ii->getId()]) === FALSE) {
+								$return['albums'][$ii->getId()] = $ii;
+							}
+							break;
+						case 'Slimpd\Artist':
+							if(isset($return['artists'][$ii->getId()]) === FALSE) {
+								$return['artists'][$ii->getId()] = $ii;
+							}
+							break;
+						case 'Slimpd\Label':
+							if(isset($return['labels'][$ii->getId()]) === FALSE) {
+								$return['labels'][$ii->getId()] = $ii;
+							}
+							break;
+						case 'Slimpd\Genre':
+							if(isset($return['genres'][$ii->getId()]) === FALSE) {
+								$return['genres'][$ii->getId()] = $ii;
+							}
+							break;
+					}
+				}
+			}
+			
+		}
+	}
+	return $return;
+}
+
+
 /*
  * TODO: only take a small chunk of the file instead of reading the whole possibly huge file
  */

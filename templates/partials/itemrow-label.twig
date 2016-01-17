@@ -1,0 +1,24 @@
+<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover">
+	<div class="col-md-2">
+		<a href="/library/label/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show label">
+			<img src="/skin/default/img/icon-label.png" alt="" style="width: 50px; height: 50px; z-index:2;">
+		</a>
+		<strong>&nbsp;&nbsp;&nbsp;&nbsp;LABEL</strong>
+	</div>
+	
+	<div class="col-md-3">
+		{% include 'partials/labellink.twig' with { labelIds: item.id } %}
+	</div>
+	<div class="col-md-3">
+		<span class="dark uc small">Artists</span><br />
+		TODO
+	</div>
+	<div class="col-md-2">
+		<span class="dark uc small">Genres</span><br />
+		TODO
+	</div>
+	<div class="col-md-2">
+		{{ item.trackCount }} <span class="dark uc small">Tracks,</span> {{ item.albumCount }} <span class="dark uc small">Albums</span><br />
+		TODO: 1996 - 2002
+	</div>
+</div>
