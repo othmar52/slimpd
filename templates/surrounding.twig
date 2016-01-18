@@ -137,64 +137,30 @@
 					
 					{% if action == 'searchresult.all' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all' } %}
-						{% include 'modules/searchresult-tracks.twig' %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.track' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track' } %}
-						{% include 'modules/searchresult-tracks.twig' %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.album' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album' } %}
-						{% include 'modules/albumlist2.twig' %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.artist' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'artist' } %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.label' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'label' } %}
+						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.genre' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
-						{% include 'modules/typelist2.twig' with { 'type': 'genre' } %}
-					{% endif %}
-					
-					
-					
-					
-					{% if action == 'newsearchresult.all' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all' } %}
-						{% include 'modules/searchresult-items.twig' %}
-					{% endif %}
-					
-					{% if action == 'newsearchresult.track' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track' } %}
-						ggg
-						{% include 'modules/searchresult-items.twig' %}
-					{% endif %}
-					
-					{% if action == 'newsearchresult.album' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album' } %}
-						{% include 'modules/searchresult-items.twig' %}
-					{% endif %}
-					
-					{% if action == 'newsearchresult.artist' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist' } %}
-						{% include 'modules/searchresult-items.twig' %}
-					{% endif %}
-					
-					{% if action == 'newsearchresult.label' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label' } %}
-						{% include 'modules/searchresult-items.twig' %}
-					{% endif %}
-					
-					{% if action == 'newsearchresult.genre' %}
 						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre' } %}
 						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
