@@ -120,25 +120,30 @@
 				</button>
 			</div>
 	  	</div>
+	  	
+	  	{# TODO: only render when xwax enabled = 1 #}
+	  	{# TODO: only render amount of configured decks #}
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
 	  			<h3>Auflegen</h3>
+	  			<div class="row">
+	  				<div class="col-md-4">
+	  					<button role="control" data-href="/xwax/load_track/1/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
+							<i class="fa fa-headphones"></i> 1
+						</button>
+	  				</div>
+	  				<div class="col-md-4">
+	  					<button role="control" data-href="/xwax/load_track/2/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
+							<i class="fa fa-headphones"></i> 2
+						</button>
+	  				</div>
+	  				<div class="col-md-4">
+	  					<button role="control" data-href="/xwax/load_track/3/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
+							<i class="fa fa-headphones"></i> 3
+						</button>
+	  				</div>
+	  			</div>
 	  		</div>
-	  		<div class="col-md-12">
-		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
-					<i class="fa fa-headphones"></i> Deck 1
-				</button>
-			</div>
-			<div class="col-md-12">
-		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
-					<i class="fa fa-headphones"></i> Deck 2
-				</button>
-			</div>
-			<div class="col-md-12">
-		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default">
-					<i class="fa fa-headphones"></i> Deck 3
-				</button>
-			</div>
 	  	</div>
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
