@@ -504,7 +504,7 @@ foreach(array_keys($sortfields) as $currentType) {
 		# TODO: evaluate if modifying searchterm makes sense
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
 		$term = str_replace(array("_", "-", "/"), " ", $app->request()->params('q'));
-		
+		$ranker = 'sph04';
 		$start = 0;
 		$itemsPerPage = 20;
 		$maxCount = 1000;
@@ -528,7 +528,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				" . (($type !== 'all') ? ' AND type=:type ' : '') . "
 				GROUP BY itemid,type
 				LIMIT ".$maxCount."
-				OPTION ranker=sph04, max_matches=".$maxCount.";");
+				OPTION ranker=".$ranker.", max_matches=".$maxCount.";");
 			$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
@@ -555,7 +555,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					GROUP BY itemid,type
 					".$sortQuery."
 					LIMIT :offset,:max
-					OPTION ranker=sph04");
+					OPTION ranker=".$ranker);
 				$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
@@ -760,5 +760,12 @@ $app->get('/deliver/:item+', function($item) use ($app, $config){
 	}
 	
 	deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
+	$app->stop();
+});
+
+$app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $config){
+	
+	$xwax = new \Slimpd\Xwax();
+	$xwax->cmd($cmd, $params, $app);
 	$app->stop();
 });
