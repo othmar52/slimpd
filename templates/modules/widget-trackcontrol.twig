@@ -121,30 +121,30 @@
 			</div>
 	  	</div>
 	  	
-	  	{# TODO: only render when xwax enabled = 1 #}
-	  	{# TODO: only render amount of configured decks #}
+	  	{% if modules.enable_xwax %}
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
 	  			<h3>Auflegen</h3>
 	  			<div class="row">
-	  				<div class="col-md-4">
-	  					<button role="control" data-href="/xwax/load_track/1/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
-							<i class="fa fa-headphones"></i> 1
+	  			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
+	  				{% for i in 1..xwax.decks %}
+	  				<div class="col-md-{{colidx}}">
+	  					<button role="control" data-href="/xwax/load_track/{{i}}/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
+							<i class="fa fa-headphones"></i> {{i}}
 						</button>
 	  				</div>
-	  				<div class="col-md-4">
-	  					<button role="control" data-href="/xwax/load_track/2/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
-							<i class="fa fa-headphones"></i> 2
-						</button>
-	  				</div>
-	  				<div class="col-md-4">
-	  					<button role="control" data-href="/xwax/load_track/3/{{item.relativePath}}" class="ajax-btn btn btn-default btn-lg">
-							<i class="fa fa-headphones"></i> 3
-						</button>
-	  				</div>
+	  				{% endfor%}
+	  			</div>
+	  			{# TODO: what is best practice to trigger target modal-content from modal-content #}
+	  			<div class="row">
+	  				<button role="control" data-ajaxtarget=".modal-content" href="/markup/widget-xwax" title="xwax controls" class="ajax-link btn btn-trnsp trigger-modal">
+						<i class="fa fa-plus"></i> xwax controls
+					</button>
 	  			</div>
 	  		</div>
 	  	</div>
+	  	{% endif %}
+	  	
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
 	  			<h3>Editieren</h3>
@@ -162,7 +162,6 @@
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-refresh"></i> neu einlesen</a>
 	  		</div>
 	  	</div>
-	  	
 	  </div>
 	  
 	  
