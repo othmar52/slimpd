@@ -1,0 +1,22 @@
+<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}" style="margin-left: 20px;margin-right: 20px;">
+	<div class="col-md-2">
+		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}"}'>
+			<i class="fa fa-play fa-lg"></i>
+		</button>
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">
+			<i class="fa fa-align-justify fa-lg"></i>
+		</button>
+		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
+	</div>
+	
+	<div class="col-md-4">
+		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	</div>
+	<div class="col-md-3">
+		{% include 'partials/artist/link.twig' %}
+	</div>
+	<div class="col-md-2">
+		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+	</div>
+	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
+</div>

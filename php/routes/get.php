@@ -172,22 +172,22 @@ $app->get('/library/album(/)', function() use ($app, $config){
 });
 
 
-
-$app->get('/library/album/:albumId', function($albumId) use ($app, $config){
-	$config['action'] = 'album.detail';
-	$config['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
-	$config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
-	
-	
-	// get all relational items we need for rendering
-	$config['renderitems'] = getRenderItems($config['album'], $config['itemlist']);
-	$config['totalitems'] = \Slimpd\Album::getCountAll();
-	$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
-		array('albumId' => $albumId)
-	);
-	$app->render('surrounding.twig', $config);
-});	
-
+foreach(['/library/album', '/markup/albumtracks'] as $what) {
+	$app->get($what .'/:albumId', function($albumId) use ($app, $config, $what){
+		$config['action'] = ($what == '/library/album') ? 'album.detail' : 'albumtracks';
+		$config['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
+		$config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
+		
+		
+		// get all relational items we need for rendering
+		$config['renderitems'] = getRenderItems($config['album'], $config['itemlist']);
+		$config['totalitems'] = \Slimpd\Album::getCountAll();
+		$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
+			array('albumId' => $albumId)
+		);
+		$app->render('surrounding.twig', $config);
+	});	
+}
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $config){
 	$config['action'] = 'library.year';
@@ -262,7 +262,7 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol'] as $markupSnippet ) {
+foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $markupSnippet ) {
 
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
@@ -548,6 +548,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				$sortQuery = ($sortfield !== 'relevance')?  ' ORDER BY ' . $sortfield . ' ' . $direction : '';
 				
 				$config['search'][$type]['time'] = microtime(TRUE);
+				
 				$stmt = $ln_sph->prepare("
 					SELECT id,type,itemid,display FROM ". $app->config['sphinx']['mainindex']."
 					WHERE MATCH(:match)
@@ -555,7 +556,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					GROUP BY itemid,type
 					".$sortQuery."
 					LIMIT :offset,:max
-					OPTION ranker=".$ranker);
+					OPTION ranker=".$ranker.";");
 				$stmt->bindValue(':match', $term, PDO::PARAM_STR);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);

@@ -129,6 +129,12 @@
 						{% include 'album.twig' %}
 					{% endif %}
 					
+					{% if action == 'albumtracks' %}
+						{% for item in itemlist %}
+							{% include 'partials/trackrow-albumview.twig' %}
+						{% endfor %}
+					{% endif %}
+					
 					{% if action == 'playlist' %}
 						{% include 'modules/nowplaying-track.twig' %}
 						{% include 'modules/nowplaying-list.twig' %}
