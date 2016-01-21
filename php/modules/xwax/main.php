@@ -39,7 +39,7 @@ class Xwax {
 		if($cmd == "load_track") {
 			array_shift($params);
 			// TODO: try to fetch artist and title from database
-			$filePath = $app->config['mpd']['alternative_musicdir'] . join(DS, $params);
+			$filePath = realpath($app->config['mpd']['alternative_musicdir'] . join(DS, $params));
 			if(is_file($filePath) === FALSE) {
 				// TODO: send error msg to frontend
 				echo $app->ll->str('xwax.invalid.file'); die();
@@ -49,7 +49,7 @@ class Xwax {
 							. escapeshellarg('dummytitle');
 		}
 		
-		$execCmd = $xConf['clientpath'] . " " . $xConf['server'] . " "  .$cmd . " " . ($selectedDeck-1) . $loadArgs;
+		$execCmd = 'timeout 2 ' . $xConf['clientpath'] . " " . $xConf['server'] . " "  . $cmd . " " . ($selectedDeck-1) . $loadArgs;
 		
 		exec($execCmd, $response);
 		
