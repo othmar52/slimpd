@@ -255,9 +255,14 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	# @see: http://www.musicpd.org/doc/protocol/command_reference.html#status_commands
 	
 	$config['mpd']['status'] = $mpd->cmd('status');
-	$config['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
-	$percent = $config['mpd']['status']['elapsed'] / ($config['mpd']['status']['duration']/100);
-	$config['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0; 
+	try {
+		$config['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
+		$percent = $config['mpd']['status']['elapsed'] / ($config['mpd']['status']['duration']/100);
+		$config['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
+	} catch (\Exception $e) {
+		// TODO: display smth like "no track loaded"
+		$config['mpd']['status'] = array();
+	}
 	echo json_encode($config['mpd']['status']);
 	$app->stop();
 });
