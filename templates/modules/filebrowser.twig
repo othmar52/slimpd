@@ -72,7 +72,11 @@
 		{% if item.ext in ['mp3','m4a','flac','wav', 'aif', 'aiff'] %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
-				<button role="control" data-href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}"}'>
+				{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
+			      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
+			      for now playing files directly is only possible for already mpd-imported tracks ... 
+			      playing files local is no issue and shoud work like a charm #}
+				<button role="control" data-href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}"}'>
 					<i class="fa fa-play fa-lg"></i>
 				</button>
 				<button role="control" data-href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}" title="more" class="btn btn-default trigger-modal">
