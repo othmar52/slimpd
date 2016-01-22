@@ -1,41 +1,40 @@
-<div class="dropdown">
-	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+<div class="dropdown" data-activesorting="{{search.activesorting}}" style="display: inline-block;">
+	  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
 	    Sorting
 	    <span class="caret"></span>
 	  </button>
 	  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-	    <li><a href="/search{{ searchcurrent }}/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Relevance</a></li>
+	    <li><a href="/search{{ searchcurrent }}/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="relevance-desc">Relevance</a></li>
 	    <li role="separator" class="divider"></li>
 	    
 	    {% if searchcurrent in ['album', 'track', 'all'] %}
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/year/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Year <i class="fa fa-arrow-down"></i> </a></li>
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/year/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Year <i class="fa fa-arrow-up"></i> </a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/year/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="year-desc">Year <i class="fa fa-arrow-down"></i> </a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/year/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="year-asc">Year <i class="fa fa-arrow-up"></i> </a></li>
 	    	<li role="separator" class="divider"></li>
 	    {% endif %}
 	    
 	    {% if searchcurrent in ['album', 'track', 'all', 'artist', 'label', 'genre'] %}
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/title/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Title, A-Z</a></li>
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/title/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Title, Z-A</a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/title/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="title-desc">Title, A-Z</a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/title/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="title-asc">Title, Z-A</a></li>
 	    	<li role="separator" class="divider"></li>
 	    {% endif %}
 	    
 	    {% if searchcurrent in ['album', 'track', 'all'] %}
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/added/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Added <i class="fa fa-arrow-down"></i></a></li>
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/added/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Added <i class="fa fa-arrow-up"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/added/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="added-desc">Added <i class="fa fa-arrow-down"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/added/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="added-asc">Added <i class="fa fa-arrow-up"></i></a></li>
 	    	<li role="separator" class="divider"></li>
 	    {% endif %}
 	    
 	    {% if searchcurrent in ['album', 'artist', 'genre', 'label'] %}
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/trackCount/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Trackcount <i class="fa fa-arrow-down"></i></a></li>
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/trackCount/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Trackcount <i class="fa fa-arrow-up"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/trackCount/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="trackCount-desc">Trackcount <i class="fa fa-arrow-down"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/trackCount/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="trackCount-asc">Trackcount <i class="fa fa-arrow-up"></i></a></li>
 	    	<li role="separator" class="divider"></li>
 	    {% endif %}
 	    
 	    {% if searchcurrent in ['artist', 'genre', 'label'] %}
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/albumCount/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Albumcount <i class="fa fa-arrow-down"></i></a></li>
-	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/albumCount/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Albumcount <i class="fa fa-arrow-up"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/albumCount/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="albumCount-desc">Albumcount <i class="fa fa-arrow-down"></i></a></li>
+	    	<li><a href="/search{{ searchcurrent }}/page/1/sort/albumCount/asc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link" data-sortkey="albumCount-asc">Albumcount <i class="fa fa-arrow-up"></i></a></li>
 	    	<li role="separator" class="divider"></li>
 	    {% endif %}
-	    
 	  </ul>
 </div>
