@@ -41,7 +41,7 @@ $(document).ready(function(){
 	$('body').on('click', '.ajax-btn, .ajax-link', function(){
 		var ajaxTarget = $(this).attr('data-ajaxtarget');
 		if(ajaxTarget) {
-			// TODO: create proper curently loading visualizing
+			// TODO: create proper currently loading visualizing
 			$('<div class="modal-backdrop fade in" id="loading-backdrop"></div>').appendTo(document.body);
 			$.ajax({
 				url: setGetParameter($(this).attr('href'), 'nosurrounding', '1')
@@ -267,9 +267,11 @@ function drawTimeGrid(duration, target) {
 
 /**
  * adds get-paramter to url, respecting existing and not-existing params
+*  TODO: currently not compatible with urlstring that contains hash
  * @param {string} urlstring
  * @param {string} paramName
  * @param {string} paramValue
+ * 
  */
 function setGetParameter(urlstring, paramName, paramValue)
 {
