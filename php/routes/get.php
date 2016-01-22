@@ -549,6 +549,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			if($type == $currentType) {
 				$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
 				$direction = ($direction == 'asc') ? 'asc' : 'desc';
+				$config['search']['activesorting'] = $sortfield . '-' . $direction;
 				
 				$sortQuery = ($sortfield !== 'relevance')?  ' ORDER BY ' . $sortfield . ' ' . $direction : '';
 				
