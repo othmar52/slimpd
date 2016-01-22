@@ -29,8 +29,10 @@ function initStuff() {
         forceHelperSize: true
     });
     
-    
-    
+    /* display selected value in dropdown instead of dropdown-label */
+    $('.dropdown').each(function(index, item){
+    	$(item).find('.btn:first-child').html($('*[data-sortkey="'+ $(item).attr('data-activesorting')+'"]').html());
+    });
 }
 
 
