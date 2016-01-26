@@ -4,9 +4,66 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6e538ff151ec841f9925f0ddd2ea52cc",
-    "content-hash": "620e06e8f7e358a0d87831e4d1d0384c",
+    "hash": "5c809ca1de0ef0ee51eb6506683257b9",
+    "content-hash": "9e6e73ee7da7139481eb12273144c2c1",
     "packages": [
+        {
+            "name": "components/backbone",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/backbone.git",
+                "reference": "478a3769d64bf8d3e8798558f01b16c1e160d670"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/backbone/zipball/478a3769d64bf8d3e8798558f01b16c1e160d670",
+                "reference": "478a3769d64bf8d3e8798558f01b16c1e160d670",
+                "shasum": ""
+            },
+            "require": {
+                "components/underscore": ">=1.4.3"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "backbone.js"
+                    ],
+                    "files": [
+                        "backbone-min.js"
+                    ],
+                    "shim": {
+                        "deps": [
+                            "underscore"
+                        ],
+                        "exports": "Backbone"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Ashkenas",
+                    "email": "jeremy@documentcloud.org"
+                }
+            ],
+            "description": "Give your JS App some Backbone with Models, Views, Collections, and Events.",
+            "homepage": "http://backbonejs.org",
+            "keywords": [
+                "browser",
+                "client",
+                "controller",
+                "model",
+                "router",
+                "server",
+                "view"
+            ],
+            "time": "2015-05-21 15:41:47"
+        },
         {
             "name": "components/font-awesome",
             "version": "4.5.0",
@@ -213,6 +270,56 @@
             ],
             "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.",
             "time": "2015-03-13 14:48:12"
+        },
+        {
+            "name": "components/underscore",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/underscore.git",
+                "reference": "91142c898763ca8bb23a32a9808735e4998839d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/underscore/zipball/91142c898763ca8bb23a32a9808735e4998839d1",
+                "reference": "91142c898763ca8bb23a32a9808735e4998839d1",
+                "shasum": ""
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "underscore.js"
+                    ],
+                    "files": [
+                        "underscore-min.js",
+                        "underscore-min.map"
+                    ],
+                    "shim": {
+                        "exports": "_"
+                    }
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Ashkenas",
+                    "email": "jeremy@documentcloud.org"
+                }
+            ],
+            "description": "JavaScript's functional programming helper library.",
+            "homepage": "http://underscorejs.org",
+            "keywords": [
+                "browser",
+                "client",
+                "functional",
+                "server",
+                "util"
+            ],
+            "time": "2015-10-16 14:27:39"
         },
         {
             "name": "guzzlehttp/command",
@@ -1186,7 +1293,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/57cc04b0f61504b9fad6b04946d2d44351019353",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/317f22132de01c10152430c458c4388a6ffa4e5d",
                 "reference": "57cc04b0f61504b9fad6b04946d2d44351019353",
                 "shasum": ""
             },
