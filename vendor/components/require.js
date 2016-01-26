@@ -2021,6 +2021,10 @@ var requirejs, require, define;
 var components = {
     "packages": [
         {
+            "name": "backbone",
+            "main": "backbone-built.js"
+        },
+        {
             "name": "jquery",
             "main": "jquery-built.js"
         },
@@ -2033,6 +2037,10 @@ var components = {
             "main": "jquery-ui-built.js"
         },
         {
+            "name": "underscore",
+            "main": "underscore-built.js"
+        },
+        {
             "name": "jplayer",
             "main": "jplayer-built.js"
         },
@@ -2042,11 +2050,20 @@ var components = {
         }
     ],
     "shim": {
+        "backbone": {
+            "deps": [
+                "underscore"
+            ],
+            "exports": "Backbone"
+        },
         "jquery-ui": {
             "deps": [
                 "jquery"
             ],
             "exports": "jQuery"
+        },
+        "underscore": {
+            "exports": "_"
         },
         "jplayer": {
             "deps": [
