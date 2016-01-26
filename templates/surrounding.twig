@@ -44,7 +44,8 @@
 
 			<div class="row">
   				<div class="col-md-12" id="main">
-{% endif %}	 				
+{% endif %}
+				<div class="main-content">
 					{% include 'modules/errorbox.twig' %}
 					
 					
@@ -171,7 +172,7 @@
 						{% include 'modules/searchresult-items.twig' %}
 					{% endif %}
 					
-					
+					</div>
 					
 {% if not nosurrounding %}
   				</div>
@@ -230,10 +231,23 @@
 		<script src="{{ config.absRefPrefix }}vendor/components/jquery-cookie/jquery.cookie.js"></script>
 		<!--script src="{{ config.absRefPrefix }}vendor/nicolasbize/faviconx/faviconx-min.js"></script-->
 		<script src="{{ config.absRefPrefix }}js/faviconxmod.js"></script>
+		
+		<script src="{{ config.absRefPrefix }}vendor/components/underscore/underscore-min.js"></script>
+		<script src="{{ config.absRefPrefix }}vendor/components/backbone/backbone-min.js"></script>
+		
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/abstract/AbstractView.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/NavbarView.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/PageView.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/LocalPlayer.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/Router.js"></script>
+		
 		<script src="{{ config.absRefPrefix }}js/app.js"></script>
+		<script src="{{ config.absRefPrefix }}js/modal.js"></script>
 		<script src="{{ config.absRefPrefix }}js/mpdplayer.js"></script>
 		<script src="{{ config.absRefPrefix }}js/localplayer.js"></script>
 		<script src="{{ config.absRefPrefix }}js/tabbedautocomplete.js"></script>
+		
+		
 		
 	</body>
 </html>
