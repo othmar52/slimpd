@@ -1,8 +1,18 @@
 
-<meta http-equiv="refresh" content="5; URL=/importer?debug=1">
-<h2>Recent importer jobs <a class="ajax-link ui-btn ui-btn-inline" href="/importer/triggerUpdate"><button>Trigger Slimpd-Update</button></a></h2>
 
+{# TODO: refresh importer stuff but only on importer-route #}
+<!--meta http-equiv="refresh" content="5; URL=/importer?debug=1"-->
 
+<div class="row">
+	<div class="col-md-10">
+		<h2>Recent importer jobs</h2>
+	</div>
+	<div class="col-md-2">
+		<button role="control" data-href="/importer/triggerUpdate" title="update slimpd-db based on already updated mpd-db" class="btn btn-default ajax-btn">
+			<i class="fa fa-refresh"></i> Trigger Slimpd-Update
+		</button>
+	</div>
+</div>
 <style type="text/css">
 
 .importer-stats td,
