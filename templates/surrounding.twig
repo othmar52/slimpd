@@ -32,16 +32,6 @@
 		<div class="container">
 			
 			{% include 'modules/header-menu.twig' %}
-			
-			<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 10px; z-index: 2000;">		
-				<a type="button" href="#" class="btn active-{{ playerMode }}"
-				data-label-local="<i class='fa fa-map-marker fa-lg'></i> Local"
-				data-label-mpd="<i class='fa fa-cloud fa-lg'></i> MPD" >
-				  <i class='fa fa-map-marker fa-lg'></i> {{ (playerMode == 'local') ? 'Local' : 'MPD' }}
-				</a>
-			</div>
-		
-
 			<div class="row">
   				<div class="col-md-12" id="main">
 {% endif %}
@@ -178,7 +168,7 @@
   				</div>
 			</div>
 		</div>
-		
+		{% set playerMode = 'local' %}
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/localplayer.twig'%}
@@ -186,6 +176,14 @@
 		
 		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/mpdplayer.twig'%}
+		</div>
+		
+		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 10px; z-index: 2000;">
+			<a type="button" href="#" class="btn active-{{ playerMode }}"
+			data-label-local="<i class='fa fa-map-marker fa-lg'></i> Local"
+			data-label-mpd="<i class='fa fa-cloud fa-lg'></i> MPD" >
+			  <i class='fa fa-map-marker fa-lg'></i> {{ (playerMode == 'local') ? 'Local' : 'MPD' }}
+			</a>
 		</div>
 	    
 		
@@ -238,13 +236,15 @@
 		<script src="{{ config.absRefPrefix }}js/backbone-modules/abstract/AbstractView.js"></script>
 		<script src="{{ config.absRefPrefix }}js/backbone-modules/NavbarView.js"></script>
 		<script src="{{ config.absRefPrefix }}js/backbone-modules/PageView.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/abstract/AbstractPlayer.js"></script>
 		<script src="{{ config.absRefPrefix }}js/backbone-modules/LocalPlayer.js"></script>
+		<script src="{{ config.absRefPrefix }}js/backbone-modules/MpdPlayer.js"></script>
 		<script src="{{ config.absRefPrefix }}js/backbone-modules/Router.js"></script>
 		
 		<script src="{{ config.absRefPrefix }}js/app.js"></script>
 		<script src="{{ config.absRefPrefix }}js/modal.js"></script>
-		<script src="{{ config.absRefPrefix }}js/mpdplayer.js"></script>
-		<script src="{{ config.absRefPrefix }}js/localplayer.js"></script>
+		<!--script src="{{ config.absRefPrefix }}js/mpdplayer.js"></script-->
+		<!--script src="{{ config.absRefPrefix }}js/localplayer.js"></script-->
 		<script src="{{ config.absRefPrefix }}js/tabbedautocomplete.js"></script>
 		
 		

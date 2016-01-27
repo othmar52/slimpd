@@ -94,6 +94,8 @@ function pollMpdData(){
 
 
 function drawTimeGrid(duration, target) {
+	return;
+	
 	
 	if(duration <= 0) {
 		return;
@@ -158,6 +160,7 @@ function drawTimeGrid(duration, target) {
 //  | Formatted time                                                         |
 //  +------------------------------------------------------------------------+
 function formatTime(seconds) {
+	return;
 	var seconds 	= Math.round(seconds);
 	var hour 		= Math.floor(seconds / 3600);
 	var minutes 	= Math.floor(seconds / 60) % 60;
@@ -173,7 +176,8 @@ function formatTime(seconds) {
 //  +------------------------------------------------------------------------+
 //  | Zero pad                                                               |
 //  +------------------------------------------------------------------------+
-function zeroPad(number, n) { 
+function zeroPad(number, n) {
+	return;
 	var zeroPad = '' + number;
 	
 	while(zeroPad.length < n)
@@ -183,7 +187,7 @@ function zeroPad(number, n) {
 }
 
 function drawFavicon(percent, state) {
-	
+	return;
 	var doghnutColor = '#278DBA';
 	var overlay;
 	var titleText;
