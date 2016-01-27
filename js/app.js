@@ -43,7 +43,7 @@ $(document).ready(function() {
     	el : '.permaplayer.player-local'
     });
     window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer({
-    	el : '.permaplayer player-mpd'
+    	el : '.permaplayer.player-mpd'
     });
     window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
     

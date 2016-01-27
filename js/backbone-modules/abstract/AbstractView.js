@@ -66,6 +66,7 @@
         
         remove : function() {
             $('a.ajax-link', this.$el).off('click', this.genericClickListener);
+            $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -88,6 +89,7 @@
         	}
 			try {
 		        var item = JSON.parse($el.attr('data-player'));
+		        console.log(item);
 		        window.sliMpd.currentPlayer.process(item);
 		    } catch(e) {
 		    	console.log(e + ' in data-player attribute');
