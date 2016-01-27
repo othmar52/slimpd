@@ -80,7 +80,7 @@
 			).jPlayer( "play");
 			this.nowPlayingItem = item.item;
 			this.redraw(item);
-    		this.reloadCss(item.hash);
+    		//this.reloadCss(item.hash);
 		},
 		redraw : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.redraw.call(this, item);
