@@ -7,7 +7,7 @@ $(document).ready(function() {
         
         /**
 		 * adds get-paramter to url, respecting existing and not-existing params
-		 *  TODO: currently not compatible with urlstring that contains hash
+		 * TODO: currently not compatible with urlstring that contains a #hash
 		 * @param {string} urlstring
 		 * @param {string} paramName
 		 * @param {string} paramValue
@@ -39,8 +39,12 @@ $(document).ready(function() {
     window.sliMpd.navbar.render();
     
    
-    window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer();
-    window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer();
+    window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer({
+    	el : '.permaplayer.player-local'
+    });
+    window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer({
+    	el : '.permaplayer player-mpd'
+    });
     window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
     
     
@@ -61,7 +65,7 @@ $(document).ready(function() {
 			$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
 			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
 			// pause local player when switching to mpd
-			setPlayPauseState('pause');
+			window.sliMpd.currentPlayer.setPlayPauseState('pause');
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
