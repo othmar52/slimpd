@@ -23,6 +23,7 @@
 		intervalInactive : 5000,
 
         initialize : function(options) {
+        	this.$content = $('.player-'+ this.mode, this.$el);
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
             this.poll();
         },
@@ -32,11 +33,28 @@
         },
         
         play : function(item) {
-        	console.log(this.mode + 'Player:play()');
-        	console.log(item);
 			$.get(item.mpdurl);
 			this.redraw();
     		//this.reloadCss(item.hash);
+    		window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
+        },
+        seek : function(item) {
+			$.get(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
+        },
+        prev : function(item) {
+        	$.get(item.mpdurl);
+        	this.refreshInterval();
+        	window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
+        },
+        next : function(item) {
+        	$.get(item.mpdurl);
+        	this.refreshInterval();
+        	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
+        },
+        
+        process : function(item) {
+        	window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
         },
         
         // IMPORTANT TODO: how to avoid growing memory consumption on those frequent poll-requests?
@@ -81,7 +99,7 @@
 		    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
 		    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
 		    	
-		    	// TODO: simulate seamless progressbar-growth and seamless secondscounter
+		    	// TODO: simulate/interpolate seamless progressbar-growth and seamless secondscounter
 		    	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
 		    	$('.mpd-status-progressbar').css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
 		    	
@@ -103,6 +121,16 @@
 		
         onRedrawComplete : function(item) {
         	//this.refreshInterval(); // TODO: why is this doubling our interval?
+        	var that = this;
+        	$('.mpd-ctrl-seekbar').on('click', function(e){
+        		console.log('clickedi click');
+				// TODO: how to respect parents padding (15px) on absolute positioned div with width 100% ?
+				var percent = Math.round((e.pageX - $(this).offset().left) / (($(this).width()+15)/100));
+				$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ percent+'% - 15px)');
+				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
+			});
+			$('a.ajax-link', this.$el).on('click', this.genericClickListener);
+            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         

@@ -72,22 +72,25 @@
 	        		this.play(item);
 	        		break;
 	        	case 'togglePause':
-	        		this.togglePause();
+	        		this.togglePause(item);
 	        		break;
 	        	case 'toggleRepeat':
-	        		this.toggleRepeat();
+	        		this.toggleRepeat(item);
 	        		break;
 	        	case 'toggleRandom':
-	        		this.toggleRandom();
+	        		this.toggleRandom(item);
 	        		break;
 	        	case 'toggleConsume':
-	        		this.toggleConsume();
+	        		this.toggleConsume(item);
 	        		break;
 	        	case 'next':
-	        		this.next();
+	        		this.next(item);
 	        		break;
 	        	case 'prev':
-	        		this.prev();
+	        		this.prev(item);
+	        		break;
+	        	case 'seek':
+	        		this.seek(item);
 	        		break;
 	        	default:
 	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
@@ -103,8 +106,9 @@
         toggleRandom : function() { return; },
         toggleConsume : function() { return; },
         setPlayPauseState : function() { return; },
-        next : function() { return; },
-        prev : function() { return; },
+        next : function(item) { return; },
+        prev : function(item) { return; },
+        seek : function(item) { return; },
                 
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here
