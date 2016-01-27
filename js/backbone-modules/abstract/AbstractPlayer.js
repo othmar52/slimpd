@@ -8,61 +8,106 @@
     $.extend(true, window.sliMpd, {
         modules : {}
     });
-    window.sliMpd.modules.AbstractPlayer = window.sliMpd.modules.PageView.extend({
+    window.sliMpd.modules.AbstractPlayer = window.sliMpd.modules.AbstractView.extend({
 
         name : null,
         rendered : false,
         mode : '',
-        percent : 0,	// used in drawFavicon()
-        state : 'pause',// used in drawFavicon()
+        
+        nowPlayingPercent : 0,	    // used in drawFavicon()
+        nowPlayingState : 'pause',  // used in drawFavicon()
+        nowPlayingDuration : 0,		// used in drawTimeGrid()
+        nowPlayingElapsed : 0,
+        nowPlayingItem : '',
+        previousPlayingItem : '',
+        
+        stateRepeat : 0,
+        stateRandom : 0,
+        stateConsume : 0,
+        
         doghnutColor : '#000000', // used in drawFavicon()
         
-        duration : 0,			// used in drawTimeGrid()
         selectorCanvas : '',	// used in drawTimeGrid()
 		selectorSeekbar : '',	// used in drawTimeGrid()
 		strokeColor : '',		// used in drawTimeGrid()
 		strokeColor2 : '',		// used in drawTimeGrid()
+		
+		
+		intervalActive : 2000, // ms
+		intervalInactive : 5000, // ms
 
         initialize : function(options) {
-            window.Backbone.View.prototype.initialize.call(this, options);
+            window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
         render : function() {
+        	console.log('AbstractPlayer::render()');
             if (this.rendered) {
+            	console.log('AbstractPlayer::render() return');
                 return;
             }
             
-            window.sliMpd.modules.PageView.call(this);
+            window.sliMpd.modules.AbstractView.prototype.render.call(this);
             
             this.rendered = true;
         },
+        // fetch markup with trackinfos
+        redraw : function(item) {
+        	$.ajax({
+    			url: '/markup/'+ this.mode+'player?item='+ item.item
+    		}).done(function(response){
+    			// place markup in DOM
+    			$('.player-'+ this.mode).html(response);
+    			this.onRedrawComplete(item);
+    		}.bind(this));
+        },
+        onRedrawComplete : function(item) { return; },
         
-        process : function(itemstring) {
+        process : function(item) {
+        	// TODO: move to abstractview
         	console.log(this.mode + 'Player:process()');
-        	if(typeof itemstring == 'undefined') {
-        		console.log('ERROR: missing player-item. exiting...');
-        		return;
-        	}
 
-			try {
-		        var item = JSON.parse(itemstring);
-		        switch(item.action) {
-		        	case 'play':
-		        		this.play(item);
-		        		break;
-		        	case 'togglePause':
-		        		this.togglePause();
-		        		break;
-		        	default:
-		        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
-        				return;
-		        }
-		    } catch(e) {
-		    	console.log(e + ' in data-player attribute');
-		    }
+	        switch(item.action) {
+	        	case 'play':
+	        		this.play(item);
+	        		break;
+	        	case 'togglePause':
+	        		this.togglePause();
+	        		break;
+	        	case 'toggleRepeat':
+	        		this.toggleRepeat();
+	        		break;
+	        	case 'toggleRandom':
+	        		this.toggleRandom();
+	        		break;
+	        	case 'toggleConsume':
+	        		this.toggleConsume();
+	        		break;
+	        	case 'next':
+	        		this.next();
+	        		break;
+	        	case 'prev':
+	        		this.prev();
+	        		break;
+	        	default:
+	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
+    				return;
+	        }
+
         },
         
+        // define those methods in inherited implementation of AbstractPlaer
+        play : function(item) { return; },
+        togglePause : function() { return; },
+        toggleRepeat : function() { return; },
+        toggleRandom : function() { return; },
+        toggleConsume : function() { return; },
+        setPlayPauseState : function() { return; },
+        next : function() { return; },
+        prev : function() { return; },
+                
 		reloadCss : function(hash) {
+			// TODO: comment whats happening here
 			$('#css-'+ this.mode +'player').attr('href', '/css/'+ this.mode +'player/'+ ((hash) ? hash : '0'));
 		},
 		drawFavicon : function() {
@@ -75,19 +120,19 @@
 				updateTitle: false,
 				shape: 'doughnut',
 				doughnutRadius: 7.5,
-				overlay: this.state,
+				overlay: this.nowPlayingState,
 				overlayColor: '#777',
 				borderColor: this.doghnutColor,
 				fillColor: this.doghnutColor,
 				titleRenderer: function(v, t){
 					return $('.player-'+ this.mode +' .now-playing-string').text();
 				}
-			}).setValue(this.percent);
+			}).setValue(this.nowPlayingPercent);
 		},
 		
 		drawTimeGrid : function() {
 	
-			if(this.duration <= 0) {
+			if(this.nowPlayingDuration <= 0) {
 				return;
 			}
 
@@ -105,27 +150,39 @@
 			//$.jPlayer.timeFormat.showHour = false;
 			
 			// longer than 30 minutes
-			if(this.duration > 1800) {
+			if(this.nowPlayingDuration > 1800) {
 				strokePerHour = 12;
 				changeColorAfter = 6;
 			}
 			
 			// longer than 1 hour
-			if(this.duration > 3600) {
+			if(this.nowPlayingDuration > 3600) {
 				strokePerHour = 6;
 				changeColorAfter = 6;
 				//$.jPlayer.timeFormat.showHour = true;
 			}
-			var pixelGap = width / this.duration * (3600/ strokePerHour); 
+			var pixelGap = width / this.nowPlayingDuration * (3600/ strokePerHour); 
 		
-			for (var i=0; i < this.duration/(3600/strokePerHour); i++) {
+			for (var i=0; i < this.nowPlayingDuration/(3600/strokePerHour); i++) {
 		    	ctx.fillStyle = ((i+1)%changeColorAfter == 0) ? this.strokeColor2 : this.strokeColor;
 		    	ctx.fillRect(pixelGap*(i+1),0,1,height);
 		    }
 		    
 		    ctx.globalCompositeOperation = 'destination-out';
 		    ctx.fill();
-		}	
+		},
+		
+		/* only for polled mpd player implementation - begin */
+		poller : null,
+		intervalActive : 0,
+		intervalInactive : 0,
+		poll : function() { return; },
+		refreshInterval : function () {
+			clearInterval(this.poller);
+			this.poll();
+		}
+		/* only for polled mpd player implementation - end */
+		
         
     });
     
