@@ -22,9 +22,9 @@
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br /><a href="/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}" class="is-playlink ajax-link" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}"}'>
 				<i class="fa fa-play fa-lg"></i>
-				</a>{{dir}}
+				</button>{{dir}}
 		{% else %}  
 			{{dir}} / 
 		{% endif %}
