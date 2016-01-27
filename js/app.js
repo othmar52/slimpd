@@ -38,16 +38,9 @@ $(document).ready(function() {
     });
     window.sliMpd.navbar.render();
     
-    
-    // TODO : use this:
-    /*
+   
     window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer();
     window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer();
-    window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
-    */
-   
-   
-    window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer();
     window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
     
     
@@ -56,6 +49,28 @@ $(document).ready(function() {
     window.Backbone.history.start({
     	pushState : true
     });
+    
+	
+	/* toggle between mpd-control and local player (jPlayer) */
+	$('.playerModeToggle a').on('click', function(e) {
+		e.preventDefault();
+		if($(this).hasClass('active-mpd') === true) {
+			$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
+			window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+		} else {
+			$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
+			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
+			// pause local player when switching to mpd
+			setPlayPauseState('pause');
+		}
+		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
+		$('.player-local,.player-mpd').toggle();
+		window.sliMpd.currentPlayer.drawFavicon();
+	});
+  
+	//$("#jquery_jplayer_1").jPlayer("play");
+    
+    
 });
 
 $(document).ready(function(){

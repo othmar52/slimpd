@@ -25,6 +25,7 @@
             }
             
             $('a.ajax-link', this.$el).on('click', this.genericClickListener);
+            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
             
             // TODO : use modal view!
 			$('.trigger-modal', this.$el).on('click', function (e) {
@@ -75,6 +76,12 @@
             window.sliMpd.router.navigate($el.attr('href'), {
                 trigger : true
             });
+        },
+        
+        playerCtrlClickListener : function(e) {
+            e.preventDefault();
+        	var $el = $(e.currentTarget);
+        	window.sliMpd.currentPlayer.process($el.attr('data-player'));
         }
         
     });
