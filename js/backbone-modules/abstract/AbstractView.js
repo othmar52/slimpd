@@ -81,8 +81,22 @@
         playerCtrlClickListener : function(e) {
             e.preventDefault();
         	var $el = $(e.currentTarget);
-        	window.sliMpd.currentPlayer.process($el.attr('data-player'));
-        }
+        	
+        	if(typeof $el.attr('data-player') == 'undefined') {
+        		console.log('ERROR: missing player-item. exiting...');
+        		return;
+        	}
+			try {
+		        var item = JSON.parse($el.attr('data-player'));
+		        window.sliMpd.currentPlayer.process(item);
+		    } catch(e) {
+		    	console.log(e + ' in data-player attribute');
+		    }
+       },
+        
+        process : function(e) {
+           // 
+        },
         
     });
     
