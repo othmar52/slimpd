@@ -59,6 +59,7 @@
     			// place markup in DOM
     			$('.player-'+ this.mode).html(response);
     			this.onRedrawComplete(item);
+    			this.reloadCss(item.hash);
     		}.bind(this));
         },
         onRedrawComplete : function(item) { return; },
@@ -92,6 +93,15 @@
 	        	case 'seek':
 	        		this.seek(item);
 	        		break;
+	        	case 'remove':
+	        		this.remove(item);
+	        		break;
+	        	case 'clearPlaylistNotCurrent':
+	        		this.clearPlaylistNotCurrent(item);
+	        		break;
+	        	case 'addDirToPlaylist':
+	        		this.addDirToPlaylist(item);
+	        		break;
 	        	default:
 	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
     				return;
@@ -99,7 +109,7 @@
 
         },
         
-        // define those methods in inherited implementation of AbstractPlaer
+        // define those methods in inherited implementation of AbstractPlayer
         play : function(item) { return; },
         togglePause : function() { return; },
         toggleRepeat : function() { return; },
@@ -109,6 +119,9 @@
         next : function(item) { return; },
         prev : function(item) { return; },
         seek : function(item) { return; },
+        remove : function(item) { return; },
+        clearPlaylistNotCurrent : function(item) { return; },
+        addDirToPlaylist : function(item) { return; },
                 
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here

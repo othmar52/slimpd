@@ -52,7 +52,21 @@
         	this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
         },
-        
+        remove : function(item) {
+        	$.get(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
+        },
+        clearPlaylistNotCurrent : function(item) {
+        	$.get(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        },
+        addDirToPlaylist : function(item) {
+        	$.get(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        },
         process : function(item) {
         	window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
         },
@@ -61,7 +75,7 @@
 		poll : function (){
 			var that = this;
 		    $.get('/mpdstatus', function(data) {
-		    	var data = JSON.parse(data);
+		    	data = JSON.parse(data);
 		    	
 		    	that.nowPlayingPercent = data.percent;
         		that.nowPlayingState = data.state;
