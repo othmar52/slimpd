@@ -78,19 +78,19 @@
 	  			<h3>Abspielen</h3>
 	  		</div>
 	  		<div class="col-md-12">
-		  		<button role="control" data-href="/mpdctrl/addSelect/{{ item.id }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}"}'>
+		  		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/addSelect/{{ item.id }}"}'>
 					<i class="fa fa-play"></i> Sofort abspielen
 				</button>
 			</div>
 			
 			<div class="col-md-12">
-		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default" data-localplayer='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		  		<button role="control" {{'niymarkup'|ll|raw}} class="btn btn-default" data-player='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}", "mpdurl":"#"}'>
 					<i class="fa fa-play"></i> Als nächstes abspielen
 				</button>
 			</div>
 			
 			<div class="col-md-12">
-		  		<button role="control" data-href="#" {{'niymarkup'|ll|raw}} class="btn btn-default" data-localplayer='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}"}'>
+		  		<button role="control" {{'niymarkup'|ll|raw}} class="btn btn-default" data-player='{"action":"playnext","item":{{ item.id }},"ext":"{{item.audioDataformat }}", "mpdurl":"#"}'>
 					<i class="fa fa-plus"></i> Zur Playlist hinzufügen
 				</button>
 			</div>
@@ -135,9 +135,8 @@
 	  				</div>
 	  				{% endfor%}
 	  			</div>
-	  			{# TODO: what is best practice to trigger target modal-content from modal-content #}
 	  			<div class="row">
-	  				<button role="control" data-ajaxtarget=".modal-content" href="/markup/widget-xwax" title="xwax controls" class="ajax-link btn btn-trnsp trigger-modal">
+	  				<button role="control" data-href="/markup/widget-xwax" title="xwax controls" class="btn btn-trnsp trigger-modal">
 						<i class="fa fa-plus"></i> xwax controls
 					</button>
 	  			</div>

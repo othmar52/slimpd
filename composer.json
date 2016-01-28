@@ -17,7 +17,9 @@
         "nicolasbize/faviconx": "^1.0",
         "webfontkit/open-sans": "^1.0",
         "happyworm/jplayer": "^2.9",
-        "components/jquery-cookie": "1.4.1.2"
+        "components/jquery-cookie": "1.4.1.2",
+        "components/backbone": "^1.2",
+        "components/greensock-js": "dev-master"
     },
     "repositories": [
         {
