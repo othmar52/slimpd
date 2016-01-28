@@ -142,8 +142,8 @@
 				$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ percent+'% - 15px)');
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 			});
-			$('a.ajax-link', this.$el).on('click', this.genericClickListener);
-            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
+			//$('a.ajax-link', this.$el).on('click', this.genericClickListener);
+            //$('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
