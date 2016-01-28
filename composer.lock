@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5c809ca1de0ef0ee51eb6506683257b9",
-    "content-hash": "9e6e73ee7da7139481eb12273144c2c1",
+    "hash": "1d13d7c95b744d04f0d911ef7a382680",
+    "content-hash": "fbea1bde6d12e2055dfc7561a1f76a43",
     "packages": [
         {
             "name": "components/backbone",
@@ -97,6 +97,50 @@
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
             "time": "2015-11-24 10:33:56"
+        },
+        {
+            "name": "components/greensock-js",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/janoist1/GreenSock-JS.git",
+                "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/janoist1/GreenSock-JS/zipball/80dead45b22e333e9c43c3020349afc4a3c7c145",
+                "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145",
+                "shasum": ""
+            },
+            "require": {
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "component": {
+                    "scripts": [
+                        "src/minified/*.js",
+                        "src/minified/easing/*.js",
+                        "src/minified/plugins/*.js",
+                        "src/minified/utils/*.js"
+                    ],
+                    "files": []
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "NO CHARGE"
+            ],
+            "description": "GSAP: Professional-Grade HTML5 Animation",
+            "homepage": "http://www.greensock.com/gsap-js/",
+            "keywords": [
+                "HTML5",
+                "JS",
+                "animation",
+                "component",
+                "gsap"
+            ],
+            "time": "2014-03-25 17:29:32"
         },
         {
             "name": "components/jquery",
@@ -1193,7 +1237,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
+                "url": "https://api.github.com/repos/symfony/process/zipball/53579cad429e52e1babd8341b83928ecf8ca3441",
                 "reference": "6f1979c3b0f4c22c77a8a8971afaa7dd07f082ac",
                 "shasum": ""
             },
@@ -1242,7 +1286,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6ff1573f84c5f84ff9ed79fa6d853180e50f933f",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/eb8cb2158a38de31e6f3ab8a669cb80c3fa93df4",
                 "reference": "6ff1573f84c5f84ff9ed79fa6d853180e50f933f",
                 "shasum": ""
             },
@@ -1293,7 +1337,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/317f22132de01c10152430c458c4388a6ffa4e5d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e0fbf85380a6dc80b2077b2e90c89b0b4dc9f553",
                 "reference": "57cc04b0f61504b9fad6b04946d2d44351019353",
                 "shasum": ""
             },
@@ -1373,7 +1417,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ricbra/php-discogs-api": 20,
-        "lusitanian/oauth": 20
+        "lusitanian/oauth": 20,
+        "components/greensock-js": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
