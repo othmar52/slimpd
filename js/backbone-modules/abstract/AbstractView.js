@@ -116,10 +116,7 @@
 	        $.ajax({
 				url: $el.attr('data-href')
 			}).done(function(response){
-				window.sliMpd.modal.rendered = false;
-				$('#global-modal .modal-content').html(response);
-				window.sliMpd.modal.render();
-				$('#global-modal').modal('show');
+				window.sliMpd.modal.renderModalContent(response);
 			});
        	},
         

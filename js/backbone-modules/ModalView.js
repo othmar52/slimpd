@@ -12,8 +12,12 @@
     window.sliMpd.modules.ModalView = window.sliMpd.modules.AbstractView.extend({
 
         rendered : false,
+        
+        modal : null,
 
         initialize : function(options) {
+        	console.log(options);
+        	this.modal = $('#global-modal');
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
@@ -21,6 +25,13 @@
             
             window.sliMpd.modules.AbstractView.prototype.render.call(this);
             this.rendered = true;
+        },
+        
+        renderModalContent : function(markup) {
+        	$('.modal-content', this.modal).html(markup);
+			this.rendered = false;
+			this.render();
+			this.modal.modal('show');
         }
         
     });
