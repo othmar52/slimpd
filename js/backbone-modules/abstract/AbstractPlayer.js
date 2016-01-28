@@ -206,8 +206,16 @@
 		refreshInterval : function () {
 			clearInterval(this.poller);
 			this.poll();
-		}
+		},
 		/* only for polled mpd player implementation - end */
+		
+		
+		/* only for mpd player progressbar implementation/interpolation - begin */
+		trackAnimation : null,
+		timeLineLight : null,
+		timelineSetValue : function(value) { return; },
+		updateSlider : function() { return; }
+		/* only for polled mpd player implementation/interpolation  - end */
 		
         
     });
