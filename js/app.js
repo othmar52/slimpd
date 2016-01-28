@@ -70,73 +70,9 @@ $(document).ready(function() {
 			window.sliMpd.currentPlayer.process({'action':'pause'});
 			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
 			window.sliMpd.currentPlayer.refreshInterval();
-			
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
 		//window.sliMpd.currentPlayer.drawFavicon();
-	});
-  
-	//$("#jquery_jplayer_1").jPlayer("play");
-    
-    
-});
-
-$(document).ready(function(){
-	return;
-	
-	$('body').on('click', '.ajax-btn, .ajax-link', function(){
-		var ajaxTarget = $(this).attr('data-ajaxtarget');
-		if(ajaxTarget) {
-			// TODO: create proper currently loading visualizing
-			$('<div class="modal-backdrop fade in" id="loading-backdrop"></div>').appendTo(document.body);
-			$.ajax({
-				url: setGetParameter($(this).attr('href'), 'nosurrounding', '1')
-			}).done(function(response){
-				$(ajaxTarget).html(response);
-				$("#loading-backdrop").remove();
-				return;
-			});
-		}
-		var localObj = $(this).attr('data-localplayer');
-		if(typeof localObj == 'undefined' || playerMode !== 'local') {
-			$.ajax({
-				url: $(this).attr('data-href')
-			}).done(function(response){
-				// TODO: notify or replace content
-				refreshInterval();
-			});
-		} else {
-			try{
-		        var a = JSON.parse(localObj);
-		        localPlayer(a);
-		    }catch(e){
-		    	console.log(e + ' in data-localplayer attribute');
-		    }
-		}
-		return false;
-	});
-	
-	/* toggle between mpd-control and local player (jPlayer) */
-	  $('.playerModeToggle a').on('click', function(e) {
-	  	e.preventDefault();
-	  	if($(this).hasClass('active-mpd') === true) {
-	  		$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
-	  		playerMode = "local";
-	  	} else {
-	  		$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
-	  		playerMode = "mpd";
-	  		// pause local player when switching to mpd
-	  		setPlayPauseState('pause');
-	  	}
-	  	$.cookie("playerMode", playerMode, { expires : 365, path: '/' });
-	  	$('.player-local,.player-mpd').toggle();
-	  	drawFavicon(false, false);
-	  });
-	  
-	  $('#global-modal').on('click', '.playerModeToggleTrigger', function(e) {
-	  	e.preventDefault();
-	  	$('.playerModeToggle a').trigger('click');
-	  });
-	  
+	});    
 });
