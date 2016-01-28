@@ -40,6 +40,16 @@
 		    });
 		    // TODO : use modal view!
 		    
+		    
+		    /* display selected value in dropdown instead of dropdown-label */
+			var that = this;
+		    $('.dropdown-label', that.$el).each(function(index, item){
+		    	$(item).find('.btn:first-child').html(
+		    		$('*[data-sortkey="'+ $(item, that.$el).attr('data-activesorting')+'"]', that.$el).html()
+		    	);
+		    });
+		    
+		    
 		    $('.dropdown-toggle', this.$el).dropdown();
 		    $('.toggle-tooltip', this.$el).tooltip();
   			$('[data-toggle="popover"]', this.$el).popover();
@@ -56,10 +66,7 @@
 		        forceHelperSize: true
 		    });
 		    
-		    /* display selected value in dropdown instead of dropdown-label */
-		    $('.dropdown', this.$el).each(function(index, item){
-		    	$(item).find('.btn:first-child').html($('*[data-sortkey="'+ $(item).attr('data-activesorting')+'"]').html());
-		    });
+		    
             
             window.Backbone.View.prototype.render.call(this);
             this.rendered = true;
