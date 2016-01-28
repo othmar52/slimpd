@@ -39,9 +39,14 @@
 		            //localPlayer({'action': 'soundEnded'});
 		        },
 		        progress: function(e,data){
-		        	
-		        	that.nowPlayingPercent = $(this).data('jPlayer').status.currentPercentAbsolute;
-		        	that.duration = $(this).data('jPlayer').status.duration;
+		        	//console.log($(this).data('jPlayer').status);
+		        	var jStatus = $(this).data('jPlayer').status;
+		        	that.nowPlayingPercent = jStatus.currentPercentAbsolute;
+        			that.nowPlayingState = (jStatus.paused===false && jStatus.currentTime > 0) ? 'play' : 'pause';
+       				that.nowPlayingDuration = jStatus.duration;
+					that.nowPlayingElapsed = jStatus.currentTime;
+					//that.nowPlayingItem = jStatus.src;
+
 		        	
 		        	// TODO: make sure we have an interval ~ 3sec for drawFavicon()
 				  	//window.sliMpd.localPlayer.drawFavicon();
@@ -62,8 +67,8 @@
         },
         
         play : function(item) {
-        	console.log(this.mode + 'Player:play()');
-        	console.log(item);
+        	//console.log(this.mode + 'Player:play()');
+        	//console.log(item);
 			// TODO: check why item.ext is sometimes 'vorbis' instead of 'ogg' 			
 			item.ext = (item.ext == 'vorbis') ? 'ogg' : item.ext;
 			
@@ -89,29 +94,43 @@
 		onRedrawComplete : function(item) {
 			// re-bind controls on ajax loaded control-markup
     		$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
+    		
+    		
+    		$('a.ajax-link', this.$el).on('click', this.genericClickListener);
+            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
+            
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
        
-		setPlayPauseState : function() {
+		setPlayPauseState : function(item) {
 			var player = $(this.playerSelector);
 			var control = $('.localplayer-play-pause');
 			if(this.nowPlayingState == 'play') {
-				$(player).jPlayer( "play");
 				$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl fa-lg"></i>');
 			} else {
-				$(player).jPlayer( "pause");
 				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
 			}
 			this.drawFavicon();
+			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseState.call(this, item);
 		},
 		
-		togglePause : function() {
-			var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
-			if(localPlayerStatus.paused === false) {
-				setPlayPauseState('pause');
+		pause : function(item) {
+			$(this.playerSelector).jPlayer( 'pause');
+			this.nowPlayingState = 'pause';
+			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
+			this.setPlayPauseState(item);
+		},
+		
+		togglePause : function(item) {
+			if(this.nowPlayingState == 'play') {
+				$(this.playerSelector).jPlayer( 'pause');
+				this.nowPlayingState = 'pause';
 			} else {
-				setPlayPauseState('play');
+				$(this.playerSelector).jPlayer( 'play');
+				this.nowPlayingState = 'play';
 			}
+			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
+			this.setPlayPauseState(item);
 		},
 		
 		soundEnded : function() {

@@ -38,6 +38,17 @@
     		//this.reloadCss(item.hash);
     		window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
         },
+        togglePause : function(item) {
+			if(this.nowPlayingState == 'play') {
+				$.get('/mpdctrl/pause');
+				this.nowPlayingState = 'pause';
+			} else {
+				$.get('/mpdctrl/play');
+				this.nowPlayingState = 'play';
+			}
+			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
+			this.setPlayPauseState(item);
+		},
         seek : function(item) {
 			$.get(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
@@ -87,40 +98,28 @@
 		    	that.stateRandom = data.random;
 		    	that.stateConsume = data.consume;
 		    	
-
-		    	['repeat', 'random', 'consume'].forEach(function(prop) {
-				    if(data[prop] == '1') {
-		    		$('.mpd-status-'+prop).addClass('active');
-			    	} else {
-			    		$('.mpd-status-'+prop).removeClass('active');
-			    	}
-				});
-				
-				
-				// TODO: find out why this snippet does not work
-				//if(data.state !== 'play' && $('.mpd-status-playpause').hasClass('fa-pause')) {
-				//	$('.mpd-status-playpause').toggleClass('fa-pause fa-play');
-				//}
-				
-				if(this.nowPlayingState == 'play') {
-					$('.mpd-status-playpause').addClass('fa-pause');
-					$('.mpd-status-playpause').removeClass('fa-play');
-				} else {
-					$('.mpd-status-playpause').removeClass('fa-pause');
-					$('.mpd-status-playpause').addClass('fa-play');
-				}
-				
-		    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
-		    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
 		    	
-		    	// TODO: simulate/interpolate seamless progressbar-growth and seamless secondscounter
-		    	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
-		    	$('.mpd-status-progressbar').css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
-		    	
-		    	
-		    	that.drawFavicon();
-		
-		
+		    	// no need to update this stuff in case local player is active...
+		    	if(window.sliMpd.currentPlayer.mode === 'mpd') {
+	
+			    	['repeat', 'random', 'consume'].forEach(function(prop) {
+					    if(data[prop] == '1') {
+			    		$('.mpd-status-'+prop, that.$el).addClass('active');
+				    	} else {
+				    		$('.mpd-status-'+prop, that.$el).removeClass('active');
+				    	}
+					});
+					
+					that.setPlayPauseState();
+					
+			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
+			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
+			    	
+			    	// TODO: simulate/interpolate seamless progressbar-growth and seamless secondscounter
+			    	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
+			    	$('.mpd-status-progressbar').css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
+			    	
+		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
 		    	if(that.previousPlayingItem != that.nowPlayingItem) {
@@ -148,19 +147,25 @@
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
-        setPlayPauseState : function(what) {
-			var player = $("#jquery_jplayer_1");
-			var control = $('.localplayer-play-pause');
-			if(what == 'play') {
-				$(player).jPlayer( "play");
-				$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl fa-lg"></i>');
+        setPlayPauseState : function(item) {
+        	
+        	
+        	// TODO: find out why this snippet does not work
+			//if(data.state !== 'play' && $('.mpd-status-playpause').hasClass('fa-pause')) {
+			//	$('.mpd-status-playpause').toggleClass('fa-pause fa-play');
+			//}
+			
+			if(this.nowPlayingState == 'play') {
+				$('.mpd-status-playpause', this.$el).addClass('fa-pause');
+				$('.mpd-status-playpause', this.$el).removeClass('fa-play');
 			} else {
-				$(player).jPlayer( "pause");
-				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
+				$('.mpd-status-playpause', this.$el).removeClass('fa-pause');
+				$('.mpd-status-playpause', this.$el).addClass('fa-play');
 			}
-			//drawFavicon(false, false);
-			return false;
+			this.drawFavicon();
+			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseState.call(this, item);
 		},
+        
 		
 		formatTime : function(seconds) {
 			var seconds 	= Math.round(seconds);

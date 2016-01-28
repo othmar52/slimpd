@@ -41,9 +41,7 @@
         },
 
         render : function() {
-        	console.log('AbstractPlayer::render()');
             if (this.rendered) {
-            	console.log('AbstractPlayer::render() return');
                 return;
             }
             
@@ -65,12 +63,13 @@
         onRedrawComplete : function(item) { return; },
         
         process : function(item) {
-        	// TODO: move to abstractview
-        	console.log(this.mode + 'Player:process()');
-
+        	//console.log('AbstractPlayer::process()'); console.log(item);
 	        switch(item.action) {
 	        	case 'play':
 	        		this.play(item);
+	        		break;
+	        	case 'pause':
+	        		this.pause(item);
 	        		break;
 	        	case 'togglePause':
 	        		this.togglePause(item);
@@ -111,7 +110,8 @@
         
         // define those methods in inherited implementation of AbstractPlayer
         play : function(item) { return; },
-        togglePause : function() { return; },
+        pause : function(item) { return; },
+        togglePause : function(item) { return; },
         toggleRepeat : function() { return; },
         toggleRandom : function() { return; },
         toggleConsume : function() { return; },
