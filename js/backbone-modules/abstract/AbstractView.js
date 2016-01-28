@@ -27,18 +27,10 @@
             $('a.ajax-link', this.$el).off('click', this.genericClickListener).on('click', this.genericClickListener);
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener).on('click', this.playerCtrlClickListener);
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener).on('click', this.ajaxPartialClickListener);
+            $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener).on('click', this.triggerModalClickListener);
             
-            // TODO : use modal view!
-			$('.trigger-modal', this.$el).on('click', function (e) {
-		        e.preventDefault();
-		        $.ajax({
-					url: $(this).attr('data-href')
-				}).done(function(response){
-					$('#global-modal .modal-content').html(response);
-					$('#global-modal').modal('show');
-				});
-		    });
-		    // TODO : use modal view!
+            // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
+            $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener).on('click', this.playerModeToggleTriggerListener);
 		    
 		    
 		    /* display selected value in dropdown instead of dropdown-label */
@@ -99,10 +91,10 @@
 		        window.sliMpd.currentPlayer.process(item);
 		    } catch(e) {
 		    	console.log(e + ' in data-player attribute');
-		    }
-       },
+			}
+		},
        
-       ajaxPartialClickListener : function(e) {
+		ajaxPartialClickListener : function(e) {
        		e.preventDefault();
         	var $el = $(e.currentTarget);
         	if(typeof $el.attr('data-ajaxtarget') == 'undefined') {
@@ -117,8 +109,26 @@
 				that.rendered = false;
 				that.render();
 			});
-       },
+		},
+       	triggerModalClickListener : function(e) {
+       		e.preventDefault();
+       		var $el = $(e.currentTarget);
+	        $.ajax({
+				url: $el.attr('data-href')
+			}).done(function(response){
+				window.sliMpd.modal.rendered = false;
+				$('#global-modal .modal-content').html(response);
+				window.sliMpd.modal.render();
+				$('#global-modal').modal('show');
+			});
+       	},
         
+        // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
+        playerModeToggleTriggerListener : function(e) {
+       		e.preventDefault();
+       		$('.playerModeToggle a').trigger('click');
+       	},
+
         process : function(e) {
            // 
         },
