@@ -21,9 +21,22 @@
 		
 		intervalActive : 2000,
 		intervalInactive : 5000,
+		timeLineLight : null,
 
         initialize : function(options) {
         	this.$content = $('.player-'+ this.mode, this.$el);
+        	/*
+        	this.trackAnimation = { currentPosPerc: 0 };
+        	this.timeLineLight = new TimelineLite();
+        	
+			        	// animate from 0 to 100, onUpdate -> change Text
+			this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
+			  currentPosPerc: 100, 
+			  ease: Linear.easeNone,  
+			});
+			
+			this.timeLineLight.eventCallback("onUpdate", this.updateSlider);
+        	*/
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
             this.poll();
         },
@@ -117,8 +130,8 @@
 			    	
 			    	// TODO: simulate/interpolate seamless progressbar-growth and seamless secondscounter
 			    	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
-			    	$('.mpd-status-progressbar').css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
-			    	
+			    	$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
+			    	//that.timelineSetValue(that.nowPlayingPercent);			    	
 		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
@@ -136,9 +149,11 @@
         	//this.refreshInterval(); // TODO: why is this doubling our interval?
         	var that = this;
         	$('.mpd-ctrl-seekbar').on('click', function(e){
-        		console.log('clickedi click');
 				// TODO: how to respect parents padding (15px) on absolute positioned div with width 100% ?
 				var percent = Math.round((e.pageX - $(this).offset().left) / (($(this).width()+15)/100));
+				
+				//that.timelineSetValue(1 / $(".mpd-ctrl-seekbar").width() *  e.offsetX); 
+				
 				$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ percent+'% - 15px)');
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 			});
@@ -177,7 +192,22 @@
 				zeroPad = '0' + zeroPad; 
 			
 			return zeroPad;
+		}/*,
+		timelineSetValue : function(value) {
+			
+			var playing = this.timeLineLight.isActive() // is playing?
+			this.timeLineLight.pause();
+			this.timeLineLight.progress(value);
+			if (playing) // yes -> resume playing 
+				this.timeLineLight.play();  
+			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
+		},
+		
+		updateSlider : function() {
+			$('.mpd-status-progressbar').css('width', 'calc('+ this.timeLineLight.progress() *100 +'% - 15px)');
+			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		}
+		*/
         
     });
     
