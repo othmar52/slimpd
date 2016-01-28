@@ -82,14 +82,12 @@
         playerCtrlClickListener : function(e) {
             e.preventDefault();
         	var $el = $(e.currentTarget);
-        	
         	if(typeof $el.attr('data-player') == 'undefined') {
         		console.log('ERROR: missing player-item. exiting...');
         		return;
         	}
 			try {
 		        var item = JSON.parse($el.attr('data-player'));
-		        console.log(item);
 		        window.sliMpd.currentPlayer.process(item);
 		    } catch(e) {
 		    	console.log(e + ' in data-player attribute');
