@@ -5,6 +5,10 @@ var components = {
             "main": "backbone-built.js"
         },
         {
+            "name": "greensock-js",
+            "main": "greensock-js-built.js"
+        },
+        {
             "name": "jquery",
             "main": "jquery-built.js"
         },
