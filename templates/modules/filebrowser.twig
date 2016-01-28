@@ -19,7 +19,7 @@
 				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
 			</li>
 			<li>
-				<button role="control" data-href="/mpdctrl/addSelect/{{ directory~item.name|url_encode }}" title="add this directory to playlist" class="btn btn-default ajax-btn" data-localplayer='{"action":"add-dir-to-playlist-not-implemented-yet"}'>
+				<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ directory~item.name|url_encode }}"}'>
 					<i class="fa fa-plus"></i> Add directory to playlist
 				</button>
 			</li>
@@ -45,7 +45,7 @@
 	<a id="d{{ item.hash }}"/>
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-2">
-			<button role="control" data-href="/mpdctrl/addSelect/{{ directory~item.name~''|url_encode }}" title="add this directory to playlist" class="btn btn-default ajax-btn" data-localplayer='{"action":"add-dir-to-playlist-not-implemented-yet"}'>
+			<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ directory~item.name~''|url_encode }}"}'>
 				<i class="fa fa-plus"></i>
 			</button>
 			
@@ -76,7 +76,7 @@
 			      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
 			      for now playing files directly is only possible for already mpd-imported tracks ... 
 			      playing files local is no issue and shoud work like a charm #}
-				<button role="control" data-href="/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}" title="play" class="btn btn-default ajax-btn is-playbtn" data-localplayer='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}"}'>
+				<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}"}'>
 					<i class="fa fa-play fa-lg"></i>
 				</button>
 				<button role="control" data-href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}" title="more" class="btn btn-default trigger-modal">
