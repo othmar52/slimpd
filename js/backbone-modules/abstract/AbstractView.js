@@ -24,8 +24,9 @@
                 return;
             }
             
-            $('a.ajax-link', this.$el).on('click', this.genericClickListener);
-            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
+            $('a.ajax-link', this.$el).off('click', this.genericClickListener).on('click', this.genericClickListener);
+            $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener).on('click', this.playerCtrlClickListener);
+            $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener).on('click', this.ajaxPartialClickListener);
             
             // TODO : use modal view!
 			$('.trigger-modal', this.$el).on('click', function (e) {
@@ -92,6 +93,23 @@
 		    } catch(e) {
 		    	console.log(e + ' in data-player attribute');
 		    }
+       },
+       
+       ajaxPartialClickListener : function(e) {
+       		e.preventDefault();
+        	var $el = $(e.currentTarget);
+        	if(typeof $el.attr('data-ajaxtarget') == 'undefined') {
+        		console.log('ERROR: data-ajaxtarget. exiting...');
+        		return;
+        	}
+        	var that = this;
+        	$.ajax({
+				url: window.sliMpd.setGetParameter($el.attr('href'), 'nosurrounding', '1')
+			}).done(function(response) {
+				$($el.attr('data-ajaxtarget')).html(response);
+				that.rendered = false;
+				that.render();
+			});
        },
         
         process : function(e) {
