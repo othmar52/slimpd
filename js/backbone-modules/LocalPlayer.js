@@ -22,7 +22,7 @@
 
         initialize : function(options) {
         	var that = this;
-        	this.$content = $('.player-'+ this.mode, this.$el);
+        	//this.$content = $('.player-'+ this.mode, this.$el);
         	
 		    /* init local player */
 			$(this.playerSelector).jPlayer({
@@ -92,12 +92,12 @@
 		},
 		
 		onRedrawComplete : function(item) {
-			// re-bind controls on ajax loaded control-markup
+			// re-bind controls(seeek-bar) on ajax loaded control-markup
     		$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
     		
     		
-    		$('a.ajax-link', this.$el).on('click', this.genericClickListener);
-            $('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
+    		//$('a.ajax-link', this.$el).on('click', this.genericClickListener);
+            //$('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
             
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
