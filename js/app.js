@@ -38,7 +38,10 @@ $(document).ready(function() {
     });
     window.sliMpd.navbar.render();
     
-   
+	window.sliMpd.modal = new window.sliMpd.modules.ModalView({
+    	el : '#global-modal .modal-content'
+    });
+    
     window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer({
     	el : '.permaplayer.player-local'
     });
