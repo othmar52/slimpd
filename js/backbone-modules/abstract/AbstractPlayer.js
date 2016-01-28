@@ -115,7 +115,7 @@
         toggleRepeat : function() { return; },
         toggleRandom : function() { return; },
         toggleConsume : function() { return; },
-        setPlayPauseState : function() { return; },
+        setPlayPauseIcon : function() { return; },
         next : function(item) { return; },
         prev : function(item) { return; },
         seek : function(item) { return; },
