@@ -40,9 +40,14 @@
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
-        render : function() {
+        render : function(renderMarkup) {
             if (this.rendered) {
                 return;
+            }
+            
+            if (renderMarkup) {
+            	//this.el = (this.$el = $(this._template((this.model || {}).attributes)))[0];
+            	this.$el.html($(this._template((this.model || {}).attributes)));
             }
             
             window.sliMpd.modules.AbstractView.prototype.render.call(this);
@@ -55,7 +60,11 @@
     			url: '/markup/'+ this.mode+'player?item='+ item.item
     		}).done(function(response){
     			// place markup in DOM
-    			$('.player-'+ this.mode).html(response);
+    			this._template = _.template(response);
+    			this.rendered = false;
+    			this.render(true);
+    			
+    			//$('.player-'+ this.mode).html(response);
     			this.onRedrawComplete(item);
     			this.reloadCss(item.hash);
     		}.bind(this));
