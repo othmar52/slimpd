@@ -47,7 +47,7 @@
 				this.nowPlayingState = 'play';
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
-			this.setPlayPauseState(item);
+			this.setPlayPauseIcon(item);
 		},
         seek : function(item) {
 			$.get(item.mpdurl);
@@ -110,7 +110,7 @@
 				    	}
 					});
 					
-					that.setPlayPauseState();
+					that.setPlayPauseIcon();
 					
 			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
 			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
@@ -147,14 +147,8 @@
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
-        setPlayPauseState : function(item) {
-        	
-        	
-        	// TODO: find out why this snippet does not work
-			//if(data.state !== 'play' && $('.mpd-status-playpause').hasClass('fa-pause')) {
-			//	$('.mpd-status-playpause').toggleClass('fa-pause fa-play');
-			//}
-			
+        // TODO: make markup more generic and move this to AbstractPlayer
+        setPlayPauseIcon : function(item) {
 			if(this.nowPlayingState == 'play') {
 				$('.mpd-status-playpause', this.$el).addClass('fa-pause');
 				$('.mpd-status-playpause', this.$el).removeClass('fa-play');
@@ -163,7 +157,7 @@
 				$('.mpd-status-playpause', this.$el).addClass('fa-play');
 			}
 			this.drawFavicon();
-			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseState.call(this, item);
+			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
         
 		

@@ -101,9 +101,8 @@
             
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
-       
-		setPlayPauseState : function(item) {
-			var player = $(this.playerSelector);
+		// TODO: make markup more generic and move this to AbstractPlayer
+		setPlayPauseIcon : function(item) {
 			var control = $('.localplayer-play-pause');
 			if(this.nowPlayingState == 'play') {
 				$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl fa-lg"></i>');
@@ -111,14 +110,14 @@
 				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
 			}
 			this.drawFavicon();
-			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseState.call(this, item);
+			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 		
 		pause : function(item) {
 			$(this.playerSelector).jPlayer( 'pause');
 			this.nowPlayingState = 'pause';
-			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
-			this.setPlayPauseState(item);
+			window.sliMpd.modules.AbstractPlayer.prototype.pause.call(this, item);
+			this.setPlayPauseIcon(item);
 		},
 		
 		togglePause : function(item) {
@@ -130,7 +129,7 @@
 				this.nowPlayingState = 'play';
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
-			this.setPlayPauseState(item);
+			this.setPlayPauseIcon(item);
 		},
 		
 		soundEnded : function() {
