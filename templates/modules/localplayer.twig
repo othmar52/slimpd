@@ -97,5 +97,5 @@
 	</div>
 	</div>
 		    
-    
-    <div class="now-playing-string" style="display: none;">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
+	<div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
+   

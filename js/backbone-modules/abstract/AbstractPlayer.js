@@ -46,7 +46,6 @@
             }
             
             if (renderMarkup) {
-            	//this.el = (this.$el = $(this._template((this.model || {}).attributes)))[0];
             	this.$el.html($(this._template((this.model || {}).attributes)));
             }
             
@@ -63,8 +62,6 @@
     			this._template = _.template(response);
     			this.rendered = false;
     			this.render(true);
-    			
-    			//$('.player-'+ this.mode).html(response);
     			this.onRedrawComplete(item);
     			this.reloadCss(item.hash);
     		}.bind(this));
@@ -134,14 +131,11 @@
                 
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here
+			// FIXME: mpd-version is broken since backbonify
 			$('#css-'+ this.mode +'player').attr('href', '/css/'+ this.mode +'player/'+ ((hash) ? hash : '0'));
 		},
+		
 		drawFavicon : function() {
-			
-			// TODO: set percent in each playermode
-			//var localPlayerStatus = $('#jquery_jplayer_1').data('jPlayer').status;
-			//percent = localPlayerStatus.currentPercentAbsolute;
-			
 			FavIconX.config({
 				updateTitle: false,
 				shape: 'doughnut',
@@ -157,7 +151,6 @@
 		},
 		
 		drawTimeGrid : function() {
-	
 			if(this.nowPlayingDuration <= 0) {
 				return;
 			}
