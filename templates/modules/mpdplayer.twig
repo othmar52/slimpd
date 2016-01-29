@@ -47,17 +47,17 @@
 			
 			
 			<div class="col-sm-4 mpd-status-random">
-				<button role="control" data-href="/mpdctrl/toggleRandom" class="btn btn-trnsp ajax-btn" title="toggle random">
+				<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next", "mpdurl":"/mpdctrl/toggleRandom"}' title="toggle random">
 					<i class="fa fa-random sign-ctrl fa-fw"></i>
 				</button>
 			</div>
 			<div class="col-sm-4 mpd-status-repeat">
-				<button role="control" data-href="/mpdctrl/toggleRepeat" class="btn btn-trnsp ajax-btn" title="toggle repeat">
+				<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next", "mpdurl":"/mpdctrl/toggleRepeat"}' title="toggle repeat">
 					<i class="fa fa-repeat sign-ctrl fa-fw"></i>
 				</button>
 			</div>
 			<div class="col-sm-4 mpd-status-consume">
-				<button role="control" data-href="/mpdctrl/toggleConsume" class="btn btn-trnsp ajax-btn" title="toggle consume">
+				<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next", "mpdurl":"/mpdctrl/toggleConsume"}' title="toggle consume">
 					<span><i class="fa fa-fire sign-ctrl fa-fw"></i></span>
 				</button>
 			</div>
@@ -89,10 +89,13 @@
 		<div class="row">
 			<div class="col-sm-12 small">
 				{# TODO: remove external liking as soon we have implemented a proper functionality #}
-				<a class="ajax-link" href="{{ temp_likerurl }}" title="temp ixwax +1">+1</a> MPD
+				<a class="ajax-link" href="{{ temp_likerurl }}" title="temp ixwax +1">+1</a>
 				</div>
     	</div>
     </div>
     
     
     <div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
+    
+    {# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
+    <style type="text/css">.track-{{ item.relativePathHash}} {border-left: 1px solid rgb(255,156,1);}</style>
