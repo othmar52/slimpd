@@ -25,20 +25,12 @@
 
         initialize : function(options) {
         	this.$content = $('.player-'+ this.mode, this.$el);
-        	/*
+        	
         	this.trackAnimation = { currentPosPerc: 0 };
         	this.timeLineLight = new TimelineLite();
         	
-			        	// animate from 0 to 100, onUpdate -> change Text
-			this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
-			  currentPosPerc: 100, 
-			  ease: Linear.easeNone,  
-			});
-			
-			this.timeLineLight.eventCallback("onUpdate", this.updateSlider);
-        	*/
+        	this.poll();
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
-            this.poll();
         },
 
         render : function(options) {
@@ -140,13 +132,21 @@
 					
 					that.setPlayPauseIcon();
 					
+					// TODO: interpolate nowPlayingElapsed independent frpm poll interval
 			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
 			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
 			    	
-			    	// TODO: simulate/interpolate seamless progressbar-growth and seamless secondscounter
-			    	// TODO: how to respect parents padding on absolute positioned div with width 100% ?
-			    	$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ that.nowPlayingPercent+'% - 15px)');
-			    	//that.timelineSetValue(that.nowPlayingPercent);			    	
+			    	// animate from 0 to 100, onUpdate -> change Text
+					that.timeLineLight = new TimelineLite();
+					that.trackAnimation.currentPosPerc = 0;
+					that.timeLineLight.to(that.trackAnimation, that.nowPlayingDuration, {
+					  	currentPosPerc: 100, 
+					  	ease: Linear.easeNone,  
+					  	onUpdate: that.updateSlider,
+					  	onUpdateScope: that
+					});
+			    	
+			    	that.timelineSetValue(that.nowPlayingPercent);			    	
 		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
@@ -166,18 +166,14 @@
         	$('.mpd-ctrl-seekbar').on('click', function(e){
 				// TODO: how to respect parents padding (15px) on absolute positioned div with width 100% ?
 				var percent = Math.round((e.pageX - $(this).offset().left) / (($(this).width()+15)/100));
-				
-				//that.timelineSetValue(1 / $(".mpd-ctrl-seekbar").width() *  e.offsetX); 
-				
 				$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ percent+'% - 15px)');
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
+				that.timelineSetValue(percent);
 			});
-			//$('a.ajax-link', this.$el).on('click', this.genericClickListener);
-            //$('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
-        // TODO: make markup more generic and move this to AbstractPlayer
+        // TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
         setPlayPauseIcon : function(item) {
 			if(this.nowPlayingState == 'play') {
 				$('.mpd-status-playpause', this.$el).addClass('fa-pause');
@@ -207,23 +203,17 @@
 				zeroPad = '0' + zeroPad; 
 			
 			return zeroPad;
-		}/*,
+		},
 		timelineSetValue : function(value) {
-			
-			var playing = this.timeLineLight.isActive() // is playing?
-			this.timeLineLight.pause();
-			this.timeLineLight.progress(value);
-			if (playing) // yes -> resume playing 
-				this.timeLineLight.play();  
+			this.timeLineLight.progress(value/100);
 			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
 		},
 		
-		updateSlider : function() {
+		updateSlider : function(item) {
+			// TODO: how to respect parents padding on absolute positioned div with width 100% ?
 			$('.mpd-status-progressbar').css('width', 'calc('+ this.timeLineLight.progress() *100 +'% - 15px)');
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		}
-		*/
-        
     });
     
 })();
