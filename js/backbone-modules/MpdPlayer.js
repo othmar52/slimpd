@@ -81,6 +81,21 @@
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
         },
+        toggleRepeat : function(item) {
+        	$.get(item.mpdurl);
+        	//this.refreshInterval();
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
+        },
+        toggleRandom : function(item) {
+        	$.get(item.mpdurl);
+        	//this.refreshInterval();
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
+        },
+        toggleConsume : function(item) {
+        	$.get(item.mpdurl);
+        	//this.refreshInterval();
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
+        },
         clearPlaylistNotCurrent : function(item) {
         	$.get(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
