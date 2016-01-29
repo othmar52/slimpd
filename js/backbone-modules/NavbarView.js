@@ -40,6 +40,8 @@
 					trigger : true
 				});
 				
+				that.searchfield.autocomplete('close');
+				
 				// TODO : insert tabbedautocomplete js code
 				// TODO : on rendering of search-results, re-init click listener:
 				// $('.ui-autocomplete a.ajax-link').off('click', this.genericClickListener).on('click', this.genericClickListener);
@@ -63,6 +65,7 @@
 				sourceCategory: 'all',
 				minLength: 3,
 				focus: function( event, ui ) {
+					$(".ui-helper-hidden-accessible").hide();
 					if(typeof ui.item !== 'undefined') {
 						ui.item.value = that.stripTags(ui.item.value);
 					}
