@@ -12,12 +12,11 @@
     window.sliMpd.modules.ModalView = window.sliMpd.modules.AbstractView.extend({
 
         rendered : false,
-        
-        modal : null,
+        $modal : null,
 
         initialize : function(options) {
         	console.log(options);
-        	this.modal = $('#global-modal');
+        	this.$modal = $('#global-modal');
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
@@ -28,10 +27,11 @@
         },
         
         renderModalContent : function(markup) {
-        	$('.modal-content', this.modal).html(markup);
+        	$('.modal-content', this.$modal).html(markup);
+        	//this.el = (this.$el = this.$modal.find('.modal-content'))[0];
 			this.rendered = false;
 			this.render();
-			this.modal.modal('show');
+			this.$modal.modal('show');
         }
         
     });

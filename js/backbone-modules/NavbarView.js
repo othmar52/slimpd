@@ -72,7 +72,7 @@
 				},
 				select: function( event, ui ) {
 					// do not navigate away with visible modal
-					if(window.sliMpd.modal.modal.hasClass('in')) {
+					if(window.sliMpd.modal.$modal.hasClass('in')) {
 						return false;
 					}
 					//console.log(ui.item);
@@ -94,7 +94,7 @@
 		     			.html(' <i class="fa fa-plus-square"></i>')
 		     			.bind('click', function(e){
 		     				// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
-		     				window.sliMpd.modal.modal.addClass('in');
+		     				window.sliMpd.modal.$modal.addClass('in');
 		     				e.preventDefault();
 		     				// TODO: is it possible to use event listener which already exists on all .trigger-modal elements?
 					        $.ajax({
