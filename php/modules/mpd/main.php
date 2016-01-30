@@ -23,44 +23,44 @@ class mpd
 		return NULL;
 	}
 	
-	public function getCurrentPlaylist() {
-		
-		$files = $this->mpd('playlist');
-		if($files === FALSE) {
-			return array();
-		}
+	public function getCurrentPlaylist($pageNum = 'current') {
 		
 		#print_r($files); die();
 		// calculate the portion which should be rendered
 		$status = $this->mpd('status');
 		$listPos = isset($status['song']) ? $status['song'] : 0;
 		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-		$minIndex = 0;
-		$maxIndex = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 		
+		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 		
-		if($listLength > $maxIndex) {
-			if(($listLength - $maxIndex) < $listPos ) {
-				$minIndex = $listLength - $maxIndex;
-				$maxIndex = $listLength-1;
-			} else {
-				$minIndex = $listPos;
-				$maxIndex = $listPos + $maxIndex-1;
-			}
-		}
+		$totalPages = $this->getCurrentPlaylistTotalPages();
 		
+		$pageNum = ($pageNum === 'current')
+			? $this->getCurrentPlaylistCurrentPage()
+			: (int)$pageNum;
+		
+		$minIndex = (($pageNum-1) * $itemsPerPage);
+		$maxIndex = $minIndex +  $itemsPerPage -1;
 
 		if(1 == 2) {
 			echo "<pre>";
-			echo "min: " . $minIndex . "\n";
-			echo "max: " . $maxIndex . "\n";
-			echo "pos: " . $listPos . "\n";
-			echo "len: " . $listLength . "\n";
+			echo "minIndex:    " . $minIndex . "\n";
+			echo "maxIndex:    " . $maxIndex . "\n";
+			echo "listPos:     " . $listPos . "\n";
+			echo "listLength:  " . $listLength . "\n";
+			echo "totalPages:  " . $totalPages . "\n";
+			echo "pageNum:     " . $pageNum . "\n";
+			echo "itemsPerPage:" . $itemsPerPage . "\n";
 			die();
+		}
+		
+		$files = $this->mpd('playlist');
+		if($files === FALSE) {
+			return array();
 		}
 		$playlist = array();
 		foreach($files as $idx => $filepath) {
-			if($idx < $minIndex || $idx > $maxIndex) {
+			if($idx < $minIndex || $idx >= $maxIndex) {
 				continue;
 			}
 			$playlist[$idx] = \Slimpd\Track::getInstanceByPath($filepath);
@@ -68,6 +68,30 @@ class mpd
 		
 		
 		return $playlist;
+	}
+	
+	public function getCurrentPlaylistLength() {
+		$status = $this->mpd('status');
+		return (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
+	}
+	
+	public function getCurrentPlaylistTotalPages() {
+		$status = $this->mpd('status');
+		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+		$totalPages = floor($listLength/$itemsPerPage)+1;
+		return $totalPages;
+	}
+	
+	public function getCurrentPlaylistCurrentPage() {
+		$status = $this->mpd('status');
+		$listPos = isset($status['song']) ? $status['song'] : 0;
+		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+		$totalPages = $this->getCurrentPlaylistTotalPages();
+		
+		$currentPage = floor($listPos/$itemsPerPage)+1;
+		return $currentPage;
 	}
 	
 	public function cmd($cmd, $item = NULL) {

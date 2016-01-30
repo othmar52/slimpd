@@ -9,7 +9,7 @@ $config['mainmenu']= array(
   ),
   array(
     'title' => $app->ll->str('menu.playlist'),
-    'url' => $config['absRefPrefix'] . 'playlist'
+    'url' => $config['absRefPrefix'] . 'playlist/page/current'
   ),
   array(
     'title' => $app->ll->str('menu.playlists'),
@@ -208,7 +208,7 @@ $app->get('/mpdctrl(/:cmd(/:item))', function($cmd, $item='') use ($app, $config
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$mpd->cmd($cmd, $item);
 	if($cmd !== 'playerStatus') {
-		//$app->redirect('/playlist');
+		//$app->redirect('/playlist/page/current');
 	}
 });
 
@@ -220,7 +220,7 @@ $app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $config){
 
 
 
-$app->get('/playlist(/)', function() use ($app, $config){
+$app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 	$config['action'] = 'playlist';
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$config['nowplaying'] = $mpd->getCurrentlyPlayedTrack();
@@ -232,10 +232,20 @@ $app->get('/playlist(/)', function() use ($app, $config){
 		// TODO: how to handle mpd played tracks we cant find in database
 		$config['nowplaying_album'] = NULL;
 	}
-	$config['currentplaylist'] = $mpd->getCurrentPlaylist();
+	$config['currentplaylist'] = $mpd->getCurrentPlaylist($pagenum);
+	$config['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
+	
 	
 	// get all relational items we need for rendering
 	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
+	
+	
+	$config['paginator_params'] = new JasonGrimes\Paginator(
+		$config['currentplaylistlength'],
+		$app->config['mpd-playlist']['max-items'],
+		(($pagenum === 'current') ? $mpd->getCurrentPlaylistCurrentPage() : $pagenum),
+		'/playlist/page/(:num)'
+	);
 		
     $app->render('surrounding.twig', $config);
 });

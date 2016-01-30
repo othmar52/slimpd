@@ -1,8 +1,11 @@
 <div class="row">&nbsp;</div>
 <div class="row">
+	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+</div>
+<div class="row">
 	<div class="col-md-2">
 		<button role="control" title="clear playlist (but keep current track)" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"clearPlaylistNotCurrent","mpdurl":"/mpdctrl/clearPlaylistNotCurrent"}'>
-			<i class="fa fa-trash"></i> Clear Playlist <span class="uc" style="font-size:0.7em;">({{ currentplaylist|length }} tracks)</span>
+			<i class="fa fa-trash"></i> Clear Playlist <span class="uc" style="font-size:0.7em;">({{ currentplaylistlength }} tracks)</span>
 		</button>	
 	</div>
 	<div class="col-md-3"><span class="dark uc small">{{'title'|ll}} &amp; {{'album'|ll}}</span></div>
