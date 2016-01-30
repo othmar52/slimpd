@@ -15,7 +15,7 @@
         $modal : null,
 
         initialize : function(options) {
-        	console.log(options);
+        	//console.log(options);
         	this.$modal = $('#global-modal');
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
