@@ -59,6 +59,7 @@
 	            return;
             }
             
+            // TODO: add proper loading animation
             this.$body.addClass('is-loading');
 			$('<div class="modal-backdrop fade in" id="loading-backdrop"></div>').appendTo(this.$body);
 			this.ajaxLoading = true;
@@ -94,8 +95,24 @@
             });
             this.currentView.render();
             this.$content.html(this.currentView.$el);
+        },
+        // FIXME: how to refresh #main view without pushing anything to history?
+        refreshIfName : function(routename) {
+        	return;
+        	if(this.currentView.name !== routename) {
+        		console.log('Router::refreshIfName(' + routename + ') does not match ' + this.currentView.name);
+        		return;
+        	}
+        	console.log('Router::refreshIfName(' + routename + ') matches');
+        	
+        	console.log(sliMpd.router.$body.context.location.pathname);
+        	this.currentView.rendered = false;
+        	this.navigate($el.attr(sliMpd.router.$body.context.location.pathname), {
+                trigger : true
+            });
+        	//this.currentView.rendered = false;
+        	//this.currentView.render(true);
         }
-        
     });
     
 })();

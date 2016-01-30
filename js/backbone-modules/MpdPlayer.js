@@ -66,6 +66,8 @@
         next : function(item) {
         	$.get(item.mpdurl);
         	this.refreshInterval();
+        	// TODO: do we really need to append '?null' to routename comparison?
+        	window.sliMpd.router.refreshIfName('playlist?null');
         	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
         },
         remove : function(item) {
@@ -132,6 +134,8 @@
 					
 					that.setPlayPauseIcon();
 					
+					
+					
 					// TODO: interpolate nowPlayingElapsed independent frpm poll interval
 			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
 			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
@@ -146,7 +150,11 @@
 					  	onUpdateScope: that
 					});
 			    	
-			    	that.timelineSetValue(that.nowPlayingPercent);			    	
+			    	if(that.nowPlayingState == 'play') {
+			    		that.timelineSetValue(that.nowPlayingPercent);
+					} else {
+			    		that.timeLineLight.pause();
+			    	}			    	
 		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
