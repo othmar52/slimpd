@@ -14,9 +14,9 @@
         rendered : false,
         mode : '',
         
-        nowPlayingPercent : 0,	    // used in drawFavicon()
-        nowPlayingState : 'pause',  // used in drawFavicon()
-        nowPlayingDuration : 0,		// used in drawTimeGrid()
+        nowPlayingPercent : 0,
+        nowPlayingState : 'pause',
+        nowPlayingDuration : 0,
         nowPlayingElapsed : 0,
         nowPlayingItem : '',
         previousPlayingItem : '',
@@ -25,7 +25,8 @@
         stateRandom : 0,
         stateConsume : 0,
         
-        doghnutColor : '#000000', // used in drawFavicon()
+        faviconDoghnutColor : '#000000',
+        faviconBackgroundColor : 'transparent',
         
         selectorCanvas : '',	// used in drawTimeGrid()
 		selectorSeekbar : '',	// used in drawTimeGrid()
@@ -139,11 +140,13 @@
 			FavIconX.config({
 				updateTitle: false,
 				shape: 'doughnut',
-				doughnutRadius: 7.5,
+				doughnutRadius: 7,
 				overlay: this.nowPlayingState,
-				overlayColor: '#777',
-				borderColor: this.doghnutColor,
-				fillColor: this.doghnutColor,
+				overlayColor : this.faviconDoghnutColor,
+				borderColor: this.faviconDoghnutColor,
+				fillColor: this.faviconDoghnutColor,
+				borderWidth : 1.2,
+				backgroundColor : this.faviconBackgroundColor,
 				titleRenderer: function(v, t){
 					return $('.player-'+ this.mode +' .now-playing-string').text();
 				}
