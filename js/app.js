@@ -5,6 +5,8 @@ $(document).ready(function() {
     window.sliMpd = $.extend(true, window.sliMpd, {
         modules : {},
         
+        drawFaviconIntervals : [],
+        
         /**
 		 * adds get-paramter to url, respecting existing and not-existing params
 		 * TODO: currently not compatible with urlstring that contains a #hash
@@ -30,6 +32,23 @@ $(document).ready(function() {
 		        urlstring += "&" + paramName + "=" + paramValue;
 		    }
 		    return urlstring;
+		},
+		drawFavicon : function() {
+			// TODO: why we have doubled amount of intervals with active mpd-player?
+			// @see: http://stackoverflow.com/questions/27144619/javascript-multiple-intervals-and-clearinterval
+			// console.log('drawing favicon for ' + window.sliMpd.currentPlayer.mode);
+			
+			window.sliMpd.currentPlayer.drawFavicon();
+			var that = this;
+			window.sliMpd.drawFaviconIntervals.push(
+				setInterval(that.drawFavicon, 2000)
+			);
+		},
+		refreshFaviconInterval : function() {
+			for (var i=0; i < window.sliMpd.drawFaviconIntervals.length; i++) {
+		        clearInterval(window.sliMpd.drawFaviconIntervals[i]);
+		    }
+			window.sliMpd.drawFavicon();
 		}
     });
     
@@ -63,6 +82,8 @@ $(document).ready(function() {
     });
     
 	
+	window.sliMpd.refreshFaviconInterval();
+	
 	/* toggle between mpd-control and local player (jPlayer) */
 	$('.playerModeToggle a').on('click', function(e) {
 		e.preventDefault();
@@ -78,6 +99,6 @@ $(document).ready(function() {
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
-		//window.sliMpd.currentPlayer.drawFavicon();
+		window.sliMpd.refreshFaviconInterval();
 	});    
 });
