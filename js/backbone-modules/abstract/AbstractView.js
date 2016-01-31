@@ -25,6 +25,7 @@
             }
             
             $('a.ajax-link', this.$el).off('click', this.genericClickListener).on('click', this.genericClickListener);
+            $('.ajax-rqst', this.$el).off('click', this.ajaxRequestClickListener).on('click', this.ajaxRequestClickListener);
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener).on('click', this.playerCtrlClickListener);
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener).on('click', this.ajaxPartialClickListener);
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener).on('click', this.triggerModalClickListener);
@@ -110,6 +111,17 @@
 				that.render();
 			});
 		},
+		
+		ajaxRequestClickListener : function(e) {
+			e.preventDefault();
+        	var $el = $(e.currentTarget);
+        	$.ajax({
+				url: window.sliMpd.setGetParameter($el.attr('data-href'), 'nosurrounding', '1')
+			}).done(function(response) {
+				// TODO: notifications and callbacks
+			});
+		},
+		
        	triggerModalClickListener : function(e) {
        		e.preventDefault();
        		var $el = $(e.currentTarget);
