@@ -23,4 +23,3 @@ heavily inspired by http://ompd.pl
 [Screenshots of current development status](https://github.com/othmar52/slimpd/wiki)
 
 [requirements & installation instructions](https://github.com/othmar52/slimpd/wiki/Installation)
-
