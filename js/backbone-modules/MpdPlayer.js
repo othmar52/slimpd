@@ -12,7 +12,8 @@
     window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.AbstractPlayer.extend({
 
         mode : 'mpd',
-        doghnutColor : '#278DBA', // used in drawFavicon()
+        faviconDoghnutColor : 'rgb(255,156,1)',
+        faviconBackgroundColor : '#444',
         
         selectorCanvas : 'timegrid-mpd',		// used in drawTimeGrid()
 		selectorSeekbar : 'mpd-ctrl-seekbar', 	// used in drawTimeGrid()
