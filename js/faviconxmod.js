@@ -27,6 +27,7 @@ var FavIconX = (function() {
     var doughnutRadius;
     var overlay;
     var overlayColor;
+    var backgroundColor;
     var animated;
     var animationSpeed; // ms to go from one value to the one from setValue
     var borderColor;
@@ -43,6 +44,7 @@ var FavIconX = (function() {
         doughnutRadius = 6;
         overlay = false;
         overlayColor = '#000';
+        backgroundColor = 'transparent';
         animated = false;
         animationSpeed = 2000;
         animCallback = null;
@@ -99,6 +101,16 @@ var FavIconX = (function() {
             ctx.stroke();
         }
     }
+    
+    
+    // Generates the background square
+    function generateBackground(ctx, w, h){
+    	if(backgroundColor === 'transparent') {
+    		return;
+    	}
+    	context.fillStyle = backgroundColor;
+    	context.fillRect(0,0,100,100);
+    }
 
     // (255, 0, 0) => "#FF0000"
     function rgbToHex(r, g, b) {
@@ -140,8 +152,13 @@ var FavIconX = (function() {
         var centerY = canvas.height / 2;
         var radius = 7 - borderWidth / 2;
         var deg = graphValue * 3.6 - 90;
+        
+        
 
         canvas.width = canvas.width;
+        
+        generateBackground(context, canvas.width, canvas.height);
+        
         context.lineWidth = borderWidth;
         context.strokeStyle = borderColor2 ? getMidColor(borderColor, borderColor2) : borderColor;
         context.beginPath();
@@ -167,8 +184,13 @@ var FavIconX = (function() {
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         var deg = graphValue * 3.6 - 90;
+        
+        
 
         canvas.width = canvas.width;
+        
+        generateBackground(context, canvas.width, canvas.height);
+        
         if(graphValue > 0){
             context.lineWidth = borderWidth;
             context.strokeStyle = shadowColor;
@@ -199,6 +221,8 @@ var FavIconX = (function() {
         var width = 14;
         var height = 14;
         var deg = graphValue * 3.6 - 90;
+        
+        generateBackground(context, canvas.width, canvas.height);
 
         canvas.width = canvas.width;
         context.beginPath();
@@ -365,6 +389,7 @@ var FavIconX = (function() {
             doughnutRadius = cfg.doughnutRadius || doughnutRadius;
             overlay = cfg.overlay || overlay;
             overlayColor = cfg.overlayColor || overlayColor;
+            backgroundColor = cfg.backgroundColor || backgroundColor;
             isReset = false;
             animated = cfg.animated || animated;
             animationSpeed = cfg.animationSpeed || animationSpeed;
