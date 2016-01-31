@@ -108,6 +108,9 @@
 	        	case 'addDirToPlaylist':
 	        		this.addDirToPlaylist(item);
 	        		break;
+	        	case 'soundEnded':
+	        		this.soundEnded(item);
+	        		break;
 	        	default:
 	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
     				return;
@@ -129,6 +132,7 @@
         remove : function(item) { return; },
         clearPlaylistNotCurrent : function(item) { return; },
         addDirToPlaylist : function(item) { return; },
+        soundEnded : function(item) { return; },
                 
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here
