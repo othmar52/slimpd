@@ -57,6 +57,9 @@
 				  	that.drawTimeGrid();
 				  	//console.log($(this).data('jPlayer').status.currentPercentAbsolute);
 				  	
+				},
+				seeked: function() {
+					window.sliMpd.refreshFaviconInterval();
 				}
 			});
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
@@ -109,7 +112,7 @@
 			} else {
 				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
 			}
-			this.drawFavicon();
+			window.sliMpd.refreshFaviconInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 		
