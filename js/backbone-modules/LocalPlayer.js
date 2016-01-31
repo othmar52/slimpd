@@ -13,7 +13,8 @@
         mode : 'local',
         playerSelector : '#jquery_jplayer_1',
         
-        doghnutColor : 'rgb(45,146,56)',	// used in drawFavicon()
+        faviconDoghnutColor : 'rgb(66,241,50)',
+        faviconBackgroundColor : '#444',
         
         selectorCanvas : 'timegrid-local', 	// used in drawTimeGrid()
 		selectorSeekbar : 'jp-seek-bar', 	// used in drawTimeGrid()
