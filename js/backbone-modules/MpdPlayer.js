@@ -154,7 +154,7 @@
 			    		that.timelineSetValue(that.nowPlayingPercent);
 					} else {
 			    		that.timeLineLight.pause();
-			    	}			    	
+			    	}
 		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
@@ -190,7 +190,7 @@
 				$('.mpd-status-playpause', this.$el).removeClass('fa-pause');
 				$('.mpd-status-playpause', this.$el).addClass('fa-play');
 			}
-			this.drawFavicon();
+			window.sliMpd.refreshFaviconInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
         
