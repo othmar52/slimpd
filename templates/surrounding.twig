@@ -168,7 +168,6 @@
   				</div>
 			</div>
 		</div>
-		{% set playerMode = 'local' %}
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/localplayer.twig'%}
