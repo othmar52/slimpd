@@ -90,8 +90,11 @@
 			<div class="row">
 				<div class="col-sm-12 small">
 					{# TODO: remove external liking as soon we have implemented a proper functionality #}
-					<a class="ajax-link" href="{{ temp_likerurl }}" title="temp ixwax +1">+1</a>
-					</div>
+					<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+					<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default btn-sm trigger-modal">
+						<i class="fa fa-align-justify fa-sm"></i>
+					</button>
+				</div>
 	    	</div>
 	    </div>
 	</div>
