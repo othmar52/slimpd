@@ -33,7 +33,7 @@
 				</button>
 			</div>
 			<div class="col-sm-4">
-				<button role="control" class="btn btn-trnsp ajax-btn player-ctrl" data-player='{"action":"togglePause"}'>
+				<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"togglePause"}'>
 					<i class="fa fa-pause sign-ctrl mpd-status-playpause fa-lg"></i>
 				</button>
 			</div>
@@ -89,8 +89,11 @@
 		<div class="row">
 			<div class="col-sm-12 small">
 				{# TODO: remove external liking as soon we have implemented a proper functionality #}
-				<a class="ajax-link" href="{{ temp_likerurl }}" title="temp ixwax +1">+1</a>
-				</div>
+				<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+				<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default btn-sm trigger-modal">
+					<i class="fa fa-align-justify fa-sm"></i>
+				</button>
+			</div>
     	</div>
     </div>
     
