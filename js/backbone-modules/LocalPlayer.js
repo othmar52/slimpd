@@ -37,7 +37,7 @@
 		        remainingDuration: false,
 		        toggleDuration: true,
 		        ended: function() {
-		            //localPlayer({'action': 'soundEnded'});
+		            that.soundEnded();
 		        },
 		        progress: function(e,data){
 		        	//console.log($(this).data('jPlayer').status);
@@ -47,10 +47,6 @@
        				that.nowPlayingDuration = jStatus.duration;
 					that.nowPlayingElapsed = jStatus.currentTime;
 					//that.nowPlayingItem = jStatus.src;
-
-		        	
-		        	// TODO: make sure we have an interval ~ 3sec for drawFavicon()
-				  	//window.sliMpd.localPlayer.drawFavicon();
 				  	
 		        	// TODO: check why jPlayer event 'loadedmetadata' sometimes has no duration (timegrid fails to render)
 		        	// draw the timegrid only once as soon as we know the total duration and remove the progress eventListener
@@ -136,12 +132,12 @@
 			this.setPlayPauseIcon(item);
 		},
 		
-		soundEnded : function() {
+		soundEnded : function(item) {
 			// for now take any rendered track and play it
 			// TODO: add functionality "current playlist" (like mpd) for local player 
-			var playable = $( ".is-playbtn[data-localplayer]").length;
+			var playable = $( "#main .is-playbtn[data-player]").length;
 			if(playable) {
-				$(".is-playbtn[data-localplayer]").eq(Math.floor(Math.random()*playable)).click();
+				$(".is-playbtn[data-player]").eq(Math.floor(Math.random()*playable)).click();
 			}
 		}
         
