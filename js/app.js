@@ -48,7 +48,12 @@ $(document).ready(function() {
     window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer({
     	el : '.permaplayer.player-mpd'
     });
-    window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+    
+    if($.cookie("playerMode") === 'mpd') {
+    	window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
+    } else {
+    	window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+    }
     
     
     window.sliMpd.router = new window.sliMpd.modules.Router();

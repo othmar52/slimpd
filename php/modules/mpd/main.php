@@ -174,6 +174,12 @@ class mpd
 			case 'stop':
 			case 'previous':
 			case 'next':
+				
+			case 'playlistid':
+			case 'playlistinfo':
+				
+				
+				
 				$this->mpd($cmd);
 				break;
 			case 'toggleRepeat':
@@ -343,7 +349,7 @@ class mpd
 	//  +------------------------------------------------------------------------+
 	//  | Music Player Daemon                                                    |
 	//  +------------------------------------------------------------------------+
-	private function mpd($command) {
+	public function mpd($command) {
 		$app = \Slim\Slim::getInstance();
 		try {
 			$socket = fsockopen(
