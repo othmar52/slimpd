@@ -197,6 +197,9 @@
         
 		
 		formatTime : function(seconds) {
+			if(typeof seconds == 'undefined') {
+				return '-- : --';
+			}
 			var seconds 	= Math.round(seconds);
 			var hour 		= Math.floor(seconds / 3600);
 			var minutes 	= Math.floor(seconds / 60) % 60;
@@ -209,8 +212,7 @@
 		zeroPad : function(number, n) {
 			var zeroPad = '' + number;
 			while(zeroPad.length < n)
-				zeroPad = '0' + zeroPad; 
-			
+				zeroPad = '0' + zeroPad;
 			return zeroPad;
 		},
 		timelineSetValue : function(value) {
