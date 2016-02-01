@@ -287,7 +287,9 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $m
 		if($markupSnippet === 'mpdplayer') {
 			$mpd = new \Slimpd\modules\mpd\mpd();
 			$config['item'] = $mpd->getCurrentlyPlayedTrack();
-			$itemRelativePath = $config['item']->getRelativePath();
+			if($config['item'] !== NULL) {
+				$itemRelativePath = $config['item']->getRelativePath();
+				}
 		} else {
 			if(is_numeric($app->request->get('item')) === TRUE) {
 				$search = array('id' => (int)$app->request->get('item'));
