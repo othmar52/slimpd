@@ -250,6 +250,8 @@ class mpd
 					if($playlistLength > 1) {
 						$this->mpd('delete 1:' . $playlistLength);
 					}
+				} else {
+					$this->mpd('clear');
 				}
 				break;
 			
