@@ -13,23 +13,18 @@ $(document).ready(function() {
 		 * @param {string} urlstring
 		 * @param {string} paramName
 		 * @param {string} paramValue
-		 * 
 		 */
 		setGetParameter : function(urlstring, paramName, paramValue) {
-		    if (urlstring.indexOf(paramName + "=") >= 0)
-		    {
+		    if (urlstring.indexOf(paramName + "=") >= 0) {
 		        var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
 		        var suffix = urlstring.substring(urlstring.indexOf(paramName));
 		        suffix = suffix.substring(suffix.indexOf("=") + 1);
 		        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
 		        urlstring = prefix + paramName + "=" + paramValue + suffix;
-		    }
-		    else
-		    {
-		    if (urlstring.indexOf("?") < 0)
-		        urlstring += "?" + paramName + "=" + paramValue;
-		    else
-		        urlstring += "&" + paramName + "=" + paramValue;
+		    } else {
+			    urlstring += (urlstring.indexOf("?") < 0)
+			        ? "?" + paramName + "=" + paramValue
+			    	: "&" + paramName + "=" + paramValue;
 		    }
 		    return urlstring;
 		},
@@ -57,11 +52,9 @@ $(document).ready(function() {
     	el : '.permaplayer.player-mpd'
     });
     
-    if($.cookie("playerMode") === 'mpd') {
-    	window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
-    } else {
-    	window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
-    }
+    window.sliMpd.currentPlayer = ($.cookie("playerMode") === 'mpd')
+		? window.sliMpd.mpdPlayer
+    	: window.sliMpd.localPlayer;
     
     
     window.sliMpd.router = new window.sliMpd.modules.Router();
@@ -70,7 +63,6 @@ $(document).ready(function() {
     	pushState : true
     });
     
-	
 	window.sliMpd.drawFavicon();
 	
 	/* toggle between mpd-control and local player (jPlayer) */
