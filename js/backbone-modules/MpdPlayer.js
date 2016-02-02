@@ -44,6 +44,7 @@
     		//this.reloadCss(item.hash);
     		window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
         },
+        
         togglePause : function(item) {
 			if(this.nowPlayingState == 'play') {
 				$.get('/mpdctrl/pause');
@@ -54,16 +55,20 @@
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
 			this.setPlayPauseIcon(item);
+			window.sliMpd.drawFavicon();
 		},
+		
         seek : function(item) {
 			$.get(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
         },
+        
         prev : function(item) {
         	$.get(item.mpdurl);
         	this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
         },
+        
         next : function(item) {
         	$.get(item.mpdurl);
         	this.refreshInterval();
@@ -71,36 +76,43 @@
         	window.sliMpd.router.refreshIfName('playlist?null');
         	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
         },
+        
         remove : function(item) {
         	$.get(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
         },
+        
         toggleRepeat : function(item) {
         	$.get(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
         },
+        
         toggleRandom : function(item) {
         	$.get(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
         },
+        
         toggleConsume : function(item) {
         	$.get(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
+        
         clearPlaylistNotCurrent : function(item) {
         	$.get(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
         },
+        
         addDirToPlaylist : function(item) {
         	$.get(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
         },
+        
         process : function(item) {
         	window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
         },
@@ -121,21 +133,18 @@
 		    	that.stateRandom = data.random;
 		    	that.stateConsume = data.consume;
 		    	
-		    	
 		    	// no need to update this stuff in case local player is active...
 		    	if(window.sliMpd.currentPlayer.mode === 'mpd') {
 	
 			    	['repeat', 'random', 'consume'].forEach(function(prop) {
 					    if(data[prop] == '1') {
-			    		$('.mpd-status-'+prop, that.$el).addClass('active');
+			    			$('.mpd-status-'+prop, that.$el).addClass('active');
 				    	} else {
 				    		$('.mpd-status-'+prop, that.$el).removeClass('active');
 				    	}
 					});
 					
 					that.setPlayPauseIcon();
-					
-					
 					
 					// TODO: interpolate nowPlayingElapsed independent frpm poll interval
 			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
@@ -191,10 +200,8 @@
 				$('.mpd-status-playpause', this.$el).removeClass('fa-pause');
 				$('.mpd-status-playpause', this.$el).addClass('fa-play');
 			}
-			window.sliMpd.refreshFaviconInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
-        
 		
 		formatTime : function(seconds) {
 			if(typeof seconds == 'undefined') {
@@ -211,10 +218,12 @@
 		
 		zeroPad : function(number, n) {
 			var zeroPad = '' + number;
-			while(zeroPad.length < n)
+			while(zeroPad.length < n) {
 				zeroPad = '0' + zeroPad;
+			}
 			return zeroPad;
 		},
+		
 		timelineSetValue : function(value) {
 			this.timeLineLight.progress(value/100);
 			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
