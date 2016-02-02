@@ -15,10 +15,10 @@
         faviconDoghnutColor : 'rgb(255,156,1)',
         faviconBackgroundColor : '#444',
         
-        selectorCanvas : 'timegrid-mpd',		// used in drawTimeGrid()
-		selectorSeekbar : 'mpd-ctrl-seekbar', 	// used in drawTimeGrid()
-		strokeColor : '#7B6137', 				// used in drawTimeGrid()
-		strokeColor2 : '#FCC772',				// used in drawTimeGrid()
+        timeGridSelectorCanvas : 'timegrid-mpd',
+		timeGridSelectorSeekbar : '.mpd-ctrl-seekbar',
+		timeGridStrokeColor : '#7B6137',
+		timeGridStrokeColor2 : '#FCC772',
 		
 		intervalActive : 2000,
 		intervalInactive : 5000,

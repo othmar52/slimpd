@@ -16,10 +16,10 @@
         faviconDoghnutColor : 'rgb(66,241,50)',
         faviconBackgroundColor : '#444',
         
-        selectorCanvas : 'timegrid-local', 	// used in drawTimeGrid()
-		selectorSeekbar : 'jp-seek-bar', 	// used in drawTimeGrid()
-		strokeColor : '#157720', 			// used in drawTimeGrid()
-		strokeColor2 : '#2DFF45', 			// used in drawTimeGrid()
+        timeGridSelectorCanvas : 'timegrid-local',
+		timeGridSelectorSeekbar : '.jp-seek-bar',
+		timeGridStrokeColor : '#157720',
+		timeGridStrokeColor2 : '#2DFF45',
 
         initialize : function(options) {
         	var that = this;
@@ -52,8 +52,6 @@
 		        	// draw the timegrid only once as soon as we know the total duration and remove the progress eventListener
 		        	// @see: http://jplayer.org/latest/developer-guide/#jPlayer-events
 				  	that.drawTimeGrid();
-				  	//console.log($(this).data('jPlayer').status.currentPercentAbsolute);
-				  	
 				},
 				seeked: function() {
 					window.sliMpd.drawFavicon();
@@ -67,8 +65,6 @@
         },
         
         play : function(item) {
-        	//console.log(this.mode + 'Player:play()');
-        	//console.log(item);
 			// TODO: check why item.ext is sometimes 'vorbis' instead of 'ogg' 			
 			item.ext = (item.ext == 'vorbis') ? 'ogg' : item.ext;
 			
@@ -95,18 +91,13 @@
 		onRedrawComplete : function(item) {
 			// re-bind controls(seeek-bar) on ajax loaded control-markup
     		$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
-    		
-    		
-    		//$('a.ajax-link', this.$el).on('click', this.genericClickListener);
-            //$('.player-ctrl', this.$el).on('click', this.playerCtrlClickListener);
-            
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
 		
 		// TODO: make markup more generic and move this to AbstractPlayer
 		setPlayPauseIcon : function(item) {
 			var control = $('.localplayer-play-pause');
-			if(this.nowPlayingState == 'play') {
+			if (this.nowPlayingState == 'play') {
 				$(control).addClass('localplayer-pause').removeClass('localplayer-play').html('<i class="fa fa-pause sign-ctrl fa-lg"></i>');
 			} else {
 				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
@@ -116,18 +107,18 @@
 		},
 		
 		pause : function(item) {
-			$(this.playerSelector).jPlayer( 'pause');
+			$(this.playerSelector).jPlayer('pause');
 			this.nowPlayingState = 'pause';
 			window.sliMpd.modules.AbstractPlayer.prototype.pause.call(this, item);
 			this.setPlayPauseIcon(item);
 		},
 		
 		togglePause : function(item) {
-			if(this.nowPlayingState == 'play') {
-				$(this.playerSelector).jPlayer( 'pause');
+			if (this.nowPlayingState == 'play') {
+				$(this.playerSelector).jPlayer('pause');
 				this.nowPlayingState = 'pause';
 			} else {
-				$(this.playerSelector).jPlayer( 'play');
+				$(this.playerSelector).jPlayer('play');
 				this.nowPlayingState = 'play';
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
@@ -137,8 +128,8 @@
 		soundEnded : function(item) {
 			// for now take any rendered track and play it
 			// TODO: add functionality "current playlist" (like mpd) for local player 
-			var playable = $( "#main .is-playbtn[data-player]").length;
-			if(playable) {
+			var playable = $("#main .is-playbtn[data-player]").length;
+			if (playable) {
 				$(".is-playbtn[data-player]").eq(Math.floor(Math.random()*playable)).click();
 			}
 		}

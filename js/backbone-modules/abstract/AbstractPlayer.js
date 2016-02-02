@@ -28,14 +28,13 @@
         faviconDoghnutColor : '#000000',
         faviconBackgroundColor : 'transparent',
         
-        selectorCanvas : '',	// used in drawTimeGrid()
-		selectorSeekbar : '',	// used in drawTimeGrid()
-		strokeColor : '',		// used in drawTimeGrid()
-		strokeColor2 : '',		// used in drawTimeGrid()
+        timeGridSelectorCanvas : '',
+		timeGridSelectorSeekbar : '',
+		timeGridStrokeColor : '',
+		timeGridStrokeColor2 : '',
 		
-		
-		intervalActive : 2000, // ms
-		intervalInactive : 5000, // ms
+		intervalActive : 2000, // [ms]
+		intervalInactive : 5000, // [ms]
 
         initialize : function(options) {
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
@@ -54,6 +53,7 @@
             
             this.rendered = true;
         },
+        
         // fetch markup with trackinfos
         redraw : function(item) {
         	$.ajax({
@@ -162,11 +162,11 @@
 				return;
 			}
 
-			var cnv = document.getElementById(this.selectorCanvas);
-			var width = $('.' + this.selectorSeekbar).width();
+			var cnv = document.getElementById(this.timeGridSelectorCanvas);
+			var width = $(this.timeGridSelectorSeekbar).width();
 			var height = 10;
 			
-			$('.'+this.selectorCanvas).css('width', width + 'px');
+			$('.'+this.timeGridSelectorCanvas).css('width', width + 'px');
 			cnv.width = width;
 			cnv.height = height;
 			var ctx = cnv.getContext('2d');
@@ -190,7 +190,7 @@
 			var pixelGap = width / this.nowPlayingDuration * (3600/ strokePerHour); 
 		
 			for (var i=0; i < this.nowPlayingDuration/(3600/strokePerHour); i++) {
-		    	ctx.fillStyle = ((i+1)%changeColorAfter == 0) ? this.strokeColor2 : this.strokeColor;
+		    	ctx.fillStyle = ((i+1)%changeColorAfter == 0) ? this.timeGridStrokeColor2 : this.timeGridStrokeColor;
 		    	ctx.fillRect(pixelGap*(i+1),0,1,height);
 		    }
 		    
