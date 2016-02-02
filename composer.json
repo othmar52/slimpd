@@ -19,12 +19,25 @@
         "happyworm/jplayer": "^2.9",
         "components/jquery-cookie": "1.4.1.2",
         "components/backbone": "^1.2",
-        "components/greensock-js": "dev-master"
+        "components/greensock-js": "dev-master",
+        "hendrismit/bootstrap-lightbox": "master"
     },
     "repositories": [
         {
             "type": "vcs",
             "url": "https://github.com/nicolasbize/faviconx.git"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "hendrismit/bootstrap-lightbox",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
         }
     ],
     "config" : {
