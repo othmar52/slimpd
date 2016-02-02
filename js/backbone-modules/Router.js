@@ -30,19 +30,44 @@
         },
         
         navigate : function(fragment, options) {
+        	
+        	
         	if (this.ajaxLoading) {
         		return;
         	}
+        	
+        	/*
+        	 * work against backbone's default behaviour - begin
+        	 *
+        	 * force rendering of view - even if we request the same (current) route again
+        	 * without pushing this to history 
+        	 */
+        	var pathStripper = /#.*$/;
+        	
+			// Normalize the fragment.
+			fragment = Backbone.history.getFragment(fragment || '');
+			
+			// Don't include a trailing slash on the root.
+			var rootPath = Backbone.history.root;
+			if (fragment === '' || fragment.charAt(0) === '?') {
+				rootPath = rootPath.slice(0, -1) || '/';
+			}
+			var url = rootPath + fragment;
+			
+			// Strip the hash and decode for matching.
+			fragment = Backbone.history.decodeFragment(fragment.replace(pathStripper, ''));
+			if (Backbone.history.fragment === fragment) {
+				Backbone.history.loadUrl(fragment);
+				return;
+			}
+			/* work against backbone's default behaviour - end */ 
+			  
         	window.Backbone.Router.prototype.navigate.call(this, fragment, options);
         },
 
         generic : function(route, queryString) {
         	var name = ((route === null) ? 'home' : route + '?' + queryString),
         		url = '/' + ((route === null) ? '' : route + '?' + queryString);
-
-            if (this.currentView && this.currentView.name === name) {
-                return;
-            }
             
             // remove view on ajax-done
             this.previousView = (this.currentView) ? this.currentView : null;
