@@ -10,20 +10,22 @@
     	
     	<link rel="shortcut icon" href="{{ config.absRefPrefix }}skin/default/img/favicon.png">
     	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{ config.absRefPrefix }}assets/images/icons/app-icon.png" />
-    	
-		<link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/twbs/bootstrap/dist/css/bootstrap.min.css" />
-		<!--link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/twbs/bootstrap/dist/css/bootstrap-theme.min.css" /-->
-		<link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/components/font-awesome/css/font-awesome.min.css" />
-		<link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}vendor/webfontkit/open-sans/open-sans.min.css" />
-		
-		<!--link rel="stylesheet" type="text/css" href="{{ config.absRefPrefix }}assets/fonts/typicons/typicons.css"-->
-		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/typicons_.css" media="all">
-
-		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/bootstrap-same-height-col.css" media="all">
-		<link rel="stylesheet" href="{{ config.absRefPrefix }}skin/default/bootstrap-jqueryui-autocomplete.css" media="all">
-	
-		<link rel="stylesheet" type="text/css" href="/skin/default/styles.css" />
-		
+    	{% set cssfiles = [
+    		'vendor/twbs/bootstrap/dist/css/bootstrap.min.css',
+    		'vendor/components/font-awesome/css/font-awesome.min.css',
+    		'vendor/webfontkit/open-sans/open-sans.min.css',
+			'vendor/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
+			'skin/default/lightbox.css',
+			'skin/default/typicons_.css',
+			'skin/default/bootstrap-same-height-col.css',
+			'skin/default/bootstrap-jqueryui-autocomplete.css',
+			'skin/default/styles.css'
+    		]
+		%}
+    	 
+		{% for cssfile in cssfiles %}
+		<link rel="stylesheet" type="text/css" media="all" href="{{ config.absRefPrefix }}{{cssfile}}" />
+		{% endfor %}		
 		{# add dynamic css for now-playing status #}
 		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}css/localplayer/0" />
 		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}css/mpdplayer/0" />
@@ -212,40 +214,38 @@
 		    </div>
 		  </div>
 		</div>
-				
-
 		
-		
-		<script src="{{ config.absRefPrefix }}vendor/components/jquery/jquery.min.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/components/jqueryui/jquery-ui.min.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/dropdown.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/tab.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/popover.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/collapse.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/twbs/bootstrap/js/tooltip.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/components/jquery-cookie/jquery.cookie.js"></script>
-		<!--script src="{{ config.absRefPrefix }}vendor/nicolasbize/faviconx/faviconx-min.js"></script-->
-		<script src="{{ config.absRefPrefix }}js/faviconxmod.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/components/greensock-js/greensock-js-built.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/components/underscore/underscore-min.js"></script>
-		<script src="{{ config.absRefPrefix }}vendor/components/backbone/backbone-min.js"></script>
-		
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/abstract/AbstractView.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/NavbarView.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/ModalView.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/PageView.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/abstract/AbstractPlayer.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/LocalPlayer.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/MpdPlayer.js"></script>
-		<script src="{{ config.absRefPrefix }}js/backbone-modules/Router.js"></script>
-		
-		
-		<script src="{{ config.absRefPrefix }}js/app.js"></script>
-		
-		
-		
+		{% set jsfiles = [
+    		'vendor/components/jquery/jquery.min.js',
+			'vendor/components/jqueryui/jquery-ui.min.js',
+			'vendor/twbs/bootstrap/dist/js/bootstrap.min.js',
+			'vendor/twbs/bootstrap/js/dropdown.js',
+			'vendor/twbs/bootstrap/js/tab.js',
+			'vendor/twbs/bootstrap/js/popover.js',
+			'vendor/twbs/bootstrap/js/collapse.js',
+			'vendor/twbs/bootstrap/js/tooltip.js',
+			'vendor/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.js',
+			'vendor/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js',
+			'vendor/components/jquery-cookie/jquery.cookie.js',
+			'js/faviconxmod.js',
+			'vendor/components/greensock-js/greensock-js-built.js',
+			'vendor/components/underscore/underscore-min.js',
+			'vendor/components/backbone/backbone-min.js',
+			'js/backbone-modules/abstract/AbstractView.js',
+			'js/backbone-modules/NavbarView.js',
+			'js/backbone-modules/ModalView.js',
+			'js/backbone-modules/PageView.js',
+			'js/backbone-modules/abstract/AbstractPlayer.js',
+			'js/backbone-modules/LocalPlayer.js',
+			'js/backbone-modules/MpdPlayer.js',
+			'js/backbone-modules/Router.js',
+			'js/app.js'
+    		]
+		%}
+    	 
+		{% for jsfile in jsfiles %}
+		<script src="{{ config.absRefPrefix }}{{jsfile}}"></script>
+		{% endfor %}		
 	</body>
 </html>
 {% endif %}

@@ -13,12 +13,14 @@
 
 <div class="row">
 	<div class="col-md-3">
-		<a href="#">
+		{% if albumimages|length > 0 %}
+		<a data-toggle="lightbox" href="/image-1000/album/{{ album.id }}" data-type="image" data-gallery="galname">
 			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
 		</a>
-		<div id="image_all">
-			{% include 'modules/imagecarousel.twig' with { 'itemlist': albumimages } %}
-		</div>
+		{% include 'modules/imagecarousel.twig' with { 'itemlist': albumimages } %}
+		{% else %}
+			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
+		{% endif %}
 	</div>
 	<div class="col-md-9">
 		<button role="control" title="add album to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ album.relativePath }}"}'>
