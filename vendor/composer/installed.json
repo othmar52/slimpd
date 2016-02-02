@@ -79,7 +79,7 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/53579cad429e52e1babd8341b83928ecf8ca3441",
+            "url": "https://api.github.com/repos/symfony/process/zipball/7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe",
             "reference": "53579cad429e52e1babd8341b83928ecf8ca3441",
             "shasum": ""
         },
@@ -1458,5 +1458,17 @@
             "streaming",
             "video"
         ]
+    },
+    {
+        "name": "hendrismit/bootstrap-lightbox",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
     }
 ]

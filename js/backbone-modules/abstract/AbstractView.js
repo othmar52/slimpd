@@ -29,6 +29,7 @@
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener).on('click', this.playerCtrlClickListener);
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener).on('click', this.ajaxPartialClickListener);
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener).on('click', this.triggerModalClickListener);
+            //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             
             // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
             $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener).on('click', this.playerModeToggleTriggerListener);
@@ -58,8 +59,6 @@
 		        placeholder: 'span2 well placeholder tile',
 		        forceHelperSize: true
 		    });
-		    
-		    
             
             window.Backbone.View.prototype.render.call(this);
             this.rendered = true;
@@ -131,7 +130,18 @@
 				window.sliMpd.modal.renderModalContent(response);
 			});
        	},
-        
+       	
+       	/*
+       	// FIXME: why doues this not work?
+       	// @see: app.js:document.ready()
+       	triggerLightboxClickListener : function(e) {
+       		event.preventDefault();
+			return $(this).ekkoLightbox({
+				always_show_close: true,
+				type: 'image'
+			});
+		},
+        */
         // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
         playerModeToggleTriggerListener : function(e) {
        		e.preventDefault();

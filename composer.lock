@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1d13d7c95b744d04f0d911ef7a382680",
-    "content-hash": "fbea1bde6d12e2055dfc7561a1f76a43",
+    "hash": "0c4d94cc744818961965fa0ed9b2dd7a",
+    "content-hash": "de9d1957f023f28f0f6b4dd254b56c30",
     "packages": [
         {
             "name": "components/backbone",
@@ -676,6 +676,17 @@
             "time": "2014-12-15 01:02:19"
         },
         {
+            "name": "hendrismit/bootstrap-lightbox",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2014-09-21 16:10:11"
+        },
+        {
             "name": "james-heinrich/getid3",
             "version": "v1.9.11",
             "source": {
@@ -1237,7 +1248,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/53579cad429e52e1babd8341b83928ecf8ca3441",
+                "url": "https://api.github.com/repos/symfony/process/zipball/7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe",
                 "reference": "53579cad429e52e1babd8341b83928ecf8ca3441",
                 "shasum": ""
             },
