@@ -23,5 +23,8 @@
 		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
 	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
-	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
+	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}
+	{% if item.audioDataFormat == 'flac' %}<br /> <span class="label label-success">FLAC</span>{% endif %}
+	{% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}
+	</div>
 </div>
