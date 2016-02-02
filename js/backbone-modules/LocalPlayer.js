@@ -56,7 +56,7 @@
 				  	
 				},
 				seeked: function() {
-					window.sliMpd.refreshFaviconInterval();
+					window.sliMpd.drawFavicon();
 				}
 			});
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
@@ -87,6 +87,7 @@
 			this.redraw(item);
     		//this.reloadCss(item.hash);
 		},
+		
 		redraw : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.redraw.call(this, item);
 		},
@@ -101,6 +102,7 @@
             
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
+		
 		// TODO: make markup more generic and move this to AbstractPlayer
 		setPlayPauseIcon : function(item) {
 			var control = $('.localplayer-play-pause');
@@ -109,7 +111,7 @@
 			} else {
 				$(control).addClass('localplayer-play').removeClass('localplayer-pause').html('<i class="fa fa-play sign-ctrl fa-lg"></i>');
 			}
-			window.sliMpd.refreshFaviconInterval();
+			window.sliMpd.drawFavicon();
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 		

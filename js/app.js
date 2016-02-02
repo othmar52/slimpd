@@ -5,7 +5,7 @@ $(document).ready(function() {
     window.sliMpd = $.extend(true, window.sliMpd, {
         modules : {},
         
-        drawFaviconIntervals : [],
+        drawFaviconTimeout : 0,
         
         /**
 		 * adds get-paramter to url, respecting existing and not-existing params
@@ -33,22 +33,11 @@ $(document).ready(function() {
 		    }
 		    return urlstring;
 		},
+		
 		drawFavicon : function() {
-			// TODO: why we have doubled amount of intervals with active mpd-player?
-			// @see: http://stackoverflow.com/questions/27144619/javascript-multiple-intervals-and-clearinterval
-			// console.log('drawing favicon for ' + window.sliMpd.currentPlayer.mode);
-			
+			clearTimeout(window.sliMpd.drawFaviconTimeout);
 			window.sliMpd.currentPlayer.drawFavicon();
-			var that = this;
-			window.sliMpd.drawFaviconIntervals.push(
-				setInterval(that.drawFavicon, 2000)
-			);
-		},
-		refreshFaviconInterval : function() {
-			for (var i=0; i < window.sliMpd.drawFaviconIntervals.length; i++) {
-		        clearInterval(window.sliMpd.drawFaviconIntervals[i]);
-		    }
-			window.sliMpd.drawFavicon();
+			window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
 		}
     });
     
@@ -82,7 +71,7 @@ $(document).ready(function() {
     });
     
 	
-	window.sliMpd.refreshFaviconInterval();
+	window.sliMpd.drawFavicon();
 	
 	/* toggle between mpd-control and local player (jPlayer) */
 	$('.playerModeToggle a').on('click', function(e) {
@@ -99,6 +88,6 @@ $(document).ready(function() {
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
-		window.sliMpd.refreshFaviconInterval();
+		window.sliMpd.drawFavicon();
 	});    
 });
