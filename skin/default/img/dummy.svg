@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500px" height="500px" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet" zoomAndPan="disable" >
+  <rect id="svgEditorBackground" x="0" y="0" width="100%" height="100%" style="fill: rgb(66,241,50); stroke: none;"/>
+  <circle id="e1_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="205" fill="white" />
+  <circle id="e2_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="58.6286" fill="rgb(66,241,50)" />
+</svg>
