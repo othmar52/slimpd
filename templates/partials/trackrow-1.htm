@@ -28,8 +28,8 @@
 		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
 	<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
-	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}
-	{% if item.audioDataFormat == 'flac' %}<br /> <span class="label label-success">FLAC</span>{% endif %}
-	{% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}
+	<div class="col-md-1">
+		{{ item.miliseconds|formatMiliseconds }}
+		{% include 'partials/track/audioformat.htm' %}
 	</div>
 </div>

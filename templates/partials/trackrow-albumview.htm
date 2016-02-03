@@ -19,7 +19,6 @@
 	</div>
 	<div class="col-xs-1 hidden-xs">{% include 'partials/yearlink.htm' %}</div>
 	<div class="col-xs-1 hidden-xs">{{ item.miliseconds|formatMiliseconds }}
-	{% if item.audioDataFormat == 'flac' %}<br /> <span class="label list-group-item-success">FLAC</span>{% endif %}
-	{% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}
+	{% include 'partials/track/audioformat.htm' %}
 	</div>
 </div>
