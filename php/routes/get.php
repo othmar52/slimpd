@@ -336,7 +336,11 @@ foreach (array(50,100,300,1000) as $imagesize) {
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('albumId' => $itemId), 'filesize DESC'
 		);
-		$image = ($image === NULL) ? \Slimpd\Bitmap::getFallbackImage() : $image;
+		if($image === NULL) {
+			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
+			return;
+		}
+		
 		$image->dump($imagesize);
 		exit();
 	});
@@ -360,19 +364,33 @@ foreach (array(50,100,300,1000) as $imagesize) {
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('id' => $itemId), 'filesize DESC'
 		);
-		$image = ($image === NULL) ? \Slimpd\Bitmap::getFallbackImage() : $image;
+		if($image === NULL) {
+			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
+			return;
+		}
 		$image->dump($imagesize);
 	});
+	
+	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $config, $imagesize){
+		$config['imagesize'] = $imagesize;
+		// TODO: move color to configfile
+		$config['imagecolor'] = ($config['playerMode'] === 'mpd') ? '#FF9C01' : 'rgb(66,241,50)';
+		switch($type) {
+			default: $template = 'svg/dummy';
+		}
+		$app->response->headers->set('Content-Type', 'image/svg+xml');
+		
+		header("Content-Type: image/svg+xml");
+		$app->render($template.'.twig', $config);
+	})->name('imagefallback-' .$imagesize);
 	
 	// missing track or album paramter caused by items that are not imported in slimpd yet
 	# TODO: maybe use another fallback image for those items...
 	$app->get('/image-'.$imagesize.'/album/', function() use ($app, $config, $imagesize){
-		$image = \Slimpd\Bitmap::getFallbackImage();
-		$image->dump($imagesize);
+		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
 	});
 	$app->get('/image-'.$imagesize.'/track/', function() use ($app, $config, $imagesize){
-		$image = \Slimpd\Bitmap::getFallbackImage();
-		$image->dump($imagesize);
+		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 	});
 	
 }
