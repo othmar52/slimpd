@@ -50,12 +50,12 @@ $config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : F
 $app->get('/', function() use ($app,$config){
 	$config['action'] = "landing";
 	// TODO: $app->auth->check('library');
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 $app->get('/library(/)', function() use ($app, $config){
 	$config['action'] = "landing";
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 
@@ -109,7 +109,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$urlPattern
 		);
 		#echo "<pre>" . print_r($config['paginator_params'], 1); die();
-    	$app->render('surrounding.twig', $config);
+    	$app->render('surrounding.htm', $config);
 	});
 		
 		
@@ -161,14 +161,14 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		);
 		$config['renderitems'] = getRenderItems($config['albumlist'], $config['item'], $config['tracklist']);
 		
-	    $app->render('surrounding.twig', $config);
+	    $app->render('surrounding.htm', $config);
 	});
 		
 }
 
 $app->get('/library/album(/)', function() use ($app, $config){
 	$config['action'] = 'library.album';
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 
@@ -185,7 +185,7 @@ foreach(['/library/album', '/markup/albumtracks'] as $what) {
 		$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 			array('albumId' => $albumId)
 		);
-		$app->render('surrounding.twig', $config);
+		$app->render('surrounding.htm', $config);
 	});	
 }
 
@@ -198,7 +198,7 @@ $app->get('/library/year/:itemString', function($itemString) use ($app, $config)
 	
 	// get all relational items we need for rendering
 	$config['renderitems'] = getRenderItems($config['albumlist']);
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 
@@ -247,13 +247,13 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 		'/playlist/page/(:num)'
 	);
 		
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 
 $app->get('/favorites(/)', function() use ($app, $config){
 	$config['action'] = 'favorites';
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 
@@ -317,14 +317,14 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $m
 		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
 			urlencode($config['mpd']['alternative_musicdir'] . $itemRelativePath);
 		
-		$app->render('modules/'.$markupSnippet.'.twig', $config);
+		$app->render('modules/'.$markupSnippet.'.htm', $config);
 		$app->stop();
 	});
 	
 	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $config, $markupSnippet){
 		$config['relativePathHash'] = $relativePathHash;
 		$app->response->headers->set('Content-Type', 'text/css');
-		$app->render('css/'.$markupSnippet.'.twig', $config);
+		$app->render('css/'.$markupSnippet.'.css', $config);
 	});
 }
 
@@ -376,12 +376,12 @@ foreach (array(50,100,300,1000) as $imagesize) {
 		// TODO: move color to configfile
 		$config['imagecolor'] = ($config['playerMode'] === 'mpd') ? '#FF9C01' : 'rgb(66,241,50)';
 		switch($type) {
-			default: $template = 'svg/dummy';
+			default: $template = 'svg/dummy.svg';
 		}
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
 		
 		header("Content-Type: image/svg+xml");
-		$app->render($template.'.twig', $config);
+		$app->render($template, $config);
 	})->name('imagefallback-' .$imagesize);
 	
 	// missing track or album paramter caused by items that are not imported in slimpd yet
@@ -405,7 +405,7 @@ $app->get('/importer(/)', function() use ($app, $config){
 		$record['jobStatistics'] = unserialize($record['jobStatistics']);
 		$config['itemlist'][] = $record;
 	}
-	$app->render('surrounding.twig', $config);
+	$app->render('surrounding.htm', $config);
 });
 
 $app->get('/importer/triggerUpdate', function() use ($app, $config){
@@ -429,7 +429,7 @@ $app->get('/filebrowser', function() use ($app, $config){
 	$config['files'] = $fileBrowser->files;
 	$config['hotlinks'] = $config['filebrowser-hotlinks'];
 	
-	$app->render('surrounding.twig', $config);
+	$app->render('surrounding.htm', $config);
 });
 
 
@@ -442,7 +442,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;
 	$config['files'] = $fileBrowser->files; 
-	$app->render('surrounding.twig', $config);
+	$app->render('surrounding.htm', $config);
 });
 
 
@@ -457,7 +457,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
 	$config['renderitems'] = getRenderItems($config['item']);
 	$config['totalitems'] = \Slimpd\Track::getCountAll();
-	$app->render('surrounding.twig', $config);
+	$app->render('surrounding.htm', $config);
 });
 
 
@@ -514,7 +514,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	
 	$config['renderitems'] = getRenderItems($config['itemlist'], $config['album']);
 	$config['totalitems'] = \Slimpd\Album::getCountAll();
-	$app->render('surrounding.twig', $config);
+	$app->render('surrounding.htm', $config);
 });
 
 
@@ -677,7 +677,7 @@ foreach(array_keys($sortfields) as $currentType) {
 		}
 		$config['action'] = 'searchresult.' . $currentType;
 		$config['renderitems'] = getRenderItems($config['itemlist']);
-		$app->render('surrounding.twig', $config);
+		$app->render('surrounding.htm', $config);
 			
 	})->name('search'.$currentType);
 }

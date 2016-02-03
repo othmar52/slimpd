@@ -3,9 +3,9 @@
     
     <h3>
     <div class="small dark uc" style="font-size: 0.4em; line-height: 2em;">{{'artist'|ll}} - {{'title'|ll}}</div>
-    	{% include 'partials/artist/link.twig' %}
+    	{% include 'partials/artist/link.htm' %}
     	- 
-    	{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %}
+    	{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %}
     </h3>
      
 	<div class="row">
@@ -37,19 +37,19 @@
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'year'|ll}}</span><br />
-	    	<strong>{% include 'partials/yearlink.twig' %}</strong>
+	    	<strong>{% include 'partials/yearlink.htm' %}</strong>
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'genre'|ll}}</span><br />
-	    	<strong>{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</strong>
+	    	<strong>{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}</strong>
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'label'|ll}}</span><br />
-	    	<strong>{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</strong>
+	    	<strong>{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}</strong>
 	    </div>
 	    <div class="col-md-4 border-left">
 	    	<span class="dark uc small">{{'album'|ll}}</span><br />
-	    	<strong>{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</strong>
+	    	<strong>{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</strong>
 	    </div>
 
   	</div>

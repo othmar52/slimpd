@@ -1,7 +1,7 @@
 {% if item.artistId %}
 {% set itemIds = item.artistId|split(',') %}
 {% for itemId in itemIds %}
-	{% include 'partials/artist/single-link.twig' %}
+	{% include 'partials/artist/single-link.htm' %}
 	{% if loop.last == false %}
 	<a class="artist-link item-link ajax-link" href="/library/artist/{{item.artistId}}" data-ajaxtarget="#main">
 		<span class="artist_all">&amp;</span></a>

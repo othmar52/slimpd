@@ -33,17 +33,17 @@
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
 		<div class="container">
 			
-			{% include 'modules/header-menu.twig' %}
+			{% include 'modules/header-menu.htm' %}
 			<div class="row">
   				<div class="col-md-12" id="main">
 {% endif %}
 				<div class="main-content">
-					{% include 'modules/errorbox.twig' %}
+					{% include 'modules/errorbox.htm' %}
 					
 					
 					{% for type in ['genre', 'artist', 'label'] %}
 						{% if action == 'library.'~type~'s' %}
-							{% include 'modules/typelist.twig' %}
+							{% include 'modules/typelist.htm' %}
 						{% endif %}
 						
 						
@@ -53,8 +53,8 @@
 								<span class="small"><a href="/library/{{type}}s/page/1" data-ajaxtarget="#main" class="ajax-link">{{ type~'s' }}</a></span>
 								<a href="/library/{{type}}/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
 								{{ item.title }} </h2>
-							{% include 'modules/albumlist2.twig' with { 'itemlist': albumlist } %}
-							{% include 'partials/tracklist-1.twig' %}
+							{% include 'modules/albumlist2.htm' with { 'itemlist': albumlist } %}
+							{% include 'partials/tracklist-1.htm' %}
 							
 							
 						{% endif %}
@@ -63,11 +63,11 @@
 					{% endfor%}				
 					
 					{% if action == 'maintainance.trackdebug' %}
-					{% include 'modules/trackdebug.twig' %}
+					{% include 'modules/trackdebug.htm' %}
 					{% endif %}
 					
 					{% if action == 'maintainance.albumdebug' %}
-					{% include 'modules/albumdebug.twig' %}
+					{% include 'modules/albumdebug.htm' %}
 					{% endif %}
 					
 					{% if action == 'landing' %}
@@ -98,70 +98,70 @@
 					{% endif %}
 					
 					{% if action == 'filebrowser' %}
-						{% include 'modules/filebrowser.twig' %}
+						{% include 'modules/filebrowser.htm' %}
 					{% endif %}
 	
 					
 					{% if action == 'library.year' %}
 						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
-						{% include 'modules/albumlist.twig' with { 'itemlist': albumlist } %}
+						{% include 'modules/albumlist.htm' with { 'itemlist': albumlist } %}
 					{% endif %}
 					
 					{% if action == 'importer' %}
-						{% include 'modules/importer.twig' %}
+						{% include 'modules/importer.htm' %}
 					{% endif %}
 					
 					
 					{% if action == '404' %}
-						{% include 'modules/404.twig' %}
+						{% include 'modules/404.htm' %}
 					{% endif %}
 					
 					
 					
 					{% if action == 'album.detail' %}
-						{% include 'album.twig' %}
+						{% include 'album.htm' %}
 					{% endif %}
 					
 					{% if action == 'albumtracks' %}
 						{% for item in itemlist %}
-							{% include 'partials/trackrow-albumview.twig' %}
+							{% include 'partials/trackrow-albumview.htm' %}
 						{% endfor %}
 					{% endif %}
 					
 					{% if action == 'playlist' %}
-						{% include 'modules/nowplaying-track.twig' %}
-						{% include 'modules/nowplaying-list.twig' %}
+						{% include 'modules/nowplaying-track.htm' %}
+						{% include 'modules/nowplaying-list.htm' %}
 					{% endif %}
 					
 					
 					{% if action == 'searchresult.all' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'all', youtubechunk:'music' } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'all', youtubechunk:'music' } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.track' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'track', youtubechunk:'song'  } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'track', youtubechunk:'song'  } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.album' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'album', youtubechunk:'music album'  } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'album', youtubechunk:'music album'  } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.artist' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'artist', youtubechunk:'music artist'  } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'artist', youtubechunk:'music artist'  } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.label' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'label', youtubechunk:'music label'  } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'label', youtubechunk:'music label'  } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					{% if action == 'searchresult.genre' %}
-						{% include 'modules/searchresult-nav.twig' with { 'searchcurrent' : 'genre', youtubechunk:'music genre'  } %}
-						{% include 'modules/searchresult-items.twig' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'genre', youtubechunk:'music genre'  } %}
+						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
 					</div>
@@ -172,11 +172,11 @@
 		</div>
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
-			{% include 'modules/localplayer.twig'%}
+			{% include 'modules/localplayer.htm'%}
 		</div>
 		
 		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
-			{% include 'modules/mpdplayer.twig'%}
+			{% include 'modules/mpdplayer.htm'%}
 		</div>
 		
 		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 10px; z-index: 2000;">

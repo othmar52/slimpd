@@ -1,7 +1,7 @@
 {% if item.artistId %}
 	{% set itemIds = item.artistId|split(',') %}
 	{% for itemId in itemIds %}
-		{% include 'partials/artist/single-link.twig' %}
+		{% include 'partials/artist/single-link.htm' %}
 		{% if loop.last == false %}
 		<a class="artist-link item-link ajax-link toggle-tooltip" href="/library/artist/{{item.artistId}}" data-ajaxtarget="#main" title="view artist xx">
 			<span class="artist_all">&amp;</span></a>
@@ -12,5 +12,5 @@
 	(ft.
 	{% set itemIds = item.featuringId|split(',') %}
 	{% for itemId in itemIds %}
-		{% include 'partials/artist/single-link.twig' %}{% if loop.last == false %}, {% endif %}{% endfor %})
+		{% include 'partials/artist/single-link.htm' %}{% if loop.last == false %}, {% endif %}{% endfor %})
 {% endif %}

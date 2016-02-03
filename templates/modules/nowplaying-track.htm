@@ -1,5 +1,5 @@
 
-<h2>Aktueller Titel: {% include 'partials/tracktitle.twig' with { 'item': nowplaying, 'titlestring': nowplaying.title, 'filepath': nowplaying.relativePath  } %}</h2>
+<h2>Aktueller Titel: {% include 'partials/tracktitle.htm' with { 'item': nowplaying, 'titlestring': nowplaying.title, 'filepath': nowplaying.relativePath  } %}</h2>
 <div class="row">
 	<div class="col-md-4">
 		<a href="/library/album/{{ nowplaying.albumId }}" data-ajaxtarget="#main" class="ajax-link">
@@ -9,18 +9,18 @@
 	<div class="col-md-8">
 		<div class="row" style="font-size: 1.6em; padding-top: 3em;">
 			<div class="col-md-6">
-				{% include 'partials/artist/link.twig' with { 'item': nowplaying } %}
+				{% include 'partials/artist/link.htm' with { 'item': nowplaying } %}
 			</div>
 			<div class="col-md-3">
-				{% include 'partials/labellink.twig' with { 'item': nowplaying_album } %}
+				{% include 'partials/labellink.htm' with { 'item': nowplaying_album } %}
 			</div>
 			<div class="col-md-3">
-				{% include 'partials/genrelink.twig' with { 'genreIds': nowplaying.genreId, 'genres': renderitems.genres } %}
+				{% include 'partials/genrelink.htm' with { 'genreIds': nowplaying.genreId, 'genres': renderitems.genres } %}
 			</div>
 		</div>
 		<div class="row" style="font-size: 1.6em;">
 			<div class="col-md-6">
-				{% include 'partials/albumlink.twig' with { 'item': nowplaying_album } %}
+				{% include 'partials/albumlink.htm' with { 'item': nowplaying_album } %}
 			</div>
 			<div class="col-md-3">
 				#CAT: {{ nowplaying.catalogNr }}
@@ -31,7 +31,7 @@
 		</div>
 		<div class="row" style="font-size: 1.6em;">
 			<div class="col-md-6">
-				{% include 'partials/yearlink.twig' with { 'item': nowplaying } %}
+				{% include 'partials/yearlink.htm' with { 'item': nowplaying } %}
 			</div>
 			<div class="col-md-6">
 				
