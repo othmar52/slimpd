@@ -15,16 +15,16 @@
 	</div>
 	
 	<div class="col-md-3">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 		<br />
-		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
+		<div class="darker-links">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' %}
+		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-md-2">
-		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
 	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
 </div>

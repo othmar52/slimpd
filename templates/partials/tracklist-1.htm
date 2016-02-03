@@ -1,13 +1,13 @@
 {% if tracklist|length > 0 %}
 <h2>Tracks with {{ type }} {{ item.title }}</h2>
 <div class="tracks_container">
-{% include 'partials/trackrow-1-header.twig' %}
+{% include 'partials/trackrow-1-header.htm' %}
 <br />
 	{% for item in tracklist %}
-		{% include 'partials/trackrow-1.twig' %}
+		{% include 'partials/trackrow-1.htm' %}
 	{% endfor %}
 	<div class="clearfix"> </div>
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 	
 </div>
 {% endif %}

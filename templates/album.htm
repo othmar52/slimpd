@@ -17,7 +17,7 @@
 		<a data-toggle="lightbox" href="/image-1000/album/{{ album.id }}" data-type="image" data-gallery="galname">
 			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
 		</a>
-		{% include 'modules/imagecarousel.twig' with { 'itemlist': albumimages } %}
+		{% include 'modules/imagecarousel.htm' with { 'itemlist': albumimages } %}
 		{% else %}
 			<img id="image_in" src="/image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
 		{% endif %}
@@ -29,7 +29,7 @@
 			
 		<span style="font-size: 1.7em;">{{album.title}}</span>
 		<div id="album-info-artist">
-			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.twig' with { 'item': album } %}
+			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
 		</div>
 		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;" data-ajaxtarget="#main" class="ajax-link">{{album.relativePath}}</a></p>
 			
@@ -42,7 +42,7 @@
 						<span class="dark uc small">{{'genre'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}
+						{% include 'partials/genrelink.htm' with { 'genreIds': album.genreId } %}
 					</div>
 				</div>
 				{% endif %}
@@ -53,7 +53,7 @@
 						<span class="dark uc small">{{'year'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/yearlink.twig' with { 'item': album } %}
+						{% include 'partials/yearlink.htm' with { 'item': album } %}
 					</div>
 				</div>
 				{% endif %}
@@ -64,7 +64,7 @@
 						<span class="dark uc small">{{'label'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/labellink.twig' with { 'labelIds': album.labelId } %}
+						{% include 'partials/labellink.htm' with { 'labelIds': album.labelId } %}
 					</div>
 				</div>
 				{% endif %}
@@ -109,7 +109,7 @@
 				</div>
 				<div class="col-md12">
 					<div class="col-md-2">
-						{% include 'partials/extlink-discogs.twig' %}
+						{% include 'partials/extlink-discogs.htm' %}
 						<a href="/maintainance/albumdebug/{{album.id}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i></a>
 					</div>
 				</div>
@@ -132,11 +132,11 @@
 	</div>
 </div>
 
-{% include 'partials/trackrow-albumview-header.twig' %}
+{% include 'partials/trackrow-albumview-header.htm' %}
 {% set totalTime = 0 %}
 {% for item in itemlist %}
 
-{% include 'partials/trackrow-albumview.twig' %}
+{% include 'partials/trackrow-albumview.htm' %}
 
 {% set totalTime = totalTime+item.miliseconds %}
 {% endfor %}

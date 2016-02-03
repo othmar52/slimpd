@@ -2,7 +2,7 @@
 {% if item.artistId %}
 {% set itemIds = item.artistId|split(',') %}
 {% for itemId in itemIds %}
-{% include 'partials/artist/single-string.twig' %}
+{% include 'partials/artist/single-string.htm' %}
 {% if loop.last == false %} &amp; {% endif %}
 {% endfor%}
 {% endif %}
@@ -10,5 +10,5 @@
 (ft.
 {% set itemIds = item.featuringId|split(',') %}
 {% for itemId in itemIds %}
-{% include 'partials/artist/single-string.twig' %}{% if loop.last == false %}, {% endif %}{% endfor %})
+{% include 'partials/artist/single-string.htm' %}{% if loop.last == false %}, {% endif %}{% endfor %})
 {% endif %}

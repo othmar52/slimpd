@@ -1,7 +1,7 @@
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2">
 		<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
-			{% include 'partials/image.twig' with {
+			{% include 'partials/image.htm' with {
 				'width': 50,
 				'type': 'album',
 				'itemId': item.albumId,
@@ -17,17 +17,17 @@
 	</div>
 	
 	<div class="col-md-3">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 		<br />
-		<div class="darker-links">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</div>
+		<div class="darker-links">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' %}
+		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-md-2">
-		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
 	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}
 	{% if item.audioDataFormat == 'flac' %}<br /> <span class="label label-success">FLAC</span>{% endif %}
 	{% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}

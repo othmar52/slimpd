@@ -9,15 +9,15 @@
 		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
 	</div>
 	<div class="col-xs-2 col-sm-3">
-		{% include 'partials/tracktitle.twig' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 	</div>
 	<div class="col-xs-5 col-sm-3">
-		{% include 'partials/artist/link.twig' %}
+		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-xs-2 hidden-xs">
-		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-xs-1 hidden-xs">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-xs-1 hidden-xs">{% include 'partials/yearlink.htm' %}</div>
 	<div class="col-xs-1 hidden-xs">{{ item.miliseconds|formatMiliseconds }}
 	{% if item.audioDataFormat == 'flac' %}<br /> <span class="label list-group-item-success">FLAC</span>{% endif %}
 	{% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}

@@ -36,7 +36,7 @@
 		</form>
 	</div>
 	<div class="col-md-1">
-		{% include 'partials/extlink-discogs.twig' %}
+		{% include 'partials/extlink-discogs.htm' %}
 	</div>
 </div>
 
@@ -44,15 +44,15 @@
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/albumlink.twig' with { 'item': album } %}</div>
+	<div class="col-md-3">{% include 'partials/albumlink.htm' with { 'item': album } %}</div>
 	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/artist/link.twig' with { 'item': album } %}</div>
-	{% set value %}{% include 'partials/artist/string.twig' with { 'item': album } %}{% endset %}
+	<div class="col-md-3">{% include 'partials/artist/link.htm' with { 'item': album } %}</div>
+	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
 	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
@@ -67,8 +67,8 @@
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/genrelink.twig' with { 'genreIds': album.genreId } %}</div>
-	{% set value %}{% include 'partials/genrestring.twig' with { 'genreIds': album.genreId } %}{% endset %}
+	<div class="col-md-3">{% include 'partials/genrelink.htm' with { 'genreIds': album.genreId } %}</div>
+	{% set value %}{% include 'partials/genrestring.htm' with { 'genreIds': album.genreId } %}{% endset %}
 	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.genre ? value : discogsalbum.genre }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
@@ -77,7 +77,7 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ album.label }}</div>
-	{% set value %}{% include 'partials/labelstring.twig' with { 'labelIds': album.labelId } %}{% endset %}
+	{% set value %}{% include 'partials/labelstring.htm' with { 'labelIds': album.labelId } %}{% endset %}
 	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
@@ -175,21 +175,21 @@
 				<input name="number[{{item.fingerprint}}]" type="text" value="{{ item.number}}" class="form-control" />
 			</div>
 			<div class="col-md-2">
-				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' %}" class="form-control" />
+				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' %}" class="form-control" />
 			</div>
 			<div class="col-md-3">
 				<input name="title[{{item.fingerprint}}]" type="text" value="{{ item.title}}" class="form-control" />
 			</div>
 			<div class="col-md-2">
 				{% set rmxItem = { 'artistId' : item.remixerId }%}
-				<input name="remixer[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' with { 'item': rmxItem } %}" class="form-control" />
+				<input name="remixer[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': rmxItem } %}" class="form-control" />
 			</div>
 			<div class="col-md-2">
 				{% set ftItem = { 'artistId' : item.featuringId }%}
-				<input name="feat[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.twig' with { 'item': ftItem } %}" class="form-control" />
+				<input name="feat[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': ftItem } %}" class="form-control" />
 			</div>
 			<div class="col-md-2">
-				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/genrestring.twig' with {'genreIds': item.genreId} %}" class="form-control" />
+				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/genrestring.htm' with {'genreIds': item.genreId} %}" class="form-control" />
 			</div>
 		</div>
 		
