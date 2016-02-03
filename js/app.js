@@ -80,6 +80,7 @@ $(document).ready(function() {
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
+		// TODO: reload all rendered images in frontend to get the correct color of fallback images
 		window.sliMpd.drawFavicon();
 	}); 
 	
