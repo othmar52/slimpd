@@ -1,5 +1,5 @@
 <div class="albums_container container">
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 	{% if itemlist|length  %}
 		{% for row in itemlist|batch(2) %}
 		<div class="row">
@@ -14,9 +14,9 @@
 						</div>
 						<div class="col-md-10">
 							<strong>{{item.title}}</strong><br />
-							{% include 'partials/artist/link.twig' %}<br />
+							{% include 'partials/artist/link.htm' %}<br />
 								({{ item.trackCount }} tracks) <br />
-								{% include 'partials/genrelink.twig' with {'genreIds': item.genreId, 'limit' : 3} %}
+								{% include 'partials/genrelink.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
 								<span style="font-size:2em; float:right; color: #222; font-weight: bold;">{{item.year}}</span>
 						</div>
 					</div>
@@ -29,5 +29,5 @@
 	{% else %}
 		no albums found
 	{% endif %}
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 </div>

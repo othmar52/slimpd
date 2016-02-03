@@ -77,14 +77,14 @@
     </div>
     <div class="col-sm-5">
     	<div class="row">
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.twig' %}</span></div>
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/albumlink.twig' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/yearlink.twig' %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/yearlink.htm' %}</span></div>
 		</div>
 		<div class="row">
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %}</span></div>
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}</span></div>
-			<div class="col-sm-4"><span class="shorten">{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}</span></div>
+			<div class="col-sm-4"><span class="shorten">{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}</span></div>
 		</div>
 		<div class="row">
 			<div class="col-sm-12 small">
@@ -98,7 +98,7 @@
     </div>
     
     
-    <div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.twig' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.twig' %}</div>
+    <div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
     
     {# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
     <style type="text/css">.track-{{ item.relativePathHash}} {border-left: 1px solid rgb(255,156,1);}</style>

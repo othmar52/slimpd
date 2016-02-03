@@ -13,13 +13,13 @@
 		</a>
 	</div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' %}
+		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-md-2">
-		{% include 'partials/genrelink.twig' with {'genreIds': item.genreId, 'limit' : 3} %}
+		{% include 'partials/genrelink.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
 	</div>
 	<div class="col-md-1">
-		{% include 'partials/yearlink.twig' %}
+		{% include 'partials/yearlink.htm' %}
 	</div>
 	<div class="col-md-1">
 		{{item.trackCount}} <span class="dark uc small">tracks</span>
