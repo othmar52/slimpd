@@ -3,7 +3,7 @@
 
 {% if itemlist|length > 0 %}
 <div class="albums_container">
-{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 <br />
 	{% for item in itemlist %}
 	<div class="col-sm-6 col-md-2 tile-square ">
@@ -16,7 +16,7 @@
 				<div class="tile-hover-data bg-col3">
 					<div class="tile_title">{{item.title}}</div>
 					<div class="tile_band">
-						{% include 'partials/artist/string.twig' %}
+						{% include 'partials/artist/string.htm' %}
 					</div>
 				</div>
 			</a>
@@ -24,7 +24,7 @@
 	</div>
 	{% endfor %}
 	<div class="clearfix"> </div>
-	{% include 'modules/paginator.twig' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 	
 </div>
 {% else %}

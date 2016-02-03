@@ -52,9 +52,9 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.artist }}</div>
-	<div class="col-md-4"><input name="artist" type="text" value="{% include 'partials/artist/without_ft_string.twig' %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="artist" type="text" value="{% include 'partials/artist/without_ft_string.htm' %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/artist/without_ft_link.twig' %}
+		{% include 'partials/artist/without_ft_link.htm' %}
 	</div>
 </div>
 
@@ -62,9 +62,9 @@
 	<div class="col-md-2"><strong>{{'featured.artist'|ll}}</strong></div>
 	<div class="col-md-3"></div>
 	{% set ftItem = { 'artistId' : item.featuringId }%}
-	<div class="col-md-4"><input name="featuring" type="text" value="{% include 'partials/artist/string.twig' with { 'item': ftItem } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="featuring" type="text" value="{% include 'partials/artist/string.htm' with { 'item': ftItem } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' with { 'item': ftItem } %}
+		{% include 'partials/artist/link.htm' with { 'item': ftItem } %}
 	</div>
 </div>
 
@@ -72,9 +72,9 @@
 	<div class="col-md-2"><strong>{{'remix.artist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.remixer }}</div>
 	{% set rmxItem = { 'artistId' : item.remixerId }%}
-	<div class="col-md-4"><input name="remixer" type="text" value="{% include 'partials/artist/string.twig' with { 'item': rmxItem } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="remixer" type="text" value="{% include 'partials/artist/string.htm' with { 'item': rmxItem } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' with { 'item': rmxItem } %}
+		{% include 'partials/artist/link.htm' with { 'item': rmxItem } %}
 	</div>
 </div>
 
@@ -82,9 +82,9 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.albumArtist }}</div>
-	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.twig' with { 'item': renderitems.albums[item.albumId] } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.htm' with { 'item': renderitems.albums[item.albumId] } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.twig' with { 'item': renderitems.albums[item.albumId] } %}
+		{% include 'partials/artist/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
 	</div>
 </div>
 
@@ -93,7 +93,7 @@
 	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.album }}</div>
 	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumId].title }}" class="form-control" /></div>
-	<div class="col-md-3">{% include 'partials/albumlink.twig' with {'item': renderitems.albums[item.albumId]} %}</div>
+	<div class="col-md-3">{% include 'partials/albumlink.htm' with {'item': renderitems.albums[item.albumId]} %}</div>
 </div>
 
 
@@ -101,24 +101,24 @@
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.year }}</div>
 	<div class="col-md-4"><input name="year" type="text" value="{{ item.year }}" class="form-control" /></div>
-	<div class="col-md-3">{% include 'partials/yearlink.twig' %}</div>
+	<div class="col-md-3">{% include 'partials/yearlink.htm' %}</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.genre }}</div>
-	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genrestring.twig' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genrestring.htm' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/genrelink.twig' with { 'genreIds': item.genreId } %}
+		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.publisher }}</div>
-	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/labelstring.twig' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/labelstring.htm' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/labellink.twig' with { 'labelIds': item.labelId } %}
+		{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}
 	</div>
 </div>
 
