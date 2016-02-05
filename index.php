@@ -141,11 +141,11 @@ $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
 define('NJB_DEFAULT_CHARSET', 'utf8');
 
 $app->error(function(\Exception $e) use ($app, $config){
-    $app->render('error.twig', $config);
+    $app->render('error.htm', $config);
 });
 $app->notFound(function() use ($app, $config){
 	$config['action'] = '404';
-    $app->render('surrounding.twig', $config);
+    $app->render('surrounding.htm', $config);
 });
 
 // DEFINE GET/POST routes (also check for .gitignored local-routes)

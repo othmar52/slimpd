@@ -43,7 +43,7 @@ abstract class AbstractModel {
 	}
 
 
-	public static function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
+	public static function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy=NULL, $sortDirection='desc') {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -59,6 +59,10 @@ abstract class AbstractModel {
 		}
 		$query = substr($query, 0, -5); // remove suffixed ') OR '
 		$query .= ')'; // close bracket
+		
+		if($sortBy !== NULL) {
+			$query .= ' ORDER BY ' . az09($sortBy) . ' ' . az09($sortDirection);
+		}
 		
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
