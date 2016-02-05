@@ -58,6 +58,17 @@
 							
 							
 						{% endif %}
+						
+						
+						{% if action == type~'.tracks' %}
+							{% include 'modules/typelist-nav.htm' %}
+							{% include 'modules/searchresult-items.htm' %}
+						{% endif %}
+						
+						{% if action == type~'.albums' %}
+							{% include 'modules/typelist-nav.htm' %}
+							{% include 'modules/searchresult-items.htm' %}
+						{% endif %}
 					
 					
 					{% endfor%}				
@@ -77,19 +88,19 @@
 					  
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/library/genres/page/1" class="link-tile bg-col2">{{'genres'|ll}}</a>
+					        <a href="/library/genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'genres'|ll}}</a>
 					      </div>
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/library/labels/page/1" class="link-tile bg-col2">{{'labels'|ll}}</a>
+					        <a href="/library/labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'labels'|ll}}</a>
 					      </div>
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/library/artists/page/1" class="link-tile bg-col2">{{'artists'|ll}}</a>
+					        <a href="/library/artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'artists'|ll}}</a>
 						   </div>
 					       <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="#/library/albums/page/1" class="link-tile bg-col2">{{'albums'|ll}}</a>
+					        <a href="#/library/albums/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'albums'|ll}}</a>
 						   </div>
 					       
 					      
@@ -100,7 +111,6 @@
 					{% if action == 'filebrowser' %}
 						{% include 'modules/filebrowser.htm' %}
 					{% endif %}
-	
 					
 					{% if action == 'library.year' %}
 						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>

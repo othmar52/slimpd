@@ -3,7 +3,7 @@
 		{% set titleparts = titlestring|split('%s') %}
 		{% set remixerIds = item.remixerId|split(',') %}
 		{% for index,titlepart in titleparts %}
-			{{ titlepart }}{% if loop.last == false %}<a class="item-link artist-link ajax-link"  data-ajaxtarget="#main" href="/library/artist/{{ remixerIds[index] }}">{{ renderitems.artists[remixerIds[index]].title }}</a>
+			{{ titlepart }}{% if loop.last == false %}<a class="item-link artist-link ajax-link"  data-ajaxtarget="#main" href="/artist/{{ remixerIds[index] }}/tracks/page/1/sort/added/desc">{{ renderitems.artists[remixerIds[index]].title }}</a>
 			{% endif %}
 		{% endfor %}
 	{% else %}
