@@ -1,0 +1,43 @@
+{% set startnum = paginator_params.currentPage*paginator_params.itemsPerPage+1-paginator_params.itemsPerPage %}
+
+{% if paginator_params.currentPage == paginator_params.numPages %}
+	{% set endnum = paginator_params.totalItems %}
+{% else %}
+	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
+{% endif %}
+
+
+
+
+<h2>{{ itemtype|ll }} &quot;{{ item.title}}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
+{{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} {{'results'|ll}} in {{ rendertime }}s</span></h2>
+
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+<div class="row">
+	<div class="col-md-10">
+		<ul class="nav nav-tabs pull-right">
+			<li class="disabled"> 
+				<a href="#" data-ajaxtarget="#main" class="ajax-link">Popular(0)</a>
+			</li>
+			<li class="{{ (item.trackCount == 0) ? 'disabled' : '' }}"> 
+				<a href="/artist/{{item.id}}/tracks/page/1/sort/year/asc" data-ajaxtarget="#main" class="ajax-link">Tracks ({{ item.trackCount }})</a>
+			</li>
+			<li class="active {{ (item.albumCount == 0) ? 'disabled' : '' }}"> 
+				<a href="/artist/{{item.id}}/albums/page/1/sort/year/asc" data-ajaxtarget="#main" class="ajax-link">Albums ({{ item.albumCount }})</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-2">
+		Sortierung {% include 'partials/dropdown-search-sorting.htm' %}
+	</div>
+</div>
+
+<div class="tracks_container">
+{% include 'partials/trackrow-1-header.htm' %}
+	{% for item in itemlist %}
+		{% include 'partials/itemrow-album.htm' %}
+	{% endfor %}
+	<div class="clearfix"> </div>
+	
+</div>
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}

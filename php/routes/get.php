@@ -59,113 +59,6 @@ $app->get('/library(/)', function() use ($app, $config){
 });
 
 
-foreach(array('artist', 'label', 'genre') as $className) {
-	
-	// stringlist of artist|label|genre
-	$app->get('/library/'.$className.'s/:itemParams+', function($itemParams) use ($app, $config, $className){
-		$classPath = "\\Slimpd\\" . ucfirst($className);
-		$config['action'] = 'library.'. $className .'s';
-		$currentPage = 1;
-		$itemsPerPage = 100;
-		$searchterm = FALSE;
-		$orderBy = FALSE;
-		
-		foreach($itemParams as $i => $urlSegment) {
-			switch($urlSegment) {
-				case 'page':
-					if(isset($itemParams[$i+1]) === TRUE && is_numeric($itemParams[$i+1]) === TRUE) {
-						$currentPage = (int) $itemParams[$i+1];
-					}
-					break;
-				case 'searchterm':
-					if(isset($itemParams[$i+1]) === TRUE && strlen(trim($itemParams[$i+1])) > 0) {
-						$searchterm = trim($itemParams[$i+1]);
-					}
-					break;
-				default: break;
-					
-			}
-		}
-
-		if($searchterm !== FALSE) {
-			$config['itemlist'] = $classPath::getInstancesLikeAttributes(
-				array('az09' => str_replace('*', '%', $searchterm)),
-				$itemsPerPage,
-				$currentPage
-			);
-			$config['totalresults'] = $classPath::getCountLikeAttributes(
-				array('az09' => str_replace('*', '%', $searchterm))
-			);
-			$urlPattern = '/library/'.$className.'s/searchterm/'.$searchterm.'/page/(:num)';
-		} else {
-			$config['itemlist'] = $classPath::getAll($itemsPerPage, $currentPage);
-			$config['totalresults'] = $classPath::getCountAll();
-			$urlPattern = '/library/'.$className.'s/page/(:num)';
-		}
-		$config['paginator_params'] = new JasonGrimes\Paginator(
-			$config['totalresults'],
-			$itemsPerPage,
-			$currentPage,
-			$urlPattern
-		);
-		#echo "<pre>" . print_r($config['paginator_params'], 1); die();
-    	$app->render('surrounding.htm', $config);
-	});
-		
-		
-		
-	// albumlist+tracklist of artist|label|genre
-	$app->get('/library/'.$className.'/:itemParams+', function($itemParams) use ($app, $config, $className){
-		
-		$itemId = $itemParams[0];
-		$currentPage = 1;
-		if(isset($itemParams[1]) && $itemParams[1]=='page') {
-			if(isset($itemParams[2]) && is_numeric($itemParams[2]) ) {
-				$currentPage = $itemParams[2];
-			}
-		}
-		#echo "<pre>" . print_r($itemParams); die();
-		$itemsPerPage = 24;
-		$classPath = "\\Slimpd\\" . ucfirst($className);
-		$config['action'] = 'library.'.$className;
-		$config['albumlist'] = \Slimpd\Album::getInstancesByFindInSetAttributes(
-			array($className . 'Id' => $itemId),
-			$itemsPerPage,
-			$currentPage
-		);
-		$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
-		$config['totalresults'] = \Slimpd\Album::getCountByFindInSetAttributes(
-			array($className.'Id' => $itemId)
-		);
-		$config['paginator_params'] = new JasonGrimes\Paginator(
-			$config['totalresults'],
-			$itemsPerPage,
-			$currentPage,
-			'/library/'.$className.'/'.$itemId.'/page/(:num)'
-		);
-		
-		$searchInAttributes = array(
-			'artistId' => $itemId,
-			'remixerId' => $itemId,
-			'featuringId' => $itemId
-		);
-	
-		if($className == 'label') { $searchInAttributes = array('labelId' => $itemId); }
-		if($className == 'genre') { $searchInAttributes = array('genreId' => $itemId); }
-		
-		// tracklist
-		$config['tracklist'] = \Slimpd\Track::getInstancesByFindInSetAttributes(
-			$searchInAttributes,
-			$itemsPerPage,
-			$currentPage
-		);
-		$config['renderitems'] = getRenderItems($config['albumlist'], $config['item'], $config['tracklist']);
-		
-	    $app->render('surrounding.htm', $config);
-	});
-		
-}
-
 $app->get('/library/album(/)', function() use ($app, $config){
 	$config['action'] = 'library.album';
     $app->render('surrounding.htm', $config);
@@ -519,15 +412,120 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 
 
 // TODO: carefully check which sorting ist possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
-$sortfields = array(
+$sortfields1 = array(
+	'artist' => array('title', 'trackCount', 'albumCount'),
+	'genre' => array('title', 'trackCount', 'albumCount'),
+	'label' => array('title', 'trackCount', 'albumCount')
+);
+
+$sortfields2 = array(
 	'all' => array('title', 'artist', 'year', 'added'),
 	'track' => array('title', 'artist', 'year', 'added'),
 	'album' => array('year', 'title', 'added', 'artist', 'trackCount'),
-	'artist' => array('title', 'trackCount', 'albumCount'),
-	'genre' => array('title', 'trackCount', 'albumCount'),
-	'label' => array('title', 'trackCount', 'albumCount'),
 );
 
+foreach(array_keys($sortfields1) as $className) {
+	
+	foreach(['album','track'] as $show) {
+		
+		// albumlist+tracklist of artist|genre|label
+		$app->get(
+		'/'.$className.'/:idemId/'.$show.'s/page/:currentPage/sort/:sort/:direction',
+		function($itemId, $currentPage, $sort, $direction) use ($app, $config, $className, $show, $sortfields1) {
+			
+			
+			$config['action'] = $className.'.' . $show.'s';
+			$config['itemtype'] = $className;
+			$config['listcurrent'] = $show;
+			$config['itemlist'] = [];
+			
+			$classPath = "\\Slimpd\\" . ucfirst($className);
+			
+			// TODO: handle comma sparated item-ids
+			$term = str_replace(",", " ", $itemId);
+			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+			
+			$itemsPerPage = 20;
+			$maxCount = 1000;
+			
+			// TODO: move sphinx constants to somewhere else
+			foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+				define (strtoupper($var), intval($app->config['sphinx'][$var]) );
+			}
+			$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+			
+			foreach(['album','track'] as $resultType) {
+				$sphinxTypeIndex = ($resultType === 'album') ? 2 : 4;
+				$stmt = $ln_sph->prepare("
+					SELECT itemid,type FROM ". $app->config['sphinx']['mainindex']."
+					WHERE MATCH('@".$className."Ids \"". $term ."\"/1')
+					AND type=:type
+					GROUP BY itemid,type
+					LIMIT ".$maxCount.";"
+				);
+				$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
+				$stmt->execute();
+				
+				$config['search'][$resultType]['total'] = $stmt->rowCount();
+				$config['search'][$resultType]['time'] = 0;
+				$config['search'][$resultType]['term'] = $term;
+				$config['search'][$resultType]['matches'] = [];
+				
+				if($resultType === $show) {
+	
+					$sortQuery = ($sort !== 'relevance')?  ' ORDER BY ' . $sort . ' ' . $direction : '';
+					$config['search']['activesorting'] = $sort . '-' . $direction;
+					
+					$stmt = $ln_sph->prepare("
+						SELECT id,type,itemid,artistIds,display
+						FROM ". $app->config['sphinx']['mainindex']."
+						WHERE MATCH('@".$className."Ids \"". $term ."\"/1')
+						AND type=:type
+						GROUP BY itemid,type
+							".$sortQuery."
+							LIMIT :offset,:max
+						");
+					$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
+					$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
+					$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
+					
+					$config['search'][$resultType]['time'] = microtime(TRUE);
+					
+					$stmt->execute();
+					$rows = $stmt->fetchAll();
+					
+					foreach($rows as $row) {
+						switch($row['type']) {
+							case '2':
+								$obj = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
+								break; 
+							case '4':
+								$obj = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+						}
+						$config['itemlist'][] = $obj;
+					}
+					
+					$config['search'][$resultType]['time'] = number_format(microtime(TRUE) - $config['search'][$resultType]['time'],3);
+					
+					$config['paginator_params'] = new JasonGrimes\Paginator(
+						$config['search'][$resultType]['total'],
+						$itemsPerPage,
+						$currentPage,
+						'/'.$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
+					);
+				}
+			}
+			$config['renderitems'] = getRenderItems($config['itemlist']);
+		    $app->render('surrounding.htm', $config);
+		});
+		
+	}
+}
+
+
+
+$sortfields = array_merge($sortfields1, $sortfields2);
 foreach(array_keys($sortfields) as $currentType) {
 	$app->get(
 		'/search'.$currentType.'/page/:currentPage/sort/:sort/:direction',
@@ -763,7 +761,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 				'label' => $excerped[0],
 				'url' => (($filterType === 'track')
 					? '/searchall/page/1/sort/relevance/desc?q=' . $row['display']
-					: '/library/' . $filterType . '/' . $row['itemid']),
+					: '/' . $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc'),
 				'type' => $filterType,
 				'typelabel' => $app->ll->str($filterType),
 				'itemid' => $row['itemid']

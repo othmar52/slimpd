@@ -1,0 +1,30 @@
+{% set startnum = paginator_params.currentPage*paginator_params.itemsPerPage+1-paginator_params.itemsPerPage %}
+
+{% if paginator_params.currentPage == paginator_params.numPages %}
+	{% set endnum = paginator_params.totalItems %}
+{% else %}
+	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
+{% endif %}
+
+
+
+
+<h2>{{itemtype|ll}} &quot;{{ item.title }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
+{{ startnum }} - {{ endnum }} of {{ search[listcurrent].total }} {{'results'|ll}} in {{ search[listcurrent].time }}s</span></h2>
+
+
+<div class="row">
+	<div class="col-md-10">
+		<ul class="nav nav-tabs">
+			<li class="{{ (listcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/{{itemtype}}/{{search[listcurrent].term}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">Tracks ({{ search.track.total }})</a>
+			</li>
+			<li class="{{ (listcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/{{itemtype}}/{{search[listcurrent].term}}/albums/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">Albums ({{ search.album.total }})</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-2">
+		Sortierung {% include 'partials/dropdown-typelist-sorting.htm' %}
+	</div>
+</div>
