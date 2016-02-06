@@ -18,6 +18,15 @@ function timeStringToSeconds($time) {
     return $sec;
 }
 
+function notifyJson($message, $type="info") {
+	$out = new stdClass();
+	$out->notify = 1;
+	$out->message = $message;
+	$out->type = $type;
+	echo json_encode($out);
+	exit;
+}
+
 function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if($verbosity > \Slim\Slim::getInstance()->config['config']['cli-verbosity'] && $fatal === FALSE) {
 		return;
