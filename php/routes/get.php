@@ -19,30 +19,13 @@ $config['mainmenu']= array(
     'title' => $app->ll->str('menu.filebrowser'),
     'url' => $config['absRefPrefix'] . 'filebrowser'
   ),
-  #array(
-  #  'title' => $app->ll->str('menu.genres'),
-  #  'url' => $config['absRefPrefix'] . 'library/genres/page/1'
-  #),
-  #array(
-  #  'title' => $app->ll->str('menu.artists'),
-  #  'url' => $config['absRefPrefix'] . 'library/artists/page/1'
-  #),
-  #array(
-  #  'title' => $app->ll->str('menu.labels'),
-  #  'url' => $config['absRefPrefix'] . 'library/labels/page/1'
-  #),
-  
-  
-  #array(
-  #  'title' => $app->ll->str('menu.favorites'),
-  #  'url' => $config['absRefPrefix'] . 'favorites'
-  #),
   array(
     'title' => $app->ll->str('menu.importer'),
     'url' => $config['absRefPrefix'] . 'importer'
   ),
 );
 
+# TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
 $config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
 
 $config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
@@ -65,9 +48,9 @@ $app->get('/library/album(/)', function() use ($app, $config){
 });
 
 
-foreach(['/library/album', '/markup/albumtracks'] as $what) {
+foreach(['/album', '/markup/albumtracks'] as $what) {
 	$app->get($what .'/:albumId', function($albumId) use ($app, $config, $what){
-		$config['action'] = ($what == '/library/album') ? 'album.detail' : 'albumtracks';
+		$config['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
 		$config['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
 		$config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
 		
@@ -100,9 +83,6 @@ $app->get('/mpdctrl(/:cmd(/:item))', function($cmd, $item='') use ($app, $config
 	$config['action'] = 'mpdctrl.' . $cmd;
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$mpd->cmd($cmd, $item);
-	if($cmd !== 'playerStatus') {
-		//$app->redirect('/playlist/page/current');
-	}
 });
 
 $app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $config){
@@ -110,7 +90,6 @@ $app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $config){
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$mpd->cmd($cmd, $item);
 });
-
 
 
 $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
@@ -174,7 +153,7 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $m
 
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
-		// maybe we cant find item in mpd or mysql database because it has ben accessed via filebrowser
+		// maybe we cant find item in mpd or mysql database because it has been accessed via filebrowser
 		$itemRelativePath = '';
 		
 		if($markupSnippet === 'mpdplayer') {
@@ -311,8 +290,6 @@ $app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use
 	$svgGenerator->generateSvg($width);
 });
 
-
-
 $app->get('/filebrowser', function() use ($app, $config){
 	$config['action'] = 'filebrowser';
 	$fileBrowser = new \Slimpd\filebrowser();
@@ -324,8 +301,6 @@ $app->get('/filebrowser', function() use ($app, $config){
 	
 	$app->render('surrounding.htm', $config);
 });
-
-
 
 $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'filebrowser';
@@ -341,11 +316,9 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 
 $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'maintainance.trackdebug';
-	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
-		$search = array('id' => (int)$itemParams[0]);
-	} else {
-		$search = array('relativePathHash' => getFilePathHash(join(DS, $itemParams)));
-	}
+	$search = (count($itemParams) === 1 && is_numeric($itemParams[0]))
+		? array('id' => (int)$itemParams[0])
+		: array('relativePathHash' => getFilePathHash(join(DS, $itemParams)));
 	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
 	$config['renderitems'] = getRenderItems($config['item']);
@@ -401,8 +374,6 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 		$config['matchmapping'] = $discogsItem->guessTrackMatch($config['itemlistraw']);
 		$config['discogstracks'] = $discogsItem->trackstrings;
 		$config['discogsalbum'] = $discogsItem->albumAttributes;
-		
-		
 	}
 	
 	$config['renderitems'] = getRenderItems($config['itemlist'], $config['album']);
@@ -411,7 +382,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 });
 
 
-// TODO: carefully check which sorting ist possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
+// TODO: carefully check which sorting is possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
 $sortfields1 = array(
 	'artist' => array('title', 'trackCount', 'albumCount'),
 	'genre' => array('title', 'trackCount', 'albumCount'),
@@ -441,7 +412,7 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$classPath = "\\Slimpd\\" . ucfirst($className);
 			
-			// TODO: handle comma sparated item-ids
+			// TODO: handle comma separated item-ids
 			$term = str_replace(",", " ", $itemId);
 			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
 			
@@ -608,12 +579,10 @@ foreach(array_keys($sortfields) as $currentType) {
 				
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
-				#echo "<pre>" . print_r($stmt,1). print_r($rows,1); die();
 				$meta = $ln_sph->query("SHOW META")->fetchAll();
 				foreach($meta as $m) {
 				    $meta_map[$m['Variable_name']] = $m['Value'];
 				}
-
 				
 				if(count($rows) === 0 && !$app->request()->params('nosuggestion')) {
 					$words = array();
@@ -719,13 +688,11 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	}
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
-	#echo "<pre>" . print_r($stmt,1) . print_r($rows,1); die();
 	$meta = $ln_sph->query("SHOW META")->fetchAll();
 	foreach($meta as $m) {
 	    $meta_map[$m['Variable_name']] = $m['Value'];
 	}
-	
-	
+		
 	if(count($rows) === 0) {
 		$words = array();
 		foreach($meta_map as $k=>$v) {
@@ -757,11 +724,23 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		foreach($rows as $row) {
 			$excerped = $cl->BuildExcerpts([$row['display']], $app->config['sphinx']['mainindex'], $term);
 			$filterType = $filterTypeMapping[$row['type']];
+			
+			switch($filterType) {
+				case 'track':
+					$url = '/searchall/page/1/sort/relevance/desc?q=' . $row['display']; 
+					break;
+				case 'album':
+					$url = '/album/' . $row['itemid']; 
+					break;
+				default:
+					$url = '/' . $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc';
+					break;
+			}
+					
+					
 			$entry = [
 				'label' => $excerped[0],
-				'url' => (($filterType === 'track')
-					? '/searchall/page/1/sort/relevance/desc?q=' . $row['display']
-					: '/' . $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc'),
+				'url' => $url,
 				'type' => $filterType,
 				'typelabel' => $app->ll->str($filterType),
 				'itemid' => $row['itemid']
@@ -780,12 +759,8 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 			$result[] = $entry;
 		}
 	}
-	#echo "<pre>" . print_r($result,1); die();
-	#echo "<pre>" . print_r($rows,1); die();
 	echo json_encode($result); exit;
 })->name('autocomplete');
-
-
 
 $app->get('/deliver/:item+', function($item) use ($app, $config){
 	$path = join(DS, $item);
