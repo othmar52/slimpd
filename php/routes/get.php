@@ -547,6 +547,14 @@ foreach(array_keys($sortfields1) as $className) {
 }
 
 
+$app->get('/alphasearch/', function() use ($app, $config){
+	$type = $app->request()->get('searchtype');
+	$term = $app->request()->get('searchterm');
+	$nosurParam = ($config['nosurrounding'] === TRUE)
+		? '?nosurrounding=1'
+		: '';
+	$app->response->redirect('/'.$type.'s/searchterm/'.rawurlencode($term).'/page/1' . $nosurParam);
+});
 
 $sortfields = array_merge($sortfields1, $sortfields2);
 foreach(array_keys($sortfields) as $currentType) {
