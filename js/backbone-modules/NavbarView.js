@@ -29,7 +29,7 @@
             
             var that = this;
             
-            $('.ajax-form', this.$el).on('submit', function(e) {
+            $('.ac-ajax-form', this.$el).on('submit', function(e) {
 				e.preventDefault();
 				var url = window.sliMpd.setGetParameter($(this).attr('action'), 'q', that.searchfield.val());
 				

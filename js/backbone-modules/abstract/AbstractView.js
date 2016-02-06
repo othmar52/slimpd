@@ -43,6 +43,17 @@
 		    	);
 		    });
 		    
+		    $('.ajax-form', this.$el).on('submit', function(e) {
+				e.preventDefault();
+				var url = $(this).attr('action') + '?' + $(this).serialize();
+				console.log(url);
+				window.sliMpd.router.navigate(url, {
+					trigger : true
+				});
+				
+				//that.searchfield.autocomplete('close');
+			});
+		    
 		    
 		    $('.dropdown-toggle', this.$el).dropdown();
 		    $('.toggle-tooltip', this.$el).tooltip();

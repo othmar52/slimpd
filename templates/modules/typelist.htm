@@ -1,10 +1,9 @@
 
 
 <h2>{{ type }}list</h2>
-<form action="/alphasearch/" method="post">
+<form action="/alphasearch/" method="get" class="ajax-form">
 	<input name="searchterm" value="" placeholder="{{type}}search alpha (az09*)"/>
 	<input name="searchtype" value="{{type}}" type="hidden"/>
-	<input name="debug" value="1" type="hidden"/>
 	<button type="submit">
 	<i id="iconSearchToggler" class="fa fa-search fa-lg"></i>
 	</button>
