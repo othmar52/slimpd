@@ -33,7 +33,41 @@ $(document).ready(function() {
 			clearTimeout(window.sliMpd.drawFaviconTimeout);
 			window.sliMpd.currentPlayer.drawFavicon();
 			window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
+		},
+		
+		fireRequestAndNotify : function(url) {
+			$.get(url).done(function(response) {
+				window.sliMpd.checkNotify(response);
+			});
+		},
+		
+		checkNotify : function(endcodedResponse) {
+			try {
+	        	var notifyConf = JSON.parse(endcodedResponse);
+	        	if (typeof notifyConf.notify !== 'undefined') {
+	        		this.notify(notifyConf);
+	        	}
+		    } catch(e) {
+		    	//console.log(e + ' no json response in SliMpd::checkNotify()');
+			}
+		},
+		
+		notify : function(notifyConf) {
+			////////////////////////////////////////////////
+			// FIXME:
+			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property 'title' of undefined
+			// check notify's-template variable for title
+			//////////////////////////////////////////////// 
+    		$.notify({
+				// options
+				message: notifyConf.message
+			},{
+				// settings
+				type: (notifyConf.type || 'info')
+			});
+			$.notify();
 		}
+		
     });
     
     window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({

@@ -39,7 +39,7 @@
         },
         
         play : function(item) {
-			$.get(item.mpdurl);
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.redraw();
     		//this.reloadCss(item.hash);
     		window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
@@ -47,10 +47,10 @@
         
         togglePause : function(item) {
 			if(this.nowPlayingState == 'play') {
-				$.get('/mpdctrl/pause');
+				window.sliMpd.fireRequestAndNotify('/mpdctrl/pause');
 				this.nowPlayingState = 'pause';
 			} else {
-				$.get('/mpdctrl/play');
+				window.sliMpd.fireRequestAndNotify('/mpdctrl/play');
 				this.nowPlayingState = 'play';
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
@@ -59,18 +59,18 @@
 		},
 		
         seek : function(item) {
-			$.get(item.mpdurl);
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
         },
         
         prev : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
         },
         
         next : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	this.refreshInterval();
         	// TODO: do we really need to append '?null' to routename comparison?
         	window.sliMpd.router.refreshIfName('playlist?null');
@@ -78,37 +78,37 @@
         },
         
         remove : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
         },
         
         toggleRepeat : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
         },
         
         toggleRandom : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
         },
         
         toggleConsume : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
         
         clearPlaylistNotCurrent : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
         },
         
         addDirToPlaylist : function(item) {
-        	$.get(item.mpdurl);
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);        	
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
         },
@@ -188,14 +188,7 @@
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
-			$.notify({
-				// options
-				message: 'MPD playing: ' + $('.player-mpd .now-playing-string').text()
-			},{
-				// settings
-				type: 'info'
-			});
-			$.notify();
+			window.sliMpd.notify({'notify':1, 'message': 'MPD playing: ' + $('.player-mpd .now-playing-string').text()});
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
