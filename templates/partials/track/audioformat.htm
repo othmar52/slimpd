@@ -1,2 +1,11 @@
 {% if item.audioDataFormat == 'flac' %}<br /> <span class="label label-success">FLAC</span>{% endif %}
+{% if item.audioDataFormat == 'wav' %}<br /> <span class="label label-success">WAV</span>{% endif %}
 {% if item.audioDataFormat == 'wma' %}<br /> <span class="label label-danger">WMA</span>{% endif %}
+{% if item.audioDataFormat == 'mp3' %}
+	{% if item.audioBitrate == 128000 %}
+		<br /> <span class="label label-danger">128k</span>
+	{% endif %}
+	{% if item.audioBitrate == 160000 %}
+		<br /> <span class="label label-warning">160k</span>
+	{% endif %}
+{% endif %}
