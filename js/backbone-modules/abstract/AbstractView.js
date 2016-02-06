@@ -101,7 +101,7 @@
 		        var item = JSON.parse($el.attr('data-player'));
 		        window.sliMpd.currentPlayer.process(item);
 		    } catch(e) {
-		    	console.log(e + ' in data-player attribute');
+		    	//console.log(e + ' in data-player attribute');
 			}
 		},
        
@@ -128,7 +128,7 @@
         	$.ajax({
 				url: window.sliMpd.setGetParameter($el.attr('data-href'), 'nosurrounding', '1')
 			}).done(function(response) {
-				// TODO: notifications and callbacks
+				window.sliMpd.checkNotify(response);
 			});
 		},
 		
@@ -143,7 +143,7 @@
        	},
        	
        	/*
-       	// FIXME: why doues this not work?
+       	// FIXME: why does this not work?
        	// @see: app.js:document.ready()
        	triggerLightboxClickListener : function(e) {
        		event.preventDefault();
