@@ -188,6 +188,14 @@
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
+			$.notify({
+				// options
+				message: 'MPD playing: ' + $('.player-mpd .now-playing-string').text()
+			},{
+				// settings
+				type: 'info'
+			});
+			$.notify();
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
