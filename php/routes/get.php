@@ -41,6 +41,58 @@ $app->get('/library(/)', function() use ($app, $config){
     $app->render('surrounding.htm', $config);
 });
 
+foreach(array('artist', 'label', 'genre') as $className) {
+	// stringlist of artist|label|genre
+	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $config, $className){
+		$classPath = "\\Slimpd\\" . ucfirst($className);
+		$config['action'] = 'library.'. $className .'s';
+		$currentPage = 1;
+		$itemsPerPage = 100;
+		$searchterm = FALSE;
+		$orderBy = FALSE;
+		
+		foreach($itemParams as $i => $urlSegment) {
+			switch($urlSegment) {
+				case 'page':
+					if(isset($itemParams[$i+1]) === TRUE && is_numeric($itemParams[$i+1]) === TRUE) {
+						$currentPage = (int) $itemParams[$i+1];
+					}
+					break;
+				case 'searchterm':
+					if(isset($itemParams[$i+1]) === TRUE && strlen(trim($itemParams[$i+1])) > 0) {
+						$searchterm = trim($itemParams[$i+1]);
+					}
+					break;
+				default: break;
+					
+			}
+		}
+
+		if($searchterm !== FALSE) {
+			$config['itemlist'] = $classPath::getInstancesLikeAttributes(
+				array('az09' => str_replace('*', '%', $searchterm)),
+				$itemsPerPage,
+				$currentPage
+			);
+			$config['totalresults'] = $classPath::getCountLikeAttributes(
+				array('az09' => str_replace('*', '%', $searchterm))
+			);
+			$urlPattern = '/'.$className.'s/searchterm/'.$searchterm.'/page/(:num)';
+		} else {
+			$config['itemlist'] = $classPath::getAll($itemsPerPage, $currentPage);
+			$config['totalresults'] = $classPath::getCountAll();
+			$urlPattern = '/'.$className.'s/page/(:num)';
+		}
+		$config['paginator_params'] = new JasonGrimes\Paginator(
+			$config['totalresults'],
+			$itemsPerPage,
+			$currentPage,
+			$urlPattern
+		);
+    	$app->render('surrounding.htm', $config);
+	});	
+}
+
 
 $app->get('/library/album(/)', function() use ($app, $config){
 	$config['action'] = 'library.album';
@@ -693,7 +745,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	    $meta_map[$m['Variable_name']] = $m['Value'];
 	}
 		
-	if(count($rows) === 0) {
+	if(count($rows) === 0 && $app->request->get('suggested') != 1) {
 		$words = array();
 		foreach($meta_map as $k=>$v) {
 			if(preg_match('/keyword\[\d+]/', $k)) {
@@ -709,7 +761,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
 		if($suggest !== FALSE) {
-			$app->response->redirect($app->urlFor('autocomplete', array('type' => $type, 'term' => $suggest)));
+			$app->response->redirect($app->urlFor('autocomplete', array('type' => $type, 'term' => $suggest)) . '?suggested=1');
 			$app->stop();
 		}
 		$result[] = [
