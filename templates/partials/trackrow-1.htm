@@ -1,6 +1,6 @@
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2">
-		<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
+		<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
 			{% include 'partials/image.htm' with {
 				'width': 50,
 				'type': 'album',
