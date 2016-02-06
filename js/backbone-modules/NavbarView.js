@@ -40,7 +40,7 @@
 					trigger : true
 				});
 				
-				that.searchfield.autocomplete('close');
+				that.closeAutoComplete();
 				
 				// TODO : insert tabbedautocomplete js code
 				// TODO : on rendering of search-results, re-init click listener:
@@ -211,6 +211,10 @@
 		stripTags : function ( str ) {
 		    str=str.toString();
 		    return str.replace(/<\/?[^>]+>/gi, '');
+		},
+		
+		closeAutoComplete : function() {
+			this.searchfield.autocomplete('close');
 		}
 		
     });
