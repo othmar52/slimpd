@@ -124,5 +124,11 @@ $(document).ready(function() {
 		return $(this).ekkoLightbox({
 			always_show_close: true
 		});
-	});   
+	});
+	
+	$(document).on('keydown', null, 'ctrl+space', function(){
+		// FIXME: this does not work with open autocomplete-widget. obviously ac overrides key bindings
+		$('#mainsearch').focus().select();
+		return false;
+	});
 });
