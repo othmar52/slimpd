@@ -223,8 +223,7 @@ class mpd
 					}
 					$this->mpd('add "' . str_replace("\"", "\\\"", $path) . '"');
 				}
-				
-				
+				notifyJson("MPD: added " . $path . " to playlist");
 				break;
 				
 			case 'playIndex':
@@ -237,6 +236,7 @@ class mpd
 				
 			case 'clearPlaylist':
 				$this->mpd('clear');
+				notifyJson("MPD: cleared playlist");
 				break;
 				
 			case 'clearPlaylistNotCurrent':
@@ -253,6 +253,7 @@ class mpd
 				} else {
 					$this->mpd('clear');
 				}
+				notifyJson("MPD: cleared playlist");
 				break;
 			
 			case 'playSelect': //		playSelect();
