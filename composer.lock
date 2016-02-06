@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0898fb120e70c13c879c6fcd8b75489e",
-    "content-hash": "9098860043ecad7c566e28417145786e",
+    "hash": "14f97f079b6f905fbdc2ae3641c981b0",
+    "content-hash": "96e21085e4916a3201846d472979baf9",
     "packages": [
         {
             "name": "components/backbone",
@@ -817,6 +817,17 @@
                 "paginator"
             ],
             "time": "2015-10-15 09:42:44"
+        },
+        {
+            "name": "jeresig/jquery.hotkeys",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:jeresig/jquery.hotkeys.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2015-11-08 20:57:18"
         },
         {
             "name": "kriswallsmith/assetic",

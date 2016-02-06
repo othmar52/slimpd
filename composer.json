@@ -21,7 +21,8 @@
         "components/backbone": "^1.2",
         "components/greensock-js": "dev-master",
         "hendrismit/bootstrap-lightbox": "master",
-        "mouse0270/bootstrap-notify": "master"
+        "mouse0270/bootstrap-notify": "master",
+        "jeresig/jquery.hotkeys": "master"
     },
     "repositories": [
         {
@@ -47,6 +48,18 @@
                 "version": "master",
                 "source": {
                     "url": "git@github.com:mouse0270/bootstrap-notify.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "jeresig/jquery.hotkeys",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:jeresig/jquery.hotkeys.git",
                     "type": "git",
                     "reference": "origin/master"
                 }
