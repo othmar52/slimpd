@@ -721,7 +721,7 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/91c8929b28f1fc45223d6422804f895ece107261",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/38a70e4a275ef4d0c838c714b6e5e3270984dab4",
             "reference": "91c8929b28f1fc45223d6422804f895ece107261",
             "shasum": ""
         },
@@ -1466,6 +1466,18 @@
         "source": {
             "type": "git",
             "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "mouse0270/bootstrap-notify",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:mouse0270/bootstrap-notify.git",
             "reference": "origin/master"
         },
         "type": "library",

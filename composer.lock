@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0c4d94cc744818961965fa0ed9b2dd7a",
-    "content-hash": "de9d1957f023f28f0f6b4dd254b56c30",
+    "hash": "0898fb120e70c13c879c6fcd8b75489e",
+    "content-hash": "9098860043ecad7c566e28417145786e",
     "packages": [
         {
             "name": "components/backbone",
@@ -963,6 +963,17 @@
             "time": "2015-12-21 00:06:34"
         },
         {
+            "name": "mouse0270/bootstrap-notify",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:mouse0270/bootstrap-notify.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2016-01-21 23:37:59"
+        },
+        {
             "name": "neutron/sphinxsearch-api",
             "version": "2.0.8",
             "source": {
@@ -1297,7 +1308,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/91c8929b28f1fc45223d6422804f895ece107261",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/38a70e4a275ef4d0c838c714b6e5e3270984dab4",
                 "reference": "91c8929b28f1fc45223d6422804f895ece107261",
                 "shasum": ""
             },

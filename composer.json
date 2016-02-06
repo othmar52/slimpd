@@ -20,7 +20,8 @@
         "components/jquery-cookie": "1.4.1.2",
         "components/backbone": "^1.2",
         "components/greensock-js": "dev-master",
-        "hendrismit/bootstrap-lightbox": "master"
+        "hendrismit/bootstrap-lightbox": "master",
+        "mouse0270/bootstrap-notify": "master"
     },
     "repositories": [
         {
@@ -34,6 +35,18 @@
                 "version": "master",
                 "source": {
                     "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "mouse0270/bootstrap-notify",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:mouse0270/bootstrap-notify.git",
                     "type": "git",
                     "reference": "origin/master"
                 }
