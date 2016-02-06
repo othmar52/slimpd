@@ -1,8 +1,6 @@
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
 		<div class="col-sm-12 col-md-5">
-			{{ dump(item) }}
-		
 			{# TODO: create preloader for waveformimage as it can take very long for large files #}
 	    	{% if not item.id %}
 	    		{% if not item.relativePath %}
@@ -72,7 +70,7 @@
 	    
 	    </div>
 	    <div class="col-sm-7 col-md-1" style="height: 100px;">
-	    	<a href="/library/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
+	    	<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
 	    		<img src="/image-100/album/{{ item.albumId }}" />
 	    	</a>
 	    </div>
