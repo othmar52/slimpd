@@ -1,30 +1,50 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2 no-padding-right">
-		<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
+		<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
 			<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
 		</a>
-		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
+		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
 			<i class="fa fa-play"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
 			<i class="fa fa-align-justify"></i>
 		</button>
-		<button role="control" title="remove from playlist" class="btn btn-default player-ctrl" data-player='{"action":"remove","item":{{ item.id }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
+		<button role="control" title="remove from playlist" class="btn btn-default player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 			<i class="fa fa-trash"></i>
 		</button>
 	</div>
 	
-	<div class="col-md-3">
-		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-		<br />
-		<div class="darker-links">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
-	</div>
-	<div class="col-md-3">
-		{% include 'partials/artist/link.htm' %}
-	</div>
-	<div class="col-md-2">
-		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
-	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
-	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
+	{% if item.id %}
+		<div class="col-md-3">
+				{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+			<br />
+			<div class="darker-links">
+				{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}
+			</div>
+		</div>
+		<div class="col-md-3">
+			{% include 'partials/artist/link.htm' %}
+		</div>
+		<div class="col-md-2">
+			{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		</div>
+		<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
+		<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
+		
+	{% else %}
+		{# item is not imported in sliMpd so we do not have any meta-infos #}
+		<div class="col-md-8">
+			{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+			<br />
+			<div class="darker-links">
+				<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+			</div>
+		</div>
+		<div class="col-md-2"><span class="label label-danger">track not imported yet</span></div>
+	{% endif %}
+	
+	
 </div>
+{% endblock %}
