@@ -70,6 +70,19 @@
 		        placeholder: 'span2 well placeholder tile',
 		        forceHelperSize: true
 		    });
+		    
+		    $('object.svg-ajax-object', that.$el).each(function(index, item){
+		    	console.log('FOUND: object.svg-ajax-object');
+		    	var obj = item;
+			    $.ajax({
+	    			url: $(obj).attr('data-svgurl')
+	    		}).retry({
+	    			times: 10,
+	    			timeout: 3000
+	    		}).then(function(response){
+	    			$(obj).attr('data', $(obj).attr('data-svgurl'));
+	  			});
+	  		});
             
             window.Backbone.View.prototype.render.call(this);
             this.rendered = true;

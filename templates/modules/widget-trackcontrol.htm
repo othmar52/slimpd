@@ -13,19 +13,7 @@
      
 	<div class="row">
 	  	<div class="col-md-10">
-	
-	    	{# TODO: create preloader for waveformimage as it can take very long for large files #}
-	    	{% if not item.id %}
-	    		{% if not item.relativePath %}
-	    		<object class="waveform" style="width: 100%; height: 100px;" data="/skin/default/img/notrack.svg" type="image/svg+xml"></object>
-	    		{% else %}
-	    		<object class="waveform" style="width: 100%; height: 100px;" data="/audiosvg/width/5000/{{ item.relativePath }}?color=3" type="image/svg+xml"></object>
-	    		{% endif %}
-	    	{% else %}
-	    		<object class="waveform" style="width: 100%; height: 100px;" data="/audiosvg/width/5000/{{ item.id }}?color=3" type="image/svg+xml">
-	    	{% endif %}
-	    	
-	    	</object>
+	  		<object class="waveform svg-ajax-object" style="width: 100%; height: 100px;" data="/skin/default/img/loading-waveform.svg" data-svgurl="/audiosvg/width/5000/{{ item.relativePath }}?color=3" type="image/svg+xml"></object>
 		</div>
 		
 		<div class="col-md-2">
