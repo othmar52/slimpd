@@ -4,17 +4,9 @@
     	<div class="mpd-status-progressbar">
     	
     	</div>
-    	{# TODO: create preloader for waveformimage as it can take very long for large files #}
-    	{% if not item.id %}
-    		{% if not item.relativePath %}
-	    		<object class="waveform" style="width: 100%; height: 50px;" data="/skin/default/img/notrack.svg" type="image/svg+xml"></object>
-	    	{% else %}
-	    		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.relativePath }}" type="image/svg+xml"></object>
-	    	{% endif %}
-    	{% else %}
-    		<object class="waveform" style="width: 100%; height: 50px;" data="/audiosvg/width/550/{{ item.id }}" type="image/svg+xml">
-    	{% endif %}
-    	
+    	<object class="waveform svg-ajax-object" style="width: 100%; height: 50px;"
+    		data="{{ placeholderSvgUrl }}"
+    		data-svgurl="{{ waveformSvgUrl }}" type="image/svg+xml">
     	</object>
     	<div class="mpd-status-timestring" style="text-align: center;">
     		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
