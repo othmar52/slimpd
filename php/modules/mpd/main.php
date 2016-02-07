@@ -63,7 +63,14 @@ class mpd
 			if($idx < $minIndex || $idx >= $maxIndex) {
 				continue;
 			}
-			$playlist[$idx] = \Slimpd\Track::getInstanceByPath($filepath);
+			$track = \Slimpd\Track::getInstanceByPath($filepath);
+			
+			if($track === NULL) {
+				$track = new \Slimpd\Track();
+				$track->setRelativePath($filepath);
+				$track->setRelativePathHash(getFilePathHash($filepath));
+			}
+			$playlist[$idx] = $track;
 		}
 		
 		
