@@ -37,7 +37,6 @@
 	  {% endfor %}
 	{% else %}
 		no {{ type }}s found
-		{{ dump(itemlist)}}
 	{% endif %}
 </div>
 {% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}

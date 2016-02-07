@@ -1,3 +1,5 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
 		<div class="col-sm-12 col-md-5">
@@ -75,6 +77,7 @@
 	    	</a>
 	    </div>
 	    <div class="col-sm-5">
+	    	{% if item.id %}
 	    	<div class="row">
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
@@ -85,11 +88,19 @@
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}</span></div>
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}</span></div>
 			</div>
+			{% else %}
+				{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				<br />
+				<div class="darker-links">
+					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+				</div>
+				<span class="label label-danger">track not imported yet</span>
+			{% endif %}
 			<div class="row">
 				<div class="col-sm-12 small">
 					{# TODO: remove external liking as soon we have implemented a proper functionality #}
 					<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
-					<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default btn-sm trigger-modal">
+					<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal">
 						<i class="fa fa-align-justify fa-sm"></i>
 					</button>
 				</div>
@@ -100,3 +111,4 @@
 		    
 	<div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
    
+{% endblock %}
