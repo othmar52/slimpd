@@ -52,10 +52,8 @@ class Svggenerator {
 			session_write_close(); // do not block other requests during processing
 			$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
 			if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
-				# make sure same file isnt processed twice simultaneously by different client-requests...
-				# TODO: send a message to client for requesting waveform again after a few seconds?
-				# or sleep here until tmp files had been deleted?
-				# or redirect to same route with increasing counter until a maximum is reached
+				# another request already triggered generateSvg
+				\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
 				return NULL;
 			}
 			$this->generatePeakFile();
@@ -74,7 +72,13 @@ class Svggenerator {
 			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');
 		}
 		
-		$values = explode("\n", file_get_contents($this->peakValuesFilePath));
+		$peaks = file_get_contents($this->peakValuesFilePath);
+		if($peaks === 'generating') {
+			\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
+			return NULL;
+		}
+		
+		$values = explode("\n", $peaks);
 		$values = array_map('trim', $values);
 		
 		$values = $this->limitArray($values, $pixel);
@@ -131,15 +135,16 @@ class Svggenerator {
 	
 		
 	private function generatePeakFile() {
+		
+		\phpthumb_functions::EnsureDirectoryExists(dirname($this->peakValuesFilePath));
+		file_put_contents($this->peakValuesFilePath, "generating");
+		
 		// extract peaks
 		$peakValues = $this->getPeaks();
 		
 		// shorten values to configured limit
 		$peakValues = $this->limitArray($peakValues, $this->peakFileResolution);
 		
-		
-		
-		\phpthumb_functions::EnsureDirectoryExists(dirname($this->peakValuesFilePath));
 		file_put_contents($this->peakValuesFilePath, join("\n", $peakValues));
 		return;
 	}
