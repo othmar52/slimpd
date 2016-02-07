@@ -55,6 +55,10 @@ a {
 	font-weight: bold;
 }
 
+.glue-hover-trigger {
+	color: #BBB;
+}
+
 .dark,
 .darker-links a {
 	color: #696969;
@@ -180,7 +184,8 @@ a {
 	content: " >";
 	color: #444;
 }
-.item-link:hover {
+.item-link:hover,
+.glue-hover-wrap.underline a {
 	color: #FFF;
 	text-decoration: none;
 	border-bottom: 1px solid #FFF;
