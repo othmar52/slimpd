@@ -29,6 +29,8 @@
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener).on('click', this.playerCtrlClickListener);
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener).on('click', this.ajaxPartialClickListener);
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener).on('click', this.triggerModalClickListener);
+            $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener).on('mouseenter', this.itemGlueMouseenterListener);
+            $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener).on('mouseleave', this.itemGlueMouseleaveListener);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             
             // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
@@ -95,6 +97,8 @@
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener);
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener);
             $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener);
+            $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener);
+            $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -174,6 +178,18 @@
         playerModeToggleTriggerListener : function(e) {
        		e.preventDefault();
        		$('.playerModeToggle a').trigger('click');
+       	},
+       	
+       	itemGlueMouseenterListener : function(e) {
+       		console.log('asdgsg')
+       		e.preventDefault();
+       		$(e.currentTarget).closest('.glue-hover-wrap').addClass('underline');
+       	},
+       	
+       	itemGlueMouseleaveListener : function(e) {
+       		console.log('bsdgsg')
+       		e.preventDefault();
+       		$(e.currentTarget).closest('.glue-hover-wrap').removeClass('underline');
        	},
 
         process : function(e) {
