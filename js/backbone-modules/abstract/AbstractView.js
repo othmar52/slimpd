@@ -90,7 +90,11 @@
         
         remove : function() {
             $('a.ajax-link', this.$el).off('click', this.genericClickListener);
+            $('.ajax-rqst', this.$el).off('click', this.ajaxRequestClickListener);
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener);
+            $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener);
+            $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener);
+            $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
