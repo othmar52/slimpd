@@ -1,12 +1,14 @@
 {% if item.artistId %}
+<span class="glue-hover-wrap">
 	{% set itemIds = item.artistId|split(',') %}
 	{% for itemId in itemIds %}
 		{% include 'partials/artist/single-link.htm' %}
 		{% if loop.last == false %}
-		<a class="artist-link item-link ajax-link toggle-tooltip" href="/artist/{{item.artistId}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" title="view artist xx">
-			<span class="artist_all">&amp;</span></a>
+		<a class="artist-link item-link ajax-link toggle-tooltip" href="/artist/{{item.artistId}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" title="view artists tracks">
+			<span class="glue-hover-trigger">&amp;</span></a>
 		{% endif %}
 	{% endfor%}
+</span>
 {% endif %}
 {% if item.featuringId %}
 	(ft.

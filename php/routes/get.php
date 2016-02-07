@@ -476,7 +476,6 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$classPath = "\\Slimpd\\" . ucfirst($className);
 			
-			// TODO: handle comma separated item-ids
 			$term = str_replace(",", " ", $itemId);
 			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
 			
@@ -493,10 +492,11 @@ foreach(array_keys($sortfields1) as $className) {
 				$sphinxTypeIndex = ($resultType === 'album') ? 2 : 4;
 				$stmt = $ln_sph->prepare("
 					SELECT itemid,type FROM ". $app->config['sphinx']['mainindex']."
-					WHERE MATCH('@".$className."Ids \"". $term ."\"/1')
+					WHERE MATCH('@".$className."Ids \"". $term ."\"')
 					AND type=:type
 					GROUP BY itemid,type
-					LIMIT ".$maxCount.";"
+					LIMIT ".$maxCount."
+					OPTION ranker = proximity;"
 				);
 				$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
 				$stmt->execute();
@@ -514,11 +514,12 @@ foreach(array_keys($sortfields1) as $className) {
 					$stmt = $ln_sph->prepare("
 						SELECT id,type,itemid,artistIds,display
 						FROM ". $app->config['sphinx']['mainindex']."
-						WHERE MATCH('@".$className."Ids \"". $term ."\"/1')
+						WHERE MATCH('@".$className."Ids \"". $term ."\"')
 						AND type=:type
 						GROUP BY itemid,type
 							".$sortQuery."
 							LIMIT :offset,:max
+						OPTION ranker = proximity;
 						");
 					$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 					$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
