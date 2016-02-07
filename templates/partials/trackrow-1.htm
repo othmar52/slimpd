@@ -11,7 +11,7 @@
 		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"/mpdctrl/addSelect/{{ item.id }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id }}" title="play" class="btn btn-default trigger-modal">
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
 			<i class="fa fa-align-justify fa-lg"></i>
 		</button>
 	</div>

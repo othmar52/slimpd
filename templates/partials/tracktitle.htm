@@ -10,10 +10,5 @@
 		{{titlestring}}
 	{% endif %}
 {% else %}
-	{% set dirs = filepath|split('/') %}
-	{% for dir in dirs %}
-		{% if loop.last == true %}
-		   {{dir}}
-		{% endif %}
-	{% endfor%}
+	{{ fileName }}
 {% endif %}

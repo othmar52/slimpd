@@ -147,10 +147,10 @@ $app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $config){
 $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 	$config['action'] = 'playlist';
 	$mpd = new \Slimpd\modules\mpd\mpd();
-	$config['nowplaying'] = $mpd->getCurrentlyPlayedTrack();
-	if($config['nowplaying'] !== NULL) {
+	$config['item'] = $mpd->getCurrentlyPlayedTrack();
+	if($config['item'] !== NULL) {
 		$config['nowplaying_album'] = \Slimpd\Album::getInstanceByAttributes(
-			array('id' => $config['nowplaying']->getAlbumId())
+			array('id' => $config['item']->getAlbumId())
 		);
 	} else {
 		// TODO: how to handle mpd played tracks we cant find in database
@@ -368,10 +368,22 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 
 $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'maintainance.trackdebug';
-	$search = (count($itemParams) === 1 && is_numeric($itemParams[0]))
-		? array('id' => (int)$itemParams[0])
-		: array('relativePathHash' => getFilePathHash(join(DS, $itemParams)));
+	$itemRelativePath = '';
+	$itemRelativePathHash = '';
+	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
+		$search = array('id' => (int)$itemParams[0]);
+	} else {
+		$itemRelativePath = join(DS, $itemParams);
+		$itemRelativePathHash = getFilePathHash($itemRelativePath);
+		$search = array('relativePathHash' => $itemRelativePathHash);
+	}
 	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+	if($config['item'] === NULL) {
+		$item = new \Slimpd\Track();
+		$item->setRelativePath($itemRelativePath);
+		$item->setRelativePathHash($itemRelativePathHash);
+		$config['item'] = $item;
+	}
 	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
 	$config['renderitems'] = getRenderItems($config['item']);
 	$config['totalitems'] = \Slimpd\Track::getCountAll();

@@ -1,0 +1,22 @@
+{% set albumHref = '/album/'~item.albumId %}
+{% set playerCtrlItem = item.id %}
+{% set parentDir = '' %}
+{% set fileName = '' %}
+{% if not item.id %}
+	{% set playerCtrlItem = '\"'~item.relativePath~'\"' %}
+	{% set dirs = item.relativePath|split('/') %}
+	{% set tmp = "/filebrowser" %}
+	
+	{% for i,dir in dirs %}
+		{% set tmp = tmp~'/'~dir %}
+		{% if i == loop.length-2 %}
+			{% set albumHref = tmp %}
+			{% set parentDir = dir %} 
+		{% endif %}
+		{% if loop.last %}
+			{% set fileName = dir %}
+		{% endif %}
+	{% endfor%}
+{% endif %}
+{% block content %}
+{% endblock %}
