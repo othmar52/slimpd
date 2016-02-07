@@ -165,6 +165,7 @@
 					} else {
 			    		that.timeLineLight.pause();
 			    	}
+			    	that.drawTimeGrid();
 		    	}
 		    	
 		    	// update trackinfo only onTrackChange()
