@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "14f97f079b6f905fbdc2ae3641c981b0",
-    "content-hash": "96e21085e4916a3201846d472979baf9",
+    "hash": "e3bfa06804f57628f68c5956da80878f",
+    "content-hash": "803e27029a350a95bfbcc86619cc807a",
     "packages": [
         {
             "name": "components/backbone",
@@ -828,6 +828,17 @@
             },
             "type": "library",
             "time": "2015-11-08 20:57:18"
+        },
+        {
+            "name": "johnkpaul/jquery-ajax-retry",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:johnkpaul/jquery-ajax-retry.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2014-12-26 22:07:25"
         },
         {
             "name": "kriswallsmith/assetic",

@@ -1494,5 +1494,17 @@
         },
         "type": "library",
         "installation-source": "source"
+    },
+    {
+        "name": "johnkpaul/jquery-ajax-retry",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:johnkpaul/jquery-ajax-retry.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
     }
 ]
