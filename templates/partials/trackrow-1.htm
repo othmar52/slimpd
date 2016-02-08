@@ -19,15 +19,15 @@
 	<div class="col-md-3">
 		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 		<br />
-		<div class="darker-links">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
+		<div class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>
 	<div class="col-md-3">
 		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-md-2">
-		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
-	<div class="col-md-1">{% include 'partials/yearlink.htm' %}</div>
+	<div class="col-md-1">{% include 'partials/year/link.htm' %}</div>
 	<div class="col-md-1">
 		{{ item.miliseconds|formatMiliseconds }}
 		{% include 'partials/track/audioformat.htm' %}
