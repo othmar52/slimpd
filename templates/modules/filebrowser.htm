@@ -98,6 +98,27 @@
 		{% endif %}
 	{% endfor %}
 	
+	{# playlist files #}
+	{% for item in files %}
+		{% if item.ext in ['m3u','pls'] %}
+		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
+			<div class="col-md-2">
+				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link btn btn-default">
+					<i class="fa fa-eye fa-lg"></i>
+				</a>
+			</div>
+			<div class="col-md-10">
+			
+				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
+				<i class="fa fa-list fa-lg"></i><i class="fa fa-music fa-lg"></i>
+				{{ item.name }}</a>
+			</div>
+			
+		</div>
+		
+		{% endif %}
+	{% endfor %}
+	
 	{% for item in files %}
 		{% if item.ext in ['png','jpg','jpeg','gif', 'bmp'] %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
@@ -112,7 +133,7 @@
 	{% endfor %}
 	
 	{% for item in files %}
-		{% if item.ext  not in ['mp3','m4a','flac','wav', 'png','jpg','jpeg','gif', 'bmp', 'aif', 'aiff'] %}
+		{% if item.ext  not in ['mp3','m4a','flac','wav', 'png','jpg','jpeg','gif', 'bmp', 'aif', 'aiff', 'm3u','pls'] %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
