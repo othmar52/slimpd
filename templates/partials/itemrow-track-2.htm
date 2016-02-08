@@ -16,7 +16,7 @@
 		{% include 'partials/artist/link.htm' %}
 	</div>
 	<div class="col-md-2">
-		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 	</div>
 	<div class="col-md-1">{{ item.miliseconds|formatMiliseconds }}</div>
 </div>
