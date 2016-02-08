@@ -29,7 +29,7 @@
 			
 		<span style="font-size: 1.7em;">{{album.title}}</span>
 		<div id="album-info-artist">
-			<span class="dark uc small">{{'artist'|ll}}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
+			<span class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
 		</div>
 		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;" data-ajaxtarget="#main" class="ajax-link">{{album.relativePath}}</a></p>
 			
@@ -39,7 +39,7 @@
 				{% if album.genreId %}
 				<div class="col-md12">
 					<div class="col-md-2">
-						<span class="dark uc small">{{'genre'|ll}}:</span>
+						<span class="dark uc small darker-links">{% include 'partials/genre/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
 						{% include 'partials/genre/link.htm' with { 'genreIds': album.genreId } %}
@@ -61,7 +61,7 @@
 				{% if album.labelId %}
 				<div class="col-md12">
 					<div class="col-md-2">
-						<span class="dark uc small">{{'label'|ll}}:</span>
+						<span class="dark uc small darker-links">{% include 'partials/label/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
 						{% include 'partials/label/link.htm' with { 'labelIds': album.labelId } %}
