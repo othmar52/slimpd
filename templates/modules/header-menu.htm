@@ -16,11 +16,7 @@
 					<ul class="nav navbar-nav">
 						{% for menu in mainmenu %}
 						<li class="{% if menu.url == current_url %} active{% endif %}">
-							{% if menu.url == '/playlists' %}
-								<a href="#" {{'niymarkup'|ll|raw}} >{{menu.title|raw}}</a>
-							{% else %}
-								<a href="{{menu.url}}" data-ajaxtarget="#main" class="ajax-link">{{menu.title|raw}}</a>
-							{% endif %}
+							<a href="{{menu.url}}" data-ajaxtarget="#main" class="ajax-link">{{menu.title|raw}}</a>
 						</li>
 						{% endfor %}
 		      		</ul>
