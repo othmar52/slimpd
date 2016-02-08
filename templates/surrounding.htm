@@ -108,6 +108,14 @@
 					</div>
 					{% endif %}
 					
+					{% if action == 'playlists' %}
+						{% include 'modules/playlists.htm' %}
+					{% endif %}	
+					
+					{% if action == 'showplaylist' %}
+						{% include 'modules/playlist.htm' %}
+					{% endif %}
+					
 					{% if action == 'filebrowser' %}
 						{% include 'modules/filebrowser.htm' %}
 					{% endif %}
