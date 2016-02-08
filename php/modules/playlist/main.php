@@ -39,10 +39,9 @@ class playlist
 			case 'txt':
 				// windows generated playlists are not supported yet
 				$playlistContent = str_replace("\\", "/", $raw);
-				
-				$itemPaths = trimExplode("\n", $playlistContent, TRUE);
-				$this->setLength(count($itemPaths));
-				foreach($itemPaths as $idx => $itemPath) {
+				$playlistContent = trimExplode("\n", $playlistContent, TRUE);
+				$this->setLength(count($playlistContent));
+				foreach($playlistContent as $idx => $itemPath) {
 					if($idx < $minIndex || $idx >= $maxIndex) {
 						continue;
 					}
@@ -55,14 +54,14 @@ class playlist
 					return;
 				}
 				
-				$struct = new \SimpleXMLElement($raw);
-				$result = $struct->xpath("//PLAYLIST/ENTRY/LOCATION");
-				$this->setLength(count($result));
-				foreach($result as $idx => $entry) {
+				$playlistContent = new \SimpleXMLElement($raw);
+				$trackEntries = $playlistContent->xpath("//PLAYLIST/ENTRY/LOCATION");
+				$this->setLength(count($trackEntries));
+				foreach($trackEntries as $idx => $trackEntry) {
 					if($idx < $minIndex || $idx >= $maxIndex) {
 						continue;
 					}
-					$itemPaths[] = $entry->attributes()->DIR->__toString() . $entry->attributes()->FILE->__toString();
+					$itemPaths[] = $trackEntry->attributes()->DIR->__toString() . $trackEntry->attributes()->FILE->__toString();
 				}
 				break;
 			default :
