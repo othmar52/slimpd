@@ -14,15 +14,15 @@
 				{% include 'partials/artist/link.htm' %}
 			</div>
 			<div class="col-md-3">
-				{% include 'partials/labellink.htm' with { 'item': nowplaying_album } %}
+				{% include 'partials/label/link.htm' with { 'item': nowplaying_album } %}
 			</div>
 			<div class="col-md-3">
-				{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+				{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
 			</div>
 		</div>
 		<div class="row" style="font-size: 1.6em;">
 			<div class="col-md-6">
-				{% include 'partials/albumlink.htm' with { 'item': nowplaying_album } %}
+				{% include 'partials/album/link.htm' with { 'item': nowplaying_album } %}
 			</div>
 			<div class="col-md-3">
 				#CAT: {{ item.catalogNr }}
@@ -33,7 +33,7 @@
 		</div>
 		<div class="row" style="font-size: 1.6em;">
 			<div class="col-md-6">
-				{% include 'partials/yearlink.htm' %}
+				{% include 'partials/year/link.htm' %}
 			</div>
 			<div class="col-md-6">
 				
@@ -47,7 +47,7 @@
 					<div class="darker-links">
 						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 					</div>
-					<span class="label label-danger">track not imported yet</span>
+					{% include 'partials/track/not-imported-badge.htm' %}
 		    	</div>
 	    	</div>
 		{% endif %}

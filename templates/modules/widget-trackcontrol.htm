@@ -28,19 +28,19 @@
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'year'|ll}}</span><br />
-	    	<strong>{% include 'partials/yearlink.htm' %}</strong>
+	    	<strong>{% include 'partials/year/link.htm' %}</strong>
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'genre'|ll}}</span><br />
-	    	<strong>{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}</strong>
+	    	<strong>{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</strong>
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'label'|ll}}</span><br />
-	    	<strong>{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}</strong>
+	    	<strong>{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</strong>
 	    </div>
 	    <div class="col-md-4 border-left">
 	    	<span class="dark uc small">{{'album'|ll}}</span><br />
-	    	<strong>{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</strong>
+	    	<strong>{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</strong>
 	    </div>
 	    {% else %}
 	    	<div class="col-md-12">
@@ -49,7 +49,7 @@
 				<div class="darker-links">
 					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
-				<span class="label label-danger">track not imported yet</span>
+				{% include 'partials/track/not-imported-badge.htm' %}
 	    	</div>
 	    {% endif %}
 

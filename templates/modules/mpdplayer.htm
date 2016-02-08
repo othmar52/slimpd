@@ -72,13 +72,13 @@
     	{% if item.id %}
 	    	<div class="row">
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/albumlink.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/yearlink.htm' %}</span></div>
+				<div class="col-sm-4"><span class="shorten">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+				<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
 			</div>
 			<div class="row">
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}</span></div>
+				<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
+				<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
 			</div>
 			{% else %}
 				{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
@@ -86,7 +86,7 @@
 				<div class="darker-links">
 					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
-				<span class="label label-danger">track not imported yet</span>
+				{% include 'partials/track/not-imported-badge.htm' %}
 			{% endif %}
 		<div class="row">
 			<div class="col-sm-12 small">

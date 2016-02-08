@@ -42,7 +42,7 @@
 						<span class="dark uc small">{{'genre'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/genrelink.htm' with { 'genreIds': album.genreId } %}
+						{% include 'partials/genre/link.htm' with { 'genreIds': album.genreId } %}
 					</div>
 				</div>
 				{% endif %}
@@ -53,7 +53,7 @@
 						<span class="dark uc small">{{'year'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/yearlink.htm' with { 'item': album } %}
+						{% include 'partials/year/link.htm' with { 'item': album } %}
 					</div>
 				</div>
 				{% endif %}
@@ -64,7 +64,7 @@
 						<span class="dark uc small">{{'label'|ll}}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/labellink.htm' with { 'labelIds': album.labelId } %}
+						{% include 'partials/label/link.htm' with { 'labelIds': album.labelId } %}
 					</div>
 				</div>
 				{% endif %}

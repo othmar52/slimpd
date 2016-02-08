@@ -34,7 +34,7 @@
 	<a href="/maintainance/albumdebug/{{item.albumId}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
 </span>
 {% if not item.id %}
-<span class="label label-danger">track not imported yet</span>
+{% include 'partials/track/not-imported-badge.htm' %}
 {% endif %}
 </h3>
 <div class="container">
@@ -97,7 +97,7 @@
 	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.album }}</div>
 	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumId].title }}" class="form-control" /></div>
-	<div class="col-md-3">{% include 'partials/albumlink.htm' with {'item': renderitems.albums[item.albumId]} %}</div>
+	<div class="col-md-3">{% include 'partials/album/link.htm' with {'item': renderitems.albums[item.albumId]} %}</div>
 </div>
 
 
@@ -105,24 +105,24 @@
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.year }}</div>
 	<div class="col-md-4"><input name="year" type="text" value="{{ item.year }}" class="form-control" /></div>
-	<div class="col-md-3">{% include 'partials/yearlink.htm' %}</div>
+	<div class="col-md-3">{% include 'partials/year/link.htm' %}</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.genre }}</div>
-	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genrestring.htm' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/genrelink.htm' with { 'genreIds': item.genreId } %}
+		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.publisher }}</div>
-	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/labelstring.htm' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/label/string.htm' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/labellink.htm' with { 'labelIds': item.labelId } %}
+		{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}
 	</div>
 </div>
 

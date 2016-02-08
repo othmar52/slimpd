@@ -16,7 +16,7 @@
 							<strong>{{item.title}}</strong><br />
 							{% include 'partials/artist/link.htm' %}<br />
 								({{ item.trackCount }} tracks) <br />
-								{% include 'partials/genrelink.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
+								{% include 'partials/genre/link.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
 								<span style="font-size:2em; float:right; color: #222; font-weight: bold;">{{item.year}}</span>
 						</div>
 					</div>
