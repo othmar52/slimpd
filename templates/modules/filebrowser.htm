@@ -110,7 +110,7 @@
 			<div class="col-md-10">
 			
 				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
-				<i class="fa fa-list fa-lg"></i><i class="fa fa-music fa-lg"></i>
+				<i class="fa fa-list fa-lg"></i>
 				{{ item.name }}</a>
 			</div>
 			
@@ -125,13 +125,12 @@
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
 				<button role="control" data-href="/showplaintext/{{ directory }}{{ item.name }}" title="show filecontent" class="btn btn-default trigger-modal">
-					<i class="fa fa-info fa-lg"></i>
+					<i class="fa fa-eye fa-lg"></i>
 				</button>
 			</div>
 			<div class="col-md-10">
-			
 				<button role="control" data-href="/showplaintext/{{ directory }}{{ item.name }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
-				<i class="fa fa-list fa-lg"></i><i class="fa fa-music fa-lg"></i>
+				<i class="fa fa-info fa-lg"></i>
 				{{ item.name }}</button>
 			</div>
 			
@@ -140,17 +139,20 @@
 		{% endif %}
 	{% endfor %}
 	
+	{# images #}
 	{% for item in files %}
 		{% if item.ext in ['png','jpg','jpeg','gif', 'bmp'] %}
-	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
-		<div class="col-md-2"></div>
+	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="image{{ loop.index }}">
+		<div class="col-md-2">
+			<a data-toggle="lightbox" href="/image-1000/path/{{ directory~item.name }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
+				<img src="/image-50/path/{{ directory~item.name }}" title="{{ item.name }}" alt="{{ item.name }}" />
+			</a>
+		</div>
 		<div class="col-md-10">
-			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
-			<i class="fa fa-image fa-lg"></i> 
-			{{ item.name }}</a>
+			<i class="fa fa-image fa-lg"></i> {{ item.name }}
 		</div>
 	</div>
-	{% endif %}
+		{% endif %}
 	{% endfor %}
 	
 	{% for item in files %}
