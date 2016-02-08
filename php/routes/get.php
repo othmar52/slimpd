@@ -394,7 +394,6 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 
 	$config['renderitems'] = getRenderItems($playlist->getTracks());
 	$config['playlist'] = $playlist;
-	
 	$config['paginator_params'] = new JasonGrimes\Paginator(
 		$playlist->getLength(),
 		$itemsPerPage,
