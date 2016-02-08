@@ -36,6 +36,7 @@ class playlist
 		switch($this->getExt()) {
 			case 'm3u':
 			case 'pls':
+			case 'txt':
 				// windows generated playlists are not supported yet
 				$playlistContent = str_replace("\\", "/", $raw);
 				
