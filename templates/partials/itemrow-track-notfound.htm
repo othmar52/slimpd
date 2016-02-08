@@ -1,0 +1,20 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
+<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
+	<div class="col-md-2">
+			{% include 'partials/image.htm' with {
+				'width': 50,
+				'type': 'album',
+				'itemId': item.albumId,
+				'attrs': 'style="width: 50px; height: 50px; z-index:2;"'
+			} %}
+		<a title="search track" class="btn btn-default ajax-link" href="/searchall/page/1/sort/relevance/desc?q={{ fileName }}">
+			<i class="fa fa-search fa-lg"></i>
+		</a>
+	</div>
+	
+	<div class="col-md-10">
+		{% include 'partials/track/not-found-badge.htm' %} {{ item.relativePath }}
+	</div>
+</div>
+{% endblock %}
