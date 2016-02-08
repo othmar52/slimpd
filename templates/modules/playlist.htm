@@ -1,10 +1,10 @@
 <h2>
 	<span class="dark uc small darker-links" style="font-size: 0.4em;">{% include 'partials/playlist/linked-label.htm' %}</span>
-	&quot;{{filename}}&quot;
-	<span style="margin-left: 1em; font-size: 0.4em; color:#888;">({{total}} Tracks)</span>
+	&quot;{{playlist.filename}}&quot;
+	<span style="margin-left: 1em; font-size: 0.4em; color:#888;">({{playlist.length}} Tracks)</span>
 </h2>
 {% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
-{% for item in itemlist %}
+{% for item in playlist.tracks %}
 	{% if item.error == 'notfound' %}
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
