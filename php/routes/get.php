@@ -295,6 +295,12 @@ foreach (array(50,100,300,1000) as $imagesize) {
 		$image->dump($imagesize);
 	});
 	
+	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $config, $imagesize){
+		$image = new \Slimpd\Bitmap();
+		$image->setRelativePath(join(DS, $itemParams));
+		$image->dump($imagesize);
+	});
+	
 	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $config, $imagesize){
 		$config['imagesize'] = $imagesize;
 		// TODO: move color to configfile
