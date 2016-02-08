@@ -51,12 +51,16 @@ class playlist
 			case 'nml':
 				if($this->isValidXml($raw) === FALSE) {
 					$app = \Slim\Slim::getInstance()->flashNow('error', 'invalid XML ' . $this->getFilename());
+					return;
 				}
 				
 				$struct = new \SimpleXMLElement($raw);
 				$result = $struct->xpath("//PLAYLIST/ENTRY/LOCATION");
 				$this->setLength(count($result));
-				foreach($result as $entry) {
+				foreach($result as $idx => $entry) {
+					if($idx < $minIndex || $idx >= $maxIndex) {
+						continue;
+					}
 					$itemPaths[] = $entry->attributes()->DIR->__toString() . $entry->attributes()->FILE->__toString();
 				}
 				break;
