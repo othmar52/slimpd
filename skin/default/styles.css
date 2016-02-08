@@ -325,3 +325,12 @@ a {
 .small {
 	font-weight: normal;
 }
+
+.nfo {
+	font-size: 1.1em;
+	line-height: 1em;
+	font-family: 'Courier New', Courier, monospace;
+	background-color: #000;
+	color: #fff;
+	word-wrap: break-word;
+}

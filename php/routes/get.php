@@ -405,6 +405,30 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 });
 
 
+
+$app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $config){
+	$config['action'] = "showplaintext";
+	$relativePath = join(DS, $itemParams);
+	$validPath = '';
+	foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
+		if(is_file($path . $relativePath) === TRUE) {
+			$validPath = realpath($path . $relativePath);
+			if(strpos($validPath, $path) !== 0) {
+				$validPath = '';
+			}
+		}
+	}
+	if($validPath === '') {
+		$app->flashNow('error', 'invalid path ' . $relativePath);
+	} else {
+		$config['plaintext'] = nfostring2html(file_get_contents($validPath));
+	}
+	$config['filepath'] = $relativePath;
+	$app->render('modules/widget-plaintext.htm', $config);
+});
+
+
+
 $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'maintainance.trackdebug';
 	$itemRelativePath = '';
