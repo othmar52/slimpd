@@ -377,54 +377,29 @@ $app->get('/playlists', function() use ($app, $config){
 
 $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = "showplaylist";
-	$playlistRelativePath = join(DS, $itemParams);
-	
-	// TODO: move to playlist model
-	if(is_file($app->config['mpd']['musicdir'] . $playlistRelativePath) === FALSE) {
-		$app->flashNow('error', 'playlist file ' . $playlistRelativePath . ' does not exist');
+	$playlist = new \Slimpd\playlist\playlist(join(DS, $itemParams));
+
+	if($playlist->getErrorPath() === TRUE) {
 		$app->render('surrounding.htm', $config);
 		return;
 	}
-	$playlistContent = file_get_contents($app->config['mpd']['musicdir'] . $playlistRelativePath);
 	
-	// windows generated playlists are not supported yet
-	$playlistContent = str_replace("\\", "/", $playlistContent);
-	
-	$itemPaths = trimExplode("\n", $playlistContent, TRUE);
-	
-	// calculate the portion which should be rendered
-	$listLength = count($itemPaths);
-	$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
-	$totalPages = ceil($listLength/$itemsPerPage);
 	$currentPage = $app->request->get('page');
 	$currentPage = ($currentPage) ? $currentPage : 1;
+	$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 	$minIndex = (($currentPage-1) * $itemsPerPage);
 	$maxIndex = $minIndex +  $itemsPerPage -1;
 	
-	$config['total'] = $listLength;
-	$config['filename'] = basename($playlistRelativePath);
-	
-	foreach($itemPaths as $idx => $itemPath) {
-		if($idx < $minIndex || $idx >= $maxIndex) {
-			continue;
-		}
-		$track = \Slimpd\Track::getInstanceByPath($itemPath);
-		if($track === NULL) {
-			$track = new \Slimpd\Track();
-			$track->setRelativePath($itemPath);
-			$track->setRelativePathHash(getFilePathHash($itemPath));
-			$track->setError('notfound');
-		}
-		$config['itemlist'][] = $track;
-	}
+	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
-	$config['renderitems'] = getRenderItems($config['itemlist']);
+	$config['renderitems'] = getRenderItems($playlist->getTracks());
+	$config['playlist'] = $playlist;
 	
 	$config['paginator_params'] = new JasonGrimes\Paginator(
-		$listLength,
+		$playlist->getLength(),
 		$itemsPerPage,
 		$currentPage,
-		'/showplaylist/'.$playlistRelativePath .'?page=(:num)'
+		'/showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
 	);
     $app->render('surrounding.htm', $config);
 });
