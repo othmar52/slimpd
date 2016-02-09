@@ -1,6 +1,7 @@
 <?php
 namespace Slimpd\modules\mpd;
 use Slimpd\Track;
+use Slimpd\playlist;
 class mpd
 {
 	public function getCurrentlyPlayedTrack() {
@@ -247,20 +248,35 @@ class mpd
 				break;
 				
 			case 'clearPlaylistNotCurrent':
-				$status 		= $this->mpd('status');
-				$songId		= isset($status['songid']) ? $status['songid'] : 0;
-				if($songId > 0) {
-					// move current song to first position
-					$this->mpd('moveid ' . $songId . ' 0');
-					
-					$playlistLength		= isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-					if($playlistLength > 1) {
-						$this->mpd('delete 1:' . $playlistLength);
-					}
-				} else {
-					$this->mpd('clear');
-				}
+				$this->clearPlaylistNotCurrent();
 				notifyJson("MPD: cleared playlist");
+				break;
+				
+			case 'addPlaylistToPlaylist':
+				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
+
+				if($playlist->getErrorPath() === TRUE) {
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+					return;
+				}
+				$playlist->fetchTrackRange(0,1000, TRUE);
+				$counter = $this->appendPlaylist($playlist);
+				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist");				
+				break;
+				
+			case 'replaceCurrentPlaylist':
+				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
+
+				if($playlist->getErrorPath() === TRUE) {
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+					return;
+				}
+				
+				$playlist->fetchTrackRange(0,1000, TRUE);
+				$this->mpd('clear');
+				$counter = $this->appendPlaylist($playlist);
+				$this->mpd('play 0');
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");				
 				break;
 			
 			case 'playSelect': //		playSelect();
@@ -352,6 +368,35 @@ class mpd
 		echo json_encode($data);
 		exit();
 		
+	}
+
+	public function clearPlaylistNotCurrent() {
+		$status 		= $this->mpd('status');
+		$songId		= isset($status['songid']) ? $status['songid'] : 0;
+		if($songId > 0) {
+			// move current song to first position
+			$this->mpd('moveid ' . $songId . ' 0');
+			
+			$playlistLength		= isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+			if($playlistLength > 1) {
+				$this->mpd('delete 1:' . $playlistLength);
+			}
+		} else {
+			$this->mpd('clear');
+		}
+		
+	}
+	
+	public function appendPlaylist($playlist) {		
+		$counter = 0;
+		foreach($playlist->getTracks() as $t) {
+			if($t->getError() === 'notfound') {
+				continue;
+			}
+			$this->mpd('add "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '"');
+			$counter ++;
+		}
+		return $counter;
 	}
 		
 		
