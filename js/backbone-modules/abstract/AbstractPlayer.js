@@ -108,6 +108,12 @@
 	        	case 'addDirToPlaylist':
 	        		this.addDirToPlaylist(item);
 	        		break;
+	        	case 'addPlaylistToPlaylist':
+	        		this.addPlaylistToPlaylist(item);
+	        		break;
+	        	case 'replaceCurrentPlaylist':
+	        		this.replaceCurrentPlaylist(item);
+	        		break;
 	        	case 'soundEnded':
 	        		this.soundEnded(item);
 	        		break;
@@ -132,6 +138,8 @@
         remove : function(item) { return; },
         clearPlaylistNotCurrent : function(item) { return; },
         addDirToPlaylist : function(item) { return; },
+        addPlaylistToPlaylist : function(item) { return; },
+        replaceCurrentPlaylist : function(item) { return; },
         soundEnded : function(item) { return; },
                 
 		reloadCss : function(hash) {
