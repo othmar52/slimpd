@@ -69,7 +69,7 @@
 	
 	{# music files #}
 	{% for item in files %}
-		{% if item.ext in ['mp3','m4a','flac','wav', 'aif', 'aiff'] %}
+		{% if item.ext in musicfiles.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
 				{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
@@ -100,7 +100,7 @@
 	
 	{# playlist files #}
 	{% for item in files %}
-		{% if item.ext in ['m3u','pls','nml'] %}
+		{% if item.ext in playlists.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
 				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link btn btn-default">
@@ -121,7 +121,7 @@
 	
 	{# info files #}
 	{% for item in files %}
-		{% if item.ext in ['nfo','txt'] %}
+		{% if item.ext in infofiles.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
 				<button role="control" data-href="/showplaintext/{{ directory }}{{ item.name }}" title="show filecontent" class="btn btn-default trigger-modal">
@@ -140,8 +140,10 @@
 	{% endfor %}
 	
 	{# images #}
+	{# TODO: check why config.ini[images][ext] does not hold all image extensions!? maybe phpThump-issue? #}
+	{% set imageext = ['png','jpg','jpeg','gif', 'bmp'] %}
 	{% for item in files %}
-		{% if item.ext in ['png','jpg','jpeg','gif', 'bmp'] %}
+		{% if item.ext in imageext %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="image{{ loop.index }}">
 		<div class="col-md-2">
 			<a data-toggle="lightbox" href="/image-1000/path/{{ directory~item.name }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
@@ -156,7 +158,7 @@
 	{% endfor %}
 	
 	{% for item in files %}
-		{% if item.ext  not in ['mp3','m4a','flac','wav', 'png','jpg','jpeg','gif', 'bmp', 'aif', 'aiff', 'm3u','pls','nml', 'nfo', 'txt'] %}
+		{% if item.ext  not in musicfiles.ext|merge(infofiles.ext)|merge(playlists.ext)|merge(imageext) %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
