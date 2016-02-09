@@ -103,9 +103,19 @@
 		{% if item.ext in playlists.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
-				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link btn btn-default">
+				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link btn btn-default" title="show playlist">
 					<i class="fa fa-eye fa-lg"></i>
 				</a>
+				
+				<button role="control" title="add playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addPlaylistToPlaylist", "item": "{{ directory~item.name }}", "mpdurl":"/mpdctrl/addPlaylistToPlaylist/{{ directory~item.name }}"}'>
+					<i class="fa fa-plus"></i>
+				</button>
+				
+				<button role="control" title="replace current playlist with this playlist" class="btn btn-default player-ctrl" data-player='{"action":"replaceCurrentPlaylist", "item": "{{ directory~item.name }}", "mpdurl":"/mpdctrl/replaceCurrentPlaylist/{{ directory~item.name }}"}'>
+					<i class="fa fa-refresh"></i>
+				</button>
+		
+		
 			</div>
 			<div class="col-md-10">
 			
