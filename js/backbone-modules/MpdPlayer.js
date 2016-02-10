@@ -108,25 +108,25 @@
         },
         
         addDirToPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);        	
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.addDirToPlaylist.call(this, item);
         },
         
         addPlaylistToPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);        	
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.addPlaylistToPlaylist.call(this, item);
         },
         
         replaceCurrentPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);        	
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylist.call(this, item);
         },
         
         replaceCurrentPlaylistKeepTrack : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);        	
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
         },
