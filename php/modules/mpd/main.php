@@ -278,6 +278,21 @@ class mpd
 				$this->mpd('play 0');
 				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");				
 				break;
+				
+			case 'replaceCurrentPlaylistKeepTrack':
+				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
+
+				if($playlist->getErrorPath() === TRUE) {
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+					return;
+				}
+				
+				$playlist->fetchTrackRange(0,1000, TRUE);
+				$this->mpd('clear');
+				$counter = $this->appendPlaylist($playlist);
+				$this->clearPlaylistNotCurrent();
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");				
+				break;
 			
 			case 'playSelect': //		playSelect();
 			case 'addSelect': //		addSelect();

@@ -114,6 +114,9 @@
 	        	case 'replaceCurrentPlaylist':
 	        		this.replaceCurrentPlaylist(item);
 	        		break;
+	        	case 'replaceCurrentPlaylistKeepTrack':
+	        		this.replaceCurrentPlaylistKeepTrack(item);
+	        		break;
 	        	case 'soundEnded':
 	        		this.soundEnded(item);
 	        		break;
@@ -140,6 +143,7 @@
         addDirToPlaylist : function(item) { return; },
         addPlaylistToPlaylist : function(item) { return; },
         replaceCurrentPlaylist : function(item) { return; },
+        replaceCurrentPlaylistKeepTrack : function(item) { return; },
         soundEnded : function(item) { return; },
                 
 		reloadCss : function(hash) {
