@@ -74,7 +74,6 @@
 		    });
 		    
 		    $('object.svg-ajax-object', that.$el).each(function(index, item){
-		    	console.log('FOUND: object.svg-ajax-object');
 		    	var obj = item;
 			    $.ajax({
 	    			url: $(obj).attr('data-svgurl')
@@ -181,13 +180,11 @@
        	},
        	
        	itemGlueMouseenterListener : function(e) {
-       		console.log('asdgsg')
        		e.preventDefault();
        		$(e.currentTarget).closest('.glue-hover-wrap').addClass('underline');
        	},
        	
        	itemGlueMouseleaveListener : function(e) {
-       		console.log('bsdgsg')
        		e.preventDefault();
        		$(e.currentTarget).closest('.glue-hover-wrap').removeClass('underline');
        	},
