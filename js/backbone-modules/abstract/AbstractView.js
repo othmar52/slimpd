@@ -23,6 +23,7 @@
             if (this.rendered) {
                 return;
             }
+            $("body", this.$el).animate({ scrollTop: 0 }, 300);
             
             $('a.ajax-link', this.$el).off('click', this.genericClickListener).on('click', this.genericClickListener);
             $('.ajax-rqst', this.$el).off('click', this.ajaxRequestClickListener).on('click', this.ajaxRequestClickListener);
