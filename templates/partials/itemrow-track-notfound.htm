@@ -1,6 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
+<div class="row missing-track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2">
 			{% include 'partials/image.htm' with {
 				'width': 50,

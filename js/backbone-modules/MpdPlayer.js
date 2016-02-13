@@ -20,6 +20,12 @@
 		timeGridStrokeColor : '#7B6137',
 		timeGridStrokeColor2 : '#FCC772',
 		
+		state : {
+        	repeat : 0,
+        	random : 0,
+        	consume : 0
+        },
+		
 		intervalActive : 2000,
 		intervalInactive : 5000,
 		timeLineLight : null,
@@ -147,20 +153,14 @@
         		that.nowPlayingElapsed = data.elapsed;
 		    	that.nowPlayingItem = data.songid;
 		    	
-		    	that.stateRepeat = data.repeat;
-		    	that.stateRandom = data.random;
-		    	that.stateConsume = data.consume;
+		    	that.state.repeat = data.repeat;
+		    	that.state.random = data.random;
+		    	that.state.consume = data.consume;
 		    	
 		    	// no need to update this stuff in case local player is active...
 		    	if(window.sliMpd.currentPlayer.mode === 'mpd') {
 	
-			    	['repeat', 'random', 'consume'].forEach(function(prop) {
-					    if(data[prop] == '1') {
-			    			$('.mpd-status-'+prop, that.$el).addClass('active');
-				    	} else {
-				    		$('.mpd-status-'+prop, that.$el).removeClass('active');
-				    	}
-					});
+			    	that.updateStateIcons();
 					
 					that.setPlayPauseIcon();
 					
@@ -209,6 +209,10 @@
 			});
 			window.sliMpd.notify({'notify':1, 'message': 'MPD playing: ' + $('.player-mpd .now-playing-string').text()});
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
+        },
+        
+        updateStateIcons : function() {
+        	window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
         },
         
         // TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
