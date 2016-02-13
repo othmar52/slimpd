@@ -21,9 +21,11 @@
         nowPlayingItem : '',
         previousPlayingItem : '',
         
-        stateRepeat : 0,
-        stateRandom : 0,
-        stateConsume : 0,
+        state : {
+        	repeat : 0,
+        	random : 0,
+        	consume : 0
+        },
         
         faviconDoghnutColor : '#000000',
         faviconBackgroundColor : 'transparent',
@@ -67,6 +69,20 @@
     			this.reloadCss(item.hash);
     		}.bind(this));
         },
+        onRedrawComplete : function(item) { return; },
+        
+        // highlight state icons when state is active
+        updateStateIcons : function() {
+        	var that = this;
+        	['repeat', 'random', 'consume'].forEach(function(prop) {
+			    if(that.state[prop] == '1') {
+	    			$('.status-'+prop, that.$el).addClass('active');
+		    	} else {
+		    		$('.status-'+prop, that.$el).removeClass('active');
+		    	}
+			});
+        },
+        
         onRedrawComplete : function(item) { return; },
         
         process : function(item) {
@@ -131,9 +147,9 @@
         play : function(item) { return; },
         pause : function(item) { return; },
         togglePause : function(item) { return; },
-        toggleRepeat : function() { return; },
-        toggleRandom : function() { return; },
-        toggleConsume : function() { return; },
+        toggleRepeat : function(item) { return; },
+        toggleRandom : function(item) { return; },
+        toggleConsume : function(item) { return; },
         setPlayPauseIcon : function() { return; },
         next : function(item) { return; },
         prev : function(item) { return; },
