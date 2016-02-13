@@ -335,3 +335,7 @@ a {
 	color: #fff;
 	word-wrap: break-word;
 }
+
+.label-warning {
+	color: #444;
+}
