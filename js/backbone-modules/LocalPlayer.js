@@ -20,10 +20,18 @@
 		timeGridSelectorSeekbar : '.jp-seek-bar',
 		timeGridStrokeColor : '#157720',
 		timeGridStrokeColor2 : '#2DFF45',
+		
+		state : {
+        	repeat : 1,
+        	random : 1,
+        	consume : 0
+        },
+		
+		// TODO: remove property as soon as local player has full functionality
+		tempNotSupportedYetNotify : {"message": "not supported in <strong>local player</strong> yet - use <strong>mpd</strong>", "type": "danger"},
 
         initialize : function(options) {
         	var that = this;
-        	//this.$content = $('.player-'+ this.mode, this.$el);
         	
 		    /* init local player */
 			$(this.playerSelector).jPlayer({
@@ -37,7 +45,7 @@
 		        remainingDuration: false,
 		        toggleDuration: true,
 		        ended: function() {
-		            that.soundEnded();
+		            that.soundEnded({});
 		        },
 		        progress: function(e,data){
 		        	//console.log($(this).data('jPlayer').status);
@@ -57,6 +65,8 @@
 					window.sliMpd.drawFavicon();
 				}
 			});
+			// TODO: why does toggleRandom(), toggleRepeat(), toggleConsume() not work on initial load???
+			this.updateStateIcons();
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
         },
 
@@ -79,10 +89,20 @@
 					'supplied': item.ext + ',mp3'
 				}
 			).jPlayer( "play");
-			this.nowPlayingItem = item.item;
+			this.nowPlayingItem = item.hash;
 			this.redraw(item);
     		//this.reloadCss(item.hash);
 		},
+		
+		prev : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
+        },
+        
+        next : function(item) {
+			this.soundEnded(item);
+        	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
+        },
 		
 		redraw : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.redraw.call(this, item);
@@ -91,8 +111,13 @@
 		onRedrawComplete : function(item) {
 			// re-bind controls(seeek-bar) on ajax loaded control-markup
     		$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
+    		this.updateStateIcons();
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
+		
+        updateStateIcons : function() {
+        	window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
+        },
 		
 		// TODO: make markup more generic and move this to AbstractPlayer
 		setPlayPauseIcon : function(item) {
@@ -125,14 +150,80 @@
 			this.setPlayPauseIcon(item);
 		},
 		
+		toggleRepeat : function(item) {
+			this.state.repeat = (this.state.repeat === 1) ? 0 : 1;
+			this.updateStateIcons(); 
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
+        },
+        
+        toggleRandom : function(item) {
+        	this.state.random = (this.state.random === 1) ? 0 : 1;
+			this.updateStateIcons(); 
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
+        },
+        
+        toggleConsume : function(item) {
+        	this.state.consume = (this.state.consume === 1) ? 0 : 1;
+			this.updateStateIcons();
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
+        },
+		
 		soundEnded : function(item) {
-			// for now take any rendered track and play it
 			// TODO: add functionality "current playlist" (like mpd) for local player 
-			var playable = $("#main .is-playbtn[data-player]").length;
-			if (playable) {
-				$(".is-playbtn[data-player]").eq(Math.floor(Math.random()*playable)).click();
+			// for now use all rendered tracks as playlist
+			
+			//console.log('local soundEnded()');
+			if(this.state.random == 1) {
+				//console.log('local random is active');
+				$("#main .track-row:not(.track-"+ this.nowPlayingItem+")").random().find('.is-playbtn').click();
+			} else {
+				//console.log('local random is NOT active');
+				// check if current track is rendered
+				var current = $('.track-' + this.nowPlayingItem);
+				if(current.length) {
+					//console.log('current track is rendered');
+					var next = current.nextAll('.track-row').find('.is-playbtn');
+					if(next.length) {
+						//console.log('found next track');
+						next[0].click();
+					} else {
+						//console.log('we have no next track. fallback to first rendered track...');
+						$('#main .is-playbtn')[0].click();
+					}
+					
+				} else {
+					//console.log('current track is not rendered. fallback to first rendered track...');
+					$('#main .is-playbtn')[0].click();
+				}
 			}
-		}
+		},
+		
+		clearPlaylistNotCurrent : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        },
+        
+        addDirToPlaylist : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.addDirToPlaylist.call(this, item);
+        },
+        
+        addPlaylistToPlaylist : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.addPlaylistToPlaylist.call(this, item);
+        },
+        
+        replaceCurrentPlaylist : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylist.call(this, item);
+        },
+        
+        replaceCurrentPlaylistKeepTrack : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
+        }
         
     });
     
