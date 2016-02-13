@@ -39,6 +39,7 @@
 		    
 		    
 		    /* display selected value in dropdown instead of dropdown-label */
+		    // TODO: choose more generic attribute-names. maybe we add "label-dropdowns" which has nothing to do with sorting...
 			var that = this;
 		    $('.dropdown-label', that.$el).each(function(index, item){
 		    	$(item).find('.btn:first-child').html(

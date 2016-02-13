@@ -23,7 +23,7 @@
 	    <div class="hidden-xs col-md-1">
 	    	<div class="row jp-controls">
 				<div class="col-sm-4">
-					<button role="control" class="btn btn-trnsp">
+					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev"}'>
 						<i class="fa fa-chevron-left sign-ctrl fa-fw"></i>
 					</button>
 				</div>
@@ -33,7 +33,7 @@
 					</button>
 				</div>
 				<div class="col-sm-4">
-					<button role="control" class="btn btn-trnsp">
+					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next"}'>
 						<i class="fa fa-chevron-right sign-ctrl fa-fw"></i>
 					</button>
 				</div>
@@ -41,21 +41,21 @@
 			<div class="row">
 				
 				
-				<!--div class="col-sm-4 mpd-status-random">
-					<a href="/mpdctrl/toggleRandom" class="ajax-link" title="toggle random">
-						<i class="fa fa-random sign-ctrl"></i>
-					</a>
+				<div class="col-sm-4 status-random">
+					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom"}'>
+						<i class="fa fa-random sign-ctrl fa-fw"></i>
+					</button>
 				</div>
-				<div class="col-sm-4 mpd-status-repeat">
-					<a href="/mpdctrl/toggleRepeat" class="ajax-link" title="toggle repeat">
-						<i class="fa fa-repeat sign-ctrl"></i>
-					</a>
+				<div class="col-sm-4 status-repeat">
+					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat"}'>
+						<i class="fa fa-repeat sign-ctrl fa-fw"></i>
+					</button>
 				</div>
-				<div class="col-sm-4 mpd-status-consume">
-					<a href="/mpdctrl/toggleConsume" class="ajax-link" title="toggle consume">
-						<i class="fa fa-fire sign-ctrl"></i>
-					</a>
-				</div-->
+				<div class="col-sm-4 status-consume">
+					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume"}'>
+						<i class="fa fa-fire sign-ctrl fa-fw"></i>
+					</button>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-sm-12 small">

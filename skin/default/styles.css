@@ -289,7 +289,8 @@ a {
 	padding-right: 0;
 }
 
-.track-row {
+.track-row,
+.missing-track-row {
 	margin-bottom: 0.3em;
 }
 
