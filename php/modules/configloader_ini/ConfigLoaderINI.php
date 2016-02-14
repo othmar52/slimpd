@@ -53,7 +53,7 @@ class ConfigLoaderINI {
      * @param $master_config_file - relative path to the master config file from the $configPath
      * @param $additionalFiles - dictionary which config files to load from the master.ini file
      */
-    public function loadConfig($master_config_file, $additinalConfig = array()) {
+    public function loadConfig($master_config_file, $additionalConfig = array()) {
         if (!is_string($master_config_file) || empty($master_config_file)) {
             throw new \Exception('Master Config file not given', 1);
         }
@@ -66,7 +66,7 @@ class ConfigLoaderINI {
         }
 
         //return config
-        return $this->buildConfig($masterConfig, $additinalConfig);
+        return $this->buildConfig($masterConfig, $additionalConfig);
     }
 
     private function prepareFilePath($path = '') {
@@ -141,7 +141,7 @@ class ConfigLoaderINI {
      * PARSE INI FILE AND CREATE GENERAL CONFIG/CONTENT
      * read all given config files - and merge them
      */
-    private function buildConfig($masterConfig, $additinalConfig) {
+    private function buildConfig($masterConfig, $additionalConfig) {
         $config = array();
 
         // load default config
@@ -150,7 +150,7 @@ class ConfigLoaderINI {
         }
 
         // add additional config
-        foreach($additinalConfig as $key => $value) {
+        foreach($additionalConfig as $key => $value) {
             $lookup = $masterConfig;
             
             while (is_array($value)) {
@@ -164,12 +164,18 @@ class ConfigLoaderINI {
             }
             
             if (isset($lookup[$key]) && isset($lookup[$key][$value]) && is_array($lookup[$key][$value])) {
-                foreach($lookup[$key][$value] as $additinalConfigFile) {
-                    $config = array_replace_recursive($config, $this->parseConfigFile($additinalConfigFile));
+                foreach($lookup[$key][$value] as $additionalConfigFile) {
+                    $config = array_replace_recursive($config, $this->parseConfigFile($additionalConfigFile));
                 }
             }
-        }
-
+		}
+		
+		// override destructiveness values based on specific config key
+		if($config['destructiveness']['disable-all'] === '1') {
+			foreach($config['destructiveness'] as $key => $value) {
+				$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
+			}
+		}
         return $config;
     }
 
