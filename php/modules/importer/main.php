@@ -1754,7 +1754,15 @@ class Importer {
 					' ' . APP_ROOT . "scripts/mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
 				break;
 			case 'flac':
-				die('# TODO: try to read flac fingerprint from tags via getId3-lib');
+				$getID3 = new \getID3;
+				$tagData = $getID3->analyze($absolutePath);
+				\getid3_lib::CopyTagsToComments($tagData);
+				if(isset($tagData['md5_data_source'])) {
+					if(preg_match("/^[0-9a-f]{32}$/", $tagData['md5_data_source'])) {
+						return $tagData['md5_data_source'];
+					}
+				}
+				die('# TODO: get flac fingerprint via metaflac');
 				return FALSE;
 				break;
 			default:
