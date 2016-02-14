@@ -1,0 +1,79 @@
+#!/bin/bash
+############################################################################
+# recursive replacement of special chars in filesystem
+# TODO: trailing whitespaces in filename does not work "filename.mp3 "
+############################################################################
+
+TEMP_FILE=/tmp/clean-rename
+LOG=/tmp/clean-rename-dupes.log
+if [ -z $1 ];then
+	echo USAGE: clean-rename "/path"
+	exit 0
+fi
+
+find "$1" -depth -name "*" | while read file; do
+	DIRECTORY=$(dirname "$file")
+	OLDFILENAME=$(basename "$file")
+	NEWFILENAME=$(echo "$OLDFILENAME" | tr "'" "_" | tr '!@#+ '\
+		'_____' |  tr '[]{}<>' '()()()' |  sed -e '
+s/[\`\´\"\]//g' | sed -e 's/\&/and/g' | sed -e '
+s/[àáâãäåα]/a/g;
+s/[ÀÁÂÃÄÅΑ]/A/g;
+s/[æ]/ae/g;
+s/[Æ]/AE/g;
+s/[ç¢©]/c/g;
+s/[Ç]/C/g;
+s/[Ð]/D/g;
+s/[éëêè]/e/g;
+s/[ÈÉÊË€]/E/g;
+s/[Η]/H/g;
+s/[ìíîï]/i/g;
+s/[ÌÍÎÏ¡]/I/g;
+s/[Κ]/K/g;
+s/[κ]/k/g;
+s/[Μ]/M/g;
+s/[μ]/m/g;
+s/[Ñ]/N/g;
+s/[ñ]/n/g;
+s/[òóôõöøο]/o/g;
+s/[ÒÓÔÕÖΟ]/O/g;
+s/[ßš]/s/g;
+s/[$§Š]/S/g;
+s/[Τ]/T/g
+s/[™]/TM/g;
+s/[ùúûü]/u/g;
+s/[ÙÚÛÜ]/U/g;
+s/[×]/x/g;
+s/[ÿýυ]/y/g;
+s/[ÝŸΥ]/Y/g;
+s/[=¦#:~*¿·¸°¯\%";+^˜‰…‡†?•]/_/g;
+s/[Ø]/0/g;
+s/[²]/2/g;
+s/[³]/3/g' | sed -e 's/[^\(\)\.\/\_a-zA-Z0-9-]//g' )
+	### preserve "_-_" ###
+	if [[ "$OLDFILENAME" != *_-_* ]]; then
+		NEWFILENAME=$(echo "$NEWFILENAME" | sed 's/_-_/-/g') 
+	fi
+	NEW=$(echo "$DIRECTORY/$NEWFILENAME")
+	if [ "$OLDFILENAME" != "$NEWFILENAME" ] && [ ! -f "$NEW" ] && [ ! -d "$NEW" ]; then
+		mv -i "$DIRECTORY/$OLDFILENAME" "$DIRECTORY/$NEWFILENAME"
+		echo ""$DIRECTORY/$OLDFILENAME" ---> "$DIRECTORY/$NEWFILENAME""
+	else
+		if [ -f "$NEW" ] && [ "$OLDFILENAME" != "$NEWFILENAME" ]; then
+			echo "$DIRECTORY/$OLDFILENAME" >> $LOG
+			echo "$DIRECTORY/$OLDFILENAME" >> $TEMP_FILE
+			#mv -i "$DIRECTORY/$OLDFILENAME" "$DIRECTORY/$NEWFILENAME"_
+		fi
+		
+		if [ -d "$NEW" ] && [ "$OLDFILENAME" != "$NEWFILENAME" ]; then
+			echo "$DIRECTORY/$OLDFILENAME" >> $LOG
+			#mv -i "$DIRECTORY/$OLDFILENAME" "$DIRECTORY/$NEWFILENAME"_
+		fi
+	fi
+done
+
+cat $TEMP_FILE 2> /dev/null
+echo $( cat $TEMP_FILE 2> /dev/null | wc -l )" errors"
+rm $TEMP_FILE  2> /dev/null
+
+exit 0

@@ -1506,5 +1506,17 @@
             "streaming",
             "video"
         ]
+    },
+    {
+        "name": "othmar52/clean-rename",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:othmar52/clean-rename.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
     }
 ]
