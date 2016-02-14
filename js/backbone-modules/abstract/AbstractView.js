@@ -32,6 +32,7 @@
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener).on('click', this.triggerModalClickListener);
             $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener).on('mouseenter', this.itemGlueMouseenterListener);
             $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener).on('mouseleave', this.itemGlueMouseleaveListener);
+            $('.toggle-content', this.$el).off('click', this.itemToggleClickListener).on('click', this.itemToggleClickListener);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             
             // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
@@ -100,6 +101,7 @@
             $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener);
             $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener);
             $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener);
+            $('.toggle-content', this.$el).off('click', this.itemToggleClickListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -198,6 +200,14 @@
        	itemGlueMouseleaveListener : function(e) {
        		e.preventDefault();
        		$(e.currentTarget).closest('.glue-hover-wrap').removeClass('underline');
+       	},
+       	
+       	itemToggleClickListener : function(e) {
+       		e.preventDefault();
+       		var $el = $(e.currentTarget);
+       		var $target = $($el.attr('data-toggle'));
+       		$target.toggle();
+       		$el.text((($target.is(":hidden")) ? $el.attr('data-text1') : $el.attr('data-text2') ) );
        	},
 
         process : function(e) {
