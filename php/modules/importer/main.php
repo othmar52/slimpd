@@ -1751,7 +1751,7 @@ class Importer {
 		switch($ext) {
 			case 'mp3':
 				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
-					' ' . APP_ROOT . "mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
+					' ' . APP_ROOT . "scripts/mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
 				break;
 			case 'flac':
 				die('# TODO: try to read flac fingerprint from tags via getId3-lib');
