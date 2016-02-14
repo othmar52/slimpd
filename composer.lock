@@ -846,12 +846,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "ea1160d85f5318bd0d452a9a351c7eda582e3687"
+                "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/ea1160d85f5318bd0d452a9a351c7eda582e3687",
-                "reference": "ea1160d85f5318bd0d452a9a351c7eda582e3687",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/4bb27cf9148b5c34f1963cb01bfc586db60d5883",
+                "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883",
                 "shasum": ""
             },
             "require": {
@@ -915,7 +915,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2016-01-13 20:05:13"
+            "time": "2016-02-07 17:40:57"
         },
         {
             "name": "lusitanian/oauth",
@@ -923,12 +923,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-                "reference": "769fea1bb53845c7b03cca97cbdd0708e9ec26da"
+                "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/769fea1bb53845c7b03cca97cbdd0708e9ec26da",
-                "reference": "769fea1bb53845c7b03cca97cbdd0708e9ec26da",
+                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/8a97b774a21e741049c2997c4e69fc36abbb0a8c",
+                "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c",
                 "shasum": ""
             },
             "require": {
@@ -982,7 +982,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2015-12-21 00:06:34"
+            "time": "2016-02-11 22:24:39"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1273,25 +1273,25 @@
         },
         {
             "name": "symfony/process",
-            "version": "2.8.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "53579cad429e52e1babd8341b83928ecf8ca3441"
+                "reference": "650a91315648fe433824e454b2c7107926f9876b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/7dedd5b60550f33dca16dd7e94ef8aca8b67bbfe",
-                "reference": "53579cad429e52e1babd8341b83928ecf8ca3441",
+                "url": "https://api.github.com/repos/symfony/process/zipball/650a91315648fe433824e454b2c7107926f9876b",
+                "reference": "650a91315648fe433824e454b2c7107926f9876b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": ">=5.5.9"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -1318,7 +1318,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-21 09:24:53"
+            "time": "2016-02-04 12:57:09"
         },
         {
             "name": "twbs/bootstrap",
@@ -1326,12 +1326,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "91c8929b28f1fc45223d6422804f895ece107261"
+                "reference": "ad5e6565cc854e7d36aa5875cd93a387f01b143a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/38a70e4a275ef4d0c838c714b6e5e3270984dab4",
-                "reference": "91c8929b28f1fc45223d6422804f895ece107261",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ad5e6565cc854e7d36aa5875cd93a387f01b143a",
+                "reference": "ad5e6565cc854e7d36aa5875cd93a387f01b143a",
                 "shasum": ""
             },
             "replace": {
@@ -1369,7 +1369,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2016-01-29 09:45:28"
+            "time": "2016-02-11 04:01:00"
         },
         {
             "name": "twig/twig",

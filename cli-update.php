@@ -20,7 +20,7 @@ define('APP_ROOT', __DIR__ . DS);
 
 chdir(dirname(__DIR__)); // set directory to root
 
-require_once 'vendor' . DS . 'autoload.php';
+require_once 'vendor-dist' . DS . 'autoload.php';
 require_once 'php' . DS . 'autoload.php';
 require_once 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
 require_once 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
