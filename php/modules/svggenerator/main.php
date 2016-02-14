@@ -20,7 +20,18 @@ class Svggenerator {
 				$this->fingerprint = $t->getFingerprint();
 				$this->ext = $t->getAudioDataFormat();
 			}
-		} else {
+		}
+		
+		if(is_string($arg) === TRUE) {
+			$t = \Slimpd\Track::getInstanceByAttributes(array('relativePathHash' => getFilePathHash($arg)));
+			if(is_object($t) === TRUE) {
+				$this->absolutePath = $config['musicdir'] . $t->getRelativePath();
+				$this->fingerprint = $t->getFingerprint();
+				$this->ext = $t->getAudioDataFormat();
+			}
+		}
+		
+		if($this->fingerprint === NULL) {
 			if(is_file($config['alternative_musicdir'].$arg) === TRUE) {
 				$arg = $config['alternative_musicdir'].$arg;
 			}
@@ -29,7 +40,7 @@ class Svggenerator {
 			}
 			if(is_file($arg) === TRUE) {
 				$this->absolutePath = $arg;
-				$this->ext = pathinfo($arg, PATHINFO_EXTENSION);
+				$this->ext = strtolower(pathinfo($arg, PATHINFO_EXTENSION));
 			}
 		}
 		
