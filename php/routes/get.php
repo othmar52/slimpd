@@ -920,3 +920,43 @@ $app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $config){
 	$xwax->cmd($cmd, $params, $app);
 	$app->stop();
 });
+
+
+$app->get('/tools/clean-rename-confirm/:itemParams+', function($itemParams) use ($app, $config){
+	if($config['destructiveness']['clean-rename'] !== '1') {
+		$app->notFound();
+		return;
+	}
+
+	$fileBrowser = new \Slimpd\filebrowser();
+	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+	$config['directory'] = $fileBrowser; 
+	$config['action'] = 'clean-rename-confirm';
+	$app->render('modules/widget-cleanrename.htm', $config);
+});
+
+
+$app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $config){
+	if($config['destructiveness']['clean-rename'] !== '1') {
+		$app->notFound();
+		return;
+	}
+	
+	$fileBrowser = new \Slimpd\filebrowser();
+	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+	
+	// do not block other requests of this client
+	session_write_close();
+	
+	// IMPORTANT TODO: move this to an exec-wrapper
+	$cmd = APP_ROOT . 'vendor-dist/othmar52/clean-rename/clean-rename '
+		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
+	exec($cmd, $result);
+	
+	$config['result'] = join("\n", $result);
+	$config['directory'] = $fileBrowser;
+	$config['cmd'] = $cmd; 
+	$config['action'] = 'clean-rename';	
+	
+	$app->render('modules/widget-cleanrename.htm', $config);
+});

@@ -22,6 +22,10 @@
 				<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ directory~item.name|url_encode }}"}'>
 					<i class="fa fa-plus"></i> Add directory to playlist
 				</button>
+				
+				<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ directory~item.name|url_encode }}">
+					<i class="fa fa-flash"></i> clean-rename
+				</button>
 			</li>
 			
 	</div>

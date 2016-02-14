@@ -1,0 +1,50 @@
+{% if destructiveness["clean-rename"] == '0' %}
+<div class="alert alert-danger" role="alert">	
+	<h4>clean-rename is disabled!</h4>
+  	<p>please check section:[destructiveness] in your configuration</p>
+</div>
+
+
+{% else %}
+	{% if action == 'clean-rename-confirm'%}
+
+<div class="alert alert-danger" role="alert">
+	<h4>please confirm clean-rename of directory <strong>{{ directory.directory }}</strong><br /><br />
+  	<strong class="uc">there is no undo!</strong>
+  </h4>
+</div>
+
+
+<br />
+
+{# TODO: add some callbacks with
+	1. immediately after click show some loading animation
+	2. refresh filebrowser/directory route to make sure we have valid new directory links in gui
+	3. trigger mpd update automatically or at least provide a button for that
+	4. testing directories whichs basepath alread have special chars #}
+
+<button role="control" data-href="/tools/clean-rename/{{ directory.directory }}" title="go!" class="btn btn-default trigger-modal">
+	<i class="fa fa-flash fa-lg"></i> <i class="fa fa-bomb fa-lg"></i><i class="fa fa-flash fa-lg"></i> <strong>Yes, i know what i am doing!</strong> <i class="fa fa-flash fa-lg"></i> <i class="fa fa-bomb fa-lg"></i><i class="fa fa-flash fa-lg"></i>
+	
+	<p><br />dont click on this button twice - be patient!!!<br />
+		based on directory-size this operation can take very long<br />
+		
+		keep this window open until operation has finished!!!<br />
+		
+		otherwise your whole musiccollection gets deleted
+	</p>
+</button>
+
+
+<br />
+	{% else %}
+	<div class="alert alert-success" role="alert">
+		<h4>clean-rename-result of directory <strong>{{ directory.directory }}</strong><br /><br />
+	  </h4>
+	</div>
+	<h4>Executet command</h4>
+	<div class="nfo small">{{cmd}}</div>
+	<h4>Result of command</h4>
+	<div class="nfo small">{{result}}</div>
+	{% endif %}
+{% endif %}

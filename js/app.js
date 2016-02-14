@@ -70,8 +70,14 @@ $(document).ready(function() {
 				type: (notifyConf.type || 'info')
 			});
 			$.notify();
-		}
+		},
 		
+		notifyError : function(errorUrl) {
+    		this.notify({
+				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
+				type : "danger"
+			});
+		}
     });
     
     window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({

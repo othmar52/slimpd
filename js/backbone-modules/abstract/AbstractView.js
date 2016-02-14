@@ -141,7 +141,10 @@
 				$($el.attr('data-ajaxtarget')).html(response);
 				that.rendered = false;
 				that.render();
-			});
+			}).fail(function() {
+				window.sliMpd.notifyError($el.attr('href'));
+    			return;
+  			});
 		},
 		
 		ajaxRequestClickListener : function(e) {
@@ -151,7 +154,10 @@
 				url: window.sliMpd.setGetParameter($el.attr('data-href'), 'nosurrounding', '1')
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
-			});
+			}).fail(function() {
+				window.sliMpd.notifyError($el.attr('data-href'));
+    			return;
+  			});
 		},
 		
        	triggerModalClickListener : function(e) {
@@ -161,7 +167,10 @@
 				url: $el.attr('data-href')
 			}).done(function(response){
 				window.sliMpd.modal.renderModalContent(response);
-			});
+			}).fail(function() {
+				window.sliMpd.notifyError($el.attr('data-href'));
+    			return;
+  			});
        	},
        	
        	/*
