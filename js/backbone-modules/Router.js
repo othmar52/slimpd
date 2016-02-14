@@ -103,7 +103,14 @@
 	            this.$body.removeClass('is-loading');
 				$("#loading-backdrop").remove();
 				this.ajaxLoading = false;
-			}.bind(this));
+			}.bind(this))
+			.fail(function() {
+				this.$body.removeClass('is-loading');
+				$("#loading-backdrop").remove();
+				this.ajaxLoading = false;
+				window.sliMpd.notifyError(url);
+    			return;
+  			}.bind(this));
         },
 
         album : function(album) {
