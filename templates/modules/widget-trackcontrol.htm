@@ -54,9 +54,41 @@
 	    {% endif %}
 
   	</div>
-  	
-    
-
+  	<div class="row">
+  		<button class="btn btn-trnsp toggle-content" data-toggle="#trackwidget-techspecs" data-text1="show tech specs" data-text2="hide tech specs">show tech specs</button>
+  	</div>
+  	<div id="trackwidget-techspecs" style="display:none;">
+  		<div class="nfo">{{item.relativePath}}</div>
+	  	{% if item.id %}
+	    <div class="row">
+			<div class="col-md-3">
+				<div>Format: {{item.audioDataFormat}}</div>
+				<div>Bitrate: {{item.audioBitrate}}</div>
+				<div>BitrateMode: {{item.audioBitrateMode}}</div>
+			</div>
+			
+			<div class="col-md-3">
+				<div>BitsPerSample: {{item.audioBitsPerSample}}</div>
+				<div>SampleRate: {{item.audioSampleRate}}</div>
+				<div>Channels: {{item.audioChannels}}</div>
+			</div>
+			
+			<div class="col-md-3">
+				<div>CompressionRatio: {{item.audioCompressionRatio}}</div>
+				<div>Dataformat: {{item.audioDataformat}}</div>
+				<div>Encoder: {{item.audioEncoder}}</div>
+			</div>
+			
+			<div class="col-md-3">
+				<div>Profile: {{item.audioProfile}}</div>
+				<div>lastScan: {{item.lastScan}}</div>
+				<div>error: {{item.error}}</div>
+			</div>
+	
+	
+		</div>
+		{% endif %}
+	</div>
   
 	{% set dirs = item.relativePath|split('/') %}
 	{% set fullpath = '' %}
