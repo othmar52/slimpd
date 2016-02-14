@@ -12,7 +12,7 @@ if($debug){
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__ . DS);
 define('APP_DEFAULT_CHARSET', 'UTF-8');
-require_once APP_ROOT . 'vendor' . DS . 'autoload.php';
+require_once APP_ROOT . 'vendor-dist' . DS . 'autoload.php';
 require_once APP_ROOT . 'php' . DS . 'autoload.php';
 date_default_timezone_set('Europe/Vienna');
 
