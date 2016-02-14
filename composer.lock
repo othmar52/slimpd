@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e3bfa06804f57628f68c5956da80878f",
-    "content-hash": "803e27029a350a95bfbcc86619cc807a",
+    "hash": "4e2da9bafec690aae4bb10b860c06273",
+    "content-hash": "b241e397dcd9933969c95d2c0350f5dc",
     "packages": [
         {
             "name": "components/backbone",
@@ -1069,6 +1069,17 @@
                 "issues": "https://github.com/nicolasbize/faviconx/issues"
             },
             "time": "2014-10-16 18:24:29"
+        },
+        {
+            "name": "othmar52/clean-rename",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:othmar52/clean-rename.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2016-02-14 09:20:00"
         },
         {
             "name": "ricbra/php-discogs-api",

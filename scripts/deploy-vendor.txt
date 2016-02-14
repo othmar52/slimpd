@@ -139,3 +139,5 @@ components/backbone/LICENSE
 components/jqueryui/LICENSE.txt
 components/jqueryui/jquery-ui.min.js
 
+othmar52/clean-rename/clean-rename
+
