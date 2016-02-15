@@ -55,7 +55,9 @@
 
   	</div>
   	<div class="row">
-  		<button class="btn btn-trnsp toggle-content" data-toggle="#trackwidget-techspecs" data-text1="show tech specs" data-text2="hide tech specs">show tech specs</button>
+  		<button class="btn btn-trnsp toggle-content" data-toggle="#trackwidget-techspecs" data-text1="show tech specs" data-text2="hide tech specs">
+  			<i class="fa fa-plus"></i> show tech specs
+  		</button>
   	</div>
   	<div id="trackwidget-techspecs" style="display:none;">
   		<div class="nfo">{{item.relativePath}}</div>
@@ -63,8 +65,8 @@
 	    <div class="row">
 			<div class="col-md-3">
 				<div>Format: {{item.audioDataFormat}}</div>
-				<div>Bitrate: {{item.audioBitrate}}</div>
-				<div>BitrateMode: {{item.audioBitrateMode}}</div>
+				<div>Profile: {{item.audioProfile}}</div>
+				<div>Filesize: {{item.filesize|formatBytes}}</div>
 			</div>
 			
 			<div class="col-md-3">
@@ -74,15 +76,15 @@
 			</div>
 			
 			<div class="col-md-3">
-				<div>CompressionRatio: {{item.audioCompressionRatio}}</div>
-				<div>Dataformat: {{item.audioDataformat}}</div>
 				<div>Encoder: {{item.audioEncoder}}</div>
+				<div>Bitrate: {{item.audioBitrate}}</div>
+				<div>BitrateMode: {{item.audioBitrateMode}}</div>
 			</div>
 			
 			<div class="col-md-3">
-				<div>Profile: {{item.audioProfile}}</div>
-				<div>lastScan: {{item.lastScan}}</div>
-				<div>error: {{item.error}}</div>
+				<div><span title="compression ratio">CR:</span> {{item.audioCompressionRatio}}</div>
+				<div>lastScan: {{item.lastScan|date("m/d/Y")}}</div>
+				<div>Fingerprint: <span title="{{item.fingerprint}}">{{item.fingerprint|shortenChecksum}}</span></div>
 			</div>
 	
 	

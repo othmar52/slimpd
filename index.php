@@ -72,6 +72,21 @@ $filter = new \Twig_SimpleFilter('shorty', function ($number) {
 });
 $twig->addFilter($filter);
 
+$filter = new \Twig_SimpleFilter('formatBytes', function ($bytes, $precision = 2) {
+	$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+    $bytes = max($bytes, 0); 
+    $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+    $pow = min($pow, count($units) - 1);
+	$bytes /= pow(1024, $pow);
+	return round($bytes, $precision) . ' ' . $units[$pow];
+});
+$twig->addFilter($filter);
+
+$filter = new \Twig_SimpleFilter('shortenChecksum', function ($hash, $precision = 3) {
+	return substr($hash,0,$precision) . '...' . substr($hash,$precision*-1);
+});
+$twig->addFilter($filter);
+
 $filter = new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array()) use($app) {
 	return $app->ll->str($hans, $vars);
 });
