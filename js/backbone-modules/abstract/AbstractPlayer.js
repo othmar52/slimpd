@@ -136,6 +136,9 @@
 	        	case 'soundEnded':
 	        		this.soundEnded(item);
 	        		break;
+	        	case 'removeDupes':
+	        		this.removeDupes(item);
+	        		break;
 	        	default:
 	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
     				return;
@@ -161,6 +164,7 @@
         replaceCurrentPlaylist : function(item) { return; },
         replaceCurrentPlaylistKeepTrack : function(item) { return; },
         soundEnded : function(item) { return; },
+        removeDupes : function(item) { return; },
                 
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here

@@ -223,6 +223,11 @@
         replaceCurrentPlaylistKeepTrack : function(item) {
         	window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
+        },
+        
+        removeDupes : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
         }
         
     });

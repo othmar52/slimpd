@@ -141,3 +141,4 @@ components/jqueryui/jquery-ui.min.js
 
 othmar52/clean-rename/clean-rename
 
+ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh

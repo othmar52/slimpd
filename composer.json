@@ -24,7 +24,8 @@
         "mouse0270/bootstrap-notify": "master",
         "jeresig/jquery.hotkeys": "master",
         "johnkpaul/jquery-ajax-retry": "master",
-        "othmar52/clean-rename": "master"
+        "othmar52/clean-rename": "master",
+        "ajjahn/puppet-mpd": "master"
     },
     "repositories": [
         {
@@ -86,6 +87,18 @@
                 "version": "master",
                 "source": {
                     "url": "git@github.com:othmar52/clean-rename.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "ajjahn/puppet-mpd",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:ajjahn/puppet-mpd.git",
                     "type": "git",
                     "reference": "origin/master"
                 }

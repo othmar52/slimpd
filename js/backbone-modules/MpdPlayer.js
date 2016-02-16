@@ -137,6 +137,12 @@
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
         },
         
+        removeDupes : function(item) {
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
+        },
+        
         process : function(item) {
         	window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
         },
