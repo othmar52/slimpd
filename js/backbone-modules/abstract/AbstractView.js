@@ -62,7 +62,14 @@
 		    
 		    $('.dropdown-toggle', this.$el).dropdown();
 		    $('.toggle-tooltip', this.$el).tooltip();
-  			$('[data-toggle="popover"]', this.$el).popover();
+  			$('[data-toggle="popover"]', this.$el).popover({
+  				html: 'true',
+  				content: function() {
+  					return ($(this).data('imageUrl'))
+  						? "<img class='popover-image' src='"+$(this).data('imageUrl')+"'>"
+  						: $(this).attr('title');
+  				}
+  			});
 		    
 		    /* route /maintainance/albumdebug */
 		    $('.inline-tab-nav a', this.$el).click(function (e) {

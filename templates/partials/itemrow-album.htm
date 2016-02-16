@@ -1,6 +1,6 @@
 <div class="row bg-col3 track-row">
 	<div class="col-md-2">
-		<a href="/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+		<a href="/album/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="/image-300/album/{{item.id}}">
 			<img src="/image-50/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
 		</a>
 		<a href="/markup/albumtracks/{{item.id}}" class="ajax-partial" data-ajaxtarget=".ajax-alb-{{ item.relativePathHash }}">

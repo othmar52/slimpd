@@ -315,7 +315,7 @@ a {
 .btn-trnsp,
 .bg-col2 .btn-trnsp,
 .bg-col2 .btn-trnsp {
-	background-color: Transparent;
+	background-color: transparent;
     background-repeat:no-repeat;
     border: none;
     cursor:pointer;
@@ -338,4 +338,8 @@ a {
 
 .label-warning {
 	color: #444;
+}
+
+.popover-image {
+	width: 100%;
 }
