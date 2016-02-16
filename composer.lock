@@ -4,9 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4e2da9bafec690aae4bb10b860c06273",
-    "content-hash": "b241e397dcd9933969c95d2c0350f5dc",
+    "hash": "63c19bf1dfa591716e130c68691ac5fd",
+    "content-hash": "3fc8e2554eacddba7f3e92abc4cdde61",
     "packages": [
+        {
+            "name": "ajjahn/puppet-mpd",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:ajjahn/puppet-mpd.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2014-11-06 14:31:47"
+        },
         {
             "name": "components/backbone",
             "version": "1.2.0",
@@ -927,7 +938,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/8a97b774a21e741049c2997c4e69fc36abbb0a8c",
+                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/eeafc1937d7560825ff5c2f1b8e5f86f059b5a28",
                 "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c",
                 "shasum": ""
             },
@@ -1079,7 +1090,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-02-14 09:20:00"
+            "time": "2016-02-14 10:51:02"
         },
         {
             "name": "ricbra/php-discogs-api",

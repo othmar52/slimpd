@@ -276,7 +276,7 @@ class mpd
 				$this->mpd('clear');
 				$counter = $this->appendPlaylist($playlist);
 				$this->mpd('play 0');
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");				
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");
 				break;
 				
 			case 'replaceCurrentPlaylistKeepTrack':
@@ -291,7 +291,15 @@ class mpd
 				$this->mpd('clear');
 				$counter = $this->appendPlaylist($playlist);
 				$this->clearPlaylistNotCurrent();
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");				
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");
+				break;
+				
+			case 'removeDupes':
+				// TODO: remove requirement of having mpc installed
+				$cmd = APP_ROOT . 'vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
+				exec($cmd, $result);
+				// TODO: count removed dupes and display result
+				notifyJson("MPD: removed dupes");
 				break;
 			
 			case 'playSelect': //		playSelect();

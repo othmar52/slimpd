@@ -1353,7 +1353,7 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/8a97b774a21e741049c2997c4e69fc36abbb0a8c",
+            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/eeafc1937d7560825ff5c2f1b8e5f86f059b5a28",
             "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c",
             "shasum": ""
         },
@@ -1514,6 +1514,18 @@
         "source": {
             "type": "git",
             "url": "git@github.com:othmar52/clean-rename.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "ajjahn/puppet-mpd",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:ajjahn/puppet-mpd.git",
             "reference": "origin/master"
         },
         "type": "library",

@@ -4,9 +4,16 @@
 </div>
 <div class="row">
 	<div class="col-md-2">
+		<button role="control" title="remove duplicate tracks from current playlist" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"removeDupes","mpdurl":"/mpdctrl/removeDupes"}'>
+			<i class="fa fa-trash"></i> Remove dupes</span>
+		</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2">
 		<button role="control" title="clear playlist (but keep current track)" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"clearPlaylistNotCurrent","mpdurl":"/mpdctrl/clearPlaylistNotCurrent"}'>
 			<i class="fa fa-trash"></i> Clear Playlist <span class="uc" style="font-size:0.7em;">({{ currentplaylistlength }} tracks)</span>
-		</button>	
+		</button>
 	</div>
 	<div class="col-md-3"><span class="dark uc small">{{'title'|ll}} &amp; {{'album'|ll}}</span></div>
 	<div class="col-md-3"><span class="dark uc small">{{'artist'|ll}}</span></div>
