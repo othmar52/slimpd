@@ -114,6 +114,13 @@
 				.append(
 					$('<div />', {'class':'col-md-10'}).append(
 						$('<a />', {'href':item.url, html: item.label, 'class': 'ajax-link', 'data-ajaxtarget': '#main'})
+						.bind('click', function(e){
+							e.preventDefault();
+							var $el = $(e.currentTarget);
+							window.sliMpd.router.navigate($el.attr('href'), {
+								trigger : true
+							});
+						})
 					)
 					.append(
 						$('<br/>')
