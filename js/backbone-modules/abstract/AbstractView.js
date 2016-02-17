@@ -119,6 +119,9 @@
             window.sliMpd.router.navigate($el.attr('href'), {
                 trigger : true
             });
+            if($el.hasClass('trigger-hide-modal')) {
+            	window.sliMpd.modal.$modal.modal('hide');
+            }
         },
         
         playerCtrlClickListener : function(e) {
@@ -131,6 +134,9 @@
 			try {
 		        var item = JSON.parse($el.attr('data-player'));
 		        window.sliMpd.currentPlayer.process(item);
+		        if($el.hasClass('trigger-hide-modal')) {
+	            	window.sliMpd.modal.$modal.modal('hide');
+	            }
 		    } catch(e) {
 		    	//console.log(e + ' in data-player attribute');
 			}
@@ -163,6 +169,9 @@
 				url: window.sliMpd.setGetParameter($el.attr('data-href'), 'nosurrounding', '1')
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
+				if($el.hasClass('trigger-hide-modal')) {
+	            	window.sliMpd.modal.$modal.modal('hide');
+	            }
 			}).fail(function() {
 				window.sliMpd.notifyError($el.attr('data-href'));
     			return;
