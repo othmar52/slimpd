@@ -5,10 +5,10 @@ try {
     	try {
     		mysqli_report(MYSQLI_REPORT_STRICT);
 			$dbh = new \mysqli(
-				$app->config['database']['host'],
-				$app->config['database']['username'],
-				$app->config['database']['password'],
-				$app->config['database']['database']
+				$app->config['database']['dbhost'],
+				$app->config['database']['dbusername'],
+				$app->config['database']['dbpassword'],
+				$app->config['database']['dbdatabase']
 			);
 		} catch (\Exception $e) {
 			$app = \Slim\Slim::getInstance();
@@ -22,10 +22,10 @@ try {
 		
 		/*
 		$dbh = new \PDO(
-			"mysql:host=".$app->config['database']['host'] .
-			";dbname=".$app->config['database']['database'],
-			$app->config['database']['username'],
-			$app->config['database']['password']
+			"mysql:host=".$app->config['database']['dbhost'] .
+			";dbname=".$app->config['database']['dbdatabase'],
+			$app->config['database']['dbusername'],
+			$app->config['database']['dbpassword']
 		);  
 		$dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		*/
