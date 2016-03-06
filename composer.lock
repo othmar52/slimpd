@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "63c19bf1dfa591716e130c68691ac5fd",
-    "content-hash": "3fc8e2554eacddba7f3e92abc4cdde61",
+    "hash": "490103a757324d94294e1959caaa015b",
+    "content-hash": "4c37e6d4a5fc09b3d9add46e8fab45ec",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -938,7 +938,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/eeafc1937d7560825ff5c2f1b8e5f86f059b5a28",
+                "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/29bda6e176df6c292a9b1c43ae8a44d56a87c30b",
                 "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c",
                 "shasum": ""
             },
@@ -1091,6 +1091,17 @@
             },
             "type": "library",
             "time": "2016-02-14 10:51:02"
+        },
+        {
+            "name": "othmar52/xwax-1.5-osc",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:othmar52/xwax-1.5-osc.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2016-03-06 21:23:13"
         },
         {
             "name": "ricbra/php-discogs-api",
@@ -1303,7 +1314,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/650a91315648fe433824e454b2c7107926f9876b",
+                "url": "https://api.github.com/repos/symfony/process/zipball/8168534f91e77282a0ebf2d7ee97750515b2cb75",
                 "reference": "650a91315648fe433824e454b2c7107926f9876b",
                 "shasum": ""
             },
@@ -1352,7 +1363,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ad5e6565cc854e7d36aa5875cd93a387f01b143a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0603d7afa02797e68436ebb05d8f31b988d8ae76",
                 "reference": "ad5e6565cc854e7d36aa5875cd93a387f01b143a",
                 "shasum": ""
             },

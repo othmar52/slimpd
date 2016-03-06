@@ -41,21 +41,29 @@ class Xwax {
 			// TODO: try to fetch artist and title from database
 			$filePath = realpath($app->config['mpd']['alternative_musicdir'] . join(DS, $params));
 			if(is_file($filePath) === FALSE) {
-				// TODO: send error msg to frontend
-				echo $app->ll->str('xwax.invalid.file'); die();
+				notifyJson($app->ll->str('xwax.invalid.file'), 'danger');
 			}
 			$loadArgs = ' ' . escapeshellarg($filePath) . ' '
 							. escapeshellarg('dummyartist') . ' '
 							. escapeshellarg('dummytitle');
 		}
 		
+		$xConf['clientpath'] = ($xConf['clientpath'][0] === '/')
+			? $xConf['clientpath']
+			: APP_ROOT . $xConf['clientpath'];
+			
+		if(is_file($xConf['clientpath']) === FALSE) {
+			notifyJson($app->ll->str('xwax.invalid.clientpath'), 'danger');
+		}
+		
 		$execCmd = 'timeout 2 ' . $xConf['clientpath'] . " " . $xConf['server'] . " "  . $cmd . " " . ($selectedDeck-1) . $loadArgs;
 		
 		exec($execCmd, $response);
 		
-		// TODO: send success message to frontend
-		echo "success";
-		$app->stop(); exit;
-		echo "<pre>$execCmd"; die(); 
+		if(isset($response[0]) && $response[0] === "OK") {
+			notifyJson($app->ll->str('xwax.cmd.success'), 'success');
+		} else {
+			notifyJson($app->ll->str('xwax.cmd.error'), 'danger');
+		}
 	}
 }
