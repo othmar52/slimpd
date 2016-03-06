@@ -25,7 +25,8 @@
         "jeresig/jquery.hotkeys": "master",
         "johnkpaul/jquery-ajax-retry": "master",
         "othmar52/clean-rename": "master",
-        "ajjahn/puppet-mpd": "master"
+        "ajjahn/puppet-mpd": "master",
+        "othmar52/xwax-1.5-osc": "master"
     },
     "repositories": [
         {
@@ -99,6 +100,18 @@
                 "version": "master",
                 "source": {
                     "url": "git@github.com:ajjahn/puppet-mpd.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "othmar52/xwax-1.5-osc",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:othmar52/xwax-1.5-osc.git",
                     "type": "git",
                     "reference": "origin/master"
                 }

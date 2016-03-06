@@ -141,4 +141,6 @@ components/jqueryui/jquery-ui.min.js
 
 othmar52/clean-rename/clean-rename
 
+othmar52/xwax-1.5-osc/xwax-client
+
 ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh
