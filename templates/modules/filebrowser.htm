@@ -24,7 +24,10 @@
 				</button>
 				
 				<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ directory~item.name|url_encode }}">
-					<i class="fa fa-flash"></i> clean-rename
+					Ã <i class="fa fa-arrow-right"></i> A
+				</button>
+				<button role="control" data-href="/mpdctrl/update/{{ directory~item.name~''|url_encode }}" title="update mpd database" class="ajax-rqst btn btn-default">
+					<i class="fa fa-refresh"></i>
 				</button>
 			</li>
 			
