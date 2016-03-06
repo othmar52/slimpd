@@ -126,8 +126,20 @@ class mpd
 					return FALSE;
 				}
 				
-				\Slimpd\importer::queDirectoryUpdate($item);
-				return $this->mpd('update "' . str_replace("\"", "\\\"", $item) . '"');
+				// now we have to find the nearest parent directory that already exists in mpd-database
+				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($item);
+				
+				// special case when we try to play a single new file (without parent-dir) out of mpd root
+				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
+					# TODO: send warning to client?
+					return FALSE;
+				}
+				
+				\Slimpd\importer::queDirectoryUpdate($closestExistingItemInMpdDatabase);
+				
+				$this->mpd('update "' . str_replace("\"", "\\\"", $closestExistingItemInMpdDatabase) . '"');
+				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase);
+				return;
 				
 			// tracks that hasnt been importet in mpd database have to get inserted befor playing
 			// TODO: should this also trigger a mysql-db-insert of this track?

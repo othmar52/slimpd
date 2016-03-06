@@ -32,6 +32,10 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 		return;
 	}
 	
+	if(PHP_SAPI !== 'cli') {
+		return;
+	}
+	
 	// TODO: check colors (especially the color after linebreaks)
 	$black 		= "33[0;30m";
 	$darkgray 	= "33[1;30m";
