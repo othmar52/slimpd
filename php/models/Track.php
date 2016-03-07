@@ -586,6 +586,10 @@ class Track extends \Slimpd\AbstractModel
 		$db->query("INSERT INTO " . self::$tableName . " (id) VALUES (".(int)$id.")");
 		return;
 	}
+	
+	public function jsonSerialize() {
+		return get_object_vars($this);
+	}
 
 
 	

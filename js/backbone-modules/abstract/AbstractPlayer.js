@@ -59,7 +59,7 @@
         // fetch markup with trackinfos
         redraw : function(item) {
         	$.ajax({
-    			url: '/markup/'+ this.mode+'player?item='+ item.item
+    			url: '/markup/'+ this.mode+'player?'+ ((this.mode === 'xwax') ? 'deck='+this.deckIndex : 'item='+ item.item)
     		}).done(function(response){
     			// place markup in DOM
     			this._template = _.template(response);

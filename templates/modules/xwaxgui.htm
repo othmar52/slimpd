@@ -1,0 +1,17 @@
+{% if modules.enable_xwax != '1' %}
+	<div class="col-md-12 error">
+	{{'xwax.notenabled'|ll}}
+		
+	</div>
+{% else %}
+	{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
+	{% for i in 1..xwax.decks %}
+	<div class="col-md-{{colidx}}">
+		<div class="row xwax-deck-{{i-1}}">
+			xwax-deck-{{i-1}}
+		</div>
+	</div>
+	{% endfor%}
+
+{% endif %}
+	  	
