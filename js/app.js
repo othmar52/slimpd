@@ -11,6 +11,8 @@ $(document).ready(function() {
         
         drawFaviconTimeout : 0,
         
+        xwax : false,
+        
         /**
 		 * adds get-paramter to url, respecting existing and not-existing params
 		 * TODO: currently not compatible with urlstring that contains a #hash
@@ -86,6 +88,11 @@ $(document).ready(function() {
     });
     window.sliMpd.navbar.render();
     
+    window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
+    	el : '.player-xwax'
+    });
+    window.sliMpd.xwax.render();
+    
 	window.sliMpd.modal = new window.sliMpd.modules.ModalView({
     	el : '#global-modal .modal-content'
     });
@@ -143,4 +150,11 @@ $(document).ready(function() {
 		$('#mainsearch').focus().select();
 		return false;
 	});
+	
+	
+	$('.navbar-upper').affix({
+  		offset: {bottom: 200}
+	});
+
+
 });

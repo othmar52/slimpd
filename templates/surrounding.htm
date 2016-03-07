@@ -189,6 +189,11 @@
 			</div>
 		</div>
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+		
+		<div class="row player-xwax bg-col4 navbar-xwax navbar navbar-fixed-bottom">
+			{% include 'modules/xwaxgui.htm'%}
+		</div>
+		
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/localplayer.htm'%}
 		</div>
@@ -259,6 +264,8 @@
 			'js/backbone-modules/abstract/AbstractPlayer.js',
 			'js/backbone-modules/LocalPlayer.js',
 			'js/backbone-modules/MpdPlayer.js',
+			'js/backbone-modules/XwaxView.js',
+			'js/backbone-modules/XwaxPlayer.js',
 			'js/backbone-modules/Router.js',
 			'js/app.js'
     		]

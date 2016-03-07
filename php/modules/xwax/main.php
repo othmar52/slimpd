@@ -72,6 +72,17 @@ class Xwax {
 		}
 	}
 
+	public function getCurrentlyPlayedTrack($deckIndex) {
+		$return = array();
+		$app = \Slim\Slim::getInstance();
+		$xConf = $app->config['xwax'];
+		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
+		$deckItem = ($deckStatus['path'] !== NULL)
+			 ? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
+			 : NULL;
+		return $deckItem;
+	}
+
 	public function fetchAllDeckStats() {
 		$return = array();
 		$app = \Slim\Slim::getInstance();
@@ -79,19 +90,24 @@ class Xwax {
 		for($i=0; $i<$xConf['decks']; $i++) {
 			$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($i+1), $app, TRUE));
 			$deckStatus['item'] = ($deckStatus['path'] !== NULL)
-				 ? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
-				 : NULL;
+				? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]->jsonSerialize()
+				: NULL;
 			$return[] = $deckStatus;
 		}
 		return $return;
 	}
 	
+
 	public static function clientResponseToArray($responseArray) {
 		$out = array();
 		foreach($responseArray as $line) {
 			$params = trimExplode(":", $line, TRUE, 2);
 			$out[$params[0]] = (isset($params[1]) === FALSE) ? NULL : $params[1];
 		}
+		
+		$out['percent'] = ($out['length'] > 0 && $out['position'] > 0)
+			? $out['position'] /($out['length']/100)
+			: 0;
 		return $out;
 	}
 }

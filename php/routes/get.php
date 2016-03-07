@@ -201,7 +201,14 @@ $app->get('/mpdstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $markupSnippet ) {
+$app->get('/xwaxstatus(/)', function() use ($app, $config){
+	$xwax = new \Slimpd\Xwax();
+	$deckStats = $xwax->fetchAllDeckStats();
+	echo json_encode($deckStats);
+	$app->stop();
+});
+
+foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widget-xwax'] as $markupSnippet ) {
 
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
@@ -214,6 +221,15 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $m
 			case 'mpdplayer':
 				$mpd = new \Slimpd\modules\mpd\mpd();
 				$config['item'] = $mpd->getCurrentlyPlayedTrack();
+				if($config['item'] !== NULL) {
+					$itemRelativePath = $config['item']->getRelativePath();
+				}
+				break;
+			case 'xwaxplayer':
+				$xwax = new \Slimpd\Xwax();
+				$config['decknum'] = $app->request->get('deck');
+				$config['item'] = $xwax->getCurrentlyPlayedTrack($config['decknum']);
+				
 				if($config['item'] !== NULL) {
 					$itemRelativePath = $config['item']->getRelativePath();
 				}

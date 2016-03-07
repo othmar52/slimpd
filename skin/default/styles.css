@@ -206,7 +206,8 @@ a {
 /* mpd player */
 
 .mpd-status-progressbar,
-.jp-play-bar {
+.jp-play-bar,
+.xwax-deck-progressbar {
 	position: absolute;
 	background: rgba(255,156,1,0.3);
 	background: rgba(0,0,0,0.7);
@@ -342,4 +343,8 @@ a {
 
 .popover-image {
 	width: 100%;
+}
+
+.navbar-xwax {
+	bottom: 105px;
 }
