@@ -30,6 +30,23 @@
 						Recue {{i}}
 					</button>
 	  			</div>
+	  			<div class="row">
+	  				{% if xwax.deckstats[i-1].item %}
+	  					{% set item = xwax.deckstats[i-1].item %}
+	  					<div class="row">
+	  					{% include 'partials/image.htm' with {
+							'width': 300,
+							'type': 'album',
+							'itemId': item.albumId,
+							'attrs': 'style="width: 300px; height: 300px; z-index:2;"'
+						} %}
+						</div>
+	  					{% include 'partials/artist/link.htm' %}
+	  					{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	  				{% else %}
+	  					<span class="label label-success">Deck is empty</span> 
+	  				{% endif %}
+	  			</div>
 	  			</div>
 	  		{% endfor%}
 	  	

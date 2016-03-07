@@ -208,25 +208,40 @@ foreach(['mpdplayer', 'localplayer', 'widget-trackcontrol', 'widget-xwax'] as $m
 		// maybe we cant find item in mpd or mysql database because it has been accessed via filebrowser
 		$itemRelativePath = '';
 		
-		if($markupSnippet === 'mpdplayer') {
-			$mpd = new \Slimpd\modules\mpd\mpd();
-			$config['item'] = $mpd->getCurrentlyPlayedTrack();
-			if($config['item'] !== NULL) {
-				$itemRelativePath = $config['item']->getRelativePath();
+		$itemsToRender = array();
+		
+		switch($markupSnippet) {
+			case 'mpdplayer':
+				$mpd = new \Slimpd\modules\mpd\mpd();
+				$config['item'] = $mpd->getCurrentlyPlayedTrack();
+				if($config['item'] !== NULL) {
+					$itemRelativePath = $config['item']->getRelativePath();
 				}
-		} else {
-			if(is_numeric($app->request->get('item')) === TRUE) {
-				$search = array('id' => (int)$app->request->get('item'));
-			} else {
-				$search = array('relativePathHash' => getFilePathHash($app->request->get('item')));
-				$itemRelativePath = $app->request->get('item');
-			}
-			$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+				break;
+			case 'widget-xwax':
+				$xwax = new \Slimpd\Xwax();
+				$config['xwax']['deckstats'] = $xwax->fetchAllDeckStats();
+				foreach($config['xwax']['deckstats'] as $deckStat) {
+					$itemsToRender[] = $deckStat['item'];
+				} 
+				// no break
+			default:
+				if(is_numeric($app->request->get('item')) === TRUE) {
+					$search = array('id' => (int)$app->request->get('item'));
+				} else {
+					$search = array('relativePathHash' => getFilePathHash($app->request->get('item')));
+					$itemRelativePath = $app->request->get('item');
+				}
+				$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+				// no break
+				
+			
 		}
 		
+		$itemsToRender[] = $config['item'];
+		$config['renderitems'] = getRenderItems($itemsToRender);
 		
 		if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
-			$config['renderitems'] = getRenderItems($config['item']);
 			$itemRelativePath = $config['item']->getRelativePath();
 		} else {
 			// playing track has not been imported in slimpd database yet...

@@ -3,7 +3,7 @@ namespace Slimpd;
 
 class Xwax {
 	
-	public function cmd($cmd, $params, $app) {
+	public function cmd($cmd, $params, $app, $returnResponse = FALSE) {
 		if($app->config['modules']['enable_xwax'] !== '1') {
 			// TODO: send error msg to frontend
 			echo $app->ll->str('xwax.notenabled'); die();
@@ -61,9 +61,37 @@ class Xwax {
 		exec($execCmd, $response);
 		
 		if(isset($response[0]) && $response[0] === "OK") {
-			notifyJson($app->ll->str('xwax.cmd.success'), 'success');
+			if($returnResponse === FALSE) {
+				notifyJson($app->ll->str('xwax.cmd.success'), 'success');
+			} else {
+				array_shift($response);
+				return $response;
+			}
 		} else {
 			notifyJson($app->ll->str('xwax.cmd.error'), 'danger');
 		}
+	}
+
+	public function fetchAllDeckStats() {
+		$return = array();
+		$app = \Slim\Slim::getInstance();
+		$xConf = $app->config['xwax'];
+		for($i=0; $i<$xConf['decks']; $i++) {
+			$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($i+1), $app, TRUE));
+			$deckStatus['item'] = ($deckStatus['path'] !== NULL)
+				 ? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
+				 : NULL;
+			$return[] = $deckStatus;
+		}
+		return $return;
+	}
+	
+	public static function clientResponseToArray($responseArray) {
+		$out = array();
+		foreach($responseArray as $line) {
+			$params = trimExplode(":", $line, TRUE, 2);
+			$out[$params[0]] = (isset($params[1]) === FALSE) ? NULL : $params[1];
+		}
+		return $out;
 	}
 }
