@@ -9,7 +9,8 @@ class playlist
 	protected $errorPath = TRUE;
 	protected $ext;
 	protected $length;
-	protected $tracks = [];
+	protected $itemPaths = [];	// pathstrings
+	protected $tracks = [];		// track-instances
 	
 	public function __construct($relativePath) {
 		$app = \Slim\Slim::getInstance();
@@ -69,8 +70,17 @@ class playlist
 				return;
 		}
 
-		foreach($itemPaths as $itemPath) {
-			if($pathOnly === FALSE) {
+		if($pathOnly === FALSE) {
+			$this->tracks = self::pathStringsToTrackInstancesArray($itemPaths);
+		} else {
+			$this->tracks = self::pathStringsToTrackInstancesArray($itemPaths, TRUE);
+		}
+	}
+
+	public static function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
+		$return = array();
+		foreach($pathStringArray as $itemPath) {
+			if($noDatabaseQueries === FALSE) {
 				$track = \Slimpd\Track::getInstanceByPath($itemPath);
 			
 				if($track === NULL) {
@@ -92,8 +102,9 @@ class playlist
 					$track->setError('notfound');
 				}
 			}
-			$this->appendTrack($track);
+			$return[] = $track;
 		}
+		return $return;
 	}
 
 	/**

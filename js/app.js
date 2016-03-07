@@ -67,7 +67,8 @@ $(document).ready(function() {
 				message: notifyConf.message
 			},{
 				// settings
-				type: (notifyConf.type || 'info')
+				type: (notifyConf.type || 'info'),
+				z_index: 10000
 			});
 			$.notify();
 		},
