@@ -113,6 +113,12 @@
             window.Backbone.View.prototype.remove.call(this);
         },
         
+        close : function() {
+        	console.log('AbstractView::destroyView');
+    		this.remove();
+    		this.unbind();
+        },
+        
         genericClickListener : function(e) {
             e.preventDefault();
         	var $el = $(e.currentTarget);

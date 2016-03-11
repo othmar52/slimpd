@@ -188,12 +188,10 @@
   				</div>
 			</div>
 		</div>
+		
+		{% include 'modules/xwaxgui.htm'%}
+		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		
-		<div class="row player-xwax bg-col4 navbar-xwax navbar navbar-fixed-bottom">
-			{% include 'modules/xwaxgui.htm'%}
-		</div>
-		
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
 			{% include 'modules/localplayer.htm'%}
 		</div>

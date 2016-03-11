@@ -33,11 +33,23 @@
         	this.trackAnimation = { currentPosPerc: 0 };
         	this.timeLineLight = new TimelineLite();
         	
-        	this.poll();
+        	//console.log('XwaxPlayer::init() ' + this.deckIndex);
+        	this.listenTo(this.parent, 'hideXwaxGui', this.close);
+        	
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
+        },
+        
+        close : function(){
+        	//console.log('XwaxPlayer::close()');
+        	this.remove();
+        	// IMPORTANT TODO: shouldnt remove() removing the DOM element???
+        	this.$el.html('');
+    		this.unbind();
+        	//window.sliMpd.modules.AbstractPlayer.prototype.close.call(this, options);
         },
 
         render : function(options) {
+        	//console.log('calling XwaxPlayer::render() ' + this.deckIndex);
             window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
         },
 		
