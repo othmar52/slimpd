@@ -1,17 +1,34 @@
 {% if modules.enable_xwax != '1' %}
 	<div class="col-md-12 error">
 	{{'xwax.notenabled'|ll}}
-		
 	</div>
 {% else %}
-	{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
-	{% for i in 1..xwax.decks %}
-	<div class="col-md-{{colidx}}">
-		<div class="row xwax-deck-{{i-1}}">
-			xwax-deck-{{i-1}}
+	
+	<div class="row player-xwax bg-XXXcol4 navbar-xwax navbar navbar-fixed-bottom">
+		<div class="row">
+			<div class="col-md-1">
+				<button class="xwax-gui-toggler inactive btn btn-lg btn-default">XWAX</button>
+			</div>
+			<div class="col-md-11 xwax-decks">
+				<div class="row xwax-gui">
+					{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
+					{% for i in 1..xwax.decks %}
+					<div class="col-md-{{colidx}}">
+						<div class="row xwax-deck-{{i-1}} bg-col4">
+						</div>
+					</div>
+					{% endfor%}
+				</div>
+				<div class="row xwax-error hidden">
+					<div class="col-md-12">
+						<div class="alert alert-danger">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							xwax connection failed. make sure it is running on {{xwax.server}}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	{% endfor%}
-
 {% endif %}
 	  	

@@ -108,6 +108,8 @@ class Xwax {
 		$out['percent'] = ($out['length'] > 0 && $out['position'] > 0)
 			? $out['position'] /($out['length']/100)
 			: 0;
+			
+		$out['state'] = ($out['player_sync_pitch'] != 1) ? 'play' : 'pause';
 		return $out;
 	}
 }

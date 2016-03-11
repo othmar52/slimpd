@@ -14,27 +14,22 @@
         rendered : false,
         tabAutocomplete : false,
         
-        totalDecks : 3, // TODO: get from config
+        totalDecks : 3, // TODO: get available decks from server
         
         xwaxRunning : false,
+        
+        visible : false,
         
         deckViews : [],
         
         lastDeckTracks : [],
         
+        toggler : false,
+        
         intervalActive : 3000,
 		intervalInactive : 6000,
         
         initialize : function(options) {
-        	for(var i=0; i< this.totalDecks; i++) {
-        		this.deckViews[i] = new window.sliMpd.modules.XwaxPlayer({
-			    	el : '.xwax-deck-'+i,
-			    	deckIndex : i
-			    });
-			    if(this.xwaxRunning === true) {
-			    	this.deckViews[i].redraw();
-			    }
-			}
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
@@ -43,28 +38,79 @@
             if (this.rendered) {
                 return;
             }
-			this.poll();
+            console.log('calling XwaxGui::render()');
+            this.toggler = $('.xwax-gui-toggler', this.$el);
+            this.toggler.off('click', this.toggleXwaxGui).on('click', this.toggleXwaxGui);
             window.sliMpd.modules.AbstractView.prototype.render.call(this);
             this.rendered = true;
 		},
 		
+		toggleXwaxGui : function() {
+			if(this.visible === false) {
+				this.showXwaxGui();
+			} else {
+				this.hideXwaxGui();
+			}
+		},
+		
+		showXwaxGui : function() {
+			for(var i=0; i< this.totalDecks; i++) {
+				var deckView = new window.sliMpd.modules.XwaxPlayer({
+			    	el : '.xwax-deck-'+i,
+			    	deckIndex : i
+			    });
+        		this.deckViews.push(deckView); 
+			    if(this.xwaxRunning === true) {
+			    	deckView.redraw();
+			    }
+			    this.visible = true;
+			}
+			$('.xwax-error').removeClass('hidden');
+			this.toggler.removeClass('btn-default').addClass('btn-success');
+			this.poll();
+		},
+		
+		hideXwaxGui : function() {
+		    this.lastDeckTracks = [];
+		    clearTimeout(this.poller);
+		    //console.log('hideXwaxGui()');
+		    this.deckViews.forEach(function (view){
+		    	//console.log('destroying view ' + view.deckIndex);
+	    		view.close();
+	    		
+		    });
+		    this.toggler.removeClass('btn-success').removeClass('btn-danger').addClass('btn-default');
+		    this.xwaxRunning = false;
+		    this.deckViews = [];
+		    this.visible = false;
+		    $('.xwax-error', this.$el).addClass('hidden');
+		    $('.xwax-gui', this.$el).removeClass('hidden');
+		},
+		
 		processXwaxNotRunning : function() {
-			console.log('processXwaxNotRunning()');
+			//console.log('processXwaxNotRunning()');
+			this.toggler.removeClass('btn-success').addClass('btn-danger');
+			$('.xwax-error', this.$el).removeClass('hidden');
+		    $('.xwax-gui', this.$el).addClass('hidden');
+		    
 			this.xwaxRunning = false;
 		    this.lastDeckTracks = [];
 		    
-		    for(var i=0; i< this.totalDecks; i++) {
+		    this.deckViews.forEach(function (deckView){
 	    		
-	    		this.deckViews[i].rendered = false;
-	    		this.deckViews[i].$el.html('xwax not running');
-	    		this.deckViews[i].render();
-		    }
-		    		
+	    		deckView.rendered = false;
+	    		deckView.$el.html('xwax not running');
+	    		deckView.render();
+		    });
+		    clearTimeout(this.poller);
 		    this.poller = setTimeout(this.poll, this.intervalInactive);
 		},
 		
 		// IMPORTANT TODO: how to avoid growing memory consumption on those frequent poll-requests?
 		poll : function (){
+			if(this.visible === false) {
+				return;
+			}
 			var that = this;
 		    $.get('/xwaxstatus', function(data) {
 		    	
@@ -78,18 +124,28 @@
 			    	that.processXwaxNotRunning();
 		        	return;
 				}
+				if(that.xwaxRunning === false) {
+					that.toggler.removeClass('btn-danger').addClass('btn-success');
+					$('.xwax-error', this.$el).addClass('hidden');
+		    		$('.xwax-gui', this.$el).removeClass('hidden');
+				}
+				
 				that.xwaxRunning = true;
-		    	//console.log(xwaxStatus[1]);
+				/*
+		    	console.log('pitch ' + xwaxStatus[0].pitch);
+		    	console.log('player_diff ' + xwaxStatus[0].player_diff);
+		    	console.log('player_sync_pitch ' + xwaxStatus[0].player_sync_pitch);
+		    	console.log('player_target_position ' + xwaxStatus[0].player_target_position);
+		    	console.log('timecode_control ' + xwaxStatus[0].timecode_control);
+		    	console.log('timecode_speed ' + xwaxStatus[0].timecode_speed);
+		    	console.log('-----------------------------');
+		    	*/
+		    	
 		    	for(var i=0; i< that.totalDecks; i++) {
-		    		if(that.lastDeckTracks[i] !== xwaxStatus[i].path) {
-		    			that.lastDeckTracks[i] = xwaxStatus[i].path;
-		    			var hash = (xwaxStatus[i].item === null) ? '0000000' : xwaxStatus[i].item.relativePathHash;
-		    			that.deckViews[i].redraw({hash: hash});
-		    			//console.log('redraw deck ' + i);
-		    		}
+		    		
 		    		
 		    		that.deckViews[i].nowPlayingPercent = xwaxStatus[i].percent;
-		    		that.deckViews[i].nowPlayingState = 'play';
+		    		that.deckViews[i].nowPlayingState = xwaxStatus[i].state;
 		    		
 		    		try {
 		    			that.deckViews[i].nowPlayingDuration = xwaxStatus[i].item.miliseconds/1000;
@@ -103,9 +159,17 @@
 		    		that.deckViews[i].nowPlayingDuration = xwaxStatus[i].length;
 		    		
 		    		that.deckViews[i].nowPlayingElapsed = xwaxStatus[i].position;
-			    	that.deckViews[i].nowPlayingItem = xwaxStatus[i].path;
+			    	
 			    	that.deckViews[i].timelineSetValue(xwaxStatus[i].percent);
 			    	that.deckViews[i].updateStateIcons();
+			    	if(that.lastDeckTracks[i] !== xwaxStatus[i].path) {
+		    			that.lastDeckTracks[i] = xwaxStatus[i].path;
+		    			that.deckViews[i].nowPlayingItem = xwaxStatus[i].path;
+		    			var hash = (xwaxStatus[i].item === null) ? '0000000' : xwaxStatus[i].item.relativePathHash;
+		    			that.deckViews[i].redraw({hash: hash});
+		    			//console.log('redraw deck ' + i);
+		    		}
+		    		that.deckViews[i].nowPlayingItem = xwaxStatus[i].path;
 			    	
 			    	//console.log(xwaxStatus);
 			    	
