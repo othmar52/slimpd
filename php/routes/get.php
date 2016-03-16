@@ -334,8 +334,9 @@ foreach (array(50,100,300,1000) as $imagesize) {
 	
 	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $config, $imagesize){
 		$config['imagesize'] = $imagesize;
-		// TODO: move color to configfile
-		$config['imagecolor'] = ($config['playerMode'] === 'mpd') ? '#FF9C01' : 'rgb(66,241,50)';
+		$config['color'] = $config['images']['noimage'][ $config['playerMode'] ]['color'];
+		$config['backgroundcolor'] = $config['images']['noimage'][ $config['playerMode'] ]['backgroundcolor'];
+		
 		switch($type) {
 			default: $template = 'svg/dummy.svg';
 		}
