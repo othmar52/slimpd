@@ -29,6 +29,9 @@
 				<button role="control" data-href="/mpdctrl/update/{{ directory~item.name~''|url_encode }}" title="update mpd database" class="ajax-rqst btn btn-default">
 					<i class="fa fa-refresh"></i>
 				</button>
+				<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ directory~item.name~''|url_encode }}" title="search database (does not work for not indexed files)">
+					<i class="fa fa-search"></i>
+				</a>
 			</li>
 			
 	</div>

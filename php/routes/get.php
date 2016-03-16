@@ -946,7 +946,6 @@ $app->get('/deliver/:item+', function($item) use ($app, $config){
 });
 
 $app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $config){
-	
 	$xwax = new \Slimpd\Xwax();
 	$xwax->cmd($cmd, $params, $app);
 	$app->stop();
