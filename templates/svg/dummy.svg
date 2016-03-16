@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{{imagesize}}px" height="{{imagesize}}px" viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
-  <rect id="svgEditorBackground" x="0" y="0" width="100%" height="100%" style="fill: {{imagecolor}}; stroke: none;"/>
-  <circle id="e1_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="205" fill="white" />
-  <circle id="e2_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="58.6286" fill="{{imagecolor}}" />
+  <rect id="svgEditorBackground" x="0" y="0" width="100%" height="100%" style="fill: {{backgroundcolor}}; stroke: none;"/>
+  <circle id="e1_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="205" fill="{{color}}" />
+  <circle id="e2_circle" cx="250" cy="250" stroke="black" style="stroke-width: 0; vector-effect: non-scaling-stroke;" r="58.6286" fill="{{backgroundcolor}}" />
 </svg>
