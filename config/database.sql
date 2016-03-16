@@ -455,6 +455,24 @@ CREATE TABLE IF NOT EXISTS `suggest` (
 
 -- --------------------------------------------------------
 
+--
+-- table structure `pollcache`
+--
+
+CREATE TABLE IF NOT EXISTS `pollcache` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `microtstamp` varchar(255) NOT NULL,
+  `type` varchar(11) NOT NULL,
+  `deckindex` tinyint(4) unsigned DEFAULT '0',
+  `success` tinyint(2) unsigned DEFAULT '0',
+  `ip` varchar(11) NOT NULL,
+  `port` tinyint(5) unsigned DEFAULT '0',
+  `response` mediumtext NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
 -- 
 -- Default artist
 --

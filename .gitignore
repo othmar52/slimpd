@@ -3,5 +3,6 @@
 /php/routes/post_local.php
 /config/config_local.ini
 /config/development.txt
+/scripts/custom-xwax-client
 
 
