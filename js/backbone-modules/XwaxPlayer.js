@@ -15,7 +15,7 @@
         faviconDoghnutColor : 'rgb(255,156,1)',
         faviconBackgroundColor : '#444',
         
-        timeGridSelectorCanvas : 'timegrid-mpd',
+        timeGridSelectorCanvas : '',
 		timeGridSelectorSeekbar : '.xwax-ctrl-seekbar',
 		timeGridStrokeColor : '#7B6137',
 		timeGridStrokeColor2 : '#FCC772',
@@ -27,14 +27,14 @@
 
         initialize : function(options) {
         	this.deckIndex = options.deckIndex;
-        	//this.redraw();
+        	this.timeGridSelectorCanvas = 'timegrid-xwax-deck-'+ this.deckIndex;
         	this.$content = $('.player-'+ this.mode, this.$el);
         	
         	this.trackAnimation = { currentPosPerc: 0 };
         	this.timeLineLight = new TimelineLite();
         	
         	//console.log('XwaxPlayer::init() ' + this.deckIndex);
-        	this.listenTo(this.parent, 'hideXwaxGui', this.close);
+        	//this.listenTo(this.parent, 'hideXwaxGui', this.close);
         	
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
         },
@@ -71,9 +71,6 @@
 	    		this.timeLineLight.pause();
 	    	}
 	    	this.drawTimeGrid();
-	
-        	
-        	
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         

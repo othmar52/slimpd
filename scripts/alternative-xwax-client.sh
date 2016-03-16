@@ -21,8 +21,13 @@ case "$CMD" in
 esac
 	
 case "$CMD" in
-	start_xwax)
-		echo "calling start_xwax"
+	launch)
+		echo "ERROR"
+		echo "insert your start command for xwax-launch here ${BASH_SOURCE[0]}"
+		;;
+	exit)
+		echo "ERROR"
+		echo "insert your exit command for xwax-launch here ${BASH_SOURCE[0]}"
 		;;
 	load_track)
 		echo "calling load_track deck=$DECK, track=$ARG1"

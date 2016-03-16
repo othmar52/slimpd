@@ -3,38 +3,40 @@ namespace Slimpd;
 
 class Xwax {
 	
+	protected $ip;
+	protected $port = 0;
+	protected $deckIndex;
+	protected $type = 'xwax';
+	protected $pollcache = NULL;
+	
 	public function cmd($cmd, $params, $app, $returnResponse = FALSE) {
 		if($app->config['modules']['enable_xwax'] !== '1') {
-			// TODO: send error msg to frontend
-			echo $app->ll->str('xwax.notenabled'); die();
+			notifyJson($app->ll->str('xwax.notenabled'), 'danger');
 		}
 		$xConf = $app->config['xwax'];
 		
 		if($xConf['decks'] < 1) {
-			// TODO: send error msg to frontend
-			echo $app->ll->str('xwax.deckconfig'); die();
+			notifyJson($app->ll->str('xwax.deckconfig'), 'danger');
 		}
 		
 		if(count($params) === 0) {
-			// TODO: send error msg to frontend
-			echo $app->ll->str('xwax.missing.deckparam'); die();
+			notifyJson($app->ll->str('xwax.missing.deckparam'), 'danger');
 		}
-		
 		
 		$totalDecks = $xConf['decks'];
 		$selectedDeck = $params[0];
 		
 		if(is_numeric($selectedDeck) === FALSE || $selectedDeck < 1 || $selectedDeck > $totalDecks) {
-			// TODO: send error msg to frontend
-			echo $app->ll->str('xwax.invalid.deckparam'); die();
+			notifyJson($app->ll->str('xwax.invalid.deckparam'), 'danger');
 		}
 		
 		if(isset($xConf['cmd_'. $cmd]) === FALSE) {
-			// TODO: send error msg to frontend
-			echo $app->ll->str('xwax.invalid.cmd'); die();
+			notifyJson($app->ll->str('xwax.invalid.cmd'), 'danger');
 		}
 		
 		$loadArgs = '';
+		$this->ip = $xConf['server'];
+		$this->deckIndex = $selectedDeck-1;
 		
 		if($cmd == "load_track") {
 			array_shift($params);
@@ -56,9 +58,29 @@ class Xwax {
 			notifyJson($app->ll->str('xwax.invalid.clientpath'), 'danger');
 		}
 		
-		$execCmd = 'timeout 2 ' . $xConf['clientpath'] . " " . $xConf['server'] . " "  . $cmd . " " . ($selectedDeck-1) . $loadArgs;
+		$useCache = FALSE;
 		
-		exec($execCmd, $response);
+		if($cmd === "get_status") {
+			$this->onBeforeGetStatus();
+			if($this->pollcache !== NULL) {
+				$interval = 2;
+				if(microtime(TRUE) - $this->pollcache->getMicrotstamp() < $interval) {
+					$useCache = TRUE;
+				}
+			}
+		}
+		
+		if($useCache === FALSE) {
+			$execCmd = 'timeout 1 ' . $xConf['clientpath'] . " " . $this->ip . " "  . $cmd . " " . $this->deckIndex . $loadArgs;
+			exec($execCmd, $response);
+			
+			if($cmd === "get_status") {
+				$this->onAfterGetStatus($response);
+			}
+			
+		} else {
+			$response = unserialize($this->pollcache->getResponse());
+		}
 		
 		if(isset($response[0]) && $response[0] === "OK") {
 			if($returnResponse === FALSE) {
@@ -70,6 +92,33 @@ class Xwax {
 		} else {
 			notifyJson($app->ll->str('xwax.cmd.error'), 'danger');
 		}
+	}
+
+	/*
+	 * check if we have a cached pollresult to avoid xwax-client-penetration caused by multiple web-clients
+	 **/
+	private function onBeforeGetStatus() {
+		$this->pollcache = \Slimpd\pollcache::getInstanceByAttributes(
+			array(
+				'type' => $this->type,
+				'deckindex' => $this->deckIndex,
+				'ip' => $this->ip,
+				'port' => $this->port
+			)
+		);
+	}
+	
+	private function onAfterGetStatus($response) {
+		if($this->pollcache === NULL) {
+			$this->pollcache = new \Slimpd\pollcache();
+			$this->pollcache->setType($this->type);
+			$this->pollcache->setDeckindex($this->deckIndex);
+			$this->pollcache->setIp($this->ip);
+			$this->pollcache->setPort($this->port);
+		}
+		$this->pollcache->setResponse(serialize($response));
+		$this->pollcache->setMicrotstamp(microtime(TRUE));
+		$this->pollcache->update();
 	}
 
 	public function getCurrentlyPlayedTrack($deckIndex) {

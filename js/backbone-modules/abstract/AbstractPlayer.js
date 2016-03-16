@@ -195,6 +195,9 @@
 			}
 
 			var cnv = document.getElementById(this.timeGridSelectorCanvas);
+			if(cnv === null) {
+				return;
+			}
 			var width = $(this.timeGridSelectorSeekbar).width();
 			var height = 10;
 			
