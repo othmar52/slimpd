@@ -78,12 +78,12 @@
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
 			</div>
 			<div class="row">
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %}</span></div>
+				<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
 			</div>
 			{% else %}
-				{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 				<br />
 				<div class="darker-links">
 					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
@@ -104,6 +104,6 @@
 	</div>
 	</div>
 		    
-	<div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/tracktitle.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
+	<div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
    
 {% endblock %}

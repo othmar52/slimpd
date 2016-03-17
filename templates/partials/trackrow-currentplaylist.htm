@@ -18,7 +18,7 @@
 	
 	{% if item.id %}
 		<div class="col-md-3">
-				{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 			<br />
 			<div class="darker-links">
 				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
@@ -36,7 +36,7 @@
 	{% else %}
 		{# item is not imported in sliMpd so we do not have any meta-infos #}
 		<div class="col-md-8">
-			{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+			{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 			<br />
 			<div class="darker-links">
 				<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>

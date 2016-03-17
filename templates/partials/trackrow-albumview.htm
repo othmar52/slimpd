@@ -9,7 +9,7 @@
 		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
 	</div>
 	<div class="col-xs-2 col-sm-3">
-		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 	</div>
 	<div class="col-xs-5 col-sm-3">
 		{% include 'partials/artist/link.htm' %}

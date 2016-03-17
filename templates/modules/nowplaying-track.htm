@@ -1,6 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-<h2>Aktueller Titel: {% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}</h2>
+<h2>Aktueller Titel: {% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}</h2>
 <div class="row">
 	<div class="col-md-4">
 		<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
