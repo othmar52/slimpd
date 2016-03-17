@@ -1,21 +1,20 @@
-{% if titlestring %}	
-	{% if item.remixerId %}
-		<span class="glue-hover-wrap">
-		{% set titleparts = titlestring|split('%s') %}
-		{% set remixerIds = item.remixerId|split(',') %}
-		{% for index,titlepart in titleparts %}
-			{% if not loop.first and not loop.last %}
-				<a class="item-link artist-link ajax-link toggle-tooltip" data-ajaxtarget="#main" href="/artist/{{ item.remixerId }}/tracks/page/1/sort/added/desc" title="view artists tracks">
-					<span class="glue-hover-trigger">
-			{% endif %}{{ titlepart }}{% if not loop.first and not loop.last %}</span></a>{% endif %}
-			{% if loop.last == false %}
-				{% include 'partials/artist/single-link.htm' with { 'itemId': remixerIds[index] }  %}
-			{% endif %}
-		{% endfor %}
-		</span>
-	{% else %}
-		{{titlestring}}
-	{% endif %}
+{# no indentation to avoid unwanted whitespace in frontend #}
+{% if titlestring %}
+{% if item.remixerId %}
+<span class="glue-hover-wrap">
+{% set titleparts = titlestring|split('%s') %}
+{% set remixerIds = item.remixerId|split(',') %}
+{% for index,titlepart in titleparts %}
+{% if not loop.first and not loop.last %}
+<a class="item-link artist-link ajax-link toggle-tooltip" data-ajaxtarget="#main" href="/artist/{{ item.remixerId }}/tracks/page/1/sort/added/desc" title="view artists tracks">
+<span class="glue-hover-trigger">
+{% endif %}{{ titlepart }}{% if not loop.first and not loop.last %}</span></a>{% endif %}
+{% if loop.last == false %}{% include 'partials/artist/single-link.htm' with { 'itemId': remixerIds[index] }  %}{% endif %}
+{% endfor %}
+</span>
 {% else %}
-	{{ fileName }}
+{{titlestring}}
+{% endif %}
+{% else %}
+{{ fileName }}
 {% endif %}
