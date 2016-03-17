@@ -29,6 +29,10 @@
 		{# add dynamic css for now-playing status #}
 		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}css/localplayer/0" />
 		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}css/mpdplayer/0" />
+		{# TODO: find a better way to highlight deck-tracks for any amount of decks #}
+		{% for deck in [0,1,2,3] %}
+		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{ config.absRefPrefix }}css/xwaxplayer/0" />
+		{% endfor %}
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
 		<div class="container">

@@ -278,6 +278,7 @@ foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widge
 	
 	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $config, $markupSnippet){
 		$config['relativePathHash'] = $relativePathHash;
+		$config['deck'] = $app->request->get('deck');
 		$app->response->headers->set('Content-Type', 'text/css');
 		$app->render('css/'.$markupSnippet.'.css', $config);
 	});
