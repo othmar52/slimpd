@@ -17,7 +17,7 @@
 	</div>
 	
 	<div class="col-md-3">
-		{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 		<br />
 		<div class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</div>
 	</div>

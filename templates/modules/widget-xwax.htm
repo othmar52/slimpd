@@ -42,7 +42,7 @@
 						} %}
 						</div>
 	  					{% include 'partials/artist/link.htm' %}
-	  					{% include 'partials/tracktitle.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	  					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 	  				{% else %}
 	  					<span class="label label-success">Deck is empty</span> 
 	  				{% endif %}
