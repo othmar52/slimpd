@@ -169,7 +169,16 @@
 		reloadCss : function(hash) {
 			// TODO: comment whats happening here
 			// FIXME: mpd-version is broken since backbonify
-			$('#css-'+ this.mode +'player').attr('href', '/css/'+ this.mode +'player/'+ ((hash) ? hash : '0'));
+			var suffix, selector;
+			if(this.mode === 'xwax') {
+				suffix = '?deck=' + this.deckIndex;
+				selector = '#css-xwaxdeck-'+ this.deckIndex;
+			} else {
+				suffix = '';
+				selector = '#css-'+this.mode+'player';
+			}
+			$(selector).attr('href', '/css/'+ this.mode +'player/'+ ((hash) ? hash : '0') + suffix);
+			
 		},
 		
 		drawFavicon : function() {
