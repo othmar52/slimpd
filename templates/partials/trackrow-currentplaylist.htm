@@ -8,9 +8,12 @@
 		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
 			<i class="fa fa-play"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal xwax-mode-hide">
 			<i class="fa fa-align-justify"></i>
 		</button>
+		<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-default xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }}">
+			<i class="fa fa-headphones fa-lg"></i>
+		</a>
 		<button role="control" title="remove from playlist" class="btn btn-default player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 			<i class="fa fa-trash"></i>
 		</button>
@@ -45,6 +48,6 @@
 		<div class="col-md-2">{% include 'partials/track/not-imported-badge.htm' %}</div>
 	{% endif %}
 	
-	
+	<div class="ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }} col-md-12"></div>
 </div>
 {% endblock %}
