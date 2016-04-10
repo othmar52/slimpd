@@ -1,14 +1,15 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-    <div class="col-sm-12 col-md-5">
+    <div class="col-md-1"> </div>
+		<div class="col-sm-12 col-md-4">
     	<div class="mpd-status-progressbar">
     	
     	</div>
-    	<object class="waveform svg-ajax-object" style="width: 100%; height: 50px;"
+    	<object class="waveform svg-ajax-object"
     		data="{{ placeholderSvgUrl }}"
     		data-svgurl="{{ waveformSvgUrl }}" type="image/svg+xml">
     	</object>
-    	<div class="mpd-status-timestring" style="text-align: center;">
+    	<div class="mpd-status-timestring status-timestring">
     		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
     		<span class="mpd-status-total">0:00</span>
     	</div>
@@ -16,7 +17,7 @@
     	<div class="mpd-ctrl-seekbar">
     	
     	</div>
-    	<canvas id="timegrid-mpd" class="timegrid-mpd" style="width: 100%; height:10px;"></canvas>
+    	<canvas id="timegrid-mpd" class="timegrid-mpd timegrid slimplayer-hidden"></canvas>
 	</div>
     <div class="hidden-xs col-md-1">
     	<div class="row">

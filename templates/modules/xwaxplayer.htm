@@ -1,18 +1,18 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-12 col-md-12 xwaxplayer">
     	
     	<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar">
     	
     	</div>
-    	<object class="waveform svg-ajax-object" style="width: 100%; height: 50px;"
+    	<object class="waveform svg-ajax-object"
     		data="{{ placeholderSvgUrl }}"
     		data-svgurl="{{ waveformSvgUrl }}?color=3" type="image/svg+xml">
     	</object>
-    	<div class="xwax-status-timestring" style="text-align: center;">
+    	<div class="xwax-status-timestring status-timestring">
     		<span class="xwax-deck-{{decknum}}-status-elapsed">0:00</span>&nbsp; | &nbsp;
     		<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
     	</div>
-    	<canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}}" style="width: 100%; height:10px;"></canvas>
+    	<canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}} timegrid"></canvas>
 	</div>
 {% endblock %}

@@ -198,37 +198,6 @@ a {
     float: none;
 }
 
-.permaplayer {
-	border-top: 4px solid #000;
-	box-shadow: 0 -30px 30px -30px #000;
-}
-
-/* mpd player */
-
-.mpd-status-progressbar,
-.jp-play-bar,
-.xwax-deck-progressbar {
-	position: absolute;
-	background: rgba(255,156,1,0.3);
-	background: rgba(0,0,0,0.7);
-	width: 0;
-	height: 50px;
-	border-right: 1px solid rgba(255, 255, 255, 1);
-	top: 0;
-}
-
-.mpd-ctrl-seekbar,
-.jp-seek-bar{
-	position: absolute;
-	top: 0;
-	left: 0;
-	
-	/* TODO: how to respect parents padding on absolute positioned div with width 100% ?*/
-	width: calc(100% - 15px);
-
-	height: 50px;
-	opacity: 0;
-}
 .rotate2 {
   -webkit-transform: rotate(-2deg);
     -moz-transform: rotate(-2deg);
@@ -263,16 +232,6 @@ a {
     white-space:nowrap;           /* force single line */
     width:100%;                 /* fixed width */
     display:block;
-}
-
-/* player mode toggler */
-.active-local {
-	color: #000;
-	background-color: rgb(59,187,47);
-}
-.active-mpd {
-	color: #000;
-	background-color: rgb(255,156,1);
 }
 
 
@@ -349,11 +308,3 @@ a {
 	bottom: 105px;
 }
 
-
-.xwax-status-timestring {
-	margin-left: 40%;
-	position: absolute;
-	top: 1em;
-	background: rgba(0,0,0,0.7);
-	padding: 0.3em;
-}
