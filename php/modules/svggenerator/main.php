@@ -103,6 +103,7 @@ class Svggenerator {
 		
 		$renderValues = array();
 		
+		
 		foreach($values as $i => $v) {
 			$strokeCounter++;
 			$avgPeak += $v;
@@ -118,11 +119,19 @@ class Svggenerator {
 			$percent = $percent*0.01*$percent;
 			$diffPercent = 100 - $percent;
 			
-			$renderValues[] = array(
-				'x' => $i/($amount/100),
-				'y1' => number_format($diffPercent/2, 2),
-				'y2' => number_format($diffPercent/2 + $percent, 2)
-			);
+			if(\Slim\Slim::getInstance()->request->get('mode') === 'half') {
+				$renderValues[] = array(
+					'x' => $i/($amount/100),
+					'y1' => number_format($diffPercent, 2),
+					'y2' => 100
+				);
+			} else {
+				$renderValues[] = array(
+					'x' => $i/($amount/100),
+					'y1' => number_format($diffPercent/2, 2),
+					'y2' => number_format($diffPercent/2 + $percent, 2)
+				);
+			}
 		}
     
 		header("Content-Type: image/svg+xml");

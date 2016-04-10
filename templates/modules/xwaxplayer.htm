@@ -1,18 +1,48 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
     <div class="col-sm-12 col-md-12 xwaxplayer">
+    	<div class="row">
+    		<div class="col-md-2">
+		    	<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
+		    		<img src="/image-100/album/{{ item.albumId }}" style="height: 50px;" />
+		    	</a>
+    		</div>
+    		<div class="col-md-10">
+    			<div class="row">
+    				<div class="row-md-12">
+    					{% if item.id %}
+				    		<span class="shortenXX">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span> -
+							<span class="shortenXX">{% include 'partials/artist/link.htm' %}</span>
+							
+						{% else %}
+							{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+							{% include 'partials/track/not-imported-badge.htm' %}
+						{% endif %}
+						
+						
+			
+			
+    					<span class="xwax-status-timestring status-timestring pull-right">
+				    		<span class="xwax-deck-{{decknum}}-status-elapsed">0:00</span>&nbsp; | &nbsp;
+				    		<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
+				    	</span>
+    				</div>
+    				<div class="col-md-12">
+    					<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar">
     	
-    	<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar">
+				    	</div>
+				    	<object class="waveform svg-ajax-object"
+				    		data="{{ placeholderSvgUrl }}"
+				    		data-svgurl="{{ waveformSvgUrl }}?color=3&mode=half" type="image/svg+xml">
+				    	</object>
+				    	<!--canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}} timegrid"></canvas-->
+    				</div>
+    			</div>
+    			
+    		</div>
     	
-    	</div>
-    	<object class="waveform svg-ajax-object"
-    		data="{{ placeholderSvgUrl }}"
-    		data-svgurl="{{ waveformSvgUrl }}?color=3" type="image/svg+xml">
-    	</object>
-    	<div class="xwax-status-timestring status-timestring">
-    		<span class="xwax-deck-{{decknum}}-status-elapsed">0:00</span>&nbsp; | &nbsp;
-    		<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
-    	</div>
-    	<canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}} timegrid"></canvas>
+    	
+    	
+    	
 	</div>
 {% endblock %}

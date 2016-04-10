@@ -4,7 +4,12 @@
 		{{'xwax.notenabled'|ll}}
 		</div>
 	{% else %}
-		<div class="col-md-3"> </div>
+		<div class="col-md-3">
+			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="open trackwidget to do trackstuff" class="btn btn-default trigger-modal">
+				more <i class="fa fa-align-justify fa-lg"></i>
+			</button>
+				
+		</div>
 		<div class="col-md-9">
 			<div class="row">
 			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
