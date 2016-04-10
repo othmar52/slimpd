@@ -65,6 +65,7 @@
 			    }
 			    this.visible = true;
 			}
+			$('body').addClass('slimplayer');
 			$('.xwax-error').removeClass('hidden');
 			this.toggler.removeClass('btn-default').addClass('btn-success');
 			this.poll();
@@ -79,6 +80,7 @@
 	    		view.close();
 	    		
 		    });
+		    $('body').removeClass('slimplayer');
 		    this.toggler.removeClass('btn-success').removeClass('btn-danger').addClass('btn-default');
 		    this.xwaxRunning = false;
 		    this.deckViews = [];
