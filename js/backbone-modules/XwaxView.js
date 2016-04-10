@@ -39,7 +39,7 @@
                 return;
             }
             console.log('calling XwaxGui::render()');
-            this.toggler = $('.xwax-gui-toggler', this.$el);
+            this.toggler = $('.xwax-gui-toggler');
             this.toggler.off('click', this.toggleXwaxGui).on('click', this.toggleXwaxGui);
             window.sliMpd.modules.AbstractView.prototype.render.call(this);
             this.rendered = true;
@@ -65,7 +65,7 @@
 			    }
 			    this.visible = true;
 			}
-			$('body').addClass('slimplayer');
+			$('body').addClass('slimplayer xwax-enabled');
 			$('.xwax-error').removeClass('hidden');
 			this.toggler.removeClass('btn-default').addClass('btn-success');
 			this.poll();
@@ -80,7 +80,7 @@
 	    		view.close();
 	    		
 		    });
-		    $('body').removeClass('slimplayer');
+		    $('body').removeClass('slimplayer xwax-enabled');
 		    this.toggler.removeClass('btn-success').removeClass('btn-danger').addClass('btn-default');
 		    this.xwaxRunning = false;
 		    this.deckViews = [];

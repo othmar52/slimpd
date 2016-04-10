@@ -102,3 +102,20 @@
 	padding: 0.3em;
 }
 
+
+
+.navbar-xwax {
+	bottom: 53px;
+}
+
+.xwax-mode-show {
+	display: none;
+}
+
+.xwax-enabled .xwax-mode-show {
+	display: inline-block;
+}
+
+.xwax-enabled .xwax-mode-hide {
+	display: none;
+}
