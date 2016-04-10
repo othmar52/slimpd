@@ -3,9 +3,12 @@
 		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"/mpdctrl/addSelect/{{ item.id }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
+		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal xwax-mode-hide">
 			<i class="fa fa-align-justify fa-lg"></i>
 		</button>
+		<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-default xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
+			<i class="fa fa-headphones fa-lg"></i>
+		</a>
 		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
 	</div>
 	<div class="col-xs-2 col-sm-3">
@@ -21,4 +24,5 @@
 	<div class="col-xs-1 hidden-xs">{{ item.miliseconds|formatMiliseconds }}
 	<br />{% include 'partials/track/audioformat.htm' %}
 	</div>
+	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
 </div>

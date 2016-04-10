@@ -1,0 +1,22 @@
+<div class="row" style="border-top: 1px solid #111; padding: 0.3em 0;">
+	{% if modules.enable_xwax != '1' %}
+		<div class="col-md-12 error">
+		{{'xwax.notenabled'|ll}}
+		</div>
+	{% else %}
+		<div class="col-md-3"> </div>
+		<div class="col-md-9">
+			<div class="row">
+			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
+			{% for i in 1..xwax.decks %}
+			<div class="col-md-{{colidx}}">
+				<button role="control" data-href="/xwax/load_track/{{i}}/{{item.relativePath}}" class="ajax-rqst btn btn-default" title="Send track to xwax deck {{i}}">
+					<i class="fa fa-headphones fa-lg"></i> Send to Deck {{i}}
+				</button>
+			</div>
+			{% endfor%}
+			</div>
+		</div>
+  	{% endif %}
+  	
+</div>

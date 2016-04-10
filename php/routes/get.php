@@ -208,7 +208,7 @@ $app->get('/xwaxstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widget-xwax'] as $markupSnippet ) {
+foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widget-xwax', 'widget-deckselector'] as $markupSnippet ) {
 
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
@@ -235,6 +235,7 @@ foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widge
 				}
 				break;
 			case 'widget-xwax':
+			case 'widget-deckselector':
 				$xwax = new \Slimpd\Xwax();
 				$config['xwax']['deckstats'] = $xwax->fetchAllDeckStats();
 				foreach($config['xwax']['deckstats'] as $deckStat) {
