@@ -45,6 +45,15 @@ body {
 	color: #BBB;
 }
 
+hr,
+.modal-footer {
+	border-top: 1px solid #444;
+}
+
+.nav-tabs {
+	border-bottom: 1px solid #444;
+}
+
 
 a {
 	color: #BBB;

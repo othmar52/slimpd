@@ -112,3 +112,7 @@
 .xwax-enabled .xwax-mode-hide {
 	display: none;
 }
+
+.xwax-error .alert {
+	padding: 0.2em 1em;
+} 
