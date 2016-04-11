@@ -159,6 +159,7 @@
         	$.ajax({
 				url: window.sliMpd.setGetParameter($el.attr('href'), 'nosurrounding', '1')
 			}).done(function(response) {
+				window.sliMpd.checkNotify(response);
 				$($el.attr('data-ajaxtarget')).html(response);
 				that.rendered = false;
 				that.render();
