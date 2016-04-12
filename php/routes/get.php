@@ -208,12 +208,23 @@ $app->get('/xwaxstatus(/)', function() use ($app, $config){
 	$app->stop();
 });
 
-foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widget-xwax', 'widget-deckselector'] as $markupSnippet ) {
+foreach([
+		'mpdplayer',
+		'localplayer',
+		'xwaxplayer',
+		'widget-trackcontrol',
+		'widget-xwax',
+		'widget-deckselector',
+		'standalone-trackview'
+	] as $markupSnippet ) {
 
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
 		
 		// maybe we cant find item in mpd or mysql database because it has been accessed via filebrowser
 		$itemRelativePath = '';
+		
+		$templateFile = 'modules/'.$markupSnippet.'.htm';
+		$config['action'] = $markupSnippet;
 		
 		$itemsToRender = array();
 		
@@ -246,13 +257,22 @@ foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widge
 				if(is_numeric($app->request->get('item')) === TRUE) {
 					$search = array('id' => (int)$app->request->get('item'));
 				} else {
-					$search = array('relativePathHash' => getFilePathHash($app->request->get('item')));
-					$itemRelativePath = $app->request->get('item');
+					// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
+					$itemPath = $app->request->get('item');
+					if(strpos($itemPath, $app->config['mpd']['alternative_musicdir']) === 0) {
+						$itemPath = substr($itemPath, strlen($app->config['mpd']['alternative_musicdir']));
+					}
+					$search = array('relativePathHash' => getFilePathHash($itemPath));
+					$itemRelativePath = $itemPath;
 				}
 				$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 				// no break
 				
 			
+		}
+
+		if($markupSnippet === 'standalone-trackview') {
+			$templateFile = 'nosurrounding.htm';
 		}
 		
 		$itemsToRender[] = $config['item'];
@@ -273,7 +293,7 @@ foreach(['mpdplayer', 'localplayer', 'xwaxplayer', 'widget-trackcontrol', 'widge
 		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
 			urlencode($config['mpd']['alternative_musicdir'] . $itemRelativePath);
 		
-		$app->render('modules/'.$markupSnippet.'.htm', $config);
+		$app->render($templateFile, $config);
 		$app->stop();
 	});
 	

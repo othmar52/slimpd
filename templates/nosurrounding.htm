@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>{{ config.title }}</title>
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="HandheldFriendly" content="True">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    	
+    	<link rel="shortcut icon" href="{{ config.absRefPrefix }}skin/default/img/favicon.png">
+    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{ config.absRefPrefix }}assets/images/icons/app-icon.png" />
+    	{% set cssfiles = [
+    		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
+    		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
+    		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
+			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
+			'skin/default/lightbox.css',
+			'skin/default/typicons_.css',
+			'skin/default/bootstrap-same-height-col.css',
+			'skin/default/bootstrap-jqueryui-autocomplete.css',
+			'skin/default/styles.css',
+			'skin/default/player.css'
+    		]
+		%}
+    	 
+		{% for cssfile in cssfiles %}
+		<link rel="stylesheet" type="text/css" media="all" href="{{ config.absRefPrefix }}{{cssfile}}" />
+		{% endfor %}
+	</head>
+	<body class="bg-col1 col1">
+		<div class="container">
+			{% if action == 'standalone-trackview' %}
+				{% include 'modules/standalone-trackview.htm' %}
+			{% endif %}	
+		</div>
+		{% set jsfiles = [
+    		'vendor-dist/components/jquery/jquery.min.js',
+			'vendor-dist/components/jqueryui/jquery-ui.min.js',
+			'vendor-dist/twbs/bootstrap/dist/js/bootstrap.min.js',
+			'vendor-dist/twbs/bootstrap/js/dropdown.js',
+			'vendor-dist/twbs/bootstrap/js/tab.js',
+			'vendor-dist/twbs/bootstrap/js/popover.js',
+			'vendor-dist/twbs/bootstrap/js/collapse.js',
+			'vendor-dist/twbs/bootstrap/js/tooltip.js',
+			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.js',
+			'vendor-dist/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js',
+			'vendor-dist/components/jquery-cookie/jquery.cookie.js',
+			'vendor-dist/jeresig/jquery.hotkeys/jquery.hotkeys.js',
+			'vendor-dist/johnkpaul/jquery-ajax-retry/dist/jquery.ajax-retry.min.js',
+			'vendor-dist/mouse0270/bootstrap-notify/bootstrap-notify.min.js',
+			'js/faviconxmod.js',
+			'vendor-dist/components/greensock-js/greensock-js-built.js',
+			'vendor-dist/components/underscore/underscore-min.js',
+			'vendor-dist/components/backbone/backbone-min.js',
+			'js/backbone-modules/abstract/AbstractView.js',
+			'js/backbone-modules/NavbarView.js',
+			'js/backbone-modules/ModalView.js',
+			'js/backbone-modules/PageView.js',
+			'js/backbone-modules/abstract/AbstractPlayer.js',
+			'js/backbone-modules/LocalPlayer.js',
+			'js/backbone-modules/MpdPlayer.js',
+			'js/backbone-modules/XwaxView.js',
+			'js/backbone-modules/XwaxPlayer.js',
+			'js/backbone-modules/Router.js',
+			'js/app.js'
+    		]
+		%}
+    	 
+		{% for jsfile in jsfiles %}
+		<script src="{{ config.absRefPrefix }}{{jsfile}}"></script>
+		{% endfor %}		
+	</body>
+</html>
