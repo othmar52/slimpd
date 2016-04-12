@@ -1,0 +1,76 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
+	<div class="row">
+		<div class="col-xs-4">
+	    	<img src="/image-300/album/{{ item.albumId }}" style="width: 100%;"/>
+		</div>
+	    
+	    <div class="col-xs-8">
+	    	{% if item.id %}
+	    	<div class="row">
+	    		<div class="col-xs-12">
+	    			<span class="dark uc small darker-links">{{'track'|ll}}:</span><br>
+	    			<span style="font-size: 2em;" class="uc">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span>
+	    		</div>
+	    		
+	    		<div class="col-xs-12">
+	    			<span class="dark uc small darker-links">{{'artist'|ll}}:</span><br>
+	    			<span style="font-size: 1.4em;" class="uc">{% include 'partials/artist/link.htm' %}</span>
+	    			<br><br><br>
+	    		</div>
+	    		
+	    		{% if item.albumId %}
+	    		<div class="col-xs-3">
+	    			<span class="dark uc small darker-links">{{'album'|ll}}:</span>
+	    		</div>
+	    		<div class="col-xs-9">
+	    			{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
+	    		</div>
+	    		{% endif %}
+	    		
+	    		{% if item.year %}
+	    		<div class="col-xs-3">
+	    			<span class="dark uc small darker-links">{{'year'|ll}}:</span>
+	    		</div>
+	    		<div class="col-xs-9">
+	    			{% include 'partials/year/link.htm' %}
+	    		</div>
+	    		{% endif %}
+	    		
+	    		{% if item.labelId %}
+	    		<div class="col-xs-3">
+	    			<span class="dark uc small darker-links">{{'label'|ll}}:</span>
+	    		</div>
+	    		<div class="col-xs-9">
+	    			{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}
+	    		</div>
+	    		{% endif %}
+	    		
+	    		{% if item.genreId %}
+	    		<div class="col-xs-3">
+	    			<span class="dark uc small darker-links">{{'genre'|ll}}:</span>
+	    		</div>
+	    		<div class="col-xs-9">
+	    			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}
+	    		</div>
+	    		{% endif %}
+	    		
+			</div>
+			{% else %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				<br />
+				<div class="darker-links">
+					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+				</div>
+				{% include 'partials/track/not-imported-badge.htm' %}
+			{% endif %}
+			{% include 'partials/track/audioformat.htm' %}
+
+	    </div>
+	    
+	    
+
+	    
+	</div>
+   
+{% endblock %}
