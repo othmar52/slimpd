@@ -8,8 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'Symfony\\Component\\Process\\' => array($vendorDir . '/symfony/process'),
     'Slim\\Views\\' => array($vendorDir . '/slim/views'),
+    'React\\Promise\\' => array($vendorDir . '/react/promise/src'),
     'GuzzleHttp\\Subscriber\\Oauth\\' => array($vendorDir . '/guzzlehttp/oauth-subscriber/src'),
     'GuzzleHttp\\Stream\\' => array($vendorDir . '/guzzlehttp/streams/src'),
+    'GuzzleHttp\\Ring\\' => array($vendorDir . '/guzzlehttp/ringphp/src'),
     'GuzzleHttp\\Command\\Guzzle\\' => array($vendorDir . '/guzzlehttp/guzzle-services/src'),
     'GuzzleHttp\\Command\\' => array($vendorDir . '/guzzlehttp/command/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),

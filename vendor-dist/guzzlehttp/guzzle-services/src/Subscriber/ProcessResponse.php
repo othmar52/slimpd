@@ -1,11 +1,11 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\Subscriber;
 
+use GuzzleHttp\Command\Guzzle\DescriptionInterface;
 use GuzzleHttp\Event\SubscriberInterface;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Command\Guzzle\Parameter;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\JsonLocation;
 use GuzzleHttp\Command\Event\ProcessEvent;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ResponseLocationInterface;
@@ -14,7 +14,6 @@ use GuzzleHttp\Command\Guzzle\ResponseLocation\StatusCodeLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\ReasonPhraseLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\HeaderLocation;
 use GuzzleHttp\Command\Guzzle\ResponseLocation\XmlLocation;
-use GuzzleHttp\Command\Model;
 
 /**
  * Subscriber used to create response models based on an HTTP response and
@@ -34,11 +33,17 @@ class ProcessResponse implements SubscriberInterface
     /** @var ResponseLocationInterface[] */
     private $responseLocations;
 
+    /** @var DescriptionInterface */
+    private $description;
+
     /**
+     * @param DescriptionInterface        $description
      * @param ResponseLocationInterface[] $responseLocations Extra response locations
      */
-    public function __construct(array $responseLocations = [])
-    {
+    public function __construct(
+        DescriptionInterface $description,
+        array $responseLocations = []
+    ) {
         static $defaultResponseLocations;
         if (!$defaultResponseLocations) {
             $defaultResponseLocations = [
@@ -52,6 +57,7 @@ class ProcessResponse implements SubscriberInterface
         }
 
         $this->responseLocations = $responseLocations + $defaultResponseLocations;
+        $this->description = $description;
     }
 
     public function getEvents()
@@ -61,14 +67,23 @@ class ProcessResponse implements SubscriberInterface
 
     public function onProcess(ProcessEvent $event)
     {
-        $command = $event->getCommand();
-        if (!($command instanceof GuzzleCommandInterface)) {
-            throw new \RuntimeException('The command sent to ' . __METHOD__
-                . ' is not a GuzzleHttp\\Command\\Guzzle\\GuzzleCommandInterface');
+        // Only add a result object if no exception was encountered.
+        if ($event->getException()) {
+            return;
         }
 
-        $operation = $command->getOperation();
+        $command = $event->getCommand();
+
+        // Do not overwrite a previous result
+        if ($event->getResult()) {
+            return;
+        }
+
+        $operation = $this->description->getOperation($command->getName());
+
+        // Add a default Model as the result if no matching schema was found.
         if (!($modelName = $operation->getResponseModel())) {
+            $event->setResult([]);
             return;
         }
 
@@ -77,7 +92,7 @@ class ProcessResponse implements SubscriberInterface
             throw new \RuntimeException("Unknown model: {$modelName}");
         }
 
-        $event->setResult(new Model($this->visit($model, $event)));
+        $event->setResult($this->visit($model, $event));
     }
 
     protected function visit(Parameter $model, ProcessEvent $event)
@@ -107,7 +122,7 @@ class ProcessResponse implements SubscriberInterface
         $location,
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {
@@ -129,42 +144,51 @@ class ProcessResponse implements SubscriberInterface
     private function visitOuterObject(
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {
+        $parentLocation = $model->getLocation();
+
         // If top-level additionalProperties is a schema, then visit it
         $additional = $model->getAdditionalProperties();
         if ($additional instanceof Parameter) {
-            $this->triggerBeforeVisitor($additional->getLocation(), $model,
-                $result, $command, $response, $context);
+            // Use the model location if none set on additionalProperties.
+            $location = $additional->getLocation() ?: $parentLocation;
+            $this->triggerBeforeVisitor(
+                $location, $model, $result, $command, $response, $context
+            );
         }
 
-        // Use 'location' from all individual defined properties
-        $properties = $model->getProperties();
-        foreach ($properties as $schema) {
-            if ($location = $schema->getLocation()) {
+        // Use 'location' from all individual defined properties, but fall back
+        // to the model location if no per-property location is set. Collect
+        // the properties that need to be visited into an array.
+        $visitProperties = [];
+        foreach ($model->getProperties() as $schema) {
+            $location = $schema->getLocation() ?: $parentLocation;
+            if ($location) {
+                $visitProperties[] = [$location, $schema];
                 // Trigger the before method on each unique visitor location
                 if (!isset($context['visitors'][$location])) {
-                    $this->triggerBeforeVisitor($location, $model, $result,
-                        $command, $response, $context);
+                    $this->triggerBeforeVisitor(
+                        $location, $model, $result, $command, $response, $context
+                    );
                 }
             }
         }
 
         // Actually visit each response element
-        foreach ($properties as $schema) {
-            if ($location = $schema->getLocation()) {
-                $this->responseLocations[$location]->visit($command, $response,
-                    $schema, $result, $context);
-            }
+        foreach ($visitProperties as $prop) {
+            $this->responseLocations[$prop[0]]->visit(
+                $command, $response, $prop[1], $result, $context
+            );
         }
     }
 
     private function visitOuterArray(
         Parameter $model,
         array &$result,
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         array &$context
     ) {
@@ -174,12 +198,14 @@ class ProcessResponse implements SubscriberInterface
         }
 
         if (!isset($foundVisitors[$location])) {
-            $this->triggerBeforeVisitor($location, $model, $result,
-                $command, $response, $context);
+            $this->triggerBeforeVisitor(
+                $location, $model, $result, $command, $response, $context
+            );
         }
 
         // Visit each item in the response
-        $this->responseLocations[$location]->visit($command, $response,
-            $model, $result, $context);
+        $this->responseLocations[$location]->visit(
+            $command, $response, $model, $result, $context
+        );
     }
 }

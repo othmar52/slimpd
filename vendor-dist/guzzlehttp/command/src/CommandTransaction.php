@@ -1,9 +1,11 @@
 <?php
 namespace GuzzleHttp\Command;
 
+use GuzzleHttp\Collection;
+use GuzzleHttp\Command\Exception\CommandException;
 use GuzzleHttp\Message\RequestInterface;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Collection;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Represents a command transaction as it is sent over the wire and inspected
@@ -11,150 +13,88 @@ use GuzzleHttp\Collection;
  */
 class CommandTransaction
 {
-    /** @var ServiceClientInterface */
-    private $client;
-
-    /** @var RequestInterface */
-    private $request;
-
-    /** @var ResponseInterface */
-    private $response;
-
-    /** @var mixed */
-    private $result;
-
-    /** @var CommandInterface */
-    private $command;
-
-    /** @var \Exception */
-    private $commandException;
-
-    /** @var Collection */
-    private $context;
+    /**
+     * Web service client used in the transaction
+     *
+     * @var ServiceClientInterface
+     */
+    public $serviceClient;
 
     /**
-     * @param ServiceClientInterface $client  Client that executes commands
-     * @param CommandInterface       $command Command being executed
-     * @param array                  $context Command context array of data
+     * The command being executed.
+     *
+     * @var CommandInterface
+     */
+    public $command;
+
+    /**
+     * The result of the command (if available)
+     *
+     * @var mixed|null
+     */
+    public $result;
+
+    /**
+     * The exception that was received while transferring (if any).
+     *
+     * @var CommandException
+     */
+    public $exception;
+
+    /**
+     * Contains contextual information about the transaction.
+     *
+     * The information added to this collection can be anything required to
+     * implement a command abstraction.
+     *
+     * @var Collection
+     */
+    public $context;
+
+    /**
+     * HTTP client used to transfer the request.
+     *
+     * @var ClientInterface
+     */
+    public $client;
+
+    /**
+     * The request that is being sent.
+     *
+     * @var RequestInterface
+     */
+    public $request;
+
+    /**
+     * The response associated with the transaction. A response will not be
+     * present when a networking error occurs or an error occurs before sending
+     * the request.
+     *
+     * @var ResponseInterface|null
+     */
+    public $response;
+
+    /**
+     * The transaction's state.
+     *
+     * @var string
+     */
+    public $state;
+
+    /**
+     * @param ServiceClientInterface $client  Client that executes commands.
+     * @param CommandInterface       $command Command being executed.
+     * @param array                  $context Command context array of data.
      */
     public function __construct(
         ServiceClientInterface $client,
         CommandInterface $command,
         array $context = []
     ) {
-        $this->client = $client;
+        $this->serviceClient = $client;
+        $this->client = $client->getHttpClient();
         $this->command = $command;
         $this->context = new Collection($context);
-    }
-
-    /**
-     * Get the service client used to execute the command
-     *
-     * @return ServiceClientInterface
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * Get the command being executed
-     *
-     * @return CommandInterface
-     */
-    public function getCommand()
-    {
-        return $this->command;
-    }
-
-    /**
-     * Get the HTTP request associated with the transaction (if available)
-     *
-     * @return RequestInterface|null
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * Set the serialized HTTP request associated with the transaction
-     *
-     * @param RequestInterface $request Request to send
-     */
-    public function setRequest(RequestInterface $request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * Get the HTTP response associated with the transaction (if any)
-     *
-     * @return ResponseInterface|null
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * Set the HTTP response associated with the transaction.
-     *
-     * @param ResponseInterface $response Response to set
-     */
-    public function setResponse(ResponseInterface $response)
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * Get the result of the transaction if one has been populated.
-     *
-     * @return mixed|null Returns null if no result has been populated
-     */
-    public function getResult()
-    {
-        return $this->result;
-    }
-
-    /**
-     * Set the result of the command.
-     *
-     * Calling the function will automatically
-     *
-     * @param $result
-     */
-    public function setResult($result)
-    {
-        $this->result = $result;
-    }
-
-    /**
-     * @return \Exception|null
-     */
-    public function getException()
-    {
-        return $this->commandException;
-    }
-
-    /**
-     * Associate an exception with the transaction.
-     *
-     * @param \Exception $e Exception to associate or pass null to remove any
-     *                      previously assigned exception.
-     */
-    public function setException(\Exception $e = null)
-    {
-        $this->commandException = $e;
-    }
-
-    /**
-     * Get contextual information about the transaction.
-     *
-     * @return Collection
-     */
-    public function getContext()
-    {
-        return $this->context;
+        $this->state = 'init';
     }
 }

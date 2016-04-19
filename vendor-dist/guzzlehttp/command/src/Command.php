@@ -1,10 +1,8 @@
 <?php
 namespace GuzzleHttp\Command;
 
-use GuzzleHttp\Event\EmitterInterface;
 use GuzzleHttp\HasDataTrait;
 use GuzzleHttp\Event\HasEmitterTrait;
-use GuzzleHttp\Command\Event\CommandEvents;
 
 /**
  * Default command implementation.
@@ -16,19 +14,32 @@ class Command implements CommandInterface
     /** @var string */
     private $name;
 
+    /** @var bool */
+    private $future = false;
+
     /**
-     * @param string           $name    Name of the command
-     * @param array            $args    Arguments to pass to the command
-     * @param EmitterInterface $emitter Emitter used by the command
+     * @param string $name    Name of the command
+     * @param array  $args    Arguments to pass to the command
+     * @param array  $options Array of command options.
+     *                        - emitter: Event emitter to use.
+     *                        - future: Set to true to create a future async
+     *                          command.
      */
     public function __construct(
         $name,
         array $args = [],
-        EmitterInterface $emitter = null
+        array $options = []
     ) {
         $this->name = $name;
         $this->data = $args;
-        $this->emitter = $emitter;
+
+        if (isset($options['emitter'])) {
+            $this->emitter = $options['emitter'];
+        }
+
+        if (isset($options['future'])) {
+            $this->future = $options['future'];
+        }
     }
 
     /**
@@ -41,28 +52,6 @@ class Command implements CommandInterface
         }
     }
 
-    /**
-     * Creates and prepares an HTTP request for a command but does not execute
-     * the command.
-     *
-     * When the request is created, it is no longer associated with the command
-     * and the event system of the command should no longer be depended upon.
-     *
-     * @param ServiceClientInterface $client  Client used to create requests
-     * @param CommandInterface       $command Command to convert into a request
-     *
-     * @return \GuzzleHttp\Message\RequestInterface
-     */
-    public static function createRequest(
-        ServiceClientInterface $client,
-        CommandInterface $command
-    ) {
-        $trans = new CommandTransaction($client, $command);
-        CommandEvents::prepare($trans);
-
-        return $trans->getRequest();
-    }
-
     public function getName()
     {
         return $this->name;
@@ -71,5 +60,15 @@ class Command implements CommandInterface
     public function hasParam($name)
     {
         return array_key_exists($name, $this->data);
+    }
+
+    public function setFuture($useFuture)
+    {
+        $this->future = $useFuture;
+    }
+
+    public function getFuture()
+    {
+        return $this->future;
     }
 }

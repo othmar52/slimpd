@@ -1,10 +1,9 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle\ResponseLocation;
 
 use GuzzleHttp\Command\Guzzle\Parameter;
 use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Command\Guzzle\GuzzleCommandInterface;
+use GuzzleHttp\Command\CommandInterface;
 
 /**
  * Extracts elements from an XML document
@@ -15,7 +14,7 @@ class XmlLocation extends AbstractLocation
     private $xml;
 
     public function before(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -25,7 +24,7 @@ class XmlLocation extends AbstractLocation
     }
 
     public function after(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $model,
         &$result,
@@ -43,7 +42,7 @@ class XmlLocation extends AbstractLocation
     }
 
     public function visit(
-        GuzzleCommandInterface $command,
+        CommandInterface $command,
         ResponseInterface $response,
         Parameter $param,
         &$result,
@@ -142,7 +141,7 @@ class XmlLocation extends AbstractLocation
      */
     private function processObject(Parameter $param, \SimpleXMLElement $node)
     {
-        $result = $knownProps = [];
+        $result = $knownProps = $knownAttributes = [];
 
         // Handle known properties
         if ($properties = $param->getProperties()) {
@@ -158,7 +157,8 @@ class XmlLocation extends AbstractLocation
 
                 if ($property->getData('xmlAttribute')) {
                     // Handle XML attributes
-                    $result[$name] = (string)$node->attributes($ns, true)->{$sentAs};
+                    $result[$name] = (string) $node->attributes($ns, true)->{$sentAs};
+                    $knownAttributes[$sentAs] = 1;
                 } elseif (count($node->children($ns, true)->{$sentAs})) {
                     // Found a child node matching wire name
                     $childNode = $node->children($ns, true)->{$sentAs};
@@ -187,6 +187,15 @@ class XmlLocation extends AbstractLocation
             // Blindly transform the XML into an array preserving as much data
             // as possible. Remove processed, aliased properties.
             $array = array_diff_key(static::xmlToArray($node), $knownProps);
+            // Remove @attributes that were explicitly plucked from the
+            // attributes list.
+            if (isset($array['@attributes']) && $knownAttributes) {
+                $array['@attributes'] = array_diff_key($array['@attributes'], $knownProps);
+                if (!$array['@attributes']) {
+                    unset($array['@attributes']);
+                }
+            }
+
             // Merge it together with the original result
             $result = array_merge($array, $result);
         }
@@ -212,21 +221,30 @@ class XmlLocation extends AbstractLocation
         $children = $xml->children($ns, true);
 
         foreach ($children as $name => $child) {
+            $attributes = (array) $child->attributes($ns, true);
             if (!isset($result[$name])) {
-                $result[$name] = static::xmlToArray($child, $ns, $nesting + 1);
+                $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+                $result[$name] = $attributes
+                    ? array_merge($attributes, $childArray)
+                    : $childArray;
+                continue;
+            }
+            // A child element with this name exists so we're assuming
+            // that the node contains a list of elements
+            if (!is_array($result[$name])) {
+                $result[$name] = [$result[$name]];
+            }
+            $childArray = static::xmlToArray($child, $ns, $nesting + 1);
+            if ($attributes) {
+                $result[$name][] = array_merge($attributes, $childArray);
             } else {
-                // A child element with this name exists so we're assuming
-                // that the node contains a list of elements
-                if (!is_array($result[$name])) {
-                    $result[$name] = [$result[$name]];
-                }
-                $result[$name][] = static::xmlToArray($child, $ns, $nesting + 1);
+                $result[$name][] = $childArray;
             }
         }
 
         // Extract text from node
         $text = trim((string) $xml);
-        if (empty($text)) {
+        if ($text === '') {
             $text = null;
         }
 
@@ -235,9 +253,9 @@ class XmlLocation extends AbstractLocation
         if ($attributes) {
             if ($text !== null) {
                 $result['value'] = $text;
-                $result = array_merge($attributes, $result);
             }
-        } else if ($text !== null) {
+            $result = array_merge($attributes, $result);
+        } elseif ($text !== null) {
             $result = $text;
         }
 

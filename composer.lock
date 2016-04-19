@@ -155,16 +155,16 @@
         },
         {
             "name": "components/jquery",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jquery.git",
-                "reference": "d8b2ac0c1978e9ed8602789123976b1c7161ef96"
+                "reference": "7894addbce3c4de6f82449610e6f8e168b49e9b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jquery/zipball/d8b2ac0c1978e9ed8602789123976b1c7161ef96",
-                "reference": "d8b2ac0c1978e9ed8602789123976b1c7161ef96",
+                "url": "https://api.github.com/repos/components/jquery/zipball/7894addbce3c4de6f82449610e6f8e168b49e9b0",
+                "reference": "7894addbce3c4de6f82449610e6f8e168b49e9b0",
                 "shasum": ""
             },
             "type": "component",
@@ -193,7 +193,7 @@
             ],
             "description": "jQuery JavaScript Library",
             "homepage": "http://jquery.com",
-            "time": "2016-01-08 23:29:41"
+            "time": "2016-02-24 08:16:25"
         },
         {
             "name": "components/jquery-cookie",
@@ -378,20 +378,20 @@
         },
         {
             "name": "guzzlehttp/command",
-            "version": "0.6.0",
+            "version": "0.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/command.git",
-                "reference": "e2004b2ef217f14380f46bea9ebe8ecce3cecf7a"
+                "reference": "2e8286ff81f75f97b00f7dcc2f51e2efafb373bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/command/zipball/e2004b2ef217f14380f46bea9ebe8ecce3cecf7a",
-                "reference": "e2004b2ef217f14380f46bea9ebe8ecce3cecf7a",
+                "url": "https://api.github.com/repos/guzzle/command/zipball/2e8286ff81f75f97b00f7dcc2f51e2efafb373bd",
+                "reference": "2e8286ff81f75f97b00f7dcc2f51e2efafb373bd",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~4.0",
+                "guzzlehttp/guzzle": "~5.0",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -400,7 +400,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.6-dev"
+                    "dev-master": "0.7-dev"
                 }
             },
             "autoload": {
@@ -420,48 +420,35 @@
                 }
             ],
             "description": "Provides the foundation for building command based web service clients",
-            "time": "2014-08-08 16:41:48"
+            "time": "2015-01-14 18:54:57"
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "4.2.3",
+            "version": "5.3.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "66fd916e9f9130bc22c51450476823391cb2f67c"
+                "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/66fd916e9f9130bc22c51450476823391cb2f67c",
-                "reference": "66fd916e9f9130bc22c51450476823391cb2f67c",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4afc9682f51b2880c6417e9f4aa19c26b53472e9",
+                "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
-                "guzzlehttp/streams": "~2.1",
+                "guzzlehttp/ringphp": "^1.1",
                 "php": ">=5.4.0"
             },
             "require-dev": {
                 "ext-curl": "*",
-                "phpunit/phpunit": "~4.0",
-                "psr/log": "~1.0"
-            },
-            "suggest": {
-                "ext-curl": "Guzzle will use specific adapters if cURL is present"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.2-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -485,30 +472,35 @@
                 "rest",
                 "web service"
             ],
-            "time": "2014-10-05 19:29:14"
+            "time": "2016-02-08 19:23:30"
         },
         {
             "name": "guzzlehttp/guzzle-services",
-            "version": "0.3.0",
+            "version": "0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle-services.git",
-                "reference": "689dfa73b65e2c0a74184a5fb8c5a6ef0b160911"
+                "reference": "5402867628d266748db88f05c90ede54fd1d884c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle-services/zipball/689dfa73b65e2c0a74184a5fb8c5a6ef0b160911",
-                "reference": "689dfa73b65e2c0a74184a5fb8c5a6ef0b160911",
+                "url": "https://api.github.com/repos/guzzle/guzzle-services/zipball/5402867628d266748db88f05c90ede54fd1d884c",
+                "reference": "5402867628d266748db88f05c90ede54fd1d884c",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/command": "~0.2",
+                "guzzlehttp/command": "0.7.*",
                 "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.4-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\Command\\Guzzle\\": "src/"
@@ -526,30 +518,35 @@
                 }
             ],
             "description": "Provides an implementation of the Guzzle Command library that uses Guzzle service descriptions to describe web services, serialize requests, and parse responses into easy to use model structures.",
-            "time": "2014-06-01 20:00:25"
+            "time": "2014-12-23 19:13:18"
         },
         {
             "name": "guzzlehttp/oauth-subscriber",
-            "version": "0.1.2",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/oauth-subscriber.git",
-                "reference": "f5e857b5ab34279611c171111c40000435299698"
+                "reference": "03f1ebe31d3112526106d0570c80eba6820e86e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/oauth-subscriber/zipball/f5e857b5ab34279611c171111c40000435299698",
-                "reference": "f5e857b5ab34279611c171111c40000435299698",
+                "url": "https://api.github.com/repos/guzzle/oauth-subscriber/zipball/03f1ebe31d3112526106d0570c80eba6820e86e5",
+                "reference": "03f1ebe31d3112526106d0570c80eba6820e86e5",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~4.0",
+                "guzzlehttp/guzzle": "~4.0|~5.0",
                 "php": ">=5.4.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "~4.0"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "0.1-dev"
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "GuzzleHttp\\Subscriber\\Oauth\\": "src"
@@ -572,41 +569,44 @@
                 "Guzzle",
                 "oauth"
             ],
-            "time": "2014-05-20 00:04:02"
+            "time": "2014-10-23 22:19:02"
         },
         {
-            "name": "guzzlehttp/streams",
-            "version": "2.1.0",
+            "name": "guzzlehttp/ringphp",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/guzzle/streams.git",
-                "reference": "f91b721d73f0e561410903b3b3c90a5d0e40b534"
+                "url": "https://github.com/guzzle/RingPHP.git",
+                "reference": "9465032ac5d6beaa55f10923403e6e1c36018d9c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/streams/zipball/f91b721d73f0e561410903b3b3c90a5d0e40b534",
-                "reference": "f91b721d73f0e561410903b3b3c90a5d0e40b534",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/9465032ac5d6beaa55f10923403e6e1c36018d9c",
+                "reference": "9465032ac5d6beaa55f10923403e6e1c36018d9c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4.0"
+                "guzzlehttp/streams": "~3.0",
+                "php": ">=5.4.0",
+                "react/promise": "~2.0"
             },
             "require-dev": {
+                "ext-curl": "*",
                 "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "ext-curl": "Guzzle will use specific adapters if cURL is present"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "1.1-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "GuzzleHttp\\Stream\\": "src/"
-                },
-                "files": [
-                    "src/functions.php"
-                ]
+                    "GuzzleHttp\\Ring\\": "src/"
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -619,13 +619,58 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "description": "Provides a simple abstraction over streams of data (Guzzle 4+)",
+            "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
+            "time": "2015-05-21 17:23:02"
+        },
+        {
+            "name": "guzzlehttp/streams",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/guzzle/streams.git",
+                "reference": "d99a261c616210618ab94fd319cb17eda458cc3e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/guzzle/streams/zipball/d99a261c616210618ab94fd319cb17eda458cc3e",
+                "reference": "d99a261c616210618ab94fd319cb17eda458cc3e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "GuzzleHttp\\Stream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "Provides a simple abstraction over streams of data",
             "homepage": "http://guzzlephp.org/",
             "keywords": [
                 "Guzzle",
                 "stream"
             ],
-            "time": "2014-08-17 21:15:53"
+            "time": "2016-04-13 16:32:01"
         },
         {
             "name": "happyworm/jplayer",
@@ -699,16 +744,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.11",
+            "version": "v1.9.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b"
+                "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/da7c657f2bcc865ef1bef53cf90c2638f344469b",
-                "reference": "da7c657f2bcc865ef1bef53cf90c2638f344469b",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/41c05612d532d30f07680cad3a4a6efbec7fc7f5",
+                "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5",
                 "shasum": ""
             },
             "require": {
@@ -731,7 +776,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2015-12-24 10:50:02"
+            "time": "2016-03-02 13:13:30"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -934,12 +979,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-                "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c"
+                "reference": "29bda6e176df6c292a9b1c43ae8a44d56a87c30b"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/29bda6e176df6c292a9b1c43ae8a44d56a87c30b",
-                "reference": "8a97b774a21e741049c2997c4e69fc36abbb0a8c",
+                "reference": "29bda6e176df6c292a9b1c43ae8a44d56a87c30b",
                 "shasum": ""
             },
             "require": {
@@ -993,7 +1038,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2016-02-11 22:24:39"
+            "time": "2016-02-24 00:20:18"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1104,23 +1149,67 @@
             "time": "2016-03-06 21:23:13"
         },
         {
-            "name": "ricbra/php-discogs-api",
-            "version": "1.1.0",
+            "name": "react/promise",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ricbra/php-discogs-api.git",
-                "reference": "ea537cefaa83a4fc3c6ed17868e8f2b2cfe8c4f6"
+                "url": "https://github.com/reactphp/promise.git",
+                "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ricbra/php-discogs-api/zipball/ea537cefaa83a4fc3c6ed17868e8f2b2cfe8c4f6",
-                "reference": "ea537cefaa83a4fc3c6ed17868e8f2b2cfe8c4f6",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/f942da7b505d1a294284ab343d05df42d02ad6d9",
+                "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9",
                 "shasum": ""
             },
             "require": {
-                "guzzlehttp/guzzle": "~4.0",
-                "guzzlehttp/guzzle-services": "~0.3.0",
-                "guzzlehttp/oauth-subscriber": "~0.1.2",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "React\\Promise\\": "src/"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jan Sorgalla",
+                    "email": "jsorgalla@gmail.com"
+                }
+            ],
+            "description": "A lightweight implementation of CommonJS Promises/A for PHP",
+            "time": "2016-03-31 13:10:33"
+        },
+        {
+            "name": "ricbra/php-discogs-api",
+            "version": "1.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ricbra/php-discogs-api.git",
+                "reference": "7b63ed2d90fb2dfc7acbe480a219a680968f550e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ricbra/php-discogs-api/zipball/7b63ed2d90fb2dfc7acbe480a219a680968f550e",
+                "reference": "7b63ed2d90fb2dfc7acbe480a219a680968f550e",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~5.0",
+                "guzzlehttp/guzzle-services": "~0.5.0",
+                "guzzlehttp/oauth-subscriber": "~0.2",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -1155,7 +1244,7 @@
                 "api",
                 "discogs"
             ],
-            "time": "2014-10-17 21:26:49"
+            "time": "2016-03-18 11:22:47"
         },
         {
             "name": "robloach/component-installer",
@@ -1163,12 +1252,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/RobLoach/component-installer.git",
-                "reference": "0b4307800d17bcc4160bbf93803fbf2bc034b074"
+                "reference": "0912e09cb1b79de1ebb76becbeb37c3b70937b52"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/0b4307800d17bcc4160bbf93803fbf2bc034b074",
-                "reference": "0b4307800d17bcc4160bbf93803fbf2bc034b074",
+                "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/0912e09cb1b79de1ebb76becbeb37c3b70937b52",
+                "reference": "0912e09cb1b79de1ebb76becbeb37c3b70937b52",
                 "shasum": ""
             },
             "require": {
@@ -1203,7 +1292,7 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
-            "time": "2015-09-09 19:12:42"
+            "time": "2016-04-18 13:37:04"
         },
         {
             "name": "slim/slim",
@@ -1310,12 +1399,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "650a91315648fe433824e454b2c7107926f9876b"
+                "reference": "1574f3451b40fa9bbae518ef71d19a56f409cac0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/8168534f91e77282a0ebf2d7ee97750515b2cb75",
-                "reference": "650a91315648fe433824e454b2c7107926f9876b",
+                "url": "https://api.github.com/repos/symfony/process/zipball/1574f3451b40fa9bbae518ef71d19a56f409cac0",
+                "reference": "1574f3451b40fa9bbae518ef71d19a56f409cac0",
                 "shasum": ""
             },
             "require": {
@@ -1351,7 +1440,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-04 12:57:09"
+            "time": "2016-04-12 19:11:33"
         },
         {
             "name": "twbs/bootstrap",
@@ -1359,12 +1448,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "ad5e6565cc854e7d36aa5875cd93a387f01b143a"
+                "reference": "795d2208b882e194e6059a1639e056e020d64072"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0603d7afa02797e68436ebb05d8f31b988d8ae76",
-                "reference": "ad5e6565cc854e7d36aa5875cd93a387f01b143a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/795d2208b882e194e6059a1639e056e020d64072",
+                "reference": "795d2208b882e194e6059a1639e056e020d64072",
                 "shasum": ""
             },
             "replace": {
@@ -1402,7 +1491,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2016-02-11 04:01:00"
+            "time": "2016-04-15 19:11:23"
         },
         {
             "name": "twig/twig",
@@ -1410,12 +1499,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "f0a4fa678465491947554f6687c5fca5e482f8ec"
+                "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f0a4fa678465491947554f6687c5fca5e482f8ec",
-                "reference": "f0a4fa678465491947554f6687c5fca5e482f8ec",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
+                "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
                 "shasum": ""
             },
             "require": {
@@ -1463,7 +1552,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-29 10:45:45"
+            "time": "2016-04-01 06:54:57"
         },
         {
             "name": "webfontkit/open-sans",
