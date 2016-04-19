@@ -3,7 +3,7 @@ namespace GuzzleHttp\Command;
 
 use GuzzleHttp\Event\HasEmitterInterface;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\RequestException;
+use GuzzleHttp\Ring\FutureInterface;
 
 /**
  * Web service client interface.
@@ -14,22 +14,29 @@ use GuzzleHttp\Exception\RequestException;
 interface ServiceClientInterface extends HasEmitterInterface
 {
     /**
-     * Invokes a command by name.
+     * Creates and executes a command for an operation by name.
      *
-     * Implementations may choose to implement other missing method calls as
-     * well as executing commands by name.
+     * @param string $name      Name of the command to execute.
+     * @param array  $arguments Arguments to pass to the getCommand method.
      *
-     * @param string $name      Name of the command
-     * @param array  $arguments Arguments to pass to the command.
      * @throws \Exception
+     * @see \GuzzleHttp\Command\ServiceClientInterface::getCommand
      */
     public function __call($name, array $arguments);
 
     /**
      * Create a command for an operation name.
      *
-     * @param string $name Name of the operation to use in the command
-     * @param array  $args Arguments to pass to the command
+     * Special keys may be set on the command to control how it behaves.
+     * Implementations SHOULD be able to utilize the following keys or throw
+     * an exception if unable.
+     *
+     * - @future: Set to true to create a future if possible. When processed,
+     *   the "@future" key value pair can be removed from the input data before
+     *   serializing the command.
+     *
+     * @param string $name   Name of the operation to use in the command
+     * @param array  $args   Arguments to pass to the command
      *
      * @return CommandInterface
      * @throws \InvalidArgumentException if no command can be found by name
@@ -47,41 +54,42 @@ interface ServiceClientInterface extends HasEmitterInterface
     public function execute(CommandInterface $command);
 
     /**
-     * Execute multiple commands in parallel.
+     * Executes many commands concurrently using a fixed pool size.
+     *
+     * Exceptions encountered while executing the commands will not be thrown.
+     * Instead, callers are expected to handle errors using the event system.
+     *
+     *     $commands = [$client->getCommand('foo', ['baz' => 'bar'])];
+     *     $client->executeAll($commands);
      *
      * @param array|\Iterator $commands Array or iterator that contains
      *     CommandInterface objects to execute.
-     * @param array $options Associative array of options.
-     *     - parallel: (int) Max number of commands to send in parallel
-     *     - prepare: (callable) Receives a CommandPrepareEvent Concrete
-     *       implementations MAY choose to implement this setting.
-     *     - process: (callable) Receives a CommandProcessEvent. Concrete
-     *       implementations MAY choose to implement this setting.
-     *     - error: (callable) Receives a CommandErrorEvent. Concrete
-     *       implementations MAY choose to implement this setting.
+     * @param array $options Associative array of options to apply.
+     * @see GuzzleHttp\Command\ServiceClientInterface::createCommandPool for
+     *      a list of options.
      */
     public function executeAll($commands, array $options = []);
 
     /**
-     * Sends multiple commands in parallel and returns a hash map of commands
-     * mapped to their corresponding result or exception.
+     * Creates a future object that, when dereferenced, sends commands in
+     * parallel using a fixed pool size.
      *
-     * Note: This method keeps every command and command and result in memory,
-     * and as such is NOT recommended when sending a large number or an
-     * indeterminable number of commands in parallel. Instead, you should use
-     * executeAll() and utilize the event system to work with results.
+     * Exceptions encountered while executing the commands will not be thrown.
+     * Instead, callers are expected to handle errors using the event system.
      *
-     * @param array|\Iterator $commands Commands to send in parallel
-     * @param array           $options  Passes through the options available
-     *                                  in {@see ClientInterface::executeAll()}
+     * @param array|\Iterator $commands Array or iterator that contains
+     *     CommandInterface objects to execute with the client.
+     * @param array $options Associative array of options to apply.
+     *     - pool_size: (int) Max number of commands to send concurrently.
+     *       When this number of concurrent requests are created, the sendAll
+     *       function blocks until all of the futures have completed.
+     *     - init: (callable) Receives an InitEvent from each command.
+     *     - prepare: (callable) Receives a PrepareEvent from each command.
+     *     - process: (callable) Receives a ProcessEvent from each command.
      *
-     * @return \SplObjectStorage Commands are the key and each value is the
-     *     result of the command on success or an instance of
-     *     {@see GuzzleHttp\Command\Exception\CommandException} if a failure
-     *     occurs while executing the command.
-     * @throws \InvalidArgumentException if the event format is incorrect.
+     * @return FutureInterface
      */
-    public function batch($commands, array $options = []);
+    public function createPool($commands, array $options = []);
 
     /**
      * Get the HTTP client used to send requests for the web service client
@@ -113,19 +121,15 @@ interface ServiceClientInterface extends HasEmitterInterface
     public function setConfig($keyOrPath, $value);
 
     /**
-     * Create an exception for a command based on a request exception.
+     * Create an exception for a command based on a previous exception.
      *
-     * This method is invoked when an exception occurs while transferring an
-     * HTTP request for a specific command. This method MUST return an instance
-     * of \Exception that will be thrown for the given command.
+     * This method is invoked when an exception occurs while executing a
+     * command. You may choose to use a custom exception class for exceptions
+     * or return the provided exception as-is.
      *
      * @param CommandTransaction $transaction Command transaction context
-     * @param RequestException   $previous    Request exception encountered
      *
      * @return \Exception
      */
-    public function createCommandException(
-        CommandTransaction $transaction,
-        RequestException $previous
-    );
+    public function createCommandException(CommandTransaction $transaction);
 }

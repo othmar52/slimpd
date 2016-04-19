@@ -1,17 +1,18 @@
 <?php
 namespace GuzzleHttp\Command;
 
-use GuzzleHttp\Event\CompleteEvent;
+use GuzzleHttp\Command\Event\ProcessEvent;
+use GuzzleHttp\Event\RequestEvents;
 use GuzzleHttp\Message\RequestInterface;
-use GuzzleHttp\Command\Event\CommandEvents;
 use GuzzleHttp\Event\ListenerAttacherTrait;
+use GuzzleHttp\Ring\Core;
 
 /**
  * Iterator used for easily creating request objects from an iterator or array
  * that contains commands.
  *
  * This iterator is useful when implementing the
- * ``ServiceClientInterface::executeAll()`` method.
+ * {@see ServiceClientInterface::executeAll()} method.
  */
 class CommandToRequestIterator implements \Iterator
 {
@@ -20,11 +21,8 @@ class CommandToRequestIterator implements \Iterator
     /** @var \Iterator */
     private $commands;
 
-    /** @var array */
-    private $options;
-
-    /** @var ServiceClientInterface */
-    private $client;
+    /** @var callable request builder function */
+    private $requestBuilder;
 
     /** @var RequestInterface|null Current request */
     private $currentRequest;
@@ -33,33 +31,34 @@ class CommandToRequestIterator implements \Iterator
     private $eventListeners = [];
 
     /**
+     * @param callable $requestBuilder A function that accepts a command and
+     *       returns a hash containing a request key mapping to a request that
+     *       has emitted it's prepare event, and a result key mapping to the
+     *       result if one was injected in the prepare event.
      * @param array|\Iterator        $commands Collection of command objects
-     * @param ServiceClientInterface $client   Associated service client
      * @param array                  $options  Hash of options:
-     *     - prepare: Callable to invoke when the "prepare" event of a command
-     *       is emitted. This callable is invoked near the end of the event
-     *       chain.
-     *     - process: Callable to invoke when the "process" event of a command
-     *       is emitted. This callable is triggered at or near the end of the
-     *       event chain.
+     *     - prepare: Callable to invoke for the "prepare" event. This event is
+     *       called only once per execution.
+     *     - before: Callable to invoke when the "process" event is fired. This
+     *       event is fired one or more times.
+     *     - process: Callable to invoke when the "process" event is fired. This
+     *       event can be fired one or more times.
      *     - error: Callable to invoke when the "error" event of a command is
-     *       emitted. This callable is invoked near the end of the event chain.
-     *     - parallel: Integer representing the maximum allowed number of
-     *       requests to send in parallel. Defaults to 50.
+     *       emitted. This event can be fired one or more times.
+     *     - end: Callable to invoke when the terminal "end" event of a command
+     *       is emitted. This event is fired once per command execution.
      *
      * @throws \InvalidArgumentException If the source is invalid
      */
     public function __construct(
+        callable $requestBuilder,
         $commands,
-        ServiceClientInterface $client,
         array $options = []
     ) {
-        $this->client = $client;
-        $this->options = $options;
-
+        $this->requestBuilder = $requestBuilder;
         $this->eventListeners = $this->prepareListeners(
             $options,
-            ['prepare', 'process', 'error']
+            ['init', 'prepared', 'process']
         );
 
         if ($commands instanceof \Iterator) {
@@ -90,33 +89,50 @@ class CommandToRequestIterator implements \Iterator
 
     public function valid()
     {
+        get_next:
+
+        // Return true if this function has already been called for iteration.
         if ($this->currentRequest) {
             return true;
         }
 
+        // Return false if we are at the end of the provided commands iterator.
         if (!$this->commands->valid()) {
             return false;
         }
 
         $command = $this->commands->current();
+
         if (!($command instanceof CommandInterface)) {
             throw new \RuntimeException('All commands provided to the ' . __CLASS__
                 . ' must implement GuzzleHttp\\Command\\CommandInterface.'
-                . ' Encountered a ' . gettype($command) . ' value.');
+                . ' Encountered a ' . Core::describeType($command) . ' value.');
         }
 
-        $trans = new CommandTransaction($this->client, $command);
-        $this->prepare($trans);
+        $command->setFuture('lazy');
+        $this->attachListeners($command, $this->eventListeners);
 
-        // Handle the command being intercepted with a result or failing by
-        // not generating a request by going to the next command and returning
-        // it's validity
-        if ($trans->getResult() !== null || !$trans->getRequest()) {
+        // Prevent transfer exceptions from throwing.
+        $command->getEmitter()->on(
+            'process',
+            function (ProcessEvent $e) {
+                if ($e->getException()) {
+                    $e->setResult(null);
+                }
+            },
+            RequestEvents::LATE
+        );
+
+        $builder = $this->requestBuilder;
+        $result = $builder($command);
+
+        // Skip commands that were intercepted with a result.
+        if (isset($result['result'])) {
             $this->commands->next();
-            return $this->valid();
+            goto get_next;
         }
 
-        $this->processCurrentRequest($trans);
+        $this->currentRequest = $result['request'];
 
         return true;
     }
@@ -127,35 +143,6 @@ class CommandToRequestIterator implements \Iterator
 
         if (!($this->commands instanceof \Generator)) {
             $this->commands->rewind();
-        }
-    }
-
-    /**
-     * Prepare a command using the provided options.
-     */
-    private function prepare(CommandTransaction $trans)
-    {
-        $this->attachListeners($trans->getCommand(), $this->eventListeners);
-        CommandEvents::prepare($trans);
-    }
-
-    /**
-     * Set the current request of the iterator and hook the request's event
-     * system up to the command's event system.
-     */
-    private function processCurrentRequest(CommandTransaction $trans)
-    {
-        $this->currentRequest = $trans->getRequest();
-
-        if ($this->currentRequest) {
-            // Emit the command's process event when the request completes
-            $this->currentRequest->getEmitter()->on(
-                'complete',
-                function (CompleteEvent $event) use ($trans) {
-                    $trans->setResponse($event->getResponse());
-                    CommandEvents::process($trans);
-                }
-            );
         }
     }
 }

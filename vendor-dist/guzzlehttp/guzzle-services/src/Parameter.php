@@ -1,5 +1,4 @@
 <?php
-
 namespace GuzzleHttp\Command\Guzzle;
 
 use GuzzleHttp\ToArrayInterface;
@@ -72,7 +71,7 @@ class Parameter implements ToArrayInterface
      *   value through. Each value in the array must be a string containing the
      *   full class path to a static method or an array of complex filter
      *   information. You can specify static methods of classes using the full
-     *   namespace class name followed by '::' (e.g. Foo\Bar::baz()). Some
+     *   namespace class name followed by '::' (e.g. Foo\Bar::baz). Some
      *   filters require arguments in order to properly filter a value. For
      *   complex filters, use a hash containing a 'method' key pointing to a
      *   static method, and an 'args' key containing an array of positional
@@ -120,7 +119,7 @@ class Parameter implements ToArrayInterface
      * - format: (string) Format used to coax a value into the correct format
      *   when serializing or unserializing. You may specify either an array of
      *   filters OR a format, but not both. Supported values: date-time, date,
-     *   time, timestamp, date-time-http.
+     *   time, timestamp, date-time-http, and boolean-string.
      *
      * - $ref: (string) String referencing a service description model. The
      *   parameter is replaced by the schema contained in the model.
@@ -137,7 +136,7 @@ class Parameter implements ToArrayInterface
 
         if (isset($options['description'])) {
             $this->serviceDescription = $options['description'];
-            if (!($this->serviceDescription instanceof Description)) {
+            if (!($this->serviceDescription instanceof DescriptionInterface)) {
                 throw new \InvalidArgumentException('description must be a Description');
             }
             if (isset($data['$ref'])) {

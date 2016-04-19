@@ -60,7 +60,7 @@ class Utils
         if ($maxLen === -1) {
             while (!$stream->eof()) {
                 $buf = $stream->read(1048576);
-                if ($buf === '' || $buf === false) {
+                if ($buf === false) {
                     break;
                 }
                 $buffer .= $buf;
@@ -71,7 +71,7 @@ class Utils
         $len = 0;
         while (!$stream->eof() && $len < $maxLen) {
             $buf = $stream->read($maxLen - $len);
-            if ($buf === '' || $buf === false) {
+            if ($buf === false) {
                 break;
             }
             $buffer .= $buf;
@@ -155,13 +155,15 @@ class Utils
      *
      * @param StreamInterface $stream    Stream to read from
      * @param int             $maxLength Maximum buffer length
+     * @param string          $eol       Line ending
      *
      * @return string|bool
      */
-    public static function readline(StreamInterface $stream, $maxLength = null)
+    public static function readline(StreamInterface $stream, $maxLength = null, $eol = PHP_EOL)
     {
         $buffer = '';
         $size = 0;
+        $negEolLen = -strlen($eol);
 
         while (!$stream->eof()) {
             if (false === ($byte = $stream->read(1))) {
@@ -169,7 +171,7 @@ class Utils
             }
             $buffer .= $byte;
             // Break when a new line is found or the max length - 1 is reached
-            if ($byte == PHP_EOL || ++$size == $maxLength - 1) {
+            if (++$size == $maxLength || substr($buffer, $negEolLen) === $eol) {
                 break;
             }
         }
@@ -181,14 +183,16 @@ class Utils
      * Alias of GuzzleHttp\Stream\Stream::factory.
      *
      * @param mixed $resource Resource to create
-     * @param int   $size     Size if known up front
+     * @param array $options  Associative array of stream options defined in
+     *                        {@see \GuzzleHttp\Stream\Stream::__construct}
      *
-     * @return MetadataStreamInterface
+     * @return StreamInterface
      *
      * @see GuzzleHttp\Stream\Stream::factory
+     * @see GuzzleHttp\Stream\Stream::__construct
      */
-    public static function create($resource, $size = null)
+    public static function create($resource, array $options = [])
     {
-        return Stream::factory($resource, $size);
+        return Stream::factory($resource, $options);
     }
 }
