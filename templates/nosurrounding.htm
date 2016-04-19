@@ -28,8 +28,8 @@
 		<link rel="stylesheet" type="text/css" media="all" href="{{ config.absRefPrefix }}{{cssfile}}" />
 		{% endfor %}
 	</head>
-	<body class="bg-col1 col1">
-		<div class="container">
+	<body class="bg-col1 col1 standalone">
+		<div class="container container-nomargin">
 			{% if action == 'standalone-trackview' %}
 				{% include 'modules/standalone-trackview.htm' %}
 			{% endif %}	
