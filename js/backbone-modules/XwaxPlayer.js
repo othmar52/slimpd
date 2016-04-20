@@ -21,7 +21,8 @@
 		timeGridStrokeColor2 : '#FCC772',
 		
 		deckIndex : false,
-		
+		showWaveform : true,
+		timecode : '',
 		
 		timeLineLight : null,
 
@@ -29,9 +30,12 @@
         	this.deckIndex = options.deckIndex;
         	this.timeGridSelectorCanvas = 'timegrid-xwax-deck-'+ this.deckIndex;
         	this.$content = $('.player-'+ this.mode, this.$el);
-        	
+        	this.showWaveform = options.showWaveform;
         	this.trackAnimation = { currentPosPerc: 0 };
-        	this.timeLineLight = new TimelineLite();
+        	
+        	if(this.showWaveform === true) {
+        		this.timeLineLight = new TimelineLite();
+        	}
         	
         	//console.log('XwaxPlayer::init() ' + this.deckIndex);
         	//this.listenTo(this.parent, 'hideXwaxGui', this.close);
@@ -54,7 +58,10 @@
         },
 		
         onRedrawComplete : function(item) {
-        	
+        	if(this.showWaveform != true) {
+        		this.updateTimecode(this.timecode);
+        		return;
+        	}
         	// animate from 0 to 100, onUpdate -> change Text
 			this.timeLineLight = new TimelineLite();
 			this.trackAnimation.currentPosPerc = 0;
@@ -107,9 +114,16 @@
 		},
 		
 		updateSlider : function(item) {
+			if(this.showWaveform != true) {
+        		return;
+        	}
 			// TODO: how to respect parents padding on absolute positioned div with width 100% ?
 			$('.xwax-deck-'+ this.deckIndex+'-status-progressbar').css('width', 'calc('+ this.timeLineLight.progress() *100 +'% - 15px)');
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
+		},
+		updateTimecode : function(timecode) {
+			this.timecode = timecode;
+			$('.xwax-deck-'+ this.deckIndex+ ' .timecoder').text(timecode);
 		}
     });
     

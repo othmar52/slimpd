@@ -41,6 +41,11 @@ $app->get('/library(/)', function() use ($app, $config){
     $app->render('surrounding.htm', $config);
 });
 
+$app->get('/djscreen', function() use ($app, $config){
+	$config['action'] = "djscreen";
+    $app->render('djscreen.htm', $config);
+});
+
 foreach(array('artist', 'label', 'genre') as $className) {
 	// stringlist of artist|label|genre
 	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $config, $className){
@@ -244,6 +249,11 @@ foreach([
 				if($config['item'] !== NULL) {
 					$itemRelativePath = $config['item']->getRelativePath();
 				}
+				if($app->request->get('type') == 'djscreen') {
+					$markupSnippet = 'standalone-trackview';
+					$templateFile = 'modules/standalone-trackview.htm';
+				}
+
 				break;
 			case 'widget-xwax':
 			case 'widget-deckselector':
@@ -269,10 +279,6 @@ foreach([
 				// no break
 				
 			
-		}
-
-		if($markupSnippet === 'standalone-trackview') {
-			$templateFile = 'nosurrounding.htm';
 		}
 		
 		$itemsToRender[] = $config['item'];

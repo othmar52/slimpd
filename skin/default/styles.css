@@ -315,14 +315,16 @@ a {
 
 /* djscreen */
 body.standalone {
-	p!adding-top: 0;
+	font-weight: bold;
+	font-size:1.8em;
+}
+
+body.vstretch14 {
 	-webkit-transform:scale(1,1.4); /* Safari and Chrome */
 	-moz-transform:scale(1,1.4); /* Firefox */
 	-ms-transform:scale(1,1.4); /* IE 9 */
 	-o-transform:scale(1,1.4); /* Opera */
 	transform:scale(1,1.4); /* W3C */
-	font-weight: bold;
-	font-size:1.8em;
 }
 
 .standalone .small {
