@@ -35,6 +35,8 @@
 		timeGridStrokeColor : '',
 		timeGridStrokeColor2 : '',
 		
+		showWaveform : true,
+		
 		intervalActive : 2000, // [ms]
 		intervalInactive : 5000, // [ms]
 
@@ -58,8 +60,18 @@
         
         // fetch markup with trackinfos
         redraw : function(item) {
+        	var url = '/markup/'+ this.mode+'player';
+        	if(this.mode === 'xwax') {
+        		url = window.sliMpd.setGetParameter(url, 'deck', this.deckIndex);
+        		if(this.showWaveform === false) {
+        			url = window.sliMpd.setGetParameter(url, 'type', 'djscreen');
+        		} 
+        	} else {
+        		url = window.sliMpd.setGetParameter(url, 'item', item.item);
+        	}
+        	
         	$.ajax({
-    			url: '/markup/'+ this.mode+'player?'+ ((this.mode === 'xwax') ? 'deck='+this.deckIndex : 'item='+ item.item)
+    			url: url
     		}).done(function(response){
     			// place markup in DOM
     			this._template = _.template(response);

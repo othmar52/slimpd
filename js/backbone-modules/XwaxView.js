@@ -24,12 +24,17 @@
         
         lastDeckTracks : [],
         
+        lastTimecodes : [],
+        
         toggler : false,
+        
+        showWaveform : true,
         
         intervalActive : 3000,
 		intervalInactive : 6000,
         
         initialize : function(options) {
+        	this.showWaveform = options.showWaveform;
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
@@ -38,7 +43,7 @@
             if (this.rendered) {
                 return;
             }
-            console.log('calling XwaxGui::render()');
+            //console.log('calling XwaxGui::render()');
             this.toggler = $('.xwax-gui-toggler');
             this.toggler.off('click', this.toggleXwaxGui).on('click', this.toggleXwaxGui);
             window.sliMpd.modules.AbstractView.prototype.render.call(this);
@@ -57,7 +62,8 @@
 			for(var i=0; i< this.totalDecks; i++) {
 				var deckView = new window.sliMpd.modules.XwaxPlayer({
 			    	el : '.xwax-deck-'+i,
-			    	deckIndex : i
+			    	deckIndex : i,
+			    	showWaveform : this.showWaveform
 			    });
         		this.deckViews.push(deckView); 
 			    if(this.xwaxRunning === true) {
@@ -73,6 +79,7 @@
 		
 		hideXwaxGui : function() {
 		    this.lastDeckTracks = [];
+		    this.lastTimecodes = [];
 		    clearTimeout(this.poller);
 		    //console.log('hideXwaxGui()');
 		    this.deckViews.forEach(function (view){
@@ -97,6 +104,7 @@
 		    
 			this.xwaxRunning = false;
 		    this.lastDeckTracks = [];
+		    this.lastTimecodes = [];
 		    
 		    this.deckViews.forEach(function (deckView){
 	    		
@@ -162,7 +170,9 @@
 		    		
 		    		that.deckViews[i].nowPlayingElapsed = xwaxStatus[i].position;
 			    	
-			    	that.deckViews[i].timelineSetValue(xwaxStatus[i].percent);
+			    	if(this.showWaveform == true) {
+			    		that.deckViews[i].timelineSetValue(xwaxStatus[i].percent);
+			    	}
 			    	that.deckViews[i].updateStateIcons();
 			    	if(that.lastDeckTracks[i] !== xwaxStatus[i].path) {
 		    			that.lastDeckTracks[i] = xwaxStatus[i].path;
@@ -171,62 +181,16 @@
 		    			that.deckViews[i].redraw({hash: hash});
 		    			//console.log('redraw deck ' + i);
 		    		}
+		    		if(that.lastTimecodes[i] !== xwaxStatus[i].timecode) {	
+		    			that.lastTimecodes[i] = xwaxStatus[i].timecode;
+		    			that.deckViews[i].updateTimecode(xwaxStatus[i].timecode);
+		    		}
+		    		
 		    		that.deckViews[i].nowPlayingItem = xwaxStatus[i].path;
 			    	
 			    	//console.log(xwaxStatus);
-			    	
-		    	
 		    		//that.deckViews[i].onRedrawComplete();
 		    	}
-		    	
-		    	
-		    	//$('.xwax-deck-'+ +'-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
-			    //$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
-		    	
-		    	
-		    	
-		    	/*
-		    	that.state.repeat = data.repeat;
-		    	that.state.random = data.random;
-		    	that.state.consume = data.consume;
-		    	
-		    	// no need to update this stuff in case local player is active...
-		    	if(window.sliMpd.currentPlayer.mode === 'mpd') {
-	
-			    	that.updateStateIcons();
-					
-					that.setPlayPauseIcon();
-					
-					// TODO: interpolate nowPlayingElapsed independent frpm poll interval
-			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
-			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
-			    	
-			    	// animate from 0 to 100, onUpdate -> change Text
-					that.timeLineLight = new TimelineLite();
-					that.trackAnimation.currentPosPerc = 0;
-					that.timeLineLight.to(that.trackAnimation, that.nowPlayingDuration, {
-					  	currentPosPerc: 100, 
-					  	ease: Linear.easeNone,  
-					  	onUpdate: that.updateSlider,
-					  	onUpdateScope: that
-					});
-			    	
-			    	if(that.nowPlayingState == 'play') {
-			    		that.timelineSetValue(that.nowPlayingPercent);
-					} else {
-			    		that.timeLineLight.pause();
-			    	}
-			    	that.drawTimeGrid();
-		    	}
-		    	
-		    	// update trackinfo only onTrackChange()
-		    	if(that.previousPlayingItem != that.nowPlayingItem) {
-		    		that.previousPlayingItem = that.nowPlayingItem
-		    		that.redraw(''); 
-		    		that.refreshInterval();
-		    		return;
-		    	}
-		    	*/
 		        that.poller = setTimeout(that.poll, that.intervalActive);
 		    });
 		}
