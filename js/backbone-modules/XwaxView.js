@@ -92,25 +92,14 @@
 		    this.xwaxRunning = false;
 		    this.deckViews = [];
 		    this.visible = false;
-		    $('.xwax-error', this.$el).addClass('hidden');
-		    $('.xwax-gui', this.$el).removeClass('hidden');
 		},
 		
 		processXwaxNotRunning : function() {
 			//console.log('processXwaxNotRunning()');
 			this.toggler.removeClass('btn-success').addClass('btn-danger');
-			$('.xwax-error', this.$el).removeClass('hidden');
-		    $('.xwax-gui', this.$el).addClass('hidden');
-		    
 			this.xwaxRunning = false;
-		    this.lastDeckTracks = [];
-		    this.lastTimecodes = [];
-		    
 		    this.deckViews.forEach(function (deckView){
-	    		
-	    		deckView.rendered = false;
-	    		deckView.$el.html('xwax not running');
-	    		deckView.render();
+	    		deckView.$el.addClass('no-connection');
 		    });
 		    clearTimeout(this.poller);
 		    this.poller = setTimeout(this.poll, this.intervalInactive);
@@ -136,8 +125,9 @@
 				}
 				if(that.xwaxRunning === false) {
 					that.toggler.removeClass('btn-danger').addClass('btn-success');
-					$('.xwax-error', this.$el).addClass('hidden');
-		    		$('.xwax-gui', this.$el).removeClass('hidden');
+					that.deckViews.forEach(function (deckView){
+						deckView.$el.removeClass('no-connection');
+				    });
 				}
 				
 				that.xwaxRunning = true;
