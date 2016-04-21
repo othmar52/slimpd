@@ -95,8 +95,6 @@
 			});
         },
         
-        onRedrawComplete : function(item) { return; },
-        
         process : function(item) {
         	//console.log('AbstractPlayer::process()'); console.log(item);
 	        switch(item.action) {
@@ -256,8 +254,6 @@
 		
 		/* only for polled mpd player implementation - begin */
 		poller : null,
-		intervalActive : 0,
-		intervalInactive : 0,
 		poll : function() { return; },
 		refreshInterval : function () {
 			clearInterval(this.poller);

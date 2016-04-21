@@ -116,3 +116,33 @@
 .xwax-error .alert {
 	padding: 0.2em 1em;
 } 
+
+
+.show-no-connection {
+	display: none;
+}
+
+.no-connection .show-no-connection {
+	display: flex;
+	justify-content: center; /* align horizontal */
+	text-align: center;
+	font-size: 2em;
+	background: #333;
+	height: 100%;
+	line-height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	padding: 0;
+	opacity: 0.6;
+}
+
+.standalone .no-connection .show-no-connection {
+	align-items: flex-end;
+}
+
+
+.standalone .xwax-row {
+	height: 100%;
+}
