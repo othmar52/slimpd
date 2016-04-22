@@ -58,12 +58,16 @@
 	    		
 			</div>
 			{% else %}
+				{% if item.relativePath %}
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 				<br />
 				<div class="darker-links">
 					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
 				{% include 'partials/track/not-imported-badge.htm' %}
+				{% else %}
+					<br><br>{% include 'partials/track/no-track-selected-badge.htm' %}
+				{% endif %}
 			{% endif %}
 			{% include 'partials/track/audioformat.htm' %}
 

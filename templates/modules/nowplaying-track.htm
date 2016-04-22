@@ -40,6 +40,7 @@
 			</div>
 		</div>
 		{% else %}
+			{% if item.relativePath %}
 			<div class="row" style="font-size: 1.6em;">
 				<div class="col-md-12">
 		    		{{ fileName }}
@@ -50,15 +51,18 @@
 					{% include 'partials/track/not-imported-badge.htm' %}
 		    	</div>
 	    	</div>
+			<div class="row">
+				<div class="col-md-2">
+					<a href="/maintainance/trackdebug/{{ item.relativePath }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
+				</div>
+				<div class="col-md-10">
+					
+				</div>
+			</div>
+			{% else %}
+				{% include 'partials/track/no-track-selected-badge.htm' %}
+			{% endif %}
 		{% endif %}
-		<div class="row">
-			<div class="col-md-2">
-				<a href="/maintainance/trackdebug/{{ item.relativePath }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
-			</div>
-			<div class="col-md-10">
-				
-			</div>
-		</div>
 	</div>
 </div>
 {% endblock %}
