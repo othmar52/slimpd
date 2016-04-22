@@ -82,13 +82,18 @@
 				<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
 			</div>
 			{% else %}
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-				<br />
-				<div class="darker-links">
-					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-				</div>
-				{% include 'partials/track/not-imported-badge.htm' %}
+				{% if item.relativePath %}
+					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+					<br />
+					<div class="darker-links">
+						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+					</div>
+					{% include 'partials/track/not-imported-badge.htm' %}
+				{% else %}
+					{% include 'partials/track/no-track-selected-badge.htm' %}
+				{% endif %}
 			{% endif %}
+		{% if item.relativePath %}
 		<div class="row">
 			<div class="col-sm-12 small">
 				{# TODO: remove external liking as soon we have implemented a proper functionality #}
@@ -99,6 +104,7 @@
 				{% include 'partials/track/audioformat.htm' %}
 			</div>
     	</div>
+    	{% endif %}
     </div>
     
     
@@ -153,14 +159,17 @@
 				</div>
 			</div>
 			{% else %}
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-				<br />
-				<div class="darker-links">
-					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-				</div>
-				{% include 'partials/track/not-imported-badge.htm' %}
+				{% if item.relativePath %}
+					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+					<br />
+					<div class="darker-links">
+						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+					</div>
+					{% include 'partials/track/not-imported-badge.htm' %}
+				{% else %}
+					{% include 'partials/track/no-track-selected-badge.htm' %}
+				{% endif %}
 			{% endif %}
-    	
     </div>
     
     
