@@ -135,16 +135,25 @@
         		console.log('Router::refreshIfName(' + routename + ') does not match ' + this.currentView.name);
         		return;
         	}
-        	console.log('Router::refreshIfName(' + routename + ') matches');
-        	
-        	console.log(sliMpd.router.$body.context.location.pathname);
         	this.currentView.rendered = false;
         	this.navigate($el.attr(sliMpd.router.$body.context.location.pathname), {
                 trigger : true
             });
         	//this.currentView.rendered = false;
         	//this.currentView.render(true);
-        }
+        },
+        
+        // replacing backbones _extractParameters() method
+        //    original method: "%2B" gets replaced with "+"
+        //    overidden method: "%2B" gets preserved
+        _extractParameters: function(route, fragment) {
+	      var params = route.exec(fragment).slice(1);
+	      return _.map(params, function(param, i) {
+	        // Don't decode the search params.
+	        if (i === params.length - 1) return param || null;
+	        return param ? decodeURIComponent(param).replace('+', '%2B') : null;
+	      });
+	    }
     });
     
 })();
