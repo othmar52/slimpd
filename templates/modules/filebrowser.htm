@@ -12,24 +12,24 @@
 			{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}
 			{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
 				<li class="" title="{{ item.name }}">
-					<a href="/filebrowser{{ item.fullpath }}" data-ajaxtarget="#main" class="ajax-link">{{ item.name }}</a>
+					<a href="/filebrowser{{ item.fullpath|path2url }}" data-ajaxtarget="#main" class="ajax-link">{{ item.name }}</a>
 				</li>
 			{% endfor %}
 			<li class="small">
 				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
 			</li>
 			<li>
-				<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ directory~item.name|url_encode }}"}'>
+				<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-plus"></i> Add directory to playlist
 				</button>
 				
-				<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ directory~item.name|url_encode }}">
+				<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
 					Ã <i class="fa fa-arrow-right"></i> A
 				</button>
-				<button role="control" data-href="/mpdctrl/update/{{ directory~item.name~''|url_encode }}" title="update mpd database" class="ajax-rqst btn btn-default">
+				<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default">
 					<i class="fa fa-refresh"></i>
 				</button>
-				<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ directory~item.name~''|url_encode }}" title="search database (does not work for not indexed files)">
+				<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
 					<i class="fa fa-search"></i>
 				</a>
 			</li>
@@ -42,7 +42,7 @@
 	{% for item in hotlinks %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-12">
-			<a href="/filebrowser/{{ item }}" data-ajaxtarget="#main" class="ajax-link">
+			<a href="/filebrowser/{{ item|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-folder-open fa-lg"></i> {{ item }}</div>
 			</a>
 	</div>
@@ -55,18 +55,18 @@
 	<a id="d{{ item.hash }}"/>
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-2">
-			<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ directory~item.name~''|url_encode }}"}'>
+			<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
 				<i class="fa fa-plus"></i>
 			</button>
 			
-			<button role="control" data-href="/mpdctrl/update/{{ directory~item.name~''|url_encode }}" title="update mpd database" class="ajax-rqst btn btn-default">
+			<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default">
 				<i class="fa fa-refresh"></i>
 			</button>
 			
 			
 		</div>
 		<div class="col-md-10">
-			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
+			<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-folder-open fa-lg"></i> {{ item.name }}
 			</a>
 		</div>
@@ -86,14 +86,14 @@
 			      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
 			      for now playing files directly is only possible for already mpd-imported tracks ... 
 			      playing files local is no issue and shoud work like a charm #}
-				<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}"}'>
+				<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-play fa-lg"></i>
 				</button>
-				<button role="control" data-href="/markup/widget-trackcontrol?item={{ directory }}{{ item.name }}" title="more" class="btn btn-default trigger-modal xwax-mode-hide">
+				<button role="control" data-href="/markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-default trigger-modal xwax-mode-hide">
 					<i class="fa fa-align-justify fa-lg"></i>
 				</button>
 				
-				<a role="control" href="/markup/widget-deckselector?item={{ directory }}{{ item.name }}" title="show deckselector" class="btn btn-default xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
+				<a role="control" href="/markup/widget-deckselector?item={{ [directory,item.name]|path2url }}" title="show deckselector" class="btn btn-default xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
 					<i class="fa fa-headphones fa-lg"></i>
 				</a>
 				
@@ -101,7 +101,7 @@
 				
 			</div>
 			<div class="col-md-10">
-				<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ directory~item.name|url_encode }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ directory~item.name|url_encode }}"}'>
+				<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-music fa-lg"></i>
 				{{ item.name }}
 				</button>
@@ -118,15 +118,15 @@
 		{% if item.ext in playlists.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
-				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link btn btn-default" title="show playlist">
+				<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-default" title="show playlist">
 					<i class="fa fa-eye fa-lg"></i>
 				</a>
 				
-				<button role="control" title="add playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addPlaylistToPlaylist", "item": "{{ directory~item.name }}", "mpdurl":"/mpdctrl/addPlaylistToPlaylist/{{ directory~item.name }}"}'>
+				<button role="control" title="add playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addPlaylistToPlaylist", "item": "{{ [directory,item.name]|path2url }}", "mpdurl":"/mpdctrl/addPlaylistToPlaylist/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-plus"></i>
 				</button>
 				
-				<button role="control" title="replace current playlist with this playlist" class="btn btn-default player-ctrl" data-player='{"action":"replaceCurrentPlaylistKeepTrack", "item": "{{ directory~item.name }}", "mpdurl":"/mpdctrl/replaceCurrentPlaylistKeepTrack/{{ directory~item.name }}"}'>
+				<button role="control" title="replace current playlist with this playlist" class="btn btn-default player-ctrl" data-player='{"action":"replaceCurrentPlaylistKeepTrack", "item": "{{ [directory,item.name]|path2url }}", "mpdurl":"/mpdctrl/replaceCurrentPlaylistKeepTrack/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-refresh"></i>
 				</button>
 		
@@ -134,7 +134,7 @@
 			</div>
 			<div class="col-md-10">
 			
-				<a href="/showplaylist/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
+				<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-list fa-lg"></i>
 				{{ item.name }}</a>
 			</div>
@@ -149,12 +149,12 @@
 		{% if item.ext in infofiles.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 			<div class="col-md-2">
-				<button role="control" data-href="/showplaintext/{{ directory }}{{ item.name }}" title="show filecontent" class="btn btn-default trigger-modal">
+				<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-default trigger-modal">
 					<i class="fa fa-eye fa-lg"></i>
 				</button>
 			</div>
 			<div class="col-md-10">
-				<button role="control" data-href="/showplaintext/{{ directory }}{{ item.name }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
+				<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
 				<i class="fa fa-info fa-lg"></i>
 				{{ item.name }}</button>
 			</div>
@@ -171,8 +171,8 @@
 		{% if item.ext in imageext %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="image{{ loop.index }}">
 		<div class="col-md-2">
-			<a data-toggle="lightbox" href="/image-1000/path/{{ directory~item.name }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
-				<img src="/image-50/path/{{ directory~item.name }}" title="{{ item.name }}" alt="{{ item.name }}" />
+			<a data-toggle="lightbox" href="/image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
+				<img src="/image-50/path/{{ [directory,item.name]|path2url }}" title="{{ item.name }}" alt="{{ item.name }}" />
 			</a>
 		</div>
 		<div class="col-md-10">
@@ -187,7 +187,7 @@
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
-			<a href="/filebrowser/{{ directory~item.name }}" data-ajaxtarget="#main" class="ajax-link">
+			<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 			<i class="fa fa-file fa-lg"></i> 
 			{{ item.name }}</a>
 		</div>

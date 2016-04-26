@@ -42,6 +42,15 @@ $filter = new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
 });
 $twig->addFilter($filter);
 
+$filter = new \Twig_SimpleFilter('path2url', function ($mixed) {
+	if(is_array($mixed) === TRUE) {
+		$mixed = join("", $mixed);
+	}
+	// rawurlencode but preserve slashes
+	return str_replace('%2F', '/', rawurlencode($mixed));
+});
+$twig->addFilter($filter);
+
 $filter = new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 	$format = "G:i:s";
 	$suffix = "h";

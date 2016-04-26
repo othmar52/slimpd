@@ -2,18 +2,18 @@
 {% set playerCtrlItem = item.id %}
 {% set parentDir = '' %}
 {% set fileName = '' %}
-{% set waveformSvgUrl = "/audiosvg/width/550/"~item.relativePath~"" %}
+{% set waveformSvgUrl = ["/audiosvg/width/550/",item.relativePath]|path2url %}
 {% set placeholderSvgUrl = "/skin/default/img/loading-waveform.svg" %}
 	    	
 {% if not item.id %}
-	{% set playerCtrlItem = '\"'~item.relativePath~'\"' %}
+	{% set playerCtrlItem = '\"'~item.relativePath|path2url~'\"' %}
 	{% set dirs = item.relativePath|split('/') %}
 	{% set tmp = "/filebrowser" %}
 	
 	{% for i,dir in dirs %}
 		{% set tmp = tmp~'/'~dir %}
 		{% if i == loop.length-2 %}
-			{% set albumHref = tmp %}
+			{% set albumHref = tmp|path2url %}
 			{% set parentDir = dir %} 
 		{% endif %}
 		{% if loop.last %}

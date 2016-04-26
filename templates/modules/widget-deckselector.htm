@@ -5,7 +5,7 @@
 		</div>
 	{% else %}
 		<div class="col-md-3">
-			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="open trackwidget to do trackstuff" class="btn btn-default trigger-modal">
+			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="open trackwidget to do trackstuff" class="btn btn-default trigger-modal">
 				more <i class="fa fa-align-justify fa-lg"></i>
 			</button>
 				
@@ -15,7 +15,7 @@
 			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
 			{% for i in 1..xwax.decks %}
 			<div class="col-md-{{colidx}}">
-				<button role="control" data-href="/xwax/load_track/{{i}}/{{item.relativePath}}" class="ajax-rqst btn btn-default" title="Send track to xwax deck {{i}}">
+				<button role="control" data-href="/xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default" title="Send track to xwax deck {{i}}">
 					<i class="fa fa-headphones fa-lg"></i> Send to Deck {{i}}
 				</button>
 			</div>
