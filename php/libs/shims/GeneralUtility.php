@@ -18,6 +18,37 @@ function timeStringToSeconds($time) {
     return $sec;
 }
 
+function cleanSearchterm($searchterm) {
+	# TODO: use flattenWhitespace() in albummigrator on reading tag-information
+	return flattenWhitespace(
+		str_replace(["_", "-", "/", " ", "(", ")"], " ", $searchterm)
+	);
+}
+
+function addStars($searchterm) {
+	$str = str_replace(["_", "-", "/", " ", "(", ")"], "* ", $searchterm) . "*";
+	// single letters like "o" in "typo o negative" must not get a star appended because the lack of results 
+	if(preg_match("/\ ([A-Za-z]){1}\*/", $str, $m)) {
+		$str = str_replace(
+			" ".$m[1]."*",
+			" ".$m[1],
+			$str
+		);
+	}
+	return $str;
+}
+
+function removeStars($searchterm) {
+	return trim(str_replace("*", " ", $searchterm));
+}
+
+/**
+ * replaces multiple whitespaces with a single whitespace
+ */
+function flattenWhitespace($input) {
+	return preg_replace('!\s+!', ' ', $input);
+}
+
 function notifyJson($message, $type="info") {
 	$out = new stdClass();
 	$out->notify = 1;
