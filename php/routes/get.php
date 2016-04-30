@@ -708,7 +708,7 @@ foreach(array_keys($sortfields) as $currentType) {
 		
 		# TODO: evaluate if modifying searchterm makes sense
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
-		$term = str_replace(array("_", "-", "/"), " ", $app->request()->params('q'));
+		$term = cleanSearchterm($app->request()->params('q'));
 		$ranker = 'sph04';
 		$start = 0;
 		$itemsPerPage = 20;
@@ -734,7 +734,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				GROUP BY itemid,type
 				LIMIT ".$maxCount."
 				OPTION ranker=".$ranker.", max_matches=".$maxCount.";");
-			$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+			$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 			}
@@ -763,7 +763,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					".$sortQuery."
 					LIMIT :offset,:max
 					OPTION ranker=".$ranker.";");
-				$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+				$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 				if(($currentType !== 'all')) {
@@ -858,8 +858,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	
 	# TODO: evaluate if modifying searchterm makes sense
 	// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
-	$term = str_replace(array("_", "-", "/"), " ", $term);
-	
+	$term = cleanSearchterm($term);
 	$start =0;
 	$offset =20;
 	$current = 1;
@@ -883,7 +882,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		GROUP BY itemid,type
 		LIMIT $start,$offset
 		OPTION ranker=sph04");
-	$stmt->bindValue(':match', $term, PDO::PARAM_STR);
+	$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 	if(($type !== 'all')) {
 		$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 	}
@@ -893,7 +892,6 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	foreach($meta as $m) {
 	    $meta_map[$m['Variable_name']] = $m['Value'];
 	}
-		
 	if(count($rows) === 0 && $app->request->get('suggested') != 1) {
 		$words = array();
 		foreach($meta_map as $k=>$v) {
