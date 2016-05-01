@@ -59,11 +59,6 @@ $(document).ready(function() {
 		},
 		
 		notify : function(notifyConf) {
-			////////////////////////////////////////////////
-			// FIXME:
-			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property 'title' of undefined
-			// check notify's-template variable for title
-			//////////////////////////////////////////////// 
     		$.notify({
 				// options
 				message: notifyConf.message
@@ -72,7 +67,6 @@ $(document).ready(function() {
 				type: (notifyConf.type || 'info'),
 				z_index: 10000
 			});
-			$.notify();
 		},
 		
 		notifyError : function(errorUrl) {
