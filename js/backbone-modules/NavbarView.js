@@ -38,7 +38,8 @@
 				
 				
 				// make sure autocomplete does not appear after rendering of resultpage
-				that.searchfield.autocomplete( "disable" );
+				that.searchfield.autocomplete('close');
+				that.searchfield.autocomplete('disable');
 				
 				window.sliMpd.router.navigate(url, {
 					trigger : true
