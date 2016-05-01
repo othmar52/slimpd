@@ -58,6 +58,17 @@ function notifyJson($message, $type="info") {
 	exit;
 }
 
+/**
+ * php's escapeshellarg() invalidates pathes with some specialchars
+ *      escapeshellarg('/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3')
+ *          results in '/testdir/pathtest-uselessx/testfile.mp3'
+ * TODO: check if this is a security issue
+ * @see: issue #4
+ */
+function escapeshellargDirty($input) {
+	return "'" . str_replace("'", "'\"'\"'", $input) . "'";
+}
+
 function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if($verbosity > \Slim\Slim::getInstance()->config['config']['cli-verbosity'] && $fatal === FALSE) {
 		return;
