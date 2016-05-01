@@ -1,9 +1,9 @@
-
 {% if paginator.numPages > 1 %}
-
-    <ul class="pagination bg-col2">
+    <ul class="pagination">
         {% if paginator.prevUrl %}
-            <li><a href="{{ paginator.prevUrl }}" data-ajaxtarget="#main" class="ajax-link">&laquo; Previous</a></li>
+            <li><a href="{{ paginator.prevUrl }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-chevron-left"></i></a></li>
+		{% else %}
+			<li class="disabled"><a href="#"><i class="fa fa-chevron-left"></i></a></li>
         {% endif %}
 
         {% for page in paginator.pages %}
@@ -12,7 +12,7 @@
             {% else %}
             	{# replace placeholder with random-link #}
 	            {% if page.num == '...'%}
-	            	<li><a href="{{ paginator.urlPattern|replace({'(:num)': random(paginator.numPages) }) }}" data-ajaxtarget="#main" class="ajax-link">random</a></li>
+	            	<li><a href="{{ paginator.urlPattern|replace({'(:num)': random(paginator.numPages) }) }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-random"></i></a></li>
 	            {% else %}
                 	<li class="disabled"><span>{{ page.num }}</span></li>
                 {% endif %}
@@ -20,7 +20,9 @@
         {% endfor %}
 
         {% if paginator.nextUrl %}
-            <li><a href="{{ paginator.nextUrl }}" data-ajaxtarget="#main" class="ajax-link">Next &raquo;</a></li>
+            <li><a href="{{ paginator.nextUrl }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-chevron-right"></i></a></li>
+        {% else %}
+			<li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
         {% endif %}
     </ul>
 {% endif %}
