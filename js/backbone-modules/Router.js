@@ -156,10 +156,10 @@
 	        
 	        return param
 	        	? decodeURIComponent(param)
-	        		.replace('%', '%25')
-	        		.replace('#', '%23')
-	        		.replace('+', '%2B')
-	        		.replace('?', '%3F')
+	        		.replace(/%/g, '%25')
+	        		.replace(/#/g, '%23')
+	        		.replace(/\+/g, '%2B')
+	        		.replace(/\?/g, '%3F')
 	        	: null;
 	      });
 	    }
