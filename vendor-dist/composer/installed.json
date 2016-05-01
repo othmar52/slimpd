@@ -1574,18 +1574,30 @@
         "description": "Allows installation of Components via Composer."
     },
     {
+        "name": "rstacruz/nprogress",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:rstacruz/nprogress.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
         "name": "twig/twig",
         "version": "1.x-dev",
         "version_normalized": "1.9999999.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/twigphp/Twig.git",
-            "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e"
+            "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
-            "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
+            "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
             "shasum": ""
         },
         "require": {

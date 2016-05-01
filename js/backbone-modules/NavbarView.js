@@ -49,11 +49,13 @@
 			
 			this.tabAutocomplete = that.searchfield.autocomplete({
 				source: function( request, response ) {
+					NProgress.start();
 					$.ajax({
 						url: "/autocomplete/all/" + $('#mainsearch').val(),
 		          		dataType: "json",
 		          		type: 'get',
 		          		success: function( data ) {
+		          			NProgress.done();
 							response( data );
 						},
 						messages: {
@@ -194,11 +196,13 @@
 			// change ajax-url
 			var that = this;
 			this.searchfield.autocomplete('option', 'source', function( request, response ) {
+				NProgress.start();
 				$.ajax({
 					url: "/autocomplete/"+ type+"/" + that.searchfield.val(),
 		      		dataType: "json",
 		      		type: 'get',
 		      		success: function( data ) {
+		      			NProgress.done();
 						response( data );
 					},
 					messages: {

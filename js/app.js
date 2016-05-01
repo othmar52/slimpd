@@ -149,6 +149,12 @@ $(document).ready(function() {
 	$('.navbar-upper').affix({
   		offset: {bottom: 200}
 	});
-
-
+	
+	NProgress.configure({
+		showSpinner: false,
+		parent: '#nprog-container',
+		speed: 100,
+		trickleRate: 0.02,
+		trickleSpeed: 800
+	});
 });
