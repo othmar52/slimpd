@@ -36,11 +36,14 @@
 				// reset form to default action (has been modified by autocomplete)
 				$(this).attr("action", $(this).attr("data-defaultaction"));
 				
+				// make sure autocomplete does not appear after rendering of resultpage
+				that.searchfield.autocomplete( "disable" );
+				
 				window.sliMpd.router.navigate(url, {
 					trigger : true
 				});
 				
-				that.closeAutoComplete();
+				that.enableAutocompleteDelayed();
 				
 				// TODO : insert tabbedautocomplete js code
 				// TODO : on rendering of search-results, re-init click listener:
@@ -224,10 +227,12 @@
 		    return str.replace(/<\/?[^>]+>/gi, '');
 		},
 		
-		closeAutoComplete : function() {
-			this.searchfield.autocomplete('close');
+		enableAutocompleteDelayed : function() {
+			setTimeout(function(){
+				window.sliMpd.navbar.searchfield.autocomplete("enable");
+			},
+			1000);
 		}
-		
     });
     
 })();
