@@ -36,6 +36,7 @@
 				// reset form to default action (has been modified by autocomplete)
 				$(this).attr("action", $(this).attr("data-defaultaction"));
 				
+				
 				// make sure autocomplete does not appear after rendering of resultpage
 				that.searchfield.autocomplete( "disable" );
 				
@@ -145,12 +146,12 @@
 		     // create a few filter links in autocomplete widget
 			this.tabAutocomplete._renderMenu = function( ul, items, type ) {
 				var that = this;
-				var markup = $('<div>').attr('class', 'nav nav-pills ac-nav');
+				var markup = $('<div>').attr('class', 'nav nav-pills ac-nav type-nav ');
 				var filterLinks = ["all", "artist", "album", "label"];
 				var cat = this.options.sourceCategory;
 				filterLinks.forEach(function(filter){
 					$('<button>').attr('type', 'button')
-					.attr('class', 'btn btn-primary' + ((cat === filter)?'active':''))
+					.attr('class', 'btn uc btn-primary' + ((cat === filter)?'active':''))
 					.attr('data-filter', filter)
 					.text(filter).bind('click', function(){
 						that.changeAutocompleteUrl(filter);
