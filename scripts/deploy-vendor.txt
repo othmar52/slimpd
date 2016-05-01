@@ -146,3 +146,7 @@ othmar52/xwax-1.5-osc/xwax-client
 ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh
 
 react/promise
+
+rstacruz/nprogress/nprogress.js
+rstacruz/nprogress/nprogress.css
+rstacruz/nprogress/License.md

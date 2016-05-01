@@ -1,0 +1,20 @@
+#nprog-container {
+	display: block;
+	overflow: visible;
+	z-index: 1000031;
+	position: relative;
+}
+
+#nprogress .bar {
+  background: #FF9C01;
+  z-index: 1000031;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+}
+
+/* remove Fancy blur effect */
+#nprogress .peg {
+  display: none;
+}
+

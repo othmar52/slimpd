@@ -156,6 +156,7 @@
         		return;
         	}
         	var that = this;
+        	NProgress.start();
         	$.ajax({
 				url: window.sliMpd.setGetParameter($el.attr('href'), 'nosurrounding', '1')
 			}).done(function(response) {
@@ -163,8 +164,10 @@
 				$($el.attr('data-ajaxtarget')).html(response);
 				that.rendered = false;
 				that.render();
+				NProgress.done();
 			}).fail(function() {
 				window.sliMpd.notifyError($el.attr('href'));
+				NProgress.done();
     			return;
   			});
 		},

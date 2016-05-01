@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "490103a757324d94294e1959caaa015b",
-    "content-hash": "4c37e6d4a5fc09b3d9add46e8fab45ec",
+    "hash": "1e4dac018be0a5226d3e99ee3b947644",
+    "content-hash": "60d51f5e9002771f0a704aa62a9c8a79",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -1146,7 +1146,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-03-06 21:23:13"
+            "time": "2016-04-19 16:55:14"
         },
         {
             "name": "react/promise",
@@ -1293,6 +1293,17 @@
             ],
             "description": "Allows installation of Components via Composer.",
             "time": "2016-04-18 13:37:04"
+        },
+        {
+            "name": "rstacruz/nprogress",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:rstacruz/nprogress.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2015-12-25 06:20:56"
         },
         {
             "name": "slim/slim",
@@ -1499,12 +1510,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e"
+                "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
-                "reference": "3d0afc03892719b7eaa5f2b8d93260a79f8c578e",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
+                "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
                 "shasum": ""
             },
             "require": {
@@ -1552,7 +1563,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-04-01 06:54:57"
+            "time": "2016-04-24 13:54:56"
         },
         {
             "name": "webfontkit/open-sans",
