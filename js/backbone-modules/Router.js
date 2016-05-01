@@ -146,12 +146,21 @@
         // replacing backbones _extractParameters() method
         //    original method: "%2B" gets replaced with "+"
         //    overidden method: "%2B" gets preserved
+        // TODO: combinations of "%" and "#" and "\" in urls still does not work
+        // @see: issue #3
         _extractParameters: function(route, fragment) {
 	      var params = route.exec(fragment).slice(1);
 	      return _.map(params, function(param, i) {
 	        // Don't decode the search params.
 	        if (i === params.length - 1) return param || null;
-	        return param ? decodeURIComponent(param).replace('+', '%2B') : null;
+	        
+	        return param
+	        	? decodeURIComponent(param)
+	        		.replace('%', '%25')
+	        		.replace('#', '%23')
+	        		.replace('+', '%2B')
+	        		.replace('?', '%3F')
+	        	: null;
 	      });
 	    }
     });
