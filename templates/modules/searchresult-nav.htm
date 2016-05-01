@@ -6,41 +6,57 @@
 	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
 {% endif %}
 
-
-
-
-<h2><span class="dark uc small darker" style="font-size: 0.4em;">{{'searchresults'|ll}}</span> &quot;{{ search.all.term }}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
-{{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} {{'results'|ll}} in {{ search[searchcurrent].time }}s</span></h2>
-
+<div class="row">
+	<div class="col-md-12">
+		<h2 style="margin:0;padding:0;font-weight:100;" class="uc">
+			<span class="dark uc small darker" style="font-size: 0.4em;">{{'searchresults'|ll}}</span>
+			&quot;{{ search.all.term }}&quot;
+			<span class="dark uc small darker" style="font-size: 0.4em;">{{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} {{'results'|ll}} in {{ search[searchcurrent].time }}s</span></h2>
+	</div>
+</div>
+<div class="row">
+	<br>{# TODO: use css instead of markup #}
+</div>
 
 <div class="row">
-	<div class="col-md-10">
-		<ul class="nav nav-tabs">
+	<div class="col-md-12">
+		<ul class="nav nav-pills type-nav">
 			<li class="{{ (searchcurrent == 'all') ? 'active' : '' }}{{ (search.all.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">All ({{ search.all.total }})</a>
+				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">All <span class="badge bg-col2">{{ search.all.total }}</span></h3>
+				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Tracks ({{ search.track.total }})</a>
+				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total }}</span></h3>
+				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Albums ({{ search.album.total }})</a>
+				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total }}</span></h3>
+				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }}{{ (search.artist.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Artists ({{ search.artist.total }})</a>
+				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Artists <span class="badge bg-col2">{{ search.artist.total }}</span></h3>
+				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }}{{ (search.genre.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Genres ({{ search.genre.total }})</a>
+				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Genres <span class="badge bg-col2">{{ search.genre.total }}</span></h3>
+				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'label') ? 'active' : '' }}{{ (search.label.total == 0) ? 'disabled' : '' }}"> 
-				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">Labels ({{ search.label.total }})</a>
+				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Labels <span class="badge bg-col2">{{ search.label.total }}</span></h3>
+				</a>
 			</li>
 			<li>
 				{# TODO: tracking of users youtube-search #}
-				<a title="search on youtube" href="http://youtube.com/results?search_query={{ search.all.term|url_encode }}%20{{youtubechunk}}" target="_blank"><i class="fa fa-youtube-square fa-lg"></i> Youtube</a>
+				<a title="search on youtube" href="http://youtube.com/results?search_query={{ search.all.term|url_encode }}%20{{youtubechunk}}" target="_blank">
+					<h3 class="uc">Youtube <i class="fa fa-youtube-square fa-lg"></i></h3>
+				</a>
 			</li>
 		</ul>
-	</div>
-	<div class="col-md-2">
-		Sortierung {% include 'partials/dropdown-search-sorting.htm' %}
 	</div>
 </div>

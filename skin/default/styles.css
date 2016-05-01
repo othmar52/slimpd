@@ -170,21 +170,72 @@ a {
     flex:1 1 auto;
 }
 
-.pagination>li:first-child>a,
-.pagination>li:first-child>span,
-.pagination>li:last-child>a,
-.pagination>li:last-child>span,
 .pagination {
-	border-radius: 0;
+	margin: 0;
+}
+.pagination li a,
+.pagination li span,
+.pagination {
+	border: none;
 }
 
 .pagination>li>a,
 .pagination>li>span {
 	color: #FFF;
 	background-color: inherit;
+	
+}
+
+.pagination>li>a {
+	padding: 0.3em;
+	font-size: 1.4em;
+}
+
+.centered-text {
+    text-align:center
+} 
+
+
+.pagination>.disabled>a,
+.pagination>.disabled>a:focus,
+.pagination>.disabled>a:hover,
+.pagination>.disabled>span,
+.pagination>.disabled>span:focus,
+.pagination>.disabled>span:hover{
+    color: #fff;
+    background-color: inherit;
+    border-radius: 0;
+}
+
+.disabled .fa {
+	color: #353535;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover,
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: inherit;
+    border-bottom: 3px solid #FF9C01;
+    border-radius: 0;
 }
 
 
+.type-nav h3 {
+	margin: 0;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.type-nav h3 .badge{
+	font-weight: normal;
+}
 
 .item-link {
 	border-bottom: 1px solid #333;
