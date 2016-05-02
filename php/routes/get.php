@@ -609,9 +609,12 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$classPath = "\\Slimpd\\" . ucfirst($className);
 			
+			// TODO: check where %20 on multiple artist-ids come from
+			$itemId = str_replace('%20', ',', $itemId);
+			
 			$term = str_replace(",", " ", $itemId);
 			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
-			
+			$config['itemids'] = $itemId;
 			$itemsPerPage = 20;
 			$maxCount = 1000;
 			
@@ -636,7 +639,7 @@ foreach(array_keys($sortfields1) as $className) {
 				
 				$config['search'][$resultType]['total'] = $stmt->rowCount();
 				$config['search'][$resultType]['time'] = 0;
-				$config['search'][$resultType]['term'] = $term;
+				$config['search'][$resultType]['term'] = $itemId;
 				$config['search'][$resultType]['matches'] = [];
 				
 				if($resultType === $show) {
