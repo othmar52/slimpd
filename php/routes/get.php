@@ -120,7 +120,6 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 		);
 		
 		$fileBrowser = new \Slimpd\filebrowser();
-		#print_r($config['album']->getRelativePath()); die();
 		$fileBrowser->fetchBreadcrumb($config['album']->getRelativePath());
 		$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	
@@ -862,8 +861,11 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 	}
 	
+	$originalTerm = ($app->request->get('qo')) ? $app->request->get('qo') : $term;
+	
 	# TODO: evaluate if modifying searchterm makes sense
 	// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
+	
 	$term = cleanSearchterm($term);
 	$start =0;
 	$offset =20;
@@ -914,15 +916,15 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
 		if($suggest !== FALSE) {
-			$app->response->redirect($app->urlFor('autocomplete', array('type' => $type, 'term' => $suggest)) . '?suggested=1');
+			$app->response->redirect(
+				$app->urlFor(
+					'autocomplete',
+					array(
+						'type' => $type,
+						'term' => $suggest)
+					) . '?suggested=1&qo=' . rawurlencode($term));
 			$app->stop();
 		}
-		$result[] = [
-			'label' => 'nothing found',
-			'url' => '#',
-			'type' => '',
-			'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
-		];
 	} else {
 		$filterTypeMapping = array_flip($filterTypeMapping);
 		$cl = new SphinxClient();
@@ -963,6 +965,14 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 			}
 			$result[] = $entry;
 		}
+	}
+	if(count($result) === 0) {
+		$result[] = [
+			'label' => $app->ll->str('autocomplete.' . $type . '.noresults', [$originalTerm]),
+			'url' => '#',
+			'type' => '',
+			'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
+		];
 	}
 	echo json_encode($result); exit;
 })->name('autocomplete');

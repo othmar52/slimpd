@@ -233,7 +233,7 @@
 			setTimeout(function(){
 				window.sliMpd.navbar.searchfield.autocomplete("enable");
 			},
-			1000);
+			2000);
 		}
     });
     
