@@ -38,7 +38,7 @@
 		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{ config.absRefPrefix }}css/xwaxplayer/0" />
 		{% endfor %}
 	</head>
-	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} ">
+	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} {{ playerMode == 'mpd' ? 'spotcol-1' : 'spotcol-2' }} ">
 		<div class="container">
 			
 			{% include 'modules/header-menu.htm' %}
