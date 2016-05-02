@@ -41,6 +41,10 @@
     border-bottom: 3px solid #FF9C01;
 }
 
+.spotcol-2 .ac-nav button.btn-primaryactive {
+    border-bottom: 3px solid rgb(59,187,47);
+}
+
 
 .ui-helper-hidden-accessible {
 	position: absolute;

@@ -45,6 +45,16 @@ body {
 	color: #BBB;
 }
 
+.col2, .col2 a {
+	color: #FF9C01;
+}
+
+.spotcol-2 .col2,
+.spotcol-2 .col2 a {
+	color: rgb(59,187,47);
+}
+
+
 hr,
 .modal-footer {
 	border-top: 1px solid #444;
@@ -60,9 +70,9 @@ a {
 }
 
 .artist-link {
-	color: #FF9C01;
 	font-weight: bold;
 }
+
 
 .glue-hover-trigger {
 	color: #BBB;
@@ -84,11 +94,6 @@ a {
 .fa:hover {
 	color: #FFF;
 }
-
-.col2, .col2 a {
-	color: #FF9C01;
-}
-
 
 .well {
 	color: #000;
@@ -228,6 +233,19 @@ a {
     border-bottom: 3px solid #FF9C01;
     border-radius: 0;
 }
+
+.spotcol-2 .pagination>.active>a,
+.spotcol-2 .pagination>.active>a:focus,
+.spotcol-2 .pagination>.active>a:hover,
+.spotcol-2 .pagination>.active>span,
+.spotcol-2 .pagination>.active>span:focus,
+.spotcol-2 .pagination>.active>span:hover,
+.spotcol-2 .nav-pills>li.active>a,
+.spotcol-2 .nav-pills>li.active>a:focus,
+.spotcol-2 .nav-pills>li.active>a:hover {
+    border-bottom: 3px solid rgb(59,187,47);
+}
+
 
 .type-nav h3 {
 	margin: 0;

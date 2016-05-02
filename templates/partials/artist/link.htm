@@ -4,7 +4,7 @@
 	{% for itemId in itemIds %}
 		{% include 'partials/artist/single-link.htm' %}
 		{% if loop.last == false %}
-		<a class="artist-link item-link ajax-link toggle-tooltip trigger-hide-modal" href="/artist/{{item.artistId}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" title="view artists tracks">
+		<a class="artist-link col2 item-link ajax-link toggle-tooltip trigger-hide-modal" href="/artist/{{item.artistId}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" title="view artists tracks">
 			<span class="glue-hover-trigger">&amp;</span></a>
 		{% endif %}
 	{% endfor%}

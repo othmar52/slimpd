@@ -13,6 +13,10 @@
   height: 1px;
 }
 
+.spotcol-2 #nprogress .bar {
+  background: rgb(59,187,47);
+}
+
 /* remove Fancy blur effect */
 #nprogress .peg {
   display: none;

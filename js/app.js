@@ -117,12 +117,14 @@ $(document).ready(function() {
 		if(window.sliMpd.currentPlayer.mode === 'mpd') {
 			$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
 			window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+			$('body').removeClass('spotcol-1').addClass('spotcol-2');
 		} else {
 			$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
 			// pause local player when switching to mpd
 			window.sliMpd.currentPlayer.process({'action':'pause'});
 			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
 			window.sliMpd.currentPlayer.refreshInterval();
+			$('body').removeClass('spotcol-2').addClass('spotcol-1');
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
