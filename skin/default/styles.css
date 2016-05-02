@@ -111,6 +111,9 @@ a {
   border-radius: 1px;
 }
 
+.main-nav {
+	border-bottom: 3px solid #1A1A1A;
+}
 
 .main-nav .active {
 	border-bottom: 3px solid #FFF;

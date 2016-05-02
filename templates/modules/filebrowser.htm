@@ -1,26 +1,36 @@
 <div class="row">
+	
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Directory:</span>
+		<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
+		<h2 style="margin:0;padding:0;font-weight:100;" class="">{{ breadcrumb|last.name }}</h2>
+	</div>
+</div>
+
+
+<div class="row replace-me-with-proper-css"><br /></div>
+
+<div class="row">
 	<div class="col-md-12 bg-col2">
-		{% include 'partials/filebrowser/breadcrumb.htm' %}
-		<ol class="breadcrumb pull-right bg-col2">
-			<li class="small">
-				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
-			</li>
-			<li>
-				<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
-					<i class="fa fa-plus"></i> Add directory to playlist
-				</button>
-				
-				<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
-					Ã <i class="fa fa-arrow-right"></i> A
-				</button>
-				<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default">
-					<i class="fa fa-refresh"></i>
-				</button>
-				<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
-					<i class="fa fa-search"></i>
-				</a>
-			</li>
-		</ol>
+		<br class="row replace-me-with-proper-css" /> 
+
+		<span class="badge">{{ subDirectories|length }}</span> <i class="fa fa-folder-open fa-lg"></i> &nbsp;&nbsp; <span class="badge">{{ files|length }}</span> files
+
+		<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
+			<i class="fa fa-plus"></i> Add directory to playlist
+		</button>
+		
+		<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
+			Ã <i class="fa fa-arrow-right"></i> A
+		</button>
+		<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default">
+			<i class="fa fa-refresh"></i>
+		</button>
+		<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
+			<i class="fa fa-search"></i>
+		</a>
+		<br class="row replace-me-with-proper-css" />
+		<br class="row replace-me-with-proper-css" />
 	</div>
 </div>
 

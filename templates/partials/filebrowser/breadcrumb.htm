@@ -1,18 +1,25 @@
+{# html comments to be able to copy valid filepaths without spaces #}
 <ol class="breadcrumb"><!--
 	-->{% if not hiderootlink %}<!--
-		--><li class="" title="List basedirs"><!--
+	--><li class="" title="List basedirs"><!--
 		--><a href="/filebrowser" data-ajaxtarget="#main" class="ajax-link uc">root</a><!--
 		--><span class="dir-separator">/</span><!--
 	--></li><!--
 	-->{% endif %}<!--
+	-->{% set break = false %}<!--
 	-->{% for idx,item in breadcrumb %}<!--
-	{# add hash of the next item and add a scroll link #}
-	{# TODO: correction of scrollposition due to sticky header #}
-	-->{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}<!--
-	{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
+		-->{% if loop.last and skiplast %}<!--
+			-->{% set break = true %}<!--
+		-->{% endif %}<!--
+		-->{% if not break %}<!--
+			{# add hash of the next item and add a scroll link #}
+			{# TODO: correction of scrollposition due to sticky header #}
+			-->{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}<!--
+			{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
 		--><li class="" title="{{ item.name }}"><!--
 		--><a href="/filebrowser{{ item.fullpath|path2url }}" data-ajaxtarget="#main" class="ajax-link">{{ item.name }}</a><!--
 		--><span class="dir-separator">/</span><!--
 		--></li><!--
+		-->{% endif %}<!--
 	-->{% endfor %}<!--
 --></ol>
