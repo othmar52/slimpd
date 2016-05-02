@@ -33,6 +33,8 @@
             $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener).on('mouseenter', this.itemGlueMouseenterListener);
             $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener).on('mouseleave', this.itemGlueMouseleaveListener);
             $('.toggle-content', this.$el).off('click', this.itemToggleClickListener).on('click', this.itemToggleClickListener);
+            $('input.clearable', this.$el).off('keyup', this.clearableInputListener).on('keyup', this.clearableInputListener);
+            $('.clearinput', this.$el).off('click', this.clearinputClickListener).on('click', this.clearinputClickListener);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             
             // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
@@ -109,6 +111,8 @@
             $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener);
             $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener);
             $('.toggle-content', this.$el).off('click', this.itemToggleClickListener);
+            $('input.clearable', this.$el).off('input', this.clearableInputListener);
+            $('.clearinput', this.$el).off('click', this.clearinputClickListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -251,6 +255,18 @@
            // 
         },
         
+        clearableInputListener : function(e) {
+        	var $el = $(e.currentTarget);
+        	$el.siblings(".clearinput").toggle(Boolean($el.val()));
+        },
+        
+        clearinputClickListener : function(e) {
+        	console.log('clearinputClickListener()');
+        	var $el = $(e.currentTarget);
+        	$( $el.attr('data-selector') ).val('').focus();
+            $el.hide();
+        },
+
     });
     
 })();
