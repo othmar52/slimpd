@@ -3,7 +3,13 @@
 		<span class="dark uc small darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</span>
 	</div>
 	<div class="col-md-7">
-		<h2 style="margin:0;padding:0;font-weight:100;" class="uc">{{ item.title }}</h2>
+		<h2 style="margin:0;padding:0;font-weight:100;" class="uc">
+			{% if itemtype == 'artist' %}
+				{% include 'partials/'~itemtype~'/string.htm' with { item: {artistId: itemids} } %}
+			{% else %}
+				{{ item.title }}
+			{% endif %}
+			</h2>
 	</div>
 	<div class="col-md-5">
 		<ul class="nav nav-pills pull-right type-nav">
