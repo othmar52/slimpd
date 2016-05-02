@@ -118,6 +118,12 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 		$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 			array('albumId' => $albumId)
 		);
+		
+		$fileBrowser = new \Slimpd\filebrowser();
+		#print_r($config['album']->getRelativePath()); die();
+		$fileBrowser->fetchBreadcrumb($config['album']->getRelativePath());
+		$config['breadcrumb'] = $fileBrowser->breadcrumb;
+	
 		$app->render('surrounding.htm', $config);
 	});	
 }

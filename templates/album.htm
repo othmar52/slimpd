@@ -1,5 +1,5 @@
 
-
+{# TODO: render randomizer based on config-var and move to partial #}
 <div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
 	<a href="/album/{{ album.id-1 }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-left fa-lg"></i>
@@ -31,7 +31,11 @@
 		<div id="album-info-artist">
 			<span class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
 		</div>
-		<p style="font-size: 0.7em; color: #999;"><br /><a href="/filebrowser/{{album.relativePath}}" style="color: #999;" data-ajaxtarget="#main" class="ajax-link">{{album.relativePath}}</a></p>
+		<div class="row replace-me-with-proper-css"><br></div>
+		<div class="small darker-links">
+		{% include 'partials/filebrowser/breadcrumb.htm' with { hiderootlink: 1 }%}
+		</div>
+		<div class="row replace-me-with-proper-css"><br></div>
 			
 		<div class="row">
 		

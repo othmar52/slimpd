@@ -1,0 +1,16 @@
+.breadcrumb {
+	background-color: inherit;
+	padding: 0;
+	margin: 0;
+	display: inline-block;
+}
+
+.breadcrumb>li+li:before {
+    padding: 0;
+    color: #ccc;
+    content: "";
+}
+
+.dir-separator {
+	padding: 0 0.3em;
+}

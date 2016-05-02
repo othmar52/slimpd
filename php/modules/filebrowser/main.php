@@ -33,13 +33,8 @@ class filebrowser {
 		}
 
 		$this->directory = $d;
-		$bread = trimExplode(DS, $d, TRUE);
 		
-		$breadgrow = "";
-		foreach($bread as $part) {
-			$breadgrow .= DS . $part;
-			$this->breadcrumb[] = new _Directory($breadgrow);
-		}
+		$this->fetchBreadcrumb($d);
 	
 		//if($this->checkAccess($d) === FALSE) {
 		//	die('sorry, you are not allowed to view this directory 8==========D');
@@ -62,5 +57,14 @@ class filebrowser {
 		#echo "<pre>" . print_r($this,1); die();
 		#echo json_encode($data);
 		return ;
+	}
+
+	public function fetchBreadcrumb($relativePath) {
+		$bread = trimExplode(DS, $relativePath, TRUE);
+		$breadgrow = "";
+		foreach($bread as $part) {
+			$breadgrow .= DS . $part;
+			$this->breadcrumb[] = new _Directory($breadgrow);
+		}
 	}
 }

@@ -1,20 +1,7 @@
 <div class="row">
-	<div class="col-md-12">
-		
-		
-		<ol class="breadcrumb bg-col2">
-			<li class="" title="List basedirs">
-				<a href="/filebrowser" data-ajaxtarget="#main" class="ajax-link">root</a>
-			</li>
-			{% for idx,item in breadcrumb %}
-			{# add hash of the next item and add a scroll link #}
-			{# TODO: correction of scrollposition due to sticky header #}
-			{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}
-			{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
-				<li class="" title="{{ item.name }}">
-					<a href="/filebrowser{{ item.fullpath|path2url }}" data-ajaxtarget="#main" class="ajax-link">{{ item.name }}</a>
-				</li>
-			{% endfor %}
+	<div class="col-md-12 bg-col2">
+		{% include 'partials/filebrowser/breadcrumb.htm' %}
+		<ol class="breadcrumb pull-right bg-col2">
 			<li class="small">
 				({{ subDirectories|length }} <i class="fa fa-folder-open fa-lg"></i> , {{ files|length }} files)
 			</li>
@@ -33,7 +20,7 @@
 					<i class="fa fa-search"></i>
 				</a>
 			</li>
-			
+		</ol>
 	</div>
 </div>
 
