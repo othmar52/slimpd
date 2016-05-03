@@ -77,16 +77,16 @@
         },
         {
             "name": "components/font-awesome",
-            "version": "4.5.0",
+            "version": "4.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "069663a8419f9db90f9bec71e71ed4bb9d28d6ee"
+                "reference": "41891b80da2ee0a328c93d465bd3699edec2ca6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/069663a8419f9db90f9bec71e71ed4bb9d28d6ee",
-                "reference": "069663a8419f9db90f9bec71e71ed4bb9d28d6ee",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/41891b80da2ee0a328c93d465bd3699edec2ca6c",
+                "reference": "41891b80da2ee0a328c93d465bd3699edec2ca6c",
                 "shasum": ""
             },
             "type": "component",
@@ -97,6 +97,7 @@
                     ],
                     "files": [
                         "css/font-awesome.min.css",
+                        "css/font-awesome.css.map",
                         "fonts/*"
                     ]
                 }
@@ -107,7 +108,7 @@
                 "OFL-1.1"
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
-            "time": "2015-11-24 10:33:56"
+            "time": "2016-04-27 11:34:50"
         },
         {
             "name": "components/greensock-js",
