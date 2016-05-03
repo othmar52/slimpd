@@ -1,20 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-
-
-
-<div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
-	<a href="/maintainance/trackdebug/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link">
-		<i class="fa fa-chevron-left fa-lg"></i>
-	</a>
-	<a href="/maintainance/trackdebug/{{ random(totalitems-1)+1 }}" data-ajaxtarget="#main" class="ajax-link">
-		<i class="fa fa-random fa-lg"></i></a>
-	<a href="/maintainance/trackdebug/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link">
-		<i class="fa fa-chevron-right fa-lg"></i>
-	</a>
-</div>
-
-
+{% include 'partials/randomizer.htm' with { id: item.id, total: totalitems, urlpattern: 'maintainance/trackdebug/%i' } %}
 
 <h3>Track-debug<br>
 <span class="small">
