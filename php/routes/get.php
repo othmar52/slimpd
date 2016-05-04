@@ -450,6 +450,21 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 	$app->render('surrounding.htm', $config);
 });
 
+
+$app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($app, $config){
+	$config['action'] = 'filebrowser';
+	$fileBrowser = new \Slimpd\filebrowser();
+
+	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+
+	$config['directory'] = $fileBrowser->directory;
+	$config['breadcrumb'] = $fileBrowser->breadcrumb;
+	$config['subDirectories'] = $fileBrowser->subDirectories;
+	$config['files'] = $fileBrowser->files; 
+	$app->render('modules/widget-directory.htm', $config);
+});
+
+
 $app->get('/playlists', function() use ($app, $config){
 	$config['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');
