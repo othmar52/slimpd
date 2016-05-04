@@ -25,24 +25,15 @@
 		</a>
 		
 		&nbsp;&nbsp;&nbsp;
-		<button role="control" title="add this directory to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
+		
+		<button role="control" data-href="/markup/widget-directory/{{ [directory,item.name]|path2url }}" title="more directory actions" class="btn btn-trnsp trigger-modal">
 			<span class="fa-stack">
 				<i class="fa fa-circle-thin fa-stack-2x"></i>
 				<i class="fa fa-plus fa-stack-1x fa-inverse"></i>
 			</span>
-			
-			Add directory to playlist
+			show options
 		</button>
 		
-		<button role="control" title="recursive remove special chars" class="btn btn-trnsp trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
-			Ã <i class="fa fa-arrow-right"></i> A
-		</button>
-		<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-trnsp">
-			<i class="fa fa-lg fa-refresh"></i>
-		</button>
-		<a class="ajax-link btn btn-trnsp" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
-			<i class="fa fa-lg fa-search"></i>
-		</a>
 		<br class="row replace-me-with-proper-css" />
 		<br class="row replace-me-with-proper-css" />
 	</div>

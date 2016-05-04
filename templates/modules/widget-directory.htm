@@ -1,0 +1,41 @@
+{# TODO: move modalsurrounding to partial #}
+<div class="modal-body">	
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
+	<div class="row">
+		<div class="col-md-12">
+			<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
+			<h2 style="margin:0;padding:0;font-weight:100;" class="">{{ breadcrumb|last.name }}</h2>
+			<br class="row replace-me-with-proper-css" />
+		</div>
+	</div>
+	<div class="row">
+	 	<div class="col-md-12">
+		<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories|length }}</span> / 
+			<i class="fa fa-file-o fa-lg"></i> files <span class="badge">{{ files|length }}</span></h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<br class="row replace-me-with-proper-css" />
+			<br class="row replace-me-with-proper-css" />		
+			<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+				<i class="fa fa-plus"></i>
+				Add directory to playlist
+			</button>
+			<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
+				Ã <i class="fa fa-arrow-right"></i> A remove special chars
+			</button>
+			<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default" data-dismiss="modal">
+				<i class="fa fa-lg fa-refresh"></i> rescan &amp; update MPD database
+			</button>
+			<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
+				<i class="fa fa-lg fa-search"></i> search database
+			</a>
+			<br class="row replace-me-with-proper-css" />
+			<br class="row replace-me-with-proper-css" />
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
