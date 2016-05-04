@@ -428,7 +428,21 @@ $app->get('/filebrowser', function() use ($app, $config){
 $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'filebrowser';
 	$fileBrowser = new \Slimpd\filebrowser();
-	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+	switch($app->request->get('neighbour')) {
+		case 'next':
+			$fileBrowser->getNextDirectoryContent(join(DS, $itemParams));
+			break;
+		case 'prev':
+			$fileBrowser->getPreviousDirectoryContent(join(DS, $itemParams));
+			break;
+		case 'up':
+			$fileBrowser->getDirectoryContent(dirname(join(DS, $itemParams)));
+			break;
+		default:
+			$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+			break;
+	}
+
 	$config['directory'] = $fileBrowser->directory;
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;

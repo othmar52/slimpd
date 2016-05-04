@@ -1,38 +1,64 @@
+
+
+
 <div class="row">
-	
 	<div class="col-md-12">
-		<span class="dark uc small darker-links">Directory:</span>
-		<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
-		<h2 style="margin:0;padding:0;font-weight:100;" class="">{{ breadcrumb|last.name }}</h2>
-	</div>
-</div>
-
-
-<div class="row replace-me-with-proper-css"><br /></div>
-
-<div class="row">
-	<div class="col-md-12 bg-col2">
-		<br class="row replace-me-with-proper-css" /> 
-
-		<span class="badge">{{ subDirectories|length }}</span> <i class="fa fa-folder-open fa-lg"></i> &nbsp;&nbsp; <span class="badge">{{ files|length }}</span> files
-
-		<button role="control" title="add this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
-			<i class="fa fa-plus"></i> Add directory to playlist
+		
+		<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=up" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
+			<span class="fa-stack">
+				<i class="fa fa-circle-thin fa-stack-2x"></i>
+				<i class="fa fa-angle-up fa-stack-1x"></i>
+			</span>
+		</a>
+		
+		<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=prev" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
+			<span class="fa-stack">
+				<i class="fa fa-circle-thin fa-stack-2x"></i>
+				<i class="fa fa-angle-left fa-stack-1x"></i>
+			</span>
+		</a>
+		<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=next" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
+			<span class="fa-stack">
+				<i class="fa fa-circle-thin fa-stack-2x"></i>
+				<i class="fa fa-angle-right fa-stack-1x"></i>
+			</span>
+		</a>
+		
+		&nbsp;&nbsp;&nbsp;
+		<button role="control" title="add this directory to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addDirToPlaylist", "mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
+			<span class="fa-stack">
+				<i class="fa fa-circle-thin fa-stack-2x"></i>
+				<i class="fa fa-plus fa-stack-1x fa-inverse"></i>
+			</span>
+			
+			Add directory to playlist
 		</button>
 		
-		<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
+		<button role="control" title="recursive remove special chars" class="btn btn-trnsp trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
 			Ã <i class="fa fa-arrow-right"></i> A
 		</button>
-		<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default">
-			<i class="fa fa-refresh"></i>
+		<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-trnsp">
+			<i class="fa fa-lg fa-refresh"></i>
 		</button>
-		<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
-			<i class="fa fa-search"></i>
+		<a class="ajax-link btn btn-trnsp" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)">
+			<i class="fa fa-lg fa-search"></i>
 		</a>
 		<br class="row replace-me-with-proper-css" />
 		<br class="row replace-me-with-proper-css" />
 	</div>
 </div>
+
+
+<div class="row">
+	<div class="col-md-12">
+		<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
+		<h2 style="margin:0;padding:0;font-weight:100;" class="">{{ breadcrumb|last.name }}</h2>
+		<br class="row replace-me-with-proper-css" />
+	</div>
+	 
+</div>
+
+
 
 {% if hotlinks %}
 	<h4>hotlinks</h4>
@@ -47,7 +73,7 @@
 {% endif %}
 
 {% if subDirectories %}
-	<h4><i class="fa fa-folder-open fa-lg"></i> directories</h4>
+	<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories|length }}</span></h4>
 	{% for item in subDirectories %}
 	<a id="d{{ item.hash }}"/>
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
@@ -64,7 +90,7 @@
 		</div>
 		<div class="col-md-10">
 			<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
-				<i class="fa fa-folder-open fa-lg"></i> {{ item.name }}
+				<i class="fa fa-folder-o fa-lg"></i> {{ item.name }}
 			</a>
 		</div>
 	</div>
@@ -72,7 +98,12 @@
 {% endif %}
 
 {% if files %}
-	<h4>files</h4>
+	<div class="row">
+		<h4><i class="fa fa-folder-o fa-lg"></i> files <span class="badge">{{ files|length }}</span></h4>
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Musicfiles</span>
+	</div>
+	</div>
 	
 	{# music files #}
 	{% for item in files %}
@@ -111,6 +142,11 @@
 	{% endfor %}
 	
 	{# playlist files #}
+	<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Playlists</span>
+	</div>
+	</div>
 	{% for item in files %}
 		{% if item.ext in playlists.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
@@ -142,6 +178,11 @@
 	{% endfor %}
 	
 	{# info files #}
+	<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Infofiles</span>
+	</div>
+	</div>
 	{% for item in files %}
 		{% if item.ext in infofiles.ext %}
 		<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
@@ -164,6 +205,14 @@
 	{# images #}
 	{# TODO: check why config.ini[images][ext] does not hold all image extensions!? maybe phpThump-issue? #}
 	{% set imageext = ['png','jpg','jpeg','gif', 'bmp'] %}
+	
+	<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Images</span>
+	</div>
+	</div>
+	
+	
 	{% for item in files %}
 		{% if item.ext in imageext %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="image{{ loop.index }}">
@@ -179,6 +228,11 @@
 		{% endif %}
 	{% endfor %}
 	
+	<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">Other files</span>
+	</div>
+	</div>
 	{% for item in files %}
 		{% if item.ext  not in musicfiles.ext|merge(infofiles.ext)|merge(playlists.ext)|merge(imageext) %}
 	<div class="row {{ cycle(['bg-col2','bg-col3'],loop.index) }} mouseover" id="track{{ loop.index }}">
