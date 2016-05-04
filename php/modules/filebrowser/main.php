@@ -59,6 +59,64 @@ class filebrowser {
 		return ;
 	}
 
+	/**
+	 * get content of the next silblings directory
+	 * @param string $d: directorypath
+	 * @return object
+	 */
+	public function getNextDirectoryContent($d) {
+		$app = \Slim\Slim::getInstance();
+		
+		// make sure we have directory separator as last char
+		$d .= (substr($d,-1) !== DS) ? DS : '';
+		
+		// fetch content of the parent directory
+		$parentDirectory = new \Slimpd\filebrowser();
+		$parentDirectory->getDirectoryContent(dirname($d));
+		
+		
+		// iterate over parentdirectories until we find the inputdirectory +1
+		$found = FALSE;
+		
+		foreach($parentDirectory->subDirectories as $subDir) {
+			if($found === TRUE) {
+				return $this->getDirectoryContent($subDir->fullpath);
+			}
+			if($subDir->fullpath.'/' == $d) {
+				$found = TRUE;
+			}
+		}
+		$app->flashNow('error', $app->ll->str('filebrowser.nonextdir'));
+		return $this->getDirectoryContent($d);
+	}
+
+	/**
+	 * get content of the previous silblings directory
+	 * @param string $d: directorypath
+	 * @return object
+	 */
+	 public function getPreviousDirectoryContent($d) {
+		$app = \Slim\Slim::getInstance();
+		$d .= (substr($d,-1) !== DS) ? DS : '';
+		$parentDirectory = new \Slimpd\filebrowser();
+		$parentDirectory->getDirectoryContent(dirname($d));
+		
+		$prev = 0;
+		
+		foreach($parentDirectory->subDirectories as $subDir) {
+			if($subDir->fullpath.'/' === $d) {
+				if($prev === 0) {
+					$app->flashNow('error', $app->ll->str('filebrowser.noprevdir'));
+					return $this->getDirectoryContent($d);
+				}
+				return $this->getDirectoryContent($prev);
+			}
+			$prev = $subDir->fullpath;
+		}
+		$app->flashNow('error', $app->ll->str('filebrowser.noprevdir'));
+		return $this->getDirectoryContent($d);
+	}
+
 	public function fetchBreadcrumb($relativePath) {
 		$bread = trimExplode(DS, $relativePath, TRUE);
 		$breadgrow = "";
