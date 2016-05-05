@@ -27,7 +27,7 @@
 {% include 'partials/trackrow-1-header.htm' %}
 
 {% for item in itemlist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }}">
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	{% if item is instanceofAlbum %}
 		{% include 'partials/itemrow-album.htm' %}
 	{% endif %}

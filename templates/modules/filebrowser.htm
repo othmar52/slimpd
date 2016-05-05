@@ -111,8 +111,8 @@
 	{# music files #}
 	{% if files.music|length %}
 	{% for item in files.music %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
-		<div class="row track-row mouseover track-{{ item.relativePathHash }}">
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
+		<div class="row track-row">
 			<div class="col-md-2 vcenter3">
 				{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
 			      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...

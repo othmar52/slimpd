@@ -5,7 +5,7 @@
 </h2>
 {% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 {% for item in playlist.tracks %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }}">
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	{% if item.error == 'notfound' %}
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
