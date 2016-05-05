@@ -34,9 +34,15 @@
 
 {% set totalTime = 0 %}
 {% for mpdidx,item in currentplaylist %}
+<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 {% set totalTime = totalTime+item.miliseconds %}
 {% include 'partials/trackrow-currentplaylist.htm' %}
+</div>
 {% endfor %}
+{# divider only if the last row is even #}
+	{% if (currentplaylist|length) is even %}
+	<div class="fw-bg bg-col5"><hr class="row " /></div>
+{% endif %}
 <div class="row">
 	<div class="col-md-9"></div>
 	<div class="col-md-1">total time</div>

@@ -264,10 +264,7 @@ a {
 .item-link {
 	border-bottom: 1px solid #333;
 }
-.item-linkXXXXXXXXXXX:after {
-	content: " >";
-	color: #444;
-}
+
 .item-link:hover,
 .glue-hover-wrap.underline a {
 	color: #FFF;
@@ -277,10 +274,23 @@ a {
 
 
 .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
+  min-height: 4em;
+  display: flex;
+  align-items: center;
 }
+
+.vcenter2 {
+  min-height: 2em;
+  display: flex;
+  align-items: center;
+}
+
+.vcenter3 {
+  min-height: 3em;
+  display: flex;
+  align-items: center;
+}
+
 
 .rotate2 {
   -webkit-transform: rotate(-2deg);
@@ -330,7 +340,6 @@ a {
     display:block;
 }
 
-
 /* track widget*/
 .border-left {
 	border-left: 1px solid #353535;
@@ -346,8 +355,7 @@ a {
 }
 
 .item-row {
-	padding-top: 0.4em;
-	padding-bottom: 0.4em;
+
 }
 .missing-track-row {
 	margin-bottom: 0.3em;

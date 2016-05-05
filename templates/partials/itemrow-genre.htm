@@ -1,24 +1,31 @@
-<div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover">
-	<div class="col-md-2">
+<div class="row track-row mouseover">
+	<div class="col-md-2 vcenter">
 		<a href="/genre/{{ item.id  }}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link toggle-tooltip trigger-hide-modal" title="show genre">
 			<img src="/skin/default/img/icon-artist.png" alt="" style="width: 50px; height: 50px; z-index:2;">
 		</a>
-		<strong>&nbsp;&nbsp;&nbsp;&nbsp;GENRE</strong>
+		<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;GENRE</strong>
 	</div>
 	
-	<div class="col-md-3">
+	<div class="col-md-3 vcenter">
 		{% include 'partials/genre/link.htm' with { genreIds: item.id } %}
 	</div>
-	<div class="col-md-3">
-		<span class="dark uc small">Labels</span><br />
-		TODO
+	<div class="col-md-3 vcenter">
+		<span class="dark uc small">TODO: Labels</span>
+	</div>
+	<div class="col-md-2 vcenter">
+		<span class="dark uc small">TODO: Artists</span>
+		
 	</div>
 	<div class="col-md-2">
-		<span class="dark uc small">Artists</span><br />
-		TODO
-	</div>
-	<div class="col-md-2">
-		{{ item.trackCount }} <span class="dark uc small">Tracks,</span> {{ item.albumCount }} <span class="dark uc small">Albums</span><br />
-		TODO: 1996 - 2002
+		<div class="row">
+			<div class="col-md-12 vcenter2">
+				<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 vcenter2">
+				<span class="dark uc small">TODO: 1996-2002</span>
+			</div>
+		</div>
 	</div>
 </div>

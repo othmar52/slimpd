@@ -1,9 +1,7 @@
 
 
 {% if itemlist|length > 0 %}
-<div class="row">
-	<br><br>{# TODO: use css instead of markup #}
-</div>
+<div class="row replace-me-with-proper-css"><br><br></div>
 	{% if paginator_params.numPages > 1 %}
 	<div class="row">
 		<div class="col-md-3">
@@ -23,39 +21,39 @@
 		</div>
 	</div>
 	
-	<div class="row">
-		<br><br>{# TODO: use css instead of markup #}
-	</div>
+	<div class="row replace-me-with-proper-css"><br><br></div>
 	{% endif %}
 <div class="tracks_container">
 {% include 'partials/trackrow-1-header.htm' %}
 
-	{% for item in itemlist %}
-		{% if item is instanceofAlbum %}
-			{% include 'partials/itemrow-album.htm' %}
-		{% endif %}
-		{% if item is instanceofTrack %}
-			{% include 'partials/trackrow-1.htm' %}
-		{% endif %}
-		
-		{% if item is instanceofLabel %}
-			{% include 'partials/itemrow-label.htm' %}
-		{% endif %}
-		{% if item is instanceofArtist %}
-			{% include 'partials/itemrow-artist.htm' %}
-		{% endif %}
-		{% if item is instanceofGenre %}
-			{% include 'partials/itemrow-genre.htm' %}
-		{% endif %}
-		
-		
-	{% endfor %}
+{% for item in itemlist %}
+<div class="{{ cycle(['','fw-bg'],loop.index) }}">
+	{% if item is instanceofAlbum %}
+		{% include 'partials/itemrow-album.htm' %}
+	{% endif %}
+	{% if item is instanceofTrack %}
+		{% include 'partials/trackrow-1.htm' %}
+	{% endif %}
+	
+	{% if item is instanceofLabel %}
+		{% include 'partials/itemrow-label.htm' %}
+	{% endif %}
+	{% if item is instanceofArtist %}
+		{% include 'partials/itemrow-artist.htm' %}
+	{% endif %}
+	{% if item is instanceofGenre %}
+		{% include 'partials/itemrow-genre.htm' %}
+	{% endif %}
+</div>
+{% endfor %}
+{# divider only if the last row is even #}
+	{% if (itemlist|length) is even %}
+	<div class="fw-bg bg-col5"><hr class="row " /></div>
+{% endif %}
 	<div class="clearfix"> </div>
 	
 </div>
-<div class="row">
-	<br><br>{# TODO: use css instead of markup #}
-</div>
+<div class="row replace-me-with-proper-css"><br><br></div>
 
 	{% if paginator_params.numPages > 1 %}
 	<div class="row">
