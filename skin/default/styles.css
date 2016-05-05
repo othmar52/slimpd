@@ -27,7 +27,7 @@ body {
 	
 }
 .bg-col2 {
-	background-color: #353535;
+	background-color: #252525;
 	
 }
 
@@ -39,6 +39,10 @@ body {
 .bg-col4 {
 	background-color: #000;
 	
+}
+
+.bg-col5 {
+	background-color: #373737;
 }
 
 .col1 {
@@ -57,7 +61,7 @@ body {
 
 hr,
 .modal-footer {
-	border-top: 1px solid #444;
+	border-top: 1px solid #373737;
 }
 
 .nav-tabs {
@@ -341,7 +345,10 @@ a {
 	padding-right: 0;
 }
 
-.track-row,
+.item-row {
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
 .missing-track-row {
 	margin-bottom: 0.3em;
 }

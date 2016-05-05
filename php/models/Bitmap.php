@@ -31,6 +31,7 @@ class Bitmap extends AbstractModel
 		$phpThumb->setParameter('config_output_format', 'jpg');
 		
 		switch($preConf) {
+			case 35:
 			case 50:
 			case 100:
 			case 300:
