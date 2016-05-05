@@ -22,7 +22,7 @@
 		</div>
 		<div class="row replace-me-with-proper-css"><br></div>
 		<div class="small darker-links">
-		{% include 'partials/filebrowser/breadcrumb.htm' with { hiderootlink: 1 }%}
+		{% include 'partials/filebrowser/breadcrumb.htm' %}
 		</div>
 		<div class="row replace-me-with-proper-css"><br></div>
 			
@@ -128,12 +128,16 @@
 {% include 'partials/trackrow-albumview-header.htm' %}
 {% set totalTime = 0 %}
 {% for item in itemlist %}
-
+<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 {% include 'partials/trackrow-albumview.htm' %}
-
+</div>
 {% set totalTime = totalTime+item.miliseconds %}
 {% endfor %}
-<hr />
+
+{# divider only if the last row is even #}
+	{% if (itemlist|length) is even %}
+	<div class="fw-bg bg-col5"><hr class="row " /></div>
+{% endif %}
 <div class="row">
 	<div class="col-md-10"></div>
 	<div class="col-md-1">total time</div>

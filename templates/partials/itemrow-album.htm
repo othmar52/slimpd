@@ -1,5 +1,5 @@
-<div class="row bg-col3 track-row">
-	<div class="col-md-2">
+<div class="row track-row">
+	<div class="col-md-2 vcenter">
 		<a href="/album/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="/image-300/album/{{item.id}}">
 			<img src="/image-50/album/{{item.id}}" style="background:url(/skin/default/img/small_animated_progress.gif) center center no-repeat;">
 		</a>
@@ -7,21 +7,21 @@
 			<strong>&nbsp;&nbsp;&nbsp;&nbsp;ALBUM</strong>
 		</a>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-3 vcenter">
 		<a href="/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
 		{{item.title}}
 		</a>
 	</div>
-	<div class="col-md-3">
+	<div class="col-md-3 vcenter">
 		{% include 'partials/artist/link.htm' %}
 	</div>
-	<div class="col-md-2">
+	<div class="col-md-2 vcenter">
 		{% include 'partials/genre/link.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
 	</div>
-	<div class="col-md-1">
+	<div class="col-md-1 vcenter">
 		{% include 'partials/year/link.htm' %}
 	</div>
-	<div class="col-md-1">
+	<div class="col-md-1 vcenter">
 		{{item.trackCount}} <span class="dark uc small">tracks</span>
 	</div>
 </div>

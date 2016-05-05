@@ -82,7 +82,7 @@
 	{% for item in subDirectories %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}" id="d{{ item.hash }}">
 		<div class="row mouseover item-row" id="track{{ loop.index }}">
-			<div class="col-md-2">
+			<div class="col-md-2 vcenter3">
 				<button role="control" title="add this directory to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-plus"></i>
 				</button>
@@ -91,7 +91,7 @@
 					<i class="fa fa-align-justify fa-lg"></i>
 				</button>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-10 vcenter3">
 				<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 					<i class="fa fa-folder-o fa-lg"></i> {{ item.name }}
 				</a>
@@ -113,7 +113,7 @@
 	{% for item in files.music %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row track-row mouseover track-{{ item.relativePathHash }}">
-			<div class="col-md-2">
+			<div class="col-md-2 vcenter3">
 				{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
 			      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
 			      for now playing files directly is only possible for already mpd-imported tracks ... 
@@ -129,7 +129,7 @@
 					<i class="fa fa-headphones fa-lg"></i>
 				</a>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-10 vcenter3">
 				<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
 					<i class="fa fa-music fa-lg"></i>
 				{{ item.name }}
@@ -153,7 +153,7 @@
 	{% for item in files.playlist %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row item-row mouseover track-{{ item.relativePathHash }}">
-			<div class="col-md-2">
+			<div class="col-md-2 vcenter3">
 				<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist">
 					<i class="fa fa-eye fa-lg"></i>
 				</a>
@@ -166,7 +166,7 @@
 					<i class="fa fa-refresh"></i>
 				</button>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-10 vcenter3">
 				<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 				<i class="fa fa-list fa-lg"></i>
 				{{ item.name }}</a>
@@ -187,12 +187,12 @@
 	{% for item in files.info %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row item-row mouseover track-{{ item.relativePathHash }}">
-			<div class="col-md-2">
+			<div class="col-md-2 vcenter3">
 				<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
 					<i class="fa fa-eye fa-lg"></i>
 				</button>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-10 vcenter3">
 				<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
 				<i class="fa fa-info fa-lg"></i>
 				{{ item.name }}</button>
@@ -214,12 +214,12 @@
 	{% for item in files.image %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row mouseover item-row" id="image{{ loop.index }}">
-			<div class="col-md-2">
+			<div class="col-md-2 vcenter3">
 				<a data-toggle="lightbox" href="/image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
 					<img src="/image-35/path/{{ [directory,item.name]|path2url }}" title="{{ item.name }}" alt="{{ item.name }}" />
 				</a>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-10 vcenter3">
 				<i class="fa fa-image fa-lg"></i> {{ item.name }}
 			</div>
 		</div>
@@ -238,8 +238,8 @@
 	{# TODO: what to do with those files? maybe provide a download link? #}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row item-row mouseover" id="track{{ loop.index }}">
-			<div class="col-md-2"></div>
-			<div class="col-md-10">
+			<div class="col-md-2 vcenter3"></div>
+			<div class="col-md-10 vcenter3">
 				<i class="fa fa-file fa-lg"></i> {{ item.name }}
 			</div>
 		</div>

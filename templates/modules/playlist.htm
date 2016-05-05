@@ -5,10 +5,12 @@
 </h2>
 {% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
 {% for item in playlist.tracks %}
+<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 	{% if item.error == 'notfound' %}
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
 		{% include 'partials/trackrow-1.htm' %}
 	{% endif %}
+</div>
 {% endfor %}
 {% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
