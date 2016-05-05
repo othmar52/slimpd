@@ -6,12 +6,35 @@ class filebrowser {
 	public $directory;
 	public $base;
 	public $subDirectories = array();
-	public $files = array();
+	public $files = array(
+		'count' => 0,
+		'music' => array(),
+		'playlist' => array(),
+		'info' => array(),
+		'image' => array(),
+		'other' => array(),
+	);
 	public $breadcrumb = array();
 	
 	public function getDirectoryContent($d) {
 		$app = \Slim\Slim::getInstance();
 		
+		// create helper array only once for performance reasons
+		$extTypes = array();
+		foreach($app->config['musicfiles']['ext'] as $ext) {
+			$extTypes[$ext] = 'music';
+		}
+		foreach($app->config['playlists']['ext'] as $ext) {
+			$extTypes[$ext] = 'playlist';
+		}
+		foreach($app->config['infofiles']['ext'] as $ext) {
+			$extTypes[$ext] = 'info';
+		}
+		foreach($app->config['images']['ext'] as $ext) {
+			$extTypes[$ext] = 'image';
+		}
+
+
 		// append trailing slash if missing
 		$d .= (substr($d,-1) !== DS) ? DS : '';
 		
@@ -49,13 +72,16 @@ class filebrowser {
 					if(is_dir($base . $d . $file) === TRUE) {
 						$this->subDirectories[] = new _Directory($d . $file);
 					} else {
-						$this->files[] = new File($d . $file);
+						$f = new File($d . $file);
+						$group = (isset($extTypes[$f->ext]) === TRUE)
+							? $extTypes[$f->ext]
+							: 'other';
+						$this->files[$group][] = new File($d . $file);
+						$this->files['count']++;
 					}
 				}
 			}
 		}
-		#echo "<pre>" . print_r($this,1); die();
-		#echo json_encode($data);
 		return ;
 	}
 

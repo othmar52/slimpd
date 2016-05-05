@@ -319,7 +319,7 @@ foreach([
 
 
 // predefined album-image sizes
-foreach (array(50,100,300,1000) as $imagesize) {
+foreach (array(35, 50,100,300,1000) as $imagesize) {
 	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $config, $imagesize){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('albumId' => $itemId), 'filesize DESC'
