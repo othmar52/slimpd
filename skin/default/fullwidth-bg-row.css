@@ -23,6 +23,7 @@ html, body {
   top: 0;
   bottom: 0;
   width: 9999px;   /* some huge width */
+  z-index:-1; /* dont hide border of row which indicates current playing */
 } 
 .fw-bg:before {
   right: 100%; 

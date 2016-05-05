@@ -1,1 +1,1 @@
-.track-{{ relativePathHash}} {border-left: 1px solid rgb(59,187,47);}
+.track-{{ relativePathHash}}>.row {border-left: 2px solid rgb(59,187,47);}
