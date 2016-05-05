@@ -64,9 +64,9 @@ class Discogsitem extends AbstractModel
 		
 		$data['styles'] = (isset($data['styles']) === TRUE) ? $data['styles'] : array();
 		$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
-		$this->albumAttributes['title'] = $data['title'];
+		$this->albumAttributes['title'] = isset($data['title']) ? $data['title'] : "";
 		$this->albumAttributes['genre'] = join(",", array_merge($data['genres'], $data['styles']));
-		$this->albumAttributes['year'] = $data['released'];
+		$this->albumAttributes['year'] = isset($data['released']) ? $data['released'] : "";
 		
 		// only take the first label/CatNo - no matter how many are provided by discogs
 		if(isset($data['labels'][0]) === TRUE) {
