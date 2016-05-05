@@ -1,0 +1,63 @@
+@font-face {
+  font-family: 'sfnsdisplay-thin';
+  src: url('fonts/SFNSDisplay-Thin.eot');
+  src: url('fonts/SFNSDisplay-Thin.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Thin.woff') format('woff'), url('fonts/SFNSDisplay-Thin.ttf') format('truetype'), url('fonts/SFNSDisplay-Thin.svg#SFNSDisplay') format('svg');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay-ultralight';
+  src: url('fonts/SFNSDisplay-Ultralight.eot');
+  src: url('fonts/SFNSDisplay-Ultralight.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Ultralight.woff') format('woff'), url('fonts/SFNSDisplay-Ultralight.ttf') format('truetype'), url('fonts/SFNSDisplay-Ultralight.svg#SFNSDisplay') format('svg');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay-light';
+  src: url('fonts/SFNSDisplay-Light.eot');
+  src: url('fonts/SFNSDisplay-Light.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Light.woff') format('woff'), url('fonts/SFNSDisplay-Light.ttf') format('truetype'), url('fonts/SFNSDisplay-Light.svg#SFNSDisplay') format('svg');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay-black';
+  src: url('fonts/SFNSDisplay-Black.eot');
+  src: url('fonts/SFNSDisplay-Black.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Black.woff') format('woff'), url('fonts/SFNSDisplay-Black.ttf') format('truetype'), url('fonts/SFNSDisplay-Black.svg#SFNSDisplay') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay';
+  src: url('fonts/SFNSDisplay-Regular.eot');
+  src: url('fonts/SFNSDisplay-Regular.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Regular.woff') format('woff'), url('fonts/SFNSDisplay-Regular.ttf') format('truetype'), url('fonts/SFNSDisplay-Regular.svg#SFNSDisplay') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay';
+  src: url('fonts/SFNSDisplay-Medium.eot');
+  src: url('fonts/SFNSDisplay-Medium.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Medium.woff') format('woff'), url('fonts/SFNSDisplay-Medium.ttf') format('truetype'), url('fonts/SFNSDisplay-Medium.svg#SFNSDisplay') format('svg');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay';
+  src: url('fonts/SFNSDisplay-Semibold.eot');
+  src: url('fonts/SFNSDisplay-Semibold.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Semibold.woff') format('woff'), url('fonts/SFNSDisplay-Semibold.ttf') format('truetype'), url('fonts/SFNSDisplay-Semibold.svg#SFNSDisplay') format('svg');
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay';
+  src: url('fonts/SFNSDisplay-Bold.eot');
+  src: url('fonts/SFNSDisplay-Bold.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Bold.woff') format('woff'), url('fonts/SFNSDisplay-Bold.ttf') format('truetype'), url('fonts/SFNSDisplay-Bold.svg#SFNSDisplay') format('svg');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'sfnsdisplay';
+  src: url('fonts/SFNSDisplay-Heavy.eot');
+  src: url('fonts/SFNSDisplay-Heavy.eot?#iefix') format('embedded-opentype'), url('fonts/SFNSDisplay-Heavy.woff') format('woff'), url('fonts/SFNSDisplay-Heavy.ttf') format('truetype'), url('fonts/SFNSDisplay-Heavy.svg#SFNSDisplay') format('svg');
+  font-weight: 800;
+  font-style: normal;
+}

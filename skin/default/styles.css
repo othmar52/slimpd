@@ -13,11 +13,10 @@
 body {
 	padding-top: 60px;
 	padding-bottom: 120px;
-	font-family: "open sans", "sans-serif";
+	font-family: "sfnsdisplay", "sans-serif";
 	font-size: 1.4em;
 	letter-spacXing: -0.3pt;
-	font-weiXght: bold;
-	color #BBB;
+	color: #EEE;
 }
 
 .bg-col1,
@@ -46,11 +45,15 @@ body {
 }
 
 .col1 {
-	color: #BBB;
+	color: #EEE;
 }
 
 .col2, .col2 a {
 	color: #FF9C01;
+}
+
+.col3 {
+	color: #CCC;
 }
 
 .spotcol-2 .col2,
@@ -68,9 +71,14 @@ hr,
 	border-bottom: 1px solid #444;
 }
 
+h2 {
+	f!ont-weight: 100;
+	font-size: 1.7em;
+	font-family: "sfnsdisplay-light";
+}
 
 a {
-	color: #BBB;
+	color: #EEE;
 }
 
 .artist-link {

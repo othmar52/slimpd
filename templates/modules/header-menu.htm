@@ -1,5 +1,5 @@
 
-<nav class="navbar bg-col2 main-nav navbar-fixed-top">
+<nav class="navbar main-nav navbar-fixed-top" style="background-color: #353535">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -16,7 +16,7 @@
 					<ul class="nav navbar-nav">
 						{% for menu in mainmenu %}
 						<li class="{% if menu.url == current_url %} active{% endif %}">
-							<a href="{{menu.url}}" data-ajaxtarget="#main" class="ajax-link">{{menu.title|raw}}</a>
+							<a href="{{menu.url}}" data-ajaxtarget="#main" class="ajax-link col3">{{menu.title|raw}}</a>
 						</li>
 						{% endfor %}
 		      		</ul>
