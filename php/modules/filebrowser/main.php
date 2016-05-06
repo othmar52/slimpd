@@ -5,8 +5,13 @@ class filebrowser {
 	
 	public $directory;
 	public $base;
-	public $subDirectories = array();
+	public $subDirectories = array(
+		'total' => 0,
+		'count' => 0,
+		'dirs' => array()
+	);
 	public $files = array(
+		'total' => 0,
 		'count' => 0,
 		'music' => array(),
 		'playlist' => array(),
@@ -16,7 +21,7 @@ class filebrowser {
 	);
 	public $breadcrumb = array();
 	
-	public function getDirectoryContent($d) {
+	public function getDirectoryContent($d, $ignoreLimit = FALSE) {
 		$app = \Slim\Slim::getInstance();
 		
 		// create helper array only once for performance reasons
@@ -66,12 +71,23 @@ class filebrowser {
 		$files = scandir($base . $d);
 		natcasesort($files);
 		
+		$maxItems = $app->config['filebrowser']['max-items'];
+		
 		if( count($files) > 2 ) { /* The 2 accounts for . and .. */
 			foreach( $files as $file ) {
 				if( file_exists($base. $d . $file) && $file != '.' && $file != '..' && substr($file,0,1) !== '.' ) {
 					if(is_dir($base . $d . $file) === TRUE) {
-						$this->subDirectories[] = new _Directory($d . $file);
+						$this->subDirectories['total']++;
+						if($this->subDirectories['count'] >= $maxItems && $ignoreLimit === FALSE) {
+							continue;
+						}
+						$this->subDirectories['dirs'][] = new _Directory($d . $file);
+						$this->subDirectories['count']++;
 					} else {
+						$this->files['total']++;
+						if($this->files['count'] >= $maxItems && $ignoreLimit === FALSE) {
+							continue;
+						}
 						$f = new File($d . $file);
 						$group = (isset($extTypes[$f->ext]) === TRUE)
 							? $extTypes[$f->ext]
@@ -98,13 +114,13 @@ class filebrowser {
 		
 		// fetch content of the parent directory
 		$parentDirectory = new \Slimpd\filebrowser();
-		$parentDirectory->getDirectoryContent(dirname($d));
+		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
 		
 		
 		// iterate over parentdirectories until we find the inputdirectory +1
 		$found = FALSE;
 		
-		foreach($parentDirectory->subDirectories as $subDir) {
+		foreach($parentDirectory->subDirectories['dirs'] as $subDir) {
 			if($found === TRUE) {
 				return $this->getDirectoryContent($subDir->fullpath);
 			}
@@ -125,11 +141,11 @@ class filebrowser {
 		$app = \Slim\Slim::getInstance();
 		$d .= (substr($d,-1) !== DS) ? DS : '';
 		$parentDirectory = new \Slimpd\filebrowser();
-		$parentDirectory->getDirectoryContent(dirname($d));
+		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
 		
 		$prev = 0;
 		
-		foreach($parentDirectory->subDirectories as $subDir) {
+		foreach($parentDirectory->subDirectories['dirs'] as $subDir) {
 			if($subDir->fullpath.'/' === $d) {
 				if($prev === 0) {
 					$app->flashNow('error', $app->ll->str('filebrowser.noprevdir'));

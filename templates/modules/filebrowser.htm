@@ -54,8 +54,16 @@
 				show options
 			</button>
 			
+			<span class="filebrowser-filter pull-right darker-links">
+				TODO Only show:
+				<a href="#">Directories</a>
+				<a href="#">Files</a> 
+			</span>
+			
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
+			
+			
 		</div>
 	</div>
 	
@@ -73,13 +81,13 @@
 	
 {% endif %}
 
-{% if subDirectories %}
+{% if subDirectories.count %}
 	<div class="row">
 		<div class="col-md-12">
-			<h4><br class="replace-me-with-proper-css" />Subdirectories <span class="badge">{{ subDirectories|length }}</span></h4>
+			<h4><br class="replace-me-with-proper-css" />Subdirectories <span class="badge">{{ subDirectories.total }}</span></h4>
 		</div>
 	</div>
-	{% for item in subDirectories %}
+	{% for item in subDirectories.dirs %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover" id="d{{ item.hash }}">
 		<div class="row item-row" id="track{{ loop.index }}">
 			<div class="col-md-2 vcenter">
@@ -103,12 +111,17 @@
 		</div>
 	</div>
 	{% endfor %}
+	{% if showDirFilterBadge %}
+	<div class="row darker-links">
+		<a href="#" class="btn btn-trnsp">TODO: {{ subDirectories.total - subDirectories.count }} more directories ...</a>
+	</div>
+	{% endif %}
 {% endif %}
 
 {% if files.count > 0 %}
 	<div class="row">
 		<div class="col-md-12">
-			<h4><br class="replace-me-with-proper-css" />Files <span class="badge">{{ files.count }}</span></h4>
+			<h4><br class="replace-me-with-proper-css" />Files <span class="badge">{{ files.total }}</span></h4>
 		</div>
 	</div>
 	
