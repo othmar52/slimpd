@@ -21,6 +21,11 @@ class filebrowser {
 	);
 	public $breadcrumb = array();
 	
+	public $currentPage = 1;
+	public $itemsPerPage = 20;
+	public $filter = '';
+	
+	
 	public function getDirectoryContent($d, $ignoreLimit = FALSE) {
 		$app = \Slim\Slim::getInstance();
 		
@@ -71,21 +76,35 @@ class filebrowser {
 		$files = scandir($base . $d);
 		natcasesort($files);
 		
-		$maxItems = $app->config['filebrowser']['max-items'];
-		
+		$minIndex = (($this->currentPage-1) * $this->itemsPerPage);
+		$minIndex = ($minIndex === 0) ? 1 : $minIndex+1;
+		$maxIndex = $minIndex +  $this->itemsPerPage -1;
+		#echo $minIndex . "<br>" . $maxIndex; die();
 		if( count($files) > 2 ) { /* The 2 accounts for . and .. */
 			foreach( $files as $file ) {
 				if( file_exists($base. $d . $file) && $file != '.' && $file != '..' && substr($file,0,1) !== '.' ) {
 					if(is_dir($base . $d . $file) === TRUE) {
 						$this->subDirectories['total']++;
-						if($this->subDirectories['count'] >= $maxItems && $ignoreLimit === FALSE) {
+						if($this->filter === 'files' && $ignoreLimit === FALSE) {
+							continue;
+						}
+						if($this->subDirectories['total'] < $minIndex && $ignoreLimit === FALSE) {
+							continue;
+						}
+						if($this->subDirectories['total'] > $maxIndex && $ignoreLimit === FALSE) {
 							continue;
 						}
 						$this->subDirectories['dirs'][] = new _Directory($d . $file);
 						$this->subDirectories['count']++;
 					} else {
 						$this->files['total']++;
-						if($this->files['count'] >= $maxItems && $ignoreLimit === FALSE) {
+						if($this->filter === 'dirs' && $ignoreLimit === FALSE) {
+							continue;
+						}
+						if($this->files['total'] < $minIndex && $ignoreLimit === FALSE) {
+							continue;
+						}
+						if($this->files['total'] > $maxIndex && $ignoreLimit === FALSE) {
 							continue;
 						}
 						$f = new File($d . $file);

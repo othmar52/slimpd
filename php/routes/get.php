@@ -418,7 +418,7 @@ $app->get('/filebrowser', function() use ($app, $config){
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->getDirectoryContent($config['mpd']['musicdir']);
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
-	$config['subDirectories'] = $fileBrowser->subDirectories['dirs'];
+	$config['subDirectories'] = $fileBrowser->subDirectories;
 	$config['files'] = $fileBrowser->files;
 	$config['hotlinks'] = $config['filebrowser-hotlinks'];
 	
@@ -427,7 +427,23 @@ $app->get('/filebrowser', function() use ($app, $config){
 
 $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'filebrowser';
+	
 	$fileBrowser = new \Slimpd\filebrowser();
+	$fileBrowser->itemsPerPage = $app->config['filebrowser']['max-items'];
+	$fileBrowser->currentPage = intval($app->request->get('page'));
+	$fileBrowser->currentPage = ($fileBrowser->currentPage === 0) ? 1 : $fileBrowser->currentPage;
+	switch($app->request->get('filter')) {
+		case 'dirs':
+			$fileBrowser->filter = 'dirs';
+			break;
+		case 'files':
+			$fileBrowser->filter = 'files';
+			break;
+		default :
+			break;
+	}
+	
+	
 	switch($app->request->get('neighbour')) {
 		case 'next':
 			$fileBrowser->getNextDirectoryContent(join(DS, $itemParams));
@@ -446,16 +462,39 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 	$config['directory'] = $fileBrowser->directory;
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;
-	$config['files'] = $fileBrowser->files; 
+	$config['files'] = $fileBrowser->files;
+	$config['filter'] = $fileBrowser->filter;
 	
-	$config['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
-		? TRUE
-		: FALSE;
-		
-	$config['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->subDirectories['total'])
-		? TRUE
-		: FALSE;
 	
+	switch($fileBrowser->filter) {
+		case 'dirs':
+			$totalFilteredItems = $fileBrowser->subDirectories['total'];
+			$config['showDirFilterBadge'] = FALSE;
+			$config['showFileFilterBadge'] = FALSE;
+			break;
+		case 'files':
+			$totalFilteredItems = $fileBrowser->files['total'];
+			$config['showDirFilterBadge'] = FALSE;
+			$config['showFileFilterBadge'] = FALSE;
+			break;
+		default :
+			$totalFilteredItems = 0;
+			$config['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
+				? TRUE
+				: FALSE;
+			
+			$config['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->files['total'])
+				? TRUE
+				: FALSE;
+			break;
+	}
+	
+	$config['paginator_params'] = new JasonGrimes\Paginator(
+		$totalFilteredItems,
+		$fileBrowser->itemsPerPage,
+		$fileBrowser->currentPage,
+		'/filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
+	);
 	
 	$app->render('surrounding.htm', $config);
 });
