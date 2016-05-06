@@ -423,7 +423,7 @@ $app->get('/filebrowser', function() use ($app, $config){
 	$config['hotlinks'] = $config['filebrowser-hotlinks'];
 	
 	$app->render('surrounding.htm', $config);
-});
+})->name('filebrowser');
 
 $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'filebrowser';
@@ -453,6 +453,12 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 			break;
 		case 'up':
 			$fileBrowser->getDirectoryContent(dirname(join(DS, $itemParams)));
+			if($fileBrowser->directory === './') {
+				$nosurrounding = ($config['nosurrounding'] === TRUE)
+					? '?nosurrounding=1'
+					: '';
+				$app->response->redirect($app->urlFor('filebrowser'). $nosurrounding);
+			}
 			break;
 		default:
 			$fileBrowser->getDirectoryContent(join(DS, $itemParams));
