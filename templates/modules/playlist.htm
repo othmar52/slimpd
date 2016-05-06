@@ -1,9 +1,32 @@
-<h2>
-	<span class="dark uc small darker-links" style="font-size: 0.4em;">{% include 'partials/playlist/linked-label.htm' %}</span>
-	&quot;{{playlist.filename}}&quot;
-	<span style="margin-left: 1em; font-size: 0.4em; color:#888;">({{playlist.length}} Tracks)</span>
-</h2>
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker-links">{% include 'partials/playlist/linked-label.htm' %}</span>
+	</div>
+	<div class="col-md-12">
+		<h2 style="margin:0;padding:0;" class="">
+				{{playlist.filename}} <span class="badge">{{playlist.length}}</span>
+		</h2>
+	</div>
+</div>
+	
+	
+{% if paginator_params.numPages > 1 %}
+<div class="row">
+	<div class="col-md-3">
+
+	</div>
+	<div class="col-md-6 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+	</div>
+	<div class="col-md-3">
+
+	</div>
+</div>
+
+<div class="row replace-me-with-proper-css"><br><br></div>
+{% endif %}
+	
+	
 {% for item in playlist.tracks %}
 <div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	{% if item.error == 'notfound' %}
@@ -13,4 +36,19 @@
 	{% endif %}
 </div>
 {% endfor %}
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+
+{% if paginator_params.numPages > 1 %}
+<div class="row">
+	<div class="col-md-3">
+
+	</div>
+	<div class="col-md-6 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+	</div>
+	<div class="col-md-3">
+
+	</div>
+</div>
+
+<div class="row replace-me-with-proper-css"><br><br></div>
+{% endif %}
