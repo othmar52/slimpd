@@ -1,31 +1,32 @@
 <div class="row track-row mouseover">
 	<div class="col-md-2 vcenter">
-		<a href="/label/{{ item.id }}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link toggle-tooltip trigger-hide-modal" title="show label">
-			<img src="/skin/default/img/icon-label.png" alt="" style="width: 50px; height: 50px; z-index:2;">
-		</a>
-		<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;LABEL</strong>
-	</div>
-	
-	<div class="col-md-3 vcenter">
-		{% include 'partials/label/link.htm' with { labelIds: item.id } %}
+		<div class="vcinner">
+			<a href="/label/{{ item.id }}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link toggle-tooltip trigger-hide-modal" title="show label">
+				<img src="/skin/default/img/icon-label.png" alt="" style="width: 50px; height: 50px; z-index:2;">
+			</a>
+			<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;LABEL</strong>
+		</div>
 	</div>
 	<div class="col-md-3 vcenter">
-		<span class="dark uc small">TODO: Labels</span>
+		<div class="vcinner">
+			{% include 'partials/label/link.htm' with { labelIds: item.id } %}
+		</div>
+	</div>
+	<div class="col-md-3 vcenter">
+		<div class="vcinner">
+			<span class="dark uc small">TODO: Labels</span>
+		</div>
 	</div>
 	<div class="col-md-2 vcenter">
-		<span class="dark uc small">TODO: Artists</span>
-		
-	</div>
-	<div class="col-md-2">
-		<div class="row">
-			<div class="col-md-12 vcenter2">
-				<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
-			</div>
+		<div class="vcinner">
+			<span class="dark uc small">TODO: Artists</span>
 		</div>
-		<div class="row">
-			<div class="col-md-12 vcenter2">
-				<span class="dark uc small">TODO: 1996-2002</span>
-			</div>
+	</div>
+	<div class="col-md-2 vcenter">
+		<div class="vcinner">
+			<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
+			<br />
+			<span class="dark uc small">TODO: 1996-2002</span>
 		</div>
 	</div>
 </div>

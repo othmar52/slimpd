@@ -287,17 +287,10 @@ a {
   align-items: center;
 }
 
-.vcenter2 {
-  min-height: 2em;
-  display: flex;
-  align-items: center;
+.vcinner {
+  display: inline-table;
 }
 
-.vcenter3 {
-  min-height: 3em;
-  display: flex;
-  align-items: center;
-}
 
 
 .rotate2 {

@@ -1,28 +1,44 @@
 <div class="row track-row item-row">
 	<div class="col-xs-3 col-sm-2 vcenter">
-		<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"/mpdctrl/addSelect/{{ item.id }}"}'>
-			<i class="fa fa-play fa-lg"></i>
-		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-			<i class="fa fa-align-justify fa-lg"></i>
-		</button>
-		<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
-			<i class="fa fa-headphones fa-lg"></i>
-		</a>
-		<span style="font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
+		<div class="vcinner">
+			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"play","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"/mpdctrl/addSelect/{{ item.id }}"}'>
+				<i class="fa fa-play fa-lg"></i>
+			</button>
+			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
+				<i class="fa fa-align-justify fa-lg"></i>
+			</button>
+			<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
+				<i class="fa fa-headphones fa-lg"></i>
+			</a>
+			<span style="font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
+		</div>
 	</div>
 	<div class="col-xs-2 col-sm-3 vcenter">
-		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		<div class="vcinner">
+			{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		</div>
 	</div>
 	<div class="col-xs-5 col-sm-3 vcenter">
-		{% include 'partials/artist/link.htm' %}
+		<div class="vcinner">
+			{% include 'partials/artist/link.htm' %}
+		</div>
 	</div>
 	<div class="col-xs-2 hidden-xs vcenter">
-		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		<div class="vcinner">
+			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+		</div>
 	</div>
-	<div class="col-xs-1 hidden-xs vcenter">{% include 'partials/year/link.htm' %}</div>
-	<div class="col-xs-1 hidden-xs vcenter">{{ item.miliseconds|formatMiliseconds }}
-	<br />{% include 'partials/track/audioformat.htm' %}
+	<div class="col-xs-1 hidden-xs vcenter">
+		<div class="vcinner">
+			{% include 'partials/year/link.htm' %}
+		</div>
+	</div>
+	<div class="col-xs-1 hidden-xs vcenter">
+		<div class="vcinner">
+			{{ item.miliseconds|formatMiliseconds }}
+			<br />
+			{% include 'partials/track/audioformat.htm' %}
+		</div>
 	</div>
 	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
 </div>

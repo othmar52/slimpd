@@ -1,29 +1,32 @@
 <div class="row track-row mouseover">
 	<div class="col-md-2 vcenter">
-		<a href="/artist/{{ item.id  }}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show artist">
-			<img src="/skin/default/img/icon-artist.png" alt="" style="width: 50px; height: 50px; z-index:2;">
-		</a>
-		<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;ARTIST</strong>
+		<div class="vcinner">
+			<a href="/artist/{{ item.id  }}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show artist">
+				<img src="/skin/default/img/icon-artist.png" alt="" style="width: 50px; height: 50px; z-index:2;">
+			</a>
+			<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;ARTIST</strong>
+		</div>
 	</div>
 	<div class="col-md-3 vcenter">
-		{% include 'partials/artist/single-link.htm' with { itemId: item.id } %}
+		<div class="vcinner">
+			{% include 'partials/artist/single-link.htm' with { itemId: item.id } %}
+		</div>
 	</div>
 	<div class="col-md-3 vcenter">
-		<span class="dark uc small">TODO: List Labels</span>
+		<div class="vcinner">
+			<span class="dark uc small">TODO: List Labels</span>
+		</div>
 	</div>
 	<div class="col-md-2 vcenter">
-		<span class="dark uc small">TODO: Genres</span>
-	</div>
-	<div class="col-md-2">
-		<div class="row">
-			<div class="col-md-12 vcenter2">
-				<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
-			</div>
+		<div class="vcinner">
+			<span class="dark uc small">TODO: Genres</span>
 		</div>
-		<div class="row">
-			<div class="col-md-12 vcenter2">
-				<span class="dark uc small">TODO: 1996-2002</span>
-			</div>
+	</div>
+	<div class="col-md-2 vcenter">
+		<div class="vcinner">
+			<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
+			<br />
+			<span class="dark uc small">TODO: 1996-2002</span>
 		</div>
 	</div>
 </div>

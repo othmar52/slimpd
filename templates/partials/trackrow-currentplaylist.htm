@@ -2,57 +2,70 @@
 {% block content %}
 <div class="row track-row">
 	<div class="col-md-2 no-padding-right vcenter">
-		<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
-			<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
-		</a>
-		<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
-			<i class="fa fa-play"></i>
-		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-			<i class="fa fa-align-justify"></i>
-		</button>
-		<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }}">
-			<i class="fa fa-headphones fa-lg"></i>
-		</a>
-		<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
-			<i class="fa fa-trash"></i>
-		</button>
+		<div class="vcinner">
+			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
+				<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
+			</a>
+			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
+				<i class="fa fa-play"></i>
+			</button>
+			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
+				<i class="fa fa-align-justify"></i>
+			</button>
+			<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }}">
+				<i class="fa fa-headphones fa-lg"></i>
+			</a>
+			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
+				<i class="fa fa-trash"></i>
+			</button>
+		</div>
 	</div>
 	
 	{% if item.id %}
-		<div class="col-md-3">
-			<div class="row">
-				<div class="col-md-12 vcenter2">
-					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-12 vcenter2 darker-links">
-					{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
-				</div>
+		<div class="col-md-3 vcenter darker-links">
+			<div class="vcinner">
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				<br />
+				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
 			</div>
 		</div>
 		<div class="col-md-3 vcenter">
-			{% include 'partials/artist/link.htm' %}
+			<div class="vcinner">
+				{% include 'partials/artist/link.htm' %}
+			</div>
 		</div>
 		<div class="col-md-2 vcenter">
-			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit': 3 } %}
+			<div class="vcinner">
+				{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit': 3 } %}
+			</div>
 		</div>
-		<div class="col-md-1 vcenter">{% include 'partials/year/link.htm' %}</div>
-		<div class="col-md-1 vcenter">{{ item.miliseconds|formatMiliseconds }}</div>
-		
+		<div class="col-md-1 vcenter">
+			<div class="vcinner">
+				{% include 'partials/year/link.htm' %}
+			</div>
+		</div>
+		<div class="col-md-1 vcenter">
+			<div class="vcinner">
+				{{ item.miliseconds|formatMiliseconds }}
+			</div>
+		</div>
 	{% else %}
 		{# item is not imported in sliMpd so we do not have any meta-infos #}
 		<div class="col-md-8 vcenter">
-			{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-			<br />
-			<div class="darker-links">
-				<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+			<div class="vcinner">
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				<br />
+				<div class="darker-links">
+					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+				</div>
 			</div>
 		</div>
-		<div class="col-md-2 vcenter">{% include 'partials/track/not-imported-badge.htm' %}</div>
+		<div class="col-md-2 vcenter">
+			<div class="vcinner">
+				{% include 'partials/track/not-imported-badge.htm' %}
+			</div>
+		</div>
 	{% endif %}
-	
 	<div class="ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }} col-md-12"></div>
 </div>
 {% endblock %}
