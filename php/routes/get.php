@@ -418,7 +418,7 @@ $app->get('/filebrowser', function() use ($app, $config){
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->getDirectoryContent($config['mpd']['musicdir']);
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
-	$config['subDirectories'] = $fileBrowser->subDirectories;
+	$config['subDirectories'] = $fileBrowser->subDirectories['dirs'];
 	$config['files'] = $fileBrowser->files;
 	$config['hotlinks'] = $config['filebrowser-hotlinks'];
 	
@@ -447,6 +447,16 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;
 	$config['files'] = $fileBrowser->files; 
+	
+	$config['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
+		? TRUE
+		: FALSE;
+		
+	$config['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->subDirectories['total'])
+		? TRUE
+		: FALSE;
+	
+	
 	$app->render('surrounding.htm', $config);
 });
 
