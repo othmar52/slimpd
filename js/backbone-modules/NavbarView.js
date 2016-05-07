@@ -93,23 +93,38 @@
 			this.tabAutocomplete._renderItem = function (ul, item) {
 		     	
 		     	
-		     	var widgetLink = '';
-		     	if(item.type == 'track') {
-		     		widgetLink = $('<a />')
-		     			.attr('class', 'trigger-modal')
-		     			.attr('href', '/markup/widget-trackcontrol?item='+ item.itemid )
-		     			.html(' <i class="fa fa-plus-square"></i>')
-		     			.bind('click', function(e){
-		     				// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
-		     				window.sliMpd.modal.$modal.addClass('in');
-		     				e.preventDefault();
-		     				// TODO: is it possible to use event listener which already exists on all .trigger-modal elements?
-					        $.ajax({
-								url: $(this).attr('href')
-							}).done(function(response){
-								window.sliMpd.modal.renderModalContent(response);
-							});
-		     			});
+		     	var additionalMarkup = '';
+		     	switch(item.type) {
+		     		case 'track':
+			     		additionalMarkup = $('<a />')
+			     			.attr('class', 'trigger-modal')
+			     			.attr('href', '/markup/widget-trackcontrol?item='+ item.itemid )
+			     			.html(' <i class="fa fa-plus-square"></i>')
+			     			.bind('click', function(e){
+			     				// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
+			     				window.sliMpd.modal.$modal.addClass('in');
+			     				e.preventDefault();
+			     				// TODO: is it possible to use event listener which already exists on all .trigger-modal elements?
+						        $.ajax({
+									url: $(this).attr('href')
+								}).done(function(response){
+									window.sliMpd.modal.renderModalContent(response);
+								});
+			     			});
+			     		break;
+			     	case 'label':
+			     	case 'genre':
+			     	case 'artist':
+			     		additionalMarkup = $('<span />')
+			     			.attr('class', 'pull-right dark')
+			     			.html(' <span class="badge">'+item.trackcount+'</span> Tracks, <span class="badge">'+item.albumcount+'</span> Albums');
+			     		break;
+			     	case 'album':
+			     	case 'dirname':
+			     		additionalMarkup = $('<span />')
+			     			.attr('class', 'pull-right dark')
+			     			.html(' <span class="badge">'+item.trackcount+'</span> Tracks');
+			     		break;
 		     	}
 		     	
 				var markup = $('<div />', {'class':'row'})
@@ -136,7 +151,7 @@
 						$('<span/>', {'class': 'dark', text:item.typelabel })
 					)
 					.append(
-						$(widgetLink)
+						$(additionalMarkup)
 					)	
 				 );
 		         return $("<li></li>")
