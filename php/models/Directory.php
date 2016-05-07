@@ -5,6 +5,7 @@ class _Directory {
 	public $fullpath;
 	public $name;
 	public $hash;
+	public $breadcrumb;
 
 	
 	

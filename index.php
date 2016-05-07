@@ -127,6 +127,10 @@ $test = new \Twig_SimpleTest('instanceofArtist', function ($item) {
 });
 $twig->addTest($test);
 
+$test = new \Twig_SimpleTest('instanceofDirectory', function ($item) {
+	return $item instanceof \Slimpd\_Directory;
+});
+$twig->addTest($test);
 
 
 #####################################################################################

@@ -119,9 +119,7 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 			array('albumId' => $albumId)
 		);
 		
-		$fileBrowser = new \Slimpd\filebrowser();
-		$fileBrowser->fetchBreadcrumb($config['album']->getRelativePath());
-		$config['breadcrumb'] = $fileBrowser->breadcrumb;
+		$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($config['album']->getRelativePath());
 	
 		$app->render('surrounding.htm', $config);
 	});	
@@ -678,6 +676,7 @@ $sortfields2 = array(
 	'all' => array('title', 'artist', 'year', 'added'),
 	'track' => array('title', 'artist', 'year', 'added'),
 	'album' => array('year', 'title', 'added', 'artist', 'trackCount'),
+	'dirname' => array('title', 'added', 'trackCount'),
 );
 
 foreach(array_keys($sortfields1) as $className) {
@@ -820,6 +819,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			'label' => 3,
 			'track' => 4,
 			'genre' => 5,
+			'dirname' => 6,
 		);
 		$config['itemlist'] = [];
 		foreach(array_keys($sortfields) as $type) {
@@ -932,6 +932,11 @@ foreach(array_keys($sortfields) as $currentType) {
 								break;
 							case 'genre':
 								$obj = \Slimpd\Genre::getInstanceByAttributes(array('id' => $row['itemid']));
+								break;
+							case 'dirname':
+								$tmp = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
+								$obj = new \Slimpd\_Directory($tmp->getRelativePath());
+								$obj->breadcrumb = \Slimpd\filebrowser::fetchBreadcrumb($obj->fullpath);
 								break;
 						}
 						$config['itemlist'][] = $obj;
