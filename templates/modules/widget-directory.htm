@@ -10,8 +10,8 @@
 	</div>
 	<div class="row">
 	 	<div class="col-md-12">
-		<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories|length }}</span> / 
-			<i class="fa fa-file-o fa-lg"></i> files <span class="badge">{{ files|length }}</span></h4>
+		<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories.total }}</span> /
+			<i class="fa fa-file-o fa-lg"></i> files <span class="badge">{{ files.total }}</span></h4>
 		</div>
 	</div>
 	<div class="row">
@@ -31,6 +31,11 @@
 			<a class="ajax-link btn btn-default" href="/searchall/page/1/sort/added/desc?q={{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> search database
 			</a>
+			{% if album %}
+			<a class="ajax-link btn btn-default" href="/album/{{ album.id }}" title="show album" data-dismiss="modal">
+				<i class="fa fa-lg fa-eye"></i> show album
+			</a>
+			{% endif %}
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
 		</div>

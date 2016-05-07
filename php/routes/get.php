@@ -511,11 +511,15 @@ $app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($a
 	$fileBrowser = new \Slimpd\filebrowser();
 
 	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
-
 	$config['directory'] = $fileBrowser->directory;
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;
-	$config['files'] = $fileBrowser->files; 
+	$config['files'] = $fileBrowser->files;
+	
+	/// try to fetch album entry for this directory
+	$config['album'] = \Slimpd\Album::getInstanceByAttributes(
+		array('relativePathHash' => getFilePathHash($fileBrowser->directory))
+	);
 	$app->render('modules/widget-directory.htm', $config);
 });
 
