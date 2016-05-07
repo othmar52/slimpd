@@ -1,3 +1,7 @@
+{% include 'partials/randomizer.htm' with {
+	id: item.id,
+	urlpattern: itemtype~'/%s/tracks/page/1/sort/added/desc'
+} %}
 <div class="row">
 	<div class="col-md-12">
 		<span class="dark uc small darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</span>

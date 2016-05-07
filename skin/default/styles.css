@@ -454,3 +454,13 @@ body.vstretch14 {
     bottom: 130px; /* height of link element */
     left: 10px; /* padding from the left side of the window */
 }
+
+
+/* randomizer for development */
+.randomizer {
+    position: fixed;
+    top: 61px;
+    right: 10px;
+    font-size: 1.5em;
+    z-index: 1;
+}
