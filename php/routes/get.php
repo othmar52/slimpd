@@ -701,6 +701,11 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$term = str_replace(",", " ", $itemId);
 			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+			
+			// for randomizer
+			// TODO: add separate route with "random" as id
+			$config['total'] = $classPath::getCountAll();
+			
 			$config['itemids'] = $itemId;
 			$itemsPerPage = 20;
 			$maxCount = 1000;

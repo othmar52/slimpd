@@ -1,11 +1,11 @@
 {% if config.showrandomizer == 1 %}
-<div style="position:absolute; top: 40px; right: 10px; font-size: 2em; z-index: 9999;" title="vorläufige blätterfunktion fürs entwickeln">
-	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(id)|raw }}{{ id-1 }}" data-ajaxtarget="#main" class="ajax-link">
+<div class="randomizer" title="vorläufige blätterfunktion fürs entwickeln">
+	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(id-1)|raw }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-left fa-lg"></i>
 	</a>
-	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(id)|raw }}{{ random(total-1)+1 }}" data-ajaxtarget="#main" class="ajax-link">
+	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(random(total-1)+1)|raw }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-random fa-lg"></i></a>
-	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(id)|raw }}{{ id+1 }}" data-ajaxtarget="#main" class="ajax-link">
+	<a href="{{ config.absRefPrefix }}{{ urlpattern|format(id+1)|raw }}" data-ajaxtarget="#main" class="ajax-link">
 		<i class="fa fa-chevron-right fa-lg"></i>
 	</a>
 </div>
