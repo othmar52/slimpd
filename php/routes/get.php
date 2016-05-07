@@ -1061,7 +1061,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 			'label' => $app->ll->str('autocomplete.' . $type . '.noresults', [$originalTerm]),
 			'url' => '#',
 			'type' => '',
-			'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
+			'img' => '/skin/default/img/icon-noresults.svg'
 		];
 	}
 	echo json_encode($result); exit;
