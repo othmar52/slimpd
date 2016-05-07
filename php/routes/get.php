@@ -972,7 +972,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	);
 	
 	$stmt = $ln_sph->prepare("
-		SELECT id,type,itemid,display FROM ". $app->config['sphinx']['mainindex']."
+		SELECT id,type,itemid,display,trackCount,albumCount FROM ". $app->config['sphinx']['mainindex']."
 		WHERE MATCH(:match)
 		" . (($type !== 'all') ? ' AND type=:type ' : '') . "
 		GROUP BY itemid,type
@@ -1039,7 +1039,9 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 				'url' => $url,
 				'type' => $filterType,
 				'typelabel' => $app->ll->str($filterType),
-				'itemid' => $row['itemid']
+				'itemid' => $row['itemid'],
+				'trackcount' => $row['trackcount'],
+				'albumcount' => $row['albumcount']
 			];
 			switch($filterType) {
 				case 'artist':
