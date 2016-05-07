@@ -148,7 +148,7 @@
 			this.tabAutocomplete._renderMenu = function( ul, items, type ) {
 				var that = this;
 				var markup = $('<div>').attr('class', 'nav nav-pills ac-nav type-nav ');
-				var filterLinks = ["all", "artist", "album", "label"];
+				var filterLinks = ["all", "artist", "album", "label", "dirname"];
 				var cat = this.options.sourceCategory;
 				filterLinks.forEach(function(filter){
 					$('<button>').attr('type', 'button')
