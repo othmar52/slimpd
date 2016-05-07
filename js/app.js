@@ -159,4 +159,26 @@ $(document).ready(function() {
 		trickleRate: 0.02,
 		trickleSpeed: 800
 	});
+	
+	
+	// TODO: is it correct to place this here (excluded from all bootstrap-views)?
+	$(function(){
+		// Only enable if the document has a long scroll bar
+		// Note the window height + offset
+		if ( ($(window).height() + 100) < $(document).height() ) {
+		    $('#top-link-block').removeClass('hidden').affix({
+		        // how far to scroll down before link "slides" into view
+		        offset: {top:100}
+		    });
+		}
+	});
+	$('#top-link-block a').on('click', function(e) {
+		e.preventDefault();
+		$('html,body').animate({scrollTop:0},'fast');
+		return false;
+	});
+
+
 });
+
+
