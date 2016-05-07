@@ -67,7 +67,7 @@ class filebrowser {
 
 		$this->directory = $d;
 		
-		$this->fetchBreadcrumb($d);
+		$this->breadcrumb = self::fetchBreadcrumb($d);
 	
 		//if($this->checkAccess($d) === FALSE) {
 		//	die('sorry, you are not allowed to view this directory 8==========D');
@@ -178,12 +178,14 @@ class filebrowser {
 		return $this->getDirectoryContent($d);
 	}
 
-	public function fetchBreadcrumb($relativePath) {
+	public static function fetchBreadcrumb($relativePath) {
 		$bread = trimExplode(DS, $relativePath, TRUE);
 		$breadgrow = "";
+		$items = array();
 		foreach($bread as $part) {
 			$breadgrow .= DS . $part;
-			$this->breadcrumb[] = new _Directory($breadgrow);
+			$items[] = new _Directory($breadgrow);
 		}
+		return $items;
 	}
 }

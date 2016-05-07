@@ -1,0 +1,25 @@
+<div class="row track-row">
+	<div class="col-md-2 vcenter">
+		<div class="vcinner">
+			<a href="/filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show directory">
+				<img src="/skin/default/img/icon-dirname.png" alt="" style="width: 50px; height: 50px; z-index:2;">
+			</a>
+			<button role="control" data-href="/markup/widget-directory/{{ item.fullpath|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
+				<i class="fa fa-align-justify fa-lg fa-fw"></i>
+			</button>
+			
+			<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+		</div>
+	</div>
+	<div class="col-md-10 vcenter">
+		<div class="vcinner">
+			<a href="/filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show directory">
+				{{ item.name }}
+			</a>
+			<br/>
+			<span class="darker-links">
+				{% include 'partials/filebrowser/breadcrumb.htm' with { breadcrumb: item.breadcrumb, hiderootlink: 1, skiplast: 1 }%}
+			</span>
+		</div>
+	</div>
+</div>

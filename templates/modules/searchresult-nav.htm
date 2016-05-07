@@ -51,6 +51,11 @@
 					<h3 class="uc">Labels <span class="badge bg-col2">{{ search.label.total }}</span></h3>
 				</a>
 			</li>
+			<li class="{{ (searchcurrent == 'dirname') ? 'active' : '' }}{{ (search.dirname.total == 0) ? 'disabled' : '' }}"> 
+				<a href="/searchdirname/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
+					<h3 class="uc">Directories <span class="badge bg-col2">{{ search.dirname.total }}</span></h3>
+				</a>
+			</li>
 			<li>
 				{# TODO: tracking of users youtube-search #}
 				<a title="search on youtube" href="http://youtube.com/results?search_query={{ search.all.term|url_encode }}%20{{youtubechunk}}" target="_blank">

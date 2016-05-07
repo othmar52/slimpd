@@ -194,6 +194,11 @@
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
 					
+					{% if action == 'searchresult.dirname' %}
+						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'dirname', youtubechunk:''  } %}
+						{% include 'modules/searchresult-items.htm' %}
+					{% endif %}
+					
 					</div>
 					
 {% if not nosurrounding %}

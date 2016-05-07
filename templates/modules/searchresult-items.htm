@@ -44,6 +44,9 @@
 	{% if item is instanceofGenre %}
 		{% include 'partials/itemrow-genre.htm' %}
 	{% endif %}
+	{% if item is instanceofDirectory %}
+		{% include 'partials/itemrow-directory.htm' %}
+	{% endif %}
 </div>
 {% endfor %}
 {# divider only if the last row is even #}
