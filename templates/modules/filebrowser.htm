@@ -114,21 +114,20 @@
 	{% for item in subDirectories.dirs %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover" id="d{{ item.hash }}">
 		<div class="row item-row" id="track{{ loop.index }}">
-			<div class="col-md-2 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					<button role="control" title="add this directory to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-plus"></i>
+						<i class="fa fa-plus fa-lg fa-fw"></i>
 					</button>
 					
 					<button role="control" data-href="/markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
-						<i class="fa fa-align-justify fa-lg"></i>
+						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
-				</div>
-			</div>
-			<div class="col-md-10 vcenter">
-				<div class="vcinner">
+					
+					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+
 					<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
-						<i class="fa fa-folder-o fa-lg"></i> {{ item.name }}
+						<i class="fa fa-folder-o fa-lg fa-fw"></i> {{ item.name }}
 					</a>
 				</div>
 			</div>
@@ -171,30 +170,29 @@
 	{% for item in files.music %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 		<div class="row track-row">
-			<div class="col-md-2 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
 				      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
 				      for now playing files directly is only possible for already mpd-imported tracks ... 
 				      playing files local is no issue and shoud work like a charm #}
 					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-play fa-lg"></i>
+						<i class="fa fa-play fa-lg fa-fw"></i>
 					</button>
 					<button role="control" data-href="/markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-						<i class="fa fa-align-justify fa-lg"></i>
+						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
 					
 					<a role="control" href="/markup/widget-deckselector?item={{ [directory,item.name]|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
-						<i class="fa fa-headphones fa-lg"></i>
+						<i class="fa fa-headphones fa-lg fa-fw"></i>
 					</a>
-				</div>
-			</div>
-			<div class="col-md-10 vcenter">
-				<div class="vcinner">
-					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-music fa-lg"></i>
+					
+					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+
+					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
+						<i class="fa fa-music fa-lg fa-fw"></i>
 					{{ item.name }}
-					</button>
+					</a>
 				</div>
 			</div>
 			{# ajax load target for xwax-control #}
@@ -215,7 +213,7 @@
 	{% for item in files.playlist %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover ">
 		<div class="row item-row">
-			<div class="col-md-2 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist">
 						<i class="fa fa-eye fa-lg"></i>
@@ -228,10 +226,9 @@
 					<button role="control" title="replace current playlist with this playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"replaceCurrentPlaylistKeepTrack", "item": "{{ [directory,item.name]|path2url }}", "mpdurl":"/mpdctrl/replaceCurrentPlaylistKeepTrack/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-refresh"></i>
 					</button>
-				</div>
-			</div>
-			<div class="col-md-10 vcenter">
-				<div class="vcinner">
+					
+					<span class="spacer visible-md-inline-block visible-lg-inline-block"></span>
+
 					<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 					<i class="fa fa-list fa-lg"></i>
 					{{ item.name }}</a>
@@ -253,18 +250,20 @@
 	{% for item in files.info %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		<div class="row item-row">
-			<div class="col-md-2 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
-						<i class="fa fa-eye fa-lg"></i>
+						<i class="fa fa-eye fa-lg fa-fw"></i>
 					</button>
-				</div>
-			</div>
-			<div class="col-md-10 vcenter">
-				<div class="vcinner">
-					<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
-					<i class="fa fa-info fa-lg"></i>
-					{{ item.name }}</button>
+					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+						<i class="fa fa-download fa-lg fa-fw"></i>
+					</a>
+					
+					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+
+					<a role="control" href="#" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="trigger-modal">
+					<i class="fa fa-info fa-lg fa-fw"></i>
+					{{ item.name }}</a>
 				</div>
 			</div>
 		</div>
@@ -284,15 +283,16 @@
 	{% for item in files.image %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		<div class="row item-row" id="image{{ loop.index }}">
-			<div class="col-md-2 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					<a data-toggle="lightbox" href="/image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
 						<img src="/image-35/path/{{ [directory,item.name]|path2url }}" title="{{ item.name }}" alt="{{ item.name }}" />
 					</a>
-				</div>
-			</div>
-			<div class="col-md-10 vcenter">
-				<div class="vcinner">
+					
+					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+
 					<i class="fa fa-image fa-lg"></i> {{ item.name }}
 				</div>
 			</div>
@@ -312,10 +312,23 @@
 	{# TODO: what to do with those files? maybe provide a download link? #}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		<div class="row item-row">
-			<div class="col-md-2 vcenter"></div>
-			<div class="col-md-10 vcenter">
+			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<i class="fa fa-file fa-lg"></i> {{ item.name }}
+					
+					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+						<i class="fa fa-download fa-lg fa-fw"></i>
+					</a>
+					
+					<button role="control" title="TODO: delete" class="btn btn-trnsp" >
+						<i class="fa fa-trash fa-lg fa-fw"></i>
+					</button>
+					
+					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+					
+					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+						<i class="fa fa-file fa-lg"></i> {{ item.name }}
+					</a>
+					
 				</div>
 			</div>
 		</div>
