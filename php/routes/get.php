@@ -452,10 +452,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 		case 'up':
 			$fileBrowser->getDirectoryContent(dirname(join(DS, $itemParams)));
 			if($fileBrowser->directory === './') {
-				$nosurrounding = ($config['nosurrounding'] === TRUE)
-					? '?nosurrounding=1'
-					: '';
-				$app->response->redirect($app->urlFor('filebrowser'). $nosurrounding);
+				$app->response->redirect($app->urlFor('filebrowser') . getNoSurSuffix());
 			}
 			break;
 		default:
@@ -525,10 +522,7 @@ $app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($a
 $app->get('/playlists', function() use ($app, $config){
 	$config['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');
-	$nosurParam = ($config['nosurrounding'] === TRUE)
-		? '?nosurrounding=1'
-		: '';
-	$app->response->redirect('/filebrowser/playlists' . $nosurParam, 301);
+	$app->response->redirect('/filebrowser/playlists' . getNoSurSuffix(), 301);
 });
 
 
@@ -793,10 +787,7 @@ foreach(array_keys($sortfields1) as $className) {
 $app->get('/alphasearch/', function() use ($app, $config){
 	$type = $app->request()->get('searchtype');
 	$term = $app->request()->get('searchterm');
-	$nosurParam = ($config['nosurrounding'] === TRUE)
-		? '?nosurrounding=1'
-		: '';
-	$app->response->redirect('/'.$type.'s/searchterm/'.rawurlencode($term).'/page/1' . $nosurParam);
+	$app->response->redirect('/'.$type.'s/searchterm/'.rawurlencode($term).'/page/1' . getNoSurSuffix());
 });
 
 $sortfields = array_merge($sortfields1, $sortfields2);
@@ -911,7 +902,7 @@ foreach(array_keys($sortfields) as $currentType) {
 								'sort' => $sort,
 								'direction' => $direction
 							])
-							.'?nosuggestion=1&q='.$suggest . ($app->request()->params('nosurrounding') ? '&nosurrounding=1' : ''));
+							.'?nosuggestion=1&q='.$suggest . '&' . getNoSurSuffix(FALSE));
 						$app->stop();
 					}
 					$result[] = [

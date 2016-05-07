@@ -171,10 +171,6 @@ define('NJB_DEFAULT_CHARSET', 'utf8');
 $app->error(function(\Exception $e) use ($app, $config){
     $app->render('error.htm', $config);
 });
-$app->notFound(function() use ($app, $config){
-	$config['action'] = '404';
-    $app->render('surrounding.htm', $config);
-});
 
 // DEFINE GET/POST routes (also check for .gitignored local-routes)
 foreach(array('get', 'post') as $method) {
@@ -184,4 +180,19 @@ foreach(array('get', 'post') as $method) {
 		}
 	}
 }
+
+
+// use 404 not found as a search in case we don't have a slash in uri
+$app->notFound(function() use ($app, $config){
+	$uri = ltrim(rawurldecode($app->request->getResourceUri()),'/');
+	// check if we do have a slash in uri
+	if(stripos($uri, '/') !== FALSE) {
+		$config['action'] = '404';
+    	$app->render('surrounding.htm', $config);
+	} else {
+		// trigger a search
+		$app->response->redirect('/searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
+	}
+});
+
 $app->run();
