@@ -666,6 +666,8 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 
 
 // TODO: carefully check which sorting is possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
+//   compare with templates/partials/dropdown-search-sorting.htm
+//   compare with templates/partials/dropdown-typelist-sorting.htm
 $sortfields1 = array(
 	'artist' => array('title', 'trackCount', 'albumCount'),
 	'genre' => array('title', 'trackCount', 'albumCount'),
@@ -950,6 +952,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			}
 		}
 		$config['action'] = 'searchresult.' . $currentType;
+		$config['searchcurrent'] = $currentType;
 		$config['renderitems'] = getRenderItems($config['itemlist']);
 		$app->render('surrounding.htm', $config);
 			
