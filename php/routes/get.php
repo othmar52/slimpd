@@ -968,6 +968,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		'label' => 3,
 		'track' => 4,
 		'genre' => 5,
+		'dirname' => 6,
 	);
 	
 	$stmt = $ln_sph->prepare("
@@ -1024,6 +1025,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 					$url = '/searchall/page/1/sort/relevance/desc?q=' . $row['display']; 
 					break;
 				case 'album':
+				case 'dirname':
 					$url = '/album/' . $row['itemid']; 
 					break;
 				default:
@@ -1043,6 +1045,7 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 				case 'artist':
 				case 'label':
 				case 'genre':
+				case 'dirname':
 					$entry['img'] = '/skin/default/img/icon-'. $filterType .'.png';
 					break;
 				case 'album':
