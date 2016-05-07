@@ -66,6 +66,7 @@
 		    $('.toggle-tooltip', this.$el).tooltip();
   			$('[data-toggle="popover"]', this.$el).popover({
   				html: 'true',
+  				container: 'body',
   				content: function() {
   					return ($(this).data('imageUrl'))
   						? "<img class='popover-image' src='"+$(this).data('imageUrl')+"'>"
