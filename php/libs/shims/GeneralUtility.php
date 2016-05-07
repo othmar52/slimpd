@@ -49,6 +49,15 @@ function flattenWhitespace($input) {
 	return preg_replace('!\s+!', ' ', $input);
 }
 
+/**
+ * @return string : empty string or get-parameter-string which is needed for Slim redirects 
+ */
+function getNoSurSuffix($prefixQuestionmark = TRUE) {
+	return  (\Slim\Slim::getInstance()->request->get('nosurrounding') == 1)
+		? (($prefixQuestionmark)? '?':'') . 'nosurrounding=1'
+		: '';
+}
+
 function notifyJson($message, $type="info") {
 	$out = new stdClass();
 	$out->notify = 1;
