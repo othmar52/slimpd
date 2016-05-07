@@ -287,11 +287,13 @@ a {
   align-items: center;
 }
 
+.filebrowser .vcenter {
+  min-height: 3em;
+}
+
 .vcinner {
   display: inline-table;
 }
-
-
 
 .rotate2 {
   -webkit-transform: rotate(-2deg);
