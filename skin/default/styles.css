@@ -61,6 +61,23 @@ body {
 	color: rgb(59,187,47);
 }
 
+::selection {
+  background: #000;
+  color: #FF9C01;
+}
+
+::-moz-selection {
+  background: #000;
+  color: #FF9C01;
+}
+
+.spotcol-2 *::selection {
+	color: rgb(59,187,47);
+}
+
+.spotcol-2 *::-moz-selection {
+	color: rgb(59,187,47);
+}
 
 hr,
 .modal-footer {
@@ -465,6 +482,7 @@ body.vstretch14 {
     z-index: 1;
 }
 
+/* mpd branding of notification widget */
 .alert-mpd {
 	background-color: #000;
 	border-left: 3px solid #FF9C01;
