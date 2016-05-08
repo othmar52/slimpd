@@ -138,7 +138,14 @@ $(document).ready(function() {
 		$('.player-local,.player-mpd').toggle();
 		// TODO: reload all rendered images in frontend to get the correct color of fallback images
 		window.sliMpd.drawFavicon();
-	}); 
+	});
+	
+	/* toggle between display tags and display filepath */
+	$('.fileModeToggle a').on('click', function(e) {
+		e.preventDefault();
+		$('body').toggleClass('ffn');
+		$(this).find('i').toggleClass('fa-toggle-off').toggleClass('fa-toggle-on');
+	});
 	
 	// delegate calls to data-toggle="lightbox"
 	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {

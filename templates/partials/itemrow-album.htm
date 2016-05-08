@@ -9,26 +9,40 @@
 			</a>
 		</div>
 	</div>
-	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-			<a href="/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
-			{{item.title}}
-			</a>
+	<div class="ffn-hidden">
+		<div class="col-md-3 vcenter">
+			<div class="vcinner">
+				<a href="/album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main" style="">
+				{{item.title}}
+				</a>
+			</div>
+		</div>
+		<div class="col-md-3 vcenter">
+			<div class="vcinner">
+				{% include 'partials/artist/link.htm' %}
+			</div>
+		</div>
+		<div class="col-md-2 vcenter">
+			<div class="vcinner">
+				{% include 'partials/genre/link.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
+			</div>
+		</div>
+		<div class="col-md-1 vcenter">
+			<div class="vcinner">
+				{% include 'partials/year/link.htm' %}
+			</div>
 		</div>
 	</div>
-	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-			{% include 'partials/artist/link.htm' %}
-		</div>
-	</div>
-	<div class="col-md-2 vcenter">
-		<div class="vcinner">
-			{% include 'partials/genre/link.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
-		</div>
-	</div>
-	<div class="col-md-1 vcenter">
-		<div class="vcinner">
-			{% include 'partials/year/link.htm' %}
+	<div class="ffn-show">
+		<div class="col-md-9 vcenter">
+			<div class="vcinner">
+				{{ renderitems.itembreadcrumbs[item.relativePathHash]|last.name }}
+				<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+					hiderootlink: 1,
+					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					skiplast: 1 } %}</span>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-1 vcenter">

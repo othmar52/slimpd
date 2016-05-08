@@ -21,26 +21,38 @@
 			</a>
 		</div>
 	</div>
-	
-	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-			{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}<br />
-			<span class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span>
+	<div class="ffn-hidden">
+		<div class="col-md-3 vcenter">
+			<div class="vcinner">
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}<br />
+				<span class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span>
+			</div>
+		</div>
+		<div class="col-md-3 vcenter">
+			<div class="vcinner">
+			{% include 'partials/artist/link.htm' %}
+			</div>
+		</div>
+		<div class="col-md-2 vcenter">
+			<div class="vcinner">
+			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit':3 } %}
+			</div>
+		</div>
+		<div class="col-md-1 vcenter">
+			<div class="vcinner">
+				{% include 'partials/year/link.htm' %}
+			</div>
 		</div>
 	</div>
-	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-		{% include 'partials/artist/link.htm' %}
-		</div>
-	</div>
-	<div class="col-md-2 vcenter">
-		<div class="vcinner">
-		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit':3 } %}
-		</div>
-	</div>
-	<div class="col-md-1 vcenter">
-		<div class="vcinner">
-			{% include 'partials/year/link.htm' %}
+	<div class="ffn-show">
+		<div class="col-md-9 vcenter">
+			<div class="vcinner">
+				{{ item.relativePath|split('/')|last }}<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+					hiderootlink: 1,
+					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					skiplast: 1 } %}</span>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-1 vcenter">
