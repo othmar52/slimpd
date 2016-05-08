@@ -72,12 +72,12 @@
 						
 						{% if action == type~'.tracks' %}
 							{% include 'modules/typelist-nav.htm' %}
-							{% include 'modules/searchresult-items.htm' %}
+							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
 						
 						{% if action == type~'.albums' %}
 							{% include 'modules/typelist-nav.htm' %}
-							{% include 'modules/searchresult-items.htm' %}
+							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
 					
 					

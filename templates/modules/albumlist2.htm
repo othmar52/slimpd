@@ -1,5 +1,5 @@
 <div class="albums_container container">
-	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 	{% if itemlist|length  %}
 		{% for row in itemlist|batch(2) %}
 		<div class="row">
@@ -29,5 +29,5 @@
 	{% else %}
 		no albums found
 	{% endif %}
-	{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+	{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 </div>

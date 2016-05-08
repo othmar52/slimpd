@@ -1,42 +1,51 @@
-
-
-<h2>{{ type }}list</h2>
-<form action="/alphasearch/" method="get" class="ajax-form">
-	<input name="searchterm" value="" placeholder="{{type}}search alpha (az09*)"/>
-	<input name="searchtype" value="{{type}}" type="hidden"/>
-	<button type="submit">
-	<i id="iconSearchToggler" class="fa fa-search fa-lg"></i>
-	</button>
-</form>
-
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
-<div class="{{ type }}s_container">
-	
+<div class="row">
+	<div class="col-md-12">
+		<h2>{{ type }}list</h2>
+	</div>
+	<div class="col-md-3">
+		<form action="/alphasearch/" method="get" class="ajax-form">
+			<div class="input-group">
+				<input name="searchterm" value="" type="text" placeholder="{{type}}search alpha (az09*)" class="form-control"/>
+				<input name="searchtype" value="{{type}}" type="hidden"/>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-default">
+						<i id="iconSearchToggler" class="fa fa-search fa-lg"></i>
+					</button>
+				</span>
+			</div>
+		</form>
+	</div>
+	<div class="col-md-6 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	</div>
+	<div class="col-md-3">
+		
+	</div>
+</div>
+<div class="row">	
 	{% if itemlist|length  %}
-	<div class="container-fluid">
-	
-	  {% set itemsPerColumn = (itemlist|length / 4)|round(0, 'ceil') %}
-	
-	  {% for item in itemlist %}
-	
-	    {% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}
-	      {% spaceless %}
-	        <div class="col-md-3">
-	      {% endspaceless %}
-	    {% endif %}
-	
-	            <a href="/{{ type }}/{{item.id}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link"><span style="color:#777;">{{item.article}}</span>{{item.title}}
-				<span style="font-size: 0.7em; color:#888;">(<strong style="color:#777;">{{ item.trackCount }}</strong>)</span>
-				</a><br />
-	
-	    {% if loop.last or loop.index % itemsPerColumn == 0 -%}
-	      {% spaceless %}
-	        </div>
-	      {% endspaceless %}
-	    {% endif %}
-	  {% endfor %}
+		{% set itemsPerColumn = (itemlist|length / 4)|round(0, 'ceil') %}
+		{% for item in itemlist %}
+			{% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}<div class="col-md-3">{% endif %}
+			<a href="/{{ type }}/{{item.id}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
+				{% if item.article %}<span class="dark">{{item.article}}</span>{% endif %}
+				{{item.title}}
+				<span class="dark small" title="trackcount">({{ item.trackCount }})</span>
+			</a><br />
+			{% if loop.last or loop.index % itemsPerColumn == 0 -%}</div>{% endif %}
+		{% endfor %}
 	{% else %}
 		no {{ type }}s found
 	{% endif %}
 </div>
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+<div class="row">
+	<div class="col-md-3">
+		
+	</div>
+	<div class="col-md-6 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	</div>
+	<div class="col-md-3">
+		
+	</div>
+</div>

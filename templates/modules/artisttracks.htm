@@ -12,7 +12,7 @@
 <h2>{{ itemtype|ll }} &quot;{{ item.title}}&quot;<span style="margin-left: 1em; font-size: 0.4em; color:#888;">
 {{ startnum }} - {{ endnum }} of {{ search[searchcurrent].total }} {{'results'|ll}} in {{ rendertime }}s</span></h2>
 
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 <div class="row">
 	<div class="col-md-10">
 		<ul class="nav nav-tabs pull-right">
@@ -40,4 +40,4 @@
 	<div class="clearfix"> </div>
 	
 </div>
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
