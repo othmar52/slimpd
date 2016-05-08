@@ -13,26 +13,37 @@
 			<span style="font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>
 		</div>
 	</div>
-	<div class="col-xs-2 col-sm-3 vcenter">
-		<div class="vcinner">
-			{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+	<div class="ffn-hidden">
+		<div class="col-xs-2 col-sm-3 vcenter">
+			<div class="vcinner">
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+			</div>
+		</div>
+		<div class="col-xs-5 col-sm-3 vcenter">
+			<div class="vcinner">
+				{% include 'partials/artist/link.htm' %}
+			</div>
+		</div>
+		<div class="col-xs-2 hidden-xs vcenter">
+			<div class="vcinner">
+				{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
+			</div>
+		</div>
+		<div class="col-xs-1 hidden-xs vcenter">
+			<div class="vcinner">
+				{% include 'partials/year/link.htm' %}
+			</div>
 		</div>
 	</div>
-	<div class="col-xs-5 col-sm-3 vcenter">
-		<div class="vcinner">
-			{% include 'partials/artist/link.htm' %}
+	<div class="ffn-show">
+		<div class="col-md-9 vcenter">
+			<div class="vcinner">
+				{{ item.relativePath|split('/')|last }}<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with { hiderootlink: 1 }%}</span>
+			</div>
 		</div>
 	</div>
-	<div class="col-xs-2 hidden-xs vcenter">
-		<div class="vcinner">
-			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
-		</div>
-	</div>
-	<div class="col-xs-1 hidden-xs vcenter">
-		<div class="vcinner">
-			{% include 'partials/year/link.htm' %}
-		</div>
-	</div>
+		
 	<div class="col-xs-1 hidden-xs vcenter">
 		<div class="vcinner">
 			{{ item.miliseconds|formatMiliseconds }}

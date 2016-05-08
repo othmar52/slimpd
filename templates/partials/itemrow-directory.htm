@@ -13,7 +13,7 @@
 	</div>
 	<div class="col-md-10 vcenter">
 		<div class="vcinner">
-			<a href="/filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show directory">
+			<a href="/filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="{{'filebrowser.showdircontent'|ll(item.name) }}">
 				{{ item.name }}
 			</a>
 			<br/>

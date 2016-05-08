@@ -487,3 +487,16 @@ body.vstretch14 {
 	background-color: #000;
 	border-left: 3px solid #FF9C01;
 }
+
+/* force displaying filename instead of tag attributes */
+.ffn-show {
+	display: none;
+}
+
+.ffn .ffn-show {
+	display: inherit;
+}
+
+.ffn .ffn-hidden {
+	display: none;
+}

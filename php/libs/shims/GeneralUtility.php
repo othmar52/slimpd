@@ -454,6 +454,7 @@ function getRenderItems() {
 		'labels' => call_user_func_array(array('\\Slimpd\\Label','getInstancesForRendering'), $args),
 		'artists' => call_user_func_array(array('\\Slimpd\\Artist','getInstancesForRendering'), $args),
 		'albums' => call_user_func_array(array('\\Slimpd\\Album','getInstancesForRendering'), $args),
+		'itembreadcrumbs' => [],
 	);
 	
 	foreach($args as $i) {
@@ -462,6 +463,9 @@ function getRenderItems() {
 				case 'Slimpd\Album':
 					if(isset($return['albums'][$i->getId()]) === FALSE) {
 						$return['albums'][$i->getId()] = $i;
+					}
+					if(isset($return['itembreadcrumbs'][$i->getRelativePathHash()]) === FALSE) {
+						$return['itembreadcrumbs'][$i->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($i->getRelativePath());
 					}
 					break;
 				case 'Slimpd\Artist':
@@ -479,6 +483,11 @@ function getRenderItems() {
 						$return['genres'][$i->getId()] = $i;
 					}
 					break;
+				case 'Slimpd\Track':
+					if(isset($return['itembreadcrumbs'][$i->getRelativePathHash()]) === FALSE) {
+						$return['itembreadcrumbs'][$i->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($i->getRelativePath());
+					}
+					break;
 			}
 		}
 		if(is_array($i)) {
@@ -488,6 +497,9 @@ function getRenderItems() {
 						case 'Slimpd\Album':
 							if(isset($return['albums'][$ii->getId()]) === FALSE) {
 								$return['albums'][$ii->getId()] = $ii;
+							}
+							if(isset($return['itembreadcrumbs'][$ii->getRelativePathHash()]) === FALSE) {
+								$return['itembreadcrumbs'][$ii->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($ii->getRelativePath());
 							}
 							break;
 						case 'Slimpd\Artist':
@@ -503,6 +515,11 @@ function getRenderItems() {
 						case 'Slimpd\Genre':
 							if(isset($return['genres'][$ii->getId()]) === FALSE) {
 								$return['genres'][$ii->getId()] = $ii;
+							}
+							break;
+						case 'Slimpd\Track':
+							if(isset($return['itembreadcrumbs'][$ii->getRelativePathHash()]) === FALSE) {
+								$return['itembreadcrumbs'][$ii->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($ii->getRelativePath());
 							}
 							break;
 					}

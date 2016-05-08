@@ -22,6 +22,7 @@
 	</div>
 	
 	{% if item.id %}
+	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter darker-links">
 			<div class="vcinner">
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
@@ -44,12 +45,25 @@
 				{% include 'partials/year/link.htm' %}
 			</div>
 		</div>
-		<div class="col-md-1 vcenter">
+	</div>
+	<div class="ffn-show">
+		<div class="col-md-9 vcenter">
 			<div class="vcinner">
-				{{ item.miliseconds|formatMiliseconds }}
-				<br />{% include 'partials/track/audioformat.htm' %}
+				{{ item.relativePath|split('/')|last }}<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+					hiderootlink: 1,
+					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					skiplast: 1 } %}</span>
 			</div>
 		</div>
+	</div>
+	<div class="col-md-1 vcenter">
+		<div class="vcinner">
+			{{ item.miliseconds|formatMiliseconds }}
+			<br />{% include 'partials/track/audioformat.htm' %}
+		</div>
+	</div>
+	
 	{% else %}
 		{# item is not imported in sliMpd so we do not have any meta-infos #}
 		<div class="col-md-8 vcenter">
