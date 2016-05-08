@@ -1,4 +1,4 @@
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 <div class="{{ type }}s_container">
 	
 	{% if itemlist|length  %}
@@ -27,5 +27,5 @@
 	  {% endfor %}
 	{% endif %}
 </div>
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
+{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 

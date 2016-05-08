@@ -2,27 +2,26 @@
 
 {% if itemlist|length > 0 %}
 <div class="row replace-me-with-proper-css"><br><br></div>
-	{% if paginator_params.numPages > 1 %}
-	<div class="row">
-		<div class="col-md-3">
-			<span class="dark uc small darker-links">Results per page</span>
-			<a href="#"><span class="badge">20</span></a>
-			<a href="#"><span class="badge">50</span></a>
-			<a href="#"><span class="badge">100</span></a>
-			<a href="#"><span class="badge">200</span></a>
-		</div>
-		<div class="col-md-6 centered-text">
-			{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
-		</div>
-		<div class="col-md-3">
-			<div class="pull-right">
-			Sortierung {% include 'partials/dropdown-search-sorting.htm' %}
-			</div>
+<div class="row">
+	<div class="col-md-3">
+		{% include 'partials/results-per-page.htm' %}
+	</div>
+	<div class="col-md-6 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	</div>
+	<div class="col-md-3">
+		<div class="pull-right">
+			Sortierung 
+			{% if dropdown == 'typelist' %}
+				{% include 'partials/dropdown-typelist-sorting.htm' %}
+			{% else %}
+				{% include 'partials/dropdown-search-sorting.htm' %}
+			{% endif %}
 		</div>
 	</div>
-	
-	<div class="row replace-me-with-proper-css"><br><br></div>
-	{% endif %}
+</div>
+
+<div class="row replace-me-with-proper-css"><br><br></div>
 <div class="tracks_container">
 {% include 'partials/trackrow-1-header.htm' %}
 
@@ -60,25 +59,13 @@
 
 	{% if paginator_params.numPages > 1 %}
 	<div class="row">
-		<div class="col-md-3">
-			<span class="dark uc small darker-links">Results per page</span>
-			<a href="#"><span class="badge">20</span></a>
-			<a href="#"><span class="badge">50</span></a>
-			<a href="#"><span class="badge">100</span></a>
-			<a href="#"><span class="badge">200</span></a>
-		</div>
-		<div class="col-md-6 centered-text">
-			{% include 'modules/paginator.htm' with { 'paginator': paginator_params, 'll': ll } %}
-		</div>
-		<div class="col-md-3">
-			<div class="pull-right">
-			Sortierung {% include 'partials/dropdown-typelist-sorting.htm' %}
-			</div>
+		<div class="col-md-12 centered-text">
+			{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
 		</div>
 	</div>
 	
-	<div class="row">
-		<br><br>{# TODO: use css instead of markup #}
+	<div class="row replace-me-with-proper-css">
+		<br><br>
 	</div>
 	{% endif %}
 {% else %}
