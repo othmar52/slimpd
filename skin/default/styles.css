@@ -464,3 +464,8 @@ body.vstretch14 {
     font-size: 1.5em;
     z-index: 1;
 }
+
+.alert-mpd {
+	background-color: #000;
+	border-left: 3px solid #FF9C01;
+}

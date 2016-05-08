@@ -138,7 +138,7 @@ class mpd
 				\Slimpd\importer::queDirectoryUpdate($closestExistingItemInMpdDatabase);
 				
 				$this->mpd('update "' . str_replace("\"", "\\\"", $closestExistingItemInMpdDatabase) . '"');
-				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase);
+				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase, 'mpd');
 				return;
 				
 			// tracks that hasnt been importet in mpd database have to get inserted befor playing
@@ -243,7 +243,7 @@ class mpd
 					}
 					$this->mpd('add "' . str_replace("\"", "\\\"", $path) . '"');
 				}
-				notifyJson("MPD: added " . $path . " to playlist");
+				notifyJson("MPD: added " . $path . " to playlist", 'mpd');
 				break;
 				
 			case 'playIndex':
@@ -256,31 +256,31 @@ class mpd
 				
 			case 'clearPlaylist':
 				$this->mpd('clear');
-				notifyJson("MPD: cleared playlist");
+				notifyJson("MPD: cleared playlist", 'mpd');
 				break;
 				
 			case 'clearPlaylistNotCurrent':
 				$this->clearPlaylistNotCurrent();
-				notifyJson("MPD: cleared playlist");
+				notifyJson("MPD: cleared playlist", 'mpd');
 				break;
 				
 			case 'addPlaylistToPlaylist':
 				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
 
 				if($playlist->getErrorPath() === TRUE) {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
 					return;
 				}
 				$playlist->fetchTrackRange(0,1000, TRUE);
 				$counter = $this->appendPlaylist($playlist);
-				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist");				
+				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
 				break;
 				
 			case 'replaceCurrentPlaylist':
 				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
 
 				if($playlist->getErrorPath() === TRUE) {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
 					return;
 				}
 				
@@ -288,7 +288,7 @@ class mpd
 				$this->mpd('clear');
 				$counter = $this->appendPlaylist($playlist);
 				$this->mpd('play 0');
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)", 'mpd');
 				break;
 				
 			case 'replaceCurrentPlaylistKeepTrack':
@@ -303,7 +303,7 @@ class mpd
 				$this->mpd('clear');
 				$counter = $this->appendPlaylist($playlist);
 				$this->clearPlaylistNotCurrent();
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)");
+				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)", 'mpd');
 				break;
 				
 			case 'removeDupes':
@@ -311,7 +311,7 @@ class mpd
 				$cmd = APP_ROOT . 'vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
 				exec($cmd, $result);
 				// TODO: count removed dupes and display result
-				notifyJson("MPD: removed dupes");
+				notifyJson("MPD: removed dupes in current playlist", 'mpd');
 				break;
 			
 			case 'playSelect': //		playSelect();

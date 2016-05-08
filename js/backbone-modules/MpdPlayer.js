@@ -213,7 +213,32 @@
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
-			window.sliMpd.notify({'notify':1, 'message': 'MPD playing: ' + $('.player-mpd .now-playing-string').text()});
+			var mpdNotify = $('<div/>')
+				.append(
+					$('<div/>')
+					.attr('class', 'row')
+					.append(
+						$('<div/>')
+						.attr('class', 'col-md-2')
+						.append(
+							$('<img/>')
+								.attr('src', $('.player-mpd img').attr('src'))
+								.attr('width', '70')
+						)
+					)
+					.append(
+						$('<div/>')
+						.attr('class', 'col-md-10')
+						.append(
+							'<span class="uc dark small">MPD trackchange</span><br>' + $('.player-mpd .now-playing-string').text()
+						)
+					)
+				);
+			window.sliMpd.notify({
+				'notify':1,
+				'type': 'mpd',
+				'message': $(mpdNotify).html()
+			});
         	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
         
