@@ -65,7 +65,15 @@ $(document).ready(function() {
 			},{
 				// settings
 				type: (notifyConf.type || 'info'),
-				z_index: 10000
+				z_index: 10000,
+				offset: {
+					x: '10',
+					y: '110'
+				},
+				placement: {
+					from: "bottom",
+					align: "right"
+				},
 			});
 		},
 		
