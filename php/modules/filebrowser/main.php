@@ -46,7 +46,7 @@ class filebrowser {
 
 
 		// append trailing slash if missing
-		$d .= (substr($d,-1) !== DS) ? DS : '';
+		$d = rtrim($d, DS) . DS;
 		
 		$base = $app->config['mpd']['musicdir'];
 		

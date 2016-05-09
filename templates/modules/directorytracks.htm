@@ -1,0 +1,43 @@
+<div class="row">
+	<div class="col-md-12">
+		<span class="dark uc small darker" style="font-family:sfnsdisplay; font-size: 0.8em;">Ordner Rekursiv</span>
+		<h2 style="margin:0;padding:0;" class="">{{ breadcrumb|last.name }}</h2>
+		<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
+		
+	</div>
+</div>
+<br class="row replace-me-with-proper-css" />
+<div class="fw-bg bg-col5"><hr class="row " /></div>
+
+<div class="row">
+	<div class="col-md-2">
+		<span class="badge">{{paginator_params.totalitems}}</span> Tracks
+	</div>
+	<div class="col-md-8 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	</div>
+	<div class="col-md-2">
+		
+	</div>
+</div>
+	
+{% for item in itemlist %}
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
+
+	{% if item is instanceofTrack %}
+		{% include 'partials/trackrow-1.htm' %}
+	{% endif %}
+	
+
+	{% if item is instanceofDirectory %}
+		{% include 'partials/itemrow-directory.htm' %}
+	{% endif %}
+</div>
+{% endfor %}
+
+
+<div class="row">
+	<div class="col-md-12 centered-text">
+		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	</div>
+</div>
