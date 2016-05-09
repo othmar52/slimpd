@@ -713,19 +713,25 @@ foreach(array_keys($sortfields1) as $className) {
 			$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
 			
 			foreach(['album','track'] as $resultType) {
+				
+				// get total results for all types (albums + tracks)
 				$sphinxTypeIndex = ($resultType === 'album') ? 2 : 4;
 				$stmt = $ln_sph->prepare("
-					SELECT itemid,type FROM ". $app->config['sphinx']['mainindex']."
+					SELECT id FROM ". $app->config['sphinx']['mainindex']."
 					WHERE MATCH('@".$className."Ids \"". $term ."\"')
 					AND type=:type
 					GROUP BY itemid,type
-					LIMIT ".$maxCount."
-					OPTION ranker = proximity;"
-				);
+					LIMIT 1;
+				");
 				$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
 				$stmt->execute();
-				
-				$config['search'][$resultType]['total'] = $stmt->rowCount();
+				$meta = $ln_sph->query("SHOW META")->fetchAll();
+				$config['search'][$resultType]['total'] = 0;
+				foreach($meta as $m) {
+					if($m['Variable_name'] === 'total_found') {
+						$config['search'][$resultType]['total'] = $m['Value'];
+					}
+				}
 				$config['search'][$resultType]['time'] = 0;
 				$config['search'][$resultType]['term'] = $itemId;
 				$config['search'][$resultType]['matches'] = [];
@@ -743,7 +749,7 @@ foreach(array_keys($sortfields1) as $className) {
 						GROUP BY itemid,type
 							".$sortQuery."
 							LIMIT :offset,:max
-						OPTION ranker = proximity;
+						OPTION ranker=proximity, max_matches=".$config['search'][$resultType]['total'].";
 						");
 					$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 					$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
@@ -802,6 +808,19 @@ foreach(array_keys($sortfields) as $currentType) {
 		# TODO: evaluate if modifying searchterm makes sense
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
 		$term = cleanSearchterm($app->request()->params('q'));
+		
+		
+		# TODO: read a blacklist of searchterms from configfile
+		// searching 'mp3' can be bad for our snappy gui
+		// at least we have to skip the "total results" query for each type
+		// for now - redirect immediately
+		if(strtolower(trim($term)) === 'mp3' || strtolower(trim($term)) === 'mu') {
+			$app->flashNow('error', 'OH SNAP! searchterm <strong>'. $term .'</strong> is currently blacklisted...');
+			$app->render('surrounding.htm', $config);
+			return;
+		}
+		
+		
 		$ranker = 'sph04';
 		$start = 0;
 		$itemsPerPage = 20;
@@ -821,25 +840,33 @@ foreach(array_keys($sortfields) as $currentType) {
 		);
 		$config['itemlist'] = [];
 		foreach(array_keys($sortfields) as $type) {
+			
+			// get result count for each resulttype 
 			$stmt = $ln_sph->prepare("
 				SELECT itemid,type FROM ". $app->config['sphinx']['mainindex']."
 				WHERE MATCH(:match)
 				" . (($type !== 'all') ? ' AND type=:type ' : '') . "
 				GROUP BY itemid,type
-				LIMIT ".$maxCount."
-				OPTION ranker=".$ranker.", max_matches=".$maxCount.";");
+				LIMIT 1;
+			");
 			$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 			}
 			
 			$stmt->execute();
-			
-			$config['search'][$type]['total'] = $stmt->rowCount();
+			$meta = $ln_sph->query("SHOW META")->fetchAll();
+			$config['search'][$type]['total'] = 0;
+			foreach($meta as $m) {
+				if($m['Variable_name'] === 'total_found') {
+					$config['search'][$type]['total'] = $m['Value'];
+				}
+			}
 			$config['search'][$type]['time'] = 0;
 			$config['search'][$type]['term'] = $term;
 			$config['search'][$type]['matches'] = [];
 			
+			// get results only for requestet result-type
 			if($type == $currentType) {
 				$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
 				$direction = ($direction == 'asc') ? 'asc' : 'desc';
@@ -856,7 +883,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					GROUP BY itemid,type
 					".$sortQuery."
 					LIMIT :offset,:max
-					OPTION ranker=".$ranker.";");
+					OPTION ranker=".$ranker.",max_matches=".$config['search'][$type]['total'].";");
 				$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
@@ -1076,6 +1103,76 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	}
 	echo json_encode($result); exit;
 })->name('autocomplete');
+
+
+
+$app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
+
+	// validate directory
+	$directory = new \Slimpd\_Directory(join(DS, $itemParams));
+	if($directory->validate() === FALSE) {
+		$app->flashNow('error', $app->ll->str('directory.notfound'));
+		$app->render('surrounding.htm', $config);
+		return;
+	}
+
+	// get total items of directory from sphinx
+	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	$stmt = $ln_sph->prepare("
+		SELECT id
+		FROM ". $app->config['sphinx']['mainindex']."
+		WHERE MATCH(:match)
+		AND type=:type
+		LIMIT 1;
+	");
+	$stmt->bindValue(':match', "'@allchunks \"". join(DS, $itemParams) . DS . "\"'", PDO::PARAM_STR);
+	$stmt->bindValue(':type', 4, PDO::PARAM_INT);
+	$stmt->execute();
+	$meta = $ln_sph->query("SHOW META")->fetchAll();
+	$total = 0;
+	foreach($meta as $m) {
+		if($m['Variable_name'] === 'total_found') {
+			$total = $m['Value'];
+		}
+	}
+
+	// get requestet portion of track-ids from sphinx
+	$itemsPerPage = 20;
+	$currentPage = intval($app->request->get('page'));
+	$currentPage = ($currentPage === 0) ? 1 : $currentPage;
+	$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	$stmt = $ln_sph->prepare("
+		SELECT itemid
+		FROM ". $app->config['sphinx']['mainindex']."
+		WHERE MATCH('@allchunks \"". $directory->fullpath. "\"')
+		AND type=:type
+		ORDER BY allchunks ASC
+		LIMIT :offset,:max
+		OPTION max_matches=".$total.";
+	");
+	$stmt->bindValue(':type', 4, PDO::PARAM_INT);
+	$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
+	$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
+	$stmt->execute();
+	$rows = $stmt->fetchAll();
+	$config['itemlist'] = [];
+	foreach($rows as $row) {
+		$config['itemlist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
+	}
+
+	// get additional stuff we need for rendering the view
+	$config['action'] = 'directorytracks';
+	$config['renderitems'] = getRenderItems($config['itemlist']);
+	$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+	$config['paginator_params'] = new JasonGrimes\Paginator(
+		$total,
+		$itemsPerPage,
+		$currentPage,
+		'/directory/'.join(DS, $itemParams) . '?page=(:num)'
+	);
+	$app->render('surrounding.htm', $config);
+});
+
 
 $app->get('/deliver/:item+', function($item) use ($app, $config){
 	$path = join(DS, $item);
