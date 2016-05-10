@@ -38,6 +38,20 @@ function addStars($searchterm) {
 	return $str;
 }
 
+/**
+ * limit displayed pages in paginator in case we have enourmous numbers
+ * @param int $currentPage : currentPage
+ * @return int : pages to be displayed
+ */
+function paginatorPages($currentPage) {
+	switch(strlen($currentPage)) {
+		case '5': return 5;
+		case '4': return 6;
+		case '3': return 7;
+		default:  return 10;
+	}
+}
+
 function removeStars($searchterm) {
 	return trim(str_replace("*", " ", $searchterm));
 }
