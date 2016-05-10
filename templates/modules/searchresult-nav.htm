@@ -23,37 +23,37 @@
 		<ul class="nav nav-pills type-nav">
 			<li class="{{ (searchcurrent == 'all') ? 'active' : '' }} {{ (search.all.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchall/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">All <span class="badge bg-col2">{{ search.all.total }}</span></h3>
+					<h3 class="uc">All <span class="badge bg-col2">{{ search.all.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'track') ? 'active' : '' }} {{ (search.track.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchtrack/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total }}</span></h3>
+					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'album') ? 'active' : '' }} {{ (search.album.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchalbum/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total }}</span></h3>
+					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'artist') ? 'active' : '' }} {{ (search.artist.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchartist/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Artists <span class="badge bg-col2">{{ search.artist.total }}</span></h3>
+					<h3 class="uc">Artists <span class="badge bg-col2">{{ search.artist.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'genre') ? 'active' : '' }} {{ (search.genre.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchgenre/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Genres <span class="badge bg-col2">{{ search.genre.total }}</span></h3>
+					<h3 class="uc">Genres <span class="badge bg-col2">{{ search.genre.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'label') ? 'active' : '' }} {{ (search.label.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchlabel/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Labels <span class="badge bg-col2">{{ search.label.total }}</span></h3>
+					<h3 class="uc">Labels <span class="badge bg-col2">{{ search.label.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (searchcurrent == 'dirname') ? 'active' : '' }} {{ (search.dirname.total == 0) ? 'disabled' : '' }}">
 				<a href="/searchdirname/page/1/sort/relevance/desc?q={{ search.all.term }}" data-ajaxtarget="#main" class="ajax-link">
-					<h3 class="uc">Directories <span class="badge bg-col2">{{ search.dirname.total }}</span></h3>
+					<h3 class="uc">Directories <span class="badge bg-col2">{{ search.dirname.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li>

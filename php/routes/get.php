@@ -94,6 +94,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$currentPage,
 			$urlPattern
 		);
+		$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
     	$app->render('surrounding.htm', $config);
 	});	
 }
@@ -171,14 +172,14 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 	// get all relational items we need for rendering
 	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
 	
-	
+	$currentPage = (($pagenum === 'current') ? $mpd->getCurrentPlaylistCurrentPage() : $pagenum);
 	$config['paginator_params'] = new JasonGrimes\Paginator(
 		$config['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
-		(($pagenum === 'current') ? $mpd->getCurrentPlaylistCurrentPage() : $pagenum),
+		$currentPage,
 		'/playlist/page/(:num)'
 	);
-		
+	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
 });
 
@@ -496,7 +497,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 		$fileBrowser->currentPage,
 		'/filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
 	);
-	
+	$config['paginator_params']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
 	$app->render('surrounding.htm', $config);
 });
 
@@ -551,6 +552,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 		$currentPage,
 		'/showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
 	);
+	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
 });
 
@@ -780,6 +782,7 @@ foreach(array_keys($sortfields1) as $className) {
 						$currentPage,
 						'/'.$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
 					);
+					$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
 				}
 			}
 			$config['renderitems'] = getRenderItems($config['itemlist']);
@@ -898,6 +901,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					$currentPage,
 					$urlPattern
 				);
+				$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
 				
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
@@ -1170,6 +1174,7 @@ $app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
 		$currentPage,
 		'/directory/'.join(DS, $itemParams) . '?page=(:num)'
 	);
+	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
 	$app->render('surrounding.htm', $config);
 });
 
