@@ -52,7 +52,7 @@
 				// $('.ui-autocomplete a.ajax-link').off('click', this.genericClickListener).on('click', this.genericClickListener);
 			});
 			
-			this.tabAutocomplete = that.searchfield.autocomplete({
+			this.tabAutocomplete = this.searchfield.autocomplete({
 				source: function( request, response ) {
 					NProgress.start();
 					$.ajax({
@@ -89,10 +89,36 @@
 					}
 				}
 			}).data("ui-autocomplete");
+			
+			/* override jqueryui's core function on our instance
+			 *   core: navigate through all silblings
+			 *   ours: navigate only through ".ui-menu-item"-silblings
+			 *
+			 * so the tabbed-nav-silbling won't get selected :)
+			 *
+			 */
+			this.tabAutocomplete.menu._move = function( direction, filter, event ) {
+				var next;
+				if ( this.active ) {
+					if ( direction === "first" || direction === "last" ) {
+						next = this.active
+							[ direction === "first" ? "prevAll" : "nextAll" ]( ".ui-menu-item" )
+							.eq( -1 );
+					} else {
+						next = this.active
+							[ direction + "All" ]( ".ui-menu-item" )
+							.eq( 0 );
+					}
+				}
+				if ( !next || !next.length || !this.active ) {
+					next = this.activeMenu.find( ".ui-menu-item" )[ filter ]();
+				}
+		
+				this.focus( event, next );
+			};
+			
 		     /* custom boostrap markup for items */
 			this.tabAutocomplete._renderItem = function (ul, item) {
-		     	
-		     	
 		     	var additionalMarkup = '';
 		     	switch(item.type) {
 		     		case 'track':
@@ -161,22 +187,21 @@
 		     };
 		     // create a few filter links in autocomplete widget
 			this.tabAutocomplete._renderMenu = function( ul, items, type ) {
-				var that = this;
-				var markup = $('<div>').attr('class', 'nav nav-pills ac-nav type-nav ');
+				var $markup = $('<div>').attr('class', 'nav nav-pills ac-nav type-nav ');
 				var filterLinks = ["all", "artist", "album", "label", "dirname"];
 				var cat = this.options.sourceCategory;
 				filterLinks.forEach(function(filter){
 					$('<button>').attr('type', 'button')
 					.attr('class', 'btn uc btn-primary' + ((cat === filter)?'active':''))
 					.attr('data-filter', filter)
-					.text(filter).bind('click', function(){
-						that.changeAutocompleteUrl(filter);
-					}).appendTo(markup);
+					.text(filter).on('click', function() {
+						that.changeAutocompleteUrl($(this).data('filter'));
+					}).appendTo($markup);
 				});
-				$(markup).wrapAll($('<li>').attr('class', 'ui-state-disabled')).appendTo(ul);
+				$('<li class="ui-state-disabled ui-menu-divider" />').append($markup).appendTo(ul);
 				
 				$.each( items, function( index, item ) {
-					that._renderItemData( ul, item );
+					that.tabAutocomplete._renderItemData( ul, item );
 				});
 			};
 			
