@@ -852,7 +852,14 @@ foreach(array_keys($sortfields) as $currentType) {
 				GROUP BY itemid,type
 				LIMIT 1;
 			");
-			$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
+			$stmt->bindValue(
+				':match', "
+				(' \"". addStars($term) . "\"') |
+				('\"". $term ."\"') |
+				('\"". str_replace(' ', '*', $term) ."\"')
+				",
+				PDO::PARAM_STR
+			);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 			}
@@ -887,7 +894,14 @@ foreach(array_keys($sortfields) as $currentType) {
 					".$sortQuery."
 					LIMIT :offset,:max
 					OPTION ranker=".$ranker.",max_matches=".$config['search'][$type]['total'].";");
-				$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
+				$stmt->bindValue(
+					':match', "
+					(' \"". addStars($term) . "\"') |
+					('\"". $term ."\"') |
+					('\"". str_replace(' ', '*', $term) ."\"')
+					",
+					PDO::PARAM_STR
+				);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 				if(($currentType !== 'all')) {
@@ -982,10 +996,11 @@ foreach(array_keys($sortfields) as $currentType) {
 }
 
 
-$app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config) {
+$app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 	foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 	}
+	$term = $app->request->get('q');
 	
 	$originalTerm = ($app->request->get('qo')) ? $app->request->get('qo') : $term;
 	
@@ -1021,19 +1036,16 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 	if(($type !== 'all')) {
 		$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 	}
-	if(($type == 'dirname')) {
-		#TODO: check if machingchizzle would also be usefule fpr other types
-		$stmt->bindValue(
-			':match', "
-			(' \"". addStars($originalTerm) . "\"') |
-			('\"". $originalTerm ."\"') |
-			('\"". str_replace(' ', '*', $originalTerm) ."\"')
-			",
-			PDO::PARAM_STR
-		);
-	} else {
-		$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
-	}
+	$stmt->bindValue(
+		':match', "
+		(' \"". addStars($originalTerm) . "\"') |
+		(' \"". addStars($term) . "\"') |
+		('\"". $originalTerm ."\"') |
+		('\"". $term ."\"') |
+		('\"". str_replace(' ', '*', $originalTerm) ."\"')
+		",
+		PDO::PARAM_STR
+	);
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
 	$meta = $ln_sph->query("SHOW META")->fetchAll();
@@ -1060,9 +1072,8 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 				$app->urlFor(
 					'autocomplete',
 					array(
-						'type' => $type,
-						'term' => $suggest)
-					) . '?suggested=1&qo=' . rawurlencode($term));
+						'type' => $type)
+					) . '?suggested=1&q=' . rawurlencode($suggest) . '&qo=' . rawurlencode($term));
 			$app->stop();
 		}
 	} else {

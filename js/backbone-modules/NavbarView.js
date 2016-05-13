@@ -56,7 +56,7 @@
 				source: function( request, response ) {
 					NProgress.start();
 					$.ajax({
-						url: "/autocomplete/all/" + $('#mainsearch').val(),
+						url: "/autocomplete/all/?q=" + decodeURIComponent($('#mainsearch').val()),
 		          		dataType: "json",
 		          		type: 'get',
 		          		success: function( data ) {
@@ -243,7 +243,7 @@
 			this.searchfield.autocomplete('option', 'source', function( request, response ) {
 				NProgress.start();
 				$.ajax({
-					url: "/autocomplete/"+ type+"/" + that.searchfield.val(),
+					url: "/autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 		      		dataType: "json",
 		      		type: 'get',
 		      		success: function( data ) {
