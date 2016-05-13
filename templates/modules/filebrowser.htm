@@ -168,8 +168,8 @@
 	{# music files #}
 	{% if files.music|length %}
 	{% for item in files.music %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
-		<div class="row track-row">
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+		<div class="row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks

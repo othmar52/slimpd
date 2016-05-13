@@ -22,14 +22,14 @@
 </div>
 	
 {% for item in itemlist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
-
 	{% if item is instanceofTrack %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
 		{% include 'partials/trackrow-1.htm' %}
 	{% endif %}
 	
 
 	{% if item is instanceofDirectory %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-directory.htm' %}
 	{% endif %}
 </div>
