@@ -26,24 +26,29 @@
 {% include 'partials/trackrow-1-header.htm' %}
 
 {% for item in itemlist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	{% if item is instanceofAlbum %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-album.htm' %}
 	{% endif %}
 	{% if item is instanceofTrack %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
 		{% include 'partials/trackrow-1.htm' %}
 	{% endif %}
 	
 	{% if item is instanceofLabel %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-label.htm' %}
 	{% endif %}
 	{% if item is instanceofArtist %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-artist.htm' %}
 	{% endif %}
 	{% if item is instanceofGenre %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-genre.htm' %}
 	{% endif %}
 	{% if item is instanceofDirectory %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-directory.htm' %}
 	{% endif %}
 </div>

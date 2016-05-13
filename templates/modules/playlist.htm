@@ -28,10 +28,11 @@
 	
 	
 {% for item in playlist.tracks %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }}">
 	{% if item.error == 'notfound' %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
 		{% include 'partials/trackrow-1.htm' %}
 	{% endif %}
 </div>
