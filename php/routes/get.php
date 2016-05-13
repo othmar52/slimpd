@@ -1017,9 +1017,22 @@ $app->get('/autocomplete/:type/:term', function($type, $term) use ($app, $config
 		GROUP BY itemid,type
 		LIMIT $start,$offset
 		OPTION ranker=sph04");
-	$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
+	
 	if(($type !== 'all')) {
 		$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
+	}
+	if(($type == 'dirname')) {
+		#TODO: check if machingchizzle would also be usefule fpr other types
+		$stmt->bindValue(
+			':match', "
+			(' \"". addStars($originalTerm) . "\"') |
+			('\"". $originalTerm ."\"') |
+			('\"". str_replace(' ', '*', $originalTerm) ."\"')
+			",
+			PDO::PARAM_STR
+		);
+	} else {
+		$stmt->bindValue(':match', '(' . $term . ')|(' . addStars($term) . ')', PDO::PARAM_STR);
 	}
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
