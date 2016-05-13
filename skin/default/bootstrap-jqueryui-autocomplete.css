@@ -34,6 +34,7 @@
     background-color: inherit;
     border-radius: 0;
     border: 3px solid transparent;
+    border-width:0 0 3px 0;
     outline: none;
 }
 
@@ -50,4 +51,8 @@
 	position: absolute;
 	left:-999em;
 	display: none;
+}
+
+.ac-nav {
+	padding-bottom: 0.5em;
 }
