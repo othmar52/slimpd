@@ -971,7 +971,6 @@ foreach(array_keys($sortfields) as $currentType) {
 						'img' => '/skin/default/img/icon-label.png' // TODO: add not-found-icon
 					];
 				} else {
-					$config['search'][$type]['time'] = number_format(microtime(TRUE) - $config['search'][$type]['time'],3);
 					$filterTypeMappingF = array_flip($filterTypeMapping);
 					foreach($rows as $row) {
 						switch($filterTypeMappingF[$row['type']]) {
@@ -999,6 +998,7 @@ foreach(array_keys($sortfields) as $currentType) {
 						$config['itemlist'][] = $obj;
 					}
 				}
+				$config['search'][$type]['time'] = number_format(microtime(TRUE) - $config['search'][$type]['time'],3);
 			}
 		}
 		$config['action'] = 'searchresult.' . $currentType;
