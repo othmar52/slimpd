@@ -13,13 +13,13 @@
         mode : 'local',
         playerSelector : '#jquery_jplayer_1',
         
-        faviconDoghnutColor : 'rgb(66,241,50)',
+        faviconDoghnutColor : window.sliMpd.conf.color.local.favicon,
         faviconBackgroundColor : '#444',
         
         timeGridSelectorCanvas : 'timegrid-local',
 		timeGridSelectorSeekbar : '.jp-seek-bar',
-		timeGridStrokeColor : '#157720',
-		timeGridStrokeColor2 : '#2DFF45',
+		timeGridStrokeColor : window.sliMpd.conf.color.local.secondary,
+		timeGridStrokeColor2 : window.sliMpd.conf.color.local.primary,
 		
 		state : {
         	repeat : 1,

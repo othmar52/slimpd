@@ -7,7 +7,7 @@
     	</div>
     	<object class="waveform svg-ajax-object"
     		data="{{ placeholderSvgUrl }}"
-    		data-svgurl="{{ waveformSvgUrl }}" type="image/svg+xml">
+    		data-svgurl="{{ waveformSvgUrl }}?colorFor=mpd" type="image/svg+xml">
     	</object>
     	<div class="mpd-status-timestring status-timestring">
     		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
@@ -180,6 +180,8 @@
     <div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
     
     {# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
-    <style type="text/css">{% include 'css/mpdplayer.css' with{ relativePathHash: item.relativePathHash} %}</style>
+    <style type="text/css">{% include 'css/nowplaying.css' with {
+    		relativePathHash: item.relativePathHash,
+    		color: colors[ spotcolor.mpd ]['1st'] } %}</style>
 
 {% endblock %}
