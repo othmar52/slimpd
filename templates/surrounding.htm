@@ -25,7 +25,8 @@
 			'skin/default/player.css',
 			'skin/default/nprogress.css',
 			'skin/default/breadcrumb.css',
-			'skin/default/fullwidth-bg-row.css'
+			'skin/default/fullwidth-bg-row.css',
+			'css/spotcolors.css'
     		]
 		%}
     	 
@@ -40,7 +41,7 @@
 		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{ config.absRefPrefix }}css/xwaxplayer/0" />
 		{% endfor %}
 	</head>
-	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} {{ playerMode == 'mpd' ? 'spotcol-1' : 'spotcol-2' }} ">
+	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
 			
 			{% include 'modules/header-menu.htm' %}
@@ -263,6 +264,25 @@
 		    </div>
 		  </div>
 		</div>
+		<script type="text/javascript">
+			var sliMpd = sliMpd || {};
+			sliMpd.conf = {
+				color: {
+					mpd: {
+						bodyclass: 'spotcol-{{ spotcolor.mpd }}',
+						primary: '{{ colors[ spotcolor.mpd ]['1st'] }}',
+						secondary: '{{ colors[ spotcolor.mpd ]['2nd'] }}',
+						favicon: '{{ colors[ spotcolor.mpd ]['fav'] }}',
+					},
+					local: {
+						bodyclass: 'spotcol-{{ spotcolor.local }}',
+						primary: '{{ colors[ spotcolor.local ]['1st'] }}',
+						secondary: '{{ colors[ spotcolor.local ]['2nd'] }}',
+						favicon: '{{ colors[ spotcolor.local ]['fav'] }}',
+					}
+				}
+			};
+		</script>
 		
 		{% set jsfiles = [
     		'vendor-dist/components/jquery/jquery.min.js',

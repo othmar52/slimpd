@@ -15,7 +15,6 @@ body {
 	padding-bottom: 120px;
 	font-family: "sfnsdisplay", "sans-serif";
 	font-size: 1.4em;
-	letter-spacXing: -0.3pt;
 	color: #EEE;
 }
 
@@ -27,17 +26,14 @@ body {
 }
 .bg-col2 {
 	background-color: #252525;
-	
 }
 
 .bg-col3 {
 	background-color: #2D2D2D;
-	
 }
 
 .bg-col4 {
 	background-color: #000;
-	
 }
 
 .bg-col5 {
@@ -48,35 +44,22 @@ body {
 	color: #EEE;
 }
 
-.col2, .col2 a {
-	color: #FF9C01;
+.col2 {
+	/* @see: templates/css/spotcolors.css for overrides */
 }
 
 .col3 {
 	color: #CCC;
 }
 
-.spotcol-2 .col2,
-.spotcol-2 .col2 a {
-	color: rgb(59,187,47);
+*::selection {
+  background-color: #FFF;
+  color: #000;
 }
 
-::selection {
-  background: #000;
-  color: #FF9C01;
-}
-
-::-moz-selection {
-  background: #000;
-  color: #FF9C01;
-}
-
-.spotcol-2 *::selection {
-	color: rgb(59,187,47);
-}
-
-.spotcol-2 *::-moz-selection {
-	color: rgb(59,187,47);
+*::-moz-selection {
+  background-color: #FFF;
+  color: #000;
 }
 
 hr,
@@ -89,7 +72,6 @@ hr,
 }
 
 h2 {
-	f!ont-weight: 100;
 	font-size: 1.7em;
 	font-family: "sfnsdisplay-light";
 }
@@ -248,6 +230,7 @@ a {
 	color: #353535;
 }
 
+/* @see: templates/css/spotcolors.css for overrides */
 .pagination>.active>a,
 .pagination>.active>a:focus,
 .pagination>.active>a:hover,
@@ -259,22 +242,9 @@ a {
 .nav-pills>li.active>a:hover {
     color: #fff;
     background-color: inherit;
-    border-bottom: 3px solid #FF9C01;
+    border-bottom: 3px solid #FFF;
     border-radius: 0;
 }
-
-.spotcol-2 .pagination>.active>a,
-.spotcol-2 .pagination>.active>a:focus,
-.spotcol-2 .pagination>.active>a:hover,
-.spotcol-2 .pagination>.active>span,
-.spotcol-2 .pagination>.active>span:focus,
-.spotcol-2 .pagination>.active>span:hover,
-.spotcol-2 .nav-pills>li.active>a,
-.spotcol-2 .nav-pills>li.active>a:focus,
-.spotcol-2 .nav-pills>li.active>a:hover {
-    border-bottom: 3px solid rgb(59,187,47);
-}
-
 
 .type-nav h3 {
 	margin: 0;
@@ -483,9 +453,10 @@ body.vstretch14 {
 }
 
 /* mpd branding of notification widget */
+/* @see: templates/css/spotcolors.css for overrides */
 .alert-mpd {
 	background-color: #000;
-	border-left: 3px solid #FF9C01;
+	border-left: 3px solid #FFFFFF;
 }
 
 /* force displaying filename instead of tag attributes */

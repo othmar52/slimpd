@@ -1,11 +1,20 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="/skin/default/waveform-{{colorIndex}}.css" type="text/css"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg width="100%" height="100%" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
   <svg y="0%" width="100%" height="100%">
+  <style type="text/css" ><![CDATA[
+	line.l {
+	  stroke: {{ color }};
+	  stroke-width: 2px;
+	}
+	line.b {
+	  stroke: rgba(0,0,0,0);
+	  stroke-width: 1px;
+	}
+  ]]></style>
   {% for i in peakvalues %}
-    <line class="l" x1="{{ i['x'] }}%" y1="{{ i['y1'] }}%" x2="{{ i['x'] }}%" y2="{{ i['y2'] }}%" />
-    <line class="b" x1="{{ i['x'] }}%" y1="{{ i['y1'] }}%" x2="{{ i['x'] }}%" y2="{{ i['y2'] }}%" /> 
+	<line class="l" x1="{{ i['x'] }}%" y1="{{ i['y1'] }}%" x2="{{ i['x'] }}%" y2="{{ i['y2'] }}%" />
+	<line class="b" x1="{{ i['x'] }}%" y1="{{ i['y1'] }}%" x2="{{ i['x'] }}%" y2="{{ i['y2'] }}%" /> 
   {% endfor %}
   </svg>
 </svg>

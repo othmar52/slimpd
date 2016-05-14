@@ -135,12 +135,23 @@ class Svggenerator {
 		}
     
 		header("Content-Type: image/svg+xml");
-		$colorIndex = \Slim\Slim::getInstance()->request->get('color');
+		$app = \Slim\Slim::getInstance();
+		switch( $app->request->get('colorFor') ) {
+			case 'mpd':
+				$color = $app->config['colors'][ $app->config['spotcolor']['mpd'] ]['1st'];
+				break;
+			case 'local':
+				$color = $app->config['colors'][ $app->config['spotcolor']['local'] ]['1st'];
+				break;
+			default:
+				$color = $app->config['colors']['defaultwaveform'];
+				break;
+		}
 		\Slim\Slim::getInstance()->render(
 			'svg/waveform.svg',
 			array(
 				'peakvalues' => $renderValues,
-				'colorIndex' => (($colorIndex) ? $colorIndex : '1')
+				'color' => $color
 			)
 		);
 		exit;

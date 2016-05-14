@@ -1,0 +1,33 @@
+{% for colname,values in colors %}
+  {% if values['1st'] %}
+
+.spotcol-{{ colname }} .col2,
+.spotcol-{{ colname }} .col2 a {
+  color: {{ values['1st'] }};
+}
+
+.spotcol-{{ colname }} .pagination>.active>a,
+.spotcol-{{ colname }} .pagination>.active>a:focus,
+.spotcol-{{ colname }} .pagination>.active>a:hover,
+.spotcol-{{ colname }} .pagination>.active>span,
+.spotcol-{{ colname }} .pagination>.active>span:focus,
+.spotcol-{{ colname }} .pagination>.active>span:hover,
+.spotcol-{{ colname }} .nav-pills>li.active>a,
+.spotcol-{{ colname }} .nav-pills>li.active>a:focus,
+.spotcol-{{ colname }} .nav-pills>li.active>a:hover,
+.spotcol-{{ colname }} .ac-nav button.btn-primaryactive {
+    border-bottom: 3px solid {{ values['1st'] }};
+}
+
+.spotcol-{{ colname }} .playerModeToggle a,
+.spotcol-{{ colname }} #nprogress .bar {
+	background-color: {{ values['1st'] }};
+}
+
+
+  {% endif %}
+{% endfor %}
+
+.alert-mpd {
+	border-left: 3px solid {{ colors[ spotcolor.mpd ]['1st'] }};
+}

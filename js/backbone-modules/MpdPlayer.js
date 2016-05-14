@@ -10,15 +10,14 @@
         modules : {}
     });
     window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.AbstractPlayer.extend({
-
         mode : 'mpd',
-        faviconDoghnutColor : 'rgb(255,156,1)',
+        faviconDoghnutColor : window.sliMpd.conf.color.mpd.favicon,
         faviconBackgroundColor : '#444',
         
         timeGridSelectorCanvas : 'timegrid-mpd',
 		timeGridSelectorSeekbar : '.mpd-ctrl-seekbar',
-		timeGridStrokeColor : '#7B6137',
-		timeGridStrokeColor2 : '#FCC772',
+		timeGridStrokeColor : window.sliMpd.conf.color.mpd.secondary,
+		timeGridStrokeColor2 : window.sliMpd.conf.color.mpd.primary,
 		
 		state : {
         	repeat : 0,

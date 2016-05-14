@@ -1,16 +1,9 @@
-
-
 /* player mode toggler */
-.active-local {
+/* @see: templates/css/spotcolors.css for overrides */
+.playerModeToggle a {
+	border-radius: 0;
 	color: #000;
-	background-color: rgb(59,187,47);
 }
-.active-mpd {
-	color: #000;
-	background-color: rgb(255,156,1);
-}
-
-
 
 .permaplayer {
 	border-top: 4px solid #000;

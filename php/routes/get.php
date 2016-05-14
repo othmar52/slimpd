@@ -310,12 +310,27 @@ foreach([
 	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $config, $markupSnippet){
 		$config['relativePathHash'] = $relativePathHash;
 		$config['deck'] = $app->request->get('deck');
+		if($markupSnippet === 'localplayer') {
+			$config['color'] = $config['colors'][ $config['spotcolor']['local'] ]['1st'];
+			$markupSnippet = 'nowplaying';
+		}
+		if($markupSnippet === 'mpdplayer') {
+			$config['color'] = $config['colors'][ $config['spotcolor']['mpd'] ]['1st'];
+			$markupSnippet = 'nowplaying';
+		}
+		if($markupSnippet === 'xwaxplayer') {
+			$config['color'] = $config['colors'][ $config['spotcolor']['xwax'] ]['1st'];
+			$markupSnippet = 'nowplaying';
+		}
 		$app->response->headers->set('Content-Type', 'text/css');
 		$app->render('css/'.$markupSnippet.'.css', $config);
 	});
 }
 
-
+$app->get('/css/spotcolors.css', function() use ($app, $config){
+	$app->response->headers->set('Content-Type', 'text/css');
+	$app->render('css/spotcolors.css', $config);
+});
 
 // predefined album-image sizes
 foreach (array(35, 50,100,300,1000) as $imagesize) {
@@ -405,7 +420,6 @@ $app->get('/importer(/)', function() use ($app, $config){
 $app->get('/importer/triggerUpdate', function() use ($app, $config){
 	\Slimpd\importer::queStandardUpdate();
 });
-
 
 $app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use ($app, $config){
 	$svgGenerator = new \Slimpd\Svggenerator($itemParam);
