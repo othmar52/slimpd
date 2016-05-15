@@ -182,14 +182,6 @@ class mpd
 		switch($cmd) {
 			case 'update':
 			case 'updateMpdAndPlay':
-			
-			/* TODO: check removal begin */
-			case 'appendTrackToPlaylist':
-			case 'appendTrackToPlaylistAndPlay':
-			case 'addPlaylistToPlaylist':
-			case 'replaceCurrentPlaylist':
-			case 'replaceCurrentPlaylistKeepTrack':
-			/* TODO: check removal end */
 				
 			case 'appendTrack':
 			case 'appendTrackAndPlay':
@@ -246,7 +238,7 @@ class mpd
 				notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
 				return;
 			} else {
-				$this->clearPlaylistNotCurrent();
+				$this->softclearPlaylist();
 			}
 		}
 
@@ -427,53 +419,9 @@ class mpd
 				notifyJson("MPD: cleared playlist", 'mpd');
 				break;
 				
-			case 'clearPlaylistNotCurrent':
-				$this->clearPlaylistNotCurrent();
+			case 'softclearPlaylist':
+				$this->softclearPlaylist();
 				notifyJson("MPD: cleared playlist", 'mpd');
-				break;
-				
-			case 'addPlaylistToPlaylist':
-				if($itemType !== 'file') {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
-					return;
-				}
-				$playlist = new \Slimpd\playlist\playlist($itemPath);
-
-				$playlist->fetchTrackRange(0,1000, TRUE);
-				$counter = $this->appendPlaylist($playlist);
-				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
-				break;
-				
-			case 'replaceCurrentPlaylist':
-				if($itemType !== 'file') {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
-					return;
-				}
-				$playlist = new \Slimpd\playlist\playlist($itemPath);
-				
-				# TODO: should we really limit trackamount to add?
-				$playlist->fetchTrackRange(0,1000, TRUE);
-				
-				$this->mpd('clear');
-				$counter = $this->appendPlaylist($playlist);
-				$this->mpd('play 0');
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)", 'mpd');
-				break;
-				
-			case 'replaceCurrentPlaylistKeepTrack':
-				if($itemType !== 'file') {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
-					return;
-				}
-				$playlist = new \Slimpd\playlist\playlist($itemPath);
-				
-				# TODO: should we really limit trackamount to add?
-				$playlist->fetchTrackRange(0,1000, TRUE);
-				
-				$this->clearPlaylistNotCurrent();
-				$counter = $this->appendPlaylist($playlist);
-				
-				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)", 'mpd');
 				break;
 				
 			case 'removeDupes':
@@ -574,7 +522,7 @@ class mpd
 		
 	}
 
-	public function clearPlaylistNotCurrent() {
+	public function softclearPlaylist() {
 		$status 		= $this->mpd('status');
 		$songId		= isset($status['songid']) ? $status['songid'] : 0;
 		if($songId > 0) {

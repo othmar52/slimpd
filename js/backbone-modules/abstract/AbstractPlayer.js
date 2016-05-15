@@ -108,16 +108,7 @@
 	        	case 'prev': this.prev(item); break;
 	        	case 'seek': this.seek(item); break;
 	        	case 'remove': this.remove(item); break;
-	        	
-	        	/* TODO: check removal begin */
-	        	case 'clearPlaylistNotCurrent': this.clearPlaylistNotCurrent(item); break;
-	        	case 'appendTrackToPlaylist': this.appendTrackToPlaylist(item); break;
-	        	case 'appendTrackToPlaylistAndPlay': this.appendTrackToPlaylistAndPlay(item); break;
-	        	case 'addDirToPlaylist': this.addDirToPlaylist(item); break;
-	        	case 'addPlaylistToPlaylist': this.addPlaylistToPlaylist(item); break;
-	        	case 'replaceCurrentPlaylist': this.replaceCurrentPlaylist(item); break;
-	        	case 'replaceCurrentPlaylistKeepTrack': this.replaceCurrentPlaylistKeepTrack(item); break;
-	        	/* TODO: check removal end */
+	        	case 'softclearPlaylist':     this.softclearPlaylist(item); break;
 	        	
 	        	case 'appendTrack':            this.appendTrack(item);                break;
 	        	case 'appendTrackAndPlay':     this.appendTrackAndPlay(item);         break;
@@ -162,16 +153,7 @@
         seek : function(item) { return; },
         remove : function(item) { return; },
         
-        /* TODO: check removal begin */
-        clearPlaylistNotCurrent : function(item) { return; },
-        appendTrackToPlaylist : function(item) { return; },
-        appendTrackToPlaylistAndPlay : function(item) { return; },
-        addDirToPlaylist : function(item) { return; },
-        addPlaylistToPlaylist : function(item) { return; },
-        replaceCurrentPlaylist : function(item) { return; },
-        replaceCurrentPlaylistKeepTrack : function(item) { return; },
-        /* TODO: check removal end */
-       
+        softclearPlaylist : function(item) { return; },
        
 		appendTrack : function(item) { return; },
 		appendTrackAndPlay : function(item) { return; },

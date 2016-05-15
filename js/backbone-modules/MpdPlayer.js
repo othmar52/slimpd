@@ -106,55 +106,12 @@
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
         
-        
-        
-        /* TODO: check removal begin */
-        clearPlaylistNotCurrent : function(item) {
+        softclearPlaylist : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        	window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
         },
-        
-        appendTrackToPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.appendTrackToPlaylist.call(this, item);
-        },
-        
-        appendTrackToPlaylistAndPlay : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.appendTrackToPlaylistAndPlay.call(this, item);
-        },
-        
-        addDirToPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.addDirToPlaylist.call(this, item);
-        },
-        
-        addPlaylistToPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.addPlaylistToPlaylist.call(this, item);
-        },
-        
-        replaceCurrentPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylist.call(this, item);
-        },
-        
-        replaceCurrentPlaylistKeepTrack : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
-        },
-        /* TODO: check removal end */
-        
-        
-        
-        
+
         
         
 		// TODO: check current route and refresh in case we are on current mpd-playlist

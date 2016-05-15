@@ -570,6 +570,13 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
     $app->render('surrounding.htm', $config);
 });
 
+$app->get('/markup/widget-playlist/:itemParams+', function($itemParams) use ($app, $config){
+	$config['action'] = 'widget-playlist';
+	$config['playlist'] = new \Slimpd\playlist\playlist(join(DS, $itemParams));
+	$config['playlist']->fetchTrackRange(1, 2);
+	$config['breadcrumb'] =  \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+	$app->render('modules/widget-playlist.htm', $config);
+});
 
 
 $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $config){

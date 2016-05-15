@@ -191,8 +191,9 @@
 			</div>
 	  	</div>
 	  	
-	  	{% if modules.enable_xwax %}
+	  	
 	  	<div class="col-md-3">
+	  		{% if modules.enable_xwax %}
 	  		<div class="col-md-12">
 	  			<h3>Auflegen</h3>
 	  			<div class="row">
@@ -211,8 +212,20 @@
 					</button>
 	  			</div>
 	  		</div>
+	  		
+	  		<div class="col-md-12">
+	  			<h3>Download</h3>
+	  		</div>
+	  		<div class="col-md-12">
+	  			<a href="/deliver/{{item.relativePath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
+	  		</div>
+	  		<div class="col-md-12">
+	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-download"></i> Album</a>
+	  		</div>
+	  		{% endif %}
+	  		
 	  	</div>
-	  	{% endif %}
+	  	
 	  	
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
@@ -230,30 +243,7 @@
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-refresh"></i> neu einlesen</a>
 	  		</div>
-	  	</div>
-	  </div>
-	  
-	  
-	  
-	  <div class="row">
-	  	<div class="col-md-3">
-	  
-	  	</div>
-	  	<div class="col-md-3">
-	  	
-	  	</div>
-	  	<div class="col-md-3">
-	  		<div class="col-md-12">
-	  			<h3>Download</h3>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="/deliver/{{item.relativePath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
-	  		</div>
-	  		<div class="col-md-12">
-	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-download"></i> Album</a>
-	  		</div>
-	  	</div>
-	  	<div class="col-md-3">
+	  		
 	  		<div class="col-md-12">
 	  			<h3>Suchen</h3>
 	  		</div>
@@ -280,9 +270,11 @@
 	  				<img src="/skin/default/img/icon-beatport.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Beatport
 	  			</a>
 	  		</div>
+	  		
+	  		
 	  	</div>
-	  	
 	  </div>
+
 	  
   
   </div>

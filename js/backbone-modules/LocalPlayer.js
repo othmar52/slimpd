@@ -204,34 +204,12 @@
         	window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
         },
-		
-		
-		/* TODO: check removal begin */
-		clearPlaylistNotCurrent : function(item) {
+
+		softclearPlaylist : function(item) {
         	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        	window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
         },
-        
-        addDirToPlaylist : function(item) {
-        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.addDirToPlaylist.call(this, item);
-        },
-        
-        addPlaylistToPlaylist : function(item) {
-        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.addPlaylistToPlaylist.call(this, item);
-        },
-        
-        replaceCurrentPlaylist : function(item) {
-        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylist.call(this, item);
-        },
-        
-        replaceCurrentPlaylistKeepTrack : function(item) {
-        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
-        },
-        /* TODO: check removal end */
+
         
         
         
