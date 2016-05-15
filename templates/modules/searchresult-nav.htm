@@ -1,11 +1,11 @@
-{% set startnum = paginator_params.currentPage*paginator_params.itemsPerPage+1-paginator_params.itemsPerPage %}
+{% set startnum = paginator.currentPage*paginator_params.itemsPerPage+1-paginator_params.itemsPerPage %}
 
-{% if paginator_params.currentPage == paginator_params.numPages %}
-	{% set endnum = paginator_params.totalItems %}
+{% if paginator.currentPage == paginator_params.numPages %}
+	{% set endnum = paginator.totalItems %}
 {% else %}
-	{% set endnum = paginator_params.currentPage*paginator_params.itemsPerPage %}
+	{% set endnum = paginator.currentPage*paginator_params.itemsPerPage %}
 {% endif %}
-{% if paginator_params.totalItems == 0 %}
+{% if paginator.totalItems == 0 %}
 	{% set resultsetstring = 0 %}
 {% else %}
 	{% set resultsetstring = startnum~' - '~endnum~' of '~search[searchcurrent].total %}

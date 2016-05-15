@@ -11,10 +11,10 @@
 
 <div class="row">
 	<div class="col-md-2">
-		<span class="badge">{{paginator_params.totalitems}}</span> Tracks
+		<span class="badge">{{paginator.totalitems}}</span> Tracks
 	</div>
 	<div class="col-md-8 centered-text">
-		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+		{% include 'modules/paginator.htm' %}
 	</div>
 	<div class="col-md-2">
 		
@@ -38,6 +38,6 @@
 
 <div class="row">
 	<div class="col-md-12 centered-text">
-		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+		{% include 'modules/paginator.htm' %}
 	</div>
 </div>

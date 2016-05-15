@@ -2,7 +2,7 @@
 
 {% if tracklist|length > 0 %}
 
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+{% include 'modules/paginator.htm' %}
 
 <div class="tracks_container">
 {% include 'partials/trackrow-1-header.htm' %}
@@ -12,7 +12,7 @@
 	<div class="clearfix"> </div>
 	
 </div>
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+{% include 'modules/paginator.htm' %}
 {% else %}
 <h3>nothing found...</h3>
 {% endif %}

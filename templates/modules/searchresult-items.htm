@@ -7,7 +7,7 @@
 		{% include 'partials/results-per-page.htm' %}
 	</div>
 	<div class="col-md-6 centered-text">
-		{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+		{% include 'modules/paginator.htm' %}
 	</div>
 	<div class="col-md-3">
 		<div class="pull-right">
@@ -62,10 +62,10 @@
 </div>
 <div class="row replace-me-with-proper-css"><br><br></div>
 
-	{% if paginator_params.numPages > 1 %}
+	{% if paginator.numPages > 1 %}
 	<div class="row">
 		<div class="col-md-12 centered-text">
-			{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+			{% include 'modules/paginator.htm' %}
 		</div>
 	</div>
 	
