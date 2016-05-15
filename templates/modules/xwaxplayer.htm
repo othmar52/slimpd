@@ -4,7 +4,7 @@
     	<div class="row">
     		<div class="col-md-2">
 		    	<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
-		    		<img src="/image-100/album/{{ item.albumId }}" style="height: 50px;" />
+		    		<img src="/image-100/album/{{ item.albumId }}" style="width: 50px; height: 50px;" />
 		    	</a>
     		</div>
     		<div class="col-md-10">
@@ -37,7 +37,7 @@
 				    	</div>
 				    	<object class="waveform svg-ajax-object"
 				    		data="{{ placeholderSvgUrl }}"
-				    		data-svgurl="{{ waveformSvgUrl }}?color=3&mode=half" type="image/svg+xml">
+				    		data-svgurl="{{ waveformSvgUrl }}?colorFor=xwax&mode=half" type="image/svg+xml">
 				    	</object>
 				    	<!--canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}} timegrid"></canvas-->
     				</div>

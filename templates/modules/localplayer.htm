@@ -1,105 +1,22 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
+{% if item.relativePath %}
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
 		<div class="col-md-1"> </div>
 		<div class="col-sm-12 col-md-4">
-	    	<object class="waveform svg-ajax-object"
-	    		data="{{ placeholderSvgUrl }}"
-	    		data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
-	    	</object>
-		    	
-
-    		<div class="jp-play-bar"></div>
-    		<div class="jp-seek-bar"></div>
-    		
-    		
-
-	    	<div class="mpd-status-timestring status-timestring">
-	    		<span class="jp-current-time" role="timer" aria-label="time">&nbsp;</span>&nbsp; | &nbsp;
-	        	<span class="jp-duration" role="timer" aria-label="duration">&nbsp;</span>
-	    	</div>
-	    	<canvas id="timegrid-local" class="timegrid-local timegrid slimplayer-hidden"></canvas> 	
+			{% include 'partials/player/local-seekbar.htm' %}
 		</div>
-		
-		
 	    <div class="hidden-xs col-md-1 slimplayer-hidden">
-	    	<div class="row jp-controls">
-				<div class="col-sm-4">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev"}'>
-						<i class="fa fa-chevron-left sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-4">
-					<button role="control" class="btn btn-trnsp localplayer-play-pause player-ctrl" data-player='{"action":"togglePause"}'>
-						<i class="fa fa-pause sign-ctrl fa-lg"></i>
-					</button>
-				</div>
-				<div class="col-sm-4">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next"}'>
-						<i class="fa fa-chevron-right sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-			</div>
-			<div class="row">
-				
-				
-				<div class="col-sm-4 status-random">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom"}'>
-						<i class="fa fa-random sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-4 status-repeat">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat"}'>
-						<i class="fa fa-repeat sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-4 status-consume">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume"}'>
-						<i class="fa fa-fire sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-sm-12 small">
-					<a href="/playlist/page/current" data-ajaxtarget="#main" class="ajax-link">Warteschlange</a>
-				</div>
-	    	</div>
-	    
-	    
+			{% include 'partials/player/local-controls.htm' %}
 	    </div>
-	     
 	    <div class="col-sm-7 col-md-1 slimplayer-hidden" style="height: 100px;">
 	    	<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
 	    		<img src="/image-100/album/{{ item.albumId }}" />
 	    	</a>
 	    </div>
-	    
 	    <div class="col-sm-5 slimplayer-hidden">
-	    	{% if item.id %}
-	    	<div class="row">
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
-			</div>
-			<div class="row">
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
-			</div>
-			{% else %}
-				{% if item.relativePath %}
-					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-					<br />
-					<div class="darker-links">
-						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-					</div>
-					{% include 'partials/track/not-imported-badge.htm' %}
-				{% else %}
-					{% include 'partials/track/no-track-selected-badge.htm' %}
-				{% endif %}
-			{% endif %}
-			{% if item.relativePath %}
+			{% include 'partials/player/trackmeta.htm' %}
 			<div class="row">
 				<div class="col-sm-12 small">
 					{# TODO: remove external liking as soon we have implemented a proper functionality #}
@@ -110,82 +27,18 @@
 					{% include 'partials/track/audioformat.htm' %}
 				</div>
 	    	</div>
-	    	{% endif %}
 	    </div>
-	    
-	    
-	    
-	    
-	    
-	    
-	     <div class="col-md-2 slimplayer-show">
-	    	<div class="row jp-controls">
-				<div class="col-sm-2">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev"}'>
-						<i class="fa fa-chevron-left sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-2">
-					<button role="control" class="btn btn-trnsp localplayer-play-pause player-ctrl" data-player='{"action":"togglePause"}'>
-						<i class="fa fa-pause sign-ctrl fa-lg"></i>
-					</button>
-				</div>
-				<div class="col-sm-2">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next"}'>
-						<i class="fa fa-chevron-right sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				
-				
-				<div class="col-sm-2 status-random">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom"}'>
-						<i class="fa fa-random sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-2 status-repeat">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat"}'>
-						<i class="fa fa-repeat sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-				<div class="col-sm-2 status-consume">
-					<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume"}'>
-						<i class="fa fa-fire sign-ctrl fa-fw"></i>
-					</button>
-				</div>
-			</div>
+		<div class="col-md-2 slimplayer-show">
+			{% include 'partials/player/local-controls-slim.htm' %}
 	    </div>
-	    
 	    <div class="col-sm-5 slimplayer-show">
-	    	{% if item.id %}
-	    	<div class="row">
-	    		<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
-				<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
-				<div class="col-sm-4">
-					{% include 'partials/year/link.htm' %}
-					<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal pull-right">
-						<i class="fa fa-align-justify fa-sm"></i>
-					</button>	
-				</div>
-			</div>
-			{% else %}
-				{% if item.relativePath %}
-					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-					<br />
-					<div class="darker-links">
-						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-					</div>
-					{% include 'partials/track/not-imported-badge.htm' %}
-				{% else %}
-					{% include 'partials/track/no-track-selected-badge.htm' %}
-				{% endif %}
-			{% endif %}
+			{% include 'partials/player/trackmeta-slim.htm' %}
 	    </div>
-	    
-	    
-	    
 	</div>
-	</div>
+</div>
 		    
-	<div class="now-playing-string" style="display: none;" data-hash="{{ item.relativePathHash }}">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %} by {% include 'partials/artist/string.htm' %}</div>
-   
+{% include 'partials/player/nowplaying-string.htm' %}
+{% else %}
+	{% include 'partials/player/empty-player.htm' %}
+{% endif %}
 {% endblock %}

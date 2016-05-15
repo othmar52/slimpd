@@ -143,6 +143,9 @@ class Svggenerator {
 			case 'local':
 				$color = $app->config['colors'][ $app->config['spotcolor']['local'] ]['1st'];
 				break;
+			case 'xwax':
+				$color = $app->config['colors'][ $app->config['spotcolor']['xwax'] ]['1st'];
+				break;
 			default:
 				$color = $app->config['colors']['defaultwaveform'];
 				break;

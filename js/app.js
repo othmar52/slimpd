@@ -140,10 +140,16 @@ $(document).ready(function() {
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
-		// TODO: reload all rendered images in frontend to get the correct color of fallback images
 		window.sliMpd.drawFavicon();
 	});
 	
+	/* toggle playersize */
+	$('.playerSizeToggle a').on('click', function(e) {
+		e.preventDefault();
+		$('body').toggleClass('slimplayer');
+		$(this).find('i').toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
+	});
+
 	/* toggle between display tags and display filepath */
 	$('.fileModeToggle a').on('click', function(e) {
 		e.preventDefault();
