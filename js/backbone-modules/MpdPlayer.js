@@ -106,10 +106,25 @@
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
         
+        
+        
+        /* TODO: check removal begin */
         clearPlaylistNotCurrent : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
+        },
+        
+        appendTrackToPlaylist : function(item) {
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.appendTrackToPlaylist.call(this, item);
+        },
+        
+        appendTrackToPlaylistAndPlay : function(item) {
+        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
+        	// TODO: check current route and refresh in case we are on current mpd-playlist
+        	window.sliMpd.modules.AbstractPlayer.prototype.appendTrackToPlaylistAndPlay.call(this, item);
         },
         
         addDirToPlaylist : function(item) {
@@ -135,6 +150,113 @@
         	// TODO: check current route and refresh in case we are on current mpd-playlist
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
         },
+        /* TODO: check removal end */
+        
+        
+        
+        
+        
+        
+		// TODO: check current route and refresh in case we are on current mpd-playlist
+		
+		appendTrack : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendTrack.call(this, item);
+		},
+		appendTrackAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendTrackAndPlay.call(this, item);
+		},
+		
+		injectTrack : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectTrack.call(this, item);
+		},
+		
+		injectTrackAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectTrackAndPlay.call(this, item);
+		},
+		
+		replaceTrack : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.replaceTrack.call(this, item);
+		},
+		
+		softreplaceTrack : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceTrack.call(this, item);
+		},
+		
+				
+		appendDir : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendDir.call(this, item);
+		},
+		
+		appendDirAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendDirAndPlay.call(this, item);
+		},
+		
+		injectDir : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectDir.call(this, item);
+		},
+		
+		injectDirAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectDirAndPlay.call(this, item);
+		},
+		
+		replaceDir : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.replaceDir.call(this, item);
+		},
+		
+		softreplaceDir : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceDir.call(this, item);
+		},
+		
+				
+		appendPlaylist : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylist.call(this, item);
+		},
+		
+		appendPlaylistAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylistAndPlay.call(this, item);
+		},
+		
+		injectPlaylist : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylist.call(this, item);
+		},
+		
+		injectPlaylistAndPlay : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylistAndPlay.call(this, item);
+		},
+		
+		replacePlaylist : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.replacePlaylist.call(this, item);
+		},
+		
+		softreplacePlaylist : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
+		},
+	
+
+
+
+
+        
+        
+        
         
         removeDupes : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);

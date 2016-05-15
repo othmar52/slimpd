@@ -98,57 +98,50 @@
         process : function(item) {
         	//console.log('AbstractPlayer::process()'); console.log(item);
 	        switch(item.action) {
-	        	case 'play':
-	        		this.play(item);
-	        		break;
-	        	case 'pause':
-	        		this.pause(item);
-	        		break;
-	        	case 'togglePause':
-	        		this.togglePause(item);
-	        		break;
-	        	case 'toggleRepeat':
-	        		this.toggleRepeat(item);
-	        		break;
-	        	case 'toggleRandom':
-	        		this.toggleRandom(item);
-	        		break;
-	        	case 'toggleConsume':
-	        		this.toggleConsume(item);
-	        		break;
-	        	case 'next':
-	        		this.next(item);
-	        		break;
-	        	case 'prev':
-	        		this.prev(item);
-	        		break;
-	        	case 'seek':
-	        		this.seek(item);
-	        		break;
-	        	case 'remove':
-	        		this.remove(item);
-	        		break;
-	        	case 'clearPlaylistNotCurrent':
-	        		this.clearPlaylistNotCurrent(item);
-	        		break;
-	        	case 'addDirToPlaylist':
-	        		this.addDirToPlaylist(item);
-	        		break;
-	        	case 'addPlaylistToPlaylist':
-	        		this.addPlaylistToPlaylist(item);
-	        		break;
-	        	case 'replaceCurrentPlaylist':
-	        		this.replaceCurrentPlaylist(item);
-	        		break;
-	        	case 'replaceCurrentPlaylistKeepTrack':
-	        		this.replaceCurrentPlaylistKeepTrack(item);
-	        		break;
-	        	case 'soundEnded':
-	        		this.soundEnded(item);
-	        		break;
-	        	case 'removeDupes':
-	        		this.removeDupes(item);
-	        		break;
+	        	case 'play': this.play(item); break;
+	        	case 'pause':this.pause(item); break;
+	        	case 'togglePause': this.togglePause(item); break;
+	        	case 'toggleRepeat': this.toggleRepeat(item); break;
+	        	case 'toggleRandom': this.toggleRandom(item); break;
+	        	case 'toggleConsume': this.toggleConsume(item); break;
+	        	case 'next': this.next(item); break;
+	        	case 'prev': this.prev(item); break;
+	        	case 'seek': this.seek(item); break;
+	        	case 'remove': this.remove(item); break;
+	        	
+	        	/* TODO: check removal begin */
+	        	case 'clearPlaylistNotCurrent': this.clearPlaylistNotCurrent(item); break;
+	        	case 'appendTrackToPlaylist': this.appendTrackToPlaylist(item); break;
+	        	case 'appendTrackToPlaylistAndPlay': this.appendTrackToPlaylistAndPlay(item); break;
+	        	case 'addDirToPlaylist': this.addDirToPlaylist(item); break;
+	        	case 'addPlaylistToPlaylist': this.addPlaylistToPlaylist(item); break;
+	        	case 'replaceCurrentPlaylist': this.replaceCurrentPlaylist(item); break;
+	        	case 'replaceCurrentPlaylistKeepTrack': this.replaceCurrentPlaylistKeepTrack(item); break;
+	        	/* TODO: check removal end */
+	        	
+	        	case 'appendTrack':            this.appendTrack(item);                break;
+	        	case 'appendTrackAndPlay':     this.appendTrackAndPlay(item);         break;
+	        	case 'injectTrack':            this.injectTrack(item);                break;
+	        	case 'injectTrackAndPlay':     this.injectTrackAndPlay(item);         break;
+	        	case 'replaceTrack':           this.replaceTrack(item);               break;
+	        	case 'softreplaceTrack':       this.softreplaceTrack(item);           break;
+	        	
+	        	case 'appendDir':              this.appendDir(item);                  break;
+	        	case 'appendDirAndPlay':       this.appendDirAndPlay(item);           break;
+	        	case 'injectDir':              this.injectDir(item);                  break;
+	        	case 'injectDirAndPlay':       this.injectDirAndPlay(item);           break;
+	        	case 'replaceDir':             this.replaceDir(item);                 break;
+	        	case 'softreplaceDir':         this.softreplaceDir(item);             break;
+	        	
+	        	case 'appendPlaylist':         this.appendPlaylist(item);             break;
+	        	case 'appendPlaylistAndPlay':  this.appendPlaylistAndPlay(item);      break;
+	        	case 'injectPlaylist':         this.injectPlaylist(item);             break;
+	        	case 'injectPlaylistAndPlay':  this.injectPlaylistAndPlay(item);      break;
+	        	case 'replacePlaylist':        this.replacePlaylist(item);            break;
+	        	case 'softreplacePlaylist':    this.softreplacePlaylist(item);        break;
+	        	
+	        	case 'soundEnded': this.soundEnded(item); break;
+	        	case 'removeDupes': this.removeDupes(item); break;
 	        	default:
 	        		console.log('ERROR: invalid action "'+ item.action +'" in '+ this.mode +'Player-item. exiting...');
     				return;
@@ -168,11 +161,40 @@
         prev : function(item) { return; },
         seek : function(item) { return; },
         remove : function(item) { return; },
+        
+        /* TODO: check removal begin */
         clearPlaylistNotCurrent : function(item) { return; },
+        appendTrackToPlaylist : function(item) { return; },
+        appendTrackToPlaylistAndPlay : function(item) { return; },
         addDirToPlaylist : function(item) { return; },
         addPlaylistToPlaylist : function(item) { return; },
         replaceCurrentPlaylist : function(item) { return; },
         replaceCurrentPlaylistKeepTrack : function(item) { return; },
+        /* TODO: check removal end */
+       
+       
+		appendTrack : function(item) { return; },
+		appendTrackAndPlay : function(item) { return; },
+		injectTrack : function(item) { return; },
+		injectTrackAndPlay : function(item) { return; },
+		replaceTrack : function(item) { return; },
+		softreplaceTrack : function(item) { return; },
+			        	
+		appendDir : function(item) { return; },
+		appendDirAndPlay : function(item) { return; },
+		injectDir : function(item) { return; },
+		injectDirAndPlay : function(item) { return; },
+		replaceDir : function(item) { return; },
+		softreplaceDir : function(item) { return; },
+			        	
+		appendPlaylist : function(item) { return; },
+		appendPlaylistAndPlay : function(item) { return; },
+		injectPlaylist : function(item) { return; },
+		injectPlaylistAndPlay : function(item) { return; },
+		replacePlaylist : function(item) { return; },
+		softreplacePlaylist : function(item) { return; },
+       
+       
         soundEnded : function(item) { return; },
         removeDupes : function(item) { return; },
                 
