@@ -88,13 +88,13 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$config['totalresults'] = $classPath::getCountAll();
 			$urlPattern = '/'.$className.'s/page/(:num)';
 		}
-		$config['paginator_params'] = new JasonGrimes\Paginator(
+		$config['paginator'] = new JasonGrimes\Paginator(
 			$config['totalresults'],
 			$itemsPerPage,
 			$currentPage,
 			$urlPattern
 		);
-		$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+		$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     	$app->render('surrounding.htm', $config);
 	});	
 }
@@ -173,13 +173,13 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
 	
 	$currentPage = (($pagenum === 'current') ? $mpd->getCurrentPlaylistCurrentPage() : $pagenum);
-	$config['paginator_params'] = new JasonGrimes\Paginator(
+	$config['paginator'] = new JasonGrimes\Paginator(
 		$config['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
 		$currentPage,
 		'/playlist/page/(:num)'
 	);
-	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
 });
 
@@ -505,13 +505,13 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 			break;
 	}
 	
-	$config['paginator_params'] = new JasonGrimes\Paginator(
+	$config['paginator'] = new JasonGrimes\Paginator(
 		$totalFilteredItems,
 		$fileBrowser->itemsPerPage,
 		$fileBrowser->currentPage,
 		'/filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
 	);
-	$config['paginator_params']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
+	$config['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
 	$app->render('surrounding.htm', $config);
 });
 
@@ -560,13 +560,13 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 
 	$config['renderitems'] = getRenderItems($playlist->getTracks());
 	$config['playlist'] = $playlist;
-	$config['paginator_params'] = new JasonGrimes\Paginator(
+	$config['paginator'] = new JasonGrimes\Paginator(
 		$playlist->getLength(),
 		$itemsPerPage,
 		$currentPage,
 		'/showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
 	);
-	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
 });
 
@@ -790,13 +790,13 @@ foreach(array_keys($sortfields1) as $className) {
 					
 					$config['search'][$resultType]['time'] = number_format(microtime(TRUE) - $config['search'][$resultType]['time'],3);
 					
-					$config['paginator_params'] = new JasonGrimes\Paginator(
+					$config['paginator'] = new JasonGrimes\Paginator(
 						$config['search'][$resultType]['total'],
 						$itemsPerPage,
 						$currentPage,
 						'/'.$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
 					);
-					$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+					$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 				}
 			}
 			$config['renderitems'] = getRenderItems($config['itemlist']);
@@ -923,13 +923,13 @@ foreach(array_keys($sortfields) as $currentType) {
 				}
 				
 				$urlPattern = '/search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $term;
-				$config['paginator_params'] = new JasonGrimes\Paginator(
+				$config['paginator'] = new JasonGrimes\Paginator(
 					$config['search'][$type]['total'],
 					$itemsPerPage,
 					$currentPage,
 					$urlPattern
 				);
-				$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+				$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 				
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
@@ -1206,13 +1206,13 @@ $app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
 	$config['action'] = 'directorytracks';
 	$config['renderitems'] = getRenderItems($config['itemlist']);
 	$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
-	$config['paginator_params'] = new JasonGrimes\Paginator(
+	$config['paginator'] = new JasonGrimes\Paginator(
 		$total,
 		$itemsPerPage,
 		$currentPage,
 		'/directory/'.join(DS, $itemParams) . '?page=(:num)'
 	);
-	$config['paginator_params']->setMaxPagesToShow(paginatorPages($currentPage));
+	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 	$app->render('surrounding.htm', $config);
 });
 

@@ -1,6 +1,6 @@
 {% if itemlist|length > 0 %}
 <div class="albums_container">
-{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+{% include 'modules/paginator.htm' %}
 <br />
 	{% for item in itemlist %}
 	<div class="col-sm-6 col-md-2 tile-square ">
@@ -21,7 +21,7 @@
 	</div>
 	{% endfor %}
 	<div class="clearfix"> </div>
-	{% include 'modules/paginator.htm' with { 'paginator': paginator_params } %}
+	{% include 'modules/paginator.htm' %}
 	
 </div>
 {% else %}
