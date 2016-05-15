@@ -274,7 +274,8 @@ a {
   align-items: center;
 }
 
-.filebrowser .vcenter {
+.filebrowser .vcenter,
+.vcenter3 {
   min-height: 3em;
 }
 

@@ -1,0 +1,23 @@
+{% if item.id %}
+<div class="row">
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
+</div>
+<div class="row">
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
+	<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
+</div>
+{% else %}
+	{% if item.relativePath %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		<br />
+		<div class="darker-links">
+			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+		</div>
+		{% include 'partials/track/not-imported-badge.htm' %}
+	{% else %}
+		{% include 'partials/track/no-track-selected-badge.htm' %}
+	{% endif %}
+{% endif %}

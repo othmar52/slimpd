@@ -1,0 +1,29 @@
+{% if item.id %}
+<div class="row">
+	<div class="col-md-11 vcenter vcenter3">
+		<div class="vcinner">
+			{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}<br />
+			<span class="dark">by</span>
+			{% include 'partials/artist/link.htm' %}
+			<span class="dark">({{item.year}})</span>
+		</div>
+	</div>
+	<div class="col-md-1">
+			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal pull-right">
+				<i class="fa fa-align-justify fa-sm"></i>
+			</button>
+	</div>
+	
+</div>
+{% else %}
+	{% if item.relativePath %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		<br />
+		<div class="darker-links">
+			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+		</div>
+		{% include 'partials/track/not-imported-badge.htm' %}
+	{% else %}
+		{% include 'partials/track/no-track-selected-badge.htm' %}
+	{% endif %}
+{% endif %}
