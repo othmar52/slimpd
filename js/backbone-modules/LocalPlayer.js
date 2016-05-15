@@ -200,6 +200,13 @@
 			}
 		},
 		
+		removeDupes : function(item) {
+        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
+        	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
+        },
+		
+		
+		/* TODO: check removal begin */
 		clearPlaylistNotCurrent : function(item) {
         	window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.clearPlaylistNotCurrent.call(this, item);
@@ -224,11 +231,109 @@
         	window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.replaceCurrentPlaylistKeepTrack.call(this, item);
         },
+        /* TODO: check removal end */
         
-        removeDupes : function(item) {
-        	window.sliMpd.notify(this.tempNotSupportedYetNotify);
-        	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
-        }
+        
+        
+        
+        
+        
+        
+        
+        
+        appendTrack : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendTrack.call(this, item);
+		},
+		appendTrackAndPlay : function(item) {
+			this.play(item);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendTrackAndPlay.call(this, item);
+		},
+		
+		injectTrack : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectTrack.call(this, item);
+		},
+		
+		injectTrackAndPlay : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectTrackAndPlay.call(this, item);
+		},
+		
+		replaceTrack : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.replaceTrack.call(this, item);
+		},
+		
+		softreplaceTrack : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceTrack.call(this, item);
+		},
+		
+				
+		appendDir : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendDir.call(this, item);
+		},
+		
+		appendDirAndPlay : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendDirAndPlay.call(this, item);
+		},
+		
+		injectDir : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectDir.call(this, item);
+		},
+		
+		injectDirAndPlay : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectDirAndPlay.call(this, item);
+		},
+		
+		replaceDir : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.replaceDir.call(this, item);
+		},
+		
+		softreplaceDir : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceDir.call(this, item);
+		},
+		
+				
+		appendPlaylist : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylist.call(this, item);
+		},
+		
+		appendPlaylistAndPlay : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylistAndPlay.call(this, item);
+		},
+		
+		injectPlaylist : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylist.call(this, item);
+		},
+		
+		injectPlaylistAndPlay : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylistAndPlay.call(this, item);
+		},
+		
+		replacePlaylist : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.replacePlaylist.call(this, item);
+		},
+		
+		softreplacePlaylist : function(item) {
+			window.sliMpd.notify(this.tempNotSupportedYetNotify);
+			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
+		}
+		
+		
+		
         
     });
     

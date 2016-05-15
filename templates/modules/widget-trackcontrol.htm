@@ -113,22 +113,57 @@
 	  			<h3>Abspielen</h3>
 	  		</div>
 	  		<div class="col-md-12">
-		  		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/addSelect/{{ item.relativePath|path2url }}"}'>
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'
+		  			title="An die Playlist hinten anfügen und sofort abspielen">
 					<i class="fa fa-play"></i> Sofort abspielen
 				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"appendTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrack/{{ item.relativePath|path2url }}"}'
+		  			title="An die Playlist hinten anfügen ohne abzuspielen">
+					<i class="fa fa-plus"></i> Hinten anfügen
+				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			
 			<div class="col-md-12">
-		  		<button role="control" {{'niymarkup'|ll|raw}} class="btn btn-default" data-player='{"action":"playnext","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}", "mpdurl":"#"}'>
-					<i class="fa fa-play"></i> Als nächstes abspielen
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"injectTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/injectTrack/{{ item.relativePath|path2url }}"}'
+		  			title="Nach dem derzeit gespielten Track einfügen ohne abzuspielen">
+					<i class="fa fa-plus"></i> Auf nächste Pos. einfügen
 				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			
 			<div class="col-md-12">
-		  		<button role="control" {{'niymarkup'|ll|raw}} class="btn btn-default" data-player='{"action":"playnext","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}", "mpdurl":"#"}'>
-					<i class="fa fa-plus"></i> Zur Playlist hinzufügen
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"injectTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/injectTrackAndPlay/{{ item.relativePath|path2url }}"}'
+		  			title="Nach dem derzeit gespielten Track einfügen und sofort abspielen">
+					<i class="fa fa-play"></i> Einfügen & abspielen
 				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
+			
+			<div class="col-md-12">
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"replaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/replaceTrack/{{ item.relativePath|path2url }}"}'
+		  			title="Playlist leeren und sofort abspielen">
+					<i class="fa fa-play"></i> Liste leeren & abspielen
+				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
+			</div>
+			<div class="col-md-12">
+		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
+		  			data-player='{"action":"softreplaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/softreplaceTrack/{{ item.relativePath|path2url }}"}'
+		  			title="Playlist fast leeren, zur Playlist hinzufügen und als nächstes abspielen">
+					<i class="fa fa-trash"></i> Liste leeren* & hinzuf.
+				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
+			</div>
+			
 	  		<div class="col-md-12">
 		  		<button role="control" data-href="#" class="btn btn-default playerModeToggleTrigger">
 					<i class="fa fa-exchange"></i> Playermodus wechseln

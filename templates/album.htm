@@ -12,7 +12,7 @@
 		{% endif %}
 	</div>
 	<div class="col-md-9">
-		<button role="control" title="add album to playlist" class="btn btn-default player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ album.relativePath }}"}'>
+		<button role="control" title="add album to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay","mpdurl":"/mpdctrl/appendDirAndPlay/{{ album.relativePath }}"}'>
 			<i class="fa fa-plus"></i>
 		</button>
 			

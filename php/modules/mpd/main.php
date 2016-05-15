@@ -107,27 +107,234 @@ class mpd
 		// @see: http://www.musicpd.org/doc/protocol/playback_commands.html
 		
 		// validate commands
+		
+		
+		$firePlay = FALSE;
+		$targetPosition = FALSE;
+		$itemPath = FALSE;
+		$itemType = FALSE;
+		$isPlaylist = FALSE;
+		$clearPlaylist = FALSE;
+		$softclearPlaylist = FALSE;
+		
+		switch($cmd) {
+			case 'appendTrackAndPlay':
+			case 'injectTrackAndPlay':
+			case 'appendDirAndPlay':
+			case 'injectDirAndPlay':
+			case 'appendPlaylistAndPlay':
+			case 'injectPlaylistAndPlay':
+				$firePlay = TRUE;
+				break;
+		}
+		
+		switch($cmd) {
+			case 'replaceTrack':
+			case 'replaceDir':
+			case 'replacePlaylist':
+				$firePlay = TRUE;
+				$clearPlaylist = TRUE;
+				$targetPosition = 0;
+				break;
+		}
+				
+		switch($cmd) {
+			case 'softreplaceTrack':
+			case 'softreplaceDir':
+			case 'softreplacePlaylist':
+				$softclearPlaylist = TRUE;
+				$targetPosition = 1;
+				break;
+		}
+		
+		switch($cmd) {
+			case 'appendTrack':
+			case 'appendTrackAndPlay':
+			case 'appendDir':
+			case 'appendDirAndPlay':
+			case 'appendPlaylist':
+			case 'appendPlaylistAndPlay':
+				$status = $this->mpd('status');
+				$targetPosition = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+				break;
+			case 'injectTrack':
+			case 'injectTrackAndPlay':
+			case 'injectDir':
+			case 'injectDirAndPlay':
+			case 'injectPlaylist':
+			case 'injectPlaylistAndPlay':
+				$status = $this->mpd('status');
+				$targetPosition = isset($status['song']) ? $status['song']+1 : 0;
+				break;
+		}
+		
+		switch($cmd) {
+			case 'appendPlaylist':
+			case 'appendPlaylistAndPlay':
+			case 'injectPlaylist':
+			case 'injectPlaylistAndPlay':
+			case 'replacePlaylist':
+			case 'softreplacePlaylist':
+				$isPlaylist = TRUE;
+				break;
+		}
+		
 		switch($cmd) {
 			case 'update':
+			case 'updateMpdAndPlay':
+			
+			/* TODO: check removal begin */
+			case 'appendTrackToPlaylist':
+			case 'appendTrackToPlaylistAndPlay':
+			case 'addPlaylistToPlaylist':
+			case 'replaceCurrentPlaylist':
+			case 'replaceCurrentPlaylistKeepTrack':
+			/* TODO: check removal end */
+				
+			case 'appendTrack':
+			case 'appendTrackAndPlay':
+			case 'injectTrack':
+			case 'injectTrackAndPlay':
+			case 'replaceTrack':
+			case 'softreplaceTrack':
+			
+			case 'appendDir':
+			case 'appendDirAndPlay':
+			case 'injectDir':
+			case 'injectDirAndPlay':
+			case 'replaceDir':
+			case 'softreplaceDir':
+			
+			case 'appendPlaylist':
+			case 'appendPlaylistAndPlay':
+			case 'injectPlaylist':
+			case 'injectPlaylistAndPlay':
+			case 'replacePlaylist':
+			case 'softreplacePlaylist':
 				$config = \Slim\Slim::getInstance()->config['mpd'];
-				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
-				if(!$item && $config['disallow_full_database_update'] == '0') {
-					return $this->mpd($cmd);
-				}
 				if(is_string($item) === TRUE) {
-					$item = $item;
+					$itemPath = $item;
+				}
+				if(is_numeric($item) === TRUE) {
+					$itemPath = \Slimpd\Track::getInstanceByAttributes(array('id' => $item))->getRelativePath();
 				}
 				if(is_array($item) === TRUE) {
-					$item = join(DS, $item);
+					$itemPath = join(DS, $item);
+				}
+				if(is_file($config['musicdir'].$itemPath)===TRUE && $itemPath !== FALSE) {
+					$itemType = 'file';
+				}
+				if(is_dir($config['musicdir'].$itemPath)===TRUE && $itemPath !== FALSE) {
+					$itemType = 'dir';
+				}
+
+				break;
+		}
+
+		// don't clear playlist in case we have nothing to add
+		if($clearPlaylist === TRUE) {
+			if($itemType === FALSE) {
+				notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+				return;
+			} else {
+				$this->mpd('clear');
+			}
+		}
+		// don't softclear playlist in case we have nothing to add
+		if($softclearPlaylist === TRUE) {
+			if($itemType === FALSE) {
+				notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+				return;
+			} else {
+				$this->clearPlaylistNotCurrent();
+			}
+		}
+
+
+		switch($cmd) {
+			case 'injectTrack':
+			case 'injectTrackAndPlay':
+				if($itemType !== 'file') {
+					notifyJson("ERROR: invalid file", 'mpd');
+					return;
+				}
+				$this->mpd('addid "' . str_replace("\"", "\\\"", $itemPath) . '" ' . $targetPosition);
+				if($firePlay === TRUE) {
+					$this->mpd('play ' . intval($targetPosition));
+				}
+				notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+				return;
+			case 'injectDir':
+			case 'injectDirAndPlay':
+				// this is not supported by mpd so we have to add each track manually
+				// TODO: how to fetch possibly millions of tracks recursively?
+				notifyJson("ERROR: injecting dirs is not supported yet. please append it to playlist", 'mpd');
+				return;
+				if($itemType !== 'dir') {
+					notifyJson("ERROR: invalid dir " . $itemPath, 'mpd');
+					return;
+				}
+				break;
+			case 'injectPlaylist':
+			case 'injectPlaylistAndPlay':
+				$playlist = new \Slimpd\playlist\playlist($itemPath);
+				$playlist->fetchTrackRange(0,1000, TRUE);
+				$counter = $this->appendPlaylist($playlist, $targetPosition);
+				if($firePlay === TRUE) {
+					$this->mpd('play ' . intval($targetPosition));
+				}
+				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
+				return;
+			case 'appendTrack':
+			case 'appendTrackAndPlay':
+			case 'replaceTrack':
+			case 'replaceTrackAndPlay':
+			case 'softreplaceTrack':
+			
+			case 'appendDir':
+			case 'appendDirAndPlay':
+			case 'replaceDir':
+			case 'replaceDirAndPlay':
+			case 'softreplaceDir':
+				// trailing slash on directories does not work - lets remove it
+				$this->mpd('add "' . str_replace("\"", "\\\"", rtrim($itemPath, DS) ) . '"');
+				if($firePlay === TRUE) {
+					$this->mpd('play ' . intval($targetPosition));
+				}
+
+				notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+				return;
+				
+			case 'appendPlaylist':
+			case 'appendPlaylistAndPlay':
+			case 'replacePlaylist':
+			case 'replacePlaylistAndPlay':
+			case 'softreplacePlaylist':
+				$playlist = new \Slimpd\playlist\playlist($itemPath);
+
+				$playlist->fetchTrackRange(0,1000, TRUE);
+				$counter = $this->appendPlaylist($playlist);
+				if($firePlay === TRUE) {
+					$this->mpd('play ' . intval($targetPosition));
+				}
+				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
+				break;
+				
+				
+			case 'update':
+				
+				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
+				if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
+					return $this->mpd($cmd);
 				}
 				
-				if(is_file($config['musicdir'].$item)===FALSE && is_dir($config['musicdir'].$item)===FALSE) {
+				if($itemType === FALSE) {
 					// error - invalid $item
 					return FALSE;
 				}
 				
 				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($item);
+				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($itemPath);
 				
 				// special case when we try to play a single new file (without parent-dir) out of mpd root
 				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
@@ -145,38 +352,31 @@ class mpd
 			// TODO: should this also trigger a mysql-db-insert of this track?
 			// TODO: should we allow this also for directories or limit this function to single music files?
 			case 'updateMpdAndPlay':
-				$config = \Slim\Slim::getInstance()->config['mpd'];
 				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
-				if(!$item && $config['disallow_full_database_update'] == '0') {
+				if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
 					return $this->mpd($cmd);
 				}
-				if(is_string($item) === TRUE) {
-					$item = $item;
-				}
-				if(is_array($item) === TRUE) {
-					$item = join(DS, $item);
-				}
 				
-				if(is_file($config['musicdir'].$item)===FALSE) {
+				if($itemType !== 'file') {
 					// error - invalid $item or $item is a directory
 					# TODO: send warning to client?
 					return FALSE;
 				}
 				
 				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($item);
+				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($itemPath);
 				
 				// special case when we try to play a single new file (without parent-dir) out of mpd root
 				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
 					# TODO: send warning to client?
 					return FALSE;
 				}
-				if($closestExistingItemInMpdDatabase !== $item) {
+				if($closestExistingItemInMpdDatabase !== $itemPath) {
 					$this->cmd('update', $closestExistingItemInMpdDatabase);
 					// TODO: replace dirty sleep with mpd-status-poll and continue as soon as the item is imported
 					sleep(1);
 				}
-				return $this->cmd('addSelect', $item);
+				return $this->cmd('appendTrackAndPlay', $itemPath);
 				
 			
 			case 'seekPercent':
@@ -194,12 +394,8 @@ class mpd
 			case 'stop':
 			case 'previous':
 			case 'next':
-				
 			case 'playlistid':
 			case 'playlistinfo':
-				
-				
-				
 				$this->mpd($cmd);
 				break;
 			case 'toggleRepeat':
@@ -216,34 +412,6 @@ class mpd
 				break;
 			case 'playlistStatus':
 				$this->playlistStatus();
-				break;
-				
-			case 'addSelect':
-				# TODO: general handling of position to add
-				# TODO: general handling of playing immediately or simply appending to playlist
-				
-				$path = '';
-				if(is_string($item) === TRUE) {
-					$path = $item;
-				}
-				if(is_numeric($item) === TRUE) {
-					$path = \Slimpd\Track::getInstanceByAttributes(array('id' => $item))->getRelativePath();
-				}
-				if (is_array($item) === TRUE) {
-					$path = join(DS, $item);
-				}
-				
-				if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $path) === TRUE) {
-					$this->mpd('addid "' . str_replace("\"", "\\\"", $path) . '" 0');
-					$this->mpd('play 0');
-				} else {
-					// trailing slash on directories will not work - lets remove it
-					if(substr($path,-1) === DS) {
-						$path = substr($path,0,-1);
-					}
-					$this->mpd('add "' . str_replace("\"", "\\\"", $path) . '"');
-				}
-				notifyJson("MPD: added " . $path . " to playlist", 'mpd');
 				break;
 				
 			case 'playIndex':
@@ -265,26 +433,27 @@ class mpd
 				break;
 				
 			case 'addPlaylistToPlaylist':
-				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
-
-				if($playlist->getErrorPath() === TRUE) {
+				if($itemType !== 'file') {
 					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
 					return;
 				}
+				$playlist = new \Slimpd\playlist\playlist($itemPath);
+
 				$playlist->fetchTrackRange(0,1000, TRUE);
 				$counter = $this->appendPlaylist($playlist);
 				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
 				break;
 				
 			case 'replaceCurrentPlaylist':
-				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
-
-				if($playlist->getErrorPath() === TRUE) {
+				if($itemType !== 'file') {
 					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
 					return;
 				}
+				$playlist = new \Slimpd\playlist\playlist($itemPath);
 				
+				# TODO: should we really limit trackamount to add?
 				$playlist->fetchTrackRange(0,1000, TRUE);
+				
 				$this->mpd('clear');
 				$counter = $this->appendPlaylist($playlist);
 				$this->mpd('play 0');
@@ -292,17 +461,18 @@ class mpd
 				break;
 				
 			case 'replaceCurrentPlaylistKeepTrack':
-				$playlist = new \Slimpd\playlist\playlist(join(DS, $item));
-
-				if($playlist->getErrorPath() === TRUE) {
-					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found");
+				if($itemType !== 'file') {
+					notifyJson("ERROR: " . $playlist->getRelativePath() . " not found", 'mpd');
 					return;
 				}
+				$playlist = new \Slimpd\playlist\playlist($itemPath);
 				
+				# TODO: should we really limit trackamount to add?
 				$playlist->fetchTrackRange(0,1000, TRUE);
-				$this->mpd('clear');
-				$counter = $this->appendPlaylist($playlist);
+				
 				$this->clearPlaylistNotCurrent();
+				$counter = $this->appendPlaylist($playlist);
+				
 				notifyJson("MPD: replaced current playlist with " . $playlist->getRelativePath() . " (". $counter ." tracks)", 'mpd');
 				break;
 				
@@ -315,7 +485,6 @@ class mpd
 				break;
 			
 			case 'playSelect': //		playSelect();
-			case 'addSelect': //		addSelect();
 			case 'deleteIndexAjax'://	deleteIndexAjax();
 			case 'deletePlayed'://		deletePlayed();
 			case 'volumeImageMap'://	volumeImageMap();
@@ -422,13 +591,17 @@ class mpd
 		
 	}
 	
-	public function appendPlaylist($playlist) {		
+	public function appendPlaylist($playlist, $targetPosition = FALSE) {
 		$counter = 0;
 		foreach($playlist->getTracks() as $t) {
 			if($t->getError() === 'notfound') {
 				continue;
 			}
-			$this->mpd('add "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '"');
+			if($targetPosition === FALSE) {
+				$this->mpd('add "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '"');
+			} else {
+				$this->mpd('addid "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '" ' . ($targetPosition+$counter));
+			}
 			$counter ++;
 		}
 		return $counter;

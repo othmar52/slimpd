@@ -116,7 +116,7 @@
 		<div class="row item-row" id="track{{ loop.index }}">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<button role="control" title="add this directory to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addDirToPlaylist","mpdurl":"/mpdctrl/addSelect/{{ [directory,item.name]|path2url }}"}'>
+					<button role="control" title="append this directory to current playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"appendDir","mpdurl":"/mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-plus fa-lg fa-fw"></i>
 					</button>
 					
