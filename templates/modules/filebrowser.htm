@@ -219,15 +219,12 @@
 						<i class="fa fa-eye fa-lg"></i>
 					</a>
 					
-					<button role="control" title="add playlist to playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"addPlaylistToPlaylist", "item": "{{ [directory,item.name]|path2url }}", "mpdurl":"/mpdctrl/addPlaylistToPlaylist/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-plus"></i>
+					<button role="control" data-href="/markup/widget-playlist/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
 					
-					<button role="control" title="replace current playlist with this playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"replaceCurrentPlaylistKeepTrack", "item": "{{ [directory,item.name]|path2url }}", "mpdurl":"/mpdctrl/replaceCurrentPlaylistKeepTrack/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-refresh"></i>
-					</button>
+					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 					
-					<span class="spacer visible-md-inline-block visible-lg-inline-block"></span>
 
 					<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 					<i class="fa fa-list fa-lg"></i>
