@@ -288,6 +288,19 @@ class mpd
 			case 'replaceDir':
 			case 'replaceDirAndPlay':
 			case 'softreplaceDir':
+				// check if item exists in MPD database
+				$closest = $this->findClosestExistingItem($itemPath);
+				if(rtrim($itemPath, DS) !== $closest) {
+					$this->mpd('update "' . str_replace("\"", "\\\"", $closest) . '"');
+					notifyJson(
+						"OH Snap!<br>
+						" . $itemPath . " does not exist in MPD-database.<br>
+						updating " . $closest,
+						'mpd'
+					);
+					return;
+				}
+
 				// trailing slash on directories does not work - lets remove it
 				$this->mpd('add "' . str_replace("\"", "\\\"", rtrim($itemPath, DS) ) . '"');
 				if($firePlay === TRUE) {
@@ -336,7 +349,8 @@ class mpd
 				
 				\Slimpd\importer::queDirectoryUpdate($closestExistingItemInMpdDatabase);
 				
-				$this->mpd('update "' . str_replace("\"", "\\\"", $closestExistingItemInMpdDatabase) . '"');
+				// trailing slash on directories does not work - lets remove it
+				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestExistingItemInMpdDatabase, DS)) . '"');
 				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase, 'mpd');
 				return;
 				
@@ -460,7 +474,12 @@ class mpd
 		if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
 			return $item;
 		}
-		$item = explode(DS, $item);
+		if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] .$item ) === TRUE) {
+			$item = dirname($item);
+		}
+		
+		$item = explode(DS, rtrim($item, DS));
+		
 		// single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
 		if(count($item) === 1 && is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $item[0])) {
 			return NULL;
@@ -470,12 +489,7 @@ class mpd
 		for($i=count($item); $i>=0; $i--) {
 			if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", join(DS, $itemCopy)) . '"') !== FALSE) {
 				// we found the closest existing directory
-				
-				// dont add a trailing slash in case we have a new root directory
-				$prefix = (count($itemCopy) > 0) ? join(DS, $itemCopy) . DS : '';
-				
-				// append one single deeper level and return the path
-				return $prefix . $item[$i];
+				return join(DS, $itemCopy);
 			}
 			
 			// shorten path by one level in every loop
