@@ -26,8 +26,7 @@
 <div class="row replace-me-with-proper-css"><br><br></div>
 {% endif %}
 	
-	
-{% for item in playlist.tracks %}
+{% for item in itemlist %}
 	{% if item.error == 'notfound' %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-track-notfound.htm' %}

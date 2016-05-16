@@ -11,6 +11,7 @@ class playlist
 	protected $length;
 	protected $itemPaths = [];	// pathstrings
 	protected $tracks = [];		// track-instances
+	private $fetchedLength = FALSE;
 	
 	public function __construct($relativePath) {
 		$app = \Slim\Slim::getInstance();
@@ -69,6 +70,7 @@ class playlist
 				$app = \Slim\Slim::getInstance()->flashNow('error', 'playlist extension ' . $this->getExt() . ' is not supported');
 				return;
 		}
+		$this->fetchedLength === TRUE;
 
 		if($pathOnly === FALSE) {
 			$this->tracks = self::pathStringsToTrackInstancesArray($itemPaths);
@@ -159,6 +161,12 @@ class playlist
 		$this->length = $length;
 	}
 	public function getLength() {
+		if($this->fetchedLength === FALSE) {
+			// we have to process to get the total length
+			$this->fetchTrackRange(0,1, TRUE);
+			$this->tracks = [];
+			$this->itemPaths = [];
+		}
 		return $this->length;
 	}
 	
