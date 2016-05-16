@@ -159,7 +159,7 @@
 				      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
 				      for now playing files directly is only possible for already mpd-imported tracks ... 
 				      playing files local is no issue and shoud work like a charm #}
-					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
+					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-play fa-lg fa-fw"></i>
 					</button>
 					<button role="control" data-href="/markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-trnsp trigger-modal xwax-mode-hide">
@@ -172,7 +172,7 @@
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 
-					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"play","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ [directory,item.name]|path2url }}"}'>
+					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-music fa-lg fa-fw"></i>
 					{{ item.name }}
 					</a>
