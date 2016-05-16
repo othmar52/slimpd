@@ -24,7 +24,7 @@ class mpd
 		return NULL;
 	}
 	
-	public function getCurrentPlaylist($pageNum = 'current') {
+	public function getCurrentPlaylist($pageNum = 1) {
 		
 		#print_r($files); die();
 		// calculate the portion which should be rendered
@@ -35,10 +35,6 @@ class mpd
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 		
 		$totalPages = $this->getCurrentPlaylistTotalPages();
-		
-		$pageNum = ($pageNum === 'current')
-			? $this->getCurrentPlaylistCurrentPage()
-			: (int)$pageNum;
 		
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;

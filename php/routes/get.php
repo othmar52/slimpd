@@ -165,14 +165,24 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 		// TODO: how to handle mpd played tracks we cant find in database
 		$config['nowplaying_album'] = NULL;
 	}
-	$config['currentplaylist'] = $mpd->getCurrentPlaylist($pagenum);
-	$config['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
 	
+	switch($pagenum) {
+		case 'current':
+			$currentPage = $mpd->getCurrentPlaylistCurrentPage();
+			break;
+		case 'last':
+			$currentPage = $mpd->getCurrentPlaylistTotalPages();
+			break;
+		default:
+			$currentPage = (int)$pagenum;
+			break;
+	}
+
+	$config['currentplaylist'] = $mpd->getCurrentPlaylist($currentPage);
+	$config['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
 	
 	// get all relational items we need for rendering
 	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
-	
-	$currentPage = (($pagenum === 'current') ? $mpd->getCurrentPlaylistCurrentPage() : $pagenum);
 	$config['paginator'] = new JasonGrimes\Paginator(
 		$config['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
@@ -553,18 +563,27 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 		return;
 	}
 	
-	$currentPage = $app->request->get('page');
-	$currentPage = ($currentPage) ? $currentPage : 1;
 	$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+	
+	$totalItems = $playlist->getLength();
+	
+	if($app->request->get('page') === 'last') {
+		$currentPage = ceil($totalItems/$itemsPerPage);
+	} else {
+		$currentPage = $app->request->get('page');
+	}
+	$currentPage = ($currentPage) ? $currentPage : 1;
 	$minIndex = (($currentPage-1) * $itemsPerPage);
 	$maxIndex = $minIndex +  $itemsPerPage -1;
-	
+
 	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
-	$config['renderitems'] = getRenderItems($playlist->getTracks());
+
+	$config['itemlist'] = $playlist->getTracks();
+	$config['renderitems'] = getRenderItems($config['itemlist']);
 	$config['playlist'] = $playlist;
 	$config['paginator'] = new JasonGrimes\Paginator(
-		$playlist->getLength(),
+		$totalItems,
 		$itemsPerPage,
 		$currentPage,
 		'/showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
