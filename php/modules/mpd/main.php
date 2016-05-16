@@ -41,7 +41,7 @@ class mpd
 			: (int)$pageNum;
 		
 		$minIndex = (($pageNum-1) * $itemsPerPage);
-		$maxIndex = $minIndex +  $itemsPerPage -1;
+		$maxIndex = $minIndex +  $itemsPerPage;
 
 		if(1 == 2) {
 			echo "<pre>";
