@@ -3,12 +3,14 @@
 <div class="row missing-track-row mouseover track-{{ item.relativePathHash }}">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
+			{% if hidethumb != 1 %}
 			{% include 'partials/image.htm' with {
 				'width': 50,
 				'type': 'album',
 				'itemId': item.albumId,
 				'attrs': 'style="width: 50px; height: 50px; z-index:2;"'
 			} %}
+			{% endif %}
 			<a title="search track" class="btn btn-trnsp ajax-link trigger-hide-modal" href="/searchall/page/1/sort/relevance/desc?q={{ fileName }}">
 				<i class="fa fa-search fa-lg"></i>
 			</a>
