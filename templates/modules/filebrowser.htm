@@ -15,9 +15,7 @@
 	<div class="{{ cycle(['','fw-bg'],loop.index) }}">
 		<div class="row item-row mouseover" id="track{{ loop.index }}">
 			<div class="col-md-12">
-				<a href="/filebrowser/{{ item|path2url }}" data-ajaxtarget="#main" class="ajax-link">
-					<i class="fa fa-folder-o fa-lg"></i> {{ item }}
-				</a>
+				{% include 'partials/filebrowser/breadcrumb.htm' with {breadcrumb:item} %}
 			</div>
 		</div>
 	</div>
