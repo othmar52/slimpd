@@ -9,7 +9,7 @@
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","mpdurl":"/mpdctrl/updateMpdAndPlay/{{ item.relativePath }}"}'>
+		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
 				<i class="fa fa-play fa-lg"></i>
 				</button>{{dir}}
 		{% else %}  

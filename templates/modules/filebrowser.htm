@@ -155,10 +155,6 @@
 		<div class="row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					{# TODO: if client is in mpd-mode give user a hint that he can only play mpd-imported tracks
-				      its not that performant to update parent dir each time a song is played (/mpdctrl/updateMpdAndPlay/)...
-				      for now playing files directly is only possible for already mpd-imported tracks ... 
-				      playing files local is no issue and shoud work like a charm #}
 					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-play fa-lg fa-fw"></i>
 					</button>

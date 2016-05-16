@@ -181,7 +181,6 @@ class mpd
 		
 		switch($cmd) {
 			case 'update':
-			case 'updateMpdAndPlay':
 				
 			case 'appendTrack':
 			case 'appendTrackAndPlay':
@@ -353,40 +352,7 @@ class mpd
 				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestExistingItemInMpdDatabase, DS)) . '"');
 				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase, 'mpd');
 				return;
-				
-			// tracks that hasnt been importet in mpd database have to get inserted befor playing
-			// TODO: should this also trigger a mysql-db-insert of this track?
-			// TODO: should we allow this also for directories or limit this function to single music files?
-			case 'updateMpdAndPlay':
-				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
-				if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
-					return $this->mpd($cmd);
-				}
-				
-				if($itemType !== 'file') {
-					// error - invalid $item or $item is a directory
-					# TODO: send warning to client?
-					return FALSE;
-				}
-				
-				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($itemPath);
-				
-				// special case when we try to play a single new file (without parent-dir) out of mpd root
-				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
-					# TODO: send warning to client?
-					return FALSE;
-				}
-				if($closestExistingItemInMpdDatabase !== $itemPath) {
-					$this->cmd('update', $closestExistingItemInMpdDatabase);
-					// TODO: replace dirty sleep with mpd-status-poll and continue as soon as the item is imported
-					sleep(1);
-				}
-				return $this->cmd('appendTrackAndPlay', $itemPath);
-				
-			
 			case 'seekPercent':
-				
 				$currentSong = $this->mpd('currentsong');
 				$cmd = 'seek ' .$currentSong['Pos'] . ' ' . round($item * ($currentSong['Time']/100)) . '';
 				$this->mpd($cmd);
