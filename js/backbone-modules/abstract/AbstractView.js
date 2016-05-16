@@ -97,6 +97,17 @@
 	    			$(obj).attr('data', $(obj).attr('data-svgurl'));
 	  			});
 	  		});
+	  		
+	  		// TODO: how to reinit affixes?
+	  		//$('[data-spy=affix]').affix({ offset: { top: 40}, spy :"affix"});
+	  		/*$('[data-spy=affix]').each(function () {
+	  			try {
+	  				$(this).data('affix').checkPosition();
+	  			} catch (error) {
+	  				console.log('reinit affix error');
+	  			}
+	  		});*/
+	  			  			
             
             window.Backbone.View.prototype.render.call(this);
             this.rendered = true;

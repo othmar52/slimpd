@@ -23,24 +23,7 @@
 {% else %}
 	<div class="row">
 		<div class="col-md-12">
-			<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=up" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.parentdir'|ll }}">
-				<span class="fa-stack">
-					<i class="fa fa-circle-thin fa-stack-2x"></i>
-					<i class="fa fa-angle-up fa-stack-1x"></i>
-				</span>
-			</a>
-			<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=prev" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.prevdir'|ll }}">
-				<span class="fa-stack">
-					<i class="fa fa-circle-thin fa-stack-2x"></i>
-					<i class="fa fa-angle-left fa-stack-1x"></i>
-				</span>
-			</a>
-			<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=next" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.nextdir'|ll }}">
-				<span class="fa-stack">
-					<i class="fa fa-circle-thin fa-stack-2x"></i>
-					<i class="fa fa-angle-right fa-stack-1x"></i>
-				</span>
-			</a>
+			{% include 'partials/filebrowser/directory-quicknav.htm' with {breadcrumb:item} %}
 			
 			<span class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			
@@ -80,10 +63,12 @@
 	</div>
 	
 	
-	<div class="row">
+	<div class="row bg-col1" data-affix="" data-spy="affix" data-offset-top="50" style="z-index: 3; top: 50px;">
 		<div class="col-md-12">
 			<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
-			<h2 style="margin:0;padding:0;" class="">{{ breadcrumb|last.name }}</h2>
+			<h2 style="margin:0;padding:0;" class="">{{ breadcrumb|last.name }}
+				<span class="show-affixed">{% include 'partials/filebrowser/directory-quicknav.htm' with {breadcrumb:item} %}</span>
+				</h2>
 			
 		</div>
 	</div>
