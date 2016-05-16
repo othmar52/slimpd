@@ -1,5 +1,4 @@
 {# TODO: move modalsurrounding to partial #}
-{{ dump(playlist)}}
 <div class="modal-body">	
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
 	<div class="row">
@@ -11,20 +10,11 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<br class="row replace-me-with-proper-css" />
-			<br class="row replace-me-with-proper-css" />
-			<span class="badge">{{ playlist.length }}</span> Tracks
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-12">
-			<br class="row replace-me-with-proper-css" />
-			<br class="row replace-me-with-proper-css" />
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-4">
 			<h3>Abspielen</h3>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
 			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylist", "mpdurl":"/mpdctrl/appendPlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
 				Hinten anfügen
@@ -33,38 +23,44 @@
 			<br class="row replace-me-with-proper-css" />
 			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylistAndPlay", "mpdurl":"/mpdctrl/appendPlaylistAndPlay/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Hinten anfügen & sofort abspielen
+				Hinten anfügen &amp; sofort abspielen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
+		</div>
+		<div class="col-md-6">
 			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replacePlaylist", "mpdurl":"/mpdctrl/replacePlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Liste leeren & sofort abspielen
+				Liste leeren &amp; sofort abspielen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
 			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplacePlaylist", "mpdurl":"/mpdctrl/softreplacePlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Liste leeren* & als nächstes abspielen
+				Liste leeren* &amp; als nächstes abspielen
 			</button>
-		</div>
-
-		<div class="col-md-4">
-			<h3>Ansehen</h3>
-			<a href="/showplaylist/{{ playlist.relativePath|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist">
-				<i class="fa fa-eye fa-lg"></i> Ansehen
-			</a>
-		</div>
-
-		<div class="col-md-4">
-
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-12">
+			<h3>Playlist-Einträge <span class="badge">{{ playlist.length }}</span></h3>
+			{% for item in playlist.tracks %}
+				{% if item.error == 'notfound' %}
+				<div class="{{ cycle(['',''],loop.index) }} mouseover">
+					{% include 'partials/itemrow-track-notfound.htm' with { hidethumb: 1 }%}
+				{% else %}
+				<div class="{{ cycle(['',''],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+					{% include 'partials/trackrow-widget.htm' %}
+				{% endif %}
+				</div>
+			{% endfor %}
+		</div>
+		<div class="col-md-12">
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			TODO: render first 5 tracks
+			<a href="/showplaylist/{{ playlist.relativePath|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist" data-dismiss="modal">
+				Alle <span class="badge">{{ playlist.length }}</span> Playlist-Einträge anzeigen...
+			</a>
 		</div>
 	</div>
 	<br class="row replace-me-with-proper-css" />
