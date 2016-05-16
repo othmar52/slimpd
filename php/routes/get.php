@@ -433,7 +433,10 @@ $app->get('/filebrowser', function() use ($app, $config){
 	$config['breadcrumb'] = $fileBrowser->breadcrumb;
 	$config['subDirectories'] = $fileBrowser->subDirectories;
 	$config['files'] = $fileBrowser->files;
-	$config['hotlinks'] = $config['filebrowser-hotlinks'];
+	$config['hotlinks'] = array();
+	foreach($config['filebrowser-hotlinks'] as $path){
+		$config['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
+	}
 	
 	$app->render('surrounding.htm', $config);
 })->name('filebrowser');
