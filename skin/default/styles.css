@@ -472,3 +472,13 @@ body.vstretch14 {
 .ffn .ffn-hidden {
 	display: none;
 }
+
+/* affixed modifications */
+.show-affixed {
+	display: none;
+}
+
+.affix .show-affixed {
+	display: inline-block;
+}
+
