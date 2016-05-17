@@ -144,9 +144,18 @@
         play : function(item) { return; },
         pause : function(item) { return; },
         togglePause : function(item) { return; },
-        toggleRepeat : function(item) { return; },
-        toggleRandom : function(item) { return; },
-        toggleConsume : function(item) { return; },
+        toggleRepeat : function(item) {
+			this.state.repeat = (this.state.repeat == 1) ? 0 : 1;
+			this.updateStateIcons();
+        },
+        toggleRandom : function(item) {
+			this.state.random = (this.state.random == 1) ? 0 : 1;
+			this.updateStateIcons();
+        },
+        toggleConsume : function(item) {
+			this.state.consume = (this.state.consume == 1) ? 0 : 1;
+			this.updateStateIcons();
+        },
         setPlayPauseIcon : function() { return; },
         next : function(item) { return; },
         prev : function(item) { return; },
