@@ -90,19 +90,16 @@
         
         toggleRepeat : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
         },
         
         toggleRandom : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
         },
         
         toggleConsume : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	//this.refreshInterval();
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
         

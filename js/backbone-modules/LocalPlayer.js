@@ -151,21 +151,15 @@
 		},
 		
 		toggleRepeat : function(item) {
-			this.state.repeat = (this.state.repeat === 1) ? 0 : 1;
-			this.updateStateIcons(); 
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
         },
         
         toggleRandom : function(item) {
-        	this.state.random = (this.state.random === 1) ? 0 : 1;
-			this.updateStateIcons(); 
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
         },
         
         toggleConsume : function(item) {
-        	this.state.consume = (this.state.consume === 1) ? 0 : 1;
-			this.updateStateIcons();
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
         	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
         },
