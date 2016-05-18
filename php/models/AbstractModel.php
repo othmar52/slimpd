@@ -478,6 +478,29 @@ abstract class AbstractModel {
 		return $db->query($query)->fetch_assoc()['itemCountTotal'];
 	}
 	
+	public static function getRandomInstance() {
+		$db = \Slim\Slim::getInstance()->db;
+
+		// ORDER BY RAND is the killer on huge tables
+		// lets try a different approach
+		$higestId = $db->query("SELECT id FROM ". self::getTableName() ." ORDER BY id DESC LIMIT 0, 1")->fetch_assoc()['id'];
+
+		$maxAttempts = 1000;
+		$counter = 0;
+		while (TRUE) {
+			$try = $db->query(
+				"SELECT id FROM ". self::getTableName() ." WHERE id = " . mt_rand(1, $higestId)
+			)->fetch_assoc()['id'];
+			if($try !== NULL) {
+				return self::getInstanceByAttributes( ['id' => $try] );
+			}
+			if($counter > $maxAttempts) {
+				die('sorry - coldn\'t fetch random ' . self::getTableName() );
+			}
+			$counter++;
+		}
+	}
+
 	public static function deleteRecordsByIds(array $idArray) {
 		if(count($idArray) === 0) {
 			return;
