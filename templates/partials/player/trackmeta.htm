@@ -1,13 +1,28 @@
 {% if item.id %}
-<div class="row">
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
+<div class="ffn-hidden">
+	<div class="row">
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/year/link.htm' %}</span></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
+		<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
+	</div>
 </div>
-<div class="row">
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</span></div>
-	<div class="col-sm-4"><span class="shorten">{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</span></div>
+<div class="ffn-show">
+	<div class="row">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				{{ item.relativePath|split('/')|last }}<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+					hiderootlink: 1,
+					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					skiplast: 1 } %}</span>
+			</div>
+		</div>
+	</div>
 </div>
 {% else %}
 	{% if item.relativePath %}
