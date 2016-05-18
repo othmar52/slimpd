@@ -60,11 +60,7 @@ call_user_func(function() use ($app) {
     }
 });
 
-
-
-$configLoader = $app->configLoaderINI;
-
-$config = $configLoader->loadConfig('master.ini');
+$config = $app->configLoaderINI->loadConfig('master.ini');
 $app->config = $config;
 
 $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
