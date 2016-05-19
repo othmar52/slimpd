@@ -1,6 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-{% include 'partials/randomizer.htm' with { id: item.id, total: totalitems, urlpattern: 'maintainance/trackdebug/%i' } %}
+{% include 'partials/randomizer.htm' with { subject: 'Track', urlpattern: 'maintainance/trackdebug/%s' } %}
 
 <h3>Track-debug<br>
 <span class="small">

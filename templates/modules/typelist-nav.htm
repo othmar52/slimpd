@@ -1,5 +1,5 @@
 {% include 'partials/randomizer.htm' with {
-	id: item.id,
+	subject: itemtype|capitalize,
 	urlpattern: itemtype~'/%s/'~listcurrent~'s/page/1/sort/added/desc'
 } %}
 <div class="row">

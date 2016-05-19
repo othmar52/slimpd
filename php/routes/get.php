@@ -112,10 +112,8 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 		$config['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
 		$config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
 		
-		
 		// get all relational items we need for rendering
 		$config['renderitems'] = getRenderItems($config['album'], $config['itemlist']);
-		$config['totalitems'] = \Slimpd\Album::getCountAll();
 		$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 			array('albumId' => $albumId)
 		);
@@ -645,7 +643,6 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	}
 	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
 	$config['renderitems'] = getRenderItems($config['item']);
-	$config['totalitems'] = \Slimpd\Track::getCountAll();
 	$app->render('surrounding.htm', $config);
 });
 
@@ -700,7 +697,6 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	}
 	
 	$config['renderitems'] = getRenderItems($config['itemlist'], $config['album']);
-	$config['totalitems'] = \Slimpd\Album::getCountAll();
 	$app->render('surrounding.htm', $config);
 });
 
@@ -743,10 +739,6 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$term = str_replace(",", " ", $itemId);
 			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
-			
-			// for randomizer
-			// TODO: add separate route with "random" as id
-			$config['total'] = $classPath::getCountAll();
 			
 			$config['itemids'] = $itemId;
 			$itemsPerPage = 20;
