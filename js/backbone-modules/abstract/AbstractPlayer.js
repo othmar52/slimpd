@@ -41,6 +41,7 @@
 		intervalInactive : 5000, // [ms]
 
         initialize : function(options) {
+        	this.render();
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
@@ -60,6 +61,7 @@
         
         // fetch markup with trackinfos
         redraw : function(item) {
+        	item = item || { item : 0};
         	var url = '/markup/'+ this.mode+'player';
         	if(this.mode === 'xwax') {
         		url = window.sliMpd.setGetParameter(url, 'deck', this.deckIndex);
