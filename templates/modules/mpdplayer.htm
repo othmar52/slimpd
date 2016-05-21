@@ -9,7 +9,7 @@
 		{% include 'partials/player/mpd-controls.htm' %}
     </div>
     <div class="col-sm-7 col-md-1 slimplayer-hidden" style="height: 100px;">
-    	<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
+    	<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
     		<img src="/image-100/album/{{ item.albumId }}" />
     	</a>
     </div>
