@@ -1892,7 +1892,7 @@ class Importer {
 
 	public function buildDictionarySql() {
 		$app = \Slim\Slim::getInstance();
-		foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+		foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 		}
 		
