@@ -41,7 +41,7 @@
 		        useStateClassSkin: false,
 		        autoBlur: false,
 		        smoothPlayBar: true,
-		        keyEnabled: true,
+		        keyEnabled: false,
 		        remainingDuration: false,
 		        toggleDuration: true,
 		        ended: function() {
