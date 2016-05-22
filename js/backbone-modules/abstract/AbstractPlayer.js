@@ -244,6 +244,10 @@
 			var changeColorAfter = 5;
 			//$.jPlayer.timeFormat.showHour = false;
 			
+			// draw stroke at zero-position
+			ctx.fillStyle = this.timeGridStrokeColor2;
+			ctx.fillRect(0,0,1,height);
+
 			// longer than 30 minutes
 			if(this.nowPlayingDuration > 1800) {
 				strokePerHour = 12;

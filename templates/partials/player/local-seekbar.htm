@@ -1,13 +1,13 @@
-<object class="waveform svg-ajax-object"
-	data="{{ placeholderSvgUrl }}"
-	data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
-</object>	
-
-<div class="jp-play-bar"></div>
-<div class="jp-seek-bar"></div>
-
-<div class="mpd-status-timestring status-timestring">
-	<span class="jp-current-time" role="timer" aria-label="time">&nbsp;</span>&nbsp; | &nbsp;
-	<span class="jp-duration" role="timer" aria-label="duration">&nbsp;</span>
+<div style="position:relative;">
+	<object class="waveform svg-ajax-object bg-col1"
+		data="{{ placeholderSvgUrl }}"
+		data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
+	</object>
+	<canvas id="timegrid-local" class="timegrid-local timegrid slimplayer-hidden"></canvas>
+	<div class="jp-play-bar"></div>
+	<div class="jp-seek-bar"></div>
+	<div class="mpd-status-timestring status-timestring">
+		<span class="jp-current-time" role="timer" aria-label="time">&nbsp;</span>&nbsp; | &nbsp;
+		<span class="jp-duration" role="timer" aria-label="duration">&nbsp;</span>
+	</div>
 </div>
-<canvas id="timegrid-local" class="timegrid-local timegrid slimplayer-hidden"></canvas>

@@ -36,17 +36,14 @@
 	width: 0;
 	border-right: 1px solid rgba(255, 255, 255, 1);
 	top: 0;
+	left: 0;
 }
 
 .mpd-ctrl-seekbar,
 .jp-seek-bar{
 	position: absolute;
 	top: 0;
-	left: 0;
-	
-	/* TODO: how to respect parents padding on absolute positioned div with width 100% ?*/
-	width: calc(100% - 15px);
-
+	width: 100%;
 	opacity: 0;
 }
 

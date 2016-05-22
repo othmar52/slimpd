@@ -274,17 +274,21 @@
 		    		that.refreshInterval();
 		    		return;
 		    	}
-		        that.poller = setTimeout(that.poll, ((window.sliMpd.currentPlayer.mode === 'mpd') ? that.intervalActive:that.intervalInactive));
-		    });
+		        that.poller = setTimeout(
+					that.poll,
+					((window.sliMpd.currentPlayer.mode === 'mpd')
+						? that.intervalActive
+						: that.intervalInactive
+					)
+				);
+			});
 		},
 		
         onRedrawComplete : function(item) {
-        	//this.refreshInterval(); // TODO: why is this doubling our interval?
         	var that = this;
         	$('.mpd-ctrl-seekbar').on('click', function(e){
-				// TODO: how to respect parents padding (15px) on absolute positioned div with width 100% ?
-				var percent = Math.round((e.pageX - $(this).offset().left) / (($(this).width()+15)/100));
-				$('.mpd-status-progressbar', that.$el).css('width', 'calc('+ percent+'% - 15px)');
+				var percent = Math.round((e.pageX - $(this).offset().left) / ($(this).width()/100));
+				$('.mpd-status-progressbar', that.$el).css('width', percent+'%');
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
@@ -360,8 +364,7 @@
 		},
 		
 		updateSlider : function(item) {
-			// TODO: how to respect parents padding on absolute positioned div with width 100% ?
-			$('.mpd-status-progressbar').css('width', 'calc('+ this.timeLineLight.progress() *100 +'% - 15px)');
+			$('.mpd-status-progressbar').css('width', this.timeLineLight.progress() *100 +'%');
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		}
     });
