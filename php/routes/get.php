@@ -759,7 +759,7 @@ foreach(array_keys($sortfields1) as $className) {
 			$maxCount = 1000;
 			
 			// TODO: move sphinx constants to somewhere else
-			foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+			foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 				define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 			}
 			$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
@@ -854,7 +854,7 @@ foreach(array_keys($sortfields) as $currentType) {
 	$app->get(
 		'/search'.$currentType.'/page/:currentPage/sort/:sort/:direction',
 		function($currentPage, $sort, $direction) use ($app, $config, $currentType, $sortfields){
-		foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+		foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 		}
 		
@@ -1047,7 +1047,7 @@ foreach(array_keys($sortfields) as $currentType) {
 
 
 $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
-	foreach(['freq_threshold', 'suggest_dubug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
+	foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 	}
 	$term = $app->request->get('q');
