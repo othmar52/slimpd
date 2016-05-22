@@ -385,6 +385,20 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$image = new \Slimpd\Bitmap();
 		$image->setRelativePath(join(DS, $itemParams));
 		$image->dump($imagesize);
+	})->name('imagepath-' .$imagesize);
+	
+	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $config, $imagesize){
+		$importer = new Slimpd\importer();
+		$images = $importer->getFilesystemImagesForMusicFile(join(DS, $itemParams));
+		if(count($images) === 0) {
+			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
+		}
+		// pick a random image
+		shuffle($images);
+		$path = array_shift($images);
+		
+		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => $path]));
+
 	});
 	
 	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $config, $imagesize){
