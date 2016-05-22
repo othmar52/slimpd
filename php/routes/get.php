@@ -68,8 +68,8 @@ foreach(array('artist', 'label', 'genre') as $className) {
 						$searchterm = trim($itemParams[$i+1]);
 					}
 					break;
-				default: break;
-					
+				default:
+					break;
 			}
 		}
 
@@ -96,7 +96,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		);
 		$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     	$app->render('surrounding.htm', $config);
-	});	
+	});
 }
 
 
@@ -121,7 +121,7 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 		$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($config['album']->getRelativePath());
 	
 		$app->render('surrounding.htm', $config);
-	});	
+	});
 }
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $config){
@@ -196,7 +196,6 @@ $app->get('/favorites(/)', function() use ($app, $config){
 	$config['action'] = 'favorites';
     $app->render('surrounding.htm', $config);
 });
-
 
 
 $app->get('/mpdstatus(/)', function() use ($app, $config){
@@ -289,8 +288,6 @@ foreach([
 				}
 				$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 				// no break
-				
-			
 		}
 		
 		$itemsToRender[] = $config['item'];
@@ -481,7 +478,6 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 			break;
 	}
 	
-	
 	switch($app->request->get('neighbour')) {
 		case 'next':
 			$fileBrowser->getNextDirectoryContent(join(DS, $itemParams));
@@ -505,7 +501,6 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 	$config['subDirectories'] = $fileBrowser->subDirectories;
 	$config['files'] = $fileBrowser->files;
 	$config['filter'] = $fileBrowser->filter;
-	
 	
 	switch($fileBrowser->filter) {
 		case 'dirs':
@@ -590,7 +585,6 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 
 	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
-
 	$config['itemlist'] = $playlist->getTracks();
 	$config['renderitems'] = getRenderItems($config['itemlist']);
 	$config['playlist'] = $playlist;
@@ -668,8 +662,7 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	}
 	
 	$config['album'] = \Slimpd\Album::getInstanceByAttributes($search);
-	
-	
+
 	$tmp = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
 	$trackInstances = array();
 	$rawTagDataInstances = array();
@@ -679,7 +672,6 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	}
 	#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
 	unset($tmp);
-	
 	
 	$config['discogstracks'] = array();
 	$config['matchmapping'] = array();
@@ -732,15 +724,12 @@ $sortfields2 = array(
 );
 
 foreach(array_keys($sortfields1) as $className) {
-	
 	foreach(['album','track'] as $show) {
 		
 		// albumlist+tracklist of artist|genre|label
 		$app->get(
 		'/'.$className.'/:idemId/'.$show.'s/page/:currentPage/sort/:sort/:direction',
 		function($itemId, $currentPage, $sort, $direction) use ($app, $config, $className, $show, $sortfields1) {
-			
-			
 			$config['action'] = $className.'.' . $show.'s';
 			$config['itemtype'] = $className;
 			$config['listcurrent'] = $show;
@@ -802,7 +791,7 @@ foreach(array_keys($sortfields1) as $className) {
 							".$sortQuery."
 							LIMIT :offset,:max
 						OPTION ranker=proximity, max_matches=".$config['search'][$resultType]['total'].";
-						");
+					");
 					$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 					$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 					$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
@@ -872,7 +861,6 @@ foreach(array_keys($sortfields) as $currentType) {
 			$app->render('surrounding.htm', $config);
 			return;
 		}
-		
 		
 		$ranker = 'sph04';
 		$start = 0;
@@ -991,13 +979,14 @@ foreach(array_keys($sortfields) as $currentType) {
 					$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
 					if($suggest !== FALSE) {
 						$app->response->redirect($app->urlFor(
-							'search'.$currentType, [
+							'search'.$currentType,
+							[
 								'type' => $currentType,
 								'currentPage' => $currentPage,
 								'sort' => $sort,
 								'direction' => $direction
-							])
-							.'?nosuggestion=1&q='.$suggest . '&' . getNoSurSuffix(FALSE));
+							]
+						) . '?nosuggestion=1&q='.$suggest . '&' . getNoSurSuffix(FALSE));
 						$app->stop();
 					}
 					$result[] = [
@@ -1011,19 +1000,12 @@ foreach(array_keys($sortfields) as $currentType) {
 					foreach($rows as $row) {
 						switch($filterTypeMappingF[$row['type']]) {
 							case 'artist':
-								$obj = \Slimpd\Artist::getInstanceByAttributes(array('id' => $row['itemid']));
-								break;
 							case 'label':
-								$obj = \Slimpd\Label::getInstanceByAttributes(array('id' => $row['itemid']));
-								break;
 							case 'album':
-								$obj = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
-								break; 
 							case 'track':
-								$obj = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
-								break;
 							case 'genre':
-								$obj = \Slimpd\Genre::getInstanceByAttributes(array('id' => $row['itemid']));
+								$classPath = "\\Slimpd\\" . ucfirst($filterTypeMappingF[$row['type']]);
+								$obj = $classPath::getInstanceByAttributes(array('id' => $row['itemid']));
 								break;
 							case 'dirname':
 								$tmp = \Slimpd\Album::getInstanceByAttributes(array('id' => $row['itemid']));
@@ -1122,8 +1104,10 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 				$app->urlFor(
 					'autocomplete',
 					array(
-						'type' => $type)
-					) . '?suggested=1&q=' . rawurlencode($suggest) . '&qo=' . rawurlencode($term));
+						'type' => $type
+					)
+				) . '?suggested=1&q=' . rawurlencode($suggest) . '&qo=' . rawurlencode($term)
+			);
 			$app->stop();
 		}
 	} else {
@@ -1145,8 +1129,7 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 					$url = '/' . $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc';
 					break;
 			}
-					
-					
+
 			$entry = [
 				'label' => $excerped[0],
 				'url' => $url,
@@ -1181,7 +1164,6 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 	}
 	echo json_encode($result); exit;
 })->name('autocomplete');
-
 
 
 $app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
