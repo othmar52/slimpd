@@ -31,15 +31,14 @@
 				    		<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
 				    	</span>
     				</div>
-    				<div class="col-md-12">
-    					<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar">
-    	
-				    	</div>
-				    	<object class="waveform svg-ajax-object"
-				    		data="{{ placeholderSvgUrl }}"
-				    		data-svgurl="{{ waveformSvgUrl }}?colorFor=xwax&mode=half" type="image/svg+xml">
-				    	</object>
-				    	<!--canvas id="timegrid-xwax-deck-{{decknum}}" class="timegrid-xwax-deck-{{decknum}} timegrid"></canvas-->
+					<div class="col-md-12">
+						<div style="position: relative;">
+							<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar"></div>
+							<object class="waveform svg-ajax-object"
+								data="{{ placeholderSvgUrl }}"
+								data-svgurl="{{ waveformSvgUrl }}?colorFor=xwax&mode=half" type="image/svg+xml">
+							</object>
+						</div>
     				</div>
     			</div>
     			
