@@ -32,6 +32,9 @@
         
         intervalActive : 3000,
 		intervalInactive : 6000,
+
+		notrunningTolerance : 2,
+		notrunningCounter : 0,
         
         initialize : function(options) {
         	this.showWaveform = options.showWaveform;
@@ -96,6 +99,16 @@
 		
 		processXwaxNotRunning : function() {
 			//console.log('processXwaxNotRunning()');
+
+			// sometimes we have connection errors with xwax's socket
+			// instead of disabling xwax stuff immediatly wait for x more poll request
+			this.notrunningCounter++;
+			if(this.notrunningCounter < this.notrunningTolerance) {
+				clearTimeout(this.poller);
+				this.poller = setTimeout(this.poll, this.intervalActive);
+				return;
+			}
+
 			this.toggler.removeClass('btn-success').addClass('btn-danger');
 			this.xwaxRunning = false;
 		    this.deckViews.forEach(function (deckView){
@@ -123,6 +136,7 @@
 			    	that.processXwaxNotRunning();
 		        	return;
 				}
+				that.notrunningCounter = 0;
 				if(that.xwaxRunning === false) {
 					that.toggler.removeClass('btn-danger').addClass('btn-success');
 					that.deckViews.forEach(function (deckView){
