@@ -4,9 +4,11 @@
 {% set fileName = '' %}
 {% set waveformSvgUrl = ["/audiosvg/width/550/",item.relativePath]|path2url %}
 {% set placeholderSvgUrl = "/skin/default/img/loading-waveform.svg" %}
+{% set artworkUrl = "/image-100/album/"~item.albumId %}
 	    	
 {% if not item.id %}
 	{% set playerCtrlItem = '\"'~item.relativePath|path2url~'\"' %}
+	{% set artworkUrl = ["/image-100/searchfor/",item.relativePath]|path2url %}
 	{% set dirs = item.relativePath|split('/') %}
 	{% set tmp = "/filebrowser" %}
 	
