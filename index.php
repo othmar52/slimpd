@@ -61,12 +61,15 @@ call_user_func(function() use ($app) {
 });
 
 $config = $app->configLoaderINI->loadConfig('master.ini');
+
+$config['current_url']  = rtrim($app->request->getResourceUri(), '/');
+# TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
+$config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
+$config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
+$config['root'] = $config['config']['absRefPrefix'];
 $app->config = $config;
 
 $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
-
-
-define('NJB_DEFAULT_CHARSET', 'utf8');
 
 $app->error(function(\Exception $e) use ($app, $config){
     $app->render('error.htm', $config);
@@ -81,7 +84,6 @@ foreach(array('get', 'post') as $method) {
 	}
 }
 
-
 // use 404 not found as a search in case we don't have a slash in uri
 $app->notFound(function() use ($app, $config){
 	$uri = ltrim(rawurldecode($app->request->getResourceUri()),'/');
@@ -91,7 +93,7 @@ $app->notFound(function() use ($app, $config){
     	$app->render('surrounding.htm', $config);
 	} else {
 		// trigger a search
-		$app->response->redirect('/searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
+		$app->response->redirect($app->config['root'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
 	}
 });
 
