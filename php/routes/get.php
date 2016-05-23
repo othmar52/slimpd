@@ -1,35 +1,5 @@
 <?php
 
-$config['current_url']  = rtrim($app->request->getResourceUri(), '/');
-$config['absRefPrefix'] = '/';
-$config['mainmenu']= array(
-  array(
-    'title' => $app->ll->str('menu.library'),
-    'url' => $config['absRefPrefix'] . 'library'
-  ),
-  array(
-    'title' => $app->ll->str('menu.playlist'),
-    'url' => $config['absRefPrefix'] . 'playlist/page/current'
-  ),
-  array(
-    'title' => $app->ll->str('menu.playlists'),
-    'url' => $config['absRefPrefix'] . 'playlists'
-  ),
-  array(
-    'title' => $app->ll->str('menu.filebrowser'),
-    'url' => $config['absRefPrefix'] . 'filebrowser'
-  ),
-  array(
-    'title' => $app->ll->str('menu.importer'),
-    'url' => $config['absRefPrefix'] . 'importer'
-  ),
-);
-
-# TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
-$config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
-
-$config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
-
 $app->get('/', function() use ($app,$config){
 	$config['action'] = "landing";
 	// TODO: $app->auth->check('library');

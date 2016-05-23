@@ -8,7 +8,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a id="logo" class="navbar-brand col2" href="/playlist/page/current">{{ config.logomarkup|raw }}</a>
+			<a id="logo" class="navbar-brand col2" href="{{root}}playlist/page/current">{{ config.logomarkup|raw }}</a>
 		</div>
 	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 	    	<div class="row row-eq-height">
@@ -16,13 +16,13 @@
 					<ul class="nav navbar-nav">
 						{% for menu in mainmenu %}
 						<li class="{% if menu.url == current_url %} active{% endif %}">
-							<a href="{{menu.url}}" data-ajaxtarget="#main" class="ajax-link col3">{{menu.title|raw}}</a>
+							<a href="{{root}}{{menu.url}}" data-ajaxtarget="#main" class="ajax-link col3">{{menu.title|ll|raw}}</a>
 						</li>
 						{% endfor %}
 		      		</ul>
 		      	</div>
 		      	<div class="col-md-6 bg-col3">
-					<form class="navbar-form ac-ajax-form" data-ajaxtarget="#main" role="search" action="/searchall/page/1/sort/relevance/desc" data-defaultaction="/searchall/page/1/sort/relevance/desc" method="get" id="searchform">
+					<form class="navbar-form ac-ajax-form" data-ajaxtarget="#main" role="search" action="{{root}}searchall/page/1/sort/relevance/desc" data-defaultaction="{{root}}searchall/page/1/sort/relevance/desc" method="get" id="searchform">
 						<input type="text" name="q" id="mainsearch" class="form-control clearable" placeholder="{{'search'|ll}}">
 						<span class="clearinput glyphicon glyphicon-remove" data-selector="#mainsearch"></span>
 					</form>
