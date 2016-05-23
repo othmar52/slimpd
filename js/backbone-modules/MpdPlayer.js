@@ -68,6 +68,12 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
         },
         
+        seekzero : function(item) {
+			window.sliMpd.fireRequestAndNotify('/mpdctrl/seekPercent/0');
+			this.timelineSetValue(0);
+			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
+        },
+
         prev : function(item) {
         	window.sliMpd.fireRequestAndNotify(item.mpdurl);
         	this.refreshInterval();
@@ -292,6 +298,10 @@
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
+			$('.mpd-ctrl-seekzero', this.$el).on('click', function(e){
+				that.seekzero();
+			});
+
 			var mpdNotify = $('<div/>')
 				.append(
 					$('<div/>')

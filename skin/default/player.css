@@ -40,11 +40,19 @@
 }
 
 .mpd-ctrl-seekbar,
-.jp-seek-bar{
+.jp-seek-bar,
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero {
 	position: absolute;
 	top: 0;
 	width: 100%;
 	opacity: 0;
+}
+
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero {
+	width: 1em;
+	left: -1em;
 }
 
 .mpd-ctrl-seekbar,
@@ -52,7 +60,9 @@
 .mpd-status-progressbar,
 .jp-play-bar,
 .xwax-deck-progressbar,
-.permaplayer .waveform {
+.permaplayer .waveform,
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero {
 	height: 50px;
 }
 
@@ -64,7 +74,9 @@
 .slimplayer .jp-play-bar,
 .slimplayer .xwax-deck-progressbar,
 .slimplayer .permaplayer .waveform,
-.slimplayer .xwaxplayer .waveform {
+.slimplayer .xwaxplayer .waveform,
+.slimplayer .local-ctrl-seekzero,
+.slimplayer .mpd-ctrl-seekzero {
 	height: 20px;
 }
 

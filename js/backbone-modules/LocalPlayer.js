@@ -65,7 +65,7 @@
 					window.sliMpd.drawFavicon();
 				}
 			});
-			// TODO: why does toggleRandom(), toggleRepeat(), toggleConsume() not work on initial load???
+
 			this.updateStateIcons();
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
         },
@@ -103,7 +103,12 @@
 			this.soundEnded(item);
         	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
         },
-		
+
+        seekzero : function(item) {
+			$(this.playerSelector).jPlayer("playHead", 0);
+			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
+        },
+
 		redraw : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.redraw.call(this, item);
 		},
@@ -111,6 +116,10 @@
 		onRedrawComplete : function(item) {
 			// re-bind controls(seeek-bar) on ajax loaded control-markup
     		$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
+			var that = this;
+			$('.local-ctrl-seekzero', this.$el).on('click', function(e){
+				that.seekzero();
+			});
     		this.updateStateIcons();
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
