@@ -68,6 +68,7 @@ $config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'loc
 $config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
 $config['root'] = $config['config']['absRefPrefix'];
 $app->config = $config;
+$vars = $config;
 
 $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
 
