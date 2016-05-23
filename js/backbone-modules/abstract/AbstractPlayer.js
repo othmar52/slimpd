@@ -109,6 +109,7 @@
 	        	case 'next': this.next(item); break;
 	        	case 'prev': this.prev(item); break;
 	        	case 'seek': this.seek(item); break;
+				case 'seekzero': this.seekzero(item); break;
 	        	case 'remove': this.remove(item); break;
 	        	case 'softclearPlaylist':     this.softclearPlaylist(item); break;
 	        	
@@ -162,6 +163,7 @@
         next : function(item) { return; },
         prev : function(item) { return; },
         seek : function(item) { return; },
+        seekzero : function(item) { return; },
         remove : function(item) { return; },
         
         softclearPlaylist : function(item) { return; },
