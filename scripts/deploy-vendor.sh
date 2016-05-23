@@ -8,9 +8,7 @@ DIR_SOURCE="vendor"
 DIR_DEST="vendor-dist"
 
 # delete old dist files
-rm -Rf "$SCRIPT_PATH/../$DIR_DEST/*"
-
-
+rm -Rf "$SCRIPT_PATH/../$DIR_DEST/"*
 cd "$SCRIPT_PATH/../$DIR_SOURCE"
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -26,3 +24,6 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 	fi
     #echo "Text read from file: $line"
 done < "$SCRIPT_PATH/deploy-vendor.txt"
+
+# TODO: we need to execute some copied files - pest practice to achieve that?
+chmod +x "$SCRIPT_PATH/../$DIR_DEST/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh"
