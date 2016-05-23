@@ -3,7 +3,7 @@
 
 <div class="row">
 	<div class="col-md-3">
-		<button role="control" title="clear playlist (but keep current track)" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"softclearPlaylist","mpdurl":"/mpdctrl/softclearPlaylist"}'>
+		<button role="control" title="clear playlist (but keep current track)" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"softclearPlaylist","mpdurl":"{{root}}mpdctrl/softclearPlaylist"}'>
 			<i class="fa fa-trash"></i> Clear Playlist <span class="badge uc">({{ currentplaylistlength }} tracks)</span>
 		</button>
 	</div>
@@ -12,7 +12,7 @@
 	</div>
 	<div class="col-md-3">
 		<div class="pull-right">
-			<button role="control" title="remove duplicate tracks from current playlist" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"removeDupes","mpdurl":"/mpdctrl/removeDupes"}'>
+			<button role="control" title="remove duplicate tracks from current playlist" class="btn btn-default player-ctrl toggle-tooltip" data-player='{"action":"removeDupes","mpdurl":"{{root}}mpdctrl/removeDupes"}'>
 				<i class="fa fa-trash"></i> Remove dupes</span>
 			</button>
 		</div>

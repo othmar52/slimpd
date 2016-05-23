@@ -1,9 +1,9 @@
 <div class="row track-row {{ cycle(['bg-col3','bg-col3'],loop.index) }} mouseover track-{{ item.relativePathHash }}" style="margin-left: 20px;margin-right: 20px;">
 	<div class="col-md-2">
-		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"/mpdctrl/appendTrackAndPlay/{{ item.id }}"}'>
+		<button role="control" title="play" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.id }}"}'>
 			<i class="fa fa-play fa-lg"></i>
 		</button>
-		<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
+		<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-default trigger-modal">
 			<i class="fa fa-align-justify fa-lg"></i>
 		</button>
 		<span style="height: 50px; font-size: 2em; text-align:center; z-index:2; width: 2em; display:inline-block;" class="dark hidden-xs">{{ item.number|default('?') }} </span>

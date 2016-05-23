@@ -3,7 +3,7 @@
 <h2>Aktueller Titel: {% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}</h2>
 <div class="row">
 	<div class="col-md-4">
-		<a href="/album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
+		<a href="{{root}}album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
 			<img id="image_in" src="/image-300/album/{{ item.albumId }}" alt="" style="top: 0px;">
 		</a>
 	</div>
@@ -53,7 +53,7 @@
 	    	</div>
 			<div class="row">
 				<div class="col-md-2">
-					<a href="/maintainance/trackdebug/{{ item.relativePath }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
+					<a href="{{root}}maintainance/trackdebug/{{ item.relativePath }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
 				</div>
 				<div class="col-md-10">
 					

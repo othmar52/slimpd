@@ -2,7 +2,7 @@
 {% if itemlist|length > 0 %}
 <div id="image_all">
 	{% for i,item in itemlist %}
-		<a data-toggle="lightbox" href="/image-1000/id/{{ item.id }}" data-type="image" data-gallery="galname"><img src="/image-50/id/{{ item.id }}" /></a>
+		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.id }}" data-type="image" data-gallery="galname"><img src="/image-50/id/{{ item.id }}" /></a>
 	{% endfor %}
 </div>
 {% endif %}

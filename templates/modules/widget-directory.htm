@@ -23,25 +23,25 @@
 	<div class="row">
 		<div class="col-md-4">
 			<h3>Abspielen</h3>
-			<button role="control" title="append this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"/mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="append this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"{{root}}mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
 				Hinten anfügen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="append this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"/mpdctrl/appendDirAndPlay/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="append this directory to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Hinten anfügen & sofort abspielen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="Playlist leeren, ordner hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"/mpdctrl/replaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="Playlist leeren, ordner hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"{{root}}mpdctrl/replaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Liste leeren & sofort abspielen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="Playlist leeren, ordner hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"/mpdctrl/softreplaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="Playlist leeren, ordner hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"{{root}}mpdctrl/softreplaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Liste leeren* & als nächstes abspielen
 			</button>
@@ -50,24 +50,24 @@
 		<div class="col-md-4">
 			<h3>Anzeigen</h3>
 			{% if album %}
-			<a class="ajax-link btn btn-default" href="/album/{{ album.id }}" title="show album" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}album/{{ album.id }}" title="show album" data-dismiss="modal">
 				<i class="fa fa-lg fa-eye"></i> Als Album anzeigen
 			</a>
 			{% endif %}
-			<a class="ajax-link btn btn-default" href="/filebrowser/{{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> Dateibrowser
 			</a>
-			<a class="ajax-link btn btn-default" href="/directory/{{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}directory/{{ [directory,item.name]|path2url }}" title="search database (does not work for not indexed files)" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> ALLE Tracks anzeigen
 			</a>
 		</div>
 
 		<div class="col-md-4">
 			<h3>Administrieren</h3>
-			<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="/tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
+			<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="{{root}}tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
 				Ã <i class="fa fa-arrow-right"></i> A remove special chars
 			</button>
-			<button role="control" data-href="/mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default" data-dismiss="modal">
+			<button role="control" data-href="{{root}}mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default" data-dismiss="modal">
 				<i class="fa fa-lg fa-refresh"></i> rescan &amp; update MPD database
 			</button>
 		</div>

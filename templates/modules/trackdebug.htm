@@ -5,11 +5,11 @@
 <h3>Track-debug<br>
 <span class="small">
 	{% set dirs = item.relativePath|split('/') %}
-	<a href="/filebrowser/{{ itemraw.relativeDirectoryPath }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	<a href="{{root}}filebrowser/{{ itemraw.relativeDirectoryPath }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
+		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
 				<i class="fa fa-play fa-lg"></i>
 				</button>{{dir}}
 		{% else %}  
@@ -17,7 +17,7 @@
 		{% endif %}
 	{% endfor%}
 	<br />
-	<a href="/maintainance/albumdebug/{{item.albumId}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
+	<a href="{{root}}maintainance/albumdebug/{{item.albumId}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
 </span>
 {% if not item.id %}
 {% include 'partials/track/not-imported-badge.htm' %}

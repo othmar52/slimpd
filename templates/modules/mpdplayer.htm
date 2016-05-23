@@ -20,7 +20,7 @@
 			<div class="col-sm-12 small">
 				{# TODO: remove external liking as soon we have implemented a proper functionality #}
 				<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
-				<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal">
+				<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal">
 					<i class="fa fa-align-justify fa-sm"></i>
 				</button>
 				{% include 'partials/track/audioformat.htm' %}
