@@ -52,11 +52,11 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$config['totalresults'] = $classPath::getCountLikeAttributes(
 				array('az09' => str_replace('*', '%', $searchterm))
 			);
-			$urlPattern = '/'.$className.'s/searchterm/'.$searchterm.'/page/(:num)';
+			$urlPattern = $app->config['root'] .$className.'s/searchterm/'.$searchterm.'/page/(:num)';
 		} else {
 			$config['itemlist'] = $classPath::getAll($itemsPerPage, $currentPage);
 			$config['totalresults'] = $classPath::getCountAll();
-			$urlPattern = '/'.$className.'s/page/(:num)';
+			$urlPattern = $app->config['root'] . $className.'s/page/(:num)';
 		}
 		$config['paginator'] = new JasonGrimes\Paginator(
 			$config['totalresults'],
@@ -155,7 +155,7 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 		$config['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
 		$currentPage,
-		'/playlist/page/(:num)'
+		$app->config['root'] . 'playlist/page/(:num)'
 	);
 	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
@@ -330,7 +330,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 			$track = \Slimpd\Track::getInstanceByAttributes(
 				array('id' => $itemId), 'filesize DESC'
 			);  
-			$app->response->redirect('/image-'.$imagesize.'/album/' . $track->getAlbumId());
+			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumId());
 			return;
 		}
 		$image->dump($imagesize);
@@ -499,7 +499,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 		$totalFilteredItems,
 		$fileBrowser->itemsPerPage,
 		$fileBrowser->currentPage,
-		'/filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
+		$app->config['root'] . 'filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
 	);
 	$config['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
 	$app->render('surrounding.htm', $config);
@@ -527,7 +527,7 @@ $app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($a
 $app->get('/playlists', function() use ($app, $config){
 	$config['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');
-	$app->response->redirect('/filebrowser/playlists' . getNoSurSuffix(), 301);
+	$app->response->redirect($app->config['root'] . 'filebrowser/playlists' . getNoSurSuffix(), 301);
 });
 
 
@@ -562,7 +562,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 		$totalItems,
 		$itemsPerPage,
 		$currentPage,
-		'/showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
+		$app->config['root'] . 'showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
 	);
 	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $config);
@@ -789,7 +789,7 @@ foreach(array_keys($sortfields1) as $className) {
 						$config['search'][$resultType]['total'],
 						$itemsPerPage,
 						$currentPage,
-						'/'.$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
+						$app->config['root'] .$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
 					);
 					$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 				}
@@ -805,7 +805,7 @@ foreach(array_keys($sortfields1) as $className) {
 $app->get('/alphasearch/', function() use ($app, $config){
 	$type = $app->request()->get('searchtype');
 	$term = $app->request()->get('searchterm');
-	$app->response->redirect('/'.$type.'s/searchterm/'.rawurlencode($term).'/page/1' . getNoSurSuffix());
+	$app->response->redirect($app->config['root'] . $type.'s/searchterm/'.rawurlencode($term).'/page/1' . getNoSurSuffix());
 });
 
 $sortfields = array_merge($sortfields1, $sortfields2);
@@ -916,7 +916,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					$stmt->bindValue(':type', $filterTypeMapping[$currentType], PDO::PARAM_INT);
 				}
 				
-				$urlPattern = '/search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $term;
+				$urlPattern = $app->config['root'] . 'search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $term;
 				$config['paginator'] = new JasonGrimes\Paginator(
 					$config['search'][$type]['total'],
 					$itemsPerPage,
@@ -1198,7 +1198,7 @@ $app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
 		$total,
 		$itemsPerPage,
 		$currentPage,
-		'/directory/'.join(DS, $itemParams) . '?page=(:num)'
+		$app->config['root'] . 'directory/'.join(DS, $itemParams) . '?page=(:num)'
 	);
 	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 	$app->render('surrounding.htm', $config);

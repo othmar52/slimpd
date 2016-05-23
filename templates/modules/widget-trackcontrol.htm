@@ -114,7 +114,7 @@
 	  		</div>
 	  		<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'
 		  			title="An die Playlist hinten anfügen und sofort abspielen">
 					<i class="fa fa-play"></i> Sofort abspielen
 				</button>
@@ -122,7 +122,7 @@
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"appendTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrack/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"appendTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ item.relativePath|path2url }}"}'
 		  			title="An die Playlist hinten anfügen ohne abzuspielen">
 					<i class="fa fa-plus"></i> Hinten anfügen
 				</button>
@@ -131,7 +131,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"injectTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/injectTrack/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"injectTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ item.relativePath|path2url }}"}'
 		  			title="Nach dem derzeit gespielten Track einfügen ohne abzuspielen">
 					<i class="fa fa-plus"></i> Auf nächste Pos. einfügen
 				</button>
@@ -140,7 +140,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"injectTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/injectTrackAndPlay/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"injectTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ item.relativePath|path2url }}"}'
 		  			title="Nach dem derzeit gespielten Track einfügen und sofort abspielen">
 					<i class="fa fa-play"></i> Einfügen & abspielen
 				</button>
@@ -149,7 +149,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"replaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/replaceTrack/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"replaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ item.relativePath|path2url }}"}'
 		  			title="Playlist leeren und sofort abspielen">
 					<i class="fa fa-play"></i> Liste leeren & abspielen
 				</button>
@@ -157,7 +157,7 @@
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"softreplaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/softreplaceTrack/{{ item.relativePath|path2url }}"}'
+		  			data-player='{"action":"softreplaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ item.relativePath|path2url }}"}'
 		  			title="Playlist fast leeren, zur Playlist hinzufügen und als nächstes abspielen">
 					<i class="fa fa-trash"></i> Liste leeren* & hinzuf.
 				</button>
@@ -200,14 +200,14 @@
 	  			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
 	  				{% for i in 1..xwax.decks %}
 	  				<div class="col-md-{{colidx}}">
-	  					<button role="control" data-href="/xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
+	  					<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
 							<i class="fa fa-headphones"></i> {{i}}
 						</button>
 	  				</div>
 	  				{% endfor%}
 	  			</div>
 	  			<div class="row">
-	  				<button role="control" data-href="/markup/widget-xwax" title="xwax controls" class="btn btn-trnsp trigger-modal">
+	  				<button role="control" data-href="{{root}}markup/widget-xwax" title="xwax controls" class="btn btn-trnsp trigger-modal">
 						<i class="fa fa-plus"></i> xwax controls
 					</button>
 	  			</div>
@@ -217,7 +217,7 @@
 	  			<h3>Download</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/deliver/{{item.relativePath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
+	  			<a href="{{root}}deliver/{{item.relativePath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-download"></i> Album</a>
@@ -232,13 +232,13 @@
 	  			<h3>Editieren</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/maintainance/trackdebug/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
+	  			<a href="{{root}}maintainance/trackdebug/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
+	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="/filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i> Ordner anzeigen</a>
+	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i> Ordner anzeigen</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-refresh"></i> neu einlesen</a>

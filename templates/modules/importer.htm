@@ -8,7 +8,7 @@
 		<h2>Recent importer jobs</h2>
 	</div>
 	<div class="col-md-2">
-		<button role="control" data-href="/importer/triggerUpdate" title="update slimpd-db based on already updated mpd-db" class="ajax-rqst btn btn-default">
+		<button role="control" data-href="{{root}}importer/triggerUpdate" title="update slimpd-db based on already updated mpd-db" class="ajax-rqst btn btn-default">
 			<i class="fa fa-refresh"></i> Trigger Slimpd-Update
 		</button>
 	</div>
@@ -81,7 +81,7 @@ td.ar {
 			{% endif %}
 			
 			{% if item.jobStatistics.insertedAlbums %}
-				<strong>insertedAlbums:</strong> <a href="/album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums }}</a><br/> 
+				<strong>insertedAlbums:</strong> <a href="{{root}}album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums }}</a><br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.updatedAlbums %}

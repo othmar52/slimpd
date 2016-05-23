@@ -27,7 +27,7 @@
 			
 			<span class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			
-			<button role="control" data-href="/markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+			<button role="control" data-href="{{root}}markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
 				<span class="fa-stack">
 					<i class="fa fa-circle-thin fa-stack-2x col2"></i>
 					<i class="fa fa-plus fa-stack-1x fa-inverse col2"></i>
@@ -38,17 +38,17 @@
 			<span class="filebrowser-filter pull-right darker-links">
 				<ul class="nav nav-pills type-nav">
 					<li class="{{ (filter == '') ? 'active' : '' }}"> 
-						<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.all.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.all.t'|ll }}">
 							{{ 'filebrowser.all'|ll }}
 						</a>
 					</li>
 					<li class="{{ (filter == 'dirs') ? 'active' : '' }} {{ (subDirectories.total == 0) ? 'disabled' : '' }}"> 
-						<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
 							{{ 'filebrowser.dirs'|ll }} <span class="badge">{{subDirectories.total}}</span>
 						</a>
 					</li>
 					<li class="{{ (filter == 'files') ? 'active' : '' }} {{ (files.total == 0) ? 'disabled' : '' }}"> 
-						<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
 							{{ 'filebrowser.files'|ll }} <span class="badge">{{files.total}}</span>
 						</a>
 					</li>
@@ -99,17 +99,17 @@
 		<div class="row item-row" id="track{{ loop.index }}">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<button role="control" title="append this directory to current playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"appendDir","mpdurl":"/mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}'>
+					<button role="control" title="append this directory to current playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"appendDir","mpdurl":"{{root}}mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-plus fa-lg fa-fw"></i>
 					</button>
 					
-					<button role="control" data-href="/markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
+					<button role="control" data-href="{{root}}markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
 						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 
-					<a href="/filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
+					<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 						<i class="fa fa-folder-o fa-lg fa-fw"></i> {{ item.name }}
 					</a>
 				</div>
@@ -119,7 +119,7 @@
 	{% endfor %}
 	{% if showDirFilterBadge %}
 	<div class="row darker-links">
-		<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=2" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=2" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.moredirs'|ll(subDirectories.total - subDirectories.count) }}
 		</a>
 	</div>
@@ -131,7 +131,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nodirs'|ll }}</div>
 			{% if files.total > 0 %}
 			<div class="row">
-				<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
 					{{ 'filebrowser.nodirsshowfiles'|ll(files.total) }}
 				</a>
 			</div>
@@ -155,20 +155,20 @@
 		<div class="row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
+					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-play fa-lg fa-fw"></i>
 					</button>
-					<button role="control" data-href="/markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-trnsp trigger-modal xwax-mode-hide">
+					<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-trnsp trigger-modal xwax-mode-hide">
 						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
 					
-					<a role="control" href="/markup/widget-deckselector?item={{ [directory,item.name]|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
+					<a role="control" href="{{root}}markup/widget-deckselector?item={{ [directory,item.name]|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
 						<i class="fa fa-headphones fa-lg fa-fw"></i>
 					</a>
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 
-					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
+					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-music fa-lg fa-fw"></i>
 					{{ item.name }}
 					</a>
@@ -194,18 +194,18 @@
 		<div class="row item-row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist">
+					<a href="{{root}}showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="show playlist">
 						<i class="fa fa-eye fa-lg"></i>
 					</a>
 					
-					<button role="control" data-href="/markup/widget-playlist/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+					<button role="control" data-href="{{root}}markup/widget-playlist/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
 						<i class="fa fa-align-justify fa-lg fa-fw"></i>
 					</button>
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 					
 
-					<a href="/showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
+					<a href="{{root}}showplaylist/{{ [directory,item.name]|path2url }}" data-ajaxtarget="#main" class="ajax-link">
 					<i class="fa fa-list fa-lg"></i>
 					{{ item.name }}</a>
 				</div>
@@ -228,16 +228,16 @@
 		<div class="row item-row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<button role="control" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
+					<button role="control" data-href="{{root}}showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
 						<i class="fa fa-eye fa-lg fa-fw"></i>
 					</button>
-					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
 						<i class="fa fa-download fa-lg fa-fw"></i>
 					</a>
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 
-					<a role="control" href="#" data-href="/showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="trigger-modal">
+					<a role="control" href="#" data-href="{{root}}showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="trigger-modal">
 					<i class="fa fa-info fa-lg fa-fw"></i>
 					{{ item.name }}</a>
 				</div>
@@ -261,7 +261,7 @@
 		<div class="row item-row" id="image{{ loop.index }}">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<a data-toggle="lightbox" href="/image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
+					<a data-toggle="lightbox" href="{{root}}image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
 						<img src="/image-35/path/{{ [directory,item.name]|path2url }}" title="{{ item.name }}" alt="{{ item.name }}" />
 					</a>
 					
@@ -291,7 +291,7 @@
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
 					
-					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
 						<i class="fa fa-download fa-lg fa-fw"></i>
 					</a>
 					
@@ -301,7 +301,7 @@
 					
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 					
-					<a href="/deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
+					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
 						<i class="fa fa-file fa-lg"></i> {{ item.name }}
 					</a>
 					
@@ -313,7 +313,7 @@
 	{% endif %}
 	{% if showFileFilterBadge %}
 	<div class="row darker-links">
-		<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=2" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=2" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.morefiles'|ll(files.total - files.count) }}
 		</a>
 	</div>
@@ -325,7 +325,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nofiles'|ll }}</div>
 			{% if subDirectories.total > 0 %}
 			<div class="row">
-				<a href="/filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
 					{{ 'filebrowser.nofilesshowdirs'|ll(subDirectories.total) }}
 				</a>
 			</div>

@@ -27,7 +27,7 @@
 		{% set itemsPerColumn = (itemlist|length / 4)|round(0, 'ceil') %}
 		{% for item in itemlist %}
 			{% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}<div class="col-md-3">{% endif %}
-			<a href="/{{ type }}/{{item.id}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
+			<a href="{{root}}{{ type }}/{{item.id}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
 				{% if item.article %}<span class="dark">{{item.article}}</span>{% endif %}
 				{{item.title}}
 				<span class="dark small" title="trackcount">({{ item.trackCount }})</span>

@@ -6,16 +6,16 @@
 			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
 				<img src="/image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
 			</a>
-			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"/mpdctrl/playIndex/{{ mpdidx }}"}'>
+			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
 			</button>
-			<button role="control" data-href="/markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
+			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
 				<i class="fa fa-align-justify"></i>
 			</button>
-			<a role="control" href="/markup/widget-deckselector?item={{ item.relativePath|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }}">
+			<a role="control" href="{{root}}markup/widget-deckselector?item={{ item.relativePath|path2url }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }}">
 				<i class="fa fa-headphones fa-lg"></i>
 			</a>
-			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"/mpdctrl/deleteIndex/{{ mpdidx }}"}'>
+			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"{{root}}mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-trash"></i>
 			</button>
 		</div>

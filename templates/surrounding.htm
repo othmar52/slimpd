@@ -8,8 +8,8 @@
     	<meta name="HandheldFriendly" content="True">
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     	
-    	<link rel="shortcut icon" href="{{ config.absRefPrefix }}skin/default/img/favicon.png">
-    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{ config.absRefPrefix }}assets/images/icons/app-icon.png" />
+    	<link rel="shortcut icon" href="{{root}}skin/default/img/favicon.png">
+    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{root}}assets/images/icons/app-icon.png" />
     	{% set cssfiles = [
     		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
     		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
@@ -31,14 +31,14 @@
 		%}
     	 
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{ config.absRefPrefix }}{{cssfile}}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{root}}{{cssfile}}" />
 		{% endfor %}		
 		{# add dynamic css for now-playing status #}
-		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{ config.absRefPrefix }}css/localplayer/0" />
-		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{ config.absRefPrefix }}css/mpdplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{root}}css/localplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{root}}css/mpdplayer/0" />
 		{# TODO: find a better way to highlight deck-tracks for any amount of decks #}
 		{% for deck in [0,1,2,3] %}
-		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{ config.absRefPrefix }}css/xwaxplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{root}}css/xwaxplayer/0" />
 		{% endfor %}
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
@@ -60,9 +60,9 @@
 						
 						{% if action == 'library.'~type %}
 							<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">
-								<a href="/library/{{type}}/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
-								<span class="small"><a href="/library/{{type}}s/page/1" data-ajaxtarget="#main" class="ajax-link">{{ type~'s' }}</a></span>
-								<a href="/library/{{type}}/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
+								<a href="{{root}}library/{{type}}/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
+								<span class="small"><a href="{{root}}library/{{type}}s/page/1" data-ajaxtarget="#main" class="ajax-link">{{ type~'s' }}</a></span>
+								<a href="{{root}}library/{{type}}/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
 								{{ item.title }} </h2>
 							{% include 'modules/albumlist2.htm' with { 'itemlist': albumlist } %}
 							{% include 'partials/tracklist-1.htm' %}
@@ -99,15 +99,15 @@
 					  
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'genres'|ll}}</a>
+					        <a href="{{root}}genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'genres'|ll}}</a>
 					      </div>
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'labels'|ll}}</a>
+					        <a href="{{root}}labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'labels'|ll}}</a>
 					      </div>
 					      <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
-					        <a href="/artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'artists'|ll}}</a>
+					        <a href="{{root}}artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'artists'|ll}}</a>
 						   </div>
 					       <div class="col-md-3 col-sm-4 col-xs-6">
 					        <div class="dummy"></div>
@@ -323,7 +323,7 @@
 		%}
     	 
 		{% for jsfile in jsfiles %}
-		<script src="{{ config.absRefPrefix }}{{jsfile}}"></script>
+		<script src="{{root}}{{jsfile}}"></script>
 		{% endfor %}		
 	</body>
 </html>

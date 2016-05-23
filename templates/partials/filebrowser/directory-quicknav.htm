@@ -1,16 +1,16 @@
-<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=up" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.parentdir'|ll }}">
+<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?neighbour=up" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.parentdir'|ll }}">
 	<span class="fa-stack">
 		<i class="fa fa-circle-thin fa-stack-2x"></i>
 		<i class="fa fa-angle-up fa-stack-1x"></i>
 	</span>
 </a>
-<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=prev" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.prevdir'|ll }}">
+<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?neighbour=prev" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.prevdir'|ll }}">
 	<span class="fa-stack">
 		<i class="fa fa-circle-thin fa-stack-2x"></i>
 		<i class="fa fa-angle-left fa-stack-1x"></i>
 	</span>
 </a>
-<a href="/filebrowser/{{ [directory,item.name]|path2url }}?neighbour=next" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.nextdir'|ll }}">
+<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?neighbour=next" data-ajaxtarget="#main" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.nextdir'|ll }}">
 	<span class="fa-stack">
 		<i class="fa fa-circle-thin fa-stack-2x"></i>
 		<i class="fa fa-angle-right fa-stack-1x"></i>

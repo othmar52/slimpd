@@ -2,7 +2,7 @@
 {% set limit = (limit) ? limit : 100 %}
 {% for g in gs %}
 	{% if loop.index <= limit %}
-		<a class="genre-link item-link ajax-link trigger-hide-modal" data-ajaxtarget="#main" href="/genre/{{renderitems.genres[g].id}}/tracks/page/1/sort/added/desc">{{renderitems.genres[g].title}}</a>{% if loop.last == false %},{% endif %}
+		<a class="genre-link item-link ajax-link trigger-hide-modal" data-ajaxtarget="#main" href="{{root}}genre/{{renderitems.genres[g].id}}/tracks/page/1/sort/added/desc">{{renderitems.genres[g].title}}</a>{% if loop.last == false %},{% endif %}
 	{% endif %}
 {% endfor%}
 {% if gs|length > limit%}

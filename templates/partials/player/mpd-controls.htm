@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-sm-4">
-		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev", "mpdurl":"/mpdctrl/previous"}'>
+		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev", "mpdurl":"{{root}}mpdctrl/previous"}'>
 			<i class="fa fa-chevron-left sign-ctrl fa-fw"></i>
 		</button>
 	</div>
@@ -10,7 +10,7 @@
 		</button>
 	</div>
 	<div class="col-sm-4">
-		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next", "mpdurl":"/mpdctrl/next"}'>
+		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next", "mpdurl":"{{root}}mpdctrl/next"}'>
 			<i class="fa fa-chevron-right sign-ctrl fa-fw"></i>
 		</button>
 	</div>
@@ -19,24 +19,24 @@
 	
 	
 	<div class="col-sm-4 status-random">
-		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom", "mpdurl":"/mpdctrl/toggleRandom"}' title="toggle random">
+		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom", "mpdurl":"{{root}}mpdctrl/toggleRandom"}' title="toggle random">
 			<i class="fa fa-random sign-ctrl fa-fw"></i>
 		</button>
 	</div>
 	<div class="col-sm-4 status-repeat">
-		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat", "mpdurl":"/mpdctrl/toggleRepeat"}' title="toggle repeat">
+		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat", "mpdurl":"{{root}}mpdctrl/toggleRepeat"}' title="toggle repeat">
 			<i class="fa fa-repeat sign-ctrl fa-fw"></i>
 		</button>
 	</div>
 	<div class="col-sm-4 status-consume">
-		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume", "mpdurl":"/mpdctrl/toggleConsume"}' title="toggle consume">
+		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume", "mpdurl":"{{root}}mpdctrl/toggleConsume"}' title="toggle consume">
 			<span><i class="fa fa-fire sign-ctrl fa-fw"></i></span>
 		</button>
 	</div>
 </div>
 <div class="row">
 	<div class="col-sm-12 small">
-		<a href="/playlist/page/current" data-ajaxtarget="#main" class="ajax-link">Warteschlange</a>
+		<a href="{{root}}playlist/page/current" data-ajaxtarget="#main" class="ajax-link">Warteschlange</a>
 		{% include 'partials/player/playrandom.htm' %}
 	</div>
 </div>
