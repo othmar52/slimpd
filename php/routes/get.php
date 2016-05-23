@@ -1,26 +1,26 @@
 <?php
 
-$app->get('/', function() use ($app,$config){
-	$config['action'] = "landing";
+$app->get('/', function() use ($app, $vars){
+	$vars['action'] = "landing";
 	// TODO: $app->auth->check('library');
-    $app->render('surrounding.htm', $config);
+    $app->render('surrounding.htm', $vars);
 });
 
-$app->get('/library(/)', function() use ($app, $config){
-	$config['action'] = "landing";
-    $app->render('surrounding.htm', $config);
+$app->get('/library(/)', function() use ($app, $vars){
+	$vars['action'] = "landing";
+    $app->render('surrounding.htm', $vars);
 });
 
-$app->get('/djscreen', function() use ($app, $config){
-	$config['action'] = "djscreen";
-    $app->render('djscreen.htm', $config);
+$app->get('/djscreen', function() use ($app, $vars){
+	$vars['action'] = "djscreen";
+    $app->render('djscreen.htm', $vars);
 });
 
 foreach(array('artist', 'label', 'genre') as $className) {
 	// stringlist of artist|label|genre
-	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $config, $className){
+	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $vars, $className){
 		$classPath = "\\Slimpd\\" . ucfirst($className);
-		$config['action'] = 'library.'. $className .'s';
+		$vars['action'] = 'library.'. $className .'s';
 		$currentPage = 1;
 		$itemsPerPage = 100;
 		$searchterm = FALSE;
@@ -44,94 +44,92 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		}
 
 		if($searchterm !== FALSE) {
-			$config['itemlist'] = $classPath::getInstancesLikeAttributes(
+			$vars['itemlist'] = $classPath::getInstancesLikeAttributes(
 				array('az09' => str_replace('*', '%', $searchterm)),
 				$itemsPerPage,
 				$currentPage
 			);
-			$config['totalresults'] = $classPath::getCountLikeAttributes(
+			$vars['totalresults'] = $classPath::getCountLikeAttributes(
 				array('az09' => str_replace('*', '%', $searchterm))
 			);
 			$urlPattern = $app->config['root'] .$className.'s/searchterm/'.$searchterm.'/page/(:num)';
 		} else {
-			$config['itemlist'] = $classPath::getAll($itemsPerPage, $currentPage);
-			$config['totalresults'] = $classPath::getCountAll();
+			$vars['itemlist'] = $classPath::getAll($itemsPerPage, $currentPage);
+			$vars['totalresults'] = $classPath::getCountAll();
 			$urlPattern = $app->config['root'] . $className.'s/page/(:num)';
 		}
-		$config['paginator'] = new JasonGrimes\Paginator(
-			$config['totalresults'],
+		$vars['paginator'] = new JasonGrimes\Paginator(
+			$vars['totalresults'],
 			$itemsPerPage,
 			$currentPage,
 			$urlPattern
 		);
-		$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-    	$app->render('surrounding.htm', $config);
+		$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+		$app->render('surrounding.htm', $vars);
 	});
 }
 
 
-$app->get('/library/album(/)', function() use ($app, $config){
-	$config['action'] = 'library.album';
-    $app->render('surrounding.htm', $config);
+$app->get('/library/album(/)', function() use ($app, $vars){
+	$vars['action'] = 'library.album';
+    $app->render('surrounding.htm', $vars);
 });
 
 
 foreach(['/album', '/markup/albumtracks'] as $what) {
-	$app->get($what .'/:albumId', function($albumId) use ($app, $config, $what){
-		$config['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
-		$config['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
-		$config['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
-		
-		// get all relational items we need for rendering
-		$config['renderitems'] = getRenderItems($config['album'], $config['itemlist']);
-		$config['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
+	$app->get($what .'/:albumId', function($albumId) use ($app, $vars, $what){
+		$vars['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
+		$vars['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
+		$vars['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
+		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
+		$vars['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 			array('albumId' => $albumId)
 		);
 		
-		$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($config['album']->getRelativePath());
+		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
 	
-		$app->render('surrounding.htm', $config);
+		$app->render('surrounding.htm', $vars);
 	});
 }
 
-$app->get('/library/year/:itemString', function($itemString) use ($app, $config){
-	$config['action'] = 'library.year';
+$app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
+	$vars['action'] = 'library.year';
 	
-	$config['albumlist'] = \Slimpd\Album::getInstancesByAttributes(
+	$vars['albumlist'] = \Slimpd\Album::getInstancesByAttributes(
 		array('year' => $itemString)
 	);
 	
 	// get all relational items we need for rendering
-	$config['renderitems'] = getRenderItems($config['albumlist']);
-    $app->render('surrounding.htm', $config);
+	$vars['renderitems'] = getRenderItems($vars['albumlist']);
+    $app->render('surrounding.htm', $vars);
 });
 
 
 
-$app->get('/mpdctrl(/:cmd(/:item))', function($cmd, $item='') use ($app, $config){
-	$config['action'] = 'mpdctrl.' . $cmd;
+$app->get('/mpdctrl(/:cmd(/:item))', function($cmd, $item='') use ($app, $vars){
+	$vars['action'] = 'mpdctrl.' . $cmd;
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$mpd->cmd($cmd, $item);
 });
 
-$app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $config){
-	$config['action'] = 'mpdctrl.' . $cmd;
+$app->get('/mpdctrl/:cmd/:item+', function($cmd, $item='') use ($app, $vars){
+	$vars['action'] = 'mpdctrl.' . $cmd;
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	$mpd->cmd($cmd, $item);
 });
 
 
-$app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
-	$config['action'] = 'playlist';
+$app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $vars){
+	$vars['action'] = 'playlist';
 	$mpd = new \Slimpd\modules\mpd\mpd();
-	$config['item'] = $mpd->getCurrentlyPlayedTrack();
-	if($config['item'] !== NULL) {
-		$config['nowplaying_album'] = \Slimpd\Album::getInstanceByAttributes(
-			array('id' => $config['item']->getAlbumId())
+	$vars['item'] = $mpd->getCurrentlyPlayedTrack();
+	if($vars['item'] !== NULL) {
+		$vars['nowplaying_album'] = \Slimpd\Album::getInstanceByAttributes(
+			array('id' => $vars['item']->getAlbumId())
 		);
 	} else {
 		// TODO: how to handle mpd played tracks we cant find in database
-		$config['nowplaying_album'] = NULL;
+		$vars['nowplaying_album'] = NULL;
 	}
 	
 	switch($pagenum) {
@@ -146,48 +144,48 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $config){
 			break;
 	}
 
-	$config['currentplaylist'] = $mpd->getCurrentPlaylist($currentPage);
-	$config['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
+	$vars['currentplaylist'] = $mpd->getCurrentPlaylist($currentPage);
+	$vars['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
 	
 	// get all relational items we need for rendering
-	$config['renderitems'] = getRenderItems($config['nowplaying_album'], $config['currentplaylist']);
-	$config['paginator'] = new JasonGrimes\Paginator(
-		$config['currentplaylistlength'],
+	$vars['renderitems'] = getRenderItems($vars['nowplaying_album'], $vars['currentplaylist']);
+	$vars['paginator'] = new JasonGrimes\Paginator(
+		$vars['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
 		$currentPage,
 		$app->config['root'] . 'playlist/page/(:num)'
 	);
-	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-    $app->render('surrounding.htm', $config);
+	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+    $app->render('surrounding.htm', $vars);
 });
 
 
-$app->get('/favorites(/)', function() use ($app, $config){
-	$config['action'] = 'favorites';
-    $app->render('surrounding.htm', $config);
+$app->get('/favorites(/)', function() use ($app, $vars){
+	$vars['action'] = 'favorites';
+    $app->render('surrounding.htm', $vars);
 });
 
 
-$app->get('/mpdstatus(/)', function() use ($app, $config){
+$app->get('/mpdstatus(/)', function() use ($app, $vars){
 	$mpd = new \Slimpd\modules\mpd\mpd();
 	
 	# TODO: mpd-version check, v 0.20 has 'duration' included in status()
 	# @see: http://www.musicpd.org/doc/protocol/command_reference.html#status_commands
 	
-	$config['mpd']['status'] = $mpd->cmd('status');
+	$vars['mpd']['status'] = $mpd->cmd('status');
 	try {
-		$config['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
-		$percent = $config['mpd']['status']['elapsed'] / ($config['mpd']['status']['duration']/100);
-		$config['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
+		$vars['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
+		$percent = $vars['mpd']['status']['elapsed'] / ($vars['mpd']['status']['duration']/100);
+		$vars['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
 	} catch (\Exception $e) {
 		// TODO: display smth like "no track loaded"
-		$config['mpd']['status'] = array();
+		$vars['mpd']['status'] = array();
 	}
-	echo json_encode($config['mpd']['status']);
+	echo json_encode($vars['mpd']['status']);
 	$app->stop();
 });
 
-$app->get('/xwaxstatus(/)', function() use ($app, $config){
+$app->get('/xwaxstatus(/)', function() use ($app, $vars){
 	$xwax = new \Slimpd\Xwax();
 	$deckStats = $xwax->fetchAllDeckStats();
 	echo json_encode($deckStats);
@@ -204,31 +202,31 @@ foreach([
 		'standalone-trackview'
 	] as $markupSnippet ) {
 
-	$app->get('/markup/'.$markupSnippet, function() use ($app, $config, $markupSnippet){
+	$app->get('/markup/'.$markupSnippet, function() use ($app, $vars, $markupSnippet){
 		
 		// maybe we cant find item in mpd or mysql database because it has been accessed via filebrowser
 		$itemRelativePath = '';
 		
 		$templateFile = 'modules/'.$markupSnippet.'.htm';
-		$config['action'] = $markupSnippet;
+		$vars['action'] = $markupSnippet;
 		
 		$itemsToRender = array();
 		
 		switch($markupSnippet) {
 			case 'mpdplayer':
 				$mpd = new \Slimpd\modules\mpd\mpd();
-				$config['item'] = $mpd->getCurrentlyPlayedTrack();
-				if($config['item'] !== NULL) {
-					$itemRelativePath = $config['item']->getRelativePath();
+				$vars['item'] = $mpd->getCurrentlyPlayedTrack();
+				if($vars['item'] !== NULL) {
+					$itemRelativePath = $vars['item']->getRelativePath();
 				}
 				break;
 			case 'xwaxplayer':
 				$xwax = new \Slimpd\Xwax();
-				$config['decknum'] = $app->request->get('deck');
-				$config['item'] = $xwax->getCurrentlyPlayedTrack($config['decknum']);
+				$vars['decknum'] = $app->request->get('deck');
+				$vars['item'] = $xwax->getCurrentlyPlayedTrack($vars['decknum']);
 				
-				if($config['item'] !== NULL) {
-					$itemRelativePath = $config['item']->getRelativePath();
+				if($vars['item'] !== NULL) {
+					$itemRelativePath = $vars['item']->getRelativePath();
 				}
 				if($app->request->get('type') == 'djscreen') {
 					$markupSnippet = 'standalone-trackview';
@@ -239,8 +237,8 @@ foreach([
 			case 'widget-xwax':
 			case 'widget-deckselector':
 				$xwax = new \Slimpd\Xwax();
-				$config['xwax']['deckstats'] = $xwax->fetchAllDeckStats();
-				foreach($config['xwax']['deckstats'] as $deckStat) {
+				$vars['xwax']['deckstats'] = $xwax->fetchAllDeckStats();
+				foreach($vars['xwax']['deckstats'] as $deckStat) {
 					$itemsToRender[] = $deckStat['item'];
 				} 
 				// no break
@@ -256,60 +254,60 @@ foreach([
 					$search = array('relativePathHash' => getFilePathHash($itemPath));
 					$itemRelativePath = $itemPath;
 				}
-				$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+				$vars['item'] = \Slimpd\Track::getInstanceByAttributes($search);
 				// no break
 		}
 		
-		$itemsToRender[] = $config['item'];
-		$config['renderitems'] = getRenderItems($itemsToRender);
+		$itemsToRender[] = $vars['item'];
+		$vars['renderitems'] = getRenderItems($itemsToRender);
 		
-		if(is_null($config['item']) === FALSE && $config['item']->getId() > 0) {
-			$itemRelativePath = $config['item']->getRelativePath();
+		if(is_null($vars['item']) === FALSE && $vars['item']->getId() > 0) {
+			$itemRelativePath = $vars['item']->getRelativePath();
 		} else {
 			// playing track has not been imported in slimpd database yet...
 			// so we are not able to get any renderitems
 			$item = new \Slimpd\Track();
 			$item->setRelativePath($itemRelativePath);
 			$item->setRelativePathHash(getFilePathHash($itemRelativePath));
-			$config['item'] = $item;
+			$vars['item'] = $item;
 		}
 		
 		// TODO: remove external liking as soon we have implemented a proper functionality
-		$config['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-			urlencode($config['mpd']['alternative_musicdir'] . $itemRelativePath);
+		$vars['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
+			urlencode($vars['mpd']['alternative_musicdir'] . $itemRelativePath);
 		
-		$app->render($templateFile, $config);
+		$app->render($templateFile, $vars);
 		$app->stop();
 	});
 	
-	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $config, $markupSnippet){
-		$config['relativePathHash'] = $relativePathHash;
-		$config['deck'] = $app->request->get('deck');
+	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $vars, $markupSnippet){
+		$vars['relativePathHash'] = $relativePathHash;
+		$vars['deck'] = $app->request->get('deck');
 		if($markupSnippet === 'localplayer') {
-			$config['color'] = $config['colors'][ $config['spotcolor']['local'] ]['1st'];
+			$vars['color'] = $vars['colors'][ $vars['spotcolor']['local'] ]['1st'];
 			$markupSnippet = 'nowplaying';
 		}
 		if($markupSnippet === 'mpdplayer') {
-			$config['color'] = $config['colors'][ $config['spotcolor']['mpd'] ]['1st'];
+			$vars['color'] = $vars['colors'][ $vars['spotcolor']['mpd'] ]['1st'];
 			$markupSnippet = 'nowplaying';
 		}
 		if($markupSnippet === 'xwaxplayer') {
-			$config['color'] = $config['colors'][ $config['spotcolor']['xwax'] ]['1st'];
+			$vars['color'] = $vars['colors'][ $vars['spotcolor']['xwax'] ]['1st'];
 			$markupSnippet = 'nowplaying';
 		}
 		$app->response->headers->set('Content-Type', 'text/css');
-		$app->render('css/'.$markupSnippet.'.css', $config);
+		$app->render('css/'.$markupSnippet.'.css', $vars);
 	});
 }
 
-$app->get('/css/spotcolors.css', function() use ($app, $config){
+$app->get('/css/spotcolors.css', function() use ($app, $vars){
 	$app->response->headers->set('Content-Type', 'text/css');
-	$app->render('css/spotcolors.css', $config);
+	$app->render('css/spotcolors.css', $vars);
 });
 
 // predefined album-image sizes
 foreach (array(35, 50,100,300,1000) as $imagesize) {
-	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $vars, $imagesize){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('albumId' => $itemId), 'filesize DESC'
 		);
@@ -322,7 +320,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		exit();
 	});
 	
-	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $vars, $imagesize){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('trackId' => $itemId), 'filesize DESC'
 		);
@@ -337,7 +335,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		exit();
 	});
 	
-	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $vars, $imagesize){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
 			array('id' => $itemId), 'filesize DESC'
 		);
@@ -348,13 +346,13 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$image->dump($imagesize);
 	});
 	
-	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Bitmap();
 		$image->setRelativePath(join(DS, $itemParams));
 		$image->dump($imagesize);
 	})->name('imagepath-' .$imagesize);
 	
-	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$importer = new Slimpd\importer();
 		$images = $importer->getFilesystemImagesForMusicFile(join(DS, $itemParams));
 		if(count($images) === 0) {
@@ -368,10 +366,10 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 
 	});
 	
-	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $config, $imagesize){
-		$config['imagesize'] = $imagesize;
-		$config['color'] = $config['images']['noimage'][ $config['playerMode'] ]['color'];
-		$config['backgroundcolor'] = $config['images']['noimage'][ $config['playerMode'] ]['backgroundcolor'];
+	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $vars, $imagesize){
+		$vars['imagesize'] = $imagesize;
+		$vars['color'] = $vars['images']['noimage'][ $vars['playerMode'] ]['color'];
+		$vars['backgroundcolor'] = $vars['images']['noimage'][ $vars['playerMode'] ]['backgroundcolor'];
 		
 		switch($type) {
 			default: $template = 'svg/dummy.svg';
@@ -379,59 +377,59 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
 		
 		header("Content-Type: image/svg+xml");
-		$app->render($template, $config);
+		$app->render($template, $vars);
 	})->name('imagefallback-' .$imagesize);
 	
 	// missing track or album paramter caused by items that are not imported in slimpd yet
 	# TODO: maybe use another fallback image for those items...
-	$app->get('/image-'.$imagesize.'/album/', function() use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/album/', function() use ($app, $vars, $imagesize){
 		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
 	});
-	$app->get('/image-'.$imagesize.'/track/', function() use ($app, $config, $imagesize){
+	$app->get('/image-'.$imagesize.'/track/', function() use ($app, $vars, $imagesize){
 		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 	});
 	
 }
 
-$app->get('/importer(/)', function() use ($app, $config){
-	$config['action'] = 'importer';
-	$config['servertime'] = time();;
+$app->get('/importer(/)', function() use ($app, $vars){
+	$vars['action'] = 'importer';
+	$vars['servertime'] = time();;
 	
 	$query = "SELECT * FROM importer ORDER BY jobStart DESC,id DESC LIMIT 30;";
 	$result = $app->db->query($query);
 	while($record = $result->fetch_assoc() ) {
 		$record['jobStatistics'] = unserialize($record['jobStatistics']);
-		$config['itemlist'][] = $record;
+		$vars['itemlist'][] = $record;
 	}
-	$app->render('surrounding.htm', $config);
+	$app->render('surrounding.htm', $vars);
 });
 
-$app->get('/importer/triggerUpdate', function() use ($app, $config){
+$app->get('/importer/triggerUpdate', function() use ($app, $vars){
 	\Slimpd\importer::queStandardUpdate();
 });
 
-$app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use ($app, $config){
+$app->get('/audiosvg/width/:width/:itemParam+', function($width, $itemParam) use ($app, $vars){
 	$svgGenerator = new \Slimpd\Svggenerator($itemParam);
 	$svgGenerator->generateSvg($width);
 });
 
-$app->get('/filebrowser', function() use ($app, $config){
-	$config['action'] = 'filebrowser';
+$app->get('/filebrowser', function() use ($app, $vars){
+	$vars['action'] = 'filebrowser';
 	$fileBrowser = new \Slimpd\filebrowser();
-	$fileBrowser->getDirectoryContent($config['mpd']['musicdir']);
-	$config['breadcrumb'] = $fileBrowser->breadcrumb;
-	$config['subDirectories'] = $fileBrowser->subDirectories;
-	$config['files'] = $fileBrowser->files;
-	$config['hotlinks'] = array();
-	foreach($config['filebrowser-hotlinks'] as $path){
-		$config['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
+	$fileBrowser->getDirectoryContent($vars['mpd']['musicdir']);
+	$vars['breadcrumb'] = $fileBrowser->breadcrumb;
+	$vars['subDirectories'] = $fileBrowser->subDirectories;
+	$vars['files'] = $fileBrowser->files;
+	$vars['hotlinks'] = array();
+	foreach($vars['filebrowser-hotlinks'] as $path){
+		$vars['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
 	}
 	
-	$app->render('surrounding.htm', $config);
+	$app->render('surrounding.htm', $vars);
 })->name('filebrowser');
 
-$app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = 'filebrowser';
+$app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'filebrowser';
 	
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->itemsPerPage = $app->config['filebrowser']['max-items'];
@@ -466,77 +464,77 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $config)
 			break;
 	}
 
-	$config['directory'] = $fileBrowser->directory;
-	$config['breadcrumb'] = $fileBrowser->breadcrumb;
-	$config['subDirectories'] = $fileBrowser->subDirectories;
-	$config['files'] = $fileBrowser->files;
-	$config['filter'] = $fileBrowser->filter;
+	$vars['directory'] = $fileBrowser->directory;
+	$vars['breadcrumb'] = $fileBrowser->breadcrumb;
+	$vars['subDirectories'] = $fileBrowser->subDirectories;
+	$vars['files'] = $fileBrowser->files;
+	$vars['filter'] = $fileBrowser->filter;
 	
 	switch($fileBrowser->filter) {
 		case 'dirs':
 			$totalFilteredItems = $fileBrowser->subDirectories['total'];
-			$config['showDirFilterBadge'] = FALSE;
-			$config['showFileFilterBadge'] = FALSE;
+			$vars['showDirFilterBadge'] = FALSE;
+			$vars['showFileFilterBadge'] = FALSE;
 			break;
 		case 'files':
 			$totalFilteredItems = $fileBrowser->files['total'];
-			$config['showDirFilterBadge'] = FALSE;
-			$config['showFileFilterBadge'] = FALSE;
+			$vars['showDirFilterBadge'] = FALSE;
+			$vars['showFileFilterBadge'] = FALSE;
 			break;
 		default :
 			$totalFilteredItems = 0;
-			$config['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
+			$vars['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
 				? TRUE
 				: FALSE;
 			
-			$config['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->files['total'])
+			$vars['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->files['total'])
 				? TRUE
 				: FALSE;
 			break;
 	}
 	
-	$config['paginator'] = new JasonGrimes\Paginator(
+	$vars['paginator'] = new JasonGrimes\Paginator(
 		$totalFilteredItems,
 		$fileBrowser->itemsPerPage,
 		$fileBrowser->currentPage,
 		$app->config['root'] . 'filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
 	);
-	$config['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
-	$app->render('surrounding.htm', $config);
+	$vars['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
+	$app->render('surrounding.htm', $vars);
 });
 
 
-$app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = 'filebrowser';
+$app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'filebrowser';
 	$fileBrowser = new \Slimpd\filebrowser();
 
 	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
-	$config['directory'] = $fileBrowser->directory;
-	$config['breadcrumb'] = $fileBrowser->breadcrumb;
-	$config['subDirectories'] = $fileBrowser->subDirectories;
-	$config['files'] = $fileBrowser->files;
+	$vars['directory'] = $fileBrowser->directory;
+	$vars['breadcrumb'] = $fileBrowser->breadcrumb;
+	$vars['subDirectories'] = $fileBrowser->subDirectories;
+	$vars['files'] = $fileBrowser->files;
 	
 	/// try to fetch album entry for this directory
-	$config['album'] = \Slimpd\Album::getInstanceByAttributes(
+	$vars['album'] = \Slimpd\Album::getInstanceByAttributes(
 		array('relativePathHash' => getFilePathHash($fileBrowser->directory))
 	);
-	$app->render('modules/widget-directory.htm', $config);
+	$app->render('modules/widget-directory.htm', $vars);
 });
 
 
-$app->get('/playlists', function() use ($app, $config){
-	$config['action'] = "playlists";
+$app->get('/playlists', function() use ($app, $vars){
+	$vars['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');
 	$app->response->redirect($app->config['root'] . 'filebrowser/playlists' . getNoSurSuffix(), 301);
 });
 
 
-$app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = "showplaylist";
+$app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = "showplaylist";
 	$playlist = new \Slimpd\playlist\playlist(join(DS, $itemParams));
 
 	if($playlist->getErrorPath() === TRUE) {
-		$app->render('surrounding.htm', $config);
+		$app->render('surrounding.htm', $vars);
 		return;
 	}
 	
@@ -555,31 +553,31 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $config
 
 	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
-	$config['itemlist'] = $playlist->getTracks();
-	$config['renderitems'] = getRenderItems($config['itemlist']);
-	$config['playlist'] = $playlist;
-	$config['paginator'] = new JasonGrimes\Paginator(
+	$vars['itemlist'] = $playlist->getTracks();
+	$vars['renderitems'] = getRenderItems($vars['itemlist']);
+	$vars['playlist'] = $playlist;
+	$vars['paginator'] = new JasonGrimes\Paginator(
 		$totalItems,
 		$itemsPerPage,
 		$currentPage,
 		$app->config['root'] . 'showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
 	);
-	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-    $app->render('surrounding.htm', $config);
+	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+    $app->render('surrounding.htm', $vars);
 });
 
-$app->get('/markup/widget-playlist/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = 'widget-playlist';
-	$config['playlist'] = new \Slimpd\playlist\playlist(join(DS, $itemParams));
-	$config['playlist']->fetchTrackRange(0, 5);
-	$config['renderitems'] = getRenderItems($config['playlist']->getTracks());
-	$config['breadcrumb'] =  \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
-	$app->render('modules/widget-playlist.htm', $config);
+$app->get('/markup/widget-playlist/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'widget-playlist';
+	$vars['playlist'] = new \Slimpd\playlist\playlist(join(DS, $itemParams));
+	$vars['playlist']->fetchTrackRange(0, 5);
+	$vars['renderitems'] = getRenderItems($vars['playlist']->getTracks());
+	$vars['breadcrumb'] =  \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+	$app->render('modules/widget-playlist.htm', $vars);
 });
 
 
-$app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = "showplaintext";
+$app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = "showplaintext";
 	$relativePath = join(DS, $itemParams);
 	$validPath = '';
 	foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
@@ -593,16 +591,16 @@ $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $confi
 	if($validPath === '') {
 		$app->flashNow('error', 'invalid path ' . $relativePath);
 	} else {
-		$config['plaintext'] = nfostring2html(file_get_contents($validPath));
+		$vars['plaintext'] = nfostring2html(file_get_contents($validPath));
 	}
-	$config['filepath'] = $relativePath;
-	$app->render('modules/widget-plaintext.htm', $config);
+	$vars['filepath'] = $relativePath;
+	$app->render('modules/widget-plaintext.htm', $vars);
 });
 
 
 
-$app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = 'maintainance.trackdebug';
+$app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'maintainance.trackdebug';
 	$itemRelativePath = '';
 	$itemRelativePathHash = '';
 	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
@@ -612,39 +610,39 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 		$itemRelativePathHash = getFilePathHash($itemRelativePath);
 		$search = array('relativePathHash' => $itemRelativePathHash);
 	}
-	$config['item'] = \Slimpd\Track::getInstanceByAttributes($search);
-	if($config['item'] === NULL) {
+	$vars['item'] = \Slimpd\Track::getInstanceByAttributes($search);
+	if($vars['item'] === NULL) {
 		$item = new \Slimpd\Track();
 		$item->setRelativePath($itemRelativePath);
 		$item->setRelativePathHash($itemRelativePathHash);
-		$config['item'] = $item;
+		$vars['item'] = $item;
 	}
-	$config['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
-	$config['renderitems'] = getRenderItems($config['item']);
-	$app->render('surrounding.htm', $config);
+	$vars['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
+	$vars['renderitems'] = getRenderItems($vars['item']);
+	$app->render('surrounding.htm', $vars);
 });
 
 
-$app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $config){
-	$config['action'] = 'maintainance.albumdebug';
+$app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'maintainance.albumdebug';
 	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
 		$search = array('id' => (int)$itemParams[0]);
 	}
 	
-	$config['album'] = \Slimpd\Album::getInstanceByAttributes($search);
+	$vars['album'] = \Slimpd\Album::getInstanceByAttributes($search);
 
-	$tmp = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $config['album']->getId()));
+	$tmp = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $vars['album']->getId()));
 	$trackInstances = array();
 	$rawTagDataInstances = array();
 	foreach($tmp as $t) {
-		$config['itemlist'][$t->getId()] = $t;
-		$config['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => (int)$t->getId()));
+		$vars['itemlist'][$t->getId()] = $t;
+		$vars['itemlistraw'][$t->getId()] = \Slimpd\Rawtagdata::getInstanceByAttributes(array('id' => (int)$t->getId()));
 	}
 	#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
 	unset($tmp);
 	
-	$config['discogstracks'] = array();
-	$config['matchmapping'] = array();
+	$vars['discogstracks'] = array();
+	$vars['matchmapping'] = array();
 	
 	$discogsId = $app->request->get('discogsid');
 	if($discogsId !== NULL) {
@@ -667,13 +665,13 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 		 */
 		
 		$discogsItem = new \Slimpd\Discogsitem($discogsId);
-		$config['matchmapping'] = $discogsItem->guessTrackMatch($config['itemlistraw']);
-		$config['discogstracks'] = $discogsItem->trackstrings;
-		$config['discogsalbum'] = $discogsItem->albumAttributes;
+		$vars['matchmapping'] = $discogsItem->guessTrackMatch($vars['itemlistraw']);
+		$vars['discogstracks'] = $discogsItem->trackstrings;
+		$vars['discogsalbum'] = $discogsItem->albumAttributes;
 	}
 	
-	$config['renderitems'] = getRenderItems($config['itemlist'], $config['album']);
-	$app->render('surrounding.htm', $config);
+	$vars['renderitems'] = getRenderItems($vars['itemlist'], $vars['album']);
+	$app->render('surrounding.htm', $vars);
 });
 
 
@@ -699,11 +697,11 @@ foreach(array_keys($sortfields1) as $className) {
 		// albumlist+tracklist of artist|genre|label
 		$app->get(
 		'/'.$className.'/:idemId/'.$show.'s/page/:currentPage/sort/:sort/:direction',
-		function($itemId, $currentPage, $sort, $direction) use ($app, $config, $className, $show, $sortfields1) {
-			$config['action'] = $className.'.' . $show.'s';
-			$config['itemtype'] = $className;
-			$config['listcurrent'] = $show;
-			$config['itemlist'] = [];
+		function($itemId, $currentPage, $sort, $direction) use ($app, $vars, $className, $show, $sortfields1) {
+			$vars['action'] = $className.'.' . $show.'s';
+			$vars['itemtype'] = $className;
+			$vars['listcurrent'] = $show;
+			$vars['itemlist'] = [];
 			
 			$classPath = "\\Slimpd\\" . ucfirst($className);
 			
@@ -711,9 +709,9 @@ foreach(array_keys($sortfields1) as $className) {
 			$itemId = str_replace('%20', ',', $itemId);
 			
 			$term = str_replace(",", " ", $itemId);
-			$config['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+			$vars['item'] = $classPath::getInstanceByAttributes(array('id' => $itemId));
 			
-			$config['itemids'] = $itemId;
+			$vars['itemids'] = $itemId;
 			$itemsPerPage = 20;
 			$maxCount = 1000;
 			
@@ -737,20 +735,20 @@ foreach(array_keys($sortfields1) as $className) {
 				$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
 				$stmt->execute();
 				$meta = $ln_sph->query("SHOW META")->fetchAll();
-				$config['search'][$resultType]['total'] = 0;
+				$vars['search'][$resultType]['total'] = 0;
 				foreach($meta as $m) {
 					if($m['Variable_name'] === 'total_found') {
-						$config['search'][$resultType]['total'] = $m['Value'];
+						$vars['search'][$resultType]['total'] = $m['Value'];
 					}
 				}
-				$config['search'][$resultType]['time'] = 0;
-				$config['search'][$resultType]['term'] = $itemId;
-				$config['search'][$resultType]['matches'] = [];
+				$vars['search'][$resultType]['time'] = 0;
+				$vars['search'][$resultType]['term'] = $itemId;
+				$vars['search'][$resultType]['matches'] = [];
 				
 				if($resultType === $show) {
 	
 					$sortQuery = ($sort !== 'relevance')?  ' ORDER BY ' . $sort . ' ' . $direction : '';
-					$config['search']['activesorting'] = $sort . '-' . $direction;
+					$vars['search']['activesorting'] = $sort . '-' . $direction;
 					
 					$stmt = $ln_sph->prepare("
 						SELECT id,type,itemid,artistIds,display
@@ -760,13 +758,13 @@ foreach(array_keys($sortfields1) as $className) {
 						GROUP BY itemid,type
 							".$sortQuery."
 							LIMIT :offset,:max
-						OPTION ranker=proximity, max_matches=".$config['search'][$resultType]['total'].";
+						OPTION ranker=proximity, max_matches=".$vars['search'][$resultType]['total'].";
 					");
 					$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 					$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 					$stmt->bindValue(':type', $sphinxTypeIndex, PDO::PARAM_INT);
 					
-					$config['search'][$resultType]['time'] = microtime(TRUE);
+					$vars['search'][$resultType]['time'] = microtime(TRUE);
 					
 					$stmt->execute();
 					$rows = $stmt->fetchAll();
@@ -780,29 +778,29 @@ foreach(array_keys($sortfields1) as $className) {
 								$obj = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
 								break;
 						}
-						$config['itemlist'][] = $obj;
+						$vars['itemlist'][] = $obj;
 					}
 					
-					$config['search'][$resultType]['time'] = number_format(microtime(TRUE) - $config['search'][$resultType]['time'],3);
+					$vars['search'][$resultType]['time'] = number_format(microtime(TRUE) - $vars['search'][$resultType]['time'],3);
 					
-					$config['paginator'] = new JasonGrimes\Paginator(
-						$config['search'][$resultType]['total'],
+					$vars['paginator'] = new JasonGrimes\Paginator(
+						$vars['search'][$resultType]['total'],
 						$itemsPerPage,
 						$currentPage,
 						$app->config['root'] .$className.'/'.$itemId.'/'.$show.'s/page/(:num)/sort/'.$sort.'/'.$direction
 					);
-					$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+					$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 				}
 			}
-			$config['renderitems'] = getRenderItems($config['itemlist']);
-		    $app->render('surrounding.htm', $config);
+			$vars['renderitems'] = getRenderItems($vars['itemlist']);
+		    $app->render('surrounding.htm', $vars);
 		});
 		
 	}
 }
 
 
-$app->get('/alphasearch/', function() use ($app, $config){
+$app->get('/alphasearch/', function() use ($app, $vars){
 	$type = $app->request()->get('searchtype');
 	$term = $app->request()->get('searchterm');
 	$app->response->redirect($app->config['root'] . $type.'s/searchterm/'.rawurlencode($term).'/page/1' . getNoSurSuffix());
@@ -812,7 +810,7 @@ $sortfields = array_merge($sortfields1, $sortfields2);
 foreach(array_keys($sortfields) as $currentType) {
 	$app->get(
 		'/search'.$currentType.'/page/:currentPage/sort/:sort/:direction',
-		function($currentPage, $sort, $direction) use ($app, $config, $currentType, $sortfields){
+		function($currentPage, $sort, $direction) use ($app, $vars, $currentType, $sortfields){
 		foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 		}
@@ -828,7 +826,7 @@ foreach(array_keys($sortfields) as $currentType) {
 		// for now - redirect immediately
 		if(strtolower(trim($term)) === 'mp3' || strtolower(trim($term)) === 'mu') {
 			$app->flashNow('error', 'OH SNAP! searchterm <strong>'. $term .'</strong> is currently blacklisted...');
-			$app->render('surrounding.htm', $config);
+			$app->render('surrounding.htm', $vars);
 			return;
 		}
 		
@@ -849,7 +847,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			'genre' => 5,
 			'dirname' => 6,
 		);
-		$config['itemlist'] = [];
+		$vars['itemlist'] = [];
 		foreach(array_keys($sortfields) as $type) {
 			
 			// get result count for each resulttype 
@@ -874,25 +872,25 @@ foreach(array_keys($sortfields) as $currentType) {
 			
 			$stmt->execute();
 			$meta = $ln_sph->query("SHOW META")->fetchAll();
-			$config['search'][$type]['total'] = 0;
+			$vars['search'][$type]['total'] = 0;
 			foreach($meta as $m) {
 				if($m['Variable_name'] === 'total_found') {
-					$config['search'][$type]['total'] = $m['Value'];
+					$vars['search'][$type]['total'] = $m['Value'];
 				}
 			}
-			$config['search'][$type]['time'] = 0;
-			$config['search'][$type]['term'] = $term;
-			$config['search'][$type]['matches'] = [];
+			$vars['search'][$type]['time'] = 0;
+			$vars['search'][$type]['term'] = $term;
+			$vars['search'][$type]['matches'] = [];
 			
 			// get results only for requestet result-type
 			if($type == $currentType) {
 				$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
 				$direction = ($direction == 'asc') ? 'asc' : 'desc';
-				$config['search']['activesorting'] = $sortfield . '-' . $direction;
+				$vars['search']['activesorting'] = $sortfield . '-' . $direction;
 				
 				$sortQuery = ($sortfield !== 'relevance')?  ' ORDER BY ' . $sortfield . ' ' . $direction : '';
 				
-				$config['search'][$type]['time'] = microtime(TRUE);
+				$vars['search'][$type]['time'] = microtime(TRUE);
 				
 				$stmt = $ln_sph->prepare("
 					SELECT id,type,itemid,display FROM ". $app->config['sphinx']['mainindex']."
@@ -901,7 +899,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					GROUP BY itemid,type
 					".$sortQuery."
 					LIMIT :offset,:max
-					OPTION ranker=".$ranker.",max_matches=".$config['search'][$type]['total'].";");
+					OPTION ranker=".$ranker.",max_matches=".$vars['search'][$type]['total'].";");
 				$stmt->bindValue(
 					':match', "
 					(' \"". addStars($term) . "\"') |
@@ -917,13 +915,13 @@ foreach(array_keys($sortfields) as $currentType) {
 				}
 				
 				$urlPattern = $app->config['root'] . 'search'.$type.'/page/(:num)/sort/'.$sortfield.'/'.$direction.'?q=' . $term;
-				$config['paginator'] = new JasonGrimes\Paginator(
-					$config['search'][$type]['total'],
+				$vars['paginator'] = new JasonGrimes\Paginator(
+					$vars['search'][$type]['total'],
 					$itemsPerPage,
 					$currentPage,
 					$urlPattern
 				);
-				$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+				$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 				
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
@@ -983,22 +981,22 @@ foreach(array_keys($sortfields) as $currentType) {
 								$obj->breadcrumb = \Slimpd\filebrowser::fetchBreadcrumb($obj->fullpath);
 								break;
 						}
-						$config['itemlist'][] = $obj;
+						$vars['itemlist'][] = $obj;
 					}
 				}
-				$config['search'][$type]['time'] = number_format(microtime(TRUE) - $config['search'][$type]['time'],3);
+				$vars['search'][$type]['time'] = number_format(microtime(TRUE) - $vars['search'][$type]['time'],3);
 			}
 		}
-		$config['action'] = 'searchresult.' . $currentType;
-		$config['searchcurrent'] = $currentType;
-		$config['renderitems'] = getRenderItems($config['itemlist']);
-		$app->render('surrounding.htm', $config);
+		$vars['action'] = 'searchresult.' . $currentType;
+		$vars['searchcurrent'] = $currentType;
+		$vars['renderitems'] = getRenderItems($vars['itemlist']);
+		$app->render('surrounding.htm', $vars);
 			
 	})->name('search'.$currentType);
 }
 
 
-$app->get('/autocomplete/:type/', function($type) use ($app, $config) {
+$app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 	foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
 		define (strtoupper($var), intval($app->config['sphinx'][$var]) );
 	}
@@ -1089,20 +1087,20 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 			
 			switch($filterType) {
 				case 'track':
-					$url = '/searchall/page/1/sort/relevance/desc?q=' . $row['display']; 
+					$url = 'searchall/page/1/sort/relevance/desc?q=' . $row['display'];
 					break;
 				case 'album':
 				case 'dirname':
-					$url = '/album/' . $row['itemid']; 
+					$url = 'album/' . $row['itemid'];
 					break;
 				default:
-					$url = '/' . $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc';
+					$url = $filterType . '/' . $row['itemid'] . '/tracks/page/1/sort/added/desc';
 					break;
 			}
 
 			$entry = [
 				'label' => $excerped[0],
-				'url' => $url,
+				'url' => $app->config['root'] . $url,
 				'type' => $filterType,
 				'typelabel' => $app->ll->str($filterType),
 				'itemid' => $row['itemid'],
@@ -1114,11 +1112,11 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 				case 'label':
 				case 'genre':
 				case 'dirname':
-					$entry['img'] = '/skin/default/img/icon-'. $filterType .'.png';
+					$entry['img'] = $app->config['root'] . 'skin/default/img/icon-'. $filterType .'.png';
 					break;
 				case 'album':
 				case 'track':
-					$entry['img'] = '/image-50/'. $filterType .'/' . $row['itemid'];
+					$entry['img'] = $app->config['root'] . 'image-50/'. $filterType .'/' . $row['itemid'];
 					break;
 			}
 			$result[] = $entry;
@@ -1136,13 +1134,13 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $config) {
 })->name('autocomplete');
 
 
-$app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
+$app->get('/directory/:itemParams+', function($itemParams) use ($app, $vars){
 
 	// validate directory
 	$directory = new \Slimpd\_Directory(join(DS, $itemParams));
 	if($directory->validate() === FALSE) {
 		$app->flashNow('error', $app->ll->str('directory.notfound'));
-		$app->render('surrounding.htm', $config);
+		$app->render('surrounding.htm', $vars);
 		return;
 	}
 
@@ -1185,27 +1183,27 @@ $app->get('/directory/:itemParams+', function($itemParams) use ($app, $config){
 	$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
-	$config['itemlist'] = [];
+	$vars['itemlist'] = [];
 	foreach($rows as $row) {
-		$config['itemlist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
+		$vars['itemlist'][] = \Slimpd\Track::getInstanceByAttributes(array('id' => $row['itemid']));
 	}
 
 	// get additional stuff we need for rendering the view
-	$config['action'] = 'directorytracks';
-	$config['renderitems'] = getRenderItems($config['itemlist']);
-	$config['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
-	$config['paginator'] = new JasonGrimes\Paginator(
+	$vars['action'] = 'directorytracks';
+	$vars['renderitems'] = getRenderItems($vars['itemlist']);
+	$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+	$vars['paginator'] = new JasonGrimes\Paginator(
 		$total,
 		$itemsPerPage,
 		$currentPage,
 		$app->config['root'] . 'directory/'.join(DS, $itemParams) . '?page=(:num)'
 	);
-	$config['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-	$app->render('surrounding.htm', $config);
+	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+	$app->render('surrounding.htm', $vars);
 });
 
 
-$app->get('/deliver/:item+', function($item) use ($app, $config){
+$app->get('/deliver/:item+', function($item) use ($app, $vars){
 	$path = join(DS, $item);
 	if(is_numeric($path)) {
 		$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$path));
@@ -1216,29 +1214,29 @@ $app->get('/deliver/:item+', function($item) use ($app, $config){
 	$app->stop();
 });
 
-$app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $config){
+$app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $vars){
 	$xwax = new \Slimpd\Xwax();
 	$xwax->cmd($cmd, $params, $app);
 	$app->stop();
 });
 
 
-$app->get('/tools/clean-rename-confirm/:itemParams+', function($itemParams) use ($app, $config){
-	if($config['destructiveness']['clean-rename'] !== '1') {
+$app->get('/tools/clean-rename-confirm/:itemParams+', function($itemParams) use ($app, $vars){
+	if($vars['destructiveness']['clean-rename'] !== '1') {
 		$app->notFound();
 		return;
 	}
 
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
-	$config['directory'] = $fileBrowser; 
-	$config['action'] = 'clean-rename-confirm';
-	$app->render('modules/widget-cleanrename.htm', $config);
+	$vars['directory'] = $fileBrowser;
+	$vars['action'] = 'clean-rename-confirm';
+	$app->render('modules/widget-cleanrename.htm', $vars);
 });
 
 
-$app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $config){
-	if($config['destructiveness']['clean-rename'] !== '1') {
+$app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $vars){
+	if($vars['destructiveness']['clean-rename'] !== '1') {
 		$app->notFound();
 		return;
 	}
@@ -1254,10 +1252,10 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
 	exec($cmd, $result);
 	
-	$config['result'] = join("\n", $result);
-	$config['directory'] = $fileBrowser;
-	$config['cmd'] = $cmd; 
-	$config['action'] = 'clean-rename';	
+	$vars['result'] = join("\n", $result);
+	$vars['directory'] = $fileBrowser;
+	$vars['cmd'] = $cmd;
+	$vars['action'] = 'clean-rename';
 	
-	$app->render('modules/widget-cleanrename.htm', $config);
+	$app->render('modules/widget-cleanrename.htm', $vars);
 });
