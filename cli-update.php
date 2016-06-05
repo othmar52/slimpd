@@ -85,6 +85,21 @@ call_user_func(function() use ($app) {
 $configLoader = $app->configLoaderINI;
 
 $config = $configLoader->loadConfig('master.ini');
+$config = $app->configLoaderINI->loadConfig('master.ini');
+switch($config['config']['langkey']) {
+	case 'de':
+		setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
+		break;
+	default:
+		// TODO: what is the correct locale-setting for en?
+		// make sure this works correctly:
+		//   var_dump(basename('musicfiles/testdirectory/Ænima-bla')); die();
+		// for now force DE...
+		// setlocale(LC_ALL, array('en_EN.UTF-8','en_EN','en_EN'))
+		setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
+		break;
+}
+
 $app->config = $config;
 
 $importer = new \Slimpd\importer();
