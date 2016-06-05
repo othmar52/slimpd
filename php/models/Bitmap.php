@@ -53,9 +53,9 @@ class Bitmap extends AbstractModel
 				chmod($phpThumb->cache_filename, 0777);
 			} else {
 				// something went wrong
-				// TODO: how to handle this?
-				// TODO: make sure we have no infinite loop...
-				return self::getFallbackImage()->dump($preConf);
+				$app = \Slim\Slim::getInstance();
+				$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
+				return;
 			}
 		}
 		#\Slim\Slim::getInstance()->response()->headers->set('Content-Type', 'image/jpeg');
@@ -63,14 +63,6 @@ class Bitmap extends AbstractModel
 		readfile($phpThumb->cache_filename);
 		exit();	
 	}
-	
-	public static function getFallbackImage() {
-		$bitmap = new Bitmap();
-		$bitmap->setRelativePath(\Slim\Slim::getInstance()->config['images']['fallback_image']);
-		$bitmap->setTrackId('xxx');
-		return $bitmap;
-	}
-	
 	
 	public function update() {
 		if($this->getId() > 0) {
