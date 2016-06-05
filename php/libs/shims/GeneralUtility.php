@@ -340,6 +340,13 @@ function getDirectoryFiles($dir, $ext='images', $addFilePath = TRUE, $checkMimeT
 	return $foundFiles;
 }
 
+function path2url($mixed) {
+	if(is_array($mixed) === TRUE) {
+		$mixed = join("", $mixed);
+	}
+	// rawurlencode but preserve slashes
+	return str_replace('%2F', '/', rawurlencode($mixed));
+}
 
 function formatByteSize($bytes) {
     if ($bytes >= 1073741824) {
