@@ -549,7 +549,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 	}
 	$currentPage = ($currentPage) ? $currentPage : 1;
 	$minIndex = (($currentPage-1) * $itemsPerPage);
-	$maxIndex = $minIndex +  $itemsPerPage -1;
+	$maxIndex = $minIndex +  $itemsPerPage;
 
 	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
