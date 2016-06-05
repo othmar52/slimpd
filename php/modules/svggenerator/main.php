@@ -121,15 +121,15 @@ class Svggenerator {
 			
 			if(\Slim\Slim::getInstance()->request->get('mode') === 'half') {
 				$renderValues[] = array(
-					'x' => $i/($amount/100),
-					'y1' => number_format($diffPercent, 2),
+					'x' => number_format($i/($amount/100), 5, '.', ''),
+					'y1' => number_format($diffPercent, 2, '.', ''),
 					'y2' => 100
 				);
 			} else {
 				$renderValues[] = array(
-					'x' => $i/($amount/100),
-					'y1' => number_format($diffPercent/2, 2),
-					'y2' => number_format($diffPercent/2 + $percent, 2)
+					'x' => number_format($i/($amount/100), 5, '.', ''),
+					'y1' => number_format($diffPercent/2, 2, '.', ''),
+					'y2' => number_format($diffPercent/2 + $percent, 2, '.', '')
 				);
 			}
 		}
