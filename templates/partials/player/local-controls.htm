@@ -1,40 +1,32 @@
-<div class="row jp-controls">
-	<div class="col-sm-4">
+<div class="row jp-controls" style="position: relative; top: -5px;">
+	<div class="col-md-3"></div>
+	<div class="col-md-7">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"prev"}'>
 			<i class="fa fa-chevron-left sign-ctrl fa-fw"></i>
 		</button>
-	</div>
-	<div class="col-sm-4">
 		<button role="control" class="btn btn-trnsp localplayer-play-pause player-ctrl" data-player='{"action":"togglePause"}'>
 			<i class="fa fa-pause sign-ctrl fa-lg"></i>
 		</button>
-	</div>
-	<div class="col-sm-4">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"next"}'>
 			<i class="fa fa-chevron-right sign-ctrl fa-fw"></i>
 		</button>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-4 status-random">
+
+	<span class="status-random">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom"}'>
 			<i class="fa fa-random sign-ctrl fa-fw"></i>
 		</button>
-	</div>
-	<div class="col-sm-4 status-repeat">
+	</span>
+	<span class="status-repeat">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRepeat"}'>
 			<i class="fa fa-repeat sign-ctrl fa-fw"></i>
 		</button>
-	</div>
-	<div class="col-sm-4 status-consume">
+	</span>
+	<span class="status-consume">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleConsume"}'>
 			<i class="fa fa-fire sign-ctrl fa-fw"></i>
 		</button>
+	</span>
+	{% include 'partials/player/playrandom.htm' %}
 	</div>
-</div>
-<div class="row">
-	<div class="col-sm-12 small">
-		<a href="{{root}}playlist/page/current" data-ajaxtarget="#main" class="ajax-link">Warteschlange</a>
-		{% include 'partials/player/playrandom.htm' %}
-	</div>
+	<div class="col-md-2"></div>
 </div>

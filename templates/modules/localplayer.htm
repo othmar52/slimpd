@@ -3,37 +3,34 @@
 {% if item.relativePath %}
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
-		<div class="col-md-1"> </div>
-		<div class="col-sm-12 col-md-4">
-			{% include 'partials/player/local-seekbar.htm' %}
+		<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-12">
+				{% include 'partials/player/local-seekbar.htm' %}
+				</div>	
+			</div>
+				<div class="col-md-12">
+				{% include 'partials/player/local-controls.htm' %}
+				</div>
 		</div>
-	    <div class="hidden-xs col-md-1 slimplayer-hidden">
-			{% include 'partials/player/local-controls.htm' %}
-	    </div>
-	    <div class="col-sm-7 col-md-1 slimplayer-hidden" style="height: 100px;">
-	    	<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
+		<div class="col-md-1">
+			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
 	    		<img src="{{ artworkUrl }}" />
 	    	</a>
-	    </div>
-	    <div class="col-sm-5 slimplayer-hidden">
+		</div>
+		<div class="col-md-5">
+			
+			{# TODO: remove external liking as soon we have implemented a proper functionality #}
+			<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal">
+				<i class="fa fa-align-justify fa-sm"></i>
+			</button>
+			{% include 'partials/track/audioformat.htm' %}
+			
+					
 			{% include 'partials/player/trackmeta.htm' %}
-			<div class="row">
-				<div class="col-sm-12 small">
-					{# TODO: remove external liking as soon we have implemented a proper functionality #}
-					<button class="ajax-rqst btn btn-default btn-sm" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
-					<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal">
-						<i class="fa fa-align-justify fa-sm"></i>
-					</button>
-					{% include 'partials/track/audioformat.htm' %}
-				</div>
-	    	</div>
-	    </div>
-		<div class="col-md-2 slimplayer-show">
-			{% include 'partials/player/local-controls-slim.htm' %}
-	    </div>
-	    <div class="col-sm-5 slimplayer-show">
-			{% include 'partials/player/trackmeta-slim.htm' %}
-	    </div>
+		</div>
+
 	</div>
 </div>
 		    
