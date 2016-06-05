@@ -348,6 +348,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	
 	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Bitmap();
+		
 		$image->setRelativePath(join(DS, $itemParams));
 		$image->dump($imagesize);
 	})->name('imagepath-' .$imagesize);
@@ -355,6 +356,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$importer = new Slimpd\importer();
 		$images = $importer->getFilesystemImagesForMusicFile(join(DS, $itemParams));
+		
 		if(count($images) === 0) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 		}
@@ -362,7 +364,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		shuffle($images);
 		$path = array_shift($images);
 		
-		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => $path]));
+		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => path2url($path)]));
 
 	});
 	
