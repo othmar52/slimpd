@@ -359,6 +359,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		
 		if(count($images) === 0) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
+			return;
 		}
 		// pick a random image
 		shuffle($images);
@@ -459,6 +460,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $vars){
 			$fileBrowser->getDirectoryContent(dirname(join(DS, $itemParams)));
 			if($fileBrowser->directory === './') {
 				$app->response->redirect($app->urlFor('filebrowser') . getNoSurSuffix());
+				return;
 			}
 			break;
 		default:
