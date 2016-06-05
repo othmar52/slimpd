@@ -18,6 +18,7 @@ try {
 			}
 			$app->flash('error', $app->ll->str('database.connect'));
 			$app->redirect('/');
+			return;
 		}
 		
 		/*
