@@ -73,6 +73,12 @@ class filebrowser {
 		//	die('sorry, you are not allowed to view this directory 8==========D');
 		//}
 		
+		// check filesystem permissions
+		if(is_readable($base . $d) === FALSE) {
+			$app->flashNow('error', $app->ll->str('filebrowser.dirpermission', [$d]));
+			return;
+		}
+
 		$files = scandir($base . $d);
 		natcasesort($files);
 		
