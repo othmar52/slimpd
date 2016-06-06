@@ -1,0 +1,39 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
+<div class="row">
+	<div class="col-md-2 vcenter">
+		<div class="vcinner">
+			<a href="{{root}}{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="/image-300/album/{{item.albumId}}">
+				{% include 'partials/image.htm' with {
+					'width': 50,
+					'type': 'album',
+					'itemId': item.albumId,
+					'attrs': 'style="width: 50px; height: 50px; z-index:2;"'
+				} %}
+			</a>
+			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
+				<i class="fa fa-play fa-lg"></i>
+			</button>
+			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
+				<i class="fa fa-align-justify fa-lg"></i>
+			</button>
+			
+			<a role="control" href="{{root}}markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
+				<i class="fa fa-headphones fa-lg"></i>
+			</a>
+		</div>
+	</div>
+
+		<div class="col-md-10 vcenter">
+			<div class="vcinner">
+				{{ item.relativePath|split('/')|last }}<br>
+				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+					hiderootlink: 1,
+					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					skiplast: 1 } %}</span>
+				{% include 'partials/track/not-imported-badge.htm' %}
+			</div>
+		</div>
+	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
+</div>
+{% endblock %}
