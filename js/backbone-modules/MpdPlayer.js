@@ -2,55 +2,76 @@
  * dependencies: jquery, backbonejs, underscorejs
  */
 (function() {
-    "use strict";
-    
-    var $ = window.jQuery,
-        _ = window._;
-    $.extend(true, window.sliMpd, {
-        modules : {}
-    });
-    window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.AbstractPlayer.extend({
-        mode : 'mpd',
-        faviconDoghnutColor : window.sliMpd.conf.color.mpd.favicon,
-        faviconBackgroundColor : '#444',
-        
-        timeGridSelectorCanvas : 'timegrid-mpd',
+	"use strict";
+	
+	var $ = window.jQuery,
+		_ = window._;
+	$.extend(true, window.sliMpd, {
+		modules : {}
+	});
+	window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.AbstractPlayer.extend({
+		mode : 'mpd',
+		faviconDoghnutColor : window.sliMpd.conf.color.mpd.favicon,
+		faviconBackgroundColor : '#444',
+		
+		timeGridSelectorCanvas : 'timegrid-mpd',
 		timeGridSelectorSeekbar : '.mpd-ctrl-seekbar',
 		timeGridStrokeColor : window.sliMpd.conf.color.mpd.secondary,
 		timeGridStrokeColor2 : window.sliMpd.conf.color.mpd.primary,
 		
 		state : {
-        	repeat : 0,
-        	random : 0,
-        	consume : 0
-        },
+			repeat : 0,
+			random : 0,
+			consume : 0
+		},
 		
 		intervalActive : 2000,
 		intervalInactive : 5000,
 		timeLineLight : null,
 
-        initialize : function(options) {
-        	this.$content = $('.player-'+ this.mode, this.$el);
-        	
-        	this.trackAnimation = { currentPosPerc: 0 };
-        	this.timeLineLight = new TimelineLite();
-        	
-        	this.poll();
-            window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
-        },
+		pollWorker : null,
 
-        render : function(options) {
-            window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
-        },
-        
-        play : function(item) {
+		initialize : function(options) {
+			this.$content = $('.player-'+ this.mode, this.$el);
+
+			this.trackAnimation = { currentPosPerc: 0 };
+			this.timeLineLight = new TimelineLite();
+
+			this.pollWorker = new Worker('/js/poll-worker.js');
+			var that = this;
+			this.pollWorker.addEventListener('message', function(e) {
+				that.processPollData(e.data);
+			}, false);
+
+			this.pollWorker.postMessage({
+				cmd: 'setPollUrlFor',
+				value: 'mpd'
+			});
+
+			this.pollWorker.postMessage({
+				cmd: 'setMiliseconds',
+				value: (($.cookie("playerMode") === 'mpd') ? this.intervalActive : this.intervalInactive)
+			});
+
+			this.pollWorker.postMessage({
+				cmd: 'start'
+			});
+
+			window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
+		},
+
+		render : function(options) {
+			window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
+		},
+
+		play : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.redraw();
-    		//this.reloadCss(item.hash);
-    		window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
-        },
-        
-        togglePause : function(item) {
+			//this.reloadCss(item.hash);
+			window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
+		},
+
+		togglePause : function(item) {
 			if(this.nowPlayingState == 'play') {
 				window.sliMpd.fireRequestAndNotify('/mpdctrl/pause');
 				this.nowPlayingState = 'pause';
@@ -63,60 +84,60 @@
 			window.sliMpd.drawFavicon();
 		},
 		
-        seek : function(item) {
+		seek : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
-        },
-        
-        seekzero : function(item) {
+		},
+
+		seekzero : function(item) {
 			window.sliMpd.fireRequestAndNotify('/mpdctrl/seekPercent/0');
 			this.timelineSetValue(0);
 			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
-        },
+		},
 
-        prev : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	this.refreshInterval();
-        	window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
-        },
-        
-        next : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	this.refreshInterval();
-        	// TODO: do we really need to append '?null' to routename comparison?
-        	window.sliMpd.router.refreshIfName('playlist?null');
-        	window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
-        },
-        
-        remove : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
-        },
-        
-        toggleRepeat : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
-        },
-        
-        toggleRandom : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
-        },
-        
-        toggleConsume : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
-        },
-        
-        softclearPlaylist : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
-        },
+		prev : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			this.refreshInterval();
+			window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
+		},
+		
+		next : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			this.refreshInterval();
+			// TODO: do we really need to append '?null' to routename comparison?
+			window.sliMpd.router.refreshIfName('playlist?null');
+			window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
+		},
+		
+		remove : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			// TODO: check current route and refresh in case we are on current mpd-playlist
+			window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
+		},
+		
+		toggleRepeat : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
+		},
+		
+		toggleRandom : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
+		},
+		
+		toggleConsume : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
+		},
+		
+		softclearPlaylist : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			// TODO: check current route and refresh in case we are on current mpd-playlist
+			window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
+		},
 
-        
-        
+		
+		
 		// TODO: check current route and refresh in case we are on current mpd-playlist
 		
 		appendTrack : function(item) {
@@ -209,90 +230,72 @@
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
 		},
-	
-
-
-
-
-        
-        
-        
-        
-        removeDupes : function(item) {
-        	window.sliMpd.fireRequestAndNotify(item.mpdurl);
-        	// TODO: check current route and refresh in case we are on current mpd-playlist
-        	window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
-        },
-        
-        process : function(item) {
-        	window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
-        },
-        
-        // IMPORTANT TODO: how to avoid growing memory consumption on those frequent poll-requests?
-		poll : function (){
-			var that = this;
-		    $.get('/mpdstatus', function(data) {
-		    	data = JSON.parse(data);
-		    	
-		    	that.nowPlayingPercent = data.percent;
-        		that.nowPlayingState = data.state;
-        		that.nowPlayingDuration = data.duration;
-        		that.nowPlayingElapsed = data.elapsed;
-		    	that.nowPlayingItem = data.songid;
-		    	
-		    	that.state.repeat = data.repeat;
-		    	that.state.random = data.random;
-		    	that.state.consume = data.consume;
-		    	
-		    	// no need to update this stuff in case local player is active...
-		    	if(window.sliMpd.currentPlayer.mode === 'mpd') {
-	
-			    	that.updateStateIcons();
-					
-					that.setPlayPauseIcon();
-					
-					// TODO: interpolate nowPlayingElapsed independent frpm poll interval
-			    	$('.mpd-status-elapsed').text(that.formatTime(that.nowPlayingElapsed));
-			    	$('.mpd-status-total').text(that.formatTime(that.nowPlayingDuration));
-			    	
-			    	// animate from 0 to 100, onUpdate -> change Text
-					that.timeLineLight = new TimelineLite();
-					that.trackAnimation.currentPosPerc = 0;
-					that.timeLineLight.to(that.trackAnimation, that.nowPlayingDuration, {
-					  	currentPosPerc: 100, 
-					  	ease: Linear.easeNone,  
-					  	onUpdate: that.updateSlider,
-					  	onUpdateScope: that
-					});
-			    	
-			    	if(that.nowPlayingState == 'play') {
-			    		that.timelineSetValue(that.nowPlayingPercent);
-					} else {
-			    		that.timeLineLight.pause();
-			    	}
-			    	that.drawTimeGrid();
-		    	}
-		    	
-		    	// update trackinfo only onTrackChange()
-		    	if(that.previousPlayingItem != that.nowPlayingItem) {
-		    		that.previousPlayingItem = that.nowPlayingItem
-		    		that.redraw(''); 
-		    		that.refreshInterval();
-		    		return;
-		    	}
-		        that.poller = setTimeout(
-					that.poll,
-					((window.sliMpd.currentPlayer.mode === 'mpd')
-						? that.intervalActive
-						: that.intervalInactive
-					)
-				);
-			});
+		
+		removeDupes : function(item) {
+			window.sliMpd.fireRequestAndNotify(item.mpdurl);
+			// TODO: check current route and refresh in case we are on current mpd-playlist
+			window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
 		},
 		
-        onRedrawComplete : function(item) {
-        	var that = this;
-        	$('.mpd-ctrl-seekbar').on('click', function(e){
+		process : function(item) {
+			window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
+		},
+		
+		processPollData : function (data){
+
+			this.nowPlayingPercent = data.percent;
+			this.nowPlayingState = data.state;
+			this.nowPlayingDuration = data.duration;
+			this.nowPlayingElapsed = data.elapsed;
+			this.nowPlayingItem = data.songid;
+
+			this.state.repeat = data.repeat;
+			this.state.random = data.random;
+			this.state.consume = data.consume;
+
+			// no need to update this stuff in case local player is active...
+			if(window.sliMpd.currentPlayer.mode === 'mpd') {
+				this.updateStateIcons();
+				this.setPlayPauseIcon();
+
+				// TODO: interpolate nowPlayingElapsed independent of poll interval
+				$('.mpd-status-elapsed').text(this.formatTime(this.nowPlayingElapsed));
+				$('.mpd-status-total').text(this.formatTime(this.nowPlayingDuration));
+
+				// animate from 0 to 100, onUpdate -> change Text
+				this.timeLineLight = new TimelineLite();
+				this.trackAnimation.currentPosPerc = 0;
+				this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
+					currentPosPerc: 100,
+					ease: Linear.easeNone,
+					onUpdate: this.updateSlider,
+					onUpdateScope: this
+				});
+
+				if(this.nowPlayingState == 'play') {
+					this.timelineSetValue(this.nowPlayingPercent);
+				} else {
+					this.timeLineLight.pause();
+				}
+				this.drawTimeGrid();
+			}
+
+			// update trackinfo only onTrackChange()
+			if(this.previousPlayingItem != this.nowPlayingItem) {
+				this.previousPlayingItem = this.nowPlayingItem
+				this.redraw(''); 
+				this.refreshInterval();
+				return;
+			}
+		},
+		
+		refreshInterval : function() {
+			window.sliMpd.modules.AbstractPlayer.prototype.refreshInterval.call(this);
+		},
+		
+		onRedrawComplete : function(item) {
+			var that = this;
+			$('.mpd-ctrl-seekbar').on('click', function(e){
 				var percent = Math.round((e.pageX - $(this).offset().left) / ($(this).width()/100));
 				$('.mpd-status-progressbar', that.$el).css('width', percent+'%');
 				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
@@ -328,15 +331,15 @@
 				'type': 'mpd',
 				'message': $(mpdNotify).html()
 			});
-        	window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
-        },
-        
-        updateStateIcons : function() {
-        	window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
-        },
-        
-        // TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
-        setPlayPauseIcon : function(item) {
+			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
+		},
+		
+		updateStateIcons : function() {
+			window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
+		},
+		
+		// TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
+		setPlayPauseIcon : function(item) {
 			if(this.nowPlayingState == 'play') {
 				$('.mpd-status-playpause', this.$el).addClass('fa-pause');
 				$('.mpd-status-playpause', this.$el).removeClass('fa-play');
@@ -377,6 +380,6 @@
 			$('.mpd-status-progressbar').css('width', this.timeLineLight.progress() *100 +'%');
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		}
-    });
-    
+	});
+	
 })();
