@@ -274,8 +274,6 @@
 		},
 		
 		/* only for polled mpd player implementation - begin */
-		poller : null,
-		poll : function() { return; },
 		refreshInterval : function () {
 			this.pollWorker.postMessage({
 				cmd: 'refreshInterval'
