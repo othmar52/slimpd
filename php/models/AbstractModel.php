@@ -452,6 +452,7 @@ abstract class AbstractModel {
 		if($itemsperPage > 500) {
 			$itemsperPage = 500;
 		}
+		$currentPage = ($currentPage < 1) ? 1 : $currentPage;
 		
 		$db = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName();
