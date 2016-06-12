@@ -125,6 +125,10 @@ $(document).ready(function() {
 		if(window.sliMpd.currentPlayer.mode === 'mpd') {
 			$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
 			window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+			window.sliMpd.mpdPlayer.pollWorker.postMessage({
+				cmd: 'setMiliseconds',
+				value: window.sliMpd.mpdPlayer.intervalInactive
+			});
 			$('body')
 				.removeClass(window.sliMpd.conf.color.mpd.bodyclass)
 				.addClass(window.sliMpd.conf.color.local.bodyclass);
@@ -133,6 +137,10 @@ $(document).ready(function() {
 			// pause local player when switching to mpd
 			window.sliMpd.currentPlayer.process({'action':'pause'});
 			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
+			window.sliMpd.mpdPlayer.pollWorker.postMessage({
+				cmd: 'setMiliseconds',
+				value: window.sliMpd.mpdPlayer.intervalActive
+			});
 			window.sliMpd.currentPlayer.refreshInterval();
 			$('body')
 				.removeClass(window.sliMpd.conf.color.local.bodyclass)
