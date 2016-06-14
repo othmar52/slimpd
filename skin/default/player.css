@@ -140,6 +140,10 @@
 	opacity: 0.6;
 }
 
+.no-connection .hide-no-connection {
+	display: none;
+}
+
 .standalone .no-connection .show-no-connection {
 	align-items: flex-end;
 }

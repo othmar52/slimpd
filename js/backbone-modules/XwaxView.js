@@ -136,9 +136,7 @@
 
 			this.toggler.removeClass('btn-success').addClass('btn-danger');
 			this.xwaxRunning = false;
-			this.deckViews.forEach(function (deckView){
-				deckView.$el.addClass('no-connection');
-			});
+			$('.player-xwax').addClass('no-connection');
 			this.pollWorker.postMessage({
 				cmd: 'setMiliseconds',
 				value: this.intervalInactive
@@ -162,9 +160,7 @@
 			this.notrunningCounter = 0;
 			if(this.xwaxRunning === false) {
 				this.toggler.removeClass('btn-danger').addClass('btn-success');
-				this.deckViews.forEach(function (deckView){
-					deckView.$el.removeClass('no-connection');
-				});
+				$('.player-xwax').removeClass('no-connection');
 			}
 
 			this.xwaxRunning = true;

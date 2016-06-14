@@ -4,7 +4,7 @@
 	</div>
 {% else %}
 	
-	<div class="row player-xwax navbar-xwax navbar navbar-fixed-bottom xwax-mode-show">
+	<div class="row player-xwax navbar-xwax navbar navbar-fixed-bottom xwax-mode-show no-connection">
 		<div class="row bg-col4">
 			<div class="col-md-1">
 				
@@ -14,9 +14,11 @@
 					{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
 					{% for i in 1..xwax.decks %}
 					<div class="col-md-{{colidx}}">
-						<div class="row xwax-row xwax-deck-{{i-1}} bg-col4 no-connection">
+						<div class="row xwax-row xwax-deck-{{i-1}} bg-col4">
 							<div class="show-no-connection">
 								xwax connection failed
+								
+			
 							</div>
 						</div>
 					</div>
@@ -24,9 +26,14 @@
 				</div>
 			</div>
 			<div class="col-md-1">
-				<button role="control" data-href="{{root}}markup/widget-xwax" title="xwax controls" class="btn btn-default trigger-modal">
+				<button role="control" data-href="{{root}}markup/widget-xwax" title="xwax controls" class="btn btn-default trigger-modal hide-no-connection">
 					<i class="fa fa-plus"></i> xwaxctrl
 				</button>
+				<div class="show-no-connection">
+					<button role="control" data-href="{{root}}xwax/{{xwax.cmd_launch}}/1" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
+						start xwax
+					</button>
+				</div>
 			</div>
 		</div>
 	</div>
