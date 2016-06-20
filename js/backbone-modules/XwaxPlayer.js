@@ -3,7 +3,7 @@
  */
 (function() {
     "use strict";
-    
+
     var $ = window.jQuery,
         _ = window._;
     $.extend(true, window.sliMpd, {
@@ -47,7 +47,7 @@
         	//console.log('XwaxPlayer::close()');
         	this.remove();
         	// IMPORTANT TODO: shouldnt remove() removing the DOM element???
-        	this.$el.html('');
+			this.$el.html('<div class="show-no-connection">xwax connection failed</div>');
     		this.unbind();
         	//window.sliMpd.modules.AbstractPlayer.prototype.close.call(this, options);
         },

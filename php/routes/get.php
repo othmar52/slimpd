@@ -348,6 +348,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	
 	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Bitmap();
+		
 		$image->setRelativePath(join(DS, $itemParams));
 		$image->dump($imagesize);
 	})->name('imagepath-' .$imagesize);
@@ -355,14 +356,16 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$importer = new Slimpd\importer();
 		$images = $importer->getFilesystemImagesForMusicFile(join(DS, $itemParams));
+		
 		if(count($images) === 0) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
+			return;
 		}
 		// pick a random image
 		shuffle($images);
 		$path = array_shift($images);
 		
-		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => $path]));
+		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => path2url($path)]));
 
 	});
 	
@@ -457,6 +460,7 @@ $app->get('/filebrowser/:itemParams+', function($itemParams) use ($app, $vars){
 			$fileBrowser->getDirectoryContent(dirname(join(DS, $itemParams)));
 			if($fileBrowser->directory === './') {
 				$app->response->redirect($app->urlFor('filebrowser') . getNoSurSuffix());
+				return;
 			}
 			break;
 		default:
@@ -549,7 +553,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 	}
 	$currentPage = ($currentPage) ? $currentPage : 1;
 	$minIndex = (($currentPage-1) * $itemsPerPage);
-	$maxIndex = $minIndex +  $itemsPerPage -1;
+	$maxIndex = $minIndex +  $itemsPerPage;
 
 	$playlist->fetchTrackRange($minIndex, $maxIndex);
 
