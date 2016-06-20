@@ -274,12 +274,13 @@
 		},
 		
 		/* only for polled mpd player implementation - begin */
-		poller : null,
-		poll : function() { return; },
 		refreshInterval : function () {
-			clearInterval(this.poller);
-			this.poll();
+			this.pollWorker.postMessage({
+				cmd: 'refreshInterval'
+			});
 		},
+		pollWorker : null,
+		processPollData : function(data) { return; },
 		/* only for polled mpd player implementation - end */
 		
 		

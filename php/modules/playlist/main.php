@@ -89,7 +89,11 @@ class playlist
 					$track = new \Slimpd\Track();
 					$track->setRelativePath($itemPath);
 					$track->setRelativePathHash(getFilePathHash($itemPath));
-					$track->setError('notfound');
+					if(is_file(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir'] . $itemPath) === FALSE) {
+						$track->setError('notfound');
+					} else {
+						$track->setAudioDataformat(strtolower(preg_replace('/^.*\./', '', $track->getRelativePath())));
+					}
 				}
 			} else {
 				// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
