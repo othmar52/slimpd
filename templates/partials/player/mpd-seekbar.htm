@@ -1,14 +1,14 @@
-<div style="position:relative;">
-	<div class="mpd-ctrl-seekzero"></div>
-	<div class="mpd-status-progressbar"></div>
-	<object class="waveform svg-ajax-object bg-col1"
-		data="{{ placeholderSvgUrl }}"
-		data-svgurl="{{ waveformSvgUrl }}?colorFor=mpd" type="image/svg+xml">
-	</object>
-	<canvas id="timegrid-mpd" class="timegrid-mpd timegrid slimplayer-hidden"></canvas>
-	<div class="mpd-status-timestring status-timestring">
-		<span class="mpd-status-elapsed">0:00</span>&nbsp; | &nbsp;
-		<span class="mpd-status-total">0:00</span>
+<div style="position:relative; margin-left: 30px; margin-right: 120px;">
+	<div style="height: 10px;">
+		<canvas id="timegrid-mpd" class="timegrid-mpd timegrid slimplayer-hidden" style="position:relative; top: -7px;"></canvas>
 	</div>
-	<div class="mpd-ctrl-seekbar"></div>
+	<div style="position:relative;">
+		<div class="mpd-ctrl-seekzero"></div>
+		<object class="waveform svg-ajax-object"
+			data="{{ placeholderSvgUrl }}"
+			data-svgurl="{{ waveformSvgUrl }}?colorFor=mpd" type="image/svg+xml">
+		</object>
+		<div class="mpd-status-progressbar"></div>
+		<div class="mpd-ctrl-seekbar"></div>
+	</div>
 </div>

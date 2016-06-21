@@ -1,24 +1,14 @@
-<div style="position:relative; margin-left: 15px;">
-	<div class="rXow" style="height: 10px;">
+<div style="position:relative; margin-left: 30px; margin-right: 120px;">
+	<div style="height: 10px;">
 		<canvas id="timegrid-local" class="timegrid-local timegrid slimplayer-hidden" style="position:relative; top: -7px;"></canvas>
 	</div>
-	<div class="rXow" style="position:relative;">
+	<div style="position:relative;">
 	<div class="local-ctrl-seekzero"></div>
-	<object class="waveform svg-ajax-object bg-col1XXX"
-		data="{{ placeholderSvgUrl }}"
-		data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
-	</object>
-	<div class="jp-play-bar"></div>
-	
-	<div class="mpd-status-timestring status-timestring" style="
-		position:absolute;
-		top:12px;
-		right: 20px;
-		background: rgba(0,0,0,0.7);
-		padding: 0.2em 0.6em;">
-		<span class="jp-current-time dark" role="timer" aria-label="time">&nbsp;</span>&nbsp; | &nbsp;
-		<span class="jp-duration" role="timer" aria-label="duration">&nbsp;</span>
-	</div>
-	<div class="jp-seek-bar"></div>
+		<object class="waveform svg-ajax-object"
+			data="{{ placeholderSvgUrl }}"
+			data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
+		</object>
+		<div class="jp-play-bar"></div>
+		<div class="jp-seek-bar"></div>
 	</div>
 </div>

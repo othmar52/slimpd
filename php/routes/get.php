@@ -209,6 +209,14 @@ foreach([
 		
 		$templateFile = 'modules/'.$markupSnippet.'.htm';
 		$vars['action'] = $markupSnippet;
+		if($markupSnippet === 'mpdplayer') {
+			$vars['player'] = 'mpd';
+			$templateFile = 'partials/player/permaplayer.htm';
+		}
+		if($markupSnippet === 'localplayer') {
+			$vars['player'] = 'local';
+			$templateFile = 'partials/player/permaplayer.htm';
+		}
 		
 		$itemsToRender = array();
 		

@@ -1,19 +1,26 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
 {% if item.relativePath %}
-    <div class="col-md-1"> </div>
-	<div class="col-sm-12 col-md-4">
-		{% include 'partials/player/mpd-seekbar.htm' %}
+	<div class="col-md-5">
+		<div class="row" style="border-bottom: 1px solid #373737">
+			{% include 'partials/player/mpd-seekbar.htm' %}
+
+			<span class="pull-right" style="position: absolute; right: 0; top: 0;">
+			{% include 'partials/player/mpd-controls-primary.htm' %}
+			</span>
+		</div>
+		<div class="row">
+			<div class="pull-right" style="padding-top: 5px;position: relative; right: -9px;">
+			{% include 'partials/player/mpd-controls-secondary.htm' %}
+			</div>
+		</div>
 	</div>
-    <div class="hidden-xs col-md-1 slimplayer-hidden">
-		{% include 'partials/player/mpd-controls.htm' %}
-    </div>
     <div class="col-sm-7 col-md-1 slimplayer-hidden" style="height: 100px;">
     	<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
     		<img src="{{ artworkUrl }}" />
     	</a>
     </div>
-    <div class="col-sm-5 slimplayer-hidden">
+    <div class="col-md-6 slimplayer-hidden">
 		{% include 'partials/player/trackmeta.htm' %}
 		{% if item.relativePath %}
 		<div class="row">
