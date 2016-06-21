@@ -1,0 +1,70 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
+{% if item.relativePath %}
+	{% if player == 'local' %}
+<div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
+	<div class="jp-gui jp-interface">
+	{% endif %}
+		<div class="col-md-5">
+			<div class="row">
+				{% include 'partials/player/'~player~'-seekbar.htm' %}
+
+				<span class="pull-right" style="position: absolute; right: 0; top: 0;">
+				{% include 'partials/player/'~player~'-controls-primary.htm' %}
+				</span>
+			</div>
+			<div class="row slimplayer-hidden"  style="border-top: 1px solid #373737">
+				{# placeholder for player-toggler and xwax-toggler #}
+				<div class="pull-right" style="padding-top: 5px;position: relative; right: -9px;">
+				{% include 'partials/player/'~player~'-controls-secondary.htm' %}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-1 slimplayer-hidden" style="height: 100px;">
+			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
+	    		<img src="{{ artworkUrl }}" />
+	    	</a>
+		</div>
+		<div class="col-md-6 slimplayer-hidden">
+			<div class="row>">
+				<div class="col-md-1">
+					{# TODO: remove external liking as soon we have implemented a proper functionality #}
+					<button class="ajax-rqst btn btn-trnsp btn-sm col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+					<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-trnsp btn-sm trigger-modal col2">
+						<i class="fa fa-align-justify fa-sm col2"></i>
+					</button>
+					{% include 'partials/track/audioformat.htm' %}
+				</div>
+				<div class="col-md-10">
+					{% include 'partials/player/trackmeta.htm' %}
+				</div>
+				<div class="col-md-1">
+					{# placeholder for size-toggler #}
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-md-2 slimplayer-show">
+		{% include 'partials/player/'~player~'-controls-secondary.htm' %}
+	    </div>
+	    <div class="col-sm-4 slimplayer-show">
+			{% include 'partials/player/trackmeta-slim.htm' %}
+	    </div>
+
+	{% if player == 'local' %}
+	</div>
+</div>
+	{% endif %}
+		    
+{% include 'partials/player/nowplaying-string.htm' %}
+	{% if player == 'mpd' %}
+ 	{# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
+    <style type="text/css">{% include 'css/nowplaying.css' with {
+    		relativePathHash: item.relativePathHash,
+    		color: colors[ spotcolor.mpd ]['1st'] } %}</style>
+	{% endif %}
+{% else %}
+	{% include 'partials/player/empty-player.htm' %}
+{% endif %}
+{% endblock %}

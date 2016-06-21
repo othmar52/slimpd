@@ -19,7 +19,7 @@
     border-bottom: 3px solid {{ values['1st'] }};
 }
 
-.spotcol-{{ colname }} .playerModeToggle a,
+.spotcol-{{ colname }} .playerXXXModeToggle a,
 .spotcol-{{ colname }} #nprogress .bar {
 	background-color: {{ values['1st'] }};
 }

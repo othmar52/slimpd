@@ -215,21 +215,23 @@
 		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
-			{% include 'modules/localplayer.htm'%}
+			{% include 'partials/player/permaplayer.htm' with {'player': 'local'} %}
 		</div>
 		
 		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
-			{% include 'modules/mpdplayer.htm'%}
+			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
 		
 		
-		<button class="xwax-gui-toggler inactive btn btn-lg btn-default" style="display:none;position: fixed; left: 10px; bottom: 60px; z-index: 2000;" >XWAX</button>
+		<button class="xwax-gui-toggler inactive btn btn-trnsp col2" style="position: fixed; left: 130px; bottom: 4px; z-index: 2000;" >
+			<span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp;&nbsp; <strong>XWAX</strong>
+		</button>
 		
-		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 10px; z-index: 2000;">
-			<a type="button" href="#" class="btn active-{{ playerMode }}"
-			data-label-local="<i class='fa fa-map-marker fa-lg'></i> Local"
-			data-label-mpd="<i class='fa fa-cloud fa-lg'></i> MPD" >
-			  <i class='fa fa-map-marker fa-lg'></i> {{ (playerMode == 'local') ? 'Local' : 'MPD' }}
+		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 4px; z-index: 2000;">
+			<a type="button" href="#" class="uc col2 btn active-{{ playerMode }}"
+			data-label-local="<i class='fa fa-map-marker fa-lg col2'></i> &nbsp;&nbsp; <strong>Local</strong>"
+			data-label-mpd="<i class='fa fa-cloud fa-lg col2'></i> &nbsp;&nbsp; <strong>MPD</strong>" >
+			  <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>  &nbsp;&nbsp; <strong>{{ (playerMode == 'local') ? 'Local' : 'MPD' }}</strong>
 			</a>
 		</div>
 		
@@ -237,7 +239,7 @@
 			<a href="#toggleFilenameMode()" title="toggle filename mode"><i class='fa fa-toggle-on fa-lg'></i></a>
 		</div>
 
-		<div class="playerSizeToggle" style="position: fixed; right: 50px; bottom: 20px; z-index: 2000;">
+		<div class="playerSizeToggle" style="position: fixed; right: 10px; bottom: 20px; z-index: 2000;">
 			<a href="#playerSizeToggle()" title="toggle playersize"><i class='fa fa-chevron-down fa-lg'></i></a>
 		</div>
 
