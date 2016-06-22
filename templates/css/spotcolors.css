@@ -6,6 +6,10 @@
   color: {{ values['1st'] }};
 }
 
+.spotcol-{{ colname }} .btn-bordered.col2 {
+	border: 1px solid {{ values['1st'] }};
+}
+
 .spotcol-{{ colname }} .pagination>.active>a,
 .spotcol-{{ colname }} .pagination>.active>a:focus,
 .spotcol-{{ colname }} .pagination>.active>a:hover,
