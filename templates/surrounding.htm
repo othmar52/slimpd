@@ -222,11 +222,11 @@
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
 		
-		
+		{% if modules.enable_xwax == '1' %}
 		<button class="xwax-gui-toggler inactive btn btn-trnsp col2" style="position: fixed; left: 130px; bottom: 4px; z-index: 2000;" >
 			<span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp;&nbsp; <strong>XWAX</strong>
 		</button>
-		
+		{% endif %}
 		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 4px; z-index: 2000;">
 			<a type="button" href="#" class="uc col2 btn active-{{ playerMode }}"
 			data-label-local="<i class='fa fa-map-marker fa-lg col2'></i> &nbsp;&nbsp; <strong>Local</strong>"
