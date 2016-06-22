@@ -173,13 +173,36 @@ $app->get('/mpdstatus(/)', function() use ($app, $vars){
 	# @see: http://www.musicpd.org/doc/protocol/command_reference.html#status_commands
 	
 	$vars['mpd']['status'] = $mpd->cmd('status');
+	if($vars['mpd']['status'] === FALSE) {
+		$vars['mpd']['status'] = array(
+			"volume" => "0",
+			"repeat" => "0",
+			"random" => "0",
+			"single" => "0",
+			"consume" => "0",
+			"playlist" => "0",
+			"playlistlength" => "0",
+			"mixrampdb" => "0.000000",
+			"state" => "pause",
+			"song" => "0",
+			"songid" => "0",
+			"time" => "0",
+			"elapsed" => "0",
+			"bitrate" => "0",
+			"audio" => "0",
+			"nextsong" => "0",
+			"nextsongid" => "0",
+			"duration" => "0",
+			"percent" => "0"
+		);
+	}
 	try {
 		$vars['mpd']['status']['duration'] = $mpd->cmd('currentsong')['Time'];
 		$percent = $vars['mpd']['status']['elapsed'] / ($vars['mpd']['status']['duration']/100);
 		$vars['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
 	} catch (\Exception $e) {
-		// TODO: display smth like "no track loaded"
-		$vars['mpd']['status'] = array();
+		$vars['mpd']['status']['duration'] = "0";
+		$vars['mpd']['status']['percent'] = "0";
 	}
 	echo json_encode($vars['mpd']['status']);
 	$app->stop();
