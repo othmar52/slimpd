@@ -406,6 +406,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$vars['backgroundcolor'] = $vars['images']['noimage'][ $vars['playerMode'] ]['backgroundcolor'];
 		
 		switch($type) {
+			case 'artist': $template = 'svg/user.svg'; break;
 			default: $template = 'svg/dummy.svg';
 		}
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
@@ -1144,6 +1145,8 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 			];
 			switch($filterType) {
 				case 'artist':
+					$entry['img'] = $app->config['root'] . 'imagefallback-50/artist';
+					break;
 				case 'label':
 				case 'genre':
 				case 'dirname':
