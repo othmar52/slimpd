@@ -39,6 +39,8 @@
 		
 		intervalActive : 2000, // [ms]
 		intervalInactive : 5000, // [ms]
+		
+		waveformSettings : { },
 
         initialize : function(options) {
         	this.render();
@@ -272,6 +274,89 @@
 		    ctx.globalCompositeOperation = 'destination-out';
 		    ctx.fill();
 		},
+		
+		drawWaveform : function() {
+			 $('.waveform-wrapper', this.$el).html('');
+			
+			this.waveformSettings.wave_color = this.timeGridStrokeColor2,
+			this.waveformSettings.canvas = document.createElement('canvas'),
+			this.waveformSettings.context = this.waveformSettings.canvas.getContext('2d');
+			
+			var dimesionSelector = (this.mode === 'mpd')
+				? '.'+this.mode+'-ctrl-seekbar'
+				:'.jp-seek-bar';
+			
+			this.waveformSettings.canvas.width = $(dimesionSelector).width();
+			this.waveformSettings.canvas.height = $(dimesionSelector).height();
+
+
+			// setting bars width and gap
+			this.waveformSettings.bar_width = 3;
+			this.waveformSettings.bar_gap = 0.1;
+			this.waveformSettings.mirrored = true;
+			
+			
+			
+			var that = this;
+			
+			$.getJSON( $('.waveform-wrapper', this.$el).attr('data-jsonurl'), function( vals ) {
+
+			  var sections = that.waveformSettings.canvas.width;
+		      var len = Math.floor(vals.length / sections);
+		      console.log('sections', sections);
+		      console.log('len', len);
+		      //len = 4;
+		      var maxHeight = that.waveformSettings.canvas.height;
+		      var maxVal = vals.max();
+	
+			    for (var j = 0; j < sections; j += that.waveformSettings.bar_width) {
+			        var scale = maxHeight / maxVal;
+			        var val = that.bufferMeasure(Math.floor(j * (vals.length / sections)), len, vals) * maxVal/10;
+			        val *= scale;
+			        val += 1;
+			        that.drawBar(j, val);
+			    }
+			    
+			    $(that.waveformSettings.canvas).appendTo( $('.waveform-wrapper', that.$el) );
+		
+
+		    //this.settings.onComplete(this.settings.canvas.toDataURL('image/png'), this.settings.context.getImageData(0, 0, this.settings.canvas.width, this.settings.canvas.height));
+		    // clear canvas for redrawing
+		    //that.waveformSettings.context.clearRect(0, 0, that.waveformSettings.canvas.width, that.waveformSettings.canvas.height);
+			});
+
+		},
+		
+		bufferMeasure: function(position, length, data) {
+			console.log('position', position);
+		    console.log('length', length);
+	        var sum = 0.0;
+	        for (var i = position; i <= (position + length) - 1; i++) {
+	            sum += Math.pow(data[i], 2);
+	        }
+	        return Math.sqrt(sum / data.length);
+	    },
+	
+	    drawBar: function(i, h) {
+	console.log(i);
+	    	this.waveformSettings.context.fillStyle = this.waveformSettings.wave_color;
+	
+			var w = this.waveformSettings.bar_width;
+	        if (this.waveformSettings.bar_gap !== 0) {
+	            w *= Math.abs(1 - this.waveformSettings.bar_gap);
+	        }
+	        var x = i + (w / 2),
+	            y = this.waveformSettings.canvas.height - h;
+	            
+	        if(this.waveformSettings.mirrored === true) {
+	        	y /=2;
+	        	//h *=2;
+	        }
+	
+	        this.waveformSettings.context.fillRect(x, y, w, h);
+	    },
+			
+		
 		
 		/* only for polled mpd player implementation - begin */
 		refreshInterval : function () {
