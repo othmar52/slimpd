@@ -884,8 +884,11 @@ foreach(array_keys($sortfields) as $currentType) {
 			'dirname' => 6,
 		);
 		$vars['itemlist'] = [];
+		$vars['timelog'] = [];
+
 		foreach(array_keys($sortfields) as $type) {
-			
+			$vars['timelog'][$type.'-total'] = new \Slimpd\ExecutionTime();
+			$vars['timelog'][$type.'-total']->Start();
 			// get result count for each resulttype 
 			$stmt = $ln_sph->prepare("
 				SELECT itemid,type FROM ". $app->config['sphinx']['mainindex']."
@@ -918,8 +921,12 @@ foreach(array_keys($sortfields) as $currentType) {
 			$vars['search'][$type]['term'] = $term;
 			$vars['search'][$type]['matches'] = [];
 			
+			$vars['timelog'][$type.'-total']->End();
+
 			// get results only for requestet result-type
 			if($type == $currentType) {
+				$vars['timelog'][$type] = new \Slimpd\ExecutionTime();
+				$vars['timelog'][$type]->Start();
 				$sortfield = (in_array($sort, $sortfields[$currentType]) === TRUE) ? $sort : 'relevance';
 				$direction = ($direction == 'asc') ? 'asc' : 'desc';
 				$vars['search']['activesorting'] = $sortfield . '-' . $direction;
@@ -1021,6 +1028,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					}
 				}
 				$vars['search'][$type]['time'] = number_format(microtime(TRUE) - $vars['search'][$type]['time'],3);
+				$vars['timelog'][$type]->End();
 			}
 		}
 		$vars['action'] = 'searchresult.' . $currentType;
