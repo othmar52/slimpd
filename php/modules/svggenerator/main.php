@@ -159,6 +159,27 @@ class Svggenerator {
 		);
 		exit;
 	}
+
+	public function generateJson($resolution=300) {
+		if(is_file($this->peakValuesFilePath) === FALSE) {
+			# TODO: send a dummy svg to client?
+			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');
+		}
+		
+		$peaks = file_get_contents($this->peakValuesFilePath);
+		if($peaks === 'generating') {
+			\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
+			return NULL;
+		}
+		
+		$values = explode("\n", $peaks);
+		$values = array_map('trim', $values);
+		
+		header("Content-Type: application/json");
+		echo json_encode($this->limitArray($values, $resolution));
+		exit;
+		
+	}
 	
 	public function setPeakFilePath() {
 		$this->peakValuesFilePath = APP_ROOT . 'peakfiles' .
