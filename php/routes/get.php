@@ -406,8 +406,9 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$vars['backgroundcolor'] = $vars['images']['noimage'][ $vars['playerMode'] ]['backgroundcolor'];
 		
 		switch($type) {
-			case 'artist': $template = 'svg/user.svg'; break;
-			default: $template = 'svg/dummy.svg';
+			case 'artist': $template = 'svg/icon-artist.svg'; break;
+			case 'noresults': $template = 'svg/icon-noresults.svg'; break;
+			default: $template = 'svg/icon-album.svg';
 		}
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
 		
@@ -1173,7 +1174,7 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 			'label' => $app->ll->str('autocomplete.' . $type . '.noresults', [$originalTerm]),
 			'url' => '#',
 			'type' => '',
-			'img' => '/skin/default/img/icon-noresults.svg'
+			'img' => $app->config['root'] . 'imagefallback-50/noresults'
 		];
 	}
 	echo json_encode($result); exit;
