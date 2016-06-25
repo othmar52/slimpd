@@ -4,11 +4,7 @@
 	</div>
 	<div style="position:relative;">
 		<div class="mpd-ctrl-seekzero"></div>
-		<object class="waveform svg-ajax-object"
-			data="{{ placeholderSvgUrl }}"
-			data-svgurl="{{ waveformSvgUrl }}?colorFor=mpd" type="image/svg+xml">
-		</object>
-		<div class="waveform-wrapper" data-jsonurl="{{ waveformJsonUrl }}"></div>
+		<div class="waveform-wrapper" id="mpd-waveform-wrapper" data-jsonurl="{{ waveformJsonUrl }}"> </div>
 		<div class="mpd-status-progressbar"></div>
 		<div class="mpd-ctrl-seekbar"></div>
 	</div>

@@ -34,7 +34,7 @@
 	background: rgba(255,156,1,0.3);
 	background: rgba(0,0,0,0.7);
 	width: 0;
-	border-right: 1px solid rgba(255, 255, 255, 1);
+	border-right: 2px solid rgba(255, 255, 255, 1);
 	top: 0;
 	left: 0;
 }
@@ -62,7 +62,9 @@
 .xwax-deck-progressbar,
 .permaplayer .waveform,
 .local-ctrl-seekzero,
-.mpd-ctrl-seekzero {
+.mpd-ctrl-seekzero,
+.waveform-wrapper,
+.waveform-wrapper canvas {
 	height: 41px;
 }
 
@@ -76,12 +78,19 @@
 .slimplayer .permaplayer .waveform,
 .slimplayer .xwaxplayer .waveform,
 .slimplayer .local-ctrl-seekzero,
-.slimplayer .mpd-ctrl-seekzero {
+.slimplayer .mpd-ctrl-seekzero,
+.slimplayer .waveform-wrapper,
+.slimplayer .waveform-wrapper canvas {
 	height: 20px;
 }
 
+.waveform-wrapper,
+.waveform-wrapper canvas,
 .waveform {
 	width: 100%;
+	margin-bottom:10px;
+	text-align: center;
+	color: #666;
 }
 
 .timegrid {
