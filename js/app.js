@@ -153,6 +153,7 @@ $(document).ready(function() {
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 		$('.player-local,.player-mpd').toggle();
 		window.sliMpd.drawFavicon();
+		window.sliMpd.currentPlayer.drawWaveform();
 	});
 	
 	/* toggle playersize */

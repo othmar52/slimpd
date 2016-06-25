@@ -3,12 +3,8 @@
 		<canvas id="timegrid-local" class="timegrid-local timegrid slimplayer-hidden" style="position:relative; top: -7px;"></canvas>
 	</div>
 	<div style="position:relative;">
-	<div class="local-ctrl-seekzero"></div>
-		<object class="waveform svg-ajax-object"
-			data="{{ placeholderSvgUrl }}"
-			data-svgurl="{{ waveformSvgUrl }}?colorFor=local" type="image/svg+xml">
-		</object>
-		<div class="waveform-wrapper" data-jsonurl="{{ waveformJsonUrl }}"></div>
+		<div class="local-ctrl-seekzero"></div>
+		<div class="waveform-wrapper" id="local-waveform-wrapper" data-jsonurl="{{ waveformJsonUrl }}"></div>
 		<div class="jp-play-bar"></div>
 		<div class="jp-seek-bar"></div>
 	</div>
