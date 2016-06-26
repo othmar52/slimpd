@@ -223,15 +223,17 @@
 		</div>
 		
 		{% if modules.enable_xwax == '1' %}
-		<button class="xwax-gui-toggler inactive btn btn-trnsp col2" style="position: fixed; left: 130px; bottom: 4px; z-index: 2000;" >
-			<span class="glyphicon glyphicon-cd" aria-hidden="true"></span> &nbsp;&nbsp; <strong>XWAX</strong>
+		<button class="xwax-gui-toggler inactive btn btn-trnsp col2">
+			<span class="glyphicon glyphicon-cd" aria-hidden="true"></span><strong class="slimplayer-hidden">XWAX</strong>
 		</button>
 		{% endif %}
-		<div class="playerModeToggle" style="position: fixed; left: 10px; bottom: 4px; z-index: 2000;">
+		{% set markupLocalActive = "<span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span><strong class='slimplayer-hidden'>Local</strong>" %}
+		{% set markupMpdActive = "<span class='glyphicon glyphicon-cloud' aria-hidden='true'></span><strong class='slimplayer-hidden'>MPD</strong>" %}
+		<div class="playerModeToggle">
 			<a type="button" href="#" class="uc col2 btn active-{{ playerMode }}"
-			data-label-local="<i class='fa fa-map-marker fa-lg col2'></i> &nbsp;&nbsp; <strong>Local</strong>"
-			data-label-mpd="<i class='fa fa-cloud fa-lg col2'></i> &nbsp;&nbsp; <strong>MPD</strong>" >
-			  <span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>  &nbsp;&nbsp; <strong>{{ (playerMode == 'local') ? 'Local' : 'MPD' }}</strong>
+			data-label-local="{{ markupLocalActive|raw }}"
+			data-label-mpd="{{ markupMpdActive }}" >
+			  {{ ((playerMode == 'local') ? markupLocalActive : markupMpdActive)|raw }}
 			</a>
 		</div>
 		
@@ -240,7 +242,7 @@
 		</div>
 
 		<div class="playerSizeToggle" style="position: fixed; right: 10px; bottom: 20px; z-index: 2000;">
-			<a href="#playerSizeToggle()" title="toggle playersize"><i class='fa fa-chevron-down fa-lg'></i></a>
+			<a href="#" title="toggle playersize"><i class='fa fa-chevron-down fa-lg'></i></a>
 		</div>
 
 		<span id="top-link-block" class="hidden">

@@ -6,7 +6,7 @@
 	<div class="jp-gui jp-interface">
 	{% endif %}
 		<div class="col-lg-6 col-md-5">
-			<div class="row">
+			<div class="row seekbar-wrapper">
 				{% include 'partials/player/'~player~'-seekbar.htm' %}
 
 				<span class="pull-right" style="position: absolute; right: 0; top: 0;">
@@ -39,7 +39,7 @@
 							</button>
 							{% include 'partials/track/audioformat.htm' %}
 						</div>
-						<div style="margin-left:4.5em; margin-right: 20px;">
+						<div style="margin-left:4.5em; margin-right: 40px;">
 							{% include 'partials/player/trackmeta.htm' %}
 						</div>
 							{# placeholder for size-toggler #}
