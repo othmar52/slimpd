@@ -68,6 +68,9 @@ class Xwax {
 					$useCache = TRUE;
 				}
 			}
+			if($app->request->get('force' === '1')) {
+				$useCache = FALSE;
+			}
 		}
 		
 		if($useCache === FALSE) {

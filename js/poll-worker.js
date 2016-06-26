@@ -30,15 +30,20 @@ self.addEventListener('message', function(e) {
 			clearTimeout(self.poller);
 			self.poll();
 			break;
+		case 'refreshIntervalDelayed':
+			clearTimeout(self.poller);
+			setTimeout(function(){self.poll('?force=1');},200);
+			break;
 		case 'stop':
 			self.close();
 			break;
 	};
 }, false);
 
-self.poll = function(){
+self.poll = function(queryString) {
 	var ajax = new XMLHttpRequest();
-	ajax.open("GET", self.pollUrl, true);
+	//console.log('pollworker.pollUrl', self.pollUrl);
+	ajax.open("GET", self.pollUrl + ((queryString)?queryString:''), true);
 	ajax.onreadystatechange = function(){
 		if(this.readyState == 4){
 			if(this.status == 200){
