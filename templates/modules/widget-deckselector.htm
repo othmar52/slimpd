@@ -15,7 +15,7 @@
 			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
 			{% for i in 1..xwax.decks %}
 			<div class="col-md-{{colidx}}">
-				<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default" title="Send track to xwax deck {{i}}">
+				<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default force-xwax-poll" title="Send track to xwax deck {{i}}">
 					<i class="fa fa-headphones fa-lg"></i> Send to Deck {{i}}
 				</button>
 			</div>

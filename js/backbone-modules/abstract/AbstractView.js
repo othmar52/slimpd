@@ -35,6 +35,7 @@
             $('.toggle-content', this.$el).off('click', this.itemToggleClickListener).on('click', this.itemToggleClickListener);
             $('input.clearable', this.$el).off('keyup', this.clearableInputListener).on('keyup', this.clearableInputListener);
             $('.clearinput', this.$el).off('click', this.clearinputClickListener).on('click', this.clearinputClickListener);
+            $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll).on('click', this.forceXwaxPoll);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             
             // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
@@ -125,6 +126,7 @@
             $('.toggle-content', this.$el).off('click', this.itemToggleClickListener);
             $('input.clearable', this.$el).off('input', this.clearableInputListener);
             $('.clearinput', this.$el).off('click', this.clearinputClickListener);
+            $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -279,6 +281,13 @@
             $el.hide();
         },
 
+		forceXwaxPoll : function(e) {
+			try {
+				window.sliMpd.xwax.pollWorker.postMessage({ cmd: 'refreshIntervalDelayed'});
+			} catch (error) {
+				console.log('ERROR window.sliMpd.xwax.pollWorker.postMessage::refreshIntervalDelayed()');
+			}
+		}
     });
     
 })();
