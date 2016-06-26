@@ -201,7 +201,7 @@
 	  				{% for i in 1..xwax.decks %}
 	  				<div class="col-md-{{colidx}}">
 	  					<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
-							<i class="fa fa-headphones"></i> {{i}}
+							<span class="glyphicon glyphicon-cd" aria-hidden="true"></span> {{i}}
 						</button>
 	  				</div>
 	  				{% endfor%}
