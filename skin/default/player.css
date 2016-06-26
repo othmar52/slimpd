@@ -84,6 +84,34 @@
 	height: 20px;
 }
 
+/* toggler mpd/local in permaplayer */
+.playerModeToggle {
+	position: fixed;
+	left: 10px;
+	bottom: 4px;
+	z-index: 2000;
+}
+
+.playerModeToggle strong,
+.xwax-gui-toggler strong {
+	padding-left: 1em;
+}
+
+.xwax-gui-toggler {
+	position: fixed;
+	left: 130px;
+	bottom: 4px;
+	z-index: 2000;
+}
+
+.slimplayer .seekbar-wrapper {
+	padding-left: 6em;
+}
+
+.slimplayer .xwax-gui-toggler {
+	left: 50px;
+}
+
 .waveform-wrapper,
 .waveform-wrapper canvas,
 .waveform {
