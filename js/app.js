@@ -95,7 +95,8 @@ $(document).ready(function() {
     window.sliMpd.navbar.render();
     
     window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
-    	el : '.player-xwax'
+		el : '.player-xwax',
+		showWaveform : true
     });
     window.sliMpd.xwax.render();
     
@@ -161,6 +162,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		$('body').toggleClass('slimplayer');
 		$(this).find('i').toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
+		window.sliMpd.currentPlayer.drawWaveform();
 	});
 
 	/* toggle between display tags and display filepath */

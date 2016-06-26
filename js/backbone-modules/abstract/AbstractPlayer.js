@@ -289,7 +289,9 @@
 			this.waveformSettings.canvas.height = $waveFormWrapper.height();
 			this.waveformSettings.barWidth = window.sliMpd.conf.waveform.barwidth;
 			this.waveformSettings.barGap = window.sliMpd.conf.waveform.gapwidth;
-			this.waveformSettings.mirrored = window.sliMpd.conf.waveform.mirrored;
+			this.waveformSettings.mirrored = ($('body').hasClass('slimplayer'))
+				? 0
+				: window.sliMpd.conf.waveform.mirrored;
 			var that = this;
 
 			$.getJSON($waveFormWrapper.attr('data-jsonurl') , function( vals ) {
