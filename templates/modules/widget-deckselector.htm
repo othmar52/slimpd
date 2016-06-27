@@ -5,10 +5,7 @@
 		</div>
 	{% else %}
 		<div class="col-md-3">
-			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="open trackwidget to do trackstuff" class="btn btn-default trigger-modal">
-				more <i class="fa fa-align-justify fa-lg"></i>
-			</button>
-				
+			{% include 'partials/button/showtrackwidget.htm' with { 'permanent': 1 } %}
 		</div>
 		<div class="col-md-9">
 			<div class="row">

@@ -34,9 +34,7 @@
 							{# TODO: remove external liking as soon we have implemented a proper functionality #}
 							<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
 							<br class="replace-me-with-proper-css" />
-							<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-trnsp btn-xs trigger-modal col2">
-								<i class="fa fa-align-justify fa-lg col2"></i>
-							</button>
+							{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
 							{% include 'partials/track/audioformat.htm' %}
 						</div>
 						<div style="margin-left:4.5em; margin-right: 40px;">

@@ -1,0 +1,9 @@
+{% if not trackpath %}{% set trackpath = item.relativePath %}{% endif %}
+{% if not permanent %}{% set additionalClass = 'xwax-mode-hide' %}{% endif %}
+<button
+  role="control"
+  data-href="{{root}}markup/widget-trackcontrol?item={{ trackpath|path2url }}"
+  title="show trackwiget TRNSL"
+  class="btn btn-trnsp trigger-modal {{ buttonClass }} {{ additionalClass }}">
+	<i class="fa fa-align-justify fa-lg {{ iconClass }}"></i>
+</button>

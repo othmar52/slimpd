@@ -1,8 +1,9 @@
 {% if item.id %}
 <div class="row">
 	<div class="ffn-hidden">
-		<div class="col-md-11 vcenter vcenter3">
+		<div class="col-md-12 vcenter vcenter3">
 			<div class="vcinner">
+				{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}<br />
 				<span class="dark">by</span>
 				{% include 'partials/artist/link.htm' %}
@@ -11,7 +12,7 @@
 		</div>
 	</div>
 	<div class="ffn-show">
-		<div class="col-md-11 vcenter vcenter3">
+		<div class="col-md-12 vcenter vcenter3">
 			<div class="vcinner">
 				{{ item.relativePath|split('/')|last }}<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
@@ -21,14 +22,6 @@
 			</div>
 		</div>
 	</div>
-	
-	
-	<div class="col-md-1">
-			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.id|default(item.relativePath) }}" title="play" class="btn btn-default btn-sm trigger-modal pull-right">
-				<i class="fa fa-align-justify fa-sm"></i>
-			</button>
-	</div>
-	
 </div>
 {% else %}
 	{% if item.relativePath %}
