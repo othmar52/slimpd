@@ -612,6 +612,7 @@ $app->get('/markup/widget-playlist/:itemParams+', function($itemParams) use ($ap
 	$vars['action'] = 'widget-playlist';
 	$vars['playlist'] = new \Slimpd\playlist\playlist(join(DS, $itemParams));
 	$vars['playlist']->fetchTrackRange(0, 5);
+	$vars['playlisttracks'] = $vars['playlist']->getTracks();
 	$vars['renderitems'] = getRenderItems($vars['playlist']->getTracks());
 	$vars['breadcrumb'] =  \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
 	$app->render('modules/widget-playlist.htm', $vars);

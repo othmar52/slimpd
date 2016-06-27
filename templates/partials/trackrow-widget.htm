@@ -5,13 +5,8 @@
 				<i class="fa fa-play fa-lg"></i>
 			</button>
 			{# TODO: replace those 2 links with partials/button/* #}
-			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-				<i class="fa fa-align-justify fa-lg"></i>
-			</button>
-			
-			<a role="control" href="{{root}}markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
-				<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
-			</a>
+			{% include 'partials/button/showtrackwidget.htm' %}
+			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relativePathHash~'-plw'~num } %}
 		</div>
 	</div>
 	<div class="ffn-hidden">
@@ -53,6 +48,6 @@
 		<br />{% include 'partials/track/audioformat.htm' %}
 		</div>
 	</div>
-	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
+	<div class="ajax-xwax-{{ item.relativePathHash }}-plw{{ num }} col-md-12"></div>
 </div>
 
