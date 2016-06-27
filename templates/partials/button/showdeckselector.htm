@@ -1,0 +1,9 @@
+{% if not trackpath %}{% set trackpath = item.relativePath %}{% endif %}
+{% if not targetselector %}{% set targetselector = item.relativePathHash %}{% endif %}
+<button role="control"
+   href="{{root}}markup/widget-deckselector?item={{ trackpath|path2url }}"
+   title="show deckselector TRNSL"
+   class="btn btn-trnsp xwax-mode-show ajax-partial {{ additionalClass }}"
+   data-ajaxtarget=".ajax-xwax-{{ targetselector }}">
+	<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
+</button>

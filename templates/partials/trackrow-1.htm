@@ -15,10 +15,7 @@
 			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
 				<i class="fa fa-align-justify fa-lg"></i>
 			</button>
-			
-			<a role="control" href="{{root}}markup/widget-deckselector?item={{ item.relativePath }}" title="show deckselector" class="btn btn-trnsp xwax-mode-show ajax-partial" data-ajaxtarget=".ajax-xwax-{{ item.relativePathHash }}">
-				<span class="glyphicon glyphicon-cd" aria-hidden="true"></span>
-			</a>
+			{% include 'partials/button/showdeckselector.htm' %}
 		</div>
 	</div>
 	<div class="ffn-hidden">
