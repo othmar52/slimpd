@@ -158,9 +158,9 @@
 					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
 						<i class="fa fa-play fa-lg fa-fw"></i>
 					</button>
-					<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ [directory,item.name]|path2url }}" title="more" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-						<i class="fa fa-align-justify fa-lg fa-fw"></i>
-					</button>
+
+					{% include 'partials/button/showtrackwidget.htm' with { 'trackpath': [directory,item.name] } %}
+
 					{% include 'partials/button/showdeckselector.htm' with { 'trackpath': [directory,item.name] } %}
 
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>

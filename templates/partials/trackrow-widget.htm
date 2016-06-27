@@ -4,6 +4,7 @@
 			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.id }}"}'>
 				<i class="fa fa-play fa-lg"></i>
 			</button>
+			{# TODO: replace those 2 links with partials/button/* #}
 			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
 				<i class="fa fa-align-justify fa-lg"></i>
 			</button>

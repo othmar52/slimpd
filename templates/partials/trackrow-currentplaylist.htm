@@ -9,9 +9,7 @@
 			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
 			</button>
-			<button role="control" data-href="{{root}}markup/widget-trackcontrol?item={{ item.relativePath|path2url }}" title="play" class="btn btn-trnsp trigger-modal xwax-mode-hide">
-				<i class="fa fa-align-justify"></i>
-			</button>
+			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relativePathHash~'-'~mpdidx } %}
 			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"{{root}}mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-trash"></i>
