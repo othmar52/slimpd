@@ -155,20 +155,21 @@
 		<div class="row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
-					<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-play fa-lg fa-fw"></i>
-					</button>
-
+					{% include 'partials/button/playtrack.htm' with {
+						'trackpath': [directory,item.name],
+						'trackext': item.ext ,
+						'additionalClass': 'fa-fw'
+					} %}
 					{% include 'partials/button/showtrackwidget.htm' with { 'trackpath': [directory,item.name] } %}
-
 					{% include 'partials/button/showdeckselector.htm' with { 'trackpath': [directory,item.name] } %}
 
 					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
 
-					<a href="#" role="control" title="play" class="player-ctrl is-playbtn" data-player='{"action":"appendTrackAndPlay","item":"{{ [directory,item.name]|path2url }}","ext":"{{item.ext }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-music fa-lg fa-fw"></i>
-					{{ item.name }}
-					</a>
+					{% include 'partials/button/playtrack.htm' with {
+						'trackpath': [directory,item.name],
+						'trackext': item.ext,
+						'linkedmarkup': "<i class=\"fa fa-music fa-lg fa-fw\"></i>"~item.name
+					} %}
 				</div>
 			</div>
 			{# ajax load target for xwax-control #}

@@ -1,0 +1,14 @@
+{% if not trackpath %}{% set trackpath = playerCtrlItem %}{% endif %}
+{% if not trackext %}{% set trackext = item.audioDataformat %}{% endif %}
+{% if not linkedmarkup %}{% set linkedmarkup = "<i class=\"fa fa-play fa-lg "~ additionalClass~"\"></i>" %}{% endif %}
+<button
+	role="control"
+	title="An die Playlist hinten anfügen und sofort abspielen TRSNLT"
+	class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal"
+	data-player='{
+		"action":"appendTrackAndPlay",
+		"item":"{{ trackpath|path2url }}",
+		"ext":"{{ trackext }}",
+		"hash":"{{ item.relativePathHash }}",
+		"mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ trackpath|path2url }}"}'
+>{{ linkedmarkup|raw }}</button>

@@ -102,7 +102,9 @@
 	
   
  
-  	<br /><br /><br />
+	<br class="replace-me-with-proper-css"/>
+	<br class="replace-me-with-proper-css"/>
+	<br class="replace-me-with-proper-css"/>
   	
   	
   	
@@ -113,16 +115,14 @@
 	  			<h3>Abspielen</h3>
 	  		</div>
 	  		<div class="col-md-12">
-		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'
-		  			title="An die Playlist hinten anfügen und sofort abspielen">
-					<i class="fa fa-play"></i> Sofort abspielen
-				</button>
+				{% include 'partials/button/playtrack.htm' with {
+					'linkedmarkup': "<i class=\"fa fa-play\"></i> Sofort abspielen"
+				} %}
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"appendTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ item.relativePath|path2url }}"}'
+					data-player='{"action":"appendTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="An die Playlist hinten anfügen ohne abzuspielen">
 					<i class="fa fa-plus"></i> Hinten anfügen
 				</button>
@@ -131,7 +131,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"injectTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ item.relativePath|path2url }}"}'
+					data-player='{"action":"injectTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="Nach dem derzeit gespielten Track einfügen ohne abzuspielen">
 					<i class="fa fa-plus"></i> Auf nächste Pos. einfügen
 				</button>
@@ -140,7 +140,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"injectTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ item.relativePath|path2url }}"}'
+					data-player='{"action":"injectTrackAndPlay","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ playerCtrlItem|path2url }}"}'
 		  			title="Nach dem derzeit gespielten Track einfügen und sofort abspielen">
 					<i class="fa fa-play"></i> Einfügen & abspielen
 				</button>
@@ -149,7 +149,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"replaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ item.relativePath|path2url }}"}'
+					data-player='{"action":"replaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="Playlist leeren und sofort abspielen">
 					<i class="fa fa-play"></i> Liste leeren & abspielen
 				</button>
@@ -157,7 +157,7 @@
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-		  			data-player='{"action":"softreplaceTrack","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ item.relativePath|path2url }}"}'
+					data-player='{"action":"softreplaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="Playlist fast leeren, zur Playlist hinzufügen und als nächstes abspielen">
 					<i class="fa fa-trash"></i> Liste leeren* & hinzuf.
 				</button>
@@ -232,7 +232,7 @@
 	  			<h3>Editieren</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}maintainance/trackdebug/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
+				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
