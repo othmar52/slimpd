@@ -9,9 +9,7 @@
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
-		   <br /><button class="is-playlink player-ctrl btn btn-default" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
-				<i class="fa fa-play fa-lg"></i>
-				</button>{{dir}}
+		   <br />{% include 'partials/button/playtrack.htm' %}{{dir}}
 		{% else %}  
 			{{dir}} / 
 		{% endif %}

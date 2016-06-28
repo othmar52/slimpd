@@ -1,10 +1,9 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.id }}"}'>
-				<i class="fa fa-play fa-lg"></i>
-			</button>
-			{# TODO: replace those 2 links with partials/button/* #}
+			{% include 'partials/button/playtrack.htm' %}
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relativePathHash~'-plw'~num } %}
 		</div>
@@ -51,3 +50,4 @@
 	<div class="ajax-xwax-{{ item.relativePathHash }}-plw{{ num }} col-md-12"></div>
 </div>
 
+{% endblock %}

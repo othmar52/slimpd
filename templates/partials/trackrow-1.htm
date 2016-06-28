@@ -1,3 +1,5 @@
+{% extends 'partials/track/not-imported-templatevars.twig' %}
+{% block content %}
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
@@ -9,9 +11,7 @@
 					'attrs': 'style="width: 50px; height: 50px; z-index:2;"'
 				} %}
 			</a>
-			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ item.id }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.id }}"}'>
-				<i class="fa fa-play fa-lg"></i>
-			</button>
+			{% include 'partials/button/playtrack.htm' %}
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' %}
 		</div>
@@ -58,4 +58,4 @@
 	</div>
 	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
 </div>
-
+{% endblock %}

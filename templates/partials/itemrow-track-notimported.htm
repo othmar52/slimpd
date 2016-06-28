@@ -11,9 +11,7 @@
 					'attrs': 'style="width: 50px; height: 50px; z-index:2;"'
 				} %}
 			</a>
-			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ item.relativePath|path2url }}"}'>
-				<i class="fa fa-play fa-lg"></i>
-			</button>
+			{% include 'partials/button/playtrack.htm' %}
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' %}
 		</div>
