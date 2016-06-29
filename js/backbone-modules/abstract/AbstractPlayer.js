@@ -85,7 +85,7 @@
     			this.reloadCss(item.hash);
     		}.bind(this));
         },
-        onRedrawComplete : function(item) { this.drawWaveform(); return; },
+        onRedrawComplete : function(item) { return; },
         
         // highlight state icons when state is active
         updateStateIcons : function() {
