@@ -218,7 +218,14 @@ $(document).ready(function() {
 		return false;
 	});
 
-
+	/*
+	 * force confirmation when user leaves sliMpd in case local audio is playing
+	 */
+	window.onbeforeunload=function(){
+		if(window.sliMpd.currentPlayer.mode === 'local' && window.sliMpd.currentPlayer.nowPlayingState === 'play') {
+			return 'local audio is currently playing';
+		}
+	}
 });
 
 
