@@ -4,7 +4,7 @@
 <h3>Album editor<br>
 <span class="small">
 	{% set dirs = album.relativePath|split('/') %}
-	<a href="{{root}}filebrowser/{{ album.relativePath }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	<a href="{{root}}filebrowser/{{ album.relativePath|path2url }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{{dir}}
