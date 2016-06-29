@@ -64,11 +64,18 @@ class Svggenerator {
 			$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
 			if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
 				# another request already triggered generateSvg
-				\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
-				return NULL;
+				$this->fireRetryHeaderAndExit();
 			}
 			$this->generatePeakFile();
 		} 
+	}
+
+	public function fireRetryHeaderAndExit() {
+		\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
+		header('HTTP/1.1 503 Service Temporarily Unavailable');
+		header('Status: 503 Service Temporarily Unavailable');
+		header('Retry-After: 5'); //seconds
+		exit;
 	}
 	
 	public function findValues($byte1, $byte2) {
@@ -85,8 +92,7 @@ class Svggenerator {
 		
 		$peaks = file_get_contents($this->peakValuesFilePath);
 		if($peaks === 'generating') {
-			\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
-			return NULL;
+			$this->fireRetryHeaderAndExit();
 		}
 		
 		$values = explode("\n", $peaks);
@@ -168,7 +174,7 @@ class Svggenerator {
 		
 		$peaks = file_get_contents($this->peakValuesFilePath);
 		if($peaks === 'generating') {
-			\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
+			$this->fireRetryHeaderAndExit();
 			return NULL;
 		}
 		

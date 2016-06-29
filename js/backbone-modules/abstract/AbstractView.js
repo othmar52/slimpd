@@ -86,19 +86,36 @@
 		        placeholder: 'span2 well placeholder tile',
 		        forceHelperSize: true
 		    });
-		    
-		    $('object.svg-ajax-object', that.$el).each(function(index, item){
-		    	var obj = item;
-			    $.ajax({
-	    			url: $(obj).attr('data-svgurl')
-	    		}).retry({
-	    			times: 10,
-	    			timeout: 3000
-	    		}).then(function(response){
-	    			$(obj).attr('data', $(obj).attr('data-svgurl'));
-	  			});
-	  		});
-	  		
+
+			// TODO : remove this as soon as all svg-waveforms have been replaced by canvas-waveforms (widget-trackcontrol, xwaxPlayer)
+			$('object.svg-ajax-object', that.$el).each(function(index, item){
+				var obj = item;
+				$.ajax({
+					url: $(obj).attr('data-svgurl')
+				}).retry({
+					times: 10,
+					timeout: 3000
+				}).then(function(response){
+					$(obj).attr('data', $(obj).attr('data-svgurl'));
+				});
+			});
+
+			// TODO : add xwaxPlayer- and trackwidget-waveform
+			$('.waveform-wrapper', that.$el).each(function(index, item){
+				var obj = item;
+				$.ajax({
+					url: $(obj).attr('data-jsonurl')
+				}).retry({
+					times: 10,
+					timeout: 3000
+				}).then(function(response){
+					switch($(obj).attr('data-player')) {
+						case 'mpd': window.sliMpd.mpdPlayer.drawWaveform(); break;
+						case 'local': window.sliMpd.localPlayer.drawWaveform(); break;
+					}
+				});
+			});
+
 	  		// TODO: how to reinit affixes?
 	  		//$('[data-spy=affix]').affix({ offset: { top: 40}, spy :"affix"});
 	  		/*$('[data-spy=affix]').each(function () {
