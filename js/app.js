@@ -226,6 +226,20 @@ $(document).ready(function() {
 			return 'local audio is currently playing';
 		}
 	}
+
+	/*
+	 * add lazy resize listener
+	 */
+	$(window).bind('resizeEnd', function() {
+		window.sliMpd.currentPlayer.drawWaveform();
+		window.sliMpd.currentPlayer.drawTimeGrid();
+	});
+	$(window).resize(function() {
+		if(this.resizeTO) clearTimeout(this.resizeTO);
+		this.resizeTO = setTimeout(function() {
+			$(this).trigger('resizeEnd');
+		}, 500);
+	});
 });
 
 
