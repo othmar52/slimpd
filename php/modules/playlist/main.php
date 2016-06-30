@@ -82,31 +82,25 @@ class playlist
 	public static function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
 		$return = array();
 		foreach($pathStringArray as $itemPath) {
-			if($noDatabaseQueries === FALSE) {
-				$track = \Slimpd\Track::getInstanceByPath($itemPath);
+			$track = ($noDatabaseQueries === FALSE)
+				? \Slimpd\Track::getInstanceByPath($itemPath)
+				: NULL;
 			
-				if($track === NULL) {
-					$track = new \Slimpd\Track();
-					$track->setRelativePath($itemPath);
-					$track->setRelativePathHash(getFilePathHash($itemPath));
-					if(is_file(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir'] . $itemPath) === FALSE) {
-						$track->setError('notfound');
-					} else {
-						$track->setAudioDataformat(strtolower(preg_replace('/^.*\./', '', $track->getRelativePath())));
-					}
-				}
-			} else {
-				// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
-				// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
+			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
+			if($track === NULL) {
 				$track = new \Slimpd\Track();
+				// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
 				if(strpos($itemPath, \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']) === 0) {
 					$itemPath = substr($itemPath, strlen(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']));
 				}
 				$track->setRelativePath($itemPath);
 				$track->setRelativePathHash(getFilePathHash($itemPath));
-				if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $itemPath) === FALSE) {
-					$track->setError('notfound');
-				}
+			}
+
+			if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $track->getRelativePath()) === FALSE) {
+				$track->setError('notfound');
+			} else {
+				$track->setAudioDataformat(strtolower(preg_replace('/^.*\./', '', $track->getRelativePath())));
 			}
 			$return[] = $track;
 		}

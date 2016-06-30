@@ -50,7 +50,11 @@
 					{% include 'partials/itemrow-track-notfound.htm' with { hidethumb: 1 }%}
 				{% else %}
 				<div class="{{ cycle(['',''],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
-					{% include 'partials/trackrow-widget.htm' with {'num': i } %}
+					{% if item.id %}
+						{% include 'partials/trackrow-widget.htm' with {'num': i } %}
+					{% else %}
+						{% include 'partials/itemrow-track-notimported.htm' with { hidethumb: 1, 'num': i } %}
+					{% endif %}
 				{% endif %}
 				</div>
 			{% endfor %}
