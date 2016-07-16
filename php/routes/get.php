@@ -1358,6 +1358,19 @@ $app->get('/systemcheck', function() use ($app, $vars){
 		$vars['systemcheck']['mpddbfile']['status'] = 'success';
 	}
 
+	// check if we have a value for mpd-musicdirectory
+	$vars['systemcheck']['mpdmusicdirempty']['status'] = ($app->config['mpd']['musicdir'] === '')
+		? 'danger'
+		: 'success';
+
+	// check if we have a trailing slash for mpd-musicdirectory
+	$vars['systemcheck']['mpdmusicdirslash']['status'] = (substr($app->config['mpd']['musicdir'],-1) !== '/')
+		? 'danger'
+		: 'success';
+	if($vars['systemcheck']['mpdmusicdirempty']['status'] === 'danger') {
+		$vars['systemcheck']['mpdmusicdirslash']['status'] = 'warning';
+	}
+
 	// check sphinx connection
 	$vars['systemcheck']['sphinxconnection']['status'] = 'success';
 	try {
@@ -1365,6 +1378,23 @@ $app->get('/systemcheck', function() use ($app, $vars){
 	} catch (\Exception $e) {
 		$vars['systemcheck']['sphinxconnection']['status'] = 'danger';
 	}
+
+	// check filesystem access of MPD's musicdir
+	if(is_dir($app->config['mpd']['musicdir']) === FALSE || is_readable($app->config['mpd']['musicdir']) === FALSE) {
+		$vars['systemcheck']['filesystemmusicdir']['status'] = 'danger';
+	} else {
+		$vars['systemcheck']['filesystemmusicdir']['status'] = 'success';
+	}
+
+	// check filesystem access for writable directories
+	foreach(['cache', 'embedded', 'peakfiles'] as $dir) {
+		if(is_dir(APP_ROOT . $dir) === FALSE || is_writeable(APP_ROOT . $dir) === FALSE) {
+			$vars['systemcheck']['filesystem'. $dir]['status'] = 'danger';
+		} else {
+			$vars['systemcheck']['filesystem'. $dir]['status'] = 'success';
+		}
+	}
+
 
 	$app->render('systemcheck.htm', $vars);
 });

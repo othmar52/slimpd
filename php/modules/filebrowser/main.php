@@ -28,6 +28,10 @@ class filebrowser {
 	
 	public function getDirectoryContent($d, $ignoreLimit = FALSE) {
 		$app = \Slim\Slim::getInstance();
+		if($app->config['mpd']['musicdir'] === '') {
+			$app->flashNow('error', $app->ll->str('error.mpd.conf.musicdir'));
+			return;
+		}
 		
 		// create helper array only once for performance reasons
 		$extTypes = array();
@@ -55,8 +59,7 @@ class filebrowser {
 		if(is_dir($base .$d) === FALSE){ //} || $this->checkAccess($d, $baseDirs) === FALSE) {
 			\Slim\Slim::getInstance()->notFound();
 		}
-		
-		
+
 		// avoid path disclosure outside relevant directories
 		$realpath = realpath($base.$d) . DS;
 		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0

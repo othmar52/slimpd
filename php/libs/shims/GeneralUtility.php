@@ -580,7 +580,9 @@ function deliver($file, $app) {
  
  
 	//- turn off compression on the server
-	@apache_setenv('no-gzip', 1);
+	if(function_exists('apache_setenv')) {
+		@apache_setenv('no-gzip', 1);
+	}
 	@ini_set('zlib.output_compression', 'Off');
  
 	// sanitize the file request, keep just the name and extension
