@@ -3,7 +3,7 @@
 {% if not linkedmarkup %}{% set linkedmarkup = "<i class=\"fa fa-play fa-lg "~ additionalClass~"\"></i>" %}{% endif %}
 <button
 	role="control"
-	title="An die Playlist hinten anfügen und sofort abspielen TRSNLT"
+	title="{{'pbctrl.appendandplay.title'|ll}}"
 	class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal"
 	data-player='{
 		"action":"appendTrackAndPlay",

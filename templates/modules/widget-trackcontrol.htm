@@ -112,19 +112,19 @@
 	  <div class="row">
 	  	<div class="col-md-3">
 	  		<div class="col-md-12">
-	  			<h3>Abspielen</h3>
+				<h3>{{'playbackcontrol'|ll}}</h3>
 	  		</div>
 	  		<div class="col-md-12">
 				{% include 'partials/button/playtrack.htm' with {
-					'linkedmarkup': "<i class=\"fa fa-play\"></i> Sofort abspielen"
+					'linkedmarkup': "<i class=\"fa fa-play\"></i> "~'pbctrl.appendandplay'|ll
 				} %}
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
 					data-player='{"action":"appendTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ playerCtrlItem|path2url }}"}'
-		  			title="An die Playlist hinten anfügen ohne abzuspielen">
-					<i class="fa fa-plus"></i> Hinten anfügen
+		  			title="{{'pbctrl.append.title'|ll}}">
+					<i class="fa fa-plus"></i> {{'pbctrl.append'|ll}}
 				</button>
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
@@ -132,8 +132,8 @@
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
 					data-player='{"action":"injectTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ playerCtrlItem|path2url }}"}'
-		  			title="Nach dem derzeit gespielten Track einfügen ohne abzuspielen">
-					<i class="fa fa-plus"></i> Auf nächste Pos. einfügen
+		  			title="{{'pbctrl.inject.title'|ll}}">
+					<i class="fa fa-plus"></i> {{'pbctrl.inject'|ll}}
 				</button>
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
@@ -141,8 +141,8 @@
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
 					data-player='{"action":"injectTrackAndPlay","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ playerCtrlItem|path2url }}"}'
-		  			title="Nach dem derzeit gespielten Track einfügen und sofort abspielen">
-					<i class="fa fa-play"></i> Einfügen & abspielen
+		  			title="{{'pbctrl.injectandplay.title'|ll}}">
+					<i class="fa fa-play"></i> {{'pbctrl.injectandplay'|ll}}
 				</button>
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
@@ -150,23 +150,23 @@
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
 					data-player='{"action":"replaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ playerCtrlItem|path2url }}"}'
-		  			title="Playlist leeren und sofort abspielen">
-					<i class="fa fa-play"></i> Liste leeren & abspielen
+		  			title="{{'pbctrl.clearandplay.title'|ll}}">
+					<i class="fa fa-play"></i> {{'pbctrl.clearandplay'|ll}}
 				</button>
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
 					data-player='{"action":"softreplaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ playerCtrlItem|path2url }}"}'
-		  			title="Playlist fast leeren, zur Playlist hinzufügen und als nächstes abspielen">
-					<i class="fa fa-trash"></i> Liste leeren* & hinzuf.
+		  			title="{{'pbctrl.softclearandplay.title'|ll}}">
+					<i class="fa fa-trash"></i> {{'pbctrl.softclearandplay'|ll}}
 				</button>
 				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
 			
 	  		<div class="col-md-12">
-		  		<button role="control" data-href="#" class="btn btn-default playerModeToggleTrigger">
-					<i class="fa fa-exchange"></i> Playermodus wechseln
+		  		<button role="control" data-href="#" class="btn btn-default playerModeToggleTrigger" title="{{'pbctrl.toggleplayer.title'|ll}}">
+					<i class="fa fa-exchange"></i> {{'pbctrl.toggleplayer'|ll}}
 				</button>
 			</div>
 	  	</div>
