@@ -51,13 +51,14 @@
 	    <div class="col-sm-4 slimplayer-show">
 			{% include 'partials/player/trackmeta-slim.htm' %}
 	    </div>
+	    {% include 'partials/player/nowplaying-string.htm' %}
 
 	{% if player == 'local' %}
 	</div>
 </div>
 	{% endif %}
 		    
-{% include 'partials/player/nowplaying-string.htm' %}
+
 	{% if player == 'mpd' %}
  	{# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
     <style type="text/css">{% include 'css/nowplaying.css' with {
