@@ -279,7 +279,7 @@ foreach([
 				} else {
 					// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
 					$itemPath = $app->request->get('item');
-					if(strpos($itemPath, $app->config['mpd']['alternative_musicdir']) === 0) {
+					if(ALTDIR && strpos($itemPath, $app->config['mpd']['alternative_musicdir']) === 0) {
 						$itemPath = substr($itemPath, strlen($app->config['mpd']['alternative_musicdir']));
 					}
 					$search = array('relativePathHash' => getFilePathHash($itemPath));
@@ -1262,8 +1262,16 @@ $app->get('/deliver/:item+', function($item) use ($app, $vars){
 		$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$path));
 		$path = ($track === NULL) ? '' : $track->getRelativePath();
 	}
+	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {
+		deliver($app->config['mpd']['musicdir'] . $path, $app);
+		$app->stop();
+	}
 	
-	deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
+	if(is_file($app->config['mpd']['alternative_musicdir'] . $path) === TRUE) {
+		deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
+		$app->stop();
+	}
+	echo "Ivalid file: " . $path;
 	$app->stop();
 });
 

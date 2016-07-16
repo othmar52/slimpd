@@ -32,7 +32,7 @@ class Svggenerator {
 		}
 		
 		if($this->fingerprint === NULL) {
-			if(is_file($config['alternative_musicdir'].$arg) === TRUE) {
+			if(ALTDIR && is_file($config['alternative_musicdir'].$arg) === TRUE) {
 				$arg = $config['alternative_musicdir'].$arg;
 			}
 			if(is_file($config['musicdir'].$arg) === TRUE) {

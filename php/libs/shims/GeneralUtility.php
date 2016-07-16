@@ -590,15 +590,14 @@ function deliver($file, $app) {
 	$pathParts = pathinfo($filePath);
 	$fileName  = $pathParts['basename'];
 	$fileExt   = $pathParts['extension'];
- 
-	
-	
+
+
 	if (is_file($filePath) === FALSE) {
 		deliveryError(404);
 	}
 	
 	// IMPORTANT TODO: proper check if file access is allowed
-	if(stripos($filePath, $app->config['mpd']['alternative_musicdir']) !== 0) {
+	if(stripos($filePath, $app->config['mpd']['musicdir']) !== 0 && stripos($filePath, $app->config['mpd']['alternative_musicdir']) !== 0) {
 		deliveryError(401);
 	}
 	
