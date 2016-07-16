@@ -1312,3 +1312,59 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 	
 	$app->render('modules/widget-cleanrename.htm', $vars);
 });
+
+
+$app->get('/systemcheck', function() use ($app, $vars){
+	#var_dump($app->request->get('dberror')); die();
+	// check MySql connection
+	if($app->request->get('dberror') !== NULL) {
+		$vars['systemcheck']['databaseconnection']['status'] = 'danger';
+		#die('error');
+	} else {
+		$db = \Slim\Slim::getInstance()->db;
+		$result = $db->query("SELECT * FROM track LIMIT 1");
+		$vars['systemcheck']['databaseconnection']['status'] = 'success';
+	}
+
+
+	// check MySQL content
+	$vars['systemcheck']['databasecontent']['skipped'] = 0;
+	if($vars['systemcheck']['databaseconnection']['status'] == 'danger') {
+		$vars['systemcheck']['databasecontent']['skipped'] = 1;
+		$vars['systemcheck']['databasecontent']['status'] = 'warning';
+		#die('sdghdhdh');
+	} else {
+		#die('ddd');
+		$vars['systemcheck']['databasecontent']['tracks'] = \Slimpd\Track::getCountAll();
+		$vars['systemcheck']['databasecontent']['albums'] = \Slimpd\Album::getCountAll();
+		$vars['systemcheck']['databasecontent']['artists'] = \Slimpd\Artist::getCountAll();
+		$vars['systemcheck']['databasecontent']['status'] = ($vars['systemcheck']['databasecontent']['tracks'] === 0)
+			? 'danger'
+			: 'success';
+	}
+
+	// check MPD connection
+	$mpd = new \Slimpd\modules\mpd\mpd();
+	if($mpd->cmd('status') === FALSE) {
+		$vars['systemcheck']['mpdconnection']['status'] = 'danger';
+	} else {
+		$vars['systemcheck']['mpdconnection']['status'] = 'success';
+	}
+
+	// check if MPD databasefile is readable
+	if(is_file($app->config['mpd']['dbfile']) == FALSE || is_readable($app->config['mpd']['dbfile']) === FALSE) {
+		$vars['systemcheck']['mpddbfile']['status'] = 'danger';
+	} else {
+		$vars['systemcheck']['mpddbfile']['status'] = 'success';
+	}
+
+	// check sphinx connection
+	$vars['systemcheck']['sphinxconnection']['status'] = 'success';
+	try {
+		$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	} catch (\Exception $e) {
+		$vars['systemcheck']['sphinxconnection']['status'] = 'danger';
+	}
+
+	$app->render('systemcheck.htm', $vars);
+});

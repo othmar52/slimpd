@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>sliMpd - SYSTEMCHECK</title>
+		<meta charset="utf-8">
+    	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    	<meta name="HandheldFriendly" content="True">
+    	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    	
+    	<link rel="shortcut icon" href="{{root}}skin/default/img/favicon.png">
+    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{root}}assets/images/icons/app-icon.png" />
+    	{% set cssfiles = [
+    		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
+    		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
+    		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
+			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
+			'vendor-dist/rstacruz/nprogress/nprogress.css',
+			'skin/default/fonts/SFDISPLAY/SFNSDisplay.css',
+			'skin/default/lightbox.css',
+			'skin/default/typicons_.css',
+			'skin/default/bootstrap-same-height-col.css',
+			'skin/default/bootstrap-jqueryui-autocomplete.css',
+			'skin/default/styles.css',
+			'skin/default/player.css',
+			'skin/default/nprogress.css',
+			'skin/default/breadcrumb.css',
+			'skin/default/fullwidth-bg-row.css',
+			'css/spotcolors.css'
+    		]
+		%}
+    	 
+		{% for cssfile in cssfiles %}
+		<link rel="stylesheet" type="text/css" media="all" href="{{root}}{{cssfile}}" />
+		{% endfor %}		
+		{# add dynamic css for now-playing status #}
+		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{root}}css/localplayer/0" />
+		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{root}}css/mpdplayer/0" />
+		{# TODO: find a better way to highlight deck-tracks for any amount of decks #}
+		{% for deck in [0,1,2,3] %}
+		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{root}}css/xwaxplayer/0" />
+		{% endfor %}
+	</head>
+	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
+		<div class="container">
+			<nav class="navbar main-nav navbar-fixed-top" style="background-color: #353535">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<a id="logo" class="navbar-brand col2" href="/systemcheck">{{config.logomarkup|raw}}</a>
+					</div>
+				    <ul class="nav navbar-nav">
+						<li class="">
+							<a href="/systemcheck" class="btn btn-default active">run systemcheck again</a>
+						</li>
+					</ul>
+				</div>
+					<div class="container-fluid" id="nprog-container"> </div>
+			</nav>
+			<div class="row">
+  				<div class="col-md-12" id="main">
+
+				<div class="main-content">
+
+
+					<h1>Database</h1>
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-{{systemcheck.databaseconnection.status}}">
+							<h4 class="uc">Connection</h4>
+						{% if systemcheck.databaseconnection.status == 'danger' %}
+							unable to connect to database
+							<strong>{{database.dbdatabase}}</strong>
+							on host <strong>{{database.dbhost}}</strong><br />
+							please check config/config_local.ini
+							<pre>[database]
+dbhost = 127.0.0.1
+dbusername = xxx
+dbpassword = xxx
+dbdatabase = xxx</pre>
+						{% else %}
+							connected to database <strong>{{database.dbdatabase}}</strong>
+							on host <strong>{{database.dbhost}}</strong>
+						{% endif %}
+						</li>
+
+						<li class="list-group-item list-group-item-{{systemcheck.databasecontent.status}}">
+							<h4 class="uc">Content</h4>
+						{% if systemcheck.databasecontent.skipped == 1 %}
+							test skipped because databaseconnection failed
+						{% else %}
+						
+							{% if systemcheck.databasecontent.status == 'danger' %}
+								your database is empty<br/>
+								please run
+								<pre>cli-update.php standard</pre>
+							{% else %}
+								<strong>Items in database:</strong><br/>
+								{{systemcheck.databasecontent.tracks}} tracks<br/>
+								{{systemcheck.databasecontent.albums}} albums<br/>
+								{{systemcheck.databasecontent.artists}} artists
+							{% endif %}
+						{% endif %}
+						</li>
+						<li class="list-group-item list-group-item-warning">
+							<h6 class="">TODO: check if database-scheme is correct</h6>
+						</li>
+					</ul>
+					
+					
+					
+					
+					
+					<h1>MPD</h1>
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-{{systemcheck.mpdconnection.status}}">
+							<h4 class="uc">Connection</h4>
+						{% if systemcheck.mpdconnection.status == 'danger' %}
+							unable to connect to mpd
+							<strong>{{mpd.dbdatabase}}</strong>
+							on host <strong>{{mpd.host}}</strong> on port <strong>{{mpd.port}}</strong><br />
+							please check config/config_local.ini
+							<pre>[mpd]
+host = 127.0.0.1
+port = 6600
+username = 
+password =</pre>
+						{% else %}
+							connected to mpd on host <strong>{{mpd.host}}</strong> on port <strong>{{mpd.port}}</strong></strong>
+						{% endif %}
+						</li>
+
+						<li class="list-group-item list-group-item-{{systemcheck.mpddbfile.status}}">
+							<h4 class="uc">Readaccess to databasefile</h4>
+						{% if systemcheck.mpddbfile.status == 'danger' %}
+							mpd's databasefile <strong>{{mpd.dbfile}}</strong> is not readable<br/>
+							please check config/config_local.ini
+							<pre>[mpd]
+dbfile = </pre> and make sure it is readable for your webserver-user
+						{% else %}
+							mpd's databasefile <strong>{{mpd.dbfile}}</strong> is readable
+						{% endif %}
+						</li>
+						
+					</ul>
+					
+					
+					
+					<h1>Sphinx</h1>
+					<ul class="list-group">
+						<li class="list-group-item list-group-item-{{systemcheck.sphinxconnection.status}}">
+							<h4 class="uc">Connection</h4>
+						{% if systemcheck.sphinxconnection.status == 'danger' %}
+							unable to connect to sphinxdaemon
+							on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong><br />
+							please check config/config_local.ini
+							<pre>[sphinx]
+host = 127.0.0.1
+port = 9312</pre>
+						{% else %}
+							connected to sphinx on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong></strong>
+						{% endif %}
+						</li>
+						<li class="list-group-item list-group-item-warning">
+							<h6 class="">TODO: check if sphinxdaemon is returning results</h6>
+						</li>
+					</ul>
+					
+					
+					
+					<h1>Filesystem</h1>
+					<h6>TODO: writing in directores cache + peakfiles + embedded</h6>
+					<h6>TODO: check access for music directories and files</h6>
+					
+					<h1>Environment</h1>
+					<h6>TODO: check if php-pdo is enabled</h6>
+					<h6>TODO: check locale settings to avoid errors caused by specialchars</h6>
+					
+					<h1>Waveforms</h1>
+					<h6>TODO: check generating waveform of all audioformats (with lame and python)</h6>
+					
+					<h1>Xwax</h1>
+					<h6>TODO: check connection</h6>
+
+  				</div>
+			</div>
+		</div>
+		
+		<span id="top-link-block" class="hidden">
+		    <a href="#t" class="btn btn-default">
+		        <i class="glyphicon glyphicon-chevron-up"></i>
+		    </a>
+		</span><!-- /top-link-block -->
+		
+		
+		
+		
+		
+		{% set jsfiles = [
+    		'vendor-dist/components/jquery/jquery.min.js',
+    		'vendor-dist/rstacruz/nprogress/nprogress.js',
+			'vendor-dist/components/jqueryui/jquery-ui.min.js',
+			'vendor-dist/twbs/bootstrap/dist/js/bootstrap.min.js',
+			'vendor-dist/twbs/bootstrap/js/dropdown.js',
+			'vendor-dist/twbs/bootstrap/js/tab.js',
+			'vendor-dist/twbs/bootstrap/js/popover.js',
+			'vendor-dist/twbs/bootstrap/js/collapse.js',
+			'vendor-dist/twbs/bootstrap/js/tooltip.js',
+			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.js',
+			'vendor-dist/happyworm/jplayer/dist/jplayer/jquery.jplayer.min.js',
+			'vendor-dist/components/jquery-cookie/jquery.cookie.js',
+			'vendor-dist/jeresig/jquery.hotkeys/jquery.hotkeys.js',
+			'vendor-dist/johnkpaul/jquery-ajax-retry/dist/jquery.ajax-retry.min.js',
+			'vendor-dist/mouse0270/bootstrap-notify/bootstrap-notify.min.js',
+			'js/faviconxmod.js',
+			'vendor-dist/components/greensock-js/greensock-js-built.js',
+			'vendor-dist/components/underscore/underscore-min.js',
+			'vendor-dist/components/backbone/backbone-min.js',
+			'js/backbone-modules/abstract/AbstractView.js',
+			'js/backbone-modules/NavbarView.js',
+			'js/backbone-modules/ModalView.js',
+			'js/backbone-modules/PageView.js',
+			'js/backbone-modules/abstract/AbstractPlayer.js',
+			'js/backbone-modules/LocalPlayer.js',
+			'js/backbone-modules/MpdPlayer.js',
+			'js/backbone-modules/XwaxView.js',
+			'js/backbone-modules/XwaxPlayer.js',
+			'js/backbone-modules/Router.js'
+    		]
+		%}
+    	 
+		{% for jsfile in jsfiles %}
+		<script src="{{root}}{{jsfile}}"></script>
+		{% endfor %}		
+	</body>
+</html>
