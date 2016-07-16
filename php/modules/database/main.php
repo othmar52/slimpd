@@ -17,7 +17,8 @@ try {
 				$app->stop();
 			}
 			$app->flash('error', $app->ll->str('database.connect'));
-			$app->redirect('/');
+			$app->redirect('/systemcheck?dberror');
+			$app->stop();
 			return;
 		}
 		

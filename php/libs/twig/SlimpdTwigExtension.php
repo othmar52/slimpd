@@ -17,19 +17,23 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			new Twig_SimpleFunction('getRandomInstance', array($this, 'getRandomInstance'))
         );
     }
-	
-    public function getRandomInstance($type)
-    {
-        $classPath = '\\Slimpd\\' . $type;
-		if(class_exists($classPath) === FALSE) {
-			return NULL;
+
+	public function getRandomInstance($type)
+	{
+		try {
+			$classPath = '\\Slimpd\\' . $type;
+			if(class_exists($classPath) === FALSE) {
+				return NULL;
+			}
+			return $classPath::getRandomInstance();
+		} catch(\Exception $e) {
+			\Slim\Slim::getInstance()->response->redirect('/systemcheck?dberror');
 		}
-        return $classPath::getRandomInstance();
-    }
-	
+	}
+
 	public function getFilters()
-    {
-        return array(
+	{
+		return array(
 			new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
 				return gmdate(($miliseconds > 3600000) ? "G:i:s" : "i:s", ($miliseconds/1000));
 			}),
