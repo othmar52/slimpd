@@ -90,7 +90,7 @@ class playlist
 			if($track === NULL) {
 				$track = new \Slimpd\Track();
 				// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
-				if(strpos($itemPath, \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']) === 0) {
+				if(ALTDIR && strpos($itemPath, \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']) === 0) {
 					$itemPath = substr($itemPath, strlen(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']));
 				}
 				$track->setRelativePath($itemPath);
