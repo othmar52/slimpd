@@ -140,10 +140,36 @@ dbfile = </pre> and make sure it is readable for your webserver-user
 						{% endif %}
 						</li>
 						
+						<li class="list-group-item list-group-item-{{systemcheck.mpdmusicdirempty.status}}">
+							<h4 class="uc">Configuration of MPD music directory</h4>
+						{% if systemcheck.mpdmusicdirempty.status == 'danger' %}
+							configuration of mpd's musicdir is empty<br/>
+							please check config/config_local.ini
+							<pre>[mpd]
+musicdir = </pre> and don't forget to add a trailing slash
+						{% else %}
+							configuration of [mpd]musicdir is not empty
+						{% endif %}
+						</li>
+
+						<li class="list-group-item list-group-item-{{systemcheck.mpdmusicdirslash.status}}">
+							<h4 class="uc">Trailing slash of MPD music directory</h4>
+							{% if systemcheck.mpdmusicdirempty.status == 'danger' %}
+								test skipped because of missing configuration
+							{% else %}
+								{% if systemcheck.mpdmusicdirslash.status == 'danger' %}
+									configuration of mpd's musicdir needs a trailing slash<br/>
+									please check config/config_local.ini
+									<pre>[mpd]
+		musicdir = {{mpd.musicdir}}</pre>
+								{% else %}
+									configuration of [mpd]musicdir has a trailing slash
+								{% endif %}
+							{% endif %}
+						</li>
 					</ul>
-					
-					
-					
+
+
 					<h1>Sphinx</h1>
 					<ul class="list-group">
 						<li class="list-group-item list-group-item-{{systemcheck.sphinxconnection.status}}">
@@ -156,7 +182,7 @@ dbfile = </pre> and make sure it is readable for your webserver-user
 host = 127.0.0.1
 port = 9312</pre>
 						{% else %}
-							connected to sphinx on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong></strong>
+							connected to sphinx on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong>
 						{% endif %}
 						</li>
 						<li class="list-group-item list-group-item-warning">
@@ -167,8 +193,27 @@ port = 9312</pre>
 					
 					
 					<h1>Filesystem</h1>
-					<h6>TODO: writing in directores cache + peakfiles + embedded</h6>
-					<h6>TODO: check access for music directories and files</h6>
+						<ul class="list-group">
+						<li class="list-group-item list-group-item-{{systemcheck.filesystemmusicdir.status}}">
+							<h4 class="uc">Accessing MPD musicdir</h4>
+						{% if systemcheck.filesystemmusicdir.status == 'danger' %}
+							failed. make sure your webserver-user can access directory <strong>{{mpd.musicdir}}</strong>
+						{% else %}
+							success. <strong>{{mpd.musicdir}}</strong>
+						{% endif %}
+						</li>
+
+						{% for dir in ['cache', 'embedded', 'peakfiles'] %}
+							<li class="list-group-item list-group-item-{{systemcheck['filesystem'~dir].status}}">
+								<h4 class="uc">Write-access for directory {{dir}}</h4>
+							{% if systemcheck['filesystem'~dir].status == 'danger' %}
+								failed. make sure your webserver-user can access directory <strong>{{dir}}</strong>
+							{% else %}
+								success. <strong>{{dir}}</strong>
+							{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
 					
 					<h1>Environment</h1>
 					<h6>TODO: check if php-pdo is enabled</h6>
