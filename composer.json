@@ -27,7 +27,8 @@
         "othmar52/clean-rename": "master",
         "ajjahn/puppet-mpd": "master",
         "othmar52/xwax-1.5-osc": "master",
-        "rstacruz/nprogress": "master"
+        "rstacruz/nprogress": "master",
+	"mmp/mmp": "dev-master"
     },
     "repositories": [
         {
@@ -129,7 +130,11 @@
                     "reference": "origin/master"
                 }
             }
-        }
+        },
+        {
+		"type": "vcs",
+		"url": "https://github.com/idler/MMP"
+	}
     ],
     "config" : {
     	"component-dir": "vendor/components"

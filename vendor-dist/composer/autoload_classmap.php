@@ -6,8 +6,22 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AbstractController' => $vendorDir . '/mmp/mmp/lib/AbstractController.class.php',
+    'AbstractMigration' => $vendorDir . '/mmp/mmp/lib/AbstractMigration.class.php',
+    'AbstractSchema' => $vendorDir . '/mmp/mmp/lib/AbstractSchema.class.php',
+    'GetOpt' => $vendorDir . '/mmp/mmp/lib/GetOpt.class.php',
+    'Helper' => $vendorDir . '/mmp/mmp/lib/Helper.class.php',
+    'Output' => $vendorDir . '/mmp/mmp/lib/Output.class.php',
     'SphinxClient' => $vendorDir . '/neutron/sphinxsearch-api/sphinxapi.php',
+    'addController' => $vendorDir . '/mmp/mmp/lib/addController.class.php',
+    'createController' => $vendorDir . '/mmp/mmp/lib/createController.class.php',
+    'dbDiff' => $vendorDir . '/mmp/mmp/lib/dbDiff.class.php',
     'getID3' => $vendorDir . '/james-heinrich/getid3/getid3/getid3.php',
     'getid3_exception' => $vendorDir . '/james-heinrich/getid3/getid3/getid3.php',
     'getid3_handler' => $vendorDir . '/james-heinrich/getid3/getid3/getid3.php',
+    'helpController' => $vendorDir . '/mmp/mmp/lib/helpController.class.php',
+    'initController' => $vendorDir . '/mmp/mmp/lib/initController.class.php',
+    'listController' => $vendorDir . '/mmp/mmp/lib/listController.class.php',
+    'migrateController' => $vendorDir . '/mmp/mmp/lib/migrateController.class.php',
+    'schemaController' => $vendorDir . '/mmp/mmp/lib/schemaController.class.php',
 );

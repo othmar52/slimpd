@@ -1648,5 +1648,41 @@
             "streaming",
             "video"
         ]
+    },
+    {
+        "name": "mmp/mmp",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/idler/MMP.git",
+            "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/idler/MMP/zipball/6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+            "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "4.0.*",
+            "satooshi/php-coveralls": "1.0.0"
+        },
+        "time": "2016-05-17 16:52:54",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "lib/"
+            ]
+        },
+        "license": [
+            "GPL-3.0"
+        ],
+        "description": "Tool to versioning MySQL database schema with VCS",
+        "support": {
+            "source": "https://github.com/idler/MMP/tree/master",
+            "issues": "https://github.com/idler/MMP/issues"
+        }
     }
 ]
