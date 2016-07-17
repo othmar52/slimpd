@@ -476,7 +476,11 @@ abstract class AbstractModel {
 		$db = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName();
 		$result = $db->query($query);
-		return $db->query($query)->fetch_assoc()['itemCountTotal'];
+		if($result === FALSE) {
+			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
+			return 0;
+		}
+		return $result->fetch_assoc()['itemCountTotal'];
 	}
 	
 	public static function getRandomInstance() {

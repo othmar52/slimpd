@@ -1327,10 +1327,7 @@ $app->get('/systemcheck', function() use ($app, $vars){
 	// check MySql connection
 	if($app->request->get('dberror') !== NULL) {
 		$vars['systemcheck']['databaseconnection']['status'] = 'danger';
-		#die('error');
 	} else {
-		$db = \Slim\Slim::getInstance()->db;
-		$result = $db->query("SELECT * FROM track LIMIT 1");
 		$vars['systemcheck']['databaseconnection']['status'] = 'success';
 	}
 
@@ -1340,15 +1337,17 @@ $app->get('/systemcheck', function() use ($app, $vars){
 	if($vars['systemcheck']['databaseconnection']['status'] == 'danger') {
 		$vars['systemcheck']['databasecontent']['skipped'] = 1;
 		$vars['systemcheck']['databasecontent']['status'] = 'warning';
-		#die('sdghdhdh');
 	} else {
-		#die('ddd');
-		$vars['systemcheck']['databasecontent']['tracks'] = \Slimpd\Track::getCountAll();
-		$vars['systemcheck']['databasecontent']['albums'] = \Slimpd\Album::getCountAll();
-		$vars['systemcheck']['databasecontent']['artists'] = \Slimpd\Artist::getCountAll();
-		$vars['systemcheck']['databasecontent']['status'] = ($vars['systemcheck']['databasecontent']['tracks'] === 0)
-			? 'danger'
-			: 'success';
+		try {
+			$vars['systemcheck']['databasecontent']['tracks'] = \Slimpd\Track::getCountAll();
+			$vars['systemcheck']['databasecontent']['albums'] = \Slimpd\Album::getCountAll();
+			$vars['systemcheck']['databasecontent']['artists'] = \Slimpd\Artist::getCountAll();
+			$vars['systemcheck']['databasecontent']['status'] = ($vars['systemcheck']['databasecontent']['tracks'] === 0)
+				? 'danger'
+				: 'success';
+		} catch (\Exception $e) {
+			$vars['systemcheck']['databasecontent']['status'] = 'danger';
+		}
 	}
 
 	// check MPD connection

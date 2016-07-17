@@ -142,31 +142,67 @@ $app->get('/database-cleaner', function () use ($app) {
 });
 
 
-$app->get('/update-db-scheme', function () use ($app, $argv) {	
-	$mmpConfig = array(
-		'host' => $app->config['database']['dbhost'],
-		'user' => $app->config['database']['dbusername'],
-		'password' => $app->config['database']['dbpassword'],
-		'db' => $app->config['database']['dbdatabase'],
-		'savedir' => APP_ROOT . 'config/dbscheme',
-		'verbose' => 'On',
-		'versiontable' => 'db_revisions',
-		'aliastable' => 'db_alias',
-		'aliasprefix' => 'slimpd_v'
+$app->get('/update-db-scheme', function () use ($app, $argv) {
+	$action = 'migrate';
+
+	// check if we can query the revisions table
+	$query = "SELECT * FROM db_revisions";
+	$result = $app->db->query($query);
+	if($result === FALSE) {
+		// obviosly table(s) never have been created
+		// let's force initial creation of all tables
+		$action = 'init';
+	}
+
+	Helper::setConfig(
+		array(
+			'host' => $app->config['database']['dbhost'],
+			'user' => $app->config['database']['dbusername'],
+			'password' => $app->config['database']['dbpassword'],
+			'db' => $app->config['database']['dbdatabase'],
+			'savedir' => APP_ROOT . 'config/dbscheme',
+			'verbose' => 'On',
+			'versiontable' => 'db_revisions',
+			'aliastable' => 'db_alias',
+			'aliasprefix' => 'slimpd_v'
+		)
 	);
-	Helper::setConfig($mmpConfig);
+
 	if (!Helper::checkConfigEnough()) {
 	    Output::error('mmp: please check configuration');
 	    die(1);
 	}
-	#$controller = Helper::getController($cli_params['command']['name'], $cli_params['command']['args']);
-	$controller = Helper::getController("schema", NULL);
+
+	# after database-structure changes we have to
+	# 1) uncomment next line
+	# 2) run ./cli-update.php update-db-scheme
+	# 3) recomment this line again
+	# to make a new revision
+	#$action = 'migrate';
+
+	$controller = Helper::getController($action, NULL);
 	if ($controller !== false) {
 	    $controller->runStrategy();
 	} else {
 	    Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
 	    Helper::getController('help')->runStrategy();
 	    die(1);
+	}
+
+	if($action !== 'init') {
+		exit;
+	}
+
+	// insert some defaults
+	// TODO: read from localization-file
+	$queries = array(
+		"INSERT INTO `artist` VALUES ('1', 'Unknown Artist', '', 'unknownartist', 0,0);",
+		"INSERT INTO `artist` VALUES ('2', 'Various Artists', '', 'variousartists', 0,0);",
+		"INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown',0,0);",
+		"INSERT INTO `label` VALUES ('1', 'Unknown Label', 'unknownlabel',0,0);"
+	);
+	foreach($queries as $query) {
+		$app->db->query($query);
 	}
 });
 

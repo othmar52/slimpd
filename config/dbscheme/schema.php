@@ -40,7 +40,7 @@ class Schema extends AbstractSchema
       . "  KEY `isMixed` (`isMixed`),\r"
       . "  FULLTEXT KEY `relativePath` (`relativePath`),\r"
       . "  FULLTEXT KEY `title` (`title`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `albumindex`",
       "CREATE TABLE `albumindex` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -51,7 +51,7 @@ class Schema extends AbstractSchema
       . "  KEY `artist` (`artist`),\r"
       . "  KEY `title` (`title`),\r"
       . "  FULLTEXT KEY `allchunks` (`allchunks`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `artist`",
       "CREATE TABLE `artist` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -90,7 +90,7 @@ class Schema extends AbstractSchema
       . "  KEY `embedded` (`embedded`),\r"
       . "  KEY `error` (`error`),\r"
       . "  FULLTEXT KEY `relativePath` (`relativePath`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `db_alias`",
       "CREATE TABLE `db_alias` (\r"
       . "  `rev` bigint(20) unsigned NOT NULL,\r"
@@ -112,7 +112,7 @@ class Schema extends AbstractSchema
       . "  PRIMARY KEY (`id`),\r"
       . "  KEY `type` (`type`),\r"
       . "  KEY `extid` (`extid`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `editorial`",
       "CREATE TABLE `editorial` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -155,7 +155,7 @@ class Schema extends AbstractSchema
       . "  PRIMARY KEY (`id`),\r"
       . "  KEY `jobStart` (`jobStart`),\r"
       . "  KEY `jobEnd` (`jobEnd`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `label`",
       "CREATE TABLE `label` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -180,6 +180,18 @@ class Schema extends AbstractSchema
       . "  `fingerprint` varchar(32) NOT NULL DEFAULT '',\r"
       . "  PRIMARY KEY (`id`),\r"
       . "  KEY `prio` (`prio`)\r"
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
+      "DROP TABLE IF EXISTS `pollcache`",
+      "CREATE TABLE `pollcache` (\r"
+      . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
+      . "  `microtstamp` varchar(255) NOT NULL,\r"
+      . "  `type` varchar(11) NOT NULL,\r"
+      . "  `deckindex` tinyint(4) unsigned DEFAULT '0',\r"
+      . "  `success` tinyint(2) unsigned DEFAULT '0',\r"
+      . "  `ip` varchar(11) NOT NULL,\r"
+      . "  `port` tinyint(5) unsigned DEFAULT '0',\r"
+      . "  `response` mediumtext NOT NULL,\r"
+      . "  PRIMARY KEY (`id`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `random`",
       "CREATE TABLE `random` (\r"
@@ -256,7 +268,7 @@ class Schema extends AbstractSchema
       . "  KEY `directoryMtime` (`directoryMtime`),\r"
       . "  KEY `importStatus` (`importStatus`),\r"
       . "  FULLTEXT KEY `error` (`error`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `suggest`",
       "CREATE TABLE `suggest` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -264,7 +276,7 @@ class Schema extends AbstractSchema
       . "  `trigrams` varchar(11) NOT NULL,\r"
       . "  `freq` int(11) unsigned NOT NULL,\r"
       . "  PRIMARY KEY (`id`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `track`",
       "CREATE TABLE `track` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -328,7 +340,7 @@ class Schema extends AbstractSchema
       . "  KEY `error` (`error`),\r"
       . "  KEY `transcoded` (`transcoded`),\r"
       . "  FULLTEXT KEY `relativePath` (`relativePath`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `trackindex`",
       "CREATE TABLE `trackindex` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
@@ -339,9 +351,9 @@ class Schema extends AbstractSchema
       . "  KEY `artist` (`artist`),\r"
       . "  KEY `title` (`title`),\r"
       . "  FULLTEXT KEY `allchunks` (`allchunks`)\r"
-      . ") ENGINE=MyISAM  DEFAULT CHARSET=utf8",
-      "INSERT INTO `db_revisions` SET rev=1468746427",
-      "INSERT INTO `db_alias` SET rev=1468746427, alias='project_v1'",
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
+      "INSERT INTO `db_revisions` SET rev=1468749226",
+      "INSERT INTO `db_alias` SET rev=1468749226, alias='slimpd_v1'",
     );
   }
 }
