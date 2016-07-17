@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1e4dac018be0a5226d3e99ee3b947644",
-    "content-hash": "60d51f5e9002771f0a704aa62a9c8a79",
+    "hash": "7f619e6c3b8dd2318745fba13406d301",
+    "content-hash": "fb07fed67c51a1dd44c0d6ba207b6877",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -1042,6 +1042,40 @@
             "time": "2016-07-12 22:15:40"
         },
         {
+            "name": "mmp/mmp",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/idler/MMP.git",
+                "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/idler/MMP/zipball/6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+                "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.0.*",
+                "satooshi/php-coveralls": "1.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "lib/"
+                ]
+            },
+            "license": [
+                "GPL-3.0"
+            ],
+            "description": "Tool to versioning MySQL database schema with VCS",
+            "support": {
+                "source": "https://github.com/idler/MMP/tree/master",
+                "issues": "https://github.com/idler/MMP/issues"
+            },
+            "time": "2016-05-17 16:52:54"
+        },
+        {
             "name": "mouse0270/bootstrap-notify",
             "version": "master",
             "source": {
@@ -1596,7 +1630,8 @@
     "stability-flags": {
         "ricbra/php-discogs-api": 20,
         "lusitanian/oauth": 20,
-        "components/greensock-js": 20
+        "components/greensock-js": 20,
+        "mmp/mmp": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

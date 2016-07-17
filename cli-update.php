@@ -141,5 +141,35 @@ $app->get('/database-cleaner', function () use ($app) {
 	// TODO: delete orphaned artists + genres + labels
 });
 
+
+$app->get('/update-db-scheme', function () use ($app, $argv) {	
+	$mmpConfig = array(
+		'host' => $app->config['database']['dbhost'],
+		'user' => $app->config['database']['dbusername'],
+		'password' => $app->config['database']['dbpassword'],
+		'db' => $app->config['database']['dbdatabase'],
+		'savedir' => APP_ROOT . 'config/dbscheme',
+		'verbose' => 'On',
+		'versiontable' => 'db_revisions',
+		'aliastable' => 'db_alias',
+		'aliasprefix' => 'slimpd_v'
+	);
+	Helper::setConfig($mmpConfig);
+	if (!Helper::checkConfigEnough()) {
+	    Output::error('mmp: please check configuration');
+	    die(1);
+	}
+	#$controller = Helper::getController($cli_params['command']['name'], $cli_params['command']['args']);
+	$controller = Helper::getController("schema", NULL);
+	if ($controller !== false) {
+	    $controller->runStrategy();
+	} else {
+	    Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+	    Helper::getController('help')->runStrategy();
+	    die(1);
+	}
+});
+
+
 // run!
 $app->run();

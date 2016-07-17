@@ -129,10 +129,24 @@ class ComposerStaticInitc8a73f6e1b8f727edc300460e8276add
     );
 
     public static $classMap = array (
+        'AbstractController' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractController.class.php',
+        'AbstractMigration' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractMigration.class.php',
+        'AbstractSchema' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractSchema.class.php',
+        'GetOpt' => __DIR__ . '/..' . '/mmp/mmp/lib/GetOpt.class.php',
+        'Helper' => __DIR__ . '/..' . '/mmp/mmp/lib/Helper.class.php',
+        'Output' => __DIR__ . '/..' . '/mmp/mmp/lib/Output.class.php',
         'SphinxClient' => __DIR__ . '/..' . '/neutron/sphinxsearch-api/sphinxapi.php',
+        'addController' => __DIR__ . '/..' . '/mmp/mmp/lib/addController.class.php',
+        'createController' => __DIR__ . '/..' . '/mmp/mmp/lib/createController.class.php',
+        'dbDiff' => __DIR__ . '/..' . '/mmp/mmp/lib/dbDiff.class.php',
         'getID3' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/getid3.php',
         'getid3_exception' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/getid3.php',
         'getid3_handler' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/getid3.php',
+        'helpController' => __DIR__ . '/..' . '/mmp/mmp/lib/helpController.class.php',
+        'initController' => __DIR__ . '/..' . '/mmp/mmp/lib/initController.class.php',
+        'listController' => __DIR__ . '/..' . '/mmp/mmp/lib/listController.class.php',
+        'migrateController' => __DIR__ . '/..' . '/mmp/mmp/lib/migrateController.class.php',
+        'schemaController' => __DIR__ . '/..' . '/mmp/mmp/lib/schemaController.class.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
