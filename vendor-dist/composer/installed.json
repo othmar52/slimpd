@@ -25,28 +25,72 @@
         "homepage": "http://www.google.com/fonts/specimen/Open+Sans"
     },
     {
+        "name": "components/jquery",
+        "version": "2.2.x-dev",
+        "version_normalized": "2.2.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/components/jquery.git",
+            "reference": "981036fcb56668433a7eb0d1e71190324b4574df"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/components/jquery/zipball/981036fcb56668433a7eb0d1e71190324b4574df",
+            "reference": "981036fcb56668433a7eb0d1e71190324b4574df",
+            "shasum": ""
+        },
+        "time": "2016-05-25 06:43:59",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "jquery.js"
+                ],
+                "files": [
+                    "jquery.min.js",
+                    "jquery.min.map",
+                    "jquery-migrate.js",
+                    "jquery-migrate.min.js"
+                ]
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "John Resig",
+                "email": "jeresig@gmail.com"
+            }
+        ],
+        "description": "jQuery JavaScript Library",
+        "homepage": "http://jquery.com"
+    },
+    {
         "name": "symfony/process",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/process.git",
-            "reference": "1574f3451b40fa9bbae518ef71d19a56f409cac0"
+            "reference": "cdb8db3590748b544e673f8879269afa3c65460a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/1574f3451b40fa9bbae518ef71d19a56f409cac0",
-            "reference": "1574f3451b40fa9bbae518ef71d19a56f409cac0",
+            "url": "https://api.github.com/repos/symfony/process/zipball/cdb8db3590748b544e673f8879269afa3c65460a",
+            "reference": "cdb8db3590748b544e673f8879269afa3c65460a",
             "shasum": ""
         },
         "require": {
             "php": ">=5.5.9"
         },
-        "time": "2016-04-12 19:11:33",
+        "time": "2016-06-29 05:43:10",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "3.1-dev"
+                "dev-master": "3.2-dev"
             }
         },
         "installation-source": "source",
@@ -408,6 +452,117 @@
         "installation-source": "source"
     },
     {
+        "name": "othmar52/clean-rename",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:othmar52/clean-rename.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "ajjahn/puppet-mpd",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:ajjahn/puppet-mpd.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "othmar52/xwax-1.5-osc",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:othmar52/xwax-1.5-osc.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "rstacruz/nprogress",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:rstacruz/nprogress.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "twig/twig",
+        "version": "1.x-dev",
+        "version_normalized": "1.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/c535bc0b56aa93ead7a75b6841f28645153b0539",
+            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "require-dev": {
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~2.7"
+        },
+        "time": "2016-07-10 07:48:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.24-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
+    },
+    {
         "name": "slim/slim",
         "version": "2.x-dev",
         "version_normalized": "2.9999999.9999999.9999999-dev",
@@ -511,6 +666,44 @@
         ]
     },
     {
+        "name": "james-heinrich/getid3",
+        "version": "v1.9.12",
+        "version_normalized": "1.9.12.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JamesHeinrich/getID3.git",
+            "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/41c05612d532d30f07680cad3a4a6efbec7fc7f5",
+            "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-03-02 13:13:30",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "getid3/getid3.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "description": "PHP script that extracts useful information from popular multimedia file formats",
+        "homepage": "http://www.getid3.org/",
+        "keywords": [
+            "codecs",
+            "php",
+            "tags"
+        ]
+    },
+    {
         "name": "james-heinrich/phpthumb",
         "version": "v1.7.13",
         "version_normalized": "1.7.13.0",
@@ -570,18 +763,18 @@
         "source": {
             "type": "git",
             "url": "https://github.com/twbs/bootstrap.git",
-            "reference": "795d2208b882e194e6059a1639e056e020d64072"
+            "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/795d2208b882e194e6059a1639e056e020d64072",
-            "reference": "795d2208b882e194e6059a1639e056e020d64072",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6ae5378202643804b383e1ee1005466e2bc8aa87",
+            "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87",
             "shasum": ""
         },
         "replace": {
             "twitter/bootstrap": "self.version"
         },
-        "time": "2016-04-15 19:11:23",
+        "time": "2016-07-17 07:01:59",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -617,24 +810,74 @@
         ]
     },
     {
-        "name": "components/jqueryui",
-        "version": "1.11.4",
-        "version_normalized": "1.11.4.0",
+        "name": "robloach/component-installer",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/components/jqueryui.git",
-            "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1"
+            "url": "https://github.com/RobLoach/component-installer.git",
+            "reference": "59f93ece022f1b5c3576de139964975561af980a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/components/jqueryui/zipball/c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
-            "reference": "c34f8dbf3ba57b3784b93f26119f436c0e8288e1",
+            "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/59f93ece022f1b5c3576de139964975561af980a",
+            "reference": "59f93ece022f1b5c3576de139964975561af980a",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "kriswallsmith/assetic": "1.*",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "composer/composer": "~1.1.2",
+            "phpunit/phpunit": "~5.4.6"
+        },
+        "time": "2016-07-16 01:43:54",
+        "type": "composer-plugin",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            },
+            "class": "ComponentInstaller\\ComponentInstallerPlugin"
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "ComponentInstaller": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rob Loach",
+                "homepage": "http://robloach.net"
+            }
+        ],
+        "description": "Allows installation of Components via Composer."
+    },
+    {
+        "name": "components/jqueryui",
+        "version": "1.12.0",
+        "version_normalized": "1.12.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/components/jqueryui.git",
+            "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/components/jqueryui/zipball/99c8c1a282ab15093cd7391aa22fe39727cbb803",
+            "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803",
             "shasum": ""
         },
         "require": {
             "components/jquery": ">=1.6"
         },
-        "time": "2015-03-13 14:48:12",
+        "time": "2016-07-13 07:19:15",
         "type": "component",
         "extra": {
             "component": {
@@ -702,6 +945,43 @@
             }
         ],
         "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice."
+    },
+    {
+        "name": "components/font-awesome",
+        "version": "4.6.3",
+        "version_normalized": "4.6.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/components/font-awesome.git",
+            "reference": "daa3ef598620217085dcb13ad11149e89a20a925"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/components/font-awesome/zipball/daa3ef598620217085dcb13ad11149e89a20a925",
+            "reference": "daa3ef598620217085dcb13ad11149e89a20a925",
+            "shasum": ""
+        },
+        "time": "2016-05-18 10:46:59",
+        "type": "component",
+        "extra": {
+            "component": {
+                "styles": [
+                    "css/font-awesome.css"
+                ],
+                "files": [
+                    "css/font-awesome.min.css",
+                    "css/font-awesome.css.map",
+                    "fonts/*"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT",
+            "OFL-1.1"
+        ],
+        "description": "The iconic font designed for use with Twitter Bootstrap."
     },
     {
         "name": "neutron/sphinxsearch-api",
@@ -795,307 +1075,24 @@
         ]
     },
     {
-        "name": "lusitanian/oauth",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-            "reference": "29bda6e176df6c292a9b1c43ae8a44d56a87c30b"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/29bda6e176df6c292a9b1c43ae8a44d56a87c30b",
-            "reference": "29bda6e176df6c292a9b1c43ae8a44d56a87c30b",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*",
-            "predis/predis": "0.8.*@dev",
-            "squizlabs/php_codesniffer": "2.*",
-            "symfony/http-foundation": "~2.1"
-        },
-        "suggest": {
-            "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client.",
-            "predis/predis": "Allows using the Redis storage backend.",
-            "symfony/http-foundation": "Allows using the Symfony Session storage backend."
-        },
-        "time": "2016-02-24 00:20:18",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "OAuth": "src",
-                "OAuth\\Unit": "tests"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "David Desberg",
-                "email": "david@daviddesberg.com"
-            },
-            {
-                "name": "Elliot Chance",
-                "email": "elliotchance@gmail.com"
-            },
-            {
-                "name": "Pieter Hordijk",
-                "email": "info@pieterhordijk.com"
-            }
-        ],
-        "description": "PHP 5.3+ oAuth 1/2 Library",
-        "keywords": [
-            "Authentication",
-            "authorization",
-            "oauth",
-            "security"
-        ]
-    },
-    {
-        "name": "nicolasbize/faviconx",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nicolasbize/faviconx.git",
-            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
-            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
-            "shasum": ""
-        },
-        "time": "2014-10-16 18:24:29",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "faviconx.js"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
-        "homepage": "http://nicolasbize.com/faviconx",
-        "support": {
-            "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
-            "issues": "https://github.com/nicolasbize/faviconx/issues"
-        }
-    },
-    {
-        "name": "happyworm/jplayer",
-        "version": "2.9.x-dev",
-        "version_normalized": "2.9.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/happyworm/jPlayer.git",
-            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/happyworm/jPlayer/zipball/4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
-            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
-            "shasum": ""
-        },
-        "require": {
-            "robloach/component-installer": "*"
-        },
-        "suggest": {
-            "components/jquery": ">=1.7.2"
-        },
-        "time": "2014-12-15 01:02:19",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "dist/jplayer/jquery.jplayer.js"
-                ],
-                "files": [
-                    "dist"
-                ],
-                "shim": {
-                    "deps": [
-                        "jquery"
-                    ]
-                }
-            }
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark J Panaghiston",
-                "email": "markp@happyworm.com"
-            }
-        ],
-        "description": "jPlayer allows you to create a media player with a consistent interface and experience across all browsers.",
-        "homepage": "http://jplayer.org/",
-        "keywords": [
-            "HTML5",
-            "audio",
-            "jplayer",
-            "media",
-            "player",
-            "streaming",
-            "video"
-        ]
-    },
-    {
-        "name": "othmar52/clean-rename",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:othmar52/clean-rename.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "ajjahn/puppet-mpd",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:ajjahn/puppet-mpd.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "othmar52/xwax-1.5-osc",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:othmar52/xwax-1.5-osc.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "james-heinrich/getid3",
-        "version": "v1.9.12",
-        "version_normalized": "1.9.12.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JamesHeinrich/getID3.git",
-            "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/41c05612d532d30f07680cad3a4a6efbec7fc7f5",
-            "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-03-02 13:13:30",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "getid3/getid3.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL"
-        ],
-        "description": "PHP script that extracts useful information from popular multimedia file formats",
-        "homepage": "http://www.getid3.org/",
-        "keywords": [
-            "codecs",
-            "php",
-            "tags"
-        ]
-    },
-    {
-        "name": "components/jquery",
-        "version": "2.2.1",
-        "version_normalized": "2.2.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/components/jquery.git",
-            "reference": "7894addbce3c4de6f82449610e6f8e168b49e9b0"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/components/jquery/zipball/7894addbce3c4de6f82449610e6f8e168b49e9b0",
-            "reference": "7894addbce3c4de6f82449610e6f8e168b49e9b0",
-            "shasum": ""
-        },
-        "time": "2016-02-24 08:16:25",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "jquery.js"
-                ],
-                "files": [
-                    "jquery.min.js",
-                    "jquery.min.map",
-                    "jquery-migrate.js",
-                    "jquery-migrate.min.js"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "John Resig",
-                "email": "jeresig@gmail.com"
-            }
-        ],
-        "description": "jQuery JavaScript Library",
-        "homepage": "http://jquery.com"
-    },
-    {
         "name": "react/promise",
-        "version": "v2.4.0",
-        "version_normalized": "2.4.0.0",
+        "version": "v2.4.1",
+        "version_normalized": "2.4.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/reactphp/promise.git",
-            "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9"
+            "reference": "8025426794f1944de806618671d4fa476dc7626f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/reactphp/promise/zipball/f942da7b505d1a294284ab343d05df42d02ad6d9",
-            "reference": "f942da7b505d1a294284ab343d05df42d02ad6d9",
+            "url": "https://api.github.com/repos/reactphp/promise/zipball/8025426794f1944de806618671d4fa476dc7626f",
+            "reference": "8025426794f1944de806618671d4fa476dc7626f",
             "shasum": ""
         },
         "require": {
             "php": ">=5.4.0"
         },
-        "time": "2016-03-31 13:10:33",
+        "time": "2016-05-03 17:50:52",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1488,41 +1485,46 @@
         ]
     },
     {
-        "name": "robloach/component-installer",
+        "name": "lusitanian/oauth",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/RobLoach/component-installer.git",
-            "reference": "0912e09cb1b79de1ebb76becbeb37c3b70937b52"
+            "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
+            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/0912e09cb1b79de1ebb76becbeb37c3b70937b52",
-            "reference": "0912e09cb1b79de1ebb76becbeb37c3b70937b52",
+            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/09f4af38f17db6938253f4d1b171d537913ac1ed",
+            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed",
             "shasum": ""
         },
         "require": {
-            "composer-plugin-api": "^1.0",
-            "kriswallsmith/assetic": "1.*",
-            "php": ">=5.3.2"
+            "php": ">=5.3.0"
         },
         "require-dev": {
-            "composer/composer": "1.*@alpha",
-            "phpunit/phpunit": "4.*"
+            "phpunit/phpunit": "3.7.*",
+            "predis/predis": "0.8.*@dev",
+            "squizlabs/php_codesniffer": "2.*",
+            "symfony/http-foundation": "~2.1"
         },
-        "time": "2016-04-18 13:37:04",
-        "type": "composer-plugin",
+        "suggest": {
+            "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client.",
+            "predis/predis": "Allows using the Redis storage backend.",
+            "symfony/http-foundation": "Allows using the Symfony Session storage backend."
+        },
+        "time": "2016-07-12 22:15:40",
+        "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            },
-            "class": "ComponentInstaller\\ComponentInstallerPlugin"
+                "dev-master": "0.1-dev"
+            }
         },
         "installation-source": "source",
         "autoload": {
             "psr-0": {
-                "ComponentInstaller": "src/"
+                "OAuth": "src",
+                "OAuth\\Unit": "tests"
             }
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -1531,122 +1533,120 @@
         ],
         "authors": [
             {
-                "name": "Rob Loach",
-                "homepage": "http://robloach.net"
-            }
-        ],
-        "description": "Allows installation of Components via Composer."
-    },
-    {
-        "name": "rstacruz/nprogress",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:rstacruz/nprogress.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "twig/twig",
-        "version": "1.x-dev",
-        "version_normalized": "1.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
-            "reference": "f167cc0a65ab0a2a53558c9385b4a324c1a36b02",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "require-dev": {
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
-        },
-        "time": "2016-04-01 06:54:57",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.24-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
+                "name": "David Desberg",
+                "email": "david@daviddesberg.com"
             },
             {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
+                "name": "Elliot Chance",
+                "email": "elliotchance@gmail.com"
             },
             {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
+                "name": "Pieter Hordijk",
+                "email": "info@pieterhordijk.com"
             }
         ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
+        "description": "PHP 5.3+ oAuth 1/2 Library",
         "keywords": [
-            "templating"
+            "Authentication",
+            "authorization",
+            "oauth",
+            "security"
         ]
     },
     {
-        "name": "components/font-awesome",
-        "version": "4.6.1",
-        "version_normalized": "4.6.1.0",
+        "name": "nicolasbize/faviconx",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/components/font-awesome.git",
-            "reference": "41891b80da2ee0a328c93d465bd3699edec2ca6c"
+            "url": "https://github.com/nicolasbize/faviconx.git",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/components/font-awesome/zipball/41891b80da2ee0a328c93d465bd3699edec2ca6c",
-            "reference": "41891b80da2ee0a328c93d465bd3699edec2ca6c",
+            "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
             "shasum": ""
         },
-        "time": "2016-04-27 11:34:50",
+        "time": "2014-10-16 18:24:29",
         "type": "component",
         "extra": {
             "component": {
-                "styles": [
-                    "css/font-awesome.css"
-                ],
-                "files": [
-                    "css/font-awesome.min.css",
-                    "css/font-awesome.css.map",
-                    "fonts/*"
+                "scripts": [
+                    "faviconx.js"
                 ]
             }
         },
         "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
+        "homepage": "http://nicolasbize.com/faviconx",
+        "support": {
+            "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
+            "issues": "https://github.com/nicolasbize/faviconx/issues"
+        }
+    },
+    {
+        "name": "happyworm/jplayer",
+        "version": "2.9.x-dev",
+        "version_normalized": "2.9.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/happyworm/jPlayer.git",
+            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/happyworm/jPlayer/zipball/4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
+            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
+            "shasum": ""
+        },
+        "require": {
+            "robloach/component-installer": "*"
+        },
+        "suggest": {
+            "components/jquery": ">=1.7.2"
+        },
+        "time": "2014-12-15 01:02:19",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "dist/jplayer/jquery.jplayer.js"
+                ],
+                "files": [
+                    "dist"
+                ],
+                "shim": {
+                    "deps": [
+                        "jquery"
+                    ]
+                }
+            }
+        },
+        "installation-source": "source",
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "MIT",
-            "OFL-1.1"
+            "MIT"
         ],
-        "description": "The iconic font designed for use with Twitter Bootstrap."
+        "authors": [
+            {
+                "name": "Mark J Panaghiston",
+                "email": "markp@happyworm.com"
+            }
+        ],
+        "description": "jPlayer allows you to create a media player with a consistent interface and experience across all browsers.",
+        "homepage": "http://jplayer.org/",
+        "keywords": [
+            "HTML5",
+            "audio",
+            "jplayer",
+            "media",
+            "player",
+            "streaming",
+            "video"
+        ]
     }
 ]
