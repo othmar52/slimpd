@@ -1349,6 +1349,20 @@ $app->get('/systemcheck', function() use ($app, $vars){
 		'sxConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 		// TODO: how to check if indexed schema is correct?
 		//'sxSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		
+		// fingerprints and waveforms
+		'fpMp3'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
+			'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/testfile.mp3',
+			'cmd' => '',
+			'resultExpected' => '3b8ad4119fa46a6b56c51aa35d78c15d',
+			'resultReal' => FALSE,
+		),
+		'wfMp3'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
+			'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/testfile.mp3',
+			'cmd' => '',
+			'resultExpected' => '',
+			'resultReal' => FALSE,
+		),
 	);
 
 
@@ -1476,7 +1490,45 @@ $app->get('/systemcheck', function() use ($app, $vars){
 	} catch (\Exception $e) {
 		$check['sxConn']['status'] = 'danger';
 	}
+	
+	// check if can extract a fingerprint of mp3 file
+	if($check['fpMp3']['skip'] === FALSE) {
+		$check['fpMp3']['cmd'] = \Slimpd\Importer::extractAudioFingerprint($check['fpMp3']['filepath'], TRUE);
+		exec($check['fpMp3']['cmd'], $response);
+		$check['fpMp3']['resultReal'] = trim(join("\n", $response));
+		unset($response);
+		if($check['fpMp3']['resultExpected'] === $check['fpMp3']['resultReal']) {
+			$check['fpMp3']['status'] = 'success';
+			$check['wfMp3']['skip'] = FALSE;
+		} else {
+			$check['fpMp3']['status'] = 'danger';
+		}
+	}
 
+	if($check['wfMp3']['skip'] === FALSE) {
+
+		// make sure we retrieve nothing cached
+		@unlink(APP_ROOT . 'peakfiles/mp3/3b8/3b8ad4119fa46a6b56c51aa35d78c15d');
+		@unlink(APP_ROOT . "cache/mp3." . $check['fpMp3']['resultExpected'] . '.mp3');
+		@unlink(APP_ROOT . "cache/mp3." . $check['fpMp3']['resultExpected'] . '.wav');
+		
+		$svgGenerator = new \Slimpd\Svggenerator([$check['wfMp3']['filepath']]);
+		$check['wfMp3']['cmd'] = $svgGenerator->getCmdTempwav();
+		exec($check['wfMp3']['cmd'], $response, $returnStatus);
+		$check['wfMp3']['resultReal'] = trim(join("\n", $response)); 
+		if($returnStatus === 0) {
+			$check['wfMp3']['status'] = 'success';
+		} else {
+			$check['wfMp3']['status'] = 'danger';
+		}
+		
+		if(is_file(APP_ROOT . "cache/mp3." . $check['fpMp3']['resultExpected'] . '.mp3') === FALSE) {
+			$check['wfMp3']['status'] = 'danger';
+		}
+		if(is_file(APP_ROOT . "cache/mp3." . $check['fpMp3']['resultExpected'] . '.wav') === FALSE) {
+			$check['wfMp3']['status'] = 'danger';
+		}
+	}
 
 
 	$vars['sys'] = $check;
