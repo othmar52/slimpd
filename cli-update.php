@@ -145,6 +145,8 @@ $app->get('/database-cleaner', function () use ($app) {
 $app->get('/update-db-scheme', function () use ($app, $argv) {
 	$action = 'migrate';
 
+	// TODO: manually performed db-changes does not get recognized here - find a solution!
+
 	// check if we can query the revisions table
 	$query = "SELECT * FROM db_revisions";
 	$result = $app->db->query($query);
@@ -154,20 +156,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 		$action = 'init';
 	}
 
-	Helper::setConfig(
-		array(
-			'host' => $app->config['database']['dbhost'],
-			'user' => $app->config['database']['dbusername'],
-			'password' => $app->config['database']['dbpassword'],
-			'db' => $app->config['database']['dbdatabase'],
-			'savedir' => APP_ROOT . 'config/dbscheme',
-			'verbose' => 'On',
-			'versiontable' => 'db_revisions',
-			'aliastable' => 'db_alias',
-			'aliasprefix' => 'slimpd_v'
-		)
-	);
-
+	Helper::setConfig( getDatabaseDiffConf($app) );
 	if (!Helper::checkConfigEnough()) {
 	    Output::error('mmp: please check configuration');
 	    die(1);
@@ -178,7 +167,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 	# 2) run ./cli-update.php update-db-scheme
 	# 3) recomment this line again
 	# to make a new revision
-	#$action = 'migrate';
+	#$action = 'create';
 
 	$controller = Helper::getController($action, NULL);
 	if ($controller !== false) {

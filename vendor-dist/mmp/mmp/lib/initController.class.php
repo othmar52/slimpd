@@ -29,6 +29,10 @@ class initController extends AbstractController
 '
             ) {
                 echo 'Can I rewrite tables in database (all data will be lost) [y/n]? ';
+				/////////////////////////////////////////////////////
+				// @see https://github.com/idler/MMP/pull/28
+				ob_flush();
+				/////////////////////////////////////////////////////
             }
             $c = fread(STDIN, 1);
             if ($c === 'Y' or $c === 'y') {

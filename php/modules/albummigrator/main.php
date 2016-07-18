@@ -236,7 +236,7 @@ class AlbumMigrator {
 	}
 
 	private function updateTrackIndex($trackId, $idx) {
-		$indexChunks = "";
+		$indexChunks = $this->tracks[$idx]['relativePath'] . " ";
 		
 		if(isset($this->r[$idx]) === TRUE) {
 			foreach($this->r[$idx] as $attrType => $scoreCombo) {
@@ -250,7 +250,6 @@ class AlbumMigrator {
 		}
 		$indexChunks .= join(" ", $this->mostScored[$idx]) . " ";
 		$indexChunks .= join(" ", $this->mostScored['album']) . " ";
-		$indexChunks .= $this->tracks[$idx]['relativePath'] . " ";
 		$indexChunks .= str_replace(
 			array('/', '_', '-', '.'),
 			' ',
@@ -268,14 +267,13 @@ class AlbumMigrator {
 
 
 	private function updateAlbumIndex($albumId) {
-		$indexChunks = "";
+		$indexChunks = $this->tracks[0]['relativeDirectoryPath'] . " ";
 		if(isset($this->r['album']) === TRUE) {
 			foreach($this->r['album'] as $attrType => $scoreCombo) {
 				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
 			}
 		}
 		$indexChunks .= join(" ", $this->mostScored['album']) . " ";
-		$indexChunks .= $this->tracks[0]['relativeDirectoryPath'] . " ";
 		$indexChunks .= str_replace(
 			array('/', '_', '-', '.'),
 			' ',

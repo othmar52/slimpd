@@ -273,7 +273,7 @@ class Schema extends AbstractSchema
       "CREATE TABLE `suggest` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
       . "  `keyword` varchar(255) NOT NULL,\r"
-      . "  `trigrams` varchar(11) NOT NULL,\r"
+      . "  `trigrams` varchar(255) NOT NULL,\r"
       . "  `freq` int(11) unsigned NOT NULL,\r"
       . "  PRIMARY KEY (`id`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
