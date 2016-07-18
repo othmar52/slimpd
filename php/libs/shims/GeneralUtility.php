@@ -348,6 +348,20 @@ function path2url($mixed) {
 	return str_replace('%2F', '/', rawurlencode($mixed));
 }
 
+function getDatabaseDiffConf($app) {
+	return array(
+		'host' => $app->config['database']['dbhost'],
+		'user' => $app->config['database']['dbusername'],
+		'password' => $app->config['database']['dbpassword'],
+		'db' => $app->config['database']['dbdatabase'],
+		'savedir' => APP_ROOT . 'config/dbscheme',
+		'verbose' => 'On',
+		'versiontable' => 'db_revisions',
+		'aliastable' => 'db_alias',
+		'aliasprefix' => 'slimpd_v'
+	);
+}
+
 function formatByteSize($bytes) {
     if ($bytes >= 1073741824) {
         return number_format($bytes / 1073741824, 2) . ' GB';

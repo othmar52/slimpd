@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>sliMpd - SYSTEMCHECK</title>
+		<title>sliMpd - {{'syscheck'|ll}}</title>
 		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,24 +33,17 @@
 		{% for cssfile in cssfiles %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{root}}{{cssfile}}" />
 		{% endfor %}		
-		{# add dynamic css for now-playing status #}
-		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{root}}css/localplayer/0" />
-		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{root}}css/mpdplayer/0" />
-		{# TODO: find a better way to highlight deck-tracks for any amount of decks #}
-		{% for deck in [0,1,2,3] %}
-		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{root}}css/xwaxplayer/0" />
-		{% endfor %}
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
 			<nav class="navbar main-nav navbar-fixed-top" style="background-color: #353535">
 				<div class="container-fluid">
 					<div class="navbar-header">
-						<a id="logo" class="navbar-brand col2" href="/systemcheck">{{config.logomarkup|raw}}</a>
+						<a id="logo" class="navbar-brand col2" href="{{root}}">{{config.logomarkup|raw}}</a>
 					</div>
 				    <ul class="nav navbar-nav">
 						<li class="">
-							<a href="/systemcheck" class="btn btn-default active">run systemcheck again</a>
+							<a href="/systemcheck" class="btn btn-default active">{{'syscheck.recheck'|ll}}</a>
 						</li>
 					</ul>
 				</div>
@@ -61,159 +54,77 @@
 
 				<div class="main-content">
 
-
-					<h1>Database</h1>
+					<h1>{{'syscheck.fs'|ll}}</h1>
 					<ul class="list-group">
-						<li class="list-group-item list-group-item-{{systemcheck.databaseconnection.status}}">
-							<h4 class="uc">Connection</h4>
-						{% if systemcheck.databaseconnection.status == 'danger' %}
-							unable to connect to database
-							<strong>{{database.dbdatabase}}</strong>
-							on host <strong>{{database.dbhost}}</strong><br />
-							please check config/config_local.ini
-							<pre>[database]
-dbhost = 127.0.0.1
-dbusername = xxx
-dbpassword = xxx
-dbdatabase = xxx</pre>
-						{% else %}
-							connected to database <strong>{{database.dbdatabase}}</strong>
-							on host <strong>{{database.dbhost}}</strong>
-						{% endif %}
-						</li>
-
-						<li class="list-group-item list-group-item-{{systemcheck.databasecontent.status}}">
-							<h4 class="uc">Content</h4>
-						{% if systemcheck.databasecontent.skipped == 1 %}
-							test skipped because databaseconnection failed
-						{% else %}
-						
-							{% if systemcheck.databasecontent.status == 'danger' %}
-								your database is empty<br/>
-								please run
-								<pre>cli-update.php standard</pre>
+						{% for test in ['fsMusicdirconf', 'fsMusicdirslash', 'fsMusicdir', 'fsCache', 'fsEmbedded', 'fsPeakfiles'] %}
+						{% if not sys[test].hide %}
+						<li class="list-group-item list-group-item-{{sys[test].status}}">
+							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							{% if sys[test].skip %}
+								{% include 'partials/systemcheck/fs/'~test~'-skipped.htm' %}
 							{% else %}
-								<strong>Items in database:</strong><br/>
-								{{systemcheck.databasecontent.tracks}} tracks<br/>
-								{{systemcheck.databasecontent.albums}} albums<br/>
-								{{systemcheck.databasecontent.artists}} artists
+								{% include 'partials/systemcheck/fs/'~test~'-'~sys[test].status~'.htm' %}
 							{% endif %}
-						{% endif %}
 						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+					
+					<h1>{{'syscheck.db'|ll}}</h1>
+					<ul class="list-group">
+						{% for test in ['dbConn', 'dbPerms', 'dbSchema', 'dbContent'] %}
+						{% if not sys[test].hide %}
+						<li class="list-group-item list-group-item-{{sys[test].status}}">
+							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							{% if sys[test].skip %}
+								{% include 'partials/systemcheck/db/'~test~'-skipped.htm' %}
+							{% else %}
+								{% include 'partials/systemcheck/db/'~test~'-'~sys[test].status~'.htm' %}
+							{% endif %}
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+					
+					<h1>{{'syscheck.mpd'|ll}}</h1>
+					<ul class="list-group">
+						{% for test in ['mpdConn', 'mpdDbfileconf', 'mpdDbfile'] %}
+						{% if not sys[test].hide %}
+						<li class="list-group-item list-group-item-{{sys[test].status}}">
+							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							{% if sys[test].skip %}
+								{% include 'partials/systemcheck/mpd/'~test~'-skipped.htm' %}
+							{% else %}
+								{% include 'partials/systemcheck/mpd/'~test~'-'~sys[test].status~'.htm' %}
+							{% endif %}
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+					
+					
+					<h1>{{'syscheck.sx'|ll}}</h1>
+					<ul class="list-group">
+						{% for test in ['sxConn'] %}
+						{% if not sys[test].hide %}
+						<li class="list-group-item list-group-item-{{sys[test].status}}">
+							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							{% if sys[test].skip %}
+								{% include 'partials/systemcheck/sx/'~test~'-skipped.htm' %}
+							{% else %}
+								{% include 'partials/systemcheck/sx/'~test~'-'~sys[test].status~'.htm' %}
+							{% endif %}
+						</li>
+						{% endif %}
+						{% endfor %}
 						<li class="list-group-item list-group-item-warning">
-							<h6 class="">TODO: check if database-scheme is correct</h6>
-						</li>
-					</ul>
-					
-					
-					
-					
-					
-					<h1>MPD</h1>
-					<ul class="list-group">
-						<li class="list-group-item list-group-item-{{systemcheck.mpdconnection.status}}">
-							<h4 class="uc">Connection</h4>
-						{% if systemcheck.mpdconnection.status == 'danger' %}
-							unable to connect to mpd
-							<strong>{{mpd.dbdatabase}}</strong>
-							on host <strong>{{mpd.host}}</strong> on port <strong>{{mpd.port}}</strong><br />
-							please check config/config_local.ini
-							<pre>[mpd]
-host = 127.0.0.1
-port = 6600
-username = 
-password =</pre>
-						{% else %}
-							connected to mpd on host <strong>{{mpd.host}}</strong> on port <strong>{{mpd.port}}</strong></strong>
-						{% endif %}
-						</li>
-
-						<li class="list-group-item list-group-item-{{systemcheck.mpddbfile.status}}">
-							<h4 class="uc">Readaccess to databasefile</h4>
-						{% if systemcheck.mpddbfile.status == 'danger' %}
-							mpd's databasefile <strong>{{mpd.dbfile}}</strong> is not readable<br/>
-							please check config/config_local.ini
-							<pre>[mpd]
-dbfile = </pre> and make sure it is readable for your webserver-user
-						{% else %}
-							mpd's databasefile <strong>{{mpd.dbfile}}</strong> is readable
-						{% endif %}
-						</li>
-						
-						<li class="list-group-item list-group-item-{{systemcheck.mpdmusicdirempty.status}}">
-							<h4 class="uc">Configuration of MPD music directory</h4>
-						{% if systemcheck.mpdmusicdirempty.status == 'danger' %}
-							configuration of mpd's musicdir is empty<br/>
-							please check config/config_local.ini
-							<pre>[mpd]
-musicdir = </pre> and don't forget to add a trailing slash
-						{% else %}
-							configuration of [mpd]musicdir is not empty
-						{% endif %}
-						</li>
-
-						<li class="list-group-item list-group-item-{{systemcheck.mpdmusicdirslash.status}}">
-							<h4 class="uc">Trailing slash of MPD music directory</h4>
-							{% if systemcheck.mpdmusicdirempty.status == 'danger' %}
-								test skipped because of missing configuration
-							{% else %}
-								{% if systemcheck.mpdmusicdirslash.status == 'danger' %}
-									configuration of mpd's musicdir needs a trailing slash<br/>
-									please check config/config_local.ini
-									<pre>[mpd]
-		musicdir = {{mpd.musicdir}}</pre>
-								{% else %}
-									configuration of [mpd]musicdir has a trailing slash
-								{% endif %}
-							{% endif %}
-						</li>
-					</ul>
-
-
-					<h1>Sphinx</h1>
-					<ul class="list-group">
-						<li class="list-group-item list-group-item-{{systemcheck.sphinxconnection.status}}">
-							<h4 class="uc">Connection</h4>
-						{% if systemcheck.sphinxconnection.status == 'danger' %}
-							unable to connect to sphinxdaemon
-							on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong><br />
-							please check config/config_local.ini
-							<pre>[sphinx]
-host = 127.0.0.1
-port = 9312</pre>
-						{% else %}
-							connected to sphinx on host <strong>{{sphinx.host}}</strong> on port <strong>{{sphinx.port}}</strong>
-						{% endif %}
+							<h6 class="">TODO: check if we can query configured sphinx-indices</h6>
 						</li>
 						<li class="list-group-item list-group-item-warning">
 							<h6 class="">TODO: check if sphinxdaemon is returning results</h6>
 						</li>
 					</ul>
 					
-					
-					
-					<h1>Filesystem</h1>
-						<ul class="list-group">
-						<li class="list-group-item list-group-item-{{systemcheck.filesystemmusicdir.status}}">
-							<h4 class="uc">Accessing MPD musicdir</h4>
-						{% if systemcheck.filesystemmusicdir.status == 'danger' %}
-							failed. make sure your webserver-user can access directory <strong>{{mpd.musicdir}}</strong>
-						{% else %}
-							success. <strong>{{mpd.musicdir}}</strong>
-						{% endif %}
-						</li>
-
-						{% for dir in ['cache', 'embedded', 'peakfiles'] %}
-							<li class="list-group-item list-group-item-{{systemcheck['filesystem'~dir].status}}">
-								<h4 class="uc">Write-access for directory {{dir}}</h4>
-							{% if systemcheck['filesystem'~dir].status == 'danger' %}
-								failed. make sure your webserver-user can access directory <strong>{{dir}}</strong>
-							{% else %}
-								success. <strong>{{dir}}</strong>
-							{% endif %}
-							</li>
-						{% endfor %}
-					</ul>
 					
 					<h1>Environment</h1>
 					<h6>TODO: check if php-pdo is enabled</h6>

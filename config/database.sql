@@ -448,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `importer` (
 CREATE TABLE IF NOT EXISTS `suggest` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `keyword` varchar(255) NOT NULL,
-  `trigrams` varchar(11) NOT NULL,
+  `trigrams` varchar(255) NOT NULL,
   `freq` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

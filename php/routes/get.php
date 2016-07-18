@@ -1323,85 +1323,163 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 
 
 $app->get('/systemcheck', function() use ($app, $vars){
-	#var_dump($app->request->get('dberror')); die();
-	// check MySql connection
-	if($app->request->get('dberror') !== NULL) {
-		$vars['systemcheck']['databaseconnection']['status'] = 'danger';
+
+	$check = array(
+
+		// filesystem
+		'fsMusicdirconf'=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'fsMusicdirslash'=> array('status' => 'warning','hide' => FALSE, 'skip' => TRUE),
+		'fsMusicdir'    => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+		'fsCache'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'fsEmbedded'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'fsPeakfiles'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+
+		// database
+		'dbConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'dbPerms'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+		'dbSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+		'dbContent'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE, 'tracks' => 0),
+
+		// mpd
+		'mpdConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'mpdDbfileconf'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		'mpdDbfile'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+
+		// sphinx
+		'sxConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+		// TODO: how to check if indexed schema is correct?
+		//'sxSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+	);
+
+
+	// check if we have a configured value for MPD-musicdirectory
+	if(trim($app->config['mpd']['musicdir']) === '') {
+		$check['fsMusicdirconf']['status'] = 'danger';
+		$check['fsMusicdirslash']['hide'] = TRUE;
+		$check['fsMusicdir']['hide'] = TRUE;
+		$check['fsMusicdirslash']['skip'] = TRUE;
+		$check['fsMusicdir']['skip'] = TRUE;
 	} else {
-		$vars['systemcheck']['databaseconnection']['status'] = 'success';
+		$check['fsMusicdirconf']['hide'] = TRUE;
+		$check['fsMusicdirslash']['skip'] = FALSE;
+		$check['fsMusicdir']['skip'] = FALSE;
 	}
 
-
-	// check MySQL content
-	$vars['systemcheck']['databasecontent']['skipped'] = 0;
-	if($vars['systemcheck']['databaseconnection']['status'] == 'danger') {
-		$vars['systemcheck']['databasecontent']['skipped'] = 1;
-		$vars['systemcheck']['databasecontent']['status'] = 'warning';
-	} else {
-		try {
-			$vars['systemcheck']['databasecontent']['tracks'] = \Slimpd\Track::getCountAll();
-			$vars['systemcheck']['databasecontent']['albums'] = \Slimpd\Album::getCountAll();
-			$vars['systemcheck']['databasecontent']['artists'] = \Slimpd\Artist::getCountAll();
-			$vars['systemcheck']['databasecontent']['status'] = ($vars['systemcheck']['databasecontent']['tracks'] === 0)
-				? 'danger'
-				: 'success';
-		} catch (\Exception $e) {
-			$vars['systemcheck']['databasecontent']['status'] = 'danger';
+	// check if we have a trailing slash on [mpd].musicdir
+	if($check['fsMusicdirslash']['skip'] === FALSE) {
+		if(substr($app->config['mpd']['musicdir'],-1) !== DS) {
+			$check['fsMusicdirslash']['status'] = 'danger';
+		} else {
+			$check['fsMusicdirslash']['hide'] = TRUE;
 		}
 	}
 
-	// check MPD connection
-	$mpd = new \Slimpd\modules\mpd\mpd();
-	if($mpd->cmd('status') === FALSE) {
-		$vars['systemcheck']['mpdconnection']['status'] = 'danger';
-	} else {
-		$vars['systemcheck']['mpdconnection']['status'] = 'success';
-	}
-
-	// check if MPD databasefile is readable
-	if(is_file($app->config['mpd']['dbfile']) == FALSE || is_readable($app->config['mpd']['dbfile']) === FALSE) {
-		$vars['systemcheck']['mpddbfile']['status'] = 'danger';
-	} else {
-		$vars['systemcheck']['mpddbfile']['status'] = 'success';
-	}
-
-	// check if we have a value for mpd-musicdirectory
-	$vars['systemcheck']['mpdmusicdirempty']['status'] = ($app->config['mpd']['musicdir'] === '')
-		? 'danger'
-		: 'success';
-
-	// check if we have a trailing slash for mpd-musicdirectory
-	$vars['systemcheck']['mpdmusicdirslash']['status'] = (substr($app->config['mpd']['musicdir'],-1) !== '/')
-		? 'danger'
-		: 'success';
-	if($vars['systemcheck']['mpdmusicdirempty']['status'] === 'danger') {
-		$vars['systemcheck']['mpdmusicdirslash']['status'] = 'warning';
-	}
-
-	// check sphinx connection
-	$vars['systemcheck']['sphinxconnection']['status'] = 'success';
-	try {
-		$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
-	} catch (\Exception $e) {
-		$vars['systemcheck']['sphinxconnection']['status'] = 'danger';
-	}
-
-	// check filesystem access of MPD's musicdir
-	if(is_dir($app->config['mpd']['musicdir']) === FALSE || is_readable($app->config['mpd']['musicdir']) === FALSE) {
-		$vars['systemcheck']['filesystemmusicdir']['status'] = 'danger';
-	} else {
-		$vars['systemcheck']['filesystemmusicdir']['status'] = 'success';
+	// check if we can access [mpd]-musicdir
+	// TODO: check if there is any content inside
+	// TODO: is it possible to read this from mpd API instead of configuring it manually?
+	if($check['fsMusicdir']['skip'] === FALSE) {
+		if(is_dir($app->config['mpd']['musicdir']) === FALSE || is_readable($app->config['mpd']['musicdir']) === FALSE) {
+			$check['fsMusicdir']['status'] = 'danger';
+		} else {
+			$check['fsMusicdir']['status'] = 'success';
+		}
 	}
 
 	// check filesystem access for writable directories
-	foreach(['cache', 'embedded', 'peakfiles'] as $dir) {
-		if(is_dir(APP_ROOT . $dir) === FALSE || is_writeable(APP_ROOT . $dir) === FALSE) {
-			$vars['systemcheck']['filesystem'. $dir]['status'] = 'danger';
+	foreach(['Cache', 'Embedded', 'Peakfiles'] as $dir) {
+		if(is_dir(APP_ROOT . strtolower($dir)) === FALSE || is_writeable(APP_ROOT . strtolower($dir)) === FALSE) {
+			$check['fs'. $dir]['status'] = 'danger';
 		} else {
-			$vars['systemcheck']['filesystem'. $dir]['status'] = 'success';
+			$check['fs'. $dir]['status'] = 'success';
 		}
 	}
 
 
+
+	// check if we can connect to database
+	if($app->request->get('dberror') !== NULL) {
+		$check['dbConn']['status'] = 'danger';
+	} else {
+		$check['dbConn']['status'] = 'success';
+		$check['dbPerms']['skip'] = FALSE;
+	}
+
+	// check permissions for "create database" (needed for schema-comparison)
+	if($check['dbPerms']['skip'] === FALSE) {
+		$tmpDb = $app->config['database']['dbdatabase']."_prmchk";
+		$result = $app->db->query("CREATE DATABASE ". $tmpDb .";");
+		if (!$result) {#
+			$check['dbPerms']['status'] = 'danger';
+		} else {
+			$app->db->query("DROP DATABASE ". $tmpDb .";");
+			$check['dbPerms']['status'] = 'success';
+			$check['dbSchema']['skip'] = FALSE;
+		}
+	}
+
+	// check if db-schema is correct
+	if($check['dbSchema']['skip'] === FALSE) {
+		Helper::setConfig( getDatabaseDiffConf($app) );
+		$db = Helper::getDbObject();
+        $tmpdb = Helper::getTmpDbObject();
+        Helper::loadTmpDb($tmpdb);
+        $diff = new dbDiff($db, $tmpdb);
+        $difference = $diff->getDifference();
+        if(!count($difference['up']) && !count($difference['down'])) {
+			$check['dbSchema']['status'] = 'success';
+			$check['dbContent']['skip'] = FALSE;
+		} else {
+			$check['dbSchema']['status'] = 'danger';
+		}
+	}
+
+	// check if we have useful records in our database
+	if($check['dbContent']['skip'] === FALSE) {
+		$check['dbContent']['tracks']  = \Slimpd\Track::getCountAll();
+		$check['dbContent']['albums']  = \Slimpd\Album::getCountAll();
+		$check['dbContent']['artists'] = \Slimpd\Artist::getCountAll();
+		$check['dbContent']['genres']  = \Slimpd\Genre::getCountAll();
+		$check['dbContent']['labels']  = \Slimpd\Label::getCountAll();
+		$check['dbContent']['status'] = ($check['dbContent']['tracks'] > 0)
+			? 'success'
+			: 'danger';
+	}
+
+
+	// check MPD connection
+	$mpd = new \Slimpd\modules\mpd\mpd();
+	$check['mpdConn']['status'] = ($mpd->cmd('status') === FALSE) ? 'danger' : 'success';
+
+	// check if we have a configured value for MPD-databasefile
+	if(trim($app->config['mpd']['dbfile']) === '') {
+		$check['mpdDbfileconf']['status'] = 'danger';
+		$check['mpdDbfile']['hide'] = TRUE;
+	} else {
+		$check['mpdDbfile']['skip'] = FALSE;
+		$check['mpdDbfileconf']['hide'] = TRUE;
+	}
+
+	// check if MPD databasefile is readable
+	if($check['mpdDbfile']['skip'] === FALSE) {
+		if(is_file($app->config['mpd']['dbfile']) == FALSE || is_readable($app->config['mpd']['dbfile']) === FALSE) {
+			$check['mpdDbfile']['status'] = 'danger';
+		} else {
+			$check['mpdDbfile']['status'] = 'success';
+		}
+	}
+
+
+	// check sphinx connection
+	$check['sxConn']['status'] = 'success';
+	try {
+		$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+	} catch (\Exception $e) {
+		$check['sxConn']['status'] = 'danger';
+	}
+
+
+
+	$vars['sys'] = $check;
+	$vars['appRoot'] = APP_ROOT;
 	$app->render('systemcheck.htm', $vars);
 });
