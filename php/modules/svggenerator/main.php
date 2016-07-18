@@ -8,6 +8,7 @@ class Svggenerator {
 	protected $peakValuesFilePath;
 	protected $peakFileResolution = 4000;
 	protected $ext;
+	protected $cmdTempwav = '';
 	
 	
 	public function __construct($arg) {
@@ -22,6 +23,7 @@ class Svggenerator {
 			}
 		}
 		
+		// 2016-07-18 TODO: why the hell is here a string condition?
 		if(is_string($arg) === TRUE) {
 			$t = \Slimpd\Track::getInstanceByAttributes(array('relativePathHash' => getFilePathHash($arg)));
 			if(is_object($t) === TRUE) {
@@ -40,6 +42,15 @@ class Svggenerator {
 			}
 			if(is_file($arg) === TRUE) {
 				$this->absolutePath = $arg;
+				$this->ext = strtolower(pathinfo($arg, PATHINFO_EXTENSION));
+			}
+		}
+		
+		// systemcheck testfiles are not within our music_dirs or in our database
+		if($this->fingerprint === NULL) {
+			if(strpos(realpath($arg), APP_ROOT . 'templates/partials/waveforms/testfiles/') === 0) {
+				die('yeah testfile');
+				$this->absolutePath = realpath($arg);
 				$this->ext = strtolower(pathinfo($arg, PATHINFO_EXTENSION));
 			}
 		}
@@ -202,6 +213,9 @@ class Svggenerator {
 		
 		// extract peaks
 		$peakValues = $this->getPeaks();
+		if($peakValues === FALSE) {
+			return FALSE;
+		}
 		
 		// shorten values to configured limit
 		$peakValues = $this->limitArray($peakValues, $this->peakFileResolution);
@@ -212,10 +226,9 @@ class Svggenerator {
 	
 	private function getPeaks() {
 		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
-		
-		$cmd = "lame " . escapeshellarg($this->absolutePath) . " -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3') .
+		$this->cmdTempwav = \Slim\Slim::getInstance()->config['modules']['bin_lame'] . " " . escapeshellarg($this->absolutePath) . " -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3') .
 			" && lame -S --decode ". escapeshellarg($tmpFileName.'.mp3') . " ". escapeshellarg($tmpFileName.'.wav');
-		exec($cmd);
+		exec($this->cmdTempwav);
 		
 		
 		if(is_file($tmpFileName.'.mp3') === TRUE) {
@@ -224,7 +237,7 @@ class Svggenerator {
 		
 		
 		if(is_file($tmpFileName.'.wav') === FALSE) {
-			die('error 8======D');
+			return FALSE;
 		}
 		$values = $this->getWavPeaks($tmpFileName.'.wav');
 		// delete temporary files
@@ -337,5 +350,7 @@ class Svggenerator {
 		}
 		return $output;
 	}
-	
+	public function getCmdTempwav() {
+		return $this->cmdTempwav;
+	}
 }

@@ -125,13 +125,43 @@
 						</li>
 					</ul>
 					
+					<h1>{{'syscheck.wf'|ll}}</h1>
+					<ul class="list-group">
+						{% for test in ['fpMp3', 'wfMp3'] %}
+						{% if not sys[test].hide %}
+						<li class="list-group-item list-group-item-{{sys[test].status}}">
+							<h4 class="uc">{{['syscheck.',test]|join|ll|raw}}</h4>
+							{% if sys[test].skip %}
+								{% include 'partials/systemcheck/waveforms/'~test~'-skipped.htm' %}
+							{% else %}
+								executed command
+								<pre>{{sys[test].cmd}}</pre>
+								
+								{% if test in ['fpMp3'] %}
+								<div class="row">
+									<div class="col-md-6">
+										expected result <pre>{{sys[test].resultExpected}}</pre>
+									</div>
+									<div class="col-md-6">
+										your system <pre>{{sys[test].resultReal}}</pre>
+									</div>
+								</div>
+								{% endif %}
+								{% include 'partials/systemcheck/waveforms/'~test~'-'~sys[test].status~'.htm' %}
+							{% endif %}
+						</li>
+						{% endif %}
+						{% endfor %}
+						<li class="list-group-item list-group-item-warning">
+							<h6 class="">TODO: add same check of other audio-fileformats (flac, wav, aiff, m4a, wma, ...)</h6>
+						</li>
+					</ul>
 					
 					<h1>Environment</h1>
-					<h6>TODO: check if php-pdo is enabled</h6>
+					<h6>TODO: check if php-pdo is enabled (if (class_exists('PDO')) )</h6>
 					<h6>TODO: check locale settings to avoid errors caused by specialchars</h6>
 					
-					<h1>Waveforms</h1>
-					<h6>TODO: check generating waveform of all audioformats (with lame and python)</h6>
+					
 					
 					<h1>Xwax</h1>
 					<h6>TODO: check connection</h6>

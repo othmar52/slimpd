@@ -1755,7 +1755,7 @@ class Importer {
 
 	// TODO: where to move pythonscript?
 	// TODO: general wrapper for shell-executing stuff
-	public static function extractAudioFingerprint($absolutePath) {
+	public static function extractAudioFingerprint($absolutePath, $returnCommand = FALSE) {
 		$ext = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
 		switch($ext) {
 			case 'mp3':
@@ -1776,12 +1776,14 @@ class Importer {
 				break;
 			default:
 				# TODO: can we get md5sum with php in a performant way?
-				$cmd = '/usr/bin/md5sum -b ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
+				$cmd = \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .' ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
+		}
+		if($returnCommand === TRUE) {
+			return $cmd;
 		}
 		#echo $cmd . "\n";
 		$response = exec($cmd);
 		if(preg_match("/^[0-9a-f]{32}$/", $response)) {
-			#echo $response . "\n"; die();
 			return $response;
 		}
 		return FALSE;
