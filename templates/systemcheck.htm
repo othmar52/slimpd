@@ -135,19 +135,27 @@
 					
 					<h1>{{'syscheck.wf'|ll}}</h1>
 					<ul class="list-group">
+						{% if not sys.skipAudioTests %}
+						{% for filetype in sys.audioFormatsUc %}
 						{% for fingerprintWaveform in ['fp', 'wf'] %}
-						{% for filetype in ['Mp3'] %}
 						{% set test = fingerprintWaveform~filetype %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
 							<h4 class="uc">
 								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',test]|join|ll|raw}}
+								{{['syscheck.',fingerprintWaveform, 'All']|join|ll(filetype)|raw}}
 								
 							{% if sys[test].skip %}
 							</h4>
-								{% include 'partials/systemcheck/waveforms/'~test~'-skipped.htm' %}
+								{{'syscheck.skipped'|ll}}
 							{% else %}
+							{% if (fingerprintWaveform == 'wf') and  sys[test].status == 'success' %}
+							<object style="    width: 62px;
+    height: 38px;
+    display: inline;
+    position: absolute;
+    right: 200px;" class="waveform" data="{{root}}audiosvg/width/5000/{{ sys[test].filepath }}?color=3" type="image/svg+xml"></object>
+							{% endif %}
 							<button class="btn btn-default toggle-content pull-right" data-toggle="#check-{{test}}" data-text1="show more" data-text2="show less">
   								show more
   							</button>
@@ -166,16 +174,24 @@
 									</div>
 								</div>
 								{% endif %}
+								{% if sys[test].status == 'success' %}
+									{{['syscheck.',test, '.success']|join|ll}}
+								{% else %}
 								{% include 'partials/systemcheck/waveforms/'~test~'-'~sys[test].status~'.htm' %}
+								{% endif %}
+								
 							</div>
 							{% endif %}
 						</li>
 						{% endif %}
 						{% endfor %}
 						{% endfor %}
-						<li class="list-group-item list-group-item-warning">
-							<h6 class="">TODO: add same check of other audio-fileformats (flac, wav, aiff, m4a, wma, ...)</h6>
-						</li>
+						{% else %}
+							<li class="list-group-item list-group-item-warning">
+								{% include 'partials/systemcheck/icon-warning.htm' %}
+								{{'syscheck.skipped'|ll}}
+							</li>
+						{% endif %}
 					</ul>
 					
 					<h1>Environment</h1>
