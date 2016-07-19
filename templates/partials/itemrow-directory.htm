@@ -2,7 +2,7 @@
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
 			<a href="{{root}}filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show directory">
-				<img src="/skin/default/img/icon-dirname.png" alt="" style="width: 50px; height: 50px; z-index:2;">
+				<img src="{{root}}skin/default/img/icon-dirname.png" alt="" style="width: 50px; height: 50px; z-index:2;">
 			</a>
 			<button role="control" data-href="{{root}}markup/widget-directory/{{ item.fullpath|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
 				<i class="fa fa-align-justify fa-lg fa-fw"></i>

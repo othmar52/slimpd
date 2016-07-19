@@ -36,7 +36,7 @@
 		    /* init local player */
 			$(this.playerSelector).jPlayer({
 		        cssSelectorAncestor: "#jp_container_1",
-		        swfPath: "/vendor/happyworm/jplayer/dist/jplayer", // TODO: get & prefix with conf.absRefPrefix
+		        swfPath: sliMpd.conf.absRefPrefix + "vendor/happyworm/jplayer/dist/jplayer",
 		        supplied: "mp3",
 		        useStateClassSkin: false,
 		        autoBlur: false,
@@ -84,8 +84,8 @@
 			$(this.playerSelector).jPlayer(
 				'setMedia',
 				{
-					[item.ext] : '/deliver/' + item.item,
-					'mp3' : '/deliver/' + item.item,
+					[item.ext] : sliMpd.conf.absRefPrefix + 'deliver/' + item.item,
+					'mp3' : sliMpd.conf.absRefPrefix + 'deliver/' + item.item,
 					'supplied': item.ext + ',mp3'
 				}
 			).jPlayer( "play");
