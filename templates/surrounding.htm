@@ -114,8 +114,6 @@
 									<span style="padding:3em;" {{'niymarkup'|ll|raw}}>{{'albums'|ll}}</span>
 								</a>
 							</div>
-   
-  
 					  	</div>
 					</div>
 					{% endif %}
@@ -298,7 +296,8 @@
 					barwidth: {{ waveform.barwidth }},
 					gapwidth: {{ waveform.gapwidth }},
 					mirrored: {{ waveform.mirrored }}
-				}
+				},
+				absRefPrefix: '{{ config.absRefPrefix }}'
 			};
 		</script>
 		

@@ -14,17 +14,8 @@ self.addEventListener('message', function(e) {
 			}
 			self.pollInterval = data.value;
 			break;
-		case 'setPollUrlFor':
-			switch(data.value) {
-				case 'xwax':
-				case 'mpd':
-					self.pollUrl = '/' + data.value + 'status';
-					break;
-				default:
-					self.postMessage('Invalid pullurl: ' + data.value + '! terminating worker...');
-					self.close();
-					break;
-			}
+		case 'setPollUrl':
+			self.pollUrl = data.value;
 			break;
 		case 'refreshInterval':
 			clearTimeout(self.poller);

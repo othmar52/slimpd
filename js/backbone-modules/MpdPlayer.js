@@ -37,15 +37,15 @@
 			this.trackAnimation = { currentPosPerc: 0 };
 			this.timeLineLight = new TimelineLite();
 
-			this.pollWorker = new Worker('/js/poll-worker.js');
+			this.pollWorker = new Worker(sliMpd.conf.absRefPrefix + 'js/poll-worker.js');
 			var that = this;
 			this.pollWorker.addEventListener('message', function(e) {
 				that.processPollData(e.data);
 			}, false);
 
 			this.pollWorker.postMessage({
-				cmd: 'setPollUrlFor',
-				value: 'mpd'
+				cmd: 'setPollUrl',
+				value: sliMpd.conf.absRefPrefix + 'mpdstatus'
 			});
 
 			this.pollWorker.postMessage({
@@ -73,10 +73,10 @@
 
 		togglePause : function(item) {
 			if(this.nowPlayingState == 'play') {
-				window.sliMpd.fireRequestAndNotify('/mpdctrl/pause');
+				window.sliMpd.fireRequestAndNotify(sliMpd.conf.absRefPrefix + 'mpdctrl/pause');
 				this.nowPlayingState = 'pause';
 			} else {
-				window.sliMpd.fireRequestAndNotify('/mpdctrl/play');
+				window.sliMpd.fireRequestAndNotify(sliMpd.conf.absRefPrefix + 'mpdctrl/play');
 				this.nowPlayingState = 'play';
 			}
 			window.sliMpd.modules.AbstractPlayer.prototype.togglePause.call(this, item);
@@ -90,7 +90,7 @@
 		},
 
 		seekzero : function(item) {
-			window.sliMpd.fireRequestAndNotify('/mpdctrl/seekPercent/0');
+			window.sliMpd.fireRequestAndNotify(sliMpd.conf.absRefPrefix + 'mpdctrl/seekPercent/0');
 			this.timelineSetValue(0);
 			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
 		},
@@ -298,7 +298,7 @@
 			$('.mpd-ctrl-seekbar').on('click', function(e){
 				var percent = Math.round((e.pageX - $(this).offset().left) / ($(this).width()/100));
 				$('.mpd-status-progressbar', that.$el).css('width', percent+'%');
-				that.process({'action': 'seek', 'mpdurl' : '/mpdctrl/seekPercent/' + percent});
+				that.process({'action': 'seek', 'mpdurl' : sliMpd.conf.absRefPrefix + 'mpdctrl/seekPercent/' + percent});
 				that.timelineSetValue(percent);
 			});
 			$('.mpd-ctrl-seekzero', this.$el).on('click', function(e){

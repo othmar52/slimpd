@@ -56,7 +56,7 @@
 				source: function( request, response ) {
 					NProgress.start();
 					$.ajax({
-						url: "/autocomplete/all/?q=" + decodeURIComponent($('#mainsearch').val()),
+						url: sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($('#mainsearch').val()),
 		          		dataType: "json",
 		          		type: 'get',
 		          		success: function( data ) {
@@ -124,7 +124,7 @@
 		     		case 'track':
 			     		additionalMarkup = $('<a />')
 			     			.attr('class', 'trigger-modal')
-			     			.attr('href', '/markup/widget-trackcontrol?item='+ item.itemid )
+			     			.attr('href', sliMpd.conf.absRefPrefix + 'markup/widget-trackcontrol?item='+ item.itemid )
 			     			.html(' <i class="fa fa-plus-square"></i>')
 			     			.bind('click', function(e){
 			     				// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
@@ -243,7 +243,7 @@
 			this.searchfield.autocomplete('option', 'source', function( request, response ) {
 				NProgress.start();
 				$.ajax({
-					url: "/autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
+					url: sliMpd.conf.absRefPrefix + "autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 		      		dataType: "json",
 		      		type: 'get',
 		      		success: function( data ) {

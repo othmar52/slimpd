@@ -64,7 +64,7 @@
         // fetch markup with trackinfos
         redraw : function(item) {
         	item = item || { item : 0};
-        	var url = '/markup/'+ this.mode+'player';
+        	var url = sliMpd.conf.absRefPrefix + 'markup/'+ this.mode+'player';
         	if(this.mode === 'xwax') {
         		url = window.sliMpd.setGetParameter(url, 'deck', this.deckIndex);
         		if(this.showWaveform === false) {
@@ -206,7 +206,7 @@
 				suffix = '';
 				selector = '#css-'+this.mode+'player';
 			}
-			$(selector).attr('href', '/css/'+ this.mode +'player/'+ ((hash) ? hash : '0') + suffix);
+			$(selector).attr('href', sliMpd.conf.absRefPrefix + 'css/'+ this.mode +'player/'+ ((hash) ? hash : '0') + suffix);
 			
 		},
 		

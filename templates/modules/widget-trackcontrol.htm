@@ -13,11 +13,11 @@
      
 	<div class="row">
 	  	<div class="col-md-10">
-	  		<object class="waveform svg-ajax-object" data="/skin/default/img/loading-waveform.svg" data-svgurl="/audiosvg/width/5000/{{ item.relativePath|path2url }}?color=3" type="image/svg+xml"></object>
+	  		<object class="waveform svg-ajax-object" data="{{root}}skin/default/img/loading-waveform.svg" data-svgurl="{{root}}audiosvg/width/5000/{{ item.relativePath|path2url }}?color=3" type="image/svg+xml"></object>
 		</div>
 		
 		<div class="col-md-2">
-	    	<img src="/image-100/album/{{ item.albumId }}" />
+	    	<img src="{{root}}image-100/album/{{ item.albumId }}" />
 	    </div>
 	</div>
 	<div class="row">
@@ -252,22 +252,22 @@
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="/skin/default/img/icon-discogs.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Discogs
+	  				<img src="{{root}}skin/default/img/icon-discogs.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Discogs
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="/skin/default/img/icon-rdb.ico" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> RollDaBeats
+	  				<img src="{{root}}skin/default/img/icon-rdb.ico" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> RollDaBeats
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="/skin/default/img/icon-junodownload.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Juno
+	  				<img src="{{root}}skin/default/img/icon-junodownload.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Juno
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="/skin/default/img/icon-beatport.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Beatport
+	  				<img src="{{root}}skin/default/img/icon-beatport.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Beatport
 	  			</a>
 	  		</div>
 	  		

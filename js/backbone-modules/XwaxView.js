@@ -79,15 +79,15 @@
 			$('.xwax-error').removeClass('hidden');
 			this.toggler.removeClass('btn-default').addClass('btn-success');
 
-			this.pollWorker = new Worker('/js/poll-worker.js');
+			this.pollWorker = new Worker(sliMpd.conf.absRefPrefix+'js/poll-worker.js');
 			var that = this;
 			this.pollWorker.addEventListener('message', function(e) {
 				that.processPollData(e.data);
 			}, false);
 
 			this.pollWorker.postMessage({
-				cmd: 'setPollUrlFor',
-				value: 'xwax'
+				cmd: 'setPollUrl',
+				value: sliMpd.conf.absRefPrefix + 'xwaxstatus'
 			});
 
 			this.pollWorker.postMessage({
