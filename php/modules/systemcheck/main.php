@@ -38,8 +38,8 @@ class Systemcheck {
 	
 			// sphinx
 			'sxConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
-			// TODO: how to check if indexed schema is correct?
-			//'sxSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+			'sxSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+			'sxContent'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			
 		);
 
@@ -86,9 +86,7 @@ class Systemcheck {
 			);
 			$check['wf'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
 				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
-				'cmd' => '',
-				'resultExpected' => '',
-				'resultReal' => FALSE,
+				'cmd' => ''
 			);
 			
 		}
@@ -223,7 +221,48 @@ class Systemcheck {
 			$ln_sph = new \PDO('mysql:host='.$this->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
 		} catch (\Exception $e) {
 			$check['sxConn']['status'] = 'danger';
+			$check['sxSchema']['skip'] = TRUE;
+			$check['sxContent']['skip'] = TRUE;
 		}
+		
+		// check if we can query both sphinx indices
+		if($check['sxSchema']['skip'] === FALSE) {
+			$schemaError = FALSE;
+			$contentError = FALSE;
+			foreach(['main', 'suggest'] as $indexName) {
+				$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+				$stmt = $ln_sph->prepare(
+					"SELECT ". $app->config['sphinx']['fields_'.$indexName]." FROM ". $app->config['sphinx'][$indexName . 'index']." LIMIT 1;"
+				);
+				$stmt->execute();
+				if($stmt->errorInfo()[0] > 0) {
+					$check['sxSchema']['status'] = 'danger';
+					$check['sxSchema']['msg'] = $stmt->errorInfo()[2];
+					$schemaError = TRUE;
+					$check['sxContent']['skip'] = TRUE;
+				} else {
+					$check['sxSchema']['status'] = 'sucess';
+					$check['sxContent']['skip'] = FALSE;
+					$meta = $ln_sph->query("SHOW META")->fetchAll();
+					foreach($meta as $m) {
+						if($m['Variable_name'] === 'total_found') {
+							if($m['Value'] < 1) {
+								$contentError = TRUE;
+							} else {
+								$check['sxContent'][$indexName]['total'] = $m['Value'];
+							}
+						}
+					}
+				}
+			}
+			$check['sxSchema']['status'] = ($schemaError === TRUE) ? 'danger' : 'success';
+			$check['sxContent']['status'] = ($contentError === TRUE) ? 'danger' : 'success';
+			if($schemaError === TRUE) {
+				$check['sxContent']['status'] = 'warning';
+			}
+		}
+		
+		
 
 		if($check['skipAudioTests'] === TRUE) {
 			return $check;
@@ -264,7 +303,6 @@ class Systemcheck {
 				$check[$checkWf]['cmd'] = $svgGenerator->getCmdTempwav();
 
 				exec($check[$checkWf]['cmd'], $response, $returnStatus);
-				$check[$checkWf]['resultReal'] = trim(join("\n", $response)); 
 				if($returnStatus === 0) {
 					$check[$checkWf]['status'] = 'success';
 				} else {
