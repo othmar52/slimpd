@@ -8,8 +8,7 @@
     	<meta name="HandheldFriendly" content="True">
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     	
-    	<link rel="shortcut icon" href="{{root}}skin/default/img/favicon.png">
-    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{root}}assets/images/icons/app-icon.png" />
+    	<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
     	{% set cssfiles = [
     		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
     		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
@@ -26,7 +25,7 @@
 		%}
     	 
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{root}}{{cssfile}}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
 		{% endfor %}
 	</head>
 	<body class="bg-col1 col1 standalone">
@@ -69,7 +68,7 @@
 		%}
     	 
 		{% for jsfile in jsfiles %}
-		<script src="{{root}}{{jsfile}}"></script>
+		<script src="{{fileroot}}{{jsfile}}"></script>
 		{% endfor %}		
 	</body>
 </html>

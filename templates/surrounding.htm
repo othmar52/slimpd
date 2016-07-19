@@ -8,8 +8,7 @@
     	<meta name="HandheldFriendly" content="True">
     	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
     	
-    	<link rel="shortcut icon" href="{{root}}skin/default/img/favicon.png">
-    	<link rel="apple-touch-icon-precomposed" sizes="122x122" href="{{root}}assets/images/icons/app-icon.png" />
+    	<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
     	{% set cssfiles = [
     		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
     		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
@@ -25,14 +24,14 @@
 			'skin/default/player.css',
 			'skin/default/nprogress.css',
 			'skin/default/breadcrumb.css',
-			'skin/default/fullwidth-bg-row.css',
-			'css/spotcolors.css'
+			'skin/default/fullwidth-bg-row.css'
     		]
 		%}
     	 
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{root}}{{cssfile}}" />
-		{% endfor %}		
+		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
+		{% endfor %}
+		<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
 		{# add dynamic css for now-playing status #}
 		<link rel="stylesheet" type="text/css" id="css-localplayer" href="{{root}}css/localplayer/0" />
 		<link rel="stylesheet" type="text/css" id="css-mpdplayer" href="{{root}}css/mpdplayer/0" />
@@ -297,7 +296,8 @@
 					gapwidth: {{ waveform.gapwidth }},
 					mirrored: {{ waveform.mirrored }}
 				},
-				absRefPrefix: '{{ config.absRefPrefix }}'
+				absRefPrefix: '{{ config.absRefPrefix }}',
+				absFilePrefix: '{{ config.absFilePrefix }}'
 			};
 		</script>
 		
@@ -336,7 +336,7 @@
 		%}
     	 
 		{% for jsfile in jsfiles %}
-		<script src="{{root}}{{jsfile}}"></script>
+		<script src="{{fileroot}}{{jsfile}}"></script>
 		{% endfor %}
 	</body>
 </html>

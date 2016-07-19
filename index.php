@@ -87,6 +87,7 @@ $config['current_url']  = rtrim($app->request->getResourceUri(), '/');
 $config['playerMode'] = ($app->getCookie('playerMode') === 'mpd') ? 'mpd' : 'local';
 $config['nosurrounding'] = ($app->request->get('nosurrounding') == 1) ? TRUE : FALSE;
 $config['root'] = $config['config']['absRefPrefix'];
+$config['fileroot'] = $config['config']['absFilePrefix'];
 $app->config = $config;
 $vars = $config;
 

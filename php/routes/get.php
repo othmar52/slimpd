@@ -1166,7 +1166,7 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 				case 'label':
 				case 'genre':
 				case 'dirname':
-					$entry['img'] = $app->config['root'] . 'skin/default/img/icon-'. $filterType .'.png';
+					$entry['img'] = $app->config['fileroot'] . 'skin/default/img/icon-'. $filterType .'.png';
 					break;
 				case 'album':
 				case 'track':
