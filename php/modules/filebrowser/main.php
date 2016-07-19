@@ -143,6 +143,10 @@ class filebrowser {
 		// fetch content of the parent directory
 		$parentDirectory = new \Slimpd\filebrowser();
 		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
+		if($parentDirectory->directory === './') {
+			$parentDirectory = new \Slimpd\filebrowser();
+			$parentDirectory->getDirectoryContent($app->config['mpd']['musicdir'], TRUE);
+		}
 		
 		
 		// iterate over parentdirectories until we find the inputdirectory +1
@@ -170,6 +174,10 @@ class filebrowser {
 		$d .= (substr($d,-1) !== DS) ? DS : '';
 		$parentDirectory = new \Slimpd\filebrowser();
 		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
+		if($parentDirectory->directory === './') {
+			$parentDirectory = new \Slimpd\filebrowser();
+			$parentDirectory->getDirectoryContent($app->config['mpd']['musicdir'], TRUE);
+		}
 		
 		$prev = 0;
 		

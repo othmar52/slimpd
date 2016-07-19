@@ -462,6 +462,7 @@ $app->get('/filebrowser', function() use ($app, $vars){
 	$vars['subDirectories'] = $fileBrowser->subDirectories;
 	$vars['files'] = $fileBrowser->files;
 	$vars['hotlinks'] = array();
+	$vars['hideQuicknav'] = 1;
 	foreach($vars['filebrowser-hotlinks'] as $path){
 		$vars['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
 	}
