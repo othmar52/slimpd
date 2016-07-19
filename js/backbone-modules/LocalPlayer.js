@@ -36,7 +36,7 @@
 		    /* init local player */
 			$(this.playerSelector).jPlayer({
 		        cssSelectorAncestor: "#jp_container_1",
-		        swfPath: sliMpd.conf.absFilePrefix + "vendor/happyworm/jplayer/dist/jplayer",
+		        swfPath: sliMpd.conf.absFilePrefix + "vendor-dist/happyworm/jplayer/dist/jplayer",
 		        supplied: "mp3",
 		        useStateClassSkin: false,
 		        autoBlur: false,
