@@ -59,7 +59,9 @@
 						{% for test in ['fsMusicdirconf', 'fsMusicdirslash', 'fsMusicdir', 'fsCache', 'fsEmbedded', 'fsPeakfiles'] %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							<h4 class="uc">
+								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+								{{['syscheck.',test]|join|ll}}</h4>
 							{% if sys[test].skip %}
 								{% include 'partials/systemcheck/fs/'~test~'-skipped.htm' %}
 							{% else %}
@@ -75,7 +77,9 @@
 						{% for test in ['dbConn', 'dbPerms', 'dbSchema', 'dbContent'] %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							<h4 class="uc">
+								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+								{{['syscheck.',test]|join|ll}}</h4>
 							{% if sys[test].skip %}
 								{% include 'partials/systemcheck/db/'~test~'-skipped.htm' %}
 							{% else %}
@@ -91,7 +95,9 @@
 						{% for test in ['mpdConn', 'mpdDbfileconf', 'mpdDbfile'] %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							<h4 class="uc">
+								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+								{{['syscheck.',test]|join|ll}}</h4>
 							{% if sys[test].skip %}
 								{% include 'partials/systemcheck/mpd/'~test~'-skipped.htm' %}
 							{% else %}
@@ -108,7 +114,9 @@
 						{% for test in ['sxConn'] %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">{{['syscheck.',test]|join|ll}}</h4>
+							<h4 class="uc">
+								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+								{{['syscheck.',test]|join|ll}}</h4>
 							{% if sys[test].skip %}
 								{% include 'partials/systemcheck/sx/'~test~'-skipped.htm' %}
 							{% else %}
@@ -127,17 +135,28 @@
 					
 					<h1>{{'syscheck.wf'|ll}}</h1>
 					<ul class="list-group">
-						{% for test in ['fpMp3', 'wfMp3'] %}
+						{% for fingerprintWaveform in ['fp', 'wf'] %}
+						{% for filetype in ['Mp3'] %}
+						{% set test = fingerprintWaveform~filetype %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">{{['syscheck.',test]|join|ll|raw}}</h4>
+							<h4 class="uc">
+								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+								{{['syscheck.',test]|join|ll|raw}}
+								
 							{% if sys[test].skip %}
+							</h4>
 								{% include 'partials/systemcheck/waveforms/'~test~'-skipped.htm' %}
 							{% else %}
+							<button class="btn btn-default toggle-content pull-right" data-toggle="#check-{{test}}" data-text1="show more" data-text2="show less">
+  								show more
+  							</button>
+  							</h4>
+  							<div id="check-{{test}}" style="display:none;">
 								executed command
 								<pre>{{sys[test].cmd}}</pre>
 								
-								{% if test in ['fpMp3'] %}
+								{% if fingerprintWaveform == 'fp' %}
 								<div class="row">
 									<div class="col-md-6">
 										expected result <pre>{{sys[test].resultExpected}}</pre>
@@ -148,9 +167,11 @@
 								</div>
 								{% endif %}
 								{% include 'partials/systemcheck/waveforms/'~test~'-'~sys[test].status~'.htm' %}
+							</div>
 							{% endif %}
 						</li>
 						{% endif %}
+						{% endfor %}
 						{% endfor %}
 						<li class="list-group-item list-group-item-warning">
 							<h6 class="">TODO: add same check of other audio-fileformats (flac, wav, aiff, m4a, wma, ...)</h6>
@@ -176,9 +197,30 @@
 		    </a>
 		</span><!-- /top-link-block -->
 		
-		
-		
-		
+		<script type="text/javascript">
+			var sliMpd = sliMpd || {};
+			sliMpd.conf = {
+				color: {
+					mpd: {
+						bodyclass: 'spotcol-{{ spotcolor.mpd }}',
+						primary: '{{ colors[ spotcolor.mpd ]['1st'] }}',
+						secondary: '{{ colors[ spotcolor.mpd ]['2nd'] }}',
+						favicon: '{{ colors[ spotcolor.mpd ]['fav'] }}',
+					},
+					local: {
+						bodyclass: 'spotcol-{{ spotcolor.local }}',
+						primary: '{{ colors[ spotcolor.local ]['1st'] }}',
+						secondary: '{{ colors[ spotcolor.local ]['2nd'] }}',
+						favicon: '{{ colors[ spotcolor.local ]['fav'] }}',
+					}
+				},
+				waveform: {
+					barwidth: {{ waveform.barwidth }},
+					gapwidth: {{ waveform.gapwidth }},
+					mirrored: {{ waveform.mirrored }}
+				}
+			};
+		</script>
 		
 		{% set jsfiles = [
     		'vendor-dist/components/jquery/jquery.min.js',
@@ -209,12 +251,13 @@
 			'js/backbone-modules/MpdPlayer.js',
 			'js/backbone-modules/XwaxView.js',
 			'js/backbone-modules/XwaxPlayer.js',
-			'js/backbone-modules/Router.js'
+			'js/backbone-modules/Router.js',
+			'js/systemcheck.js'
     		]
 		%}
     	 
 		{% for jsfile in jsfiles %}
 		<script src="{{root}}{{jsfile}}"></script>
-		{% endfor %}		
+		{% endfor %}
 	</body>
 </html>
