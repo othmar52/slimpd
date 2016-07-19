@@ -48,10 +48,9 @@ class Svggenerator {
 		
 		// systemcheck testfiles are not within our music_dirs or in our database
 		if($this->fingerprint === NULL) {
-			if(strpos(realpath($arg), APP_ROOT . 'templates/partials/waveforms/testfiles/') === 0) {
-				die('yeah testfile');
-				$this->absolutePath = realpath($arg);
-				$this->ext = strtolower(pathinfo($arg, PATHINFO_EXTENSION));
+			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
+				$this->absolutePath = realpath(DS.$arg);
+				$this->ext = strtolower(pathinfo(DS.$arg, PATHINFO_EXTENSION));
 			}
 		}
 		
@@ -228,6 +227,7 @@ class Svggenerator {
 		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
 		$this->cmdTempwav = \Slim\Slim::getInstance()->config['modules']['bin_lame'] . " " . escapeshellarg($this->absolutePath) . " -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3') .
 			" && lame -S --decode ". escapeshellarg($tmpFileName.'.mp3') . " ". escapeshellarg($tmpFileName.'.wav');
+
 		exec($this->cmdTempwav);
 		
 		
