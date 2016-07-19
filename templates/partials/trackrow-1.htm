@@ -42,7 +42,11 @@
 	<div class="ffn-show">
 		<div class="col-md-9 vcenter">
 			<div class="vcinner">
-				{{ item.relativePath|split('/')|last }}<br>
+				{{ item.relativePath|split('/')|last }}
+				{% if item.fingerprint %}
+				<span class="pull-right dark" title="fingerprint: {{ item.fingerprint }}">{{ item|fingerprintshorty }}</span>
+				{% endif %}
+				<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
 					hiderootlink: 1,
 					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
