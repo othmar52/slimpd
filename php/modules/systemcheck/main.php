@@ -23,6 +23,7 @@ class Systemcheck {
 			'fsCache'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsEmbedded'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsPeakfiles'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
+			// TODO: perform checks for optional configuration [mpd]alternative_musicdir
 	
 			// database
 			'dbConn'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
@@ -191,7 +192,9 @@ class Systemcheck {
 			unset($response);
 			if($check['fpMp3']['resultExpected'] === $check['fpMp3']['resultReal']) {
 				$check['fpMp3']['status'] = 'success';
-				$check['wfMp3']['skip'] = FALSE;
+				if($check['fsPeakfiles']['status'] === 'success') {
+					$check['wfMp3']['skip'] = FALSE;
+				}
 			} else {
 				$check['fpMp3']['status'] = 'danger';
 			}
