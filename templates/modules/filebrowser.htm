@@ -23,6 +23,7 @@
 {% else %}
 	<div class="row">
 		<div class="col-md-12">
+			{% if hideQuicknav != '1' %}
 			{% include 'partials/filebrowser/directory-quicknav.htm' with {breadcrumb:item} %}
 			
 			<span class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -34,7 +35,7 @@
 				</span>
 				{{ 'filebrowser.diroptions'|ll }}
 			</button>
-			
+			{% endif %}
 			<span class="filebrowser-filter pull-right darker-links">
 				<ul class="nav nav-pills type-nav">
 					<li class="{{ (filter == '') ? 'active' : '' }}"> 
