@@ -71,6 +71,18 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 				return number_format($number/1000000,1) . " M";
 			}),
 			
+			new \Twig_SimpleFilter('fingerprintshorty', function ($mixed) {
+				if(is_object($mixed) === TRUE) {
+					if(method_exists($mixed, 'getFingerprint') === TRUE) {
+						$fp = $mixed->getFingerprint();
+						if(strlen($fp) === 32) {
+							return substr($fp, 0, 3) . '...' . substr($fp, -3); 
+						}
+					}
+				}
+				return "";
+			}),
+			
 			new \Twig_SimpleFilter('formatBytes', function ($bytes, $precision = 2) {
 				$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
 			    $bytes = max($bytes, 0); 
@@ -78,10 +90,6 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			    $pow = min($pow, count($units) - 1);
 				$bytes /= pow(1024, $pow);
 				return round($bytes, $precision) . ' ' . $units[$pow];
-			}),
-			
-			new \Twig_SimpleFilter('shortenChecksum', function ($hash, $precision = 3) {
-				return substr($hash,0,$precision) . '...' . substr($hash,$precision*-1);
 			}),
 			
 			new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array()) {
