@@ -111,26 +111,20 @@
 					
 					<h1>{{'syscheck.sx'|ll}}</h1>
 					<ul class="list-group">
-						{% for test in ['sxConn'] %}
+						{% for test in ['sxConn', 'sxSchema', 'sxContent'] %}
 						{% if not sys[test].hide %}
 						<li class="list-group-item list-group-item-{{sys[test].status}}">
 							<h4 class="uc">
 								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
 								{{['syscheck.',test]|join|ll}}</h4>
 							{% if sys[test].skip %}
-								{% include 'partials/systemcheck/sx/'~test~'-skipped.htm' %}
+								{{'syscheck.skipped'|ll}}
 							{% else %}
 								{% include 'partials/systemcheck/sx/'~test~'-'~sys[test].status~'.htm' %}
 							{% endif %}
 						</li>
 						{% endif %}
 						{% endfor %}
-						<li class="list-group-item list-group-item-warning">
-							<h6 class="">TODO: check if we can query configured sphinx-indices</h6>
-						</li>
-						<li class="list-group-item list-group-item-warning">
-							<h6 class="">TODO: check if sphinxdaemon is returning results</h6>
-						</li>
 					</ul>
 					
 					<h1>{{'syscheck.wf'|ll}}</h1>
