@@ -57,15 +57,24 @@ class filebrowser {
 		$d = ($d === $base) ? '' : $d;
 		
 		if(is_dir($base .$d) === FALSE){ //} || $this->checkAccess($d, $baseDirs) === FALSE) {
-			\Slim\Slim::getInstance()->notFound();
+			$app->flashNow('error', $app->ll->str('filebrowser.invaliddir.', [$base .$d]));
+			return;
 		}
 
-		// avoid path disclosure outside relevant directories
-		$realpath = realpath($base.$d) . DS;
-		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
-		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
-			var_dump($realpath); die();
-			\Slim\Slim::getInstance()->notFound();
+		if($app->config['filebrowser']['restrict-to-musicdir'] == '1') {
+			// avoid path disclosure outside relevant directories
+			$realpath = realpath($base.$d) . DS;
+			
+			if(!$realpath) {
+				$app->flashNow('error', $app->ll->str('filebrowser.realpathempty', [$base.$d]));
+				return;
+			}
+			
+			if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
+			&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
+				$app->flashNow('error', $app->ll->str('filebrowser.outsiderealpath', [$base .$d, $app->config['mpd']['musicdir']]));
+				return;
+			}
 		}
 
 		$this->directory = $d;
