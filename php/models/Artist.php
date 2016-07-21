@@ -42,7 +42,7 @@ class Artist extends AbstractModel
 	
 	public static function getIdsByString($itemString) {
 		if(trim($itemString) === '') {
-			return array("1"); // Unknown
+			return array("10"); // Unknown
 		}
 		
 		$app = \Slim\Slim::getInstance();
@@ -75,7 +75,7 @@ class Artist extends AbstractModel
 			
 			if($az09 === '' || preg_match("/^hash0x([a-f0-9]{7})$/", $az09)) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
-				$itemIds[1] = 1;
+				$itemIds[1] = 10; // Unknown Genre
 			} else {
 				$artistArticle = '';
 				foreach(array('The', 'Die', ) as $matchArticle) {
