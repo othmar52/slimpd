@@ -1,250 +1,16 @@
 [
     {
-        "name": "webfontkit/open-sans",
-        "version": "1.0.0",
-        "version_normalized": "1.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/webfontkit/open-sans.git",
-            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/webfontkit/open-sans/zipball/00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
-            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
-            "shasum": ""
-        },
-        "time": "2014-08-20 20:43:34",
-        "type": "library",
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "Apache-2.0"
-        ],
-        "description": "Open Sans is a humanist sans serif typeface designed by Steve Matteson, Type Director of Ascender Corp. This version contains the complete 897 character set, which includes the standard ISO Latin 1, Latin CE, Greek and Cyrillic character sets. Open Sans was designed with an upright stress, open forms and a neutral, yet friendly appearance. It was optimized for print, web, and mobile interfaces, and has excellent legibility characteristics in its letterforms.",
-        "homepage": "http://www.google.com/fonts/specimen/Open+Sans"
-    },
-    {
-        "name": "components/jquery",
-        "version": "2.2.x-dev",
-        "version_normalized": "2.2.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/components/jquery.git",
-            "reference": "981036fcb56668433a7eb0d1e71190324b4574df"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/components/jquery/zipball/981036fcb56668433a7eb0d1e71190324b4574df",
-            "reference": "981036fcb56668433a7eb0d1e71190324b4574df",
-            "shasum": ""
-        },
-        "time": "2016-05-25 06:43:59",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "jquery.js"
-                ],
-                "files": [
-                    "jquery.min.js",
-                    "jquery.min.map",
-                    "jquery-migrate.js",
-                    "jquery-migrate.min.js"
-                ]
-            }
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "John Resig",
-                "email": "jeresig@gmail.com"
-            }
-        ],
-        "description": "jQuery JavaScript Library",
-        "homepage": "http://jquery.com"
-    },
-    {
-        "name": "symfony/process",
-        "version": "dev-master",
+        "name": "ajjahn/puppet-mpd",
+        "version": "master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/symfony/process.git",
-            "reference": "cdb8db3590748b544e673f8879269afa3c65460a"
+            "url": "git@github.com:ajjahn/puppet-mpd.git",
+            "reference": "origin/master"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/cdb8db3590748b544e673f8879269afa3c65460a",
-            "reference": "cdb8db3590748b544e673f8879269afa3c65460a",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9"
-        },
-        "time": "2016-06-29 05:43:10",
+        "time": "2014-11-06 14:31:47",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.2-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Process\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Process Component",
-        "homepage": "https://symfony.com"
-    },
-    {
-        "name": "kriswallsmith/assetic",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/kriswallsmith/assetic.git",
-            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/4bb27cf9148b5c34f1963cb01bfc586db60d5883",
-            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.1",
-            "symfony/process": "~2.1|~3.0"
-        },
-        "conflict": {
-            "twig/twig": "<1.23"
-        },
-        "require-dev": {
-            "cssmin/cssmin": "3.0.1",
-            "joliclic/javascript-packer": "1.1",
-            "kamicane/packager": "1.0",
-            "leafo/lessphp": "^0.3.7",
-            "leafo/scssphp": "~0.1",
-            "mrclay/minify": "~2.2",
-            "patchwork/jsqueeze": "~1.0|~2.0",
-            "phpunit/phpunit": "~4.8",
-            "psr/log": "~1.0",
-            "ptachoire/cssembed": "~1.0",
-            "symfony/phpunit-bridge": "~2.7|~3.0",
-            "twig/twig": "~1.23|~2.0"
-        },
-        "suggest": {
-            "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
-            "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
-            "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
-            "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
-            "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
-            "twig/twig": "Assetic provides the integration with the Twig templating engine"
-        },
-        "time": "2016-02-07 17:40:57",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.4-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Assetic": "src/"
-            },
-            "files": [
-                "src/functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Kris Wallsmith",
-                "email": "kris.wallsmith@gmail.com",
-                "homepage": "http://kriswallsmith.net/"
-            }
-        ],
-        "description": "Asset Management for PHP",
-        "homepage": "https://github.com/kriswallsmith/assetic",
-        "keywords": [
-            "assets",
-            "compression",
-            "minification"
-        ]
-    },
-    {
-        "name": "components/jquery-cookie",
-        "version": "1.4.1.2",
-        "version_normalized": "1.4.1.2",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Gta-Cool/jquery-cookie.git",
-            "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Gta-Cool/jquery-cookie/zipball/0a10666155fd3aab9be5735b0ba83a4dccf59d78",
-            "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78",
-            "shasum": ""
-        },
-        "require": {
-            "components/jquery": "*",
-            "robloach/component-installer": "*"
-        },
-        "time": "2014-07-02 18:35:35",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "jquery.cookie.js"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Klaus Hartl",
-                "homepage": "https://github.com/carhartl"
-            }
-        ],
-        "description": "A simple, lightweight jQuery plugin for reading, writing and deleting cookies",
-        "homepage": "https://github.com/carhartl/jquery-cookie",
-        "keywords": [
-            "JS",
-            "cookie",
-            "javascript",
-            "jquery"
-        ]
+        "installation-source": "source"
     },
     {
         "name": "components/underscore",
@@ -358,6 +124,85 @@
         ]
     },
     {
+        "name": "kriswallsmith/assetic",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kriswallsmith/assetic.git",
+            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/4bb27cf9148b5c34f1963cb01bfc586db60d5883",
+            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.1",
+            "symfony/process": "~2.1|~3.0"
+        },
+        "conflict": {
+            "twig/twig": "<1.23"
+        },
+        "require-dev": {
+            "cssmin/cssmin": "3.0.1",
+            "joliclic/javascript-packer": "1.1",
+            "kamicane/packager": "1.0",
+            "leafo/lessphp": "^0.3.7",
+            "leafo/scssphp": "~0.1",
+            "mrclay/minify": "~2.2",
+            "patchwork/jsqueeze": "~1.0|~2.0",
+            "phpunit/phpunit": "~4.8",
+            "psr/log": "~1.0",
+            "ptachoire/cssembed": "~1.0",
+            "symfony/phpunit-bridge": "~2.7|~3.0",
+            "twig/twig": "~1.23|~2.0"
+        },
+        "suggest": {
+            "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
+            "leafo/scssphp": "Assetic provides the integration with the scssphp SCSS compiler",
+            "leafo/scssphp-compass": "Assetic provides the integration with the SCSS compass plugin",
+            "patchwork/jsqueeze": "Assetic provides the integration with the JSqueeze JavaScript compressor",
+            "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
+            "twig/twig": "Assetic provides the integration with the Twig templating engine"
+        },
+        "time": "2016-02-07 17:40:57",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.4-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Assetic": "src/"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Kris Wallsmith",
+                "email": "kris.wallsmith@gmail.com",
+                "homepage": "http://kriswallsmith.net/"
+            }
+        ],
+        "description": "Asset Management for PHP",
+        "homepage": "https://github.com/kriswallsmith/assetic",
+        "keywords": [
+            "assets",
+            "compression",
+            "minification"
+        ]
+    },
+    {
         "name": "components/greensock-js",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -404,6 +249,115 @@
         ]
     },
     {
+        "name": "components/jquery-cookie",
+        "version": "1.4.1.2",
+        "version_normalized": "1.4.1.2",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Gta-Cool/jquery-cookie.git",
+            "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Gta-Cool/jquery-cookie/zipball/0a10666155fd3aab9be5735b0ba83a4dccf59d78",
+            "reference": "0a10666155fd3aab9be5735b0ba83a4dccf59d78",
+            "shasum": ""
+        },
+        "require": {
+            "components/jquery": "*",
+            "robloach/component-installer": "*"
+        },
+        "time": "2014-07-02 18:35:35",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "jquery.cookie.js"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Klaus Hartl",
+                "homepage": "https://github.com/carhartl"
+            }
+        ],
+        "description": "A simple, lightweight jQuery plugin for reading, writing and deleting cookies",
+        "homepage": "https://github.com/carhartl/jquery-cookie",
+        "keywords": [
+            "JS",
+            "cookie",
+            "javascript",
+            "jquery"
+        ]
+    },
+    {
+        "name": "happyworm/jplayer",
+        "version": "2.9.x-dev",
+        "version_normalized": "2.9.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/happyworm/jPlayer.git",
+            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/happyworm/jPlayer/zipball/4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
+            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
+            "shasum": ""
+        },
+        "require": {
+            "robloach/component-installer": "*"
+        },
+        "suggest": {
+            "components/jquery": ">=1.7.2"
+        },
+        "time": "2014-12-15 01:02:19",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "dist/jplayer/jquery.jplayer.js"
+                ],
+                "files": [
+                    "dist"
+                ],
+                "shim": {
+                    "deps": [
+                        "jquery"
+                    ]
+                }
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Mark J Panaghiston",
+                "email": "markp@happyworm.com"
+            }
+        ],
+        "description": "jPlayer allows you to create a media player with a consistent interface and experience across all browsers.",
+        "homepage": "http://jplayer.org/",
+        "keywords": [
+            "HTML5",
+            "audio",
+            "jplayer",
+            "media",
+            "player",
+            "streaming",
+            "video"
+        ]
+    },
+    {
         "name": "hendrismit/bootstrap-lightbox",
         "version": "master",
         "version_normalized": "9999999-dev",
@@ -412,20 +366,109 @@
             "url": "git@github.com:hendrismit/bootstrap-lightbox.git",
             "reference": "origin/master"
         },
+        "time": "2014-09-21 16:10:11",
         "type": "library",
         "installation-source": "source"
     },
     {
-        "name": "mouse0270/bootstrap-notify",
-        "version": "master",
-        "version_normalized": "9999999-dev",
+        "name": "james-heinrich/phpthumb",
+        "version": "v1.7.13",
+        "version_normalized": "1.7.13.0",
         "source": {
             "type": "git",
-            "url": "git@github.com:mouse0270/bootstrap-notify.git",
-            "reference": "origin/master"
+            "url": "https://github.com/JamesHeinrich/phpThumb.git",
+            "reference": "6a582647f352706432898e332d196c3c84a982d9"
         },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JamesHeinrich/phpThumb/zipball/6a582647f352706432898e332d196c3c84a982d9",
+            "reference": "6a582647f352706432898e332d196c3c84a982d9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=4.3.3"
+        },
+        "suggest": {
+            "ext-gd": "PHP GD library",
+            "ext-imagick": "PHP ImageMagick"
+        },
+        "time": "2014-06-26 14:09:03",
         "type": "library",
-        "installation-source": "source"
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "phpthumb.class.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "authors": [
+            {
+                "name": "James Heinric",
+                "email": "info@silisoftware.com",
+                "homepage": "http://www.silisoftware.com/",
+                "role": "Developer"
+            }
+        ],
+        "description": "The PHP thumbnail generator",
+        "homepage": "http://phpthumb.sourceforge.net/",
+        "keywords": [
+            "ImageMagick",
+            "gd",
+            "image",
+            "magic",
+            "thumb",
+            "thumbnail"
+        ]
+    },
+    {
+        "name": "jasongrimes/paginator",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jasongrimes/php-paginator.git",
+            "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jasongrimes/php-paginator/zipball/8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
+            "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.2"
+        },
+        "time": "2015-10-15 09:42:44",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "JasonGrimes": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jason Grimes",
+                "email": "jason@grimesit.com"
+            }
+        ],
+        "description": "A lightweight PHP paginator, for generating pagination controls in the style of Stack Overflow and Flickr. The 'first' and 'last' page links are shown inline as page numbers, and excess page numbers are replaced by ellipses.",
+        "homepage": "http://github.com/jasongrimes/php-paginator",
+        "keywords": [
+            "pager",
+            "pagination",
+            "paginator"
+        ]
     },
     {
         "name": "jeresig/jquery.hotkeys",
@@ -436,6 +479,7 @@
             "url": "git@github.com:jeresig/jquery.hotkeys.git",
             "reference": "origin/master"
         },
+        "time": "2015-11-08 20:57:18",
         "type": "library",
         "installation-source": "source"
     },
@@ -448,8 +492,170 @@
             "url": "git@github.com:johnkpaul/jquery-ajax-retry.git",
             "reference": "origin/master"
         },
+        "time": "2014-12-26 22:07:25",
         "type": "library",
         "installation-source": "source"
+    },
+    {
+        "name": "lusitanian/oauth",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
+            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/09f4af38f17db6938253f4d1b171d537913ac1ed",
+            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "3.7.*",
+            "predis/predis": "0.8.*@dev",
+            "squizlabs/php_codesniffer": "2.*",
+            "symfony/http-foundation": "~2.1"
+        },
+        "suggest": {
+            "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client.",
+            "predis/predis": "Allows using the Redis storage backend.",
+            "symfony/http-foundation": "Allows using the Symfony Session storage backend."
+        },
+        "time": "2016-07-12 22:15:40",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "0.1-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "OAuth": "src",
+                "OAuth\\Unit": "tests"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "David Desberg",
+                "email": "david@daviddesberg.com"
+            },
+            {
+                "name": "Elliot Chance",
+                "email": "elliotchance@gmail.com"
+            },
+            {
+                "name": "Pieter Hordijk",
+                "email": "info@pieterhordijk.com"
+            }
+        ],
+        "description": "PHP 5.3+ oAuth 1/2 Library",
+        "keywords": [
+            "Authentication",
+            "authorization",
+            "oauth",
+            "security"
+        ]
+    },
+    {
+        "name": "mouse0270/bootstrap-notify",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:mouse0270/bootstrap-notify.git",
+            "reference": "origin/master"
+        },
+        "time": "2016-01-21 23:37:59",
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "neutron/sphinxsearch-api",
+        "version": "2.0.8",
+        "version_normalized": "2.0.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/romainneutron/Sphinx-Search-API-PHP-Client.git",
+            "reference": "a108fda835a9f8717e8fc22f2f35106e0f49dbdc"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/romainneutron/Sphinx-Search-API-PHP-Client/zipball/a108fda835a9f8717e8fc22f2f35106e0f49dbdc",
+            "reference": "a108fda835a9f8717e8fc22f2f35106e0f49dbdc",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=4"
+        },
+        "time": "2013-08-07 18:06:02",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "classmap": [
+                "sphinxapi.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "authors": [
+            {
+                "name": "Andrew Aksyonoff",
+                "homepage": "http://sphinxsearch.com/"
+            }
+        ],
+        "description": "SphinxSearch PHP API",
+        "homepage": "http://sphinxsearch.com/",
+        "keywords": [
+            "Sphinx Search",
+            "api",
+            "search-engine"
+        ]
+    },
+    {
+        "name": "nicolasbize/faviconx",
+        "version": "1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nicolasbize/faviconx.git",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
+            "shasum": ""
+        },
+        "time": "2014-10-16 18:24:29",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "faviconx.js"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
+        "homepage": "http://nicolasbize.com/faviconx",
+        "support": {
+            "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
+            "issues": "https://github.com/nicolasbize/faviconx/issues"
+        }
     },
     {
         "name": "othmar52/clean-rename",
@@ -460,107 +666,9 @@
             "url": "git@github.com:othmar52/clean-rename.git",
             "reference": "origin/master"
         },
+        "time": "2016-02-14 10:51:02",
         "type": "library",
         "installation-source": "source"
-    },
-    {
-        "name": "ajjahn/puppet-mpd",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:ajjahn/puppet-mpd.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "othmar52/xwax-1.5-osc",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:othmar52/xwax-1.5-osc.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "rstacruz/nprogress",
-        "version": "master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "git@github.com:rstacruz/nprogress.git",
-            "reference": "origin/master"
-        },
-        "type": "library",
-        "installation-source": "source"
-    },
-    {
-        "name": "twig/twig",
-        "version": "1.x-dev",
-        "version_normalized": "1.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/c535bc0b56aa93ead7a75b6841f28645153b0539",
-            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "require-dev": {
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
-        },
-        "time": "2016-07-10 07:48:21",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.24-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
     },
     {
         "name": "slim/slim",
@@ -666,6 +774,84 @@
         ]
     },
     {
+        "name": "twbs/bootstrap",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twbs/bootstrap.git",
+            "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/edefe0e77a39149f971c4215301f7f8a7f15f210",
+            "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210",
+            "shasum": ""
+        },
+        "replace": {
+            "twitter/bootstrap": "self.version"
+        },
+        "time": "2016-07-21 15:14:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.3.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jacob Thornton",
+                "email": "jacobthornton@gmail.com"
+            },
+            {
+                "name": "Mark Otto",
+                "email": "markdotto@gmail.com"
+            }
+        ],
+        "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
+        "homepage": "http://getbootstrap.com",
+        "keywords": [
+            "JS",
+            "css",
+            "framework",
+            "front-end",
+            "less",
+            "mobile-first",
+            "responsive",
+            "web"
+        ]
+    },
+    {
+        "name": "webfontkit/open-sans",
+        "version": "1.0.0",
+        "version_normalized": "1.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/webfontkit/open-sans.git",
+            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/webfontkit/open-sans/zipball/00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+            "reference": "00ab31e690edfd0d88f9ffbcd998cf298b9687e9",
+            "shasum": ""
+        },
+        "time": "2014-08-20 20:43:34",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "Apache-2.0"
+        ],
+        "description": "Open Sans is a humanist sans serif typeface designed by Steve Matteson, Type Director of Ascender Corp. This version contains the complete 897 character set, which includes the standard ISO Latin 1, Latin CE, Greek and Cyrillic character sets. Open Sans was designed with an upright stress, open forms and a neutral, yet friendly appearance. It was optimized for print, web, and mobile interfaces, and has excellent legibility characteristics in its letterforms.",
+        "homepage": "http://www.google.com/fonts/specimen/Open+Sans"
+    },
+    {
         "name": "james-heinrich/getid3",
         "version": "v1.9.12",
         "version_normalized": "1.9.12.0",
@@ -704,180 +890,119 @@
         ]
     },
     {
-        "name": "james-heinrich/phpthumb",
-        "version": "v1.7.13",
-        "version_normalized": "1.7.13.0",
+        "name": "components/jquery",
+        "version": "2.2.x-dev",
+        "version_normalized": "2.2.9999999.9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/JamesHeinrich/phpThumb.git",
-            "reference": "6a582647f352706432898e332d196c3c84a982d9"
+            "url": "https://github.com/components/jquery.git",
+            "reference": "981036fcb56668433a7eb0d1e71190324b4574df"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/phpThumb/zipball/6a582647f352706432898e332d196c3c84a982d9",
-            "reference": "6a582647f352706432898e332d196c3c84a982d9",
+            "url": "https://api.github.com/repos/components/jquery/zipball/981036fcb56668433a7eb0d1e71190324b4574df",
+            "reference": "981036fcb56668433a7eb0d1e71190324b4574df",
+            "shasum": ""
+        },
+        "time": "2016-05-25 06:43:59",
+        "type": "component",
+        "extra": {
+            "component": {
+                "scripts": [
+                    "jquery.js"
+                ],
+                "files": [
+                    "jquery.min.js",
+                    "jquery.min.map",
+                    "jquery-migrate.js",
+                    "jquery-migrate.min.js"
+                ]
+            }
+        },
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "John Resig",
+                "email": "jeresig@gmail.com"
+            }
+        ],
+        "description": "jQuery JavaScript Library",
+        "homepage": "http://jquery.com"
+    },
+    {
+        "name": "symfony/process",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/symfony/process.git",
+            "reference": "cdb8db3590748b544e673f8879269afa3c65460a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/symfony/process/zipball/cdb8db3590748b544e673f8879269afa3c65460a",
+            "reference": "cdb8db3590748b544e673f8879269afa3c65460a",
             "shasum": ""
         },
         "require": {
-            "php": ">=4.3.3"
+            "php": ">=5.5.9"
         },
-        "suggest": {
-            "ext-gd": "PHP GD library",
-            "ext-imagick": "PHP ImageMagick"
-        },
-        "time": "2014-06-26 14:09:03",
+        "time": "2016-06-29 05:43:10",
         "type": "library",
-        "installation-source": "dist",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.2-dev"
+            }
+        },
+        "installation-source": "source",
         "autoload": {
-            "files": [
-                "phpthumb.class.php"
+            "psr-4": {
+                "Symfony\\Component\\Process\\": ""
+            },
+            "exclude-from-classmap": [
+                "/Tests/"
             ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
-            "GPL"
-        ],
-        "authors": [
-            {
-                "name": "James Heinric",
-                "email": "info@silisoftware.com",
-                "homepage": "http://www.silisoftware.com/",
-                "role": "Developer"
-            }
-        ],
-        "description": "The PHP thumbnail generator",
-        "homepage": "http://phpthumb.sourceforge.net/",
-        "keywords": [
-            "ImageMagick",
-            "gd",
-            "image",
-            "magic",
-            "thumb",
-            "thumbnail"
-        ]
-    },
-    {
-        "name": "twbs/bootstrap",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twbs/bootstrap.git",
-            "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6ae5378202643804b383e1ee1005466e2bc8aa87",
-            "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87",
-            "shasum": ""
-        },
-        "replace": {
-            "twitter/bootstrap": "self.version"
-        },
-        "time": "2016-07-17 07:01:59",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.3.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
             "MIT"
         ],
         "authors": [
             {
-                "name": "Jacob Thornton",
-                "email": "jacobthornton@gmail.com"
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
             },
             {
-                "name": "Mark Otto",
-                "email": "markdotto@gmail.com"
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
             }
         ],
-        "description": "The most popular front-end framework for developing responsive, mobile first projects on the web.",
-        "homepage": "http://getbootstrap.com",
-        "keywords": [
-            "JS",
-            "css",
-            "framework",
-            "front-end",
-            "less",
-            "mobile-first",
-            "responsive",
-            "web"
-        ]
-    },
-    {
-        "name": "robloach/component-installer",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/RobLoach/component-installer.git",
-            "reference": "59f93ece022f1b5c3576de139964975561af980a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/59f93ece022f1b5c3576de139964975561af980a",
-            "reference": "59f93ece022f1b5c3576de139964975561af980a",
-            "shasum": ""
-        },
-        "require": {
-            "composer-plugin-api": "^1.0",
-            "kriswallsmith/assetic": "1.*",
-            "php": ">=5.3.2"
-        },
-        "require-dev": {
-            "composer/composer": "~1.1.2",
-            "phpunit/phpunit": "~5.4.6"
-        },
-        "time": "2016-07-16 01:43:54",
-        "type": "composer-plugin",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            },
-            "class": "ComponentInstaller\\ComponentInstallerPlugin"
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "ComponentInstaller": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Rob Loach",
-                "homepage": "http://robloach.net"
-            }
-        ],
-        "description": "Allows installation of Components via Composer."
+        "description": "Symfony Process Component",
+        "homepage": "https://symfony.com"
     },
     {
         "name": "components/jqueryui",
-        "version": "1.12.0",
-        "version_normalized": "1.12.0.0",
+        "version": "1.12.0.1",
+        "version_normalized": "1.12.0.1",
         "source": {
             "type": "git",
             "url": "https://github.com/components/jqueryui.git",
-            "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803"
+            "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/components/jqueryui/zipball/99c8c1a282ab15093cd7391aa22fe39727cbb803",
-            "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803",
+            "url": "https://api.github.com/repos/components/jqueryui/zipball/2c9359a9d199da254dd278bef3d4ced047d6581c",
+            "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c",
             "shasum": ""
         },
         "require": {
             "components/jquery": ">=1.6"
         },
-        "time": "2016-07-13 07:19:15",
+        "time": "2016-07-19 06:02:37",
         "type": "component",
         "extra": {
             "component": {
@@ -984,122 +1109,31 @@
         "description": "The iconic font designed for use with Twitter Bootstrap."
     },
     {
-        "name": "neutron/sphinxsearch-api",
-        "version": "2.0.8",
-        "version_normalized": "2.0.8.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/romainneutron/Sphinx-Search-API-PHP-Client.git",
-            "reference": "a108fda835a9f8717e8fc22f2f35106e0f49dbdc"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/romainneutron/Sphinx-Search-API-PHP-Client/zipball/a108fda835a9f8717e8fc22f2f35106e0f49dbdc",
-            "reference": "a108fda835a9f8717e8fc22f2f35106e0f49dbdc",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=4"
-        },
-        "time": "2013-08-07 18:06:02",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "classmap": [
-                "sphinxapi.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL"
-        ],
-        "authors": [
-            {
-                "name": "Andrew Aksyonoff",
-                "homepage": "http://sphinxsearch.com/"
-            }
-        ],
-        "description": "SphinxSearch PHP API",
-        "homepage": "http://sphinxsearch.com/",
-        "keywords": [
-            "Sphinx Search",
-            "api",
-            "search-engine"
-        ]
-    },
-    {
-        "name": "jasongrimes/paginator",
-        "version": "1.0.2",
-        "version_normalized": "1.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/jasongrimes/php-paginator.git",
-            "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/jasongrimes/php-paginator/zipball/8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
-            "reference": "8b18245b8a9dbdf69918ebd1e1f4a229a06030cd",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.2"
-        },
-        "time": "2015-10-15 09:42:44",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "JasonGrimes": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jason Grimes",
-                "email": "jason@grimesit.com"
-            }
-        ],
-        "description": "A lightweight PHP paginator, for generating pagination controls in the style of Stack Overflow and Flickr. The 'first' and 'last' page links are shown inline as page numbers, and excess page numbers are replaced by ellipses.",
-        "homepage": "http://github.com/jasongrimes/php-paginator",
-        "keywords": [
-            "pager",
-            "pagination",
-            "paginator"
-        ]
-    },
-    {
         "name": "react/promise",
-        "version": "v2.4.1",
-        "version_normalized": "2.4.1.0",
+        "version": "2.x-dev",
+        "version_normalized": "2.9999999.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/reactphp/promise.git",
-            "reference": "8025426794f1944de806618671d4fa476dc7626f"
+            "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/reactphp/promise/zipball/8025426794f1944de806618671d4fa476dc7626f",
-            "reference": "8025426794f1944de806618671d4fa476dc7626f",
+            "url": "https://api.github.com/repos/reactphp/promise/zipball/d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
+            "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
             "shasum": ""
         },
         "require": {
             "php": ">=5.4.0"
         },
-        "time": "2016-05-03 17:50:52",
+        "time": "2016-05-09 07:16:19",
         "type": "library",
         "extra": {
             "branch-alias": {
                 "dev-master": "2.0-dev"
             }
         },
-        "installation-source": "dist",
+        "installation-source": "source",
         "autoload": {
             "psr-4": {
                 "React\\Promise\\": "src/"
@@ -1232,12 +1266,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/guzzle/guzzle.git",
-            "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9"
+            "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4afc9682f51b2880c6417e9f4aa19c26b53472e9",
-            "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9",
+            "url": "https://api.github.com/repos/guzzle/guzzle/zipball/70f1fa53b71c4647bf2762c09068a95f77e12fb8",
+            "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8",
             "shasum": ""
         },
         "require": {
@@ -1248,7 +1282,7 @@
             "ext-curl": "*",
             "phpunit/phpunit": "^4.0"
         },
-        "time": "2016-02-08 19:23:30",
+        "time": "2016-07-15 19:28:39",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -1485,169 +1519,28 @@
         ]
     },
     {
-        "name": "lusitanian/oauth",
-        "version": "dev-master",
+        "name": "othmar52/xwax-1.5-osc",
+        "version": "master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/Lusitanian/PHPoAuthLib.git",
-            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed"
+            "url": "git@github.com:othmar52/xwax-1.5-osc.git",
+            "reference": "origin/master"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Lusitanian/PHPoAuthLib/zipball/09f4af38f17db6938253f4d1b171d537913ac1ed",
-            "reference": "09f4af38f17db6938253f4d1b171d537913ac1ed",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "3.7.*",
-            "predis/predis": "0.8.*@dev",
-            "squizlabs/php_codesniffer": "2.*",
-            "symfony/http-foundation": "~2.1"
-        },
-        "suggest": {
-            "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client.",
-            "predis/predis": "Allows using the Redis storage backend.",
-            "symfony/http-foundation": "Allows using the Symfony Session storage backend."
-        },
-        "time": "2016-07-12 22:15:40",
         "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "0.1-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "OAuth": "src",
-                "OAuth\\Unit": "tests"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "David Desberg",
-                "email": "david@daviddesberg.com"
-            },
-            {
-                "name": "Elliot Chance",
-                "email": "elliotchance@gmail.com"
-            },
-            {
-                "name": "Pieter Hordijk",
-                "email": "info@pieterhordijk.com"
-            }
-        ],
-        "description": "PHP 5.3+ oAuth 1/2 Library",
-        "keywords": [
-            "Authentication",
-            "authorization",
-            "oauth",
-            "security"
-        ]
+        "installation-source": "source"
     },
     {
-        "name": "nicolasbize/faviconx",
-        "version": "1.0.1",
-        "version_normalized": "1.0.1.0",
+        "name": "rstacruz/nprogress",
+        "version": "master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/nicolasbize/faviconx.git",
-            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a"
+            "url": "git@github.com:rstacruz/nprogress.git",
+            "reference": "origin/master"
         },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nicolasbize/faviconx/zipball/90900f7f06bdd3832ff252850801aebb8e8d7c5a",
-            "reference": "90900f7f06bdd3832ff252850801aebb8e8d7c5a",
-            "shasum": ""
-        },
-        "time": "2014-10-16 18:24:29",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "faviconx.js"
-                ]
-            }
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "description": "A tiny javascript library that makes progress bars out of the favicon placeholders.",
-        "homepage": "http://nicolasbize.com/faviconx",
-        "support": {
-            "source": "https://github.com/nicolasbize/faviconx/tree/1.0.1",
-            "issues": "https://github.com/nicolasbize/faviconx/issues"
-        }
-    },
-    {
-        "name": "happyworm/jplayer",
-        "version": "2.9.x-dev",
-        "version_normalized": "2.9.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/happyworm/jPlayer.git",
-            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/happyworm/jPlayer/zipball/4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
-            "reference": "4eb52eca89d27fd2a6c714bffa7927b2bd7fba4a",
-            "shasum": ""
-        },
-        "require": {
-            "robloach/component-installer": "*"
-        },
-        "suggest": {
-            "components/jquery": ">=1.7.2"
-        },
-        "time": "2014-12-15 01:02:19",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "dist/jplayer/jquery.jplayer.js"
-                ],
-                "files": [
-                    "dist"
-                ],
-                "shim": {
-                    "deps": [
-                        "jquery"
-                    ]
-                }
-            }
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Mark J Panaghiston",
-                "email": "markp@happyworm.com"
-            }
-        ],
-        "description": "jPlayer allows you to create a media player with a consistent interface and experience across all browsers.",
-        "homepage": "http://jplayer.org/",
-        "keywords": [
-            "HTML5",
-            "audio",
-            "jplayer",
-            "media",
-            "player",
-            "streaming",
-            "video"
-        ]
+        "type": "library",
+        "installation-source": "source"
     },
     {
         "name": "mmp/mmp",
@@ -1656,19 +1549,19 @@
         "source": {
             "type": "git",
             "url": "https://github.com/idler/MMP.git",
-            "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e"
+            "reference": "eb11124225b43866dc035f0d3795d7446ece28b3"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/idler/MMP/zipball/6e5d3db0b91adccec6d0f9deb092446fda9c515e",
-            "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+            "url": "https://api.github.com/repos/idler/MMP/zipball/eb11124225b43866dc035f0d3795d7446ece28b3",
+            "reference": "eb11124225b43866dc035f0d3795d7446ece28b3",
             "shasum": ""
         },
         "require-dev": {
             "phpunit/phpunit": "4.0.*",
             "satooshi/php-coveralls": "1.0.0"
         },
-        "time": "2016-05-17 16:52:54",
+        "time": "2016-07-20 20:23:29",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -1684,5 +1577,118 @@
             "source": "https://github.com/idler/MMP/tree/master",
             "issues": "https://github.com/idler/MMP/issues"
         }
+    },
+    {
+        "name": "robloach/component-installer",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/RobLoach/component-installer.git",
+            "reference": "59f93ece022f1b5c3576de139964975561af980a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/RobLoach/component-installer/zipball/59f93ece022f1b5c3576de139964975561af980a",
+            "reference": "59f93ece022f1b5c3576de139964975561af980a",
+            "shasum": ""
+        },
+        "require": {
+            "composer-plugin-api": "^1.0",
+            "kriswallsmith/assetic": "1.*",
+            "php": ">=5.3.2"
+        },
+        "require-dev": {
+            "composer/composer": "~1.1.2",
+            "phpunit/phpunit": "~5.4.6"
+        },
+        "time": "2016-07-16 01:43:54",
+        "type": "composer-plugin",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            },
+            "class": "ComponentInstaller\\ComponentInstallerPlugin"
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "ComponentInstaller": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rob Loach",
+                "homepage": "http://robloach.net"
+            }
+        ],
+        "description": "Allows installation of Components via Composer."
+    },
+    {
+        "name": "twig/twig",
+        "version": "1.x-dev",
+        "version_normalized": "1.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/c535bc0b56aa93ead7a75b6841f28645153b0539",
+            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "require-dev": {
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~2.7"
+        },
+        "time": "2016-07-10 07:48:21",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.24-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
     }
 ]

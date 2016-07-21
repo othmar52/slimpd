@@ -244,16 +244,16 @@
         },
         {
             "name": "components/jqueryui",
-            "version": "1.12.0",
+            "version": "1.12.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jqueryui.git",
-                "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803"
+                "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jqueryui/zipball/99c8c1a282ab15093cd7391aa22fe39727cbb803",
-                "reference": "99c8c1a282ab15093cd7391aa22fe39727cbb803",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/2c9359a9d199da254dd278bef3d4ced047d6581c",
+                "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c",
                 "shasum": ""
             },
             "require": {
@@ -325,7 +325,7 @@
                 }
             ],
             "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.",
-            "time": "2016-07-13 07:19:15"
+            "time": "2016-07-19 06:02:37"
         },
         {
             "name": "components/underscore",
@@ -429,12 +429,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9"
+                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/4afc9682f51b2880c6417e9f4aa19c26b53472e9",
-                "reference": "4afc9682f51b2880c6417e9f4aa19c26b53472e9",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/70f1fa53b71c4647bf2762c09068a95f77e12fb8",
+                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8",
                 "shasum": ""
             },
             "require": {
@@ -473,7 +473,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-02-08 19:23:30"
+            "time": "2016-07-15 19:28:39"
         },
         {
             "name": "guzzlehttp/guzzle-services",
@@ -1047,12 +1047,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/idler/MMP.git",
-                "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e"
+                "reference": "eb11124225b43866dc035f0d3795d7446ece28b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/idler/MMP/zipball/6e5d3db0b91adccec6d0f9deb092446fda9c515e",
-                "reference": "6e5d3db0b91adccec6d0f9deb092446fda9c515e",
+                "url": "https://api.github.com/repos/idler/MMP/zipball/eb11124225b43866dc035f0d3795d7446ece28b3",
+                "reference": "eb11124225b43866dc035f0d3795d7446ece28b3",
                 "shasum": ""
             },
             "require-dev": {
@@ -1073,7 +1073,7 @@
                 "source": "https://github.com/idler/MMP/tree/master",
                 "issues": "https://github.com/idler/MMP/issues"
             },
-            "time": "2016-05-17 16:52:54"
+            "time": "2016-07-20 20:23:29"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1185,16 +1185,16 @@
         },
         {
             "name": "react/promise",
-            "version": "v2.4.1",
+            "version": "2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "8025426794f1944de806618671d4fa476dc7626f"
+                "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/8025426794f1944de806618671d4fa476dc7626f",
-                "reference": "8025426794f1944de806618671d4fa476dc7626f",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
+                "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
                 "shasum": ""
             },
             "require": {
@@ -1225,7 +1225,7 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2016-05-03 17:50:52"
+            "time": "2016-05-09 07:16:19"
         },
         {
             "name": "ricbra/php-discogs-api",
@@ -1494,12 +1494,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87"
+                "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/6ae5378202643804b383e1ee1005466e2bc8aa87",
-                "reference": "6ae5378202643804b383e1ee1005466e2bc8aa87",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/edefe0e77a39149f971c4215301f7f8a7f15f210",
+                "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210",
                 "shasum": ""
             },
             "replace": {
@@ -1537,7 +1537,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2016-07-17 07:01:59"
+            "time": "2016-07-21 15:14:21"
         },
         {
             "name": "twig/twig",
