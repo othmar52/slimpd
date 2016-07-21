@@ -185,10 +185,17 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 	// insert some defaults
 	// TODO: read from localization-file
 	$queries = array(
-		"INSERT INTO `artist` VALUES ('1', 'Unknown Artist', '', 'unknownartist', 0,0);",
-		"INSERT INTO `artist` VALUES ('2', 'Various Artists', '', 'variousartists', 0,0);",
-		"INSERT INTO `genre` VALUES ('1', 'Unknown', '0', 'unknown',0,0);",
-		"INSERT INTO `label` VALUES ('1', 'Unknown Label', 'unknownlabel',0,0);"
+		"ALTER TABLE `artist` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `genre` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `label` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `album` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `albumindex` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `track` AUTO_INCREMENT = 10;",
+		"ALTER TABLE `trackindex` AUTO_INCREMENT = 10;",
+		"INSERT INTO `artist` VALUES (NULL, 'Unknown Artist', '', 'unknownartist', 0,0);",
+		"INSERT INTO `artist` VALUES (NULL, 'Various Artists', '', 'variousartists', 0,0);",
+		"INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown',0,0);",
+		"INSERT INTO `label` VALUES (NULL, 'Unknown Label', 'unknownlabel',0,0);"
 	);
 	foreach($queries as $query) {
 		$app->db->query($query);
