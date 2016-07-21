@@ -57,7 +57,7 @@ class filebrowser {
 		$d = ($d === $base) ? '' : $d;
 		
 		if(is_dir($base .$d) === FALSE){ //} || $this->checkAccess($d, $baseDirs) === FALSE) {
-			$app->flashNow('error', $app->ll->str('filebrowser.invaliddir.', [$base .$d]));
+			$app->flashNow('error', $app->ll->str('filebrowser.invaliddir', [$base .$d]));
 			return;
 		}
 
