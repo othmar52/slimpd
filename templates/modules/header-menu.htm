@@ -15,9 +15,11 @@
 	    		<div class="col-md-6">
 					<ul class="nav navbar-nav">
 						{% for menu in mainmenu %}
+						{% if menu.url %}
 						<li class="{% if menu.url == current_url %} active{% endif %}">
 							<a href="{{root}}{{menu.url}}" data-ajaxtarget="#main" class="ajax-link col3">{{menu.title|ll|raw}}</a>
 						</li>
+						{% endif %}
 						{% endfor %}
 		      		</ul>
 		      	</div>
