@@ -7,7 +7,7 @@
 	padding: 1em;
 }
 
-.ui-autocomplete .ui-state-focus {
+.ui-autocomplete .ui-state-active {
 	background-color: #353535;
 	outline: 1px solid #AAA;
 }
@@ -16,7 +16,7 @@
 	border-bottom: 1px solid #AAA;
 }
 
-.ui-autocomplete li.ui-menu-item.ui-state-focus {
+.ui-autocomplete li.ui-menu-item .ui-state-active {
 	border: none;
 	background-color: #1A1A1A;
 	outline: none;
