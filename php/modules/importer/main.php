@@ -579,6 +579,26 @@ class Importer {
 			}
 		}
 
+		if($app->config['images']['look_silbling_directory']) {
+			$this->pluralizeCommonArtworkDirectoryNames();
+			$parentDir = $app->config['mpd']['musicdir'] . dirname($directory) . DS;
+			// search for specific named subdirectories
+			if(is_dir($parentDir) === TRUE) {
+				$handle=opendir($parentDir);
+				while ($dirname = readdir ($handle)) {
+					if(is_dir($parentDir . $dirname)) {
+						if(in_array(az09($dirname), $this->commonArtworkDirectoryNames)) {
+							$foundAlbumImages = array_merge(
+								$foundAlbumImages,
+								getDirectoryFiles($parentDir . $dirname)
+							);
+						}
+					}
+				}
+				closedir($handle);
+			}
+		}
+
 		if($app->config['images']['look_parent_directory'] && count($foundAlbumImages) === 0) {
 			$parentDir = dirname($directory) . DS;
 			$parentDirHash = getFilePathHash($parentDir);
@@ -606,7 +626,7 @@ class Importer {
 		}
 
 		$app = \Slim\Slim::getInstance();
-		if($app->config['images']['look_cover_directory'] != TRUE) {
+		if($app->config['images']['look_cover_directory'] != TRUE && $app->config['images']['look_silbling_directory'] != TRUE) {
 			// disabled by config
 			return;
 		}
