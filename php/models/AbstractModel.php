@@ -6,7 +6,7 @@ abstract class AbstractModel {
 		
 	public static $tableName;
 	
-	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1) {
+	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -22,7 +22,20 @@ abstract class AbstractModel {
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 		
-		
+		// important TODO: validate orderBy to avoid SQL injection
+		// for now use an ugly whitelist
+		switch($orderBy) {
+			case 'number ASC':
+				// as we have a string field(01, A1,...) we have to cast it by adding ' +0'
+				$orderBy = ' ORDER BY number + 0 ASC ';
+				break;
+			default:
+				$orderBy = "";
+				break;
+		}
+
+		$query .= $orderBy;
+
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
 		$result = $db->query($query);

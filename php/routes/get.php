@@ -80,7 +80,7 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 	$app->get($what .'/:albumId', function($albumId) use ($app, $vars, $what){
 		$vars['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
 		$vars['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
-		$vars['itemlist'] = \Slimpd\Track::getInstancesByAttributes(array('albumId' => $albumId));
+		$vars['itemlist'] = \Slimpd\Track::getInstancesByAttributes(['albumId' => $albumId], FALSE, 200, 1, 'number ASC');
 		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
 		$vars['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
 			array('albumId' => $albumId)
