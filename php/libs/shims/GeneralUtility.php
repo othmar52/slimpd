@@ -26,7 +26,7 @@ function cleanSearchterm($searchterm) {
 }
 
 function addStars($searchterm) {
-	$str = str_replace(["_", "-", "/", " ", "(", ")"], "* ", $searchterm) . "*";
+	$str = "*" . str_replace(["_", "-", "/", " ", "(", ")"], "* *", $searchterm) . "*";
 	// single letters like "o" in "typo o negative" must not get a star appended because the lack of results 
 	if(preg_match("/\ ([A-Za-z]){1}\*/", $str, $m)) {
 		$str = str_replace(
@@ -36,6 +36,25 @@ function addStars($searchterm) {
 		);
 	}
 	return $str;
+}
+
+/**
+ * Builds querystring to use for sphinx-queries
+ * we have to make sure that /autocomplete and /search* gives us the same results
+ * @param array $terms : array with searchphrases
+ * @return string : query syntax which can be used in MATCH(:match)
+ */
+function getSphinxMatchSyntax(array $terms) {
+	$groups = [];
+	foreach($terms as $term) {
+		$groups[] = "(' \"". addStars($term) . "\"')";
+		$groups[] = "('\"". $term ."\"')";
+		$groups[] = "('\"". str_replace(' ', '*', $term) ."\"')";
+		$groups[] = "('\"". str_replace(' ', ',', $term) ."\"')";
+		$groups[] = "('\"". str_replace(' ', ' | ', $term) ."\"')";
+		$groups[] = "('\"". str_replace(' ', '* | ', $term) ."*\"')";
+	}
+	return join("|\n", $groups);
 }
 
 /**
@@ -137,6 +156,17 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	
 	echo $prefix . $msg . $suffix . "\n";
 	ob_flush();
+}
+
+function fileLog($mixed) {
+	$filename = APP_ROOT . 'cache/log-' . $date = date("Y-M-d") . ".log";
+	if(is_string($mixed) === TRUE) {
+		$data = $mixed . "\n";
+	}
+	if(is_array($mixed) === TRUE) {
+		$data = print_r($mixed,1) . "\n";
+	}
+	file_put_contents($filename, $data, FILE_APPEND);
 }
 
 function debugLog($mixed){
