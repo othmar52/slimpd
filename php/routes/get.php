@@ -905,14 +905,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				GROUP BY itemid,type
 				LIMIT 1;
 			");
-			$stmt->bindValue(
-				':match', "
-				(' \"". addStars($term) . "\"') |
-				('\"". $term ."\"') |
-				('\"". str_replace(' ', '*', $term) ."\"')
-				",
-				PDO::PARAM_STR
-			);
+			$stmt->bindValue(':match', getSphinxMatchSyntax([$term]), PDO::PARAM_STR);
 			if(($type !== 'all')) {
 				$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 			}
@@ -951,14 +944,7 @@ foreach(array_keys($sortfields) as $currentType) {
 					".$sortQuery."
 					LIMIT :offset,:max
 					OPTION ranker=".$ranker.",max_matches=".$vars['search'][$type]['total'].";");
-				$stmt->bindValue(
-					':match', "
-					(' \"". addStars($term) . "\"') |
-					('\"". $term ."\"') |
-					('\"". str_replace(' ', '*', $term) ."\"')
-					",
-					PDO::PARAM_STR
-				);
+				$stmt->bindValue(':match', getSphinxMatchSyntax([$term]), PDO::PARAM_STR);
 				$stmt->bindValue(':offset', ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
 				$stmt->bindValue(':max', $itemsPerPage, PDO::PARAM_INT);
 				if(($currentType !== 'all')) {
@@ -1082,31 +1068,33 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 		WHERE MATCH(:match)
 		" . (($type !== 'all') ? ' AND type=:type ' : '') . "
 		GROUP BY itemid,type
-		LIMIT $start,$offset
-		OPTION ranker=sph04");
+		LIMIT $start,$offset;");
 	
 	if(($type !== 'all')) {
 		$stmt->bindValue(':type', $filterTypeMapping[$type], PDO::PARAM_INT);
 	}
-	$stmt->bindValue(
-		':match', "
-		(' \"". addStars($originalTerm) . "\"') |
-		(' \"". addStars($term) . "\"') |
-		('\"". $originalTerm ."\"') |
-		('\"". $term ."\"') |
-		('\"". str_replace(' ', '*', $originalTerm) ."\"')
-		",
-		PDO::PARAM_STR
-	);
+	$stmt->bindValue(':match', getSphinxMatchSyntax([$term,$originalTerm]), PDO::PARAM_STR);
+
+	// do some timelogging for debugging purposes
+	$timLogData = [
+		"-----------------------------------------------",
+		"AUTOCOMPLETE timelogger",
+		" term: " . $term,
+		" orignal term: " . $originalTerm
+	];
 
 	// in case an autocomplete ajax call gets aborted make sure to stop query against our index
 	// TODO: how can we test if this works?
 	ignore_user_abort(FALSE);
 	ob_implicit_flush();
 
+	$timeLogBegin = microtime(TRUE);
 	$stmt->execute();
+	$timLogData[] = " execute() " . (microtime(TRUE) - $timeLogBegin);
 	$rows = $stmt->fetchAll();
+	$timLogData[] = " fetchAll() " . (microtime(TRUE) - $timeLogBegin);
 	$meta = $ln_sph->query("SHOW META")->fetchAll();
+	$timLogData[] = " metaFetch() " . (microtime(TRUE) - $timeLogBegin);
 	foreach($meta as $m) {
 	    $meta_map[$m['Variable_name']] = $m['Value'];
 	}
@@ -1125,6 +1113,7 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 			}
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+		$timLogData[] = " MakePhaseSuggestion() " . (microtime(TRUE) - $timeLogBegin);
 		if($suggest !== FALSE) {
 			$app->response->redirect(
 				$app->urlFor(
@@ -1181,6 +1170,7 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 			}
 			$result[] = $entry;
 		}
+		$timLogData[] = " BuildExcerptsAndJson() " . (microtime(TRUE) - $timeLogBegin);
 	}
 	if(count($result) === 0) {
 		$result[] = [
@@ -1190,6 +1180,11 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 			'img' => $app->config['root'] . 'imagefallback-50/noresults'
 		];
 	}
+	$timLogData[] = " json_encode() " . (microtime(TRUE) - $timeLogBegin);
+
+	// TODO: read usage of file-logging from config
+	#fileLog($timLogData);
+
 	echo json_encode($result); exit;
 })->name('autocomplete');
 
@@ -1234,7 +1229,7 @@ $app->get('/directory/:itemParams+', function($itemParams) use ($app, $vars){
 		FROM ". $app->config['sphinx']['mainindex']."
 		WHERE MATCH('@allchunks \"". $directory->fullpath. "\"')
 		AND type=:type
-		ORDER BY allchunks ASC
+		ORDER BY sort1 ASC
 		LIMIT :offset,:max
 		OPTION max_matches=".$total.";
 	");
