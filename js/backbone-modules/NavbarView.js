@@ -55,10 +55,20 @@
 			this.tabAutocomplete = this.searchfield.autocomplete({
 				source: function( request, response ) {
 					NProgress.start();
-					$.ajax({
-						url: sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($('#mainsearch').val()),
-		          		dataType: "json",
-		          		type: 'get',
+			        var $this = $(this);
+			        var $element = $(this.element);
+			        var previous_request = $element.data( "jqXHR" );
+			        if( previous_request ) {
+			            // a previous request has been made.
+			            // though we don't know if it's concluded
+			            // we can try and kill it in case it hasn't
+			            previous_request.abort();
+			        }
+			        // Store new AJAX request
+			        $element.data( "jqXHR", $.ajax( {
+			            type: "GET",
+			            url: sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($('#mainsearch').val()),
+			            dataType: "json",
 		          		success: function( data ) {
 		          			NProgress.done();
 							response( data );
@@ -66,11 +76,12 @@
 						messages: {
 					        noResults: '',
 					        results: function() {}
-					    }
-					});
+						}
+			        }));
 				},
 				sourceCategory: 'all',
 				minLength: 3,
+				delay: 300,
 				focus: function( event, ui ) {
 					$(".ui-helper-hidden-accessible").hide();
 					if(typeof ui.item !== 'undefined') {

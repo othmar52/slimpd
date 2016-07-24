@@ -1098,6 +1098,12 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 		",
 		PDO::PARAM_STR
 	);
+
+	// in case an autocomplete ajax call gets aborted make sure to stop query against our index
+	// TODO: how can we test if this works?
+	ignore_user_abort(FALSE);
+	ob_implicit_flush();
+
 	$stmt->execute();
 	$rows = $stmt->fetchAll();
 	$meta = $ln_sph->query("SHOW META")->fetchAll();
