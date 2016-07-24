@@ -41,11 +41,8 @@ $twig->addExtension(new \Slimpd_Twig_Extension());
 call_user_func(function() use ($app) {
     $path = APP_ROOT . 'php' . DS . 'modules' . DS;
     foreach (scandir($path) as $dir) {
-        $dir = $path . $dir;
-        $file = $dir . DS . 'main.php';
-        if (is_dir($dir) && is_file($file) && is_readable($file)) {
-            include $file;
-        }
+    	// suppress warning with "@" and avoid tons of is_file()-checks 
+		@include_once($path . $dir . DS . 'class.php');
     }
 });
 
@@ -97,6 +94,15 @@ $app->error(function(\Exception $e) use ($app, $config){
     $app->render('error.htm', $config);
 });
 
+// LOAD CONTROLLERS
+call_user_func(function() use ($app, $vars) {
+    $path = APP_ROOT . 'php' . DS . 'modules' . DS;
+    foreach (scandir($path) as $dir) {
+    	// suppress warning with "@" and avoid tons of is_file()-checks 
+		@include_once($path . $dir . DS . 'controller.php');
+    }
+});
+
 // DEFINE GET/POST routes (also check for .gitignored local-routes)
 foreach(array('get', 'post') as $method) {
 	foreach(array('', '_local') as $local) {
@@ -107,11 +113,11 @@ foreach(array('get', 'post') as $method) {
 }
 
 // use 404 not found as a search in case we don't have a slash in uri
-$app->notFound(function() use ($app, $config){
+$app->notFound(function() use ($app, $vars){
 	$uri = ltrim(rawurldecode($app->request->getResourceUri()),'/');
 	// check if we do have a slash in uri
 	if(stripos($uri, '/') !== FALSE) {
-		$config['action'] = '404';
+		$vars['action'] = '404';
     	$app->render('surrounding.htm', $config);
 	} else {
 		// trigger a search
