@@ -118,7 +118,7 @@ $app->notFound(function() use ($app, $vars){
 	// check if we do have a slash in uri
 	if(stripos($uri, '/') !== FALSE) {
 		$vars['action'] = '404';
-    	$app->render('surrounding.htm', $config);
+		$app->render('surrounding.htm', $vars);
 	} else {
 		// trigger a search
 		$app->response->redirect($app->config['root'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
