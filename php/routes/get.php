@@ -69,7 +69,6 @@ foreach(array('artist', 'label', 'genre') as $className) {
 	});
 }
 
-
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 	$vars['action'] = 'library.year';
 	
