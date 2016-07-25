@@ -45,12 +45,12 @@ foreach(array('artist', 'label', 'genre') as $className) {
 
 		if($searchterm !== FALSE) {
 			$vars['itemlist'] = $classPath::getInstancesLikeAttributes(
-				array('az09' => str_replace('*', '%', $searchterm)),
+				array('az09' => preg_replace('/[^\da-z]/i', '%', $searchterm)),
 				$itemsPerPage,
 				$currentPage
 			);
 			$vars['totalresults'] = $classPath::getCountLikeAttributes(
-				array('az09' => str_replace('*', '%', $searchterm))
+				array('az09' => preg_replace('/[^\da-z]/i', '%', $searchterm))
 			);
 			$urlPattern = $app->config['root'] .$className.'s/searchterm/'.$searchterm.'/page/(:num)';
 		} else {
@@ -64,6 +64,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 			$currentPage,
 			$urlPattern
 		);
+		$vars['searchterm'] = $searchterm;
 		$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 		$app->render('surrounding.htm', $vars);
 	});

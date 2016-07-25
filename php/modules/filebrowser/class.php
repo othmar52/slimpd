@@ -100,7 +100,11 @@ class filebrowser {
 		#echo $minIndex . "<br>" . $maxIndex; die();
 		if( count($files) > 2 ) { /* The 2 accounts for . and .. */
 			foreach( $files as $file ) {
-				if( file_exists($base. $d . $file) && $file != '.' && $file != '..' && substr($file,0,1) !== '.' ) {
+				// skip '.' and '..' and hidden files
+				if(substr($file,0,1) === '.') {
+					continue;
+				}
+				if( file_exists($base. $d . $file)) {
 					if(is_dir($base . $d . $file) === TRUE) {
 						$this->subDirectories['total']++;
 						if($this->filter === 'files' && $ignoreLimit === FALSE) {
