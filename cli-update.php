@@ -97,7 +97,20 @@ switch($config['config']['langkey']) {
 		break;
 }
 
+if($config['mpd']['alternative_musicdir'] === '') {
+	define('ALTDIR', FALSE);
+} else {
+	define('ALTDIR', TRUE);
+}
+
+
+$config['root'] = $config['config']['absRefPrefix'];
+$config['fileroot'] = $config['config']['absFilePrefix'];
 $app->config = $config;
+$vars = $config;
+
+
+$app->config = $vars;
 
 // LOAD CONTROLLERS
 call_user_func(function() use ($app, $vars) {
