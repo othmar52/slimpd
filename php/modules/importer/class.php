@@ -30,29 +30,31 @@ class Importer {
 	
 	# TODO: unset all big arrays at the end of each method
 	
-	public function triggerImport() {
+	public function triggerImport($remigrate = FALSE) {
+		
+		if($remigrate === FALSE) {
+			// phase 2: check if mpd database update is running and simply wait if required
+			$this->waitForMpd();
 			
-		// phase 2: check if mpd database update is running and simply wait if required
-		$this->waitForMpd();
-		
-		// phase 3: parse mpd database and insert/update table:rawtagdata
-		$this->processMpdDatabasefile();
-		
-		// phase 4: scan id3 tags and insert into table:rawtagdata of all new or modified files
-		$this->scanMusicFileTags();
-		
+			// phase 3: parse mpd database and insert/update table:rawtagdata
+			$this->processMpdDatabasefile();
+			
+			// phase 4: scan id3 tags and insert into table:rawtagdata of all new or modified files
+			$this->scanMusicFileTags();
+		}
 		
 		// phase 5: migrate table rawtagdata to table track,album,artist,genre,label
-		$this->migrateRawtagdataTable(FALSE);
+		$this->migrateRawtagdataTable($remigrate);
 		
-		// phase 6: delete dupes of extracted embedded images
-		$this->destroyExtractedImageDupes();
-		
-		
-		// phase 7: get images
-		// TODO: extend directory scan with additional relevant files
-		$this->searchImagesInFilesystem();
-		
+		if($remigrate === FALSE) {
+			// phase 6: delete dupes of extracted embedded images
+			$this->destroyExtractedImageDupes();
+			
+			
+			// phase 7: get images
+			// TODO: extend directory scan with additional relevant files
+			$this->searchImagesInFilesystem();
+		}
 		// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
 		#$importer->fixAlbumGenres();
 		
@@ -816,32 +818,10 @@ class Importer {
 	}
 	
 	// only for development purposes
-	// TODO: move to a separate method @see cli-update.php
 	public function tempResetMigrationPhase() {
-		$db = \Slim\Slim::getInstance()->db;
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
-		$queries = array(
-			"TRUNCATE artist;",
-			"TRUNCATE genre;",
-			"TRUNCATE track;",
-			"TRUNCATE label;",
-			"TRUNCATE album;",
-			"TRUNCATE albumindex;",
-			"TRUNCATE trackindex;",
-			"ALTER TABLE `artist` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `genre` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `label` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `album` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `albumindex` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `track` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `trackindex` AUTO_INCREMENT = 10;",
-			"INSERT INTO `artist` VALUES (NULL, 'Unknown Artist', '', 'unknownartist', 0,0);",
-			"INSERT INTO `artist` VALUES (NULL, 'Various Artists', '', 'variousartists', 0,0);",
-			"INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown',0,0);",
-			"INSERT INTO `label` VALUES (NULL, 'Unknown Label', 'unknownlabel',0,0);"
-		);
-		foreach($queries as $query) {
-			$db->query($query);
+		foreach(self::getInitialDatabaseQueries() as $query) {
+			\Slim\Slim::getInstance()->db->query($query);
 		}
 	}
 	
@@ -850,30 +830,24 @@ class Importer {
 	 * @return array 'directoryHash' => 'most-recent-timestamp' 
 	 */
 	public static function getMigratedAlbumTimstamps() {
-		$db = \Slim\Slim::getInstance()->db;
-		$timestampsMysql = array();
-		
-		$query = "SELECT relativePathHash,filemtime FROM album";
-		$result = $db->query($query);
-		while($record = $result->fetch_assoc()) {
-			$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
-		}
-		
-		return $timestampsMysql;
+		return self::getMigratedTimstamps('album');
 	}
 
 	public static function getMigratedTrackTimstamps() {
-		$db = \Slim\Slim::getInstance()->db;
+		return self::getMigratedTimstamps('track');
+	}
+	
+	public static function getMigratedTimstamps($tablename) {
 		$timestampsMysql = array();
 		
-		$query = "SELECT relativePathHash,filemtime FROM track";
-		$result = $db->query($query);
+		$query = "SELECT relativePathHash,filemtime FROM " . az09($tablename);
+		$result = \Slim\Slim::getInstance()->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
-			
 		}
 		return $timestampsMysql;
 	}
+
 	/**
 	 * TODO: how to deal with album-orphans?
 	 * TODO: reset album:lastScan for each migrated album 
@@ -1040,7 +1014,6 @@ class Importer {
 			$deadMysqlFiles[ $record['relativePathHash'] ] = $record['id'];
 			$fileTimestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
 			
-			
 			// get the oldest directory timestamp stored in rawtagdata
 			if(isset($directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
 				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = 9999999999;
@@ -1048,6 +1021,14 @@ class Importer {
 			if($record['directoryMtime'] < $directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) {
 				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime']; 
 			}
+		}
+		
+		// get all existing album-ids to determine orphans
+		$deadMysqlAlbums = array();
+		$query = "SELECT id, relativePathHash FROM album;";
+		$result = $app->db->query($query);
+		while($record = $result->fetch_assoc()) {
+			$deadMysqlAlbums[ $record['relativePathHash'] ] = $record['id'];
 		}
 		
 		
@@ -1181,6 +1162,10 @@ class Importer {
 							unset($fileTimestampsMysql[$trackHash]);
 							unset($deadMysqlFiles[$trackHash]);
 							$unmodifiedFiles++;
+							
+							if(array_key_exists($directoryHash, $deadMysqlAlbums)) {
+								unset($deadMysqlAlbums[$directoryHash]);
+							}
 						} else {
 							
 							$t = new Rawtagdata();
@@ -1286,13 +1271,22 @@ class Importer {
 			}
 		}
 
-		// delete dead items in table:rawtagdata & table:track
+		// delete dead items in table:rawtagdata & table:track & table:trackindex
 		if(count($deadMysqlFiles) > 0) {
 			\Slimpd\Rawtagdata::deleteRecordsByIds($deadMysqlFiles);
 			\Slimpd\Track::deleteRecordsByIds($deadMysqlFiles);
+			\Slimpd\Trackindex::deleteRecordsByIds($deadMysqlFiles);
+
+			// TODO: last check if those 3 tables has identical totalCount()
+			// reason: basis is only rawtagdata and not all 3 tables
 		}
 
-		
+		// delete dead items in table:album & table:albumindex
+		if(count($deadMysqlAlbums) > 0) {
+			print_r($deadMysqlAlbums);
+			\Slimpd\Album::deleteRecordsByIds($deadMysqlAlbums);
+			\Slimpd\Albumindex::deleteRecordsByIds($deadMysqlAlbums);
+		}
 
 
 		cliLog("dircount: " . $dircount);
@@ -1911,6 +1905,45 @@ class Importer {
 			$this->finishJob(NULL, __FUNCTION__);
 		}
 		return;
+	}
+
+	public static function getInitialDatabaseQueries($app = NULL) {
+		if($app === NULL) {
+			$app = \Slim\Slim::getInstance();
+		}
+		$queries = array(
+			"TRUNCATE artist;",
+			"TRUNCATE genre;",
+			"TRUNCATE track;",
+			"TRUNCATE label;",
+			"TRUNCATE album;",
+			"TRUNCATE albumindex;",
+			"TRUNCATE trackindex;",
+			"ALTER TABLE `artist` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `genre` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `label` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `album` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `albumindex` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `track` AUTO_INCREMENT = 10;",
+			"ALTER TABLE `trackindex` AUTO_INCREMENT = 10;",
+		);
+		foreach([
+			'unknownartist' => 'artist',
+			'variousartists' => 'artist',
+			'unknowngenre' => 'genre',
+			'unknownlabel' => 'label'] as $llKey => $table) {
+			$queries[] =
+				"INSERT INTO `".$table."` ".
+				"VALUES (
+					NULL,
+					'".$app->ll->str('importer.' . $llKey)."',
+					'',
+					'".az09($app->ll->str('importer.' . $llKey))."',
+					0,
+					0
+				);";
+		}
+		return $queries;
 	}
 
 
