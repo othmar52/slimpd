@@ -81,13 +81,15 @@
 			// WARNING: jPlayer's essential Audio formats are: mp3 or m4a.
 			// wav, flac, ogg, m4a plays fine in chromium under linux but we have to add an unused mp3-property...
 			// TODO: really provide alternative urls instead of adding an invalid url for mp3
+			
+			var jPlayerConfObject = {
+				'mp3' : sliMpd.conf.absRefPrefix + 'deliver/' + item.item,
+				'supplied': item.ext + ',mp3'
+			};
+			jPlayerConfObject[item.ext] = sliMpd.conf.absRefPrefix + 'deliver/' + item.item;
 			$(this.playerSelector).jPlayer(
 				'setMedia',
-				{
-					[item.ext] : sliMpd.conf.absRefPrefix + 'deliver/' + item.item,
-					'mp3' : sliMpd.conf.absRefPrefix + 'deliver/' + item.item,
-					'supplied': item.ext + ',mp3'
-				}
+				jPlayerConfObject
 			).jPlayer( "play");
 			this.nowPlayingItem = item.hash;
 			this.redraw(item);
