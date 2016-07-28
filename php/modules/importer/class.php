@@ -186,13 +186,17 @@ class Importer {
 					// skip obviously invalid imagedata
 					continue;
 				}
-				if(strlen($rawImageData) > 40000) {
-					// skip huge imagedata
-					// got errormessage "Maximum supported image dimension is 65500 pixels" from ???
-					continue;
-				}
+
+				// TODO: find a file where we can reproduce this error
+				// for now deactivate the size check
+				//if(strlen($rawImageData) > 40000) {
+				//	// skip huge imagedata
+				//	// got errormessage "Maximum supported image dimension is 65500 pixels" from ???
+				//	continue;
+				//}
 				
-				# TODO: delete tmp files of php thumb - shouldn't phpThumb handle that itself?
+				# TODO: delete tmp files of php thumb (cache/pThumb*) - shouldn't phpThumb handle that itself?
+
 				$phpThumb->resetObject();
 				$phpThumb->setSourceData($rawImageData);
 				$phpThumb->setParameter('config_cache_prefix', $record['relativePathHash'].'_' . $bitmapIndex . '_');
