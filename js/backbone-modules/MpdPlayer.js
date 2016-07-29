@@ -31,6 +31,8 @@
 
 		pollWorker : null,
 
+		playlistState : false,
+
 		initialize : function(options) {
 			this.$content = $('.player-'+ this.mode, this.$el);
 
@@ -278,6 +280,21 @@
 					this.timeLineLight.pause();
 				}
 				this.drawTimeGrid();
+
+				// update view in case current route shows playlist and playlist has changed
+				if(this.playlistState !== data.playlist) {
+					// make sure we do not reload after initial rendering of sliMpd
+					if(this.playlistState !== false) {
+						var urlRegex = new RegExp("^" + window.sliMpd.conf.absRefPrefix.replace("/", "\\/") + "playlist\\/");
+						if(urlRegex.test("/"+window.sliMpd.router.currentView.name) == true) {
+							var targetUrl = window.sliMpd.conf.absRefPrefix + window.sliMpd.router.currentView.name;
+							window.sliMpd.router.navigate(targetUrl, {
+				                trigger : true
+				            });
+						}
+					}
+					this.playlistState = data.playlist;
+				}
 			}
 
 			// update trackinfo only onTrackChange()
