@@ -27,12 +27,20 @@
 		{% for cssfile in cssfiles %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
 		{% endfor %}
+		{% if action == 'trackid3' %}
+			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}skin/default/getid3.css" />
+			<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
+		{% endif %}
 	</head>
 	<body class="bg-col1 col1 standalone">
 		<div class="container container-nomargin">
 			{% if action == 'standalone-trackview' %}
 				{% include 'modules/standalone-trackview.htm' %}
-			{% endif %}	
+			{% endif %}
+
+			{% if action == 'trackid3' %}
+				{% include 'modules/trackid3.htm' %}
+			{% endif %}
 		</div>
 		{% set jsfiles = [
     		'vendor-dist/components/jquery/jquery.min.js',
