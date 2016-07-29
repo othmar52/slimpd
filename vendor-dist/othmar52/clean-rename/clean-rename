@@ -1,10 +1,12 @@
 #!/bin/bash
 ############################################################################
 # recursive replacement of special chars in filesystem
-# TODO: trailing whitespaces in filename/dirname does not work "filename.ext "
-# TODO: backslash in filename/dirname does not work "filena\me.ext"
-# TODO: add optional argument switch for renaming to lowercase
-# TODO: add optional argument switch for dry run
+#
+# TODO: trailing whitespaces in filename does not work "filename.mp3 "
+# TODO: errormessage in case we have no permissions to rename any item
+# TODO: dry run as argument without renaming anything
+# TODO: argument for renaming to lowercase
+# TODO: additional regex check to make sure everything is fine | grep '[^a-zA-Z0-9_\(\)\/.-]'
 ############################################################################
 
 TEMP_FILE=/tmp/clean-rename
@@ -20,17 +22,18 @@ find "$1" -depth -name "*" | while read file; do
 	NEWFILENAME=$(echo "$OLDFILENAME" | tr "'" "_" | tr '!@#+ '\
 		'_____' |  tr '[]{}<>' '()()()' |  sed -e '
 s/[\`\´\"\]//g' | sed -e 's/\&/and/g' | sed -e '
-s/[àáâãäåα]/a/g;
+s/[àáâãäåαª]/a/g;
 s/[ÀÁÂÃÄÅΑ]/A/g;
 s/[æ]/ae/g;
 s/[Æ]/AE/g;
 s/[ç¢©]/c/g;
 s/[Ç]/C/g;
 s/[Ð]/D/g;
-s/[éëêè]/e/g;
+s/[éëêèə]/e/g;
 s/[ÈÉÊË€]/E/g;
+s/[ğ]/g/g;
 s/[Η]/H/g;
-s/[ìíîï]/i/g;
+s/[ìíîïı]/i/g;
 s/[ÌÍÎÏ¡]/I/g;
 s/[Κ]/K/g;
 s/[κ]/k/g;
@@ -38,10 +41,11 @@ s/[Μ]/M/g;
 s/[μ]/m/g;
 s/[Ñ]/N/g;
 s/[ñ]/n/g;
-s/[òóôõöøο]/o/g;
+s/[òóôõöøοɔ]/o/g;
 s/[ÒÓÔÕÖΟ]/O/g;
-s/[ßš]/s/g;
-s/[$§Š]/S/g;
+s/[®]/R/g;
+s/[ßšş]/s/g;
+s/[$§ŠȘ]/S/g;
 s/[Τ]/T/g
 s/[™]/TM/g;
 s/[ùúûü]/u/g;
@@ -49,6 +53,7 @@ s/[ÙÚÛÜ]/U/g;
 s/[×]/x/g;
 s/[ÿýυ]/y/g;
 s/[ÝŸΥ]/Y/g;
+s/[–]/-/g;
 s/[=¦#:~*¿·¸°¯\%";+^˜‰…‡†?•]/_/g;
 s/[Ø]/0/g;
 s/[²]/2/g;

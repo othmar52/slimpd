@@ -4,7 +4,7 @@
         "slim/slim": "2.*",
         "twig/twig": "~1.0",
         "slim/views": "0.1.*",
-        "james-heinrich/getid3": "1.*",
+        "james-heinrich/getid3": "dev-master",
         "components/jquery": "2.*",
         "james-heinrich/phpThumb": "1.*",
         "twbs/bootstrap": "^3.3",
