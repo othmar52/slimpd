@@ -142,3 +142,15 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 });
 
 
+$app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app, $vars){
+	$vars['action'] = 'trackid3';
+	
+	$getID3 = new \getID3;
+	$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . join(DS, $itemParams));
+	\getid3_lib::CopyTagsToComments($tagData);
+	\getid3_lib::ksort_recursive($tagData);
+
+	$vars['dumpstring'] = table_var_dump($tagData, false, 'UTF-8');
+	$vars['getid3version'] = $getID3->version();
+	$app->render('nosurrounding.htm', $vars);
+});
