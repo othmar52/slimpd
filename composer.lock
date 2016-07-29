@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "7f619e6c3b8dd2318745fba13406d301",
-    "content-hash": "fb07fed67c51a1dd44c0d6ba207b6877",
+    "hash": "0f982566516fa9fcd2015031b2d00d58",
+    "content-hash": "211e7b26f0e2a98e74d5186f0d7bd7a0",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -745,16 +745,16 @@
         },
         {
             "name": "james-heinrich/getid3",
-            "version": "v1.9.12",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5"
+                "reference": "920e717f38c65c58db29c5c2586a92789be541dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/41c05612d532d30f07680cad3a4a6efbec7fc7f5",
-                "reference": "41c05612d532d30f07680cad3a4a6efbec7fc7f5",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/920e717f38c65c58db29c5c2586a92789be541dd",
+                "reference": "920e717f38c65c58db29c5c2586a92789be541dd",
                 "shasum": ""
             },
             "require": {
@@ -777,7 +777,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-03-02 13:13:30"
+            "time": "2016-07-28 12:30:10"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -1170,7 +1170,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-02-16 07:40:54"
+            "time": "2016-02-14 10:51:02"
         },
         {
             "name": "othmar52/xwax-1.5-osc",
@@ -1445,12 +1445,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "cdb8db3590748b544e673f8879269afa3c65460a"
+                "reference": "e0ecb4772c6186bb5288076daf421bed9ef57489"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/cdb8db3590748b544e673f8879269afa3c65460a",
-                "reference": "cdb8db3590748b544e673f8879269afa3c65460a",
+                "url": "https://api.github.com/repos/symfony/process/zipball/e0ecb4772c6186bb5288076daf421bed9ef57489",
+                "reference": "e0ecb4772c6186bb5288076daf421bed9ef57489",
                 "shasum": ""
             },
             "require": {
@@ -1486,7 +1486,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-06-29 05:43:10"
+            "time": "2016-07-28 11:15:50"
         },
         {
             "name": "twbs/bootstrap",
@@ -1628,6 +1628,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "james-heinrich/getid3": 20,
         "ricbra/php-discogs-api": 20,
         "lusitanian/oauth": 20,
         "components/greensock-js": 20,
