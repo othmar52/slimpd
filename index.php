@@ -124,7 +124,6 @@ $app->notFound(function() use ($app, $vars){
 	// check if we do have a slash in uri
 	if(stripos($uri, '/') !== FALSE) {
 		$vars['action'] = '404';
-		echo $e->getTraceAsString();
 		$app->render('surrounding.htm', $vars);
 	} else {
 		// trigger a search
