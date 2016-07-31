@@ -90,8 +90,14 @@ $vars = $config;
 
 $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
 
-$app->error(function(\Exception $e) use ($app, $config){
-    $app->render('error.htm', $config);
+$app->error(function(\Exception $e) use ($app, $vars){
+	$vars['action'] = 'error';
+	$vars['errormessage'] = $e->getMessage();
+	$vars['tracestring'] = str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($e->getTraceAsString()));
+	$vars['url'] = $app->request->getResourceUri();
+	$vars['file'] = $e->getFile();
+	$vars['line'] = $e->getLine();
+    $app->render('appless.htm', $vars);
 });
 
 // LOAD CONTROLLERS
@@ -118,6 +124,7 @@ $app->notFound(function() use ($app, $vars){
 	// check if we do have a slash in uri
 	if(stripos($uri, '/') !== FALSE) {
 		$vars['action'] = '404';
+		echo $e->getTraceAsString();
 		$app->render('surrounding.htm', $vars);
 	} else {
 		// trigger a search
