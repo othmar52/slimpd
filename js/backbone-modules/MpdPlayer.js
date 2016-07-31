@@ -287,7 +287,7 @@
 					if(this.playlistState !== false) {
 						var urlRegex = new RegExp("^" + window.sliMpd.conf.absRefPrefix.replace("/", "\\/") + "playlist\\/");
 						if(urlRegex.test("/"+window.sliMpd.router.currentView.name) == true) {
-							var targetUrl = window.sliMpd.conf.absRefPrefix + window.sliMpd.router.currentView.name;
+							var targetUrl = window.sliMpd.router.currentView.name;
 							window.sliMpd.router.navigate(targetUrl, {
 				                trigger : true
 				            });
