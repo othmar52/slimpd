@@ -27,7 +27,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			}
 			return $classPath::getRandomInstance();
 		} catch(\Exception $e) {
-			\Slim\Slim::getInstance()->response->redirect('/systemcheck?dberror');
+			\Slim\Slim::getInstance()->response->redirect(\Slim\Slim::getInstance()->config['root'] . 'systemcheck?dberror');
 		}
 	}
 

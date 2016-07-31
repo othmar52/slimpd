@@ -69,6 +69,8 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   `trackId` int(11) unsigned DEFAULT NULL,
   `rawTagDataId` int(11) unsigned DEFAULT NULL,
   `embedded` tinyint(4) unsigned DEFAULT NULL,
+  `embeddedName` varchar(255) NOT NULL DEFAULT '',
+  `pictureType` varchar(20) NOT NULL DEFAULT '',
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `error` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -78,6 +80,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   KEY `rawTagDataId` (`rawTagDataId`),
   KEY `importStatus` (`importStatus`),
   KEY `embedded` (`embedded`),
+  KEY `pictureType` (`pictureType`),
   KEY `error` (`error`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

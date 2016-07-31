@@ -1,11 +1,13 @@
 <?php
+$weightConf = trimExplode("\n", $app->config['images']['weightening'], TRUE);
+$imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), filesize DESC";
 
-
+#echo $imageWeightOrderBy; die();
 // predefined album-image sizes
 foreach (array(35, 50,100,300,1000) as $imagesize) {
-	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $vars, $imagesize){
+	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
-			array('albumId' => $itemId), 'filesize DESC'
+			array('albumId' => $itemId), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
@@ -16,13 +18,13 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		exit();
 	});
 	
-	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $vars, $imagesize){
+	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
-			array('trackId' => $itemId), 'filesize DESC'
+			array('trackId' => $itemId), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$track = \Slimpd\Track::getInstanceByAttributes(
-				array('id' => $itemId), 'filesize DESC'
+				array('id' => $itemId)
 			);  
 			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumId());
 			return;
@@ -31,9 +33,9 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		exit();
 	});
 	
-	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $vars, $imagesize){
+	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Bitmap::getInstanceByAttributes(
-			array('id' => $itemId), 'filesize DESC'
+			array('id' => $itemId), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));

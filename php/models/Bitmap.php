@@ -16,6 +16,8 @@ class Bitmap extends AbstractModel
 	protected $trackId;
 	protected $rawTagDataId;
 	protected $embedded;
+	protected $embeddedName;
+	protected $pictureType;
 	protected $importStatus;
 	protected $error;
 	
@@ -171,6 +173,12 @@ class Bitmap extends AbstractModel
 	public function setEmbedded($value) {
 		$this->embedded = $value;
 	}
+	public function setEmbeddedName($value) {
+		$this->embeddedName = $value;
+	}
+	public function setPictureType($value) {
+		$this->pictureType = $value;
+	}
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
 	}
@@ -215,6 +223,12 @@ class Bitmap extends AbstractModel
 	}
 	public function getEmbedded() {
 		return $this->embedded;
+	}
+	public function getEmbeddedName() {
+		return $this->embeddedName;
+	}
+	public function getPictureType() {
+		return $this->pictureType;
 	}
 	public function getImportStatus() {
 		return $this->importStatus;

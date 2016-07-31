@@ -231,6 +231,14 @@ class Importer {
 				$bitmap->setEmbedded(1);
 				// setAlbumId() will be applied later because at this time we havn't any albumId's but tons of bitmap-record-dupes
 				
+				if(isset($bitmapData['picturetype']) !== FALSE) {
+					$bitmap->setEmbeddedName($bitmapData['picturetype'] . '.ext');
+				} else {
+					$bitmap->setEmbeddedName('Other.ext');
+				}
+				
+				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()));
+				
 				if($imageSize !== FALSE) {
 					$bitmap->setWidth($imageSize[0]);
 					$bitmap->setHeight($imageSize[1]);
@@ -532,6 +540,7 @@ class Importer {
 				} else {
 					$bitmap->setError(1);
 				}
+				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelativePath()));
 				$bitmap->update();
 				$insertedImages++;
 			}
