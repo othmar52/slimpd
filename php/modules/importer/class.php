@@ -134,6 +134,7 @@ class Importer {
 			));
 			$t = new Rawtagdata();
 			$t->setId($record['id']);
+			$t->setRelativePath($record['relativePath']);
 			$t->setLastScan(time());
 			$t->setImportStatus(2);
 			
@@ -419,6 +420,18 @@ class Importer {
 					}
 				}
 			}
+		}
+
+		// override description of audiocodec
+		// @see: https://github.com/othmar52/slimpd/issues/25
+		// @see: https://github.com/JamesHeinrich/getID3/issues/48
+		$ext = strtolower(preg_replace('/^.*\./', '', $t->getRelativePath())); 
+		if($ext !== 'm4a') {
+			return;
+		}
+		if(@$data['audio']['codec'] === 'Apple Lossless Audio Codec') {
+			$t->setMimeType('audio/aac');
+			$t->setAudioDataformat('aac');
 		}
 	}
 
