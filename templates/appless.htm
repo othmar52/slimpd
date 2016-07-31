@@ -52,6 +52,40 @@
   				<div class="col-md-12" id="main">
 
 				<div class="main-content">
+					{% if action == 'error' %}
+						<h1>{{ config.logomarkup|raw }} Application Error</h1>
+						<p>Maybe its time to report an error on <a class="col2" href="https://github.com/othmar52/slimpd/issues" target="_blank">https://github.com/othmar52/slimpd/issues</a></p>
+						<h2>Details</h2>
+						<div class="row">
+							
+							<div class="col-md-1"><strong>Url:</strong></div>
+							<div class="col-md-11">{{url}}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1"><strong>Message:</strong></div>
+							<div class="col-md-11">{{errormessage}}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1"><strong>File:</strong></div>
+							<div class="col-md-11">{{file}}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1"><strong>Line:</strong></div>
+							<div class="col-md-11">{{line}}</div>
+						</div>
+						<div class="row">
+							<div class="col-md-1"><strong>Trace:</strong></div>
+							<div class="col-md-11">
+								<button class="btn btn-default toggle-content" data-toggle="#errortrace" data-text1="show" data-text2="hide">
+						  			<i class="fa fa-plus"></i> show
+						  		</button>
+								<pre id="errortrace" style="display:none;">{{tracestring|raw}}</pre>
+							</div>
+						</div>
+						
+					{% endif %}
+					
+					{% if action == 'systemcheck' %}
 
 					<h1>{{'syscheck.fs'|ll}}</h1>
 					<ul class="list-group">
@@ -195,6 +229,8 @@
 					
 					<h1>Xwax</h1>
 					<h6>TODO: check connection</h6>
+					
+					{% endif %}
 
   				</div>
 			</div>
@@ -263,7 +299,7 @@
 			'js/backbone-modules/XwaxView.js',
 			'js/backbone-modules/XwaxPlayer.js',
 			'js/backbone-modules/Router.js',
-			'js/systemcheck.js'
+			'js/appless.js'
     		]
 		%}
     	 
