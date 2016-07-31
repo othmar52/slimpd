@@ -79,6 +79,8 @@ class Schema extends AbstractSchema
       . "  `trackId` int(11) unsigned DEFAULT NULL,\r"
       . "  `rawTagDataId` int(11) unsigned DEFAULT NULL,\r"
       . "  `embedded` tinyint(4) unsigned DEFAULT NULL,\r"
+      . "  `embeddedName` varchar(255) NOT NULL DEFAULT '',\r"
+      . "  `pictureType` varchar(20) NOT NULL DEFAULT '',\r"
       . "  `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"
       . "  `error` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"
       . "  PRIMARY KEY (`id`),\r"
@@ -88,6 +90,7 @@ class Schema extends AbstractSchema
       . "  KEY `rawTagDataId` (`rawTagDataId`),\r"
       . "  KEY `importStatus` (`importStatus`),\r"
       . "  KEY `embedded` (`embedded`),\r"
+      . "  KEY `pictureType` (`pictureType`),\r"
       . "  KEY `error` (`error`),\r"
       . "  FULLTEXT KEY `relativePath` (`relativePath`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
