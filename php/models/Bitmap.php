@@ -51,7 +51,7 @@ class Bitmap extends AbstractModel
 			$phpThumb->GenerateThumbnail();
 			\phpthumb_functions::EnsureDirectoryExists(
 				dirname($phpThumb->cache_filename),
-				octdec($app->config['config']['dirCreateMask'])
+				octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
 			);
 			$phpThumb->RenderToFile($phpThumb->cache_filename);
 			if(is_file($phpThumb->cache_filename) === TRUE) {
