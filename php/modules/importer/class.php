@@ -217,8 +217,8 @@ class Importer {
 					continue;
 				}
 				
-				# TODO: general handling of permissions of created directories and files
-				chmod($phpThumb->cache_filename, 0777);
+				// remove tempfiles of phpThumb
+				clearPhpThumbTempFiles($phpThumb);
 				
 				$relativePath = str_replace(APP_ROOT, '', $phpThumb->cache_filename);
 				$relativePathHash = getFilePathHash($relativePath);
