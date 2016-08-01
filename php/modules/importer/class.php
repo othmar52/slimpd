@@ -1248,7 +1248,7 @@ class Importer {
 					default: break;
 				}
 			}
-			if(isset($attr[1]) === TRUE) {
+			if(isset($attr[1]) === TRUE && in_array($attr[0], ['Time','Artist','Title','Track','Album','Genre','Date'])) {
 				// believe it or not - some people store html in their tags
 				$attr[1] = preg_replace('!\s+!', ' ', (trim(strip_tags($attr[1]))));
 			}
