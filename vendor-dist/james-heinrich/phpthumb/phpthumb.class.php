@@ -1479,6 +1479,7 @@ class phpthumb {
 			if ($fp_tempfile) {
 				fwrite($fp_tempfile, $this->rawImageData);
 				fclose($fp_tempfile);
+				@chmod($IMtempSourceFilename, $this->getParameter('config_file_create_mask'));
 				$this->sourceFilename = $IMtempSourceFilename;
 				$this->DebugMessage('ImageMagickThumbnailToGD() setting $this->sourceFilename to "'.$IMtempSourceFilename.'" from $this->rawImageData ('.strlen($this->rawImageData).' bytes)', __FILE__, __LINE__);
 			} else {
@@ -1590,6 +1591,7 @@ class phpthumb {
 					if ($fp_im_temp = @fopen($IMtempfilename, 'wb')) {
 						// erase temp image so ImageMagick logo doesn't get output if other processing fails
 						fclose($fp_im_temp);
+						@chmod($IMtempfilename, $this->getParameter('config_file_create_mask'));
 					}
 				}
 
@@ -4190,6 +4192,7 @@ if (false) {
 			if ($fp_tempnam = @fopen($tempnam, 'wb')) {
 				fwrite($fp_tempnam, $RawImageData);
 				fclose($fp_tempnam);
+				@chmod($tempnam, $this->getParameter('config_file_create_mask'));
 				if (($ICFSreplacementFunctionName == 'ImageCreateFromGIF') && !function_exists($ICFSreplacementFunctionName)) {
 
 					// Need to create from GIF file, but ImageCreateFromGIF does not exist
