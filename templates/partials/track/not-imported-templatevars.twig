@@ -1,4 +1,4 @@
-{% set albumHref = '/album/'~item.albumId %}
+{% set albumHref = root~'album/'~item.albumId %}
 {% set playerCtrlItem = item.id %}
 {% set parentDir = '' %}
 {% set fileName = '' %}
@@ -11,7 +11,7 @@
 	{% set playerCtrlItem = item.relativePath %}
 	{% set artworkUrl = [root,"image-100/searchfor/",item.relativePath]|path2url %}
 	{% set dirs = item.relativePath|split('/') %}
-	{% set tmp = "/filebrowser" %}
+	{% set tmp = root~"filebrowser" %}
 	
 	{% for i,dir in dirs %}
 		{% set tmp = tmp~'/'~dir %}
