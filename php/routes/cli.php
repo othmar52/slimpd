@@ -8,16 +8,16 @@ $importer = new \Slimpd\importer();
 // IMPORTANT TODO: avoid simultaneously executet updates
 
 $app->get('/', function () use ($app, $importer) {
-	cliLog($app->ll->str('cli.usage'), 10, 'yellow');
+	cliLog($app->ll->str('cli.usage'), 1, 'yellow');
 	cliLog("  ./slimpd [ARGUMENT]");
-	cliLog("ARGUMENTS", 10, 'yellow');
-	cliLog("  resethard", 10, 'cyan');
+	cliLog("ARGUMENTS", 1, 'yellow');
+	cliLog("  resethard", 1, 'cyan');
 	cliLog("    " . $app->ll->str('cli.args.resethard.line1'));
 	cliLog("    " . $app->ll->str('cli.args.resethard.line2'));
-	cliLog("    " . $app->ll->str('cli.args.resethard.warning'), 10, 'yellow');
-	cliLog("  update", 10, 'cyan');
+	cliLog("    " . $app->ll->str('cli.args.resethard.warning'), 1, 'yellow');
+	cliLog("  update", 1, 'cyan');
 	cliLog("    " . $app->ll->str('cli.args.update'));
-	cliLog("  remigrate", 10, 'cyan');
+	cliLog("  remigrate", 1, 'cyan');
 	cliLog("    " . $app->ll->str('cli.args.remigrate.line1'));
 	cliLog("    " . $app->ll->str('cli.args.remigrate.line2'));
 	cliLog("");
