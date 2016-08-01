@@ -203,7 +203,10 @@ class Importer {
 				$phpThumb->setParameter('config_cache_prefix', $record['relativePathHash'].'_' . $bitmapIndex . '_');
 				$phpThumb->SetCacheFilename();
 				$phpThumb->GenerateThumbnail();
-				\phpthumb_functions::EnsureDirectoryExists(dirname($phpThumb->cache_filename));
+				\phpthumb_functions::EnsureDirectoryExists(
+					dirname($phpThumb->cache_filename),
+					octdec($app->config['config']['dirCreateMask'])
+				);
 				$phpThumb->RenderToFile($phpThumb->cache_filename);
 				
 				$extractedImages ++;

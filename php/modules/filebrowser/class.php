@@ -26,7 +26,7 @@ class filebrowser {
 	public $filter = '';
 	
 	
-	public function getDirectoryContent($d, $ignoreLimit = FALSE) {
+	public function getDirectoryContent($d, $ignoreLimit = FALSE, $systemdir=FALSE) {
 		$app = \Slim\Slim::getInstance();
 		if($app->config['mpd']['musicdir'] === '') {
 			$app->flashNow('error', $app->ll->str('error.mpd.conf.musicdir'));
@@ -52,44 +52,57 @@ class filebrowser {
 		// append trailing slash if missing
 		$d = rtrim($d, DS) . DS;
 		
-		$base = $app->config['mpd']['musicdir'];
-		
-		$d = ($d === $base) ? '' : $d;
-		
-		if(is_dir($base .$d) === FALSE){ //} || $this->checkAccess($d, $baseDirs) === FALSE) {
-			$app->flashNow('error', $app->ll->str('filebrowser.invaliddir', [$base .$d]));
-			return;
-		}
+		if($systemdir === TRUE) {
+			$base = APP_ROOT;
+			switch($d) {
+				case 'cache/':
+				case 'embedded/':
+				case 'peakfiles/':
+					break;
+				default:
+					die('invalid dir');
+			}
+		} else {
+			$base = $app->config['mpd']['musicdir'];
+			$d = ($d === $base) ? '' : $d;
 
-		if($app->config['filebrowser']['restrict-to-musicdir'] == '1') {
-			// avoid path disclosure outside relevant directories
-			$realpath = realpath($base.$d) . DS;
-			
-			if(!$realpath) {
-				$app->flashNow('error', $app->ll->str('filebrowser.realpathempty', [$base.$d]));
+			if(is_dir($base .$d) === FALSE){ //} || $this->checkAccess($d, $baseDirs) === FALSE) {
+				$app->flashNow('error', $app->ll->str('filebrowser.invaliddir', [$base .$d]));
 				return;
 			}
-			
-			if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
-			&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
-				$app->flashNow('error', $app->ll->str('filebrowser.outsiderealpath', [$base .$d, $app->config['mpd']['musicdir']]));
+
+			if($app->config['filebrowser']['restrict-to-musicdir'] == '1') {
+				// avoid path disclosure outside relevant directories
+				$realpath = realpath($base.$d) . DS;
+
+				if(!$realpath) {
+					$app->flashNow('error', $app->ll->str('filebrowser.realpathempty', [$base.$d]));
+					return;
+				}
+
+				if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
+				&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
+					$app->flashNow('error', $app->ll->str('filebrowser.outsiderealpath', [$base .$d, $app->config['mpd']['musicdir']]));
+					return;
+				}
+			}
+
+			$this->breadcrumb = self::fetchBreadcrumb($d);
+
+			//if($this->checkAccess($d) === FALSE) {
+			//	die('sorry, you are not allowed to view this directory 8==========D');
+			//}
+
+			// check filesystem permissions
+			if(is_readable($base . $d) === FALSE) {
+				$app->flashNow('error', $app->ll->str('filebrowser.dirpermission', [$d]));
 				return;
 			}
 		}
 
 		$this->directory = $d;
 		
-		$this->breadcrumb = self::fetchBreadcrumb($d);
-	
-		//if($this->checkAccess($d) === FALSE) {
-		//	die('sorry, you are not allowed to view this directory 8==========D');
-		//}
-		
-		// check filesystem permissions
-		if(is_readable($base . $d) === FALSE) {
-			$app->flashNow('error', $app->ll->str('filebrowser.dirpermission', [$d]));
-			return;
-		}
+
 
 		$files = scandir($base . $d);
 		natcasesort($files);

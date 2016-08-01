@@ -207,7 +207,10 @@ class Svggenerator {
 		
 	private function generatePeakFile() {
 		
-		\phpthumb_functions::EnsureDirectoryExists(dirname($this->peakValuesFilePath));
+		\phpthumb_functions::EnsureDirectoryExists(
+			dirname($this->peakValuesFilePath),
+			octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
+		);
 		file_put_contents($this->peakValuesFilePath, "generating");
 		
 		// extract peaks
@@ -220,6 +223,7 @@ class Svggenerator {
 		$peakValues = $this->limitArray($peakValues, $this->peakFileResolution);
 		
 		file_put_contents($this->peakValuesFilePath, join("\n", $peakValues));
+		chmod($this->peakValuesFilePath, octdec(\Slim\Slim::getInstance()->config['config']['fileCreateMask']));
 		return;
 	}
 	

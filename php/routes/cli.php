@@ -8,12 +8,27 @@ $importer = new \Slimpd\importer();
 // IMPORTANT TODO: avoid simultaneously executet updates
 
 $app->get('/', function () use ($app, $importer) {
-	
+	cliLog($app->ll->str('cli.usage'), 10, 'yellow');
+	cliLog("  ./slimpd [ARGUMENT]");
+	cliLog("ARGUMENTS", 10, 'yellow');
+	cliLog("  resethard", 10, 'cyan');
+	cliLog("    " . $app->ll->str('cli.args.resethard.line1'));
+	cliLog("    " . $app->ll->str('cli.args.resethard.line2'));
+	cliLog("    " . $app->ll->str('cli.args.resethard.warning'), 10, 'yellow');
+	cliLog("  update", 10, 'cyan');
+	cliLog("    " . $app->ll->str('cli.args.update'));
+	cliLog("  remigrate", 10, 'cyan');
+	cliLog("    " . $app->ll->str('cli.args.remigrate.line1'));
+	cliLog("    " . $app->ll->str('cli.args.remigrate.line2'));
+	cliLog("");
+	cliLog("  ..................................");
+	cliLog("  https://github.com/othmar52/slimpd");
+	cliLog("");
 	// check if we have something to process
-	if($importer->checkQue() === TRUE) {
-		$importer->triggerImport();
-	}
-    echo "Hello, kitty\n"; exit;
+	//if($importer->checkQue() === TRUE) {
+	//	$importer->triggerImport();
+	//}
+
 });
 
 
@@ -23,7 +38,7 @@ $app->get('/debugmig', function () use ($app, $importer) {
 });
 
 
-$app->get('/standard', function () use ($app, $importer) {
+$app->get('/update', function () use ($app, $importer) {
 	$importer->triggerImport();
 });
 
@@ -89,3 +104,66 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 		$app->db->query($query);
 	}
 });
+
+
+/**
+ * start from scratch by dropping and recreating database
+ */
+$app->get('/resethard', function () use ($app, $argv, $importer) {
+	foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
+		$fileBrowser = new \Slimpd\filebrowser();
+		$fileBrowser->getDirectoryContent('cache', TRUE, TRUE);
+		cliLog("Deleting files and directories inside ". $sysDir ."/");
+		foreach(['music','playlist','info','image','other'] as $key) {
+			foreach($fileBrowser->files[$key] as $file) {
+				// just to make sure we do not delete unwanted stuff :)
+				$delete = realpath(APP_ROOT . $file->fullpath);
+				if(strpos($delete, APP_ROOT.'cache/') === FALSE) {
+					continue;
+				}
+				unlink($delete);
+			}
+		}
+		foreach($fileBrowser->subDirectories['dirs'] as $dir) {
+			// just to make sure we do not delete unwanted stuff :)
+			$delete = realpath(APP_ROOT . $dir->fullpath);
+			if(strpos($delete, APP_ROOT.'cache/') === FALSE) {
+				continue;
+			}
+			rrmdir($delete);
+		}
+	}
+
+	// we cant use $app->db for dropping and creating
+	$db = new \mysqli(
+		$app->config['database']['dbhost'],
+		$app->config['database']['dbusername'],
+		$app->config['database']['dbpassword']
+	);
+	cliLog("Dropping database");
+
+	$result = $db->query("DROP DATABASE IF EXISTS " . $app->config['database']['dbdatabase'].";");
+	cliLog("Recreating database");
+	$result = $db->query("CREATE DATABASE " . $app->config['database']['dbdatabase'].";");
+	$action = 'init';
+
+	Helper::setConfig( getDatabaseDiffConf($app) );
+	if (!Helper::checkConfigEnough()) {
+	    Output::error('mmp: please check configuration');
+	    die(1);
+	}
+	$controller = Helper::getController($action, NULL);
+	if ($controller !== false) {
+	    $controller->runStrategy();
+	} else {
+	    Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+	    Helper::getController('help')->runStrategy();
+	    die(1);
+	}
+
+	foreach(\Slimpd\Importer::getInitialDatabaseQueries() as $query) {
+		$app->db->query($query);
+	}
+	$importer->triggerImport();
+});
+

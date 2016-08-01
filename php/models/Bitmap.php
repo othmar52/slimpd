@@ -49,7 +49,10 @@ class Bitmap extends AbstractModel
 		// check if we already have a cached image
 		if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {		
 			$phpThumb->GenerateThumbnail();
-			\phpthumb_functions::EnsureDirectoryExists(dirname($phpThumb->cache_filename));
+			\phpthumb_functions::EnsureDirectoryExists(
+				dirname($phpThumb->cache_filename),
+				octdec($app->config['config']['dirCreateMask'])
+			);
 			$phpThumb->RenderToFile($phpThumb->cache_filename);
 			if(is_file($phpThumb->cache_filename) === TRUE) {
 				chmod($phpThumb->cache_filename, 0777);
@@ -257,6 +260,8 @@ class Bitmap extends AbstractModel
 		#$phpThumb->setParameter('config_cache_maxsize', NULL);
 		#$phpThumb->setParameter('config_cache_maxfile', NULL);
 		$phpThumb->setParameter('config_cache_directory_depth', 3);
+		$phpThumb->setParameter('config_file_create_mask', octdec(\Slim\Slim::getInstance()->config['config']['fileCreateMask']));
+		$phpThumb->setParameter('config_dir_create_mask', octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask']));
 		return $phpThumb;
 	}
 	
