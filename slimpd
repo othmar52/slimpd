@@ -48,7 +48,9 @@ $app->environment = Slim\Environment::mock([
 // CLI-compatible not found error handler
 $app->notFound(function () use ($app) {
     $url = $app->environment['PATH_INFO'];
-    echo "Error: Cannot route to $url\n";
+    cliLog($app->ll->str('cli.arg.invalid', [ltrim($url, '/')]));
+    cliLog('');
+    renderCliHelp();
     $app->stop();
 });
 
