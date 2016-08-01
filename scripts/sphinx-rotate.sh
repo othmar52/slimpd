@@ -17,7 +17,7 @@ getConfigValue () {
 /usr/bin/indexer --rotate $( getConfigValue mainindex )
 
 /usr/bin/indexer $( getConfigValue mainindex ) --buildstops $SCRIPT_PATH/../cache/dict.txt 10000000 --buildfreqs
-cat $SCRIPT_PATH/../cache/dict.txt | php $SCRIPT_PATH/../cli-update.php builddictsql > $SCRIPT_PATH/../cache/dict.sql
+cat $SCRIPT_PATH/../cache/dict.txt | php $SCRIPT_PATH/../slimpd builddictsql > $SCRIPT_PATH/../cache/dict.sql
 mysql -u$( getConfigValue dbusername ) -p$( getConfigValue dbpassword ) $( getConfigValue dbdatabase ) < $SCRIPT_PATH/../cache/dict.sql
 
 rm $SCRIPT_PATH/../cache/dict.txt
