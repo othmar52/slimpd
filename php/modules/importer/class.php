@@ -711,7 +711,7 @@ class Importer {
 	}
 
 	/**
-	 * inserts a database record which will be processed by cli-update.php
+	 * queDirectoryUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
 	public static function queDirectoryUpdate($relativePath) {
 		$app = \Slim\Slim::getInstance();
@@ -730,7 +730,7 @@ class Importer {
 	}
 	
 	/**
-	 * inserts a database record which will be processed by cli-update.php
+	 * queStandardUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
 	public static function queStandardUpdate() {
 		$app = \Slim\Slim::getInstance();

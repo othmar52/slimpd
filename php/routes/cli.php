@@ -67,7 +67,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 
 	# after database-structure changes we have to
 	# 1) uncomment next line
-	# 2) run ./cli-update.php update-db-scheme
+	# 2) run ./slimpd update-db-scheme
 	# 3) recomment this line again
 	# to make a new revision
 	#$action = 'create';
