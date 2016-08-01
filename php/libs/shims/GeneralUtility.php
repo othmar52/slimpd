@@ -1412,3 +1412,16 @@ function renderCliHelp() {
 	cliLog("  https://github.com/othmar52/slimpd");
 	cliLog("");
 }
+
+
+function clearPhpThumbTempFiles($phpThumb) {
+	foreach($phpThumb->tempFilesToDelete as $delete) {
+		if(strpos($delete, realpath(APP_ROOT . 'cache/')) !== 0) {
+			continue;
+		}
+		if(is_file($delete) === TRUE) {
+			cliLog('deleting tmpFile ' . $delete, 10);
+			unlink($delete);
+		}
+	}
+}
