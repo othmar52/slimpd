@@ -145,6 +145,8 @@ class phpthumb {
 	var $config_allow_src_above_phpthumb             = true;
 	var $config_auto_allow_symlinks                  = true;    // allow symlink target directories without explicitly whitelisting them
 	var $config_additional_allowed_dirs              = array(); // additional directories to allow source images to be read from
+	var $config_file_create_mask                     = 0755;
+	var $config_dir_create_mask                      = 0755;
 
 	// * HTTP fopen
 	var $config_http_fopen_timeout                   = 10;
@@ -551,6 +553,7 @@ class phpthumb {
 
 		if ($this->RenderOutput()) {
 			if (file_put_contents($renderfilename, $this->outputImageData)) {
+				@chmod($renderfilename, $this->getParameter('config_file_create_mask'));
 				$this->DebugMessage('RenderToFile('.$renderfilename.') succeeded', __FILE__, __LINE__);
 				return true;
 			}
@@ -1302,6 +1305,7 @@ class phpthumb {
 				} else {
 					$WhichConvert = trim(phpthumb_functions::SafeExec('which convert'));
 					@file_put_contents($IMwhichConvertCacheFilename, $WhichConvert);
+					@chmod($IMwhichConvertCacheFilename, $this->getParameter('config_file_create_mask'));
 				}
 			}
 		}
@@ -1374,6 +1378,7 @@ class phpthumb {
 			}
 
 			@file_put_contents($IMcommandlineBaseCacheFilename, $commandline);
+			@chmod($IMcommandlineBaseCacheFilename, $this->getParameter('config_file_create_mask'));
 		}
 		return $commandline;
 	}
@@ -1409,6 +1414,7 @@ class phpthumb {
 				}
 
 				@file_put_contents($IMversionCacheFilename, $versionstring[0]."\n".$versionstring[1]);
+				@chmod($IMversionCacheFilename, $this->getParameter('config_file_create_mask'));
 
 			}
 		}
@@ -1496,7 +1502,7 @@ class phpthumb {
 			// $UnAllowedParameters contains options that can only be processed in GD, not ImageMagick
 			// note: 'fltr' *may* need to be processed by GD, but we'll check that in more detail below
 			$UnAllowedParameters = array('xto', 'ar', 'bg', 'bc');
-			// 'ra' may be part of this list, if not a multiple of 90°
+			// 'ra' may be part of this list, if not a multiple of 90ï¿½
 			foreach ($UnAllowedParameters as $parameter) {
 				if (isset($this->$parameter)) {
 					$this->DebugMessage('$this->useRawIMoutput=false because "'.$parameter.'" is set', __FILE__, __LINE__);
@@ -3614,6 +3620,7 @@ if (false) {
 						} else {
 							$this->DebugMessage('ImageMagickThumbnailToGD() failed', __FILE__, __LINE__);
 						}
+						@chmod($tempnam, $this->getParameter('config_file_create_mask'));
 					} else {
 						$this->DebugMessage('failed to put $this->rawImageData into temp file "'.$tempnam.'"', __FILE__, __LINE__);
 					}

@@ -819,7 +819,7 @@ class phpthumb_functions {
 		return false;
 	}
 
-	static function EnsureDirectoryExists($dirname) {
+	static function EnsureDirectoryExists($dirname, $mask = 0755) {
 		$directory_elements = explode(DIRECTORY_SEPARATOR, $dirname);
 		$startoffset = (!$directory_elements[0] ? 2 : 1);  // unix with leading "/" then start with 2nd element; Windows with leading "c:\" then start with 1st element
 		$open_basedirs = preg_split('#[;:]#', ini_get('open_basedir'));
@@ -841,8 +841,8 @@ class phpthumb_functions {
 					// directory name already exists as a file
 					return false;
 				}
-				@mkdir($test_directory, 0755);
-				@chmod($test_directory, 0755);
+				@mkdir($test_directory, $mask);
+				@chmod($test_directory, $mask);
 				if (!@is_dir($test_directory) || !@is_writeable($test_directory)) {
 					return false;
 				}
