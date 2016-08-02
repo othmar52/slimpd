@@ -131,20 +131,28 @@
             this.currentView.render();
             this.$content.html(this.currentView.$el);
         },
-        // FIXME: how to refresh #main view without pushing anything to history?
-        refreshIfName : function(routename) {
-        	return;
-        	if(this.currentView.name !== routename) {
-        		console.log('Router::refreshIfName(' + routename + ') does not match ' + this.currentView.name);
-        		return;
-        	}
-        	this.currentView.rendered = false;
-        	this.navigate($el.attr(sliMpd.router.$body.context.location.pathname), {
-                trigger : true
-            });
-        	//this.currentView.rendered = false;
-        	//this.currentView.render(true);
-        },
+		// FIXME: how to refresh #main view without pushing anything to history?
+		refreshIfName : function(routename) {
+			// TODO: check if we can use a generic function
+			// for now lets define each usecase separately
+			switch(routename) {
+				case 'playlist':
+					var urlRegex = new RegExp("^" + window.sliMpd.conf.absRefPrefix.replace("/", "\\/") + "playlist\\/");
+					// TODO: which router variable to use for comparison?
+					// sliMpd.router.$body.context.location.pathname
+					// sliMpd.router.currentView.name
+					if(urlRegex.test("/"+window.sliMpd.router.currentView.name) == true) {
+						var targetUrl = window.sliMpd.router.currentView.name;
+						window.sliMpd.router.navigate(targetUrl, {
+							trigger : true
+						});
+					}
+					break;
+				default:
+					break;
+			}
+			return;
+		},
         
         // replacing backbones _extractParameters() method
         //    original method: "%2B" gets replaced with "+"
