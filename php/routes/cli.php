@@ -97,13 +97,13 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 $app->get('/resethard', function () use ($app, $argv, $importer) {
 	foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
 		$fileBrowser = new \Slimpd\filebrowser();
-		$fileBrowser->getDirectoryContent('cache', TRUE, TRUE);
+		$fileBrowser->getDirectoryContent($sysDir, TRUE, TRUE);
 		cliLog("Deleting files and directories inside ". $sysDir ."/");
 		foreach(['music','playlist','info','image','other'] as $key) {
 			foreach($fileBrowser->files[$key] as $file) {
 				// just to make sure we do not delete unwanted stuff :)
 				$delete = realpath(APP_ROOT . $file->fullpath);
-				if(strpos($delete, APP_ROOT.'cache/') === FALSE) {
+				if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
 					continue;
 				}
 				unlink($delete);
@@ -112,7 +112,7 @@ $app->get('/resethard', function () use ($app, $argv, $importer) {
 		foreach($fileBrowser->subDirectories['dirs'] as $dir) {
 			// just to make sure we do not delete unwanted stuff :)
 			$delete = realpath(APP_ROOT . $dir->fullpath);
-			if(strpos($delete, APP_ROOT.'cache/') === FALSE) {
+			if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
 				continue;
 			}
 			rrmdir($delete);
