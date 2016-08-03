@@ -94,7 +94,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 /**
  * start from scratch by dropping and recreating database
  */
-$app->get('/resethard', function () use ($app, $argv, $importer) {
+$app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
 		$fileBrowser = new \Slimpd\filebrowser();
 		$fileBrowser->getDirectoryContent($sysDir, TRUE, TRUE);
