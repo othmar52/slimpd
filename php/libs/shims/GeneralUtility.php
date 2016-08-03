@@ -1398,10 +1398,10 @@ function renderCliHelp() {
 	cliLog($app->ll->str('cli.usage'), 1, 'yellow');
 	cliLog("  ./slimpd [ARGUMENT]");
 	cliLog("ARGUMENTS", 1, 'yellow');
-	cliLog("  resethard", 1, 'cyan');
-	cliLog("    " . $app->ll->str('cli.args.resethard.line1'));
-	cliLog("    " . $app->ll->str('cli.args.resethard.line2'));
-	cliLog("    " . $app->ll->str('cli.args.resethard.warning'), 1, 'yellow');
+	cliLog("  hard-reset", 1, 'cyan');
+	cliLog("    " . $app->ll->str('cli.args.hard-reset.line1'));
+	cliLog("    " . $app->ll->str('cli.args.hard-reset.line2'));
+	cliLog("    " . $app->ll->str('cli.args.hard-reset.warning'), 1, 'yellow');
 	cliLog("  update", 1, 'cyan');
 	cliLog("    " . $app->ll->str('cli.args.update'));
 	cliLog("  remigrate", 1, 'cyan');
