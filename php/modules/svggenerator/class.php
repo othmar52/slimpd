@@ -237,6 +237,13 @@ class Svggenerator {
 					" | " . $binConf['bin_lame'] .
 					" -m m -S -f -b 16 --resample 8 - ". escapeshellarg($tmpFileName.'.mp3');
 				break;
+			case 'm4a':
+				$this->cmdTempwav = $binConf['bin_faad'] . " -q -o " . escapeshellarg($tmpFileName.'.wav') .
+					" " .escapeshellarg($this->absolutePath) . " && " . $binConf['bin_lame'] .
+					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.wav') .
+					" " . escapeshellarg($tmpFileName.'.mp3');
+				break;
+
 			default:
 				$this->cmdTempwav = $binConf['bin_lame'] . " " . escapeshellarg($this->absolutePath) .
 					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3');
