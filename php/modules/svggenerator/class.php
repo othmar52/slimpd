@@ -229,8 +229,22 @@ class Svggenerator {
 	
 	private function getPeaks() {
 		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
-		$this->cmdTempwav = \Slim\Slim::getInstance()->config['modules']['bin_lame'] . " " . escapeshellarg($this->absolutePath) . " -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3') .
-			" && lame -S --decode ". escapeshellarg($tmpFileName.'.mp3') . " ". escapeshellarg($tmpFileName.'.wav');
+		$binConf = \Slim\Slim::getInstance()->config['modules'];
+
+		switch($this->ext) {
+			case 'flac':
+				$this->cmdTempwav = $binConf['bin_flac'] . " -d --stdout " . escapeshellarg($this->absolutePath) .
+					" | " . $binConf['bin_lame'] .
+					" -m m -S -f -b 16 --resample 8 - ". escapeshellarg($tmpFileName.'.mp3');
+				break;
+			default:
+				$this->cmdTempwav = $binConf['bin_lame'] . " " . escapeshellarg($this->absolutePath) .
+					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3');
+				break;
+		}
+
+		$this->cmdTempwav .= " && ".$binConf['bin_lame']." -S --decode ". escapeshellarg($tmpFileName.'.mp3') . " ". escapeshellarg($tmpFileName.'.wav');
+
 
 		exec($this->cmdTempwav);
 		
