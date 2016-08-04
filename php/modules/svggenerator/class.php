@@ -229,34 +229,72 @@ class Svggenerator {
 	
 	private function getPeaks() {
 		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
+		$inFile = escapeshellarg($this->absolutePath);
+		$tmpWav = escapeshellarg($tmpFileName.'.wav');
+		$tmpMp3 = escapeshellarg($tmpFileName.'.mp3');
 		$binConf = \Slim\Slim::getInstance()->config['modules'];
 
 		switch($this->ext) {
 			case 'flac':
-				$this->cmdTempwav = $binConf['bin_flac'] . " -d --stdout " . escapeshellarg($this->absolutePath) .
-					" | " . $binConf['bin_lame'] .
-					" -m m -S -f -b 16 --resample 8 - ". escapeshellarg($tmpFileName.'.mp3');
+				$this->cmdTempwav = sprintf(
+					"%s -d --stdout %s | %s -m m -S -f -b 16 --resample 8 - %s",
+					$binConf['bin_flac'],
+					$inFile,
+					$binConf['bin_lame'],
+					$tmpMp3
+				);
 				break;
 			case 'm4a':
 			case 'aac':
-				$this->cmdTempwav = $binConf['bin_faad'] . " -q -o " . escapeshellarg($tmpFileName.'.wav') .
-					" " .escapeshellarg($this->absolutePath) . " && " . $binConf['bin_lame'] .
-					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.wav') .
-					" " . escapeshellarg($tmpFileName.'.mp3');
+				$this->cmdTempwav = sprintf(
+					"%s -q -o %s %s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					$binConf['bin_faad'],
+					$tmpWav,
+					$inFile,
+					$binConf['bin_lame'],
+					$tmpWav,
+					$tmpMp3
+				);
 				break;
 			case 'ogg':
-				$this->cmdTempwav = $binConf['bin_oggdec'] . " -Q " . escapeshellarg($this->absolutePath) .
-					" -o " . escapeshellarg($tmpFileName.'.wav') . " && " . $binConf['bin_lame'] .
-					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.wav') .
-					" " . escapeshellarg($tmpFileName.'.mp3');
-				break;	
+				$this->cmdTempwav = sprintf(
+					"%s -Q  %s -o  %s &&  %s -m m -S -f -b 16 --resample 8  %s  %s",
+					$binConf['bin_oggdec'],
+					$inFile,
+					$tmpWav,
+					$binConf['bin_lame'],
+					$tmpWav,
+					$tmpMp3
+				);
+				break;
+			case 'ac3':
+				$this->cmdTempwav = sprintf(
+					"%s -really-quiet -channels 5 -af pan=2:'1:0':'0:1':'0.7:0':'0:0.7':'0.5:0.5' %s".
+					" -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					$binConf['bin_mplayer'],
+					$inFile,
+					$tmpWav,
+					$binConf['bin_lame'],
+					$tmpWav,
+					$tmpMp3
+				);
+				break;
 			default:
-				$this->cmdTempwav = $binConf['bin_lame'] . " " . escapeshellarg($this->absolutePath) .
-					" -m m -S -f -b 16 --resample 8 ". escapeshellarg($tmpFileName.'.mp3');
+				$this->cmdTempwav = sprintf(
+					"%s %s -m m -S -f -b 16 --resample 8 %s",
+					$binConf['bin_lame'],
+					$inFile,
+					$tmpMp3
+				);
 				break;
 		}
 
-		$this->cmdTempwav .= " && ".$binConf['bin_lame']." -S --decode ". escapeshellarg($tmpFileName.'.mp3') . " ". escapeshellarg($tmpFileName.'.wav');
+		$this->cmdTempwav .= sprintf(
+			" && %s -S --decode %s %s",
+			$binConf['bin_lame'],
+			$tmpMp3,
+			$tmpWav
+		);
 
 
 		exec($this->cmdTempwav);
