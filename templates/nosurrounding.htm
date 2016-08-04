@@ -14,21 +14,25 @@
     		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
     		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
 			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
+			'vendor-dist/rstacruz/nprogress/nprogress.css',
 			'skin/default/fonts/SFDISPLAY/SFNSDisplay.css',
+			'skin/default/css/layout.css',
+			'skin/default/css/list.css',
+			'skin/default/css/buttons.css',
+			'skin/default/css/forms.css',
 			'skin/default/css/lightbox.css',
-			'skin/default/css/typicons_.css',
-			'skin/default/css/bootstrap-same-height-col.css',
-			'skin/default/css/bootstrap-jqueryui-autocomplete.css',
-			'skin/default/css/styles.css',
-			'skin/default/css/player.css'
-    		]
-		%}
+			'skin/default/css/nprogress.css',
+			'skin/default/css/navbars.css',
+			'skin/default/css/breadcrumb.css',
+			'skin/default/css/widget-autocomplete.css',
+			'skin/default/css/player/player.css'
+		] %}
     	 
 		{% for cssfile in cssfiles %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
 		{% endfor %}
 		{% if action == 'trackid3' %}
-			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}skin/default/getid3.css" />
+			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}skin/default/css/getid3.css" />
 			<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
 		{% endif %}
 	</head>
