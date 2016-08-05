@@ -279,6 +279,17 @@ class Svggenerator {
 					$tmpMp3
 				);
 				break;
+			case 'wma':
+				$this->cmdTempwav = sprintf(
+					"%s -really-quiet %s -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					$binConf['bin_mplayer'],
+					$inFile,
+					$tmpWav,
+					$binConf['bin_lame'],
+					$tmpWav,
+					$tmpMp3
+				);
+				break;
 			default:
 				$this->cmdTempwav = sprintf(
 					"%s %s -m m -S -f -b 16 --resample 8 %s",
