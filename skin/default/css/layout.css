@@ -1,0 +1,484 @@
+@font-face {
+	font-family: 'slim1';
+	src: url('./fonts/Share-Regular/Share-Regular.eot');
+	src: local('slim1'), url('./fonts/Share-Regular/Share-Regular.ttf') format('truetype');
+} 
+
+@font-face {
+	font-family: 'slim2';
+	src: url('./fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+} 
+
+
+body {
+	padding-top: 60px;
+	padding-bottom: 120px;
+	font-family: "sfnsdisplay", "sans-serif";
+	font-size: 1.4em;
+	color: #EEE;
+}
+
+.bg-col1,
+.popover,
+.popover .popover-title {
+	background-color: #1A1A1A;
+	
+}
+.bg-col2 {
+	background-color: #252525;
+}
+
+.bg-col3 {
+	background-color: #2D2D2D;
+}
+
+.bg-col4 {
+	background-color: #000;
+}
+
+.bg-col5 {
+	background-color: #373737;
+}
+
+.col1 {
+	color: #EEE;
+}
+
+.col2 {
+	/* @see: templates/css/spotcolors.css for overrides */
+}
+
+.col3 {
+	color: #CCC;
+}
+
+*::selection {
+  background-color: #FFF;
+  color: #000;
+}
+
+*::-moz-selection {
+  background-color: #FFF;
+  color: #000;
+}
+
+hr,
+.modal-footer {
+	border-top: 1px solid #373737;
+}
+
+.nav-tabs {
+	border-bottom: 1px solid #444;
+}
+
+h2 {
+	font-size: 1.7em;
+	font-family: "sfnsdisplay-light";
+}
+
+a {
+	color: #EEE;
+}
+
+.artist-link {
+	font-weight: bold;
+}
+
+
+.glue-hover-trigger {
+	color: #BBB;
+}
+
+.dark,
+.darker-links a {
+	color: #696969;
+}
+.fa {
+	color: #888;
+}
+
+.uc {
+	text-transform: uppercase;
+}
+
+.active .fa,
+.fa:hover {
+	color: #FFF;
+}
+
+.well {
+	color: #000;
+}
+
+.main-nav .form-control {
+	background-color: #2D2D2D;
+	border:none;
+	width: 100%;
+	display:block;
+	margin-top: 0.7em;
+}
+
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+.main-nav {
+	border-bottom: 3px solid #1A1A1A;
+}
+
+.main-nav .active {
+	border-bottom: 3px solid #FFF;
+}
+
+.dummy {
+    margin-top: 100%;
+}
+.link-tile {
+    position: absolute;
+    top: 15px;
+    bottom: 0;
+    left: 15px;
+    right: 0;
+    text-align:center;
+    padding-top:calc(50% - 30px);
+}
+
+.tile-square {
+	margin-bottom: 2.5em;
+	overflow: hidden;
+}
+
+.tile-square a{
+	height: 100%;
+}
+
+
+.tile-img img {
+	width: 100%;
+	height: 100%;
+}
+
+.tile-info-bottom {
+	padding-top: 0;
+	top: auto;
+}
+
+
+/* same height for all columns inside row*/
+.main-nav .row{
+    overflow: hidden; 
+}
+.main-nav [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+.tile-hover-data {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+
+.equal, .equal > div[class*='col-'] {  
+    display: -webkit-flex;
+    display: flex;
+    flex:1 1 auto;
+}
+
+.pagination {
+	margin: 0;
+}
+.pagination li a,
+.pagination li span,
+.pagination {
+	border: none;
+}
+
+.pagination>li>a,
+.pagination>li>span {
+	color: #FFF;
+	background-color: inherit;
+	
+}
+
+.pagination>li>a {
+	padding: 0.3em;
+	font-size: 1.4em;
+}
+
+.centered-text {
+    text-align:center
+} 
+
+
+.pagination>.disabled>a,
+.pagination>.disabled>a:focus,
+.pagination>.disabled>a:hover,
+.pagination>.disabled>span,
+.pagination>.disabled>span:focus,
+.pagination>.disabled>span:hover{
+    color: #fff;
+    background-color: inherit;
+    border-radius: 0;
+}
+
+.disabled .fa {
+	color: #353535;
+}
+
+/* @see: templates/css/spotcolors.css for overrides */
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover,
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: inherit;
+    border-bottom: 3px solid #FFF;
+    border-radius: 0;
+}
+
+.type-nav h3 {
+	margin: 0;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.type-nav h3 .badge{
+	font-weight: normal;
+}
+
+.item-link {
+	border-bottom: 1px solid #333;
+}
+
+.item-link:hover,
+.glue-hover-wrap.underline a {
+	color: #FFF;
+	text-decoration: none;
+	border-bottom: 1px solid #FFF;
+}
+
+
+.vcenter {
+  min-height: 4em;
+  display: flex;
+  align-items: center;
+}
+
+.filebrowser .vcenter,
+.vcenter3 {
+  min-height: 3em;
+}
+
+.vcinner {
+  display: inline-table;
+}
+
+.rotate2 {
+  -webkit-transform: rotate(-2deg);
+    -moz-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -ms-transform: rotate(-2deg);
+    transform: rotate(-2deg);
+}
+
+.form-control[type=text] {
+	background-color: #2D2D2D;
+	border:none;
+	color: #AAA;
+}
+
+/* cross-icon to clear searchfield */
+.clearinput {
+    position: absolute;
+    right: 0.4em;
+    top: 0.9em;
+    bottom: 0;
+    margin: 0;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    display: none;
+}
+
+/* album list 2 (wide boxes) begin */
+.box {
+  border-right: 1em solid #1a1a1a;
+}
+
+.box .img-col {
+	padding-left: 0;
+}
+/* album list 2 (wide boxes) end */
+
+
+/* mpd player shorten text begin */
+.shorten {
+    -o-text-overflow: ellipsis;   /* Opera */
+    text-overflow:    ellipsis;   /* IE, Safari (WebKit) */
+    overflow:hidden;              /* don't show excess chars */
+    white-space:nowrap;           /* force single line */
+    width:100%;                 /* fixed width */
+    display:block;
+}
+
+/* track widget*/
+.border-left {
+	border-left: 1px solid #353535;
+}
+
+/* TODO: fix non-working popover inside modalbox ... */
+.popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
+.popover .popover-title {border-radius: 0; }
+
+
+.no-padding-right {
+	padding-right: 0;
+}
+
+.item-row {
+
+}
+.missing-track-row {
+	margin-bottom: 0.3em;
+}
+
+.centered-icon {
+	display:block;
+	padding-top: 25%;
+}
+
+
+.btn-default {
+	background-color: #353535;
+	border: none;
+	border-radius: 0;
+	color: #888;
+}
+
+.bg-col2 .btn-default,
+.bg-col3 .btn-default {
+	background-color: #191919;
+}
+
+.btn-trnsp,
+.bg-col2 .btn-trnsp,
+.bg-col2 .btn-trnsp {
+	background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+.small {
+	font-weight: normal;
+}
+
+.nfo {
+	font-size: 1.1em;
+	line-height: 1em;
+	font-family: 'Courier New', Courier, monospace;
+	background-color: #000;
+	color: #fff;
+	word-wrap: break-word;
+}
+
+.label-warning {
+	color: #444;
+}
+
+.popover-image {
+	width: 100%;
+}
+
+/* djscreen */
+body.standalone {
+	font-weight: bold;
+	font-size:1.8em;
+}
+
+body.vstretch14 {
+	-webkit-transform:scale(1,1.4); /* Safari and Chrome */
+	-moz-transform:scale(1,1.4); /* Firefox */
+	-ms-transform:scale(1,1.4); /* IE 9 */
+	-o-transform:scale(1,1.4); /* Opera */
+	transform:scale(1,1.4); /* W3C */
+}
+
+.standalone .small {
+	font-weight: bold;
+}
+
+.standalone .dark {
+	color: #888;
+}
+
+.standalone .container-nomargin {
+	margin: 0;
+	padding: 0;
+}
+
+
+/* to-top link */
+
+#top-link-block.affix-top {
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px; /* negative of the offset - height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+#top-link-block.affix {
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 130px; /* height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+
+
+/* randomizer for development */
+.randomizer {
+    position: fixed;
+    top: 61px;
+    right: 10px;
+    font-size: 1.5em;
+    z-index: 1;
+}
+
+/* mpd branding of notification widget */
+/* @see: templates/css/spotcolors.css for overrides */
+.alert-mpd {
+	background-color: #000;
+	border-left: 3px solid #FFFFFF;
+}
+
+/* force displaying filename instead of tag attributes */
+.ffn-show {
+	display: none;
+}
+
+.ffn .ffn-show {
+	display: inherit;
+}
+
+.ffn .ffn-hidden {
+	display: none;
+}
+
+/* affixed modifications */
+.show-affixed {
+	display: none;
+}
+
+.affix .show-affixed {
+	display: inline-block;
+}
+

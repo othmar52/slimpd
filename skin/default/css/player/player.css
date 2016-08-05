@@ -1,0 +1,191 @@
+/* player mode toggler */
+/* @see: templates/css/spotcolors.css for overrides */
+.playerModeToggle a {
+	border-radius: 0;
+	color: #000;
+}
+
+.permaplayer {
+	border-top: 4px solid #000;
+	box-shadow: 0 -30px 30px -30px #000;
+}
+
+
+.slimplayer-show {
+	display: none;
+}
+
+.slimplayer .slimplayer-show {
+	display: inline-block;
+}
+
+.slimplayer .slimplayer-hidden {
+	display: none;
+}
+
+
+
+/* mpd player */
+
+.mpd-status-progressbar,
+.jp-play-bar,
+.xwax-deck-progressbar {
+	position: absolute;
+	background: rgba(255,156,1,0.3);
+	background: rgba(0,0,0,0.7);
+	width: 0;
+	border-right: 2px solid rgba(255, 255, 255, 1);
+	top: 0;
+	left: 0;
+}
+
+.mpd-ctrl-seekbar,
+.jp-seek-bar,
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	opacity: 0;
+}
+
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero {
+	width: 1em;
+	left: -1em;
+}
+
+.mpd-ctrl-seekbar,
+.jp-seek-bar,
+.mpd-status-progressbar,
+.jp-play-bar,
+.xwax-deck-progressbar,
+.permaplayer .waveform,
+.local-ctrl-seekzero,
+.mpd-ctrl-seekzero,
+.waveform-wrapper,
+.waveform-wrapper canvas {
+	height: 41px;
+}
+
+
+
+.slimplayer .mpd-ctrl-seekbar,
+.slimplayer .jp-seek-bar,
+.slimplayer .mpd-status-progressbar,
+.slimplayer .jp-play-bar,
+.slimplayer .xwax-deck-progressbar,
+.slimplayer .permaplayer .waveform,
+.slimplayer .xwaxplayer .waveform,
+.slimplayer .local-ctrl-seekzero,
+.slimplayer .mpd-ctrl-seekzero,
+.slimplayer .waveform-wrapper,
+.slimplayer .waveform-wrapper canvas {
+	height: 20px;
+}
+
+/* toggler mpd/local in permaplayer */
+.playerModeToggle {
+	position: fixed;
+	left: 10px;
+	bottom: 4px;
+	z-index: 2000;
+}
+
+.playerModeToggle strong,
+.xwax-gui-toggler strong {
+	padding-left: 1em;
+}
+
+.xwax-gui-toggler {
+	position: fixed;
+	left: 130px;
+	bottom: 4px;
+	z-index: 2000;
+}
+
+.slimplayer .seekbar-wrapper {
+	padding-left: 6em;
+}
+
+.slimplayer .xwax-gui-toggler {
+	left: 50px;
+}
+
+.waveform-wrapper,
+.waveform-wrapper canvas,
+.waveform {
+	width: 100%;
+	margin-bottom:10px;
+	text-align: center;
+	color: #666;
+}
+
+.timegrid {
+	width: 100%;
+	height:10px;
+}
+
+
+
+.status-timestring {
+	text-align: center;
+}
+
+
+
+
+
+.navbar-xwax {
+	bottom: 53px;
+}
+
+.xwax-mode-show {
+	display: none;
+}
+
+.xwax-enabled .xwax-mode-show {
+	display: inline-block;
+}
+
+.xwax-enabled .xwax-mode-hide {
+	display: none;
+}
+
+.xwax-error .alert {
+	padding: 0.2em 1em;
+} 
+
+
+.show-no-connection {
+	display: none;
+}
+
+.no-connection .show-no-connection {
+	display: flex;
+	justify-content: center; /* align horizontal */
+	text-align: center;
+	font-size: 2em;
+	background: #333;
+	height: 100%;
+	line-height: 100%;
+	width: 100%;
+	top: 0;
+	left: 0;
+	position: absolute;
+	padding: 0;
+	opacity: 0.6;
+}
+
+.no-connection .hide-no-connection {
+	display: none;
+}
+
+.standalone .no-connection .show-no-connection {
+	align-items: flex-end;
+}
+
+
+.standalone .xwax-row {
+	height: 100%;
+}
