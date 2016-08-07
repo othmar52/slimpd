@@ -597,6 +597,42 @@ function getRenderItems() {
 }
 
 
+
+
+function convertInstancesArrayToRenderItems($input) {
+	$return = [
+		'genres' => [],
+		'labels' => [],
+		'artists' => []
+	];
+	
+	foreach($input as $i) {
+		if(is_object($i)) {
+			switch(get_class($i)) {
+				case 'Slimpd\Artist':
+					if(isset($return['artists'][$i->getId()]) === FALSE) {
+						$return['artists'][$i->getId()] = $i;
+					}
+					break;
+				case 'Slimpd\Label':
+					if(isset($return['labels'][$i->getId()]) === FALSE) {
+						$return['labels'][$i->getId()] = $i;
+					}
+					break;
+				case 'Slimpd\Genre':
+					if(isset($return['genres'][$i->getId()]) === FALSE) {
+						$return['genres'][$i->getId()] = $i;
+					}
+					break;
+			}
+		}
+
+	}
+	return $return;
+}
+
+
+
 /*
  * TODO: only take a small chunk of the file instead of reading the whole possibly huge file
  */

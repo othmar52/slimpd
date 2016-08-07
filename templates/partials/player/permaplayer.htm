@@ -6,7 +6,7 @@
 	<div class="jp-gui jp-interface">
 	{% endif %}
 		<div class="col-lg-6 col-md-5">
-			<div class="row seekbar-wrapper">
+			<div class="row player-section-top">
 				{% include 'partials/player/'~player~'-seekbar.htm' %}
 
 				<span class="pull-right" style="position: absolute; right: 0; top: 0;">
@@ -25,7 +25,7 @@
 			<div class="row>">
 				<div class="media">
 					<div class="media-left">
-						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link">
+						<a href="{{ albumHref }}" class="ajax-link">
 							<img src="{{ artworkUrl }}" style="width: 100px; height: 100px;"/>
 						</a>
 					</div>

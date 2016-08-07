@@ -2,7 +2,7 @@
 <ol class="breadcrumb"><!--
 	-->{% if not hiderootlink %}<!--
 	--><li><!--
-		--><a href="{{root}}filebrowser" data-ajaxtarget="#main" class="ajax-link uc" title="{{ 'filebrowser.showroot'|ll }}"><i class="fa fa-folder-o fa-lg"></i></a><!--
+		--><a href="{{root}}filebrowser" class="ajax-link uc" title="{{ 'filebrowser.showroot'|ll }}"><i class="fa fa-folder-o fa-lg"></i></a><!--
 		--><span class="dir-separator"> </span><!--
 	--></li><!--
 	-->{% endif %}<!--
@@ -17,7 +17,7 @@
 			-->{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}<!--
 			{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
 		--><li class="" title="{{ item.name }}"><!--
-		--><a href="{{root}}filebrowser{{ item.fullpath|path2url }}" data-ajaxtarget="#main" title="{{'filebrowser.showdircontent'|ll(item.name) }}" class="ajax-link toggle-tooltip trigger-hide-modal">{{ item.name }}</a><!--
+		--><a href="{{root}}filebrowser{{ item.fullpath|path2url }}" title="{{'filebrowser.showdircontent'|ll(item.name) }}" class="ajax-link toggle-tooltip trigger-hide-modal">{{ item.name }}</a><!--
 		--><span class="dir-separator">/</span><!--
 		--></li><!--
 		-->{% endif %}<!--

@@ -6,7 +6,7 @@
 {% set remixerIds = item.remixerId|split(',') %}
 {% for index,titlepart in titleparts %}
 {% if not loop.first and not loop.last %}
-<a class="item-link artist-link col2 ajax-link toggle-tooltip" data-ajaxtarget="#main" href="{{root}}artist/{{ item.remixerId }}/tracks/page/1/sort/added/desc" title="view artists tracks">
+<a class="item-link artist-link col2 ajax-link toggle-tooltip" href="{{root}}artist/{{ item.remixerId }}/tracks/page/1/sort/added/desc" title="view artists tracks">
 <span class="glue-hover-trigger">
 {% endif %}{{ titlepart }}{% if not loop.first and not loop.last %}</span></a>{% endif %}
 {% if loop.last == false %}{% include 'partials/artist/single-link.htm' with { 'itemId': remixerIds[index] }  %}{% endif %}

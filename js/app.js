@@ -82,6 +82,7 @@ $(document).ready(function() {
 		},
 		
 		notifyError : function(errorUrl) {
+			// TODO: get message from language file
     		this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
 				type : "danger"
@@ -127,6 +128,7 @@ $(document).ready(function() {
 	/* toggle between mpd-control and local player (jPlayer) */
 	$('.playerModeToggle a').on('click', function(e) {
 		e.preventDefault();
+		$('.player-local,.player-mpd').toggleClass('hidden');
 		if(window.sliMpd.currentPlayer.mode === 'mpd') {
 			$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
 			window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
@@ -152,7 +154,6 @@ $(document).ready(function() {
 				.addClass(window.sliMpd.conf.color.mpd.bodyclass);
 		}
 		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
-		$('.player-local,.player-mpd').toggle();
 		window.sliMpd.drawFavicon();
 		window.sliMpd.currentPlayer.drawWaveform();
 	});
@@ -203,14 +204,10 @@ $(document).ready(function() {
 	
 	// TODO: is it correct to place this here (excluded from all bootstrap-views)?
 	$(function(){
-		// Only enable if the document has a long scroll bar
-		// Note the window height + offset
-		if ( ($(window).height() + 100) < $(document).height() ) {
-		    $('#top-link-block').removeClass('hidden').affix({
-		        // how far to scroll down before link "slides" into view
-		        offset: {top:100}
-		    });
-		}
+	    $('#top-link-block').removeClass('hidden').affix({
+	        // how far to scroll down before link "slides" into view
+	        offset: {top:100}
+	    });
 	});
 	$('#top-link-block a').on('click', function(e) {
 		e.preventDefault();
@@ -220,6 +217,7 @@ $(document).ready(function() {
 
 	/*
 	 * force confirmation when user leaves sliMpd in case local audio is playing
+	 * as the browser is not displaying the text there is no nedd to fetch string from language file
 	 */
 	window.onbeforeunload=function(){
 		if(window.sliMpd.currentPlayer.mode === 'local' && window.sliMpd.currentPlayer.nowPlayingState === 'play') {

@@ -3,8 +3,8 @@
 <div class="row">
 	<div class="col-md-2 no-padding-right vcenter">
 		<div class="vcinner">
-			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show album">
-				<img src="{{root}}image-100/album/{{ item.albumId }}" alt="" style="width: 50px; height: 50px; z-index:2;">
+			<a href="{{ albumHref }}" class="ajax-link toggle-tooltip" title="show album">
+				<img src="{{root}}image-100/album/{{ item.albumId }}" alt="" class="icon-50">
 			</a>
 			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
@@ -67,7 +67,7 @@
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 				<br />
 				<div class="darker-links">
-					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+					<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
 			</div>
 		</div>

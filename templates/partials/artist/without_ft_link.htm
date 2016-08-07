@@ -3,7 +3,7 @@
 {% for itemId in itemIds %}
 	{% include 'partials/artist/single-link.htm' %}
 	{% if loop.last == false %}
-	<a class="artist-link col2 item-link ajax-link trigger-hide-modal" href="{{root}}artist/{{item.artistId}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main">
+	<a class="artist-link col2 item-link ajax-link trigger-hide-modal" href="{{root}}artist/{{item.artistId}}/tracks/page/1/sort/added/desc">
 		<span class="artist_all">&amp;</span></a>
 	{% endif %}
 {% endfor %}
