@@ -35,7 +35,7 @@
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
-			<nav class="navbar main-nav navbar-fixed-top" style="background-color: #353535">
+			<nav class="navbar main-nav navbar-fixed-top">
 				<div class="container-fluid">
 					<div class="navbar-header">
 						<a id="logo" class="navbar-brand col2" href="{{root}}">{{config.logomarkup|raw}}</a>
@@ -177,11 +177,7 @@
 								{{'syscheck.skipped'|ll}}
 							{% else %}
 							{% if (fingerprintWaveform == 'wf') and  sys[test].status == 'success' %}
-							<object style="    width: 62px;
-    height: 38px;
-    display: inline;
-    position: absolute;
-    right: 200px;" class="waveform" data="{{root}}audiosvg/width/5000/{{ sys[test].filepath }}?color=3" type="image/svg+xml"></object>
+							<object class="waveform waveform-tiny" data="{{root}}audiosvg/width/5000/{{ sys[test].filepath }}?color=3" type="image/svg+xml"></object>
 							{% endif %}
 							<button class="btn btn-default toggle-content pull-right" data-toggle="#check-{{test}}" data-text1="show more" data-text2="show less">
   								show more
