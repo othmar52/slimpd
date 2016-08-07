@@ -4,7 +4,7 @@
     <h3>XWAX Control</h3>
     
     {% if xwax.showlauncher %}
-    <div class="row" style="text-align: center;">
+    <div class="row centered-text">
 		<div class="col-md-6">
 			<button role="control" data-href="{{root}}xwax/{{xwax.cmd_launch}}/1" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
 			start xwax
@@ -29,7 +29,7 @@
 		{% else %}
 			{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
 	  		{% for i in 1..xwax.decks %}
-	  		<div class="col-md-{{colidx}}" style="text-align: center;">
+	  		<div class="col-md-{{colidx}} centered-text">
 	  			<div class="row">
 	  				<button role="control" data-href="{{root}}xwax/disconnect/{{i}}" class="ajax-rqst btn btn-default btn-lg" title="Send disconnect to xwax deck {{i}}">
 						Disconnect {{i}}
