@@ -72,6 +72,10 @@ a {
 	font-weight: bold;
 }
 
+.typelist .artist-link.col2 {
+	font-weight: normal;
+	color: #EEE;
+}
 
 .glue-hover-trigger {
 	color: #BBB;
