@@ -47,7 +47,7 @@
 	    		{{ fileName }}
 				<br />
 				<div class="darker-links">
-					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+					<a href="{{ albumHref }}" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
 				{% include 'partials/track/not-imported-badge.htm' %}
 	    	</div>
@@ -60,7 +60,7 @@
   		</button>
   	</div>
   	<div id="trackwidget-techspecs" style="display:none;">
-  		<div class="nfo" style="padding:1em; line-height: 1.3em; font-size: 0.9em;">{{item.relativePath}}</div>
+  		<div class="nfo">{{item.relativePath}}</div>
 	  	{% if item.id %}
 	    <div class="row">
 			<div class="col-md-3">
@@ -232,13 +232,13 @@
 	  			<h3>{{'edit'|ll}}</h3>
 	  		</div>
 	  		<div class="col-md-12">
-				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
+				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
+	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i>
+	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i>
 	  				{{'viewdir'|ll}}
 	  			</a>
 	  		</div>
@@ -258,22 +258,22 @@
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="{{fileroot}}skin/default/img/icon-discogs.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Discogs
+	  				<img src="{{fileroot}}skin/default/img/icon-discogs.png" class="icon-16 grayscale"/> Discogs
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="{{fileroot}}skin/default/img/icon-rdb.ico" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> RollDaBeats
+	  				<img src="{{fileroot}}skin/default/img/icon-rdb.ico" class="icon-16 grayscale"/> RollDaBeats
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="{{fileroot}}skin/default/img/icon-junodownload.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Juno
+	  				<img src="{{fileroot}}skin/default/img/icon-junodownload.png" class="icon-16 grayscale"/> Juno
 	  			</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body">
-	  				<img src="{{fileroot}}skin/default/img/icon-beatport.png" style="width: 16px; height: 16px;-webkit-filter: grayscale(100%)"/> Beatport
+	  				<img src="{{fileroot}}skin/default/img/icon-beatport.png" class="icon-16 grayscale"/> Beatport
 	  			</a>
 	  		</div>
 	  		

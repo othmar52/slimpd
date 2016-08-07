@@ -22,16 +22,22 @@
 		
 	</div>
 </div>
-<div class="row">	
+<div class="row typelist">
 	{% if itemlist|length  %}
 		{% set itemsPerColumn = (itemlist|length / 4)|round(0, 'ceil') %}
 		{% for item in itemlist %}
 			{% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}<div class="col-md-3">{% endif %}
-			<a href="{{root}}{{ type }}/{{item.id}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
-				{% if item.article %}<span class="dark">{{item.article}}</span>{% endif %}
-				{{item.title}}
+				{% if item is instanceofArtist %}
+					{% include 'partials/artist/single-link.htm' with { itemId: item.id } %}
+				{% endif %}
+				{% if item is instanceofGenre %}
+					{% include 'partials/genre/link.htm' with { genreIds: item.id } %}
+				{% endif %}
+				{% if item is instanceofLabel %}
+					{% include 'partials/label/link.htm' with { labelIds: item.id } %}
+				{% endif %}
 				<span class="dark small" title="trackcount">({{ item.trackCount }})</span>
-			</a><br />
+			<br />
 			{% if loop.last or loop.index % itemsPerColumn == 0 -%}</div>{% endif %}
 		{% endfor %}
 	{% else %}

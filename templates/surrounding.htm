@@ -16,17 +16,17 @@
 			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
 			'vendor-dist/rstacruz/nprogress/nprogress.css',
 			'skin/default/fonts/SFDISPLAY/SFNSDisplay.css',
-			'skin/default/lightbox.css',
-			'skin/default/typicons_.css',
-			'skin/default/bootstrap-same-height-col.css',
-			'skin/default/bootstrap-jqueryui-autocomplete.css',
-			'skin/default/styles.css',
-			'skin/default/player.css',
-			'skin/default/nprogress.css',
-			'skin/default/breadcrumb.css',
-			'skin/default/fullwidth-bg-row.css'
-    		]
-		%}
+			'skin/default/css/layout.css',
+			'skin/default/css/list.css',
+			'skin/default/css/buttons.css',
+			'skin/default/css/forms.css',
+			'skin/default/css/lightbox.css',
+			'skin/default/css/nprogress.css',
+			'skin/default/css/navbars.css',
+			'skin/default/css/breadcrumb.css',
+			'skin/default/css/widget-autocomplete.css',
+			'skin/default/css/player/player.css'
+		] %}
     	 
 		{% for cssfile in cssfiles %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
@@ -56,20 +56,6 @@
 							{% include 'modules/typelist.htm' %}
 						{% endif %}
 						
-						
-						{% if action == 'library.'~type %}
-							<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">
-								<a href="{{root}}library/{{type}}/{{ item.id-1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-left fa-lg"></i></a>
-								<span class="small"><a href="{{root}}library/{{type}}s/page/1" data-ajaxtarget="#main" class="ajax-link">{{ type~'s' }}</a></span>
-								<a href="{{root}}library/{{type}}/{{ item.id+1 }}" data-ajaxtarget="#main" class="ajax-link"><i id="iconSearchToggler" class="fa fa-chevron-right fa-lg"></i></a>
-								{{ item.title }} </h2>
-							{% include 'modules/albumlist2.htm' with { 'itemlist': albumlist } %}
-							{% include 'partials/tracklist-1.htm' %}
-							
-							
-						{% endif %}
-						
-						
 						{% if action == type~'.tracks' %}
 							{% include 'modules/typelist-nav.htm' %}
 							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
@@ -97,19 +83,19 @@
 						<div class="row">
 							<div class="col-md-3 col-sm-4 col-xs-6">
 								<div class="dummy"></div>
-								<a href="{{root}}genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'genres'|ll}}</a>
+								<a href="{{root}}genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'genres'|ll}}</a>
 							</div>
 							<div class="col-md-3 col-sm-4 col-xs-6">
 								<div class="dummy"></div>
-								<a href="{{root}}labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'labels'|ll}}</a>
+								<a href="{{root}}labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'labels'|ll}}</a>
 							</div>
 							<div class="col-md-3 col-sm-4 col-xs-6">
 								<div class="dummy"></div>
-								<a href="{{root}}artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">{{'artists'|ll}}</a>
+								<a href="{{root}}artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'artists'|ll}}</a>
 							</div>
 							<div class="col-md-3 col-sm-4 col-xs-6">
 								<div class="dummy"></div>
-								<a href="#/albums/page/1" class="genre-link item-link ajax-link link-tile bg-col2" data-ajaxtarget="#main">
+								<a href="#/albums/page/1" class="genre-link item-link ajax-link link-tile bg-col2">
 									<span style="padding:3em;" {{'niymarkup'|ll|raw}}>{{'albums'|ll}}</span>
 								</a>
 							</div>
@@ -212,11 +198,11 @@
 		{% include 'modules/xwaxgui.htm'%}
 		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
+		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom {{ (playerMode == 'mpd') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'local'} %}
 		</div>
 		
-		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
+		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom {{ (playerMode == 'local') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
 		

@@ -1,0 +1,41 @@
+
+
+
+
+.btn-default {
+	background-color: #353535;
+	border: none;
+	border-radius: 0;
+	color: #888;
+}
+
+.bg-col2 .btn-default,
+.bg-col3 .btn-default {
+	background-color: #191919;
+}
+
+.btn-trnsp,
+.bg-col2 .btn-trnsp,
+.bg-col2 .btn-trnsp {
+	background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
+}
+
+
+
+/* to-top link */
+
+#top-link-block.affix-top {
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px; /* negative of the offset - height of link element */
+    left: 10px; /* padding from the left side of the window */
+}
+#top-link-block.affix {
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 130px; /* height of link element */
+    left: 10px; /* padding from the left side of the window */
+}

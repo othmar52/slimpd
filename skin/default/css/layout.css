@@ -1,0 +1,308 @@
+body {
+	padding-top: 60px;
+	padding-bottom: 120px;
+	font-family: "sfnsdisplay", "sans-serif";
+	font-size: 1.4em;
+	color: #EEE;
+}
+
+.bg-col1,
+.popover,
+.popover .popover-title {
+	background-color: #1A1A1A;
+	
+}
+.bg-col2 {
+	background-color: #252525;
+}
+
+.bg-col3 {
+	background-color: #2D2D2D;
+}
+
+.bg-col4 {
+	background-color: #000;
+}
+
+.bg-col5 {
+	background-color: #373737;
+}
+
+.col1 {
+	color: #EEE;
+}
+
+.col2 {
+	/* @see: templates/css/spotcolors.css for overrides */
+}
+
+.col3 {
+	color: #CCC;
+}
+
+*::selection {
+  background-color: #FFF;
+  color: #000;
+}
+
+*::-moz-selection {
+  background-color: #FFF;
+  color: #000;
+}
+
+hr,
+.modal-footer {
+	border-top: 1px solid #373737;
+}
+
+.nav-tabs {
+	border-bottom: 1px solid #444;
+}
+
+h2 {
+	font-size: 1.7em;
+	font-family: "sfnsdisplay-light";
+}
+
+a {
+	color: #EEE;
+}
+
+.artist-link {
+	font-weight: bold;
+}
+
+.typelist .artist-link.col2 {
+	font-weight: normal;
+	color: #EEE;
+}
+
+.glue-hover-trigger {
+	color: #BBB;
+}
+
+.dark,
+.darker-links a {
+	color: #696969;
+}
+.fa {
+	color: #888;
+}
+
+.uc {
+	text-transform: uppercase;
+}
+
+.active .fa,
+.fa:hover {
+	color: #FFF;
+}
+
+.well {
+	color: #000;
+}
+
+
+.centered-text {
+    text-align: center;
+} 
+
+
+.disabled .fa {
+	color: #353535;
+}
+
+
+.type-nav h3 {
+	margin: 0;
+	font-size: 1em;
+	font-weight: bold;
+}
+
+.type-nav h3 .badge{
+	font-weight: normal;
+}
+
+.item-link {
+	border-bottom: 1px solid #333;
+}
+
+.item-link:hover,
+.glue-hover-wrap.underline a {
+	color: #FFF;
+	text-decoration: none;
+	border-bottom: 1px solid #FFF;
+}
+
+.article,
+a .article {
+	color: #777;
+}
+
+
+.rotate2 {
+  -webkit-transform: rotate(-2deg);
+    -moz-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -ms-transform: rotate(-2deg);
+    transform: rotate(-2deg);
+}
+
+/* mpd player shorten text begin */
+.shorten {
+    -o-text-overflow: ellipsis;   /* Opera */
+    text-overflow:    ellipsis;   /* IE, Safari (WebKit) */
+    overflow:hidden;              /* don't show excess chars */
+    white-space:nowrap;           /* force single line */
+    width:100%;                 /* fixed width */
+    display:block;
+}
+
+/* track widget*/
+.border-left {
+	border-left: 1px solid #353535;
+}
+
+.popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
+.popover .popover-title {border-radius: 0; }
+
+.hidden {
+	display: none;
+}
+
+.no-padding-right {
+	padding-right: 0;
+}
+
+.item-row {
+
+}
+
+.centered-icon {
+	display:block;
+	padding-top: 25%;
+}
+
+.icon-50 {
+	width: 50px;
+	height: 50px;
+	z-index:2;
+}
+
+.icon-16 {
+	width: 16px;
+	height: 16px;
+}
+
+.grayscale {
+	filter: grayscale(100%);
+	-webkit-filter: grayscale(100%);
+}
+
+.small {
+	font-weight: normal;
+}
+
+.nfo {
+	font-size: 1.1em;
+	line-height: 1em;
+	font-family: 'Courier New', Courier, monospace;
+	background-color: #000;
+	color: #fff;
+	word-wrap: break-word;
+}
+
+#trackwidget-techspecs .nfo {
+	padding: 1em;
+	line-height: 1.3em;
+	font-size: 0.9em;
+}
+
+.label-warning {
+	color: #444;
+}
+
+.popover-image {
+	width: 100%;
+}
+
+/* djscreen */
+body.standalone {
+	font-weight: bold;
+	font-size:1.8em;
+}
+
+body.vstretch14 {
+	-webkit-transform:scale(1,1.4); /* Safari and Chrome */
+	-moz-transform:scale(1,1.4); /* Firefox */
+	-ms-transform:scale(1,1.4); /* IE 9 */
+	-o-transform:scale(1,1.4); /* Opera */
+	transform:scale(1,1.4); /* W3C */
+}
+
+.standalone .small {
+	font-weight: bold;
+}
+
+.standalone .dark {
+	color: #888;
+}
+
+.standalone .container-nomargin {
+	margin: 0;
+	padding: 0;
+}
+
+.nomargin {
+	margin: 0;
+	padding: 0;
+}
+
+
+/* randomizer for development */
+.randomizer {
+    position: fixed;
+    top: 61px;
+    right: 10px;
+    font-size: 1.5em;
+    z-index: 1;
+}
+
+/* mpd branding of notification widget */
+/* @see: templates/css/spotcolors.css for overrides */
+.alert-mpd {
+	background-color: #000;
+	border-left: 3px solid #FFFFFF;
+}
+
+/* force displaying filename instead of tag attributes */
+.ffn-show {
+	display: none;
+}
+
+.ffn .ffn-show {
+	display: inherit;
+}
+
+.ffn .ffn-hidden {
+	display: none;
+}
+
+/* affixed modifications */
+.show-affixed {
+	display: none;
+}
+
+.affix .show-affixed {
+	display: inline-block;
+}
+
+
+/* systemcheck */
+.waveform.waveform-tiny {
+	width: 62px;
+    height: 38px;
+    display: inline;
+    position: absolute;
+    right: 200px;
+}

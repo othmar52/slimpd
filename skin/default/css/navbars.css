@@ -1,0 +1,89 @@
+
+
+
+.main-nav {
+	border-bottom: 3px solid #1A1A1A;
+	background-color: #353535;
+}
+
+.main-nav .active {
+	border-bottom: 3px solid #FFF;
+}
+
+.main-nav .form-control {
+	border:none;
+	width: 100%;
+	display:block;
+	margin-top: 0.7em;
+}
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+.main-nav .row{
+    overflow: hidden; 
+}
+.main-nav [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+
+
+
+
+.pagination {
+	margin: 0;
+}
+.pagination li a,
+.pagination li span,
+.pagination {
+	border: none;
+}
+
+.pagination>li>a,
+.pagination>li>span {
+	color: #FFF;
+	background-color: inherit;
+	
+}
+
+.pagination>li>a {
+	padding: 0.3em;
+	font-size: 1.4em;
+}
+
+.pagination>.disabled>a,
+.pagination>.disabled>a:focus,
+.pagination>.disabled>a:hover,
+.pagination>.disabled>span,
+.pagination>.disabled>span:focus,
+.pagination>.disabled>span:hover{
+    color: #fff;
+    background-color: inherit;
+    border-radius: 0;
+}
+
+
+/* @see: templates/css/spotcolors.css for overrides */
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover,
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:focus,
+.nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: inherit;
+    border-bottom: 3px solid #FFF;
+    border-radius: 0;
+}
+
+
