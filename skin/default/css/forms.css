@@ -1,0 +1,18 @@
+.form-control[type=text] {
+	background-color: #2D2D2D;
+	border:none;
+	color: #AAA;
+}
+
+/* cross-icon to clear searchfield */
+.clearinput {
+    position: absolute;
+    right: 0.4em;
+    top: 0.9em;
+    bottom: 0;
+    margin: 0;
+    font-size: 20px;
+    cursor: pointer;
+    color: #666;
+    display: none;
+}

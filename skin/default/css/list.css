@@ -1,140 +1,19 @@
-/*  bootstrap same hight columns - begin */
-
-
-/* taken from: http://www.minimit.com/articles/solutions-tutorials/bootstrap-3-responsive-columns-of-same-height */
-.inside {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-.inside-full-height {
-  /*
-  // if you want to give content full height give him height: 100%;
-  // with content full height you can't apply margins to the content
-  // content full height does not work in ie http://stackoverflow.com/questions/27384433/ie-display-table-cell-child-ignores-height-100
-  */
-  height: 100%;
-  margin-top: 0;
-  margin-bottom: 0;
+/*  bootstrap vertically centering of row content - begin */
+.vcenter {
+  min-height: 4em;
+  display: flex;
+  align-items: center;
 }
 
-/* columns of same height styles */
-
-.row-height {
-  display: table;
-  table-layout: fixed;
-  height: 100%;
-  width: 100%;
-}
-.col-height {
-  display: table-cell;
-  float: none;
-  height: 100%;
-}
-.col-top {
-  vertical-align: top;
-}
-.col-middle {
-  vertical-align: middle;
-}
-.col-bottom {
-  vertical-align: bottom;
+.filebrowser .vcenter,
+.vcenter3 {
+  min-height: 3em;
 }
 
-@media (min-width: 480px) {
-  .row-xs-height {
-    display: table;
-    table-layout: fixed;
-    height: 100%;
-    width: 100%;
-  }
-  .col-xs-height {
-    display: table-cell;
-    float: none;
-    height: 100%;
-  }
-  .col-xs-top {
-    vertical-align: top;
-  }
-  .col-xs-middle {
-    vertical-align: middle;
-  }
-  .col-xs-bottom {
-    vertical-align: bottom;
-  }
+.vcinner {
+  display: inline-table;
 }
-
-@media (min-width: 768px) {
-  .row-sm-height {
-    display: table;
-    table-layout: fixed;
-    height: 100%;
-    width: 100%;
-  }
-  .col-sm-height {
-    display: table-cell;
-    float: none;
-    height: 100%;
-  }
-  .col-sm-top {
-    vertical-align: top;
-  }
-  .col-sm-middle {
-    vertical-align: middle;
-  }
-  .col-sm-bottom {
-    vertical-align: bottom;
-  }
-}
-
-@media (min-width: 992px) {
-  .row-md-height {
-    display: table;
-    table-layout: fixed;
-    height: 100%;
-    width: 100%;
-  }
-  .col-md-height {
-    display: table-cell;
-    float: none;
-    height: 100%;
-  }
-  .col-md-top {
-    vertical-align: top;
-  }
-  .col-md-middle {
-    vertical-align: middle;
-  }
-  .col-md-bottom {
-    vertical-align: bottom;
-  }
-}
-
-@media (min-width: 1200px) {
-  .row-lg-height {
-    display: table;
-    table-layout: fixed;
-    height: 100%;
-    width: 100%;
-  }
-  .col-lg-height {
-    display: table-cell;
-    float: none;
-    height: 100%;
-  }
-  .col-lg-top {
-    vertical-align: top;
-  }
-  .col-lg-middle {
-    vertical-align: middle;
-  }
-  .col-lg-bottom {
-    vertical-align: bottom;
-  }
-}
-
-/*  bootstrap same hight columns - end */
-
-
+/*  bootstrap vertically centering of row content - end */
 
 
 
@@ -190,3 +69,59 @@ html, body {
   background: #373737;  /* Match the background */
 } 
 /*  bootstrap full width row background - end */
+
+
+
+.missing-track-row {
+	margin-bottom: 0.3em;
+}
+
+
+
+
+
+
+
+
+
+/* tile listing in <base>/library/year/YYYY (consider removal) - begin */
+.dummy {
+    margin-top: 100%;
+}
+
+.link-tile {
+    position: absolute;
+    top: 15px;
+    bottom: 0;
+    left: 15px;
+    right: 0;
+    text-align:center;
+    padding-top:calc(50% - 30px);
+}
+
+.tile-square {
+	margin-bottom: 2.5em;
+	overflow: hidden;
+}
+
+.tile-square a{
+	height: 100%;
+}
+
+.tile-img img {
+	width: 100%;
+	height: 100%;
+}
+
+.tile-info-bottom {
+	padding-top: 0;
+	top: auto;
+}
+
+.tile-hover-data {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+}
+/* tile listing in <base>/library/year/YYYY (consider removal) - end */
+
