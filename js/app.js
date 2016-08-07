@@ -203,14 +203,10 @@ $(document).ready(function() {
 	
 	// TODO: is it correct to place this here (excluded from all bootstrap-views)?
 	$(function(){
-		// Only enable if the document has a long scroll bar
-		// Note the window height + offset
-		if ( ($(window).height() + 100) < $(document).height() ) {
-		    $('#top-link-block').removeClass('hidden').affix({
-		        // how far to scroll down before link "slides" into view
-		        offset: {top:100}
-		    });
-		}
+	    $('#top-link-block').removeClass('hidden').affix({
+	        // how far to scroll down before link "slides" into view
+	        offset: {top:100}
+	    });
 	});
 	$('#top-link-block a').on('click', function(e) {
 		e.preventDefault();
@@ -220,6 +216,7 @@ $(document).ready(function() {
 
 	/*
 	 * force confirmation when user leaves sliMpd in case local audio is playing
+	 * as the browser is not displaying the text there is no nedd to fetch string from language file
 	 */
 	window.onbeforeunload=function(){
 		if(window.sliMpd.currentPlayer.mode === 'local' && window.sliMpd.currentPlayer.nowPlayingState === 'play') {
