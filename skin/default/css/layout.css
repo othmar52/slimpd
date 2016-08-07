@@ -98,85 +98,6 @@ a {
 	color: #000;
 }
 
-.main-nav .form-control {
-	background-color: #2D2D2D;
-	border:none;
-	width: 100%;
-	display:block;
-	margin-top: 0.7em;
-}
-
-
-.navbar-toggle .icon-bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background-color: #cccccc;
-  border-radius: 1px;
-}
-
-.main-nav {
-	border-bottom: 3px solid #1A1A1A;
-}
-
-.main-nav .active {
-	border-bottom: 3px solid #FFF;
-}
-
-.dummy {
-    margin-top: 100%;
-}
-.link-tile {
-    position: absolute;
-    top: 15px;
-    bottom: 0;
-    left: 15px;
-    right: 0;
-    text-align:center;
-    padding-top:calc(50% - 30px);
-}
-
-.tile-square {
-	margin-bottom: 2.5em;
-	overflow: hidden;
-}
-
-.tile-square a{
-	height: 100%;
-}
-
-
-.tile-img img {
-	width: 100%;
-	height: 100%;
-}
-
-.tile-info-bottom {
-	padding-top: 0;
-	top: auto;
-}
-
-
-/* same height for all columns inside row*/
-.main-nav .row{
-    overflow: hidden; 
-}
-.main-nav [class*="col-"]{
-    margin-bottom: -99999px;
-    padding-bottom: 99999px;
-}
-.tile-hover-data {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-}
-
-.equal, .equal > div[class*='col-'] {  
-    display: -webkit-flex;
-    display: flex;
-    flex:1 1 auto;
-}
-
 
 .centered-text {
     text-align:center
@@ -210,20 +131,6 @@ a {
 }
 
 
-.vcenter {
-  min-height: 4em;
-  display: flex;
-  align-items: center;
-}
-
-.filebrowser .vcenter,
-.vcenter3 {
-  min-height: 3em;
-}
-
-.vcinner {
-  display: inline-table;
-}
 
 .rotate2 {
   -webkit-transform: rotate(-2deg);
@@ -232,36 +139,6 @@ a {
     -ms-transform: rotate(-2deg);
     transform: rotate(-2deg);
 }
-
-.form-control[type=text] {
-	background-color: #2D2D2D;
-	border:none;
-	color: #AAA;
-}
-
-/* cross-icon to clear searchfield */
-.clearinput {
-    position: absolute;
-    right: 0.4em;
-    top: 0.9em;
-    bottom: 0;
-    margin: 0;
-    font-size: 20px;
-    cursor: pointer;
-    color: #666;
-    display: none;
-}
-
-/* album list 2 (wide boxes) begin */
-.box {
-  border-right: 1em solid #1a1a1a;
-}
-
-.box .img-col {
-	padding-left: 0;
-}
-/* album list 2 (wide boxes) end */
-
 
 /* mpd player shorten text begin */
 .shorten {
@@ -278,7 +155,6 @@ a {
 	border-left: 1px solid #353535;
 }
 
-/* TODO: fix non-working popover inside modalbox ... */
 .popover { border-radius: 0; min-width: 20em; border: 3px solid #353535;}
 .popover .popover-title {border-radius: 0; }
 
@@ -289,9 +165,6 @@ a {
 
 .item-row {
 
-}
-.missing-track-row {
-	margin-bottom: 0.3em;
 }
 
 .centered-icon {

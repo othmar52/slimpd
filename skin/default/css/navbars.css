@@ -1,6 +1,41 @@
 
 
 
+.main-nav {
+	border-bottom: 3px solid #1A1A1A;
+}
+
+.main-nav .active {
+	border-bottom: 3px solid #FFF;
+}
+
+.main-nav .form-control {
+	border:none;
+	width: 100%;
+	display:block;
+	margin-top: 0.7em;
+}
+
+.navbar-toggle .icon-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: #cccccc;
+  border-radius: 1px;
+}
+
+.main-nav .row{
+    overflow: hidden; 
+}
+.main-nav [class*="col-"]{
+    margin-bottom: -99999px;
+    padding-bottom: 99999px;
+}
+
+
+
+
+
 .pagination {
 	margin: 0;
 }
