@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="show directory">
+			<a href="{{root}}filebrowser/{{ item.fullpath|path2url  }}" class="ajax-link toggle-tooltip" title="show directory">
 				<img src="{{fileroot}}skin/default/img/icon-dirname.png" alt="" class="icon-50">
 			</a>
 			<button role="control" data-href="{{root}}markup/widget-directory/{{ item.fullpath|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
@@ -13,7 +13,7 @@
 	</div>
 	<div class="col-md-10 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}filebrowser/{{ item.fullpath|path2url  }}" data-ajaxtarget="#main" class="ajax-link toggle-tooltip" title="{{'filebrowser.showdircontent'|ll(item.name) }}">
+			<a href="{{root}}filebrowser/{{ item.fullpath|path2url  }}" class="ajax-link toggle-tooltip" title="{{'filebrowser.showdircontent'|ll(item.name) }}">
 				{{ item.name }}
 			</a>
 			<br/>

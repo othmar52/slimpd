@@ -47,7 +47,7 @@
 	    		{{ fileName }}
 				<br />
 				<div class="darker-links">
-					<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+					<a href="{{ albumHref }}" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 				</div>
 				{% include 'partials/track/not-imported-badge.htm' %}
 	    	</div>
@@ -232,13 +232,13 @@
 	  			<h3>{{'edit'|ll}}</h3>
 	  		</div>
 	  		<div class="col-md-12">
-				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
+				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
+	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i>
+	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i>
 	  				{{'viewdir'|ll}}
 	  			</a>
 	  		</div>

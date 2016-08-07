@@ -3,7 +3,7 @@
 <h2>{{'currentlyplaying'|ll}}: {% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}</h2>
 <div class="row">
 	<div class="col-md-4">
-		<a href="{{root}}album/{{ item.albumId }}" data-ajaxtarget="#main" class="ajax-link">
+		<a href="{{root}}album/{{ item.albumId }}" class="ajax-link">
 			<img id="image_in" src="{{root}}image-300/album/{{ item.albumId }}" alt="" style="top: 0px;">
 		</a>
 	</div>
@@ -46,14 +46,14 @@
 		    		{{ fileName }}
 					<br />
 					<div class="darker-links">
-						<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+						<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 					</div>
 					{% include 'partials/track/not-imported-badge.htm' %}
 		    	</div>
 	    	</div>
 			<div class="row">
 				<div class="col-md-2">
-					<a href="{{root}}maintainance/trackdebug/{{ item.relativePath|path2url }}" data-ajaxtarget="#main" class="ajax-link">edit</a>
+					<a href="{{root}}maintainance/trackdebug/{{ item.relativePath|path2url }}" class="ajax-link">edit</a>
 				</div>
 				<div class="col-md-10">
 					

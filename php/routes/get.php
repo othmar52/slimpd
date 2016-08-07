@@ -66,6 +66,7 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		);
 		$vars['searchterm'] = $searchterm;
 		$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
+		$vars['renderitems'] = convertInstancesArrayToRenderItems($vars['itemlist']);
 		$app->render('surrounding.htm', $vars);
 	});
 }
