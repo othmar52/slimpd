@@ -1,15 +1,3 @@
-@font-face {
-	font-family: 'slim1';
-	src: url('./fonts/Share-Regular/Share-Regular.eot');
-	src: local('slim1'), url('./fonts/Share-Regular/Share-Regular.ttf') format('truetype');
-} 
-
-@font-face {
-	font-family: 'slim2';
-	src: url('./fonts/Roboto/Roboto-Regular.ttf') format('truetype');
-} 
-
-
 body {
 	padding-top: 60px;
 	padding-bottom: 120px;
@@ -189,62 +177,16 @@ a {
     flex:1 1 auto;
 }
 
-.pagination {
-	margin: 0;
-}
-.pagination li a,
-.pagination li span,
-.pagination {
-	border: none;
-}
-
-.pagination>li>a,
-.pagination>li>span {
-	color: #FFF;
-	background-color: inherit;
-	
-}
-
-.pagination>li>a {
-	padding: 0.3em;
-	font-size: 1.4em;
-}
 
 .centered-text {
     text-align:center
 } 
 
 
-.pagination>.disabled>a,
-.pagination>.disabled>a:focus,
-.pagination>.disabled>a:hover,
-.pagination>.disabled>span,
-.pagination>.disabled>span:focus,
-.pagination>.disabled>span:hover{
-    color: #fff;
-    background-color: inherit;
-    border-radius: 0;
-}
-
 .disabled .fa {
 	color: #353535;
 }
 
-/* @see: templates/css/spotcolors.css for overrides */
-.pagination>.active>a,
-.pagination>.active>a:focus,
-.pagination>.active>a:hover,
-.pagination>.active>span,
-.pagination>.active>span:focus,
-.pagination>.active>span:hover,
-.nav-pills>li.active>a,
-.nav-pills>li.active>a:focus,
-.nav-pills>li.active>a:hover {
-    color: #fff;
-    background-color: inherit;
-    border-bottom: 3px solid #FFF;
-    border-radius: 0;
-}
 
 .type-nav h3 {
 	margin: 0;
@@ -357,30 +299,6 @@ a {
 	padding-top: 25%;
 }
 
-
-.btn-default {
-	background-color: #353535;
-	border: none;
-	border-radius: 0;
-	color: #888;
-}
-
-.bg-col2 .btn-default,
-.bg-col3 .btn-default {
-	background-color: #191919;
-}
-
-.btn-trnsp,
-.bg-col2 .btn-trnsp,
-.bg-col2 .btn-trnsp {
-	background-color: transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
-}
-
 .small {
 	font-weight: normal;
 }
@@ -430,18 +348,6 @@ body.vstretch14 {
 }
 
 
-/* to-top link */
-
-#top-link-block.affix-top {
-    position: absolute; /* allows it to "slide" up into view */
-    bottom: -82px; /* negative of the offset - height of link element */
-    left: 10px; /* padding from the left side of the window */
-}
-#top-link-block.affix {
-    position: fixed; /* keeps it on the bottom once in view */
-    bottom: 130px; /* height of link element */
-    left: 10px; /* padding from the left side of the window */
-}
 
 
 /* randomizer for development */
