@@ -198,11 +198,11 @@
 		{% include 'modules/xwaxgui.htm'%}
 		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom" {{ (playerMode == 'mpd') ? 'style="display: none;"' : '' }}>
+		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom {{ (playerMode == 'mpd') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'local'} %}
 		</div>
 		
-		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom" {{ (playerMode == 'local') ? 'style="display: none;"' : '' }}>
+		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom {{ (playerMode == 'local') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
 		
