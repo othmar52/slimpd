@@ -187,8 +187,7 @@
        		e.preventDefault();
         	var $el = $(e.currentTarget);
         	if(typeof $el.attr('data-ajaxtarget') == 'undefined') {
-        		console.log('ERROR: data-ajaxtarget. exiting...');
-        		return;
+        		$el.attr('data-ajaxtarget', '#main');
         	}
         	var that = this;
         	NProgress.start();

@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}album/{{ item.id }}" data-ajaxtarget="#main" class="ajax-link" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.id}}">
+			<a href="{{root}}album/{{ item.id }}" class="ajax-link" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.id}}">
 				<img src="{{root}}image-50/album/{{item.id}}">
 			</a>
 			<a href="{{root}}markup/albumtracks/{{item.id}}" class="ajax-partial" data-ajaxtarget=".ajax-alb-{{ item.relativePathHash }}">
@@ -12,7 +12,7 @@
 	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter">
 			<div class="vcinner">
-				<a href="{{root}}album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main">
+				<a href="{{root}}album/{{item.id}}" class="ajax-link">
 				{{item.title}}
 				</a>
 			</div>

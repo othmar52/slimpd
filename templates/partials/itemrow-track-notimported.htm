@@ -4,7 +4,7 @@
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
 			{% if hidethumb != 1 %}
-			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.albumId}}">
+			<a href="{{ albumHref }}" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.albumId}}">
 				{% include 'partials/image.htm' with {
 					'width': 50,
 					'type': 'album',

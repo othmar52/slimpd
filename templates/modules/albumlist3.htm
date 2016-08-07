@@ -5,7 +5,7 @@
 	{% for item in itemlist %}
 		<div class="row bg-col3 track-row">
 			<div class="col-md-1">
-				<a href="{{root}}album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main">
+				<a href="{{root}}album/{{item.id}}" class="ajax-link">
 					<img src="{{root}}image-50/album/{{item.id}}">
 				</a>
 			</div>
@@ -13,7 +13,7 @@
 				play bla
 			</div>
 			<div class="col-md-3">
-				<a href="{{root}}album/{{item.id}}" class="ajax-link" data-ajaxtarget="#main">
+				<a href="{{root}}album/{{item.id}}" class="ajax-link">
 				{{item.title}}
 				</a>
 			</div>

@@ -5,7 +5,7 @@
 <h3>Track-debug<br>
 <span class="small">
 	{% set dirs = item.relativePath|split('/') %}
-	<a href="{{root}}filebrowser/{{ itemraw.relativeDirectoryPath|path2url }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	<a href="{{root}}filebrowser/{{ itemraw.relativeDirectoryPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
@@ -15,7 +15,7 @@
 		{% endif %}
 	{% endfor%}
 	<br />
-	<a href="{{root}}maintainance/albumdebug/{{item.albumId}}" title="edit album" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
+	<a href="{{root}}maintainance/albumdebug/{{item.albumId}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
 </span>
 {% if not item.id %}
 {% include 'partials/track/not-imported-badge.htm' %}

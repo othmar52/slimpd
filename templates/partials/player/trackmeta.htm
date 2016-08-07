@@ -33,7 +33,7 @@
 		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
 		<br />
 		<div class="darker-links">
-			<a href="{{ albumHref }}" data-ajaxtarget="#main" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+			<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
 		</div>
 		{% include 'partials/track/not-imported-badge.htm' %}
 	{% else %}

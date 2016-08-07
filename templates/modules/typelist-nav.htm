@@ -18,17 +18,17 @@
 	<div class="col-md-5">
 		<ul class="nav nav-pills pull-right type-nav">
 			<!--li class="{{ (listcurrent == 'recommended') ? 'active' : '' }}{{ (search.recommended.total == 0) ? 'disabled' : '' }}"> 
-				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/recommended/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
+				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/recommended/page/1/sort/added/desc" class="ajax-link">
 					<h3 class="uc">Recommended <span class="badge bg-col2">{{ search.recommended.total }}0</span></h3>
 				</a>
 			</li-->
 			<li class="{{ (listcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
-				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/tracks/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
+				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/tracks/page/1/sort/added/desc" class="ajax-link">
 					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (listcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
-				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/albums/page/1/sort/added/desc" data-ajaxtarget="#main" class="ajax-link">
+				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/albums/page/1/sort/added/desc" class="ajax-link">
 					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total }}</span></h3>
 				</a>
 			</li>

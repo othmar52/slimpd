@@ -17,13 +17,13 @@
 	<div class="col-md-10">
 		<ul class="nav nav-tabs pull-right">
 			<li class="disabled"> 
-				<a href="#" data-ajaxtarget="#main" class="ajax-link">Popular(0)</a>
+				<a href="#" class="ajax-link">Popular(0)</a>
 			</li>
 			<li class="{{ (searchcurrent == 'track') ? 'active' : '' }} {{ (item.trackCount == 0) ? 'disabled' : '' }}"> 
-				<a href="{{root}}artist/{{item.id}}/tracks/page/1/sort/year/asc" data-ajaxtarget="#main" class="ajax-link">Tracks ({{ item.trackCount }})</a>
+				<a href="{{root}}artist/{{item.id}}/tracks/page/1/sort/year/asc" class="ajax-link">Tracks ({{ item.trackCount }})</a>
 			</li>
 			<li class="{{ (searchcurrent == 'album') ? 'active' : '' }} {{ (item.albumCount == 0) ? 'disabled' : '' }}"> 
-				<a href="{{root}}artist/{{item.id}}/albums/page/1/sort/year/asc" data-ajaxtarget="#main" class="ajax-link">Albums ({{ item.albumCount }})</a>
+				<a href="{{root}}artist/{{item.id}}/albums/page/1/sort/year/asc" class="ajax-link">Albums ({{ item.albumCount }})</a>
 			</li>
 		</ul>
 	</div>
