@@ -37,9 +37,8 @@
             $('.clearinput', this.$el).off('click', this.clearinputClickListener).on('click', this.clearinputClickListener);
             $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll).on('click', this.forceXwaxPoll);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
-            
-            // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
-            $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener).on('click', this.playerModeToggleTriggerListener);
+            $('.toggle-player', this.$el).off('click', this.playerModeToggleTriggerListener).on('click', this.playerModeToggleTriggerListener);
+            $('.xwax-gui-toggler', this.$el).off('click', this.xwaxGuiToggleTriggerListener).on('click', this.xwaxGuiToggleTriggerListener);
 		    
 		    
 		    /* display selected value in dropdown instead of dropdown-label */
@@ -137,13 +136,14 @@
             $('.player-ctrl', this.$el).off('click', this.playerCtrlClickListener);
             $('.ajax-partial', this.$el).off('click', this.ajaxPartialClickListener);
             $('.trigger-modal', this.$el).off('click', this.triggerModalClickListener);
-            $('.playerModeToggleTrigger', this.$el).off('click', this.playerModeToggleTriggerListener);
+            $('.toggle-player', this.$el).off('click', this.playerModeToggleTriggerListener);
             $('.glue-hover-trigger', this.$el).off('mouseenter', this.itemGlueMouseenterListener);
             $('.glue-hover-trigger', this.$el).off('mouseleave', this.itemGlueMouseleaveListener);
             $('.toggle-content', this.$el).off('click', this.itemToggleClickListener);
             $('input.clearable', this.$el).off('input', this.clearableInputListener);
             $('.clearinput', this.$el).off('click', this.clearinputClickListener);
             $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll);
+            $('.xwax-gui-toggler', this.$el).off('click', this.xwaxGuiToggleTriggerListener);
             
             window.Backbone.View.prototype.remove.call(this);
         },
@@ -257,10 +257,9 @@
 			});
 		},
         */
-        // TODO: whats best practice to toggle playermode triggered by any element? @see app.js:'.playerModeToggle a'-Eventbinding
         playerModeToggleTriggerListener : function(e) {
        		e.preventDefault();
-       		$('.playerModeToggle a').trigger('click');
+			window.sliMpd.togglePlayer();
        	},
        	
        	itemGlueMouseenterListener : function(e) {
@@ -303,6 +302,11 @@
 			} catch (error) {
 				console.log('ERROR window.sliMpd.xwax.pollWorker.postMessage::refreshIntervalDelayed()');
 			}
+		},
+		
+		xwaxGuiToggleTriggerListener : function(e) {
+			e.preventDefault();
+			window.sliMpd.xwax.toggleXwaxGui();
 		}
     });
     

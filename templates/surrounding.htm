@@ -206,20 +206,6 @@
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
 		
-		{% if modules.enable_xwax == '1' %}
-		<button class="xwax-gui-toggler inactive btn btn-trnsp col2">
-			<span class="glyphicon glyphicon-cd" aria-hidden="true"></span><strong class="slimplayer-hidden">XWAX</strong>
-		</button>
-		{% endif %}
-		{% set markupLocalActive = "<span class='glyphicon glyphicon-map-marker' aria-hidden='true'></span><strong class='slimplayer-hidden'>Local</strong>" %}
-		{% set markupMpdActive = "<span class='glyphicon glyphicon-cloud' aria-hidden='true'></span><strong class='slimplayer-hidden'>MPD</strong>" %}
-		<div class="playerModeToggle">
-			<a type="button" href="#" class="uc col2 btn active-{{ playerMode }}"
-			data-label-local="{{ markupLocalActive|raw }}"
-			data-label-mpd="{{ markupMpdActive }}" >
-			  {{ ((playerMode == 'local') ? markupLocalActive : markupMpdActive)|raw }}
-			</a>
-		</div>
 		
 		<div class="fileModeToggle" style="position: fixed; top: 60px; left: 10px;">
 			<a href="#toggleFilenameMode()" title="toggle filename mode"><i class='fa fa-toggle-on fa-lg'></i></a>

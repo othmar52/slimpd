@@ -62,6 +62,7 @@ $(document).ready(function() {
 			}
 		},
 		
+		// TODO: respect playersize + visible xwax gui for positioning
 		notify : function(notifyConf) {
     		$.notify({
 				// options
@@ -87,7 +88,39 @@ $(document).ready(function() {
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
 				type : "danger"
 			});
-		}
+		},
+
+		/* toggle between mpd-control and local player (jPlayer) */
+		togglePlayer : function() {
+			$('.player-local,.player-mpd').toggleClass('hidden');
+			if(window.sliMpd.currentPlayer.mode === 'mpd') {
+				// activate local player
+				window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+				window.sliMpd.mpdPlayer.pollWorker.postMessage({
+					cmd: 'setMiliseconds',
+					value: window.sliMpd.mpdPlayer.intervalInactive
+				});
+				$('body')
+					.removeClass(window.sliMpd.conf.color.mpd.bodyclass)
+					.addClass(window.sliMpd.conf.color.local.bodyclass);
+			} else {
+				// pause local player when switching to mpd
+				window.sliMpd.currentPlayer.process({'action':'pause'});
+				// activate mpd player
+				window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
+				window.sliMpd.mpdPlayer.pollWorker.postMessage({
+					cmd: 'setMiliseconds',
+					value: window.sliMpd.mpdPlayer.intervalActive
+				});
+				window.sliMpd.currentPlayer.refreshInterval();
+				$('body')
+					.removeClass(window.sliMpd.conf.color.local.bodyclass)
+					.addClass(window.sliMpd.conf.color.mpd.bodyclass);
+			}
+			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
+			window.sliMpd.drawFavicon();
+			window.sliMpd.currentPlayer.drawWaveform();
+		} 
     });
     
     window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({
@@ -124,39 +157,6 @@ $(document).ready(function() {
     });
     
 	window.sliMpd.drawFavicon();
-	
-	/* toggle between mpd-control and local player (jPlayer) */
-	$('.playerModeToggle a').on('click', function(e) {
-		e.preventDefault();
-		$('.player-local,.player-mpd').toggleClass('hidden');
-		if(window.sliMpd.currentPlayer.mode === 'mpd') {
-			$(this).addClass('active-local').removeClass('active-mpd').html($(this).attr('data-label-local'));
-			window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
-			window.sliMpd.mpdPlayer.pollWorker.postMessage({
-				cmd: 'setMiliseconds',
-				value: window.sliMpd.mpdPlayer.intervalInactive
-			});
-			$('body')
-				.removeClass(window.sliMpd.conf.color.mpd.bodyclass)
-				.addClass(window.sliMpd.conf.color.local.bodyclass);
-		} else {
-			$(this).addClass('active-mpd').removeClass('active-local').html($(this).attr('data-label-mpd'));
-			// pause local player when switching to mpd
-			window.sliMpd.currentPlayer.process({'action':'pause'});
-			window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
-			window.sliMpd.mpdPlayer.pollWorker.postMessage({
-				cmd: 'setMiliseconds',
-				value: window.sliMpd.mpdPlayer.intervalActive
-			});
-			window.sliMpd.currentPlayer.refreshInterval();
-			$('body')
-				.removeClass(window.sliMpd.conf.color.local.bodyclass)
-				.addClass(window.sliMpd.conf.color.mpd.bodyclass);
-		}
-		$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
-		window.sliMpd.drawFavicon();
-		window.sliMpd.currentPlayer.drawWaveform();
-	});
 	
 	/* toggle playersize */
 	$('.playerSizeToggle a').on('click', function(e) {

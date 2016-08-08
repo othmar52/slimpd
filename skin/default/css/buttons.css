@@ -26,6 +26,13 @@
 }
 
 
+.btn-spacy {
+	padding: 0.3em 1em;
+}
+
+.btn-spacy .glyphicon{
+	padding-right: 1em;
+}
 
 /* to-top link */
 

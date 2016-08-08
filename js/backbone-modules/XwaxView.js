@@ -49,7 +49,6 @@
 			}
 			//console.log('calling XwaxGui::render()');
 			this.toggler = $('.xwax-gui-toggler');
-			this.toggler.off('click', this.toggleXwaxGui).on('click', this.toggleXwaxGui);
 			window.sliMpd.modules.AbstractView.prototype.render.call(this);
 			this.rendered = true;
 		},
