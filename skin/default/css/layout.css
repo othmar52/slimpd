@@ -199,6 +199,10 @@ a .article {
 	-webkit-filter: grayscale(100%);
 }
 
+.main-image {
+	width: 100%;
+}
+
 .small {
 	font-weight: normal;
 }
