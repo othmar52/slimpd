@@ -4,11 +4,11 @@
 	<div class="col-md-3">
 		{% if albumimages|length > 0 %}
 		<a data-toggle="lightbox" href="{{root}}image-1000/album/{{ album.id }}" data-type="image" data-gallery="galname">
-			<img id="image_in" src="{{root}}image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
+			<img class="main-image" src="{{root}}image-300/album/{{ album.id }}" alt="">
 		</a>
 		{% include 'modules/imagecarousel.htm' with { 'itemlist': albumimages } %}
 		{% else %}
-			<img id="image_in" src="{{root}}image-300/album/{{ album.id }}" alt="" style="top: 0px; width: 100%">
+			<img class="main-image" src="{{root}}image-300/album/{{ album.id }}" alt="">
 		{% endif %}
 	</div>
 	<div class="col-md-9">
