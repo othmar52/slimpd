@@ -1,8 +1,7 @@
 /* player mode toggler */
 /* @see: templates/css/spotcolors.css for overrides */
-.playerModeToggle a {
-	border-radius: 0;
-	color: #000;
+.permaplayer .toggle-player {
+	margin-left: 2em;
 }
 
 .permaplayer {
@@ -84,28 +83,14 @@
 	height: 20px;
 }
 
-/* toggler mpd/local in permaplayer */
-.playerModeToggle {
-	position: fixed;
-	left: 10px;
-	bottom: 4px;
-	z-index: 2000;
+hr.player-divider {
+	margin: 0 0 0.3em 0;
+	width: 110%; /* TODO: best practice for full width border */
 }
 
-.playerModeToggle strong,
-.xwax-gui-toggler strong {
-	padding-left: 1em;
-}
-
-.xwax-gui-toggler {
-	position: fixed;
-	left: 130px;
-	bottom: 4px;
-	z-index: 2000;
-}
-
-.slimplayer .player-section-top {
-	padding-left: 6em;
+/* TODO: best practice for conditional margin (xwax yes/no) */
+.slimplayer .seekbar-wrapper {
+	margin-left: 11em;
 }
 
 .seekbar-wrapper {

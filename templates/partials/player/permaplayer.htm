@@ -7,15 +7,23 @@
 	{% endif %}
 		<div class="col-lg-6 col-md-5">
 			<div class="row player-section-top">
+				<div class="slimplayer-show" style="float:left;">
+					{% include 'partials/button/player-toggle-'~player~'.htm' %}
+					{% include 'partials/button/xwaxgui-toggle.htm' %}
+				</div>
+
 				{% include 'partials/player/'~player~'-seekbar.htm' %}
 
 				<span class="pull-right" style="position: absolute; right: 0; top: 0;">
 				{% include 'partials/player/'~player~'-controls-primary.htm' %}
 				</span>
 			</div>
-			<div class="row slimplayer-hidden"  style="border-top: 1px solid #373737">
-				{# placeholder for player-toggler and xwax-toggler #}
-				<div class="pull-right" style="padding-top: 5px;position: relative; right: -9px;">
+			<hr class="player-divider slimplayer-hidden"/>
+			<div class="row slimplayer-hidden">
+				{% include 'partials/button/player-toggle-'~player~'.htm' %}
+				{% include 'partials/button/xwaxgui-toggle.htm' %}
+
+				<div class="pull-right">
 				{% include 'partials/player/'~player~'-controls-secondary.htm' %}
 				</div>
 			</div>
