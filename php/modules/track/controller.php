@@ -152,5 +152,5 @@ $app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app
 
 	$vars['dumpstring'] = table_var_dump($tagData, false, 'UTF-8');
 	$vars['getid3version'] = $getID3->version();
-	$app->render('nosurrounding.htm', $vars);
+	$app->render('appless.htm', $vars);
 });
