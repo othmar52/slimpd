@@ -32,6 +32,10 @@
 		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
 		{% endfor %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
+		{% if action == 'trackid3' %}
+			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}skin/default/css/getid3.css" />
+			<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
+		{% endif %}
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
@@ -84,148 +88,13 @@
 						</div>
 						
 					{% endif %}
-					
-					{% if action == 'systemcheck' %}
 
-					<h1>{{'syscheck.fs'|ll}}</h1>
-					<ul class="list-group">
-						{% for test in ['fsMusicdirconf', 'fsMusicdirslash', 'fsMusicdir', 'fsCache', 'fsEmbedded', 'fsPeakfiles'] %}
-						{% if not sys[test].hide %}
-						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">
-								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',test]|join|ll}}</h4>
-							{% if sys[test].skip %}
-								{% include 'partials/systemcheck/fs/'~test~'-skipped.htm' %}
-							{% else %}
-								{% include 'partials/systemcheck/fs/'~test~'-'~sys[test].status~'.htm' %}
-							{% endif %}
-						</li>
-						{% endif %}
-						{% endfor %}
-					</ul>
-					
-					<h1>{{'syscheck.db'|ll}}</h1>
-					<ul class="list-group">
-						{% for test in ['dbConn', 'dbPerms', 'dbSchema', 'dbContent'] %}
-						{% if not sys[test].hide %}
-						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">
-								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',test]|join|ll}}</h4>
-							{% if sys[test].skip %}
-								{% include 'partials/systemcheck/db/'~test~'-skipped.htm' %}
-							{% else %}
-								{% include 'partials/systemcheck/db/'~test~'-'~sys[test].status~'.htm' %}
-							{% endif %}
-						</li>
-						{% endif %}
-						{% endfor %}
-					</ul>
-					
-					<h1>{{'syscheck.mpd'|ll}}</h1>
-					<ul class="list-group">
-						{% for test in ['mpdConn', 'mpdDbfileconf', 'mpdDbfile'] %}
-						{% if not sys[test].hide %}
-						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">
-								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',test]|join|ll}}</h4>
-							{% if sys[test].skip %}
-								{% include 'partials/systemcheck/mpd/'~test~'-skipped.htm' %}
-							{% else %}
-								{% include 'partials/systemcheck/mpd/'~test~'-'~sys[test].status~'.htm' %}
-							{% endif %}
-						</li>
-						{% endif %}
-						{% endfor %}
-					</ul>
-					
-					
-					<h1>{{'syscheck.sx'|ll}}</h1>
-					<ul class="list-group">
-						{% for test in ['sxConn', 'sxSchema', 'sxContent'] %}
-						{% if not sys[test].hide %}
-						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">
-								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',test]|join|ll}}</h4>
-							{% if sys[test].skip %}
-								{{'syscheck.skipped'|ll}}
-							{% else %}
-								{% include 'partials/systemcheck/sx/'~test~'-'~sys[test].status~'.htm' %}
-							{% endif %}
-						</li>
-						{% endif %}
-						{% endfor %}
-					</ul>
-					
-					<h1>{{'syscheck.wf'|ll}}</h1>
-					<ul class="list-group">
-						{% if not sys.skipAudioTests %}
-						{% for filetype in sys.audioFormatsUc %}
-						{% for fingerprintWaveform in ['fp', 'wf'] %}
-						{% set test = fingerprintWaveform~filetype %}
-						{% if not sys[test].hide %}
-						<li class="list-group-item list-group-item-{{sys[test].status}}">
-							<h4 class="uc">
-								{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
-								{{['syscheck.',fingerprintWaveform, 'All']|join|ll(filetype)|raw}}
-								
-							{% if sys[test].skip %}
-							</h4>
-								{{'syscheck.skipped'|ll}}
-							{% else %}
-							{% if (fingerprintWaveform == 'wf') and  sys[test].status == 'success' %}
-							<object class="waveform waveform-tiny" data="{{root}}audiosvg/width/5000/{{ sys[test].filepath }}?color=3" type="image/svg+xml"></object>
-							{% endif %}
-							<button class="btn btn-default toggle-content pull-right" data-toggle="#check-{{test}}" data-text1="show more" data-text2="show less">
-  								show more
-  							</button>
-  							</h4>
-  							<div id="check-{{test}}" style="display:none;">
-								executed command
-								<pre>{{sys[test].cmd}}</pre>
-								
-								{% if fingerprintWaveform == 'fp' %}
-								<div class="row">
-									<div class="col-md-6">
-										expected result <pre>{{sys[test].resultExpected}}</pre>
-									</div>
-									<div class="col-md-6">
-										your system <pre>{{sys[test].resultReal}}</pre>
-									</div>
-								</div>
-								{% endif %}
-								{% if sys[test].status == 'success' %}
-									{{['syscheck.',test, '.success']|join|ll}}
-								{% else %}
-								{% include 'partials/systemcheck/waveforms/'~test~'-'~sys[test].status~'.htm' %}
-								{% endif %}
-								
-							</div>
-							{% endif %}
-						</li>
-						{% endif %}
-						{% endfor %}
-						{% endfor %}
-						{% else %}
-							<li class="list-group-item list-group-item-warning">
-								{% include 'partials/systemcheck/icon-warning.htm' %}
-								{{'syscheck.skipped'|ll}}
-							</li>
-						{% endif %}
-					</ul>
-					
-					<h1>Environment</h1>
-					<h6>TODO: check if php-pdo is enabled (if (class_exists('PDO')) )</h6>
-					<h6>TODO: check locale settings to avoid errors caused by specialchars</h6>
-					
-					
-					
-					<h1>Xwax</h1>
-					<h6>TODO: check connection</h6>
-					
+					{% if action == 'trackid3' %}
+						{% include 'modules/trackid3.htm' %}
+					{% endif %}
+
+					{% if action == 'systemcheck' %}
+						{% include 'partials/systemcheck/layout.htm' %}
 					{% endif %}
 
   				</div>
