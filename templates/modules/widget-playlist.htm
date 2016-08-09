@@ -1,6 +1,6 @@
 {# TODO: move modalsurrounding to partial #}
 <div class="modal-body">	
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
+    {% include 'partials/modal/close-button-top.htm' %}
 	<div class="row">
 		<div class="col-md-12">
 			<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
@@ -63,7 +63,7 @@
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
 			<a href="{{root}}showplaylist/{{ playlist.relativePath|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist" data-dismiss="modal">
-				Alle <span class="badge">{{ playlist.length }}</span> Playlist-Einträge anzeigen...
+				View all <span class="badge">{{ playlist.length }}</span> Playlist Entries...
 			</a>
 		</div>
 	</div>
@@ -71,5 +71,5 @@
 	<br class="row replace-me-with-proper-css" />
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    {% include 'partials/modal/close-button-bottom.htm' %}
 </div>
