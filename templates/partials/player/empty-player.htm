@@ -1,12 +1,55 @@
-<div class="col-md-12 centered-text slimplayer-show vcenter vcenter3">
-	<div class="vcinner">
-		<div>no track selected {% include 'partials/player/playrandom.htm' %}</div>
-	</div>
-</div>
+	{% if player == 'local' %}
+<div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
+	<div class="jp-gui jp-interface">
+	{% endif %}
+		<div class="col-lg-6 col-md-5">
+			<div class="row player-section-top">
+				<div class="slimplayer-show" style="float:left;">
+					{% include 'partials/button/player-toggle-'~player~'.htm' %}
+					{% include 'partials/button/xwaxgui-toggle.htm' %}
+				</div>
+				<div class="seekbar-wrapper">
+					<div class="timegrid-wrapper"></div>
+					<div class="waveform-wrapper">
+					no track selected
+					</div>
+				</div>
 
-<div class="col-md-12 centered-text slimplayer-hidden vcenter" style="height: 100px; font-size: 2em;">
-	<div class="vcinner" style="margin-left:10em;">
-		<div>no track selected</div>
-		<div>{% include 'partials/player/playrandom.htm' %}</div>
+				<span class="primary-controls">
+				{% include 'partials/player/'~player~'-controls-primary.htm' %}
+				</span>
+			</div>
+			<hr class="player-divider slimplayer-hidden"/>
+			<div class="row slimplayer-hidden">
+				{% include 'partials/button/player-toggle-'~player~'.htm' %}
+				{% include 'partials/button/xwaxgui-toggle.htm' %}
+
+				<div class="pull-right">
+				{% include 'partials/player/'~player~'-controls-secondary.htm' %}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-6 col-md-6 slimplayer-hidden">
+			<div class="row>">
+				<div class="media">
+					<div class="media-left">
+						<img src="{{ root }}image-100/album/0" />
+					</div>
+					<div class="media-body">
+							<div>no track selected {% include 'partials/player/playrandom.htm' %}</div>
+							{# placeholder for size-toggler #}
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2 slimplayer-show">
+		{% include 'partials/player/'~player~'-controls-secondary.htm' %}
+	    </div>
+	    <div class="col-sm-4 slimplayer-show">
+			<div>no track selected {% include 'partials/player/playrandom.htm' %}</div>
+	    </div>
+	{% if player == 'local' %}
 	</div>
 </div>
+	{% endif %}
