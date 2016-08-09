@@ -310,3 +310,25 @@ body.vstretch14 {
     position: absolute;
     right: 200px;
 }
+
+
+
+/* TODO: replace fixed position of togglers with proper markup/css */
+.fileModeToggle {
+	position: fixed;
+	top: 60px;
+	left: 10px;
+}
+
+.systemcheck {
+	position: fixed;
+	top: 90px;
+	left: 12px;
+}
+
+.playerSizeToggle {
+	position: fixed;
+	right: 10px;
+	bottom: 20px;
+	z-index: 2000;
+}
