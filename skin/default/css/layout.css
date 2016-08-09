@@ -203,6 +203,10 @@ a .article {
 	width: 100%;
 }
 
+table {
+	width: 100%;
+}
+
 .small {
 	font-weight: normal;
 }
@@ -305,6 +309,13 @@ body.vstretch14 {
 .affix .show-affixed {
 	display: inline-block;
 }
+
+.affix-container {
+	z-index: 3;
+	top: 50px;
+}
+
+
 
 .inline-heading {
 	display: inline-block;
