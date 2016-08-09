@@ -1,13 +1,8 @@
 {# TODO: move modalsurrounding to partial #}
 <div class="modal-body">	
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
-	<div class="row">
-		<div class="col-md-12">
-			<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
-			<h2 style="font-weight:100;" class="nomargin">{{ breadcrumb|last.name }}</h2>
-			<br class="row replace-me-with-proper-css" />
-		</div>
-	</div>
+    {% include 'partials/modal/close-button-top.htm' %}
+    <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</div>
+	<h2 class="nomargin">{{ breadcrumb|last.name }}</h2>
 	<div class="row">
 	 	<div class="col-md-12">
 		<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories.total }}</span> /
@@ -76,5 +71,5 @@
 	<br class="row replace-me-with-proper-css" />
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    {% include 'partials/modal/close-button-bottom.htm' %}
 </div>

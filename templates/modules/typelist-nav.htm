@@ -3,11 +3,9 @@
 	urlpattern: itemtype~'/%s/'~listcurrent~'s/page/1/sort/added/desc'
 } %}
 <div class="row">
-	<div class="col-md-12">
-		<span class="dark uc small darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</span>
-	</div>
 	<div class="col-md-7">
-		<h2 style="font-weight:100;" class="uc nomargin">
+		<div class="dark uc tinyfont darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</div>
+		<h2 class="uc nomargin">
 			{% if itemtype == 'artist' %}
 				{% include 'partials/'~itemtype~'/string.htm' with { item: {artistId: itemids} } %}
 			{% else %}

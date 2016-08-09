@@ -207,6 +207,11 @@ a .article {
 	font-weight: normal;
 }
 
+.tinyfont {
+	font-size: 0.8em;
+}
+
+
 .nfo {
 	font-size: 1.1em;
 	line-height: 1em;
@@ -301,6 +306,9 @@ body.vstretch14 {
 	display: inline-block;
 }
 
+.inline-heading {
+	display: inline-block;
+}
 
 /* systemcheck */
 .waveform.waveform-tiny {

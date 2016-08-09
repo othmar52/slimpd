@@ -2,14 +2,13 @@
 {% block content %}
 
   <div class="modal-body">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times-circle sign"></i></span></button>
+    {% include 'partials/modal/close-button-top.htm' %}
     
-    <h3>
-    <div class="small dark uc" style="font-size: 0.4em; line-height: 2em;">{{'artist'|ll}} - {{'title'|ll}}</div>
-    	{% include 'partials/artist/link.htm' %}
+    <div class="tinyfont dark uc">{{'artist'|ll}} - {{'title'|ll}}</div>
+    <h2 class="nomargin">{% include 'partials/artist/link.htm' %}
     	- 
     	{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}
-    </h3>
+    </h2>
      
 	<div class="row">
 	  	<div class="col-md-10">
@@ -195,7 +194,7 @@
 	  	<div class="col-md-3">
 	  		{% if modules.enable_xwax %}
 	  		<div class="col-md-12">
-	  			<h3>Auflegen</h3>
+	  			<h3>Send to deck</h3>
 	  			<div class="row">
 	  			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
 	  				{% for i in 1..xwax.decks %}
@@ -285,6 +284,6 @@
   
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+  	{% include 'partials/modal/close-button-bottom.htm' %}
   </div>
 {% endblock %}

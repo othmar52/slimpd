@@ -190,3 +190,10 @@ hr.player-divider {
 .standalone .xwax-row {
 	height: 100%;
 }
+
+.primary-controls { /* prev - play - next */
+	position: absolute;
+	right: 0;
+	top: 0;
+	padding-top: 5px;
+}
