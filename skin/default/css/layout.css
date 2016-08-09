@@ -215,6 +215,10 @@ table {
 	font-size: 0.8em;
 }
 
+.dropdown {
+	display: inline-block;
+}
+
 
 .nfo {
 	font-size: 1.1em;

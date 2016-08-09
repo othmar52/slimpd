@@ -1,13 +1,8 @@
 {# TODO: move modalsurrounding to partial #}
 <div class="modal-body">	
     {% include 'partials/modal/close-button-top.htm' %}
-	<div class="row">
-		<div class="col-md-12">
-			<span class="dark small darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</span>
-			<h2 style="font-weight:100;" class="nomargin">{{ breadcrumb|last.name }}</h2>
-			<br class="row replace-me-with-proper-css" />
-		</div>
-	</div>
+    <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</div>
+	<h2 class="nomargin">{{ breadcrumb|last.name }}</h2>
 	<div class="row">
 		<div class="col-md-12">
 			<h3>Abspielen</h3>
