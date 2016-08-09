@@ -303,6 +303,11 @@
 
 			// update trackinfo only onTrackChange()
 			if(this.previousPlayingItem != this.nowPlayingItem) {
+				// make sure we do not reload after initial rendering of sliMpd
+				if(this.previousPlayingItem !== '') {
+					// update view in case current route shows playlist and track has changed
+					window.sliMpd.router.refreshIfName('playlist');
+				}
 				this.previousPlayingItem = this.nowPlayingItem
 				this.redraw(''); 
 				this.refreshInterval();
