@@ -19,7 +19,7 @@
 				</span>
 			</div>
 			<hr class="player-divider slimplayer-hidden"/>
-			<div class="row slimplayer-hidden">
+			<div class="slimplayer-hidden">
 				{% include 'partials/button/player-toggle-'~player~'.htm' %}
 				{% include 'partials/button/xwaxgui-toggle.htm' %}
 
@@ -38,14 +38,21 @@
 						</a>
 					</div>
 					<div class="media-body">
-						<div style="width: 2em; margin: 1em 1.5em  0 1em; position: absolute;">
-							{# TODO: remove external liking as soon we have implemented a proper functionality #}
-							<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
-							<br class="replace-me-with-proper-css" />
-							{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
-							{% include 'partials/track/audioformat.htm' %}
+						<div class="media-body-container">
+							<div class="media-body-inner-table">
+								<div class="media-body-inner-row">
+									{# TODO: remove external liking as soon we have implemented a proper functionality #}
+									<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+								</div>
+								<div class="media-body-inner-row">
+									{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
+								</div>
+								<div class="media-body-inner-row">
+									{% include 'partials/track/audioformat.htm' %}
+								</div>
+							</div>
 						</div>
-						<div style="margin-left:4.5em; margin-right: 40px;">
+						<div class="permaplayer-trackmeta">
 							{% include 'partials/player/trackmeta.htm' %}
 						</div>
 							{# placeholder for size-toggler #}
