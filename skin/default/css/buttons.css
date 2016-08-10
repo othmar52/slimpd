@@ -46,3 +46,12 @@
     bottom: 130px; /* height of link element */
     left: 10px; /* padding from the left side of the window */
 }
+
+.discogs-link {
+	background: url(../img/discogs-white.png) top left no-repeat;
+	background-size: 40px 16px;
+	width: 40px;
+	height: 16px;
+	display:inline-block;
+	opacity: 0.2;
+}

@@ -1,67 +1,117 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-<h2>{{'currentlyplaying'|ll}}: {% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}</h2>
+<h2>{{'currentlyplaying'|ll}}</h2>
 <div class="row">
-	<div class="col-md-4">
+	<div class="col-md-3">
 		<a href="{{root}}album/{{ item.albumId }}" class="ajax-link">
 			<img class="main-image" src="{{root}}image-300/album/{{ item.albumId }}" alt="">
 		</a>
 	</div>
-	<div class="col-md-8">
+	<div class="col-md-9">
 		{% if item.id %}
-		<div class="row" style="font-size: 1.6em; padding-top: 3em;">
-			<div class="col-md-6">
-				{% include 'partials/artist/link.htm' %}
-			</div>
-			<div class="col-md-3">
-				{% include 'partials/label/link.htm' with { 'item': nowplaying_album } %}
-			</div>
-			<div class="col-md-3">
-				{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres } %}
-			</div>
-		</div>
-		<div class="row" style="font-size: 1.6em;">
-			<div class="col-md-6">
-				{% include 'partials/album/link.htm' with { 'item': nowplaying_album } %}
-			</div>
-			<div class="col-md-3">
-				#CAT: {{ item.catalogNr }}
-			</div>
-			<div class="col-md-3">
-				TODO: STYLE
-			</div>
-		</div>
-		<div class="row" style="font-size: 1.6em;">
-			<div class="col-md-6">
-				{% include 'partials/year/link.htm' %}
+		<div class="row">
+			<div class="col-md-12">
+				<div class="dark uc tinyfont darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'title'|ll}}</div>
+				<h3 class="nomargin">
+					{% include 'partials/artist/link.htm' %}
+					-
+					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				</h3>
+				<div class="row replace-me-with-proper-css"><br></div>
+				<div class="dark uc tinyfont dark">Album</div>
+				<h4 class="nomargin">{% include 'partials/album/link.htm' with { 'item': nowplaying_album } %}</h4>
+				<div class="row replace-me-with-proper-css"><br></div>
 			</div>
 			<div class="col-md-6">
-				
+				{% if item.genreId %}
+				<div class="row">
+					<div class="col-md-2">
+						<span class="dark uc small darker-links">{% include 'partials/genre/linked-label.htm' %}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if item.year %}
+				<div class="row">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'year'|ll}}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/year/link.htm' %}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if item.labelId %}
+				<div class="row">
+					<div class="col-md-2">
+						<span class="dark uc small darker-links">{% include 'partials/label/linked-label.htm' %}:</span>
+					</div>
+					<div class="col-md-10">
+						{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}
+					</div>
+				</div>
+				{% endif %}
+
+				{% if nowplaying_album.catalogNr %}
+				<div class="row">
+					<div class="col-md-2">
+						<span class="dark uc small">{{'catnr'|ll}}:</span>
+					</div>
+					<div class="col-md-10">
+						{{ nowplaying_album.catalogNr }}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-3">
+						<span class="dark uc small"><nobr>{{'fileformat'|ll}}:</nobr></span>
+					</div>
+					<div class="col-md-9">
+						{{item.audioBitsPerSample}}bit - {{item.audioSampleRate}}kHz
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<span class="dark uc small"><nobr>{{'filetype'|ll}}:</nobr></span>
+					</div>
+					<div class="col-md-9">
+						{{item.audioDataformat}} - {{item.audioProfile}}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-3">
+						<span class="dark uc small"><nobr>{{'addedat'|ll}}:</nobr></span>
+					</div>
+					<div class="col-md-9">
+						{{ item.filemtime|date("m/d/Y") }}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						{% include 'partials/extlink-discogs.htm' with { album: nowplaying_album } %}
+						<a href="{{root}}maintainance/albumdebug/{{nowplaying_album.id}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
+					</div>
+				</div>
 			</div>
 		</div>
 		{% else %}
-			{% if item.relativePath %}
-			<div class="row" style="font-size: 1.6em;">
-				<div class="col-md-12">
-		    		{{ fileName }}
-					<br />
-					<div class="darker-links">
-						<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-					</div>
-					{% include 'partials/track/not-imported-badge.htm' %}
-		    	</div>
-	    	</div>
-			<div class="row">
-				<div class="col-md-2">
-					<a href="{{root}}maintainance/trackdebug/{{ item.relativePath|path2url }}" class="ajax-link">edit</a>
-				</div>
-				<div class="col-md-10">
-					
-				</div>
+		<div class="row">
+			<div class="col-md-12">
+				<div class="dark uc tinyfont darker-links">{{'filename'|ll}}</div>
+				<h3 class="nomargin">{{ fileName }}</h3>
+				<div class="row replace-me-with-proper-css"><br></div>
+				<div class="dark uc tinyfont dark">{{'dirname'|ll}}</div>
+				<h4 class="nomargin"><a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a></h4>
+				<div class="row replace-me-with-proper-css"><br></div>
+				{% include 'partials/track/not-imported-badge.htm' %}
 			</div>
-			{% else %}
-				{% include 'partials/track/no-track-selected-badge.htm' %}
-			{% endif %}
+		</div>
 		{% endif %}
 	</div>
 </div>

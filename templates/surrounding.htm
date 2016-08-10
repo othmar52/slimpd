@@ -144,8 +144,12 @@
 					{% endif %}
 					
 					{% if action == 'playlist' %}
-						{% include 'modules/nowplaying-track.htm' %}
-						{% include 'modules/nowplaying-list.htm' %}
+						{% if item.relativePath %}
+							{% include 'modules/nowplaying-track.htm' %}
+							{% include 'modules/nowplaying-list.htm' %}
+						{% else %}
+							{% include 'partials/track/no-track-selected-badge.htm' %}
+						{% endif %}
 					{% endif %}
 					
 					
