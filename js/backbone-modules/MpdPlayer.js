@@ -265,6 +265,9 @@
 			this.state.random = data.random;
 			this.state.consume = data.consume;
 
+			// helper var to avoid double page reload (trackchange + playlistchange)
+			var forcePageReload = false;
+
 			// no need to update this stuff in case local player is active...
 			if(window.sliMpd.currentPlayer.mode === 'mpd') {
 				this.updateStateIcons();
@@ -295,7 +298,7 @@
 				if(this.playlistState !== data.playlist) {
 					// make sure we do not reload after initial rendering of sliMpd
 					if(this.playlistState !== false) {
-						window.sliMpd.router.refreshIfName('playlist');
+						forcePageReload = true;
 					}
 					this.playlistState = data.playlist;
 				}
@@ -306,12 +309,15 @@
 				// make sure we do not reload after initial rendering of sliMpd
 				if(this.previousPlayingItem !== '') {
 					// update view in case current route shows playlist and track has changed
-					window.sliMpd.router.refreshIfName('playlist');
+					forcePageReload = true;
 				}
 				this.previousPlayingItem = this.nowPlayingItem
 				this.redraw(''); 
 				this.refreshInterval();
-				return;
+			}
+
+			if(forcePageReload === true) {
+				window.sliMpd.router.refreshIfName('playlist');
 			}
 		},
 		
