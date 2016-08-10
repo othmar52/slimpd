@@ -3,12 +3,7 @@
 {% set searchstring = renderitems.artists[album.artistId].title ~ ' ' ~ album.title %}
 <a
  title="Search discogs for &quot;{{ searchstring }}&quot;"
- style="background: url({{fileroot}}skin/default/img/discogs-white.png) top left no-repeat;
- background-size: 40px 16px;
- width: 40px;
- height: 16px;
- display:inline-block;
- opacity: 0.2;"
+ class="discogs-link"
  href="http://www.discogs.com/search/?{{
  {'q': searchstring , 'type': 'all' }|url_encode
 }}" target="_blank"></a>

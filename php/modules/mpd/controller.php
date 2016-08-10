@@ -84,7 +84,7 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $vars){
 	$vars['currentplaylistlength'] = $mpd->getCurrentPlaylistLength();
 	
 	// get all relational items we need for rendering
-	$vars['renderitems'] = getRenderItems($vars['nowplaying_album'], $vars['currentplaylist']);
+	$vars['renderitems'] = getRenderItems($vars['item'], $vars['nowplaying_album'], $vars['currentplaylist']);
 	$vars['paginator'] = new JasonGrimes\Paginator(
 		$vars['currentplaylistlength'],
 		$app->config['mpd-playlist']['max-items'],
