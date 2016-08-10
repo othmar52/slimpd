@@ -9,7 +9,7 @@
 	<div class="col-md-9">
 		{% if item.id %}
 		<div class="row">
-			<div class="col-md-12">
+			<div class="col-md-12 ffn-hidden">
 				<div class="dark uc tinyfont darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'title'|ll}}</div>
 				<h3 class="nomargin">
 					{% include 'partials/artist/link.htm' %}
@@ -20,6 +20,20 @@
 				<div class="dark uc tinyfont dark">Album</div>
 				<h4 class="nomargin">{% include 'partials/album/link.htm' with { 'item': nowplaying_album } %}</h4>
 				<div class="row replace-me-with-proper-css"><br></div>
+			</div>
+			<div class="col-md-12 ffn-show">
+				<div class="dark uc tinyfont darker-links">{{'filename'|ll}}</div>
+				<h3 class="nomargin">{{ item.relativePath|split('/')|last }}</h3>
+				<div class="row replace-me-with-proper-css"><br></div>
+				<div class="dark uc tinyfont dark">{{'dirname'|ll}}</div>
+				<h4>
+					<span class="tinyfont darker-links">
+						{% include 'partials/filebrowser/breadcrumb.htm' with {
+								breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+								skiplast: 1 }
+						%}
+					</span>
+				</h4>
 			</div>
 			<div class="col-md-6">
 				{% if item.genreId %}
