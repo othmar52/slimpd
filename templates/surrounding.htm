@@ -144,12 +144,13 @@
 					{% endif %}
 					
 					{% if action == 'playlist' %}
+						<h2>{{'currentlyplaying'|ll}}</h2>
 						{% if item.relativePath %}
 							{% include 'modules/nowplaying-track.htm' %}
-							{% include 'modules/nowplaying-list.htm' %}
 						{% else %}
 							{% include 'partials/track/no-track-selected-badge.htm' %}
 						{% endif %}
+						{% include 'modules/nowplaying-list.htm' %}
 					{% endif %}
 					
 					
