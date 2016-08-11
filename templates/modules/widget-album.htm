@@ -1,7 +1,7 @@
 {# TODO: move modalsurrounding to partial #}
 <div class="modal-body">	
     {% include 'partials/modal/close-button-top.htm' %}
-    <div class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %} - ALBUMTITLE</div>
+    <div class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'albumtitle'|ll}}</div>
     <h3 class="nomargin">{% include 'partials/artist/link.htm' with { 'item': album } %} - {{album.title}}</h3>
     <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' %}</div>
 	<div class="row">
