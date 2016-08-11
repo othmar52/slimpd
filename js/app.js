@@ -164,8 +164,9 @@ $(document).ready(function() {
 				classToAdd = window.sliMpd.conf.color.mpd.bodyclass;
 			}
 
-			// change body-class for colorizing all links
-			$('body').addClass(classToAdd).removeClass(classToRemove);
+			// change body-class for colorizing all links in half of animation time
+			// TODO: is window.setTimeout() correct or should it be on another element?
+			window.setTimeout(function (){ $('body').addClass(classToAdd).removeClass(classToRemove); }, speed/2*1000);
 
 			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 			window.sliMpd.drawFavicon();
