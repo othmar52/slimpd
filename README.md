@@ -2,9 +2,8 @@
   <a name="top" href="engine@gas-werk.org"><img 
   src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/slimpd_logo_moustache_v2.png"></a>
 </p>
- 
-PHP/JS/MySQL based MPD-web-client for large music collections
-heavily inspired by http://ompd.pl
+<p align="center"><sup>PHP/JS/MySQL based MPD-web-client for large music collections
+heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p>
 ***
 
 ## Features (most of them are working pretty well)
