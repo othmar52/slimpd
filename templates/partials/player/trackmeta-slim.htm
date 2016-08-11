@@ -1,30 +1,27 @@
-{% if item.id %}
-<div class="ffn-hidden">
-	{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}<br />
-	<span class="dark">by</span>
-	{% include 'partials/artist/link.htm' %}
-	<span class="dark">({{item.year}})</span>
-</div>
-<div class="ffn-show">
-	<div class="col-md-12 vcenter vcenter3">
-		<div class="vcinner">
-			{{ item.relativePath|split('/')|last }}<br>
-			<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
-				hiderootlink: 1,
-				breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
-				skiplast: 1 } %}</span>
-		</div>
-	</div>
-</div>
+{% if not item.relativePath %}
+	{% include 'partials/track/no-track-selected-badge.htm' %}
 {% else %}
-	{% if item.relativePath %}
-		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
-		<br />
-		<div class="darker-links">
-			<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
-		</div>
-		{% include 'partials/track/not-imported-badge.htm' %}
+	<div class="ffn-hidden">
+	{% if item.id %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}<br />
+		<span class="dark">by</span>
+		{% include 'partials/artist/link.htm' %}
+		<span class="dark">({{item.year}})</span>
 	{% else %}
-		{% include 'partials/track/no-track-selected-badge.htm' %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		<span class="pull-right">{% include 'partials/track/not-imported-badge.htm' %}</span>
+		<br />
+		<span class="darker-links">
+			<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+		</span>
 	{% endif %}
+	</div>
+	<div class="ffn-show">
+		{{ item.relativePath|split('/')|last }}<br>
+		<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+			hiderootlink: 1,
+			breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+			skiplast: 1 }
+		%}</span>
+	</div>
 {% endif %}
