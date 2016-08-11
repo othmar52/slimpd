@@ -92,31 +92,81 @@ $(document).ready(function() {
 
 		/* toggle between mpd-control and local player (jPlayer) */
 		togglePlayer : function() {
-			$('.player-local,.player-mpd').toggleClass('hidden');
+			var perspective = -1100;
+			var origin = '50% 50%';
+			var ease = Power2.easeInOut;
+			var speed = 0.5;
+			var classToRemove = window.sliMpd.conf.color.mpd.bodyclass;
+			var classToAdd = window.sliMpd.conf.color.local.bodyclass;
+
+			var transformPreviousPlayerFrom = {
+				transformOrigin: origin,
+				transformPerspective: perspective,
+				display: 'block',
+				rotationX: 0,
+				y: 0,
+				ease: ease
+			}
+			var transformPreviousPlayerTo = {
+				rotationX: 90,
+				y: 50,
+				opacity: 0,
+				ease: ease
+			}
+			var transformNewPlayerFrom = {
+				transformOrigin: origin,
+				transformPerspective: perspective,
+				display: 'block',
+				rotationX: -90,
+				y: -50
+			}
+			var transformNewPlayerTo = {
+				rotationX: 0,
+				y:0,
+				ease: ease,
+				opacity: 1
+			}
+
+			$('.player-local,.player-mpd').removeClass('hidden');
+
 			if(window.sliMpd.currentPlayer.mode === 'mpd') {
 				// activate local player
 				window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
+
+				// reduce poll amount of inactive mpd player
 				window.sliMpd.mpdPlayer.pollWorker.postMessage({
 					cmd: 'setMiliseconds',
 					value: window.sliMpd.mpdPlayer.intervalInactive
 				});
-				$('body')
-					.removeClass(window.sliMpd.conf.color.mpd.bodyclass)
-					.addClass(window.sliMpd.conf.color.local.bodyclass);
+
+				// flip animation for both players
+				TweenLite.fromTo($('.player-mpd'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				TweenLite.fromTo($('.player-local'), speed, transformNewPlayerFrom, transformNewPlayerTo);
 			} else {
 				// pause local player when switching to mpd
 				window.sliMpd.currentPlayer.process({'action':'pause'});
+
 				// activate mpd player
 				window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
+
+				// increase poll amount as mpd player is now active
 				window.sliMpd.mpdPlayer.pollWorker.postMessage({
 					cmd: 'setMiliseconds',
 					value: window.sliMpd.mpdPlayer.intervalActive
 				});
 				window.sliMpd.currentPlayer.refreshInterval();
-				$('body')
-					.removeClass(window.sliMpd.conf.color.local.bodyclass)
-					.addClass(window.sliMpd.conf.color.mpd.bodyclass);
+
+				// flip animation for both players
+				TweenLite.fromTo($('.player-local'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				TweenLite.fromTo($('.player-mpd'), speed, transformNewPlayerFrom, transformNewPlayerTo);
+
+				classToRemove = window.sliMpd.conf.color.local.bodyclass;
+				classToAdd = window.sliMpd.conf.color.mpd.bodyclass;
 			}
+
+			// change body-class for colorizing all links
+			$('body').addClass(classToAdd).removeClass(classToRemove);
+
 			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 			window.sliMpd.drawFavicon();
 			window.sliMpd.currentPlayer.drawWaveform();
