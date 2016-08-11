@@ -310,9 +310,9 @@ class AlbumMigrator {
 		if ($rawArray['audioLossless']) {
 			$t->setAudioLossless($rawArray['audioLossless']);
 			if ($rawArray['audioCompressionRatio'] == 1) {
-				$t->setAudioProfile('Losless');
+				$t->setAudioProfile('Lossless');
 			} else {
-				$t->setAudioProfile('Losless compression');
+				$t->setAudioProfile('Lossless compression');
 			}
 		}
 		$t->setAudioBitrate(round($rawArray['audioBitrate'])); // integer in database
