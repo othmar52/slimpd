@@ -1,6 +1,6 @@
 <?php
 
-foreach(['/album', '/markup/albumtracks'] as $what) {
+foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 	$app->get($what .'/:albumId', function($albumId) use ($app, $vars, $what){
 		$vars['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
 		$vars['album'] = \Slimpd\Album::getInstanceByAttributes(array('id' => $albumId));
@@ -17,6 +17,11 @@ foreach(['/album', '/markup/albumtracks'] as $what) {
 		);
 		
 		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
+		
+		if($what === '/markup/widget-album') {
+			$app->render('modules/widget-album.htm', $vars);
+			return;
+		}
 	
 		$app->render('surrounding.htm', $vars);
 	});
