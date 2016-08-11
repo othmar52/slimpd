@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<svg viewBox="0 0 300 300" width="{{imagesize}}px" height="{{imagesize}}px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="si-glyph si-glyph-calendar-empty">
+  <defs></defs>
+  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+    <g fill="{{color}}">
+      <rect id="svgEditorBackground" x="0" y="0" width="100%" height="100%" style="fill: {{backgroundcolor}}; stroke: none;"/>
+      <path x="0" y="0" transform="translate(67, 67) scale(2.7, 2.7)" d="M 6.687500 5.125000 C 5.579500 5.125000 4.687500 6.017000 4.687500 7.125000 L 4.687500 18.218750 L 30.781250 19.156250 L 43.906250 31.562500 L 55.437500 24.656250 L 55.437500 7.125000 C 55.437500 6.017000 54.545500 5.125000 53.437500 5.125000 L 6.687500 5.125000 z M 28.781250 28.687500 L 4.687500 34.781250 L 4.687500 53.500000 C 4.687500 54.608000 5.579500 55.500000 6.687500 55.500000 L 53.437500 55.500000 C 54.545500 55.500000 55.437500 54.608000 55.437500 53.500000 L 55.437500 37.312500 L 41.375000 42.531250 L 28.781250 28.687500 z" />
+    </g>
+  </g>
+</svg>

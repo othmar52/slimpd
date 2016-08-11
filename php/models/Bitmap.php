@@ -45,28 +45,33 @@ class Bitmap extends AbstractModel
 		}
 		$phpThumb->SetCacheFilename();
 		
-		
-		// check if we already have a cached image
-		if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {		
-			$phpThumb->GenerateThumbnail();
-			\phpthumb_functions::EnsureDirectoryExists(
-				dirname($phpThumb->cache_filename),
-				octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
-			);
-			$phpThumb->RenderToFile($phpThumb->cache_filename);
-			if(is_file($phpThumb->cache_filename) === TRUE) {
-				chmod($phpThumb->cache_filename, 0777);
-			} else {
-				// something went wrong
-				$app = \Slim\Slim::getInstance();
-				$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
-				return;
+		try {
+			// check if we already have a cached image
+			if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {
+				$phpThumb->GenerateThumbnail();
+				\phpthumb_functions::EnsureDirectoryExists(
+					dirname($phpThumb->cache_filename),
+					octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
+				);
+				$phpThumb->RenderToFile($phpThumb->cache_filename);
+				if(is_file($phpThumb->cache_filename) === TRUE) {
+					chmod($phpThumb->cache_filename, 0777);
+				} else {
+					// something went wrong
+					$app = \Slim\Slim::getInstance();
+					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
+					return;
+				}
 			}
+			# TODO: why does slim's set header not work?
+			#\Slim\Slim::getInstance()->response()->headers->set('Content-Type', 'image/jpeg');
+			header('Content-Type: image/jpeg');
+			readfile($phpThumb->cache_filename);
+			exit();
+		} catch(\Exception $e) {
+			$app = \Slim\Slim::getInstance();
+			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
 		}
-		#\Slim\Slim::getInstance()->response()->headers->set('Content-Type', 'image/jpeg');
-		header('Content-Type: image/jpeg');
-		readfile($phpThumb->cache_filename);
-		exit();	
 	}
 	
 	public function update() {

@@ -75,6 +75,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		switch($type) {
 			case 'artist': $template = 'svg/icon-artist.svg'; break;
 			case 'noresults': $template = 'svg/icon-noresults.svg'; break;
+			case 'broken': $template = 'svg/icon-broken-image.svg'; break;
 			default: $template = 'svg/icon-album.svg';
 		}
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
