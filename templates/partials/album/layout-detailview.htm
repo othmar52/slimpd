@@ -12,11 +12,17 @@
 		{% endif %}
 	</div>
 	<div class="col-md-9">
-		<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay","mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ album.relativePath }}"}'>
-			<i class="fa fa-plus"></i>
-		</button>
+		<h3 class="nomargin">
+			<button
+			  role="control"
+			  data-href="{{root}}markup/widget-album/{{ album.id }}"
+			  title="show album widget TRNSL"
+			  class="btn btn-default trigger-modal">
+				<i class="fa fa-plus fa-lg"></i>
+			</button>
 			
-		<span style="font-size: 1.7em;">{{album.title}}</span>
+		</button> {{album.title}}</h3>
+		
 		<div id="album-info-artist">
 			<span class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
 		</div>
