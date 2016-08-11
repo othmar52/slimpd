@@ -10,12 +10,17 @@
 }
 
 
-.slimplayer-show {
+.slimplayer-show,
+.slimplayer-show-tc {
 	display: none;
 }
 
 .slimplayer .slimplayer-show {
 	display: inline-block;
+}
+
+.slimplayer .slimplayer-show-tc {
+	display: table-cell;
 }
 
 .slimplayer .slimplayer-hidden {
@@ -134,6 +139,10 @@ hr.player-divider {
     display: table-cell;
 }
 
+.slimplayer .media-body-container {
+    height: 40px;
+}
+
 .media-body-inner-table {
 	
     height: 100%;
@@ -149,6 +158,16 @@ hr.player-divider {
     display: table-row;
     width: 2em;
 	
+}
+
+.permaplayer-artwork {
+	width: 100px;
+	height: 100px;
+}
+
+.slimplayer .permaplayer-artwork {
+	width: 40px;
+	height: 40px;
 }
 
 .permaplayer-trackmeta {
