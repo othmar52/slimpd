@@ -1,4 +1,7 @@
-# <p> align="center">slimpd</p>
+<h1 align="center">
+  <b>sliMpd</b><br>
+</h1>  
+***
 PHP/JS/MySQL based MPD-web-client for large music collections
 heavily inspired by http://ompd.pl
 
