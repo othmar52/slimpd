@@ -70,7 +70,12 @@ class Bitmap extends AbstractModel
 			exit();
 		} catch(\Exception $e) {
 			$app = \Slim\Slim::getInstance();
+			header('Location: ' . $app->config['root'] . 'imagefallback-'.$preConf.'/broken');#
+			exit;
+
+			# TODO: check why slim's redirect does not work
 			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
+			return;
 		}
 	}
 	
