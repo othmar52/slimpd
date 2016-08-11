@@ -29,43 +29,43 @@
 			</div>
 		</div>
 
-		<div class="col-lg-6 col-md-6 slimplayer-hidden">
-			<div class="row>">
+		<div class="col-lg-6 col-md-6">
+			<div class="row">
 				<div class="media">
 					<div class="media-left">
 						<a href="{{ albumHref }}" class="ajax-link">
-							<img src="{{ artworkUrl }}" style="width: 100px; height: 100px;"/>
+							<img src="{{ artworkUrl }}" class="permaplayer-artwork" />
 						</a>
 					</div>
 					<div class="media-body">
 						<div class="media-body-container">
 							<div class="media-body-inner-table">
-								<div class="media-body-inner-row">
+								<div class="media-body-inner-row slimplayer-hidden">
 									{# TODO: remove external liking as soon we have implemented a proper functionality #}
 									<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
 								</div>
 								<div class="media-body-inner-row">
 									{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
 								</div>
-								<div class="media-body-inner-row">
+								<div class="media-body-inner-row slimplayer-hidden">
 									{% include 'partials/track/audioformat.htm' %}
 								</div>
 							</div>
 						</div>
-						<div class="permaplayer-trackmeta">
+						<div class="permaplayer-trackmeta ">
+							<div class="slimplayer-hidden">
 							{% include 'partials/player/trackmeta.htm' %}
+							</div>
+							<div class="slimplayer-show-tc">
+							{% include 'partials/player/trackmeta-slim.htm' %}
+							</div>
 						</div>
 							{# placeholder for size-toggler #}
 					</div>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-2 slimplayer-show">
-		{% include 'partials/player/'~player~'-controls-secondary.htm' %}
-	    </div>
-	    <div class="col-sm-4 slimplayer-show">
-			{% include 'partials/player/trackmeta-slim.htm' %}
-	    </div>
+
 	    {% include 'partials/player/nowplaying-string.htm' %}
 
 	{% if player == 'local' %}
