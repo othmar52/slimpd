@@ -92,42 +92,60 @@ $(document).ready(function() {
 
 		/* toggle between mpd-control and local player (jPlayer) */
 		togglePlayer : function() {
-			var perspective = -1100;
-			var origin = '50% 50%';
-			var ease = Power2.easeInOut;
+			var perspective = -1000;
+			var originPrev = '50% 50%';
+			var originNew = '50% 50%';
+			var ease = Back.easeInOut.config(1);
+			var easeIn = Power2.easeIn;
+			var easeOut = Power2.easeOut;
 			var speed = 0.5;
 			var classToRemove = window.sliMpd.conf.color.mpd.bodyclass;
 			var classToAdd = window.sliMpd.conf.color.local.bodyclass;
-
+			
+			var tweenIn;
+			var tweenOut;
+			var timeScale = 0.7;
+			
+			$('.player-local,.player-mpd').removeClass('hidden');
+			
 			var transformPreviousPlayerFrom = {
-				transformOrigin: origin,
-				transformPerspective: perspective,
 				display: 'block',
+				transformOrigin: originPrev,
+				transformPerspective: perspective,
+				zIndex: 1030,
 				rotationX: 0,
 				y: 0,
-				ease: ease
+				z:0
 			}
 			var transformPreviousPlayerTo = {
+				display: 'none',
 				rotationX: 90,
-				y: 50,
-				opacity: 0,
+				y: $('.player-mpd').height()/2,
+				z: -5,
+				//opacity: 0,
 				ease: ease
 			}
 			var transformNewPlayerFrom = {
-				transformOrigin: origin,
+				transformOrigin: originNew,
 				transformPerspective: perspective,
 				display: 'block',
+				zIndex: 1029,
+				//opacity: 0.5,
 				rotationX: -90,
-				y: -50
+				y: -$('.player-mpd').height()/2,
+				z: -5
 			}
 			var transformNewPlayerTo = {
+				display: 'block',
 				rotationX: 0,
 				y:0,
-				ease: ease,
-				opacity: 1
+				z:0,
+				//opacity: 1,
+				delay:0.02,
+				ease: ease
 			}
 
-			$('.player-local,.player-mpd').removeClass('hidden');
+			
 
 			if(window.sliMpd.currentPlayer.mode === 'mpd') {
 				// activate local player
@@ -140,8 +158,13 @@ $(document).ready(function() {
 				});
 
 				// flip animation for both players
-				TweenLite.fromTo($('.player-mpd'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				TweenLite.fromTo($('.player-local'), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				tweenIn = TweenLite.fromTo($('.player-mpd'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenLite.fromTo($('.player-local'), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				
+				tweenIn.timeScale(timeScale);
+				tweenOut.timeScale(timeScale);
+				
+				//TweenLite.fromTo($('.permaplayer-wrapper'), speed, {rotationX: 0 }, {rotationX: 90});
 			} else {
 				// pause local player when switching to mpd
 				window.sliMpd.currentPlayer.process({'action':'pause'});
@@ -157,16 +180,22 @@ $(document).ready(function() {
 				window.sliMpd.currentPlayer.refreshInterval();
 
 				// flip animation for both players
-				TweenLite.fromTo($('.player-local'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				TweenLite.fromTo($('.player-mpd'), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				tweenIn = TweenLite.fromTo($('.player-local'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenLite.fromTo($('.player-mpd'), speed, transformNewPlayerFrom, transformNewPlayerTo);
 
+				tweenIn.timeScale(timeScale);
+				tweenOut.timeScale(timeScale);
+				
+				//TweenLite.fromTo($('.permaplayer-wrapper'), speed, {rotationX: 90 }, {rotationX: 0});
+				
 				classToRemove = window.sliMpd.conf.color.local.bodyclass;
 				classToAdd = window.sliMpd.conf.color.mpd.bodyclass;
 			}
 
 			// change body-class for colorizing all links in half of animation time
 			// TODO: is window.setTimeout() correct or should it be on another element?
-			window.setTimeout(function (){ $('body').addClass(classToAdd).removeClass(classToRemove); }, speed/2*1000);
+			//window.setTimeout(function (){ $('body').addClass(classToAdd).removeClass(classToRemove); }, speed/2*1000);
+			$('body').addClass(classToAdd).removeClass(classToRemove);
 
 			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
 			window.sliMpd.drawFavicon();
