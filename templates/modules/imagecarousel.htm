@@ -2,10 +2,28 @@
 {% if itemlist|length > 0 %}
 <div id="image_all">
 	{% for i,item in itemlist %}
-		{%if item.pictureType == 'booklet' %}
-		{% else %}
 		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.id }}" data-type="image" data-gallery="galname"><img src="{{root}}image-50/id/{{ item.id }}" /></a>
-		{% endif %}
+	{% endfor %}
+</div>
+{% endif %}
+
+{% if bookletimagesXX|length > 0 %}
+<style type="text/css">
+	#booklet-container{
+    width: 400px;
+    height: 400px;
+    background-color:green;
+}
+#booklet-container .turn-page{
+    background-color:#f00;
+}
+
+</style>
+<h4>Booklet</h4>
+<div class="" id="booklet-container">
+	{% for i,item in bookletimages %}
+		<!--div style="background-image:url({{root}}image-1000/id/{{ item.id }});" /> XX</div-->
+		<div><span class="text">Page {{i}}</span></div>
 	{% endfor %}
 </div>
 {% endif %}
