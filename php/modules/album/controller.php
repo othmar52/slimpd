@@ -17,8 +17,23 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 		$bitmaps = \Slimpd\Bitmap::getInstancesByAttributes(
 			['albumId' => $albumId], FALSE, 200, 1, 'imageweight'
 		);
+		$foundFront = FALSE;
 		foreach($bitmaps as $bitmap) {
-			$vars[($bitmap->getPictureType() === 'booklet') ? 'bookletimages' : 'albumimages' ][] = $bitmap;
+			switch($bitmap->getPictureType()) {
+				case 'front':
+					if($foundFront === TRUE && $app->config['images']['hide_front_duplicates'] == '1') {
+						continue;
+					}
+					$vars['albumimages'][] = $bitmap;
+					$foundFront = TRUE;
+					break;
+				case 'booklet':
+					$vars['bookletimages'][] = $bitmap;
+					break;
+				default:
+					$vars['albumimages'][] = $bitmap;
+					break;
+			}
 		}
 		
 		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
