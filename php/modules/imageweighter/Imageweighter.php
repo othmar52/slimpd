@@ -16,7 +16,7 @@ class Imageweighter
 		if(array_key_exists($cleanFilename, self::$weights) === TRUE) {
 			return $this::$weights[$cleanFilename];
 		}
-		return 0;
+		return 10000;
 	}
 	
 	public function getType($filename) {
