@@ -1684,5 +1684,17 @@
             "thumb",
             "thumbnail"
         ]
+    },
+    {
+        "name": "codrops/BookBlock",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:codrops/BookBlock.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
     }
 ]

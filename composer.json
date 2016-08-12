@@ -28,7 +28,8 @@
         "ajjahn/puppet-mpd": "master",
         "othmar52/xwax-1.5-osc": "master",
         "rstacruz/nprogress": "master",
-	"mmp/mmp": "dev-master"
+	"mmp/mmp": "dev-master",
+        "codrops/BookBlock": "master"
     },
     "repositories": [
         {
@@ -132,9 +133,21 @@
             }
         },
         {
-		"type": "vcs",
-		"url": "https://github.com/idler/MMP"
-	}
+            "type": "vcs",
+            "url": "https://github.com/idler/MMP"
+        },
+        {  
+            "type": "package",
+            "package": {
+                "name": "codrops/BookBlock",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:codrops/BookBlock.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        }
     ],
     "config" : {
     	"component-dir": "vendor/components"
