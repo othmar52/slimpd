@@ -16,7 +16,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 |
 <b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#license">License</a></b>
 </p>
-<a href="https://codeclimate.com/github/thoughtbot/paperclip"><img src="https://codeclimate.com/github/thoughtbot/paperclip/badges/issue_count.svg" /></a>  <a href="https://codeclimate.com/github/thoughtbot/paperclip"><img src="https://codeclimate.com/github/thoughtbot/paperclip/badges/gpa.svg" /></a>
+<a href="https://codeclimate.com/github/thoughtbot/paperclip"><img src="https://codeclimate.com/github/thoughtbot/paperclip/badges/issue_count.svg" /></a>  <a href="https://codeclimate.com/github/thoughtbot/paperclip"><img src="https://codeclimate.com/github/thoughtbot/paperclip/badges/gpa.svg" /></a>  ![](https://reposs.herokuapp.com/?path=othmar52/slimpd&style=flat)  <a href="https://badge.fury.io/gh/othmar52%2Fslimpd"><img src="https://badge.fury.io/gh/othmar52%2Fslimpd.svg" alt="GitHub version" height="20"></a>
 <br>
 ## Features 
 <sup>(most of them are working pretty well)</sup>
