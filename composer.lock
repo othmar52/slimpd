@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0f982566516fa9fcd2015031b2d00d58",
-    "content-hash": "211e7b26f0e2a98e74d5186f0d7bd7a0",
+    "hash": "4a7c60b1ad991587de10dd617a955893",
+    "content-hash": "19259226cf6f5a38c0a64bc551e4e658",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -17,6 +17,17 @@
             },
             "type": "library",
             "time": "2014-11-06 14:31:47"
+        },
+        {
+            "name": "blasten/turn.js",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:blasten/turn.js.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2013-05-04 15:19:44"
         },
         {
             "name": "components/backbone",
