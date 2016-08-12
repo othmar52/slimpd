@@ -12,9 +12,14 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 			['albumId' => $albumId], FALSE, 200, 1, 'number ASC'
 		);
 		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
-		$vars['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
+		$vars['albumimages'] = [];
+		$vars['bookletimages'] = [];
+		$bitmaps = \Slimpd\Bitmap::getInstancesByAttributes(
 			['albumId' => $albumId], FALSE, 200, 1, 'imageweight'
 		);
+		foreach($bitmaps as $bitmap) {
+			$vars[($bitmap->getPictureType() === 'booklet') ? 'bookletimages' : 'albumimages' ][] = $bitmap;
+		}
 		
 		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
 		
