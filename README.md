@@ -4,7 +4,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 <p align="center">
 <b><a href="#features">Features</a></b>
 |
-<b><a href="https://github.com/othmar52/slimpd/wiki">About</a></b>
+<b><a href="https://github.com/othmar52/slimpd/wiki/About">About</a></b>
 |
 <b><a href="https://github.com/othmar52/slimpd/wiki/Installation">Installation</a></b>
 |
