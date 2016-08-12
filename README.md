@@ -1,39 +1,67 @@
-<p align="center">
-  <a name="top" href="engine@gas-werk.org"><img 
-  src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/slimpd_logo_moustache_v2.png"></a>
-</p>
+<p align="center"><a name="top" href="https://github.com/othmar52/slimpd/wiki"><img alt="home" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/slimpd_logo_moustache_v2.png"></a></p>
 <p align="center"><sup>PHP/JS/MySQL based MPD-web-client for large music collections
 heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p>
-***
+<p align="center">
+<b><a href="#features">Features</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki">Home</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki/Installation">Installation</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki/Configuration">Configuration</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki/Gallery">Gallery</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#credits">Credits</a></b>
+|
+<b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#license">License</a></b>
+</p>
 
-## Features (most of them are working pretty well)
-* massive performance one large music collections
- * check if music-collection had been updated runs with  120K Tracks per minute
-* choose between controlling MPD and playing files directly in browser
-* AJAX driven frontend
- * browser-history-support
- * browser played audio keeps playing during navigating
- * animated favicon which shows progress of currently played track
-* integrated filebrowser
- * access files in realtime without the need+benefit of doing an import first
- * having thousands of files or directories within a directory does not affect GUI-performance
-* unifiying of misspelled or different notations of tag information
-* extracting useable information from filesystem of music files with no tags
-* non-destructive approach (your music-collection wont get touched at all)
-* separate linking of each remixers and featured artists
-* localization of the whole frontend
- * english
- * german
-* displaying waveforms of currently played track
-* toggle between displaying tags and displaying filepath
-* autocomplete widget in searchfield with filter-support (all,artist,album,label)
-* typos in searchterm gets autocorrected (if possible)
-* mpd.conf:max_playlist_length="100000" does not affect gui performance
-* support to control [xwax-osc](https://github.com/oligau/xwax-1.5-osc) (Digital Vinyl System)
-* highly configurable in many ways
-* mobile friendly (not implemented yet)
+<br>
+## Features 
+<sup>(most of them are working pretty well)</sup>
+* __Massive Performance__ on large music collections.
+ * Music-collection update runs at 120K Tracks per minute.
+
+* __Control Playing Music Files__ with MPD, or directly in your browser.
+
+* __AJAX__ driven frontend.
+ * Browser-history support.
+ * Audio keeps playing during your browsers navigation.
+ * Animated favicon shows progress of the currently playing track.
+ 
+* __Fully Integrated File-Browser.__
+ * Access your music files in realtime, without the need to perform an import first.
+ * Having thousands of files or directories within your music-directory does not affect the GUI's performance.
+
+* __Tag Correction and Unifiying__ of misspelled or different notations and information.
+
+* __Able to Extract Useable Information__ from the filesystem for music files without tags.
+
+* __Totally Non-Destructive__ approach to editing (your music-collection wont get touched at all)!
+
+* __Separate Artist Links__ for Artists, Remix-Artists, and Featured-Artists.
+
+* __Localization__ of the entire frontend.
+ * English
+ * German
+ 
+* __Waveforms__ are displayed for the currently playing track.
+
+* __Tags and Filepaths__ displays can be toggled between.
+
+* __Autocomplete Search-Field Widget__ with filter-support for: all,artist,album,and label.
+
+* __Auto-Correcting Search__, typos in search-field will be corrected whenever possible.
+
+* __Max_playlist_length="100000"__ setting in 'mpd.conf' does not impact GUI performance.
+
+* [__Xwax-Osc__](https://github.com/oligau/xwax-1.5-osc) control support for the 'Digital Vinyl System'.
+
+* __Designed to be Highly Configurable__; in many ways your very own personal player.
+
+* __Mobile Friendly__ (not implemented yet).
 
 
 [Screenshots of current development status](https://github.com/othmar52/slimpd/wiki/Gallery)
 
-[requirements & installation instructions](https://github.com/othmar52/slimpd/wiki/Installation)
