@@ -63,5 +63,12 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 * __Mobile Friendly__ (not implemented yet).
 
 
-[Screenshots of current development status](https://github.com/othmar52/slimpd/wiki/Gallery)
+
+######[Screenshots of current development status](https://github.com/othmar52/slimpd/wiki/Gallery)
+
+***
+
+<p align="left"> <a name="left" href="https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html"><img border="0" alt="gnu" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/29516-44947-gpl-gnu.jpg"></a><h5 id="license">license: <code>GNU GENERAL PUBLIC LICENSE Version 2</code></h5></p>
+***
+<h5 id="Credits">Credits</h5>
 
