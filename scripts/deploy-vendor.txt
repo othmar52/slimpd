@@ -160,4 +160,7 @@ mmp/mmp/phing
 mmp/mmp/init.php
 mmp/mmp/migration.php
 
-codrops/BookBlock
+codrops/BookBlock/css
+codrops/BookBlock/donts
+codrops/BookBlock/images
+codrops/BookBlock/js
