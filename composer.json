@@ -28,8 +28,7 @@
         "ajjahn/puppet-mpd": "master",
         "othmar52/xwax-1.5-osc": "master",
         "rstacruz/nprogress": "master",
-	"mmp/mmp": "dev-master",
-        "blasten/turn.js": "master"
+	"mmp/mmp": "dev-master"
     },
     "repositories": [
         {
@@ -135,19 +134,7 @@
         {
 		"type": "vcs",
 		"url": "https://github.com/idler/MMP"
-        },
-        {
-            "type": "package",
-            "package": {
-                "name": "blasten/turn.js",
-                "version": "master",
-                "source": {
-                    "url": "git@github.com:blasten/turn.js.git",
-                    "type": "git",
-                    "reference": "origin/master"
-                }
-            }
-        }
+	}
     ],
     "config" : {
     	"component-dir": "vendor/components"
