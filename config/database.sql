@@ -71,6 +71,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   `embedded` tinyint(4) unsigned DEFAULT NULL,
   `embeddedName` varchar(255) NOT NULL DEFAULT '',
   `pictureType` varchar(20) NOT NULL DEFAULT '',
+  `sorting` int(6) unsigned DEFAULT NULL,
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `error` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -81,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   KEY `importStatus` (`importStatus`),
   KEY `embedded` (`embedded`),
   KEY `pictureType` (`pictureType`),
+  KEY `sorting` (`sorting`),
   KEY `error` (`error`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
