@@ -460,77 +460,24 @@
         ]
     },
     {
-        "name": "james-heinrich/phpthumb",
-        "version": "v1.7.13",
-        "version_normalized": "1.7.13.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JamesHeinrich/phpThumb.git",
-            "reference": "6a582647f352706432898e332d196c3c84a982d9"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/phpThumb/zipball/6a582647f352706432898e332d196c3c84a982d9",
-            "reference": "6a582647f352706432898e332d196c3c84a982d9",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=4.3.3"
-        },
-        "suggest": {
-            "ext-gd": "PHP GD library",
-            "ext-imagick": "PHP ImageMagick"
-        },
-        "time": "2014-06-26 14:09:03",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "files": [
-                "phpthumb.class.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL"
-        ],
-        "authors": [
-            {
-                "name": "James Heinric",
-                "email": "info@silisoftware.com",
-                "homepage": "http://www.silisoftware.com/",
-                "role": "Developer"
-            }
-        ],
-        "description": "The PHP thumbnail generator",
-        "homepage": "http://phpthumb.sourceforge.net/",
-        "keywords": [
-            "ImageMagick",
-            "gd",
-            "image",
-            "magic",
-            "thumb",
-            "thumbnail"
-        ]
-    },
-    {
         "name": "twbs/bootstrap",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/twbs/bootstrap.git",
-            "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210"
+            "reference": "7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/edefe0e77a39149f971c4215301f7f8a7f15f210",
-            "reference": "edefe0e77a39149f971c4215301f7f8a7f15f210",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e",
+            "reference": "7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e",
             "shasum": ""
         },
         "replace": {
             "twitter/bootstrap": "self.version"
         },
-        "time": "2016-07-21 15:14:21",
+        "time": "2016-08-03 04:37:14",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1280,18 +1227,18 @@
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/process.git",
-            "reference": "e0ecb4772c6186bb5288076daf421bed9ef57489"
+            "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/e0ecb4772c6186bb5288076daf421bed9ef57489",
-            "reference": "e0ecb4772c6186bb5288076daf421bed9ef57489",
+            "url": "https://api.github.com/repos/symfony/process/zipball/489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
+            "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
             "shasum": ""
         },
         "require": {
             "php": ">=5.5.9"
         },
-        "time": "2016-07-28 11:15:50",
+        "time": "2016-08-07 15:19:41",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1585,18 +1532,56 @@
         ]
     },
     {
+        "name": "james-heinrich/getid3",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JamesHeinrich/getID3.git",
+            "reference": "920e717f38c65c58db29c5c2586a92789be541dd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/920e717f38c65c58db29c5c2586a92789be541dd",
+            "reference": "920e717f38c65c58db29c5c2586a92789be541dd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-07-28 12:30:10",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "getid3/getid3.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "description": "PHP script that extracts useful information from popular multimedia file formats",
+        "homepage": "http://www.getid3.org/",
+        "keywords": [
+            "codecs",
+            "php",
+            "tags"
+        ]
+    },
+    {
         "name": "twig/twig",
         "version": "1.x-dev",
         "version_normalized": "1.9999999.9999999.9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/twigphp/Twig.git",
-            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539"
+            "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/c535bc0b56aa93ead7a75b6841f28645153b0539",
-            "reference": "c535bc0b56aa93ead7a75b6841f28645153b0539",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
+            "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
             "shasum": ""
         },
         "require": {
@@ -1606,7 +1591,7 @@
             "symfony/debug": "~2.7",
             "symfony/phpunit-bridge": "~2.7"
         },
-        "time": "2016-07-10 07:48:21",
+        "time": "2016-07-28 20:58:48",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1648,41 +1633,56 @@
         ]
     },
     {
-        "name": "james-heinrich/getid3",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "name": "james-heinrich/phpthumb",
+        "version": "v1.7.14",
+        "version_normalized": "1.7.14.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/JamesHeinrich/getID3.git",
-            "reference": "920e717f38c65c58db29c5c2586a92789be541dd"
+            "url": "https://github.com/JamesHeinrich/phpThumb.git",
+            "reference": "51af297b5946c86a902103b5886f93aa0d37ed83"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/920e717f38c65c58db29c5c2586a92789be541dd",
-            "reference": "920e717f38c65c58db29c5c2586a92789be541dd",
+            "url": "https://api.github.com/repos/JamesHeinrich/phpThumb/zipball/51af297b5946c86a902103b5886f93aa0d37ed83",
+            "reference": "51af297b5946c86a902103b5886f93aa0d37ed83",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.3.0"
+            "php": ">=4.3.3"
         },
-        "time": "2016-07-28 12:30:10",
+        "suggest": {
+            "ext-gd": "PHP GD library",
+            "ext-imagick": "PHP ImageMagick"
+        },
+        "time": "2016-08-10 17:12:04",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
-            "classmap": [
-                "getid3/getid3.php"
+            "files": [
+                "phpthumb.class.php"
             ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
             "GPL"
         ],
-        "description": "PHP script that extracts useful information from popular multimedia file formats",
-        "homepage": "http://www.getid3.org/",
+        "authors": [
+            {
+                "name": "James Heinrich",
+                "email": "info@silisoftware.com",
+                "homepage": "http://www.silisoftware.com/",
+                "role": "Developer"
+            }
+        ],
+        "description": "The PHP thumbnail generator",
+        "homepage": "http://phpthumb.sourceforge.net/",
         "keywords": [
-            "codecs",
-            "php",
-            "tags"
+            "ImageMagick",
+            "gd",
+            "image",
+            "magic",
+            "thumb",
+            "thumbnail"
         ]
     }
 ]
