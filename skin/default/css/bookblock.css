@@ -1,0 +1,13 @@
+.bb-bookblock {
+	width: 1000px;
+	height: 500px;
+}
+#bb-nav-prev,
+#bb-nav-next {
+	padding: 2em;
+}
+
+#booklet-wrapper nav {
+	text-align: center;
+	width: 1000px;
+}
