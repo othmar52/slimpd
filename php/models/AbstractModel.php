@@ -29,6 +29,10 @@ abstract class AbstractModel {
 				// as we have a string field(01, A1,...) we have to cast it by adding ' +0'
 				$orderBy = ' ORDER BY number + 0 ASC ';
 				break;
+			case 'imageweight':
+				$weightConf = trimExplode("\n", \Slim\Slim::getInstance()->config['images']['weightening'], TRUE);
+				$orderBy = " ORDER BY FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC ";
+				break;
 			default:
 				$orderBy = "";
 				break;

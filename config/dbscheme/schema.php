@@ -81,6 +81,7 @@ class Schema extends AbstractSchema
       . "  `embedded` tinyint(4) unsigned DEFAULT NULL,\r"
       . "  `embeddedName` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `pictureType` varchar(20) NOT NULL DEFAULT '',\r"
+      . "  `sorting` int(6) unsigned DEFAULT NULL,\r"
       . "  `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"
       . "  `error` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"
       . "  PRIMARY KEY (`id`),\r"
@@ -91,6 +92,7 @@ class Schema extends AbstractSchema
       . "  KEY `importStatus` (`importStatus`),\r"
       . "  KEY `embedded` (`embedded`),\r"
       . "  KEY `pictureType` (`pictureType`),\r"
+      . "  KEY `sorting` (`sorting`),\r"
       . "  KEY `error` (`error`),\r"
       . "  FULLTEXT KEY `relativePath` (`relativePath`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",

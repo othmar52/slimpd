@@ -13,7 +13,7 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 		);
 		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
 		$vars['albumimages'] = \Slimpd\Bitmap::getInstancesByAttributes(
-			array('albumId' => $albumId)
+			['albumId' => $albumId], FALSE, 200, 1, 'imageweight'
 		);
 		
 		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
