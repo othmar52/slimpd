@@ -7,24 +7,30 @@
 </div>
 {% endif %}
 
-{% if bookletimagesXX|length > 0 %}
-<style type="text/css">
-	#booklet-container{
-    width: 400px;
-    height: 400px;
-    background-color:green;
-}
-#booklet-container .turn-page{
-    background-color:#f00;
-}
+{% if bookletimages|length > 0 %}
 
-</style>
-<h4>Booklet</h4>
-<div class="" id="booklet-container">
-	{% for i,item in bookletimages %}
-		<!--div style="background-image:url({{root}}image-1000/id/{{ item.id }});" /> XX</div-->
-		<div><span class="text">Page {{i}}</span></div>
-	{% endfor %}
+
+
+<button class="btn btn-trnsp toggle-content" data-toggle="#booklet-wrapper" data-text1="show booklet (beta)" data-text2="hide booklet (beta)">
+	<i class="fa fa-plus"></i> show booklet (beta)
+</button>
+
+<div id="booklet-wrapper" style="display:none;">
+	<nav>
+		<a id="bb-nav-prev" href="#" class="bb-custom-icon bb-custom-icon-arrow-left">
+			<i class="fa fa-arrow-left fa-lg"></i>
+		</a>
+		<a id="bb-nav-next" href="#" class="bb-custom-icon bb-custom-icon-arrow-right">
+			<i class="fa fa-arrow-right fa-lg"></i>
+		</a>
+	</nav>
+	<div id="bb-bookblock" class="bb-bookblock">
+		{% for i,item in bookletimages %}
+			<div class="bb-item">
+				<img src="{{root}}image-1000/id/{{ item.id }});" />
+			</div>
+		{% endfor %}
+	</div>
 </div>
 {% endif %}
 

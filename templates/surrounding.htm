@@ -15,6 +15,7 @@
     		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
 			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
 			'vendor-dist/rstacruz/nprogress/nprogress.css',
+			'vendor-dist/codrops/BookBlock/css/bookblock.css',
 			'skin/default/fonts/SFDISPLAY/SFNSDisplay.css',
 			'skin/default/css/layout.css',
 			'skin/default/css/list.css',
@@ -24,6 +25,7 @@
 			'skin/default/css/nprogress.css',
 			'skin/default/css/navbars.css',
 			'skin/default/css/breadcrumb.css',
+			'skin/default/css/bookblock.css',
 			'skin/default/css/widget-autocomplete.css',
 			'skin/default/css/player/player.css'
 		] %}
@@ -39,6 +41,7 @@
 		{% for deck in [0,1,2,3] %}
 		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{root}}css/xwaxplayer/0" />
 		{% endfor %}
+		<script src="{{fileroot}}vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
@@ -296,6 +299,8 @@
 			'vendor-dist/mouse0270/bootstrap-notify/bootstrap-notify.min.js',
 			'js/faviconxmod.js',
 			'vendor-dist/components/greensock-js/greensock-js-built.js',
+			'vendor-dist/codrops/BookBlock/js/jquerypp.custom.js',
+			'vendor-dist/codrops/BookBlock/js/jquery.bookblock.min.js',
 			'vendor-dist/components/underscore/underscore-min.js',
 			'vendor-dist/components/backbone/backbone-min.js',
 			'js/backbone-modules/abstract/AbstractView.js',

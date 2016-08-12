@@ -125,7 +125,16 @@
 	  			}
 	  		});*/
 	  			  			
-            
+            $( '#bb-bookblock' ).bookblock( {
+				speed : 8000,
+				shadowSides : 0.8,
+				shadowFlip : 0.7,
+				circular : true,
+				nextEl : '#bb-nav-next',
+				prevEl : '#bb-nav-prev'
+			});
+			
+			
             window.Backbone.View.prototype.render.call(this);
             this.rendered = true;
         },
