@@ -242,6 +242,7 @@ class Importer {
 				}
 				
 				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()));
+				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getEmbeddedName()));
 				
 				if($imageSize !== FALSE) {
 					$bitmap->setWidth($imageSize[0]);
@@ -557,6 +558,7 @@ class Importer {
 					$bitmap->setError(1);
 				}
 				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelativePath()));
+				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getRelativePath()));
 				$bitmap->update();
 				$insertedImages++;
 			}

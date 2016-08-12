@@ -18,6 +18,7 @@ class Bitmap extends AbstractModel
 	protected $embedded;
 	protected $embeddedName;
 	protected $pictureType;
+	protected $sorting;
 	protected $importStatus;
 	protected $error;
 	
@@ -192,6 +193,9 @@ class Bitmap extends AbstractModel
 	public function setPictureType($value) {
 		$this->pictureType = $value;
 	}
+	public function setSorting($value) {
+		$this->sorting = $value;
+	}
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
 	}
@@ -242,6 +246,9 @@ class Bitmap extends AbstractModel
 	}
 	public function getPictureType() {
 		return $this->pictureType;
+	}
+	public function getSorting() {
+		return $this->sorting;
 	}
 	public function getImportStatus() {
 		return $this->importStatus;
