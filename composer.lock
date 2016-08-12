@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4a7c60b1ad991587de10dd617a955893",
-    "content-hash": "19259226cf6f5a38c0a64bc551e4e658",
+    "hash": "353d995439c8bdff2d8b2a2cf0127c89",
+    "content-hash": "f0bda6bb4f797fd5b0dda1576511c73a",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -19,15 +19,15 @@
             "time": "2014-11-06 14:31:47"
         },
         {
-            "name": "blasten/turn.js",
+            "name": "codrops/BookBlock",
             "version": "master",
             "source": {
                 "type": "git",
-                "url": "git@github.com:blasten/turn.js.git",
+                "url": "git@github.com:codrops/BookBlock.git",
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2013-05-04 15:19:44"
+            "time": "2016-01-12 09:13:04"
         },
         {
             "name": "components/backbone",
