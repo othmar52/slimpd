@@ -6,3 +6,11 @@ php:
 - 5.4
 - hhvm
 script: phpunit Test.php
+
+language: node_js
+node_js:
+  - "6"
+  - "6.1"
+  - "5.11"
+  - "0.6"
+  - "iojs"
