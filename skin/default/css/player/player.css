@@ -173,6 +173,14 @@ hr.player-divider {
 
 .permaplayer-trackmeta {
 	display: table-cell;
+	width: 100%;
+	padding-right: 4em; /* TODO: remove this ugly hack */
+}
+
+.toggle-player-size-wrapper {
+	position: absolute;
+	right: 1em;
+	bottom: 0.5em;
 }
 
 .status-timestring {

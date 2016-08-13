@@ -237,14 +237,6 @@ $(document).ready(function() {
     });
     
 	window.sliMpd.drawFavicon();
-	
-	/* toggle playersize */
-	$('.playerSizeToggle a').on('click', function(e) {
-		e.preventDefault();
-		$('body').toggleClass('slimplayer');
-		$(this).find('i').toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
-		window.sliMpd.currentPlayer.drawWaveform();
-	});
 
 	/* toggle between display tags and display filepath */
 	$('.fileModeToggle a').on('click', function(e) {

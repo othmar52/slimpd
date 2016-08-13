@@ -38,6 +38,7 @@
             $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll).on('click', this.forceXwaxPoll);
             //$('*[data-toggle="lightbox"]', this.$el).off('click', this.triggerLightboxClickListener).on('click', this.triggerLightboxClickListener);
             $('.toggle-player', this.$el).off('click', this.playerModeToggleTriggerListener).on('click', this.playerModeToggleTriggerListener);
+            $('.toggle-player-size', this.$el).off('click', this.playerSizeToggleTriggerListener).on('click', this.playerSizeToggleTriggerListener);
             $('.xwax-gui-toggler', this.$el).off('click', this.xwaxGuiToggleTriggerListener).on('click', this.xwaxGuiToggleTriggerListener);
 		    
 		    
@@ -151,6 +152,7 @@
             $('input.clearable', this.$el).off('input', this.clearableInputListener);
             $('.clearinput', this.$el).off('click', this.clearinputClickListener);
             $('.force-xwax-poll', this.$el).off('click', this.forceXwaxPoll);
+            $('.toggle-player-size', this.$el).off('click', this.playerSizeToggleTriggerListener);
             $('.xwax-gui-toggler', this.$el).off('click', this.xwaxGuiToggleTriggerListener);
             
             window.Backbone.View.prototype.remove.call(this);
@@ -269,7 +271,14 @@
        		e.preventDefault();
 			window.sliMpd.togglePlayer();
        	},
-       	
+
+        playerSizeToggleTriggerListener : function(e) {
+       		e.preventDefault();
+			$('body').toggleClass('slimplayer');
+			$(this).find('i').toggleClass('fa-chevron-down').toggleClass('fa-chevron-up');
+			this.drawWaveform();
+       	},
+
        	itemGlueMouseenterListener : function(e) {
        		e.preventDefault();
        		$(e.currentTarget).closest('.glue-hover-wrap').addClass('underline');
