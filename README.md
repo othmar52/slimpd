@@ -16,7 +16,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 |
 <b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#license-gnu-general-public-license-version-2">License</a></b>
 </p>
-   ![](https://reposs.herokuapp.com/?path=Othmar52/slimpd&style=flat&color=orange)  <a href="https://badge.fury.io/gh/othmar52%2Fslimpd"><img src="https://badge.fury.io/gh/othmar52%2Fslimpd.svg" alt="GitHub version" height="20"/></a>  [![License](http://img.shields.io/:license-gpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccf3e99ed39745bf8600a4b90a93b48d)](https://www.codacy.com/app/othmar/slimpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=othmar52/slimpd&amp;utm_campaign=Badge_Grade)
+   ![](https://reposs.herokuapp.com/?path=Othmar52/slimpd&style=flat&color=orange)  <a href="https://badge.fury.io/gh/othmar52%2Fslimpd"><img src="https://badge.fury.io/gh/othmar52%2Fslimpd.svg" alt="GitHub version" height="20"/></a>  [![License](http://img.shields.io/:license-gpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccf3e99ed39745bf8600a4b90a93b48d)](https://www.codacy.com/app/othmar/slimpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=othmar52/slimpd&amp;utm_campaign=Badge_Grade)  [![Scrutinizer](https://img.shields.io/scrutinizer/g/filp/whoops.svg?maxAge=2592000)]()  
 
 <br>
 ## Features 
