@@ -14,7 +14,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 |
 <b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#credits">Credits</a></b>
 |
-<b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#license-gnu-affero-general-public-license-version-3">License</a></b>
+<b><a href="https://github.com/othmar52/slimpd/wiki/_Footer/#licensegnu-affero-general-public-license-version-3">License</a></b>
 </p>
    ![](https://reposs.herokuapp.com/?path=Othmar52/slimpd&style=flat&color=orange)  <a href="https://badge.fury.io/gh/othmar52%2Fslimpd"><img src="https://badge.fury.io/gh/othmar52%2Fslimpd.svg" alt="GitHub version" height="20"/></a>  [![License](http://img.shields.io/:license-gpl2-blue.svg?style=flat)](http://www.gnu.org/licenses/gpl-2.0.html)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ccf3e99ed39745bf8600a4b90a93b48d)](https://www.codacy.com/app/othmar/slimpd?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=othmar52/slimpd&amp;utm_campaign=Badge_Grade)    
 
@@ -71,5 +71,5 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 
 <h5 id="license"><a id="OSI" href="https://opensource.org/about"><img border="0" alt="OpenSourceInitiative" width="42" height="48" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/osi_standard_logo.png" /></a>  <a id="AGPLv3" href="https://www.gnu.org/licenses/agpl.html"><img border="0" alt="AGPLv3" width="146" height="48" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/agplv3-146x48.png" /></a> License:<code>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</code></h5>
 ***
-<h5 id="Credits">Credits</h5>
+<h5 id="credits">Credits:</h5>
 
