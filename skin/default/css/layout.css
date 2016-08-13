@@ -355,3 +355,8 @@ body.vstretch14 {
 	bottom: 20px;
 	z-index: 2000;
 }
+
+/* hide everything on initial load */
+.fade-start {
+	opacity: 0;
+}

@@ -32,6 +32,7 @@
 		pollWorker : null,
 
 		playlistState : false,
+		initialNotificationBlocker : true,
 
 		initialize : function(options) {
 			this.$content = $('.player-'+ this.mode, this.$el);
@@ -337,32 +338,36 @@
 				that.seekzero();
 			});
 
-			var mpdNotify = $('<div/>')
-				.append(
-					$('<div/>')
-					.attr('class', 'row')
+			// do not show notification on initial load
+			if(that.initialNotificationBlocker === false) {
+				var mpdNotify = $('<div/>')
 					.append(
 						$('<div/>')
-						.attr('class', 'col-md-2')
+						.attr('class', 'row')
 						.append(
-							$('<img/>')
-								.attr('src', $('.player-mpd img').attr('src'))
-								.attr('width', '70')
+							$('<div/>')
+							.attr('class', 'col-md-2')
+							.append(
+								$('<img/>')
+									.attr('src', $('.player-mpd img').attr('src'))
+									.attr('width', '70')
+							)
 						)
-					)
-					.append(
-						$('<div/>')
-						.attr('class', 'col-md-10')
 						.append(
-							'<span class="uc dark small">MPD trackchange</span><br>' + $('.player-mpd .now-playing-string').text()
+							$('<div/>')
+							.attr('class', 'col-md-10')
+							.append(
+								'<span class="uc dark small">MPD trackchange</span><br>' + $('.player-mpd .now-playing-string').text()
+							)
 						)
-					)
-				);
-			window.sliMpd.notify({
-				'notify':1,
-				'type': 'mpd',
-				'message': $(mpdNotify).html()
-			});
+					);
+				window.sliMpd.notify({
+					'notify':1,
+					'type': 'mpd',
+					'message': $(mpdNotify).html()
+				});
+			}
+			that.initialNotificationBlocker = false;
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
 		

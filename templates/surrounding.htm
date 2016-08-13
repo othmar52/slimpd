@@ -45,10 +45,9 @@
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
-			
 			{% include 'modules/header-menu.htm' %}
 			<div class="row">
-  				<div class="col-md-12" id="main">
+				<div class="col-md-12 fade-start" id="main">
 {% endif %}
 				<div class="main-content">
 					{% include 'modules/errorbox.htm' %}
@@ -206,14 +205,13 @@
 		{% include 'modules/xwaxgui.htm'%}
 		
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
-		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom {{ (playerMode == 'mpd') ? 'hidden' : '' }}">
+		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom fade-start {{ (playerMode == 'mpd') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'local'} %}
 		</div>
 		
-		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom {{ (playerMode == 'local') ? 'hidden' : '' }}">
+		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom fade-start {{ (playerMode == 'local') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
-		
 		
 		<div class="fileModeToggle" {# TODO: create button instead of anchor #}>
 			<a href="#toggleFilenameMode()" title="toggle filename mode"><i class='fa fa-toggle-off fa-lg'></i></a>
