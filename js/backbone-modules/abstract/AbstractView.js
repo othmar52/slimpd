@@ -125,8 +125,8 @@
 	  			}
 	  		});*/
 
-            $( '#bb-bookblock' ).bookblock( {
-				speed : 8000,
+            $( '#bb-bookblock', that.$el ).bookblock( {
+				speed : 800,
 				shadowSides : 0.8,
 				shadowFlip : 0.7,
 				circular : true,

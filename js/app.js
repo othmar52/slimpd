@@ -318,6 +318,16 @@ $(document).ready(function() {
 			$(this).trigger('resizeEnd');
 		}, 500);
 	});
+
+	// add some smooth animation on initial loading
+	var timeScale = 1;
+	$(window.sliMpd.localPlayer.el).css('z-index',1027);
+	$(window.sliMpd.mpdPlayer.el).css('z-index',1028);
+	$(window.sliMpd.currentPlayer.el).css('z-index',1030);
+	TweenLite.set([$('.permaplayer'), $('.main-nav')],{opacity:1});
+	TweenLite.fromTo($('.main-nav'), 0.75, { y: -$('.main-nav').height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
+	TweenLite.fromTo($('#main'), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
+	TweenLite.fromTo($('.permaplayer'), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
 });
 
 
