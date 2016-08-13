@@ -1540,14 +1540,17 @@ class Importer {
 				$album->setImportStatus(4);
 				
 				// extract unique labelIds ordered by relevance
-				$album->setLabelId(
-					join(
-						",",
-						uniqueArrayOrderedByRelevance(
-							trimExplode(",", $labelIdsFromTracks, TRUE)
-						)
-					)
+				$orderedByRelevance = uniqueArrayOrderedByRelevance(
+					trimExplode(",", $labelIdsFromTracks, TRUE)
 				);
+
+				// remove "Unknown Label" in case we have another label-id
+				// TODO: find out why this case is possible and remove this "cleanup" code
+				if(count($orderedByRelevance) > 1 && in_array(10, $orderedByRelevance)) {
+					unset($orderedByRelevance[array_search(10, $orderedByRelevance)]);
+				}
+
+				$album->setLabelId(join(",", $orderedByRelevance));
 				cliLog($app->ll->str('importer.fixlabel.msg', array($album->getId(), $album->getLabelId())), 7);
 				$album->update();
 				$this->itemCountChecked++;
@@ -1961,8 +1964,7 @@ class Importer {
 		foreach([
 			'unknownartist' => 'artist',
 			'variousartists' => 'artist',
-			'unknowngenre' => 'genre',
-			'unknownlabel' => 'label'] as $llKey => $table) {
+			'unknowngenre' => 'genre'] as $llKey => $table) {
 			$queries[] =
 				"INSERT INTO `".$table."` ".
 				"VALUES (
@@ -1974,6 +1976,15 @@ class Importer {
 					0
 				);";
 		}
+		$queries[] =
+			"INSERT INTO `label` ".
+			"VALUES (
+				NULL,
+				'".$app->ll->str('importer.unknownlabel')."',
+				'".az09($app->ll->str('importer.unknownlabel'))."',
+				0,
+				0
+			);";
 		return $queries;
 	}
 

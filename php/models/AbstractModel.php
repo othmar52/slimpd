@@ -343,8 +343,9 @@ abstract class AbstractModel {
 	}
 
 	public static function getIdsByString($itemString) {
+		$idForUnknown = 10;
 		if(trim($itemString) === '') {
-			return array("1"); // Unknown
+			return array($idForUnknown); // Unknown
 		}
 		
 		$app = \Slim\Slim::getInstance();
@@ -377,7 +378,7 @@ abstract class AbstractModel {
 			
 			if($az09 === '' || preg_match("/^hash0x([a-f0-9]{7})$/", $az09)) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
-				$itemIds[1] = 1;
+				$itemIds[$idForUnknown] = $idForUnknown;
 			} else {
 				
 				
