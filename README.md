@@ -62,7 +62,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 * __Designed to be Highly Configurable__; in many ways your very own personal player.
 
 * __Mobile Friendly__ (not implemented yet).
-<p align="left"><a href="#top">:arrow_up:</a></p>
+<p align="left"><a href="#top"><i class="fa fa-cog fa-lg">::before</i></a></p>
 
 
 ######[Screenshots of current development status](https://github.com/othmar52/slimpd/wiki/Gallery)
