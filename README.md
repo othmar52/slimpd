@@ -24,7 +24,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 * __Massive Performance__ on large music collections.
  * Music-collection update runs at 120K Tracks per minute.
 
-* __Control Playing Music Files__ with MPD, or directly in your browser.
+* __Control Playing Music Files__ [with MPD, or directly in your browser](http://gas-werk.org/slimpd/2016-08/slimpd-toggle-players.gif).
 
 * __AJAX__ driven frontend.
  * Browser-history support.
