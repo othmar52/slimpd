@@ -1,5 +1,5 @@
 $.fn.random = function() {
-  return this.eq(Math.floor(Math.random() * this.length));
+	return this.eq(Math.floor(Math.random() * this.length));
 }
 
 Array.prototype.max = function() {
@@ -7,17 +7,17 @@ Array.prototype.max = function() {
 };
 
 $(document).ready(function() {
-    "use strict";
-    
-    var $ = window.jQuery;
-    window.sliMpd = $.extend(true, window.sliMpd, {
-        modules : {},
-        
-        drawFaviconTimeout : 0,
-        
-        xwax : false,
-        
-        /**
+	"use strict";
+
+	var $ = window.jQuery;
+	window.sliMpd = $.extend(true, window.sliMpd, {
+		modules : {},
+
+		drawFaviconTimeout : 0,
+
+		xwax : false,
+
+		/**
 		 * adds get-paramter to url, respecting existing and not-existing params
 		 * TODO: currently not compatible with urlstring that contains a #hash
 		 * @param {string} urlstring
@@ -25,55 +25,55 @@ $(document).ready(function() {
 		 * @param {string} paramValue
 		 */
 		setGetParameter : function(urlstring, paramName, paramValue) {
-		    if (urlstring.indexOf(paramName + "=") >= 0) {
-		        var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
-		        var suffix = urlstring.substring(urlstring.indexOf(paramName));
-		        suffix = suffix.substring(suffix.indexOf("=") + 1);
-		        suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
-		        urlstring = prefix + paramName + "=" + paramValue + suffix;
-		    } else {
-			    urlstring += (urlstring.indexOf("?") < 0)
-			        ? "?" + paramName + "=" + paramValue
-			    	: "&" + paramName + "=" + paramValue;
-		    }
-		    return urlstring;
+			if (urlstring.indexOf(paramName + "=") >= 0) {
+				var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
+				var suffix = urlstring.substring(urlstring.indexOf(paramName));
+				suffix = suffix.substring(suffix.indexOf("=") + 1);
+				suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
+				urlstring = prefix + paramName + "=" + paramValue + suffix;
+			} else {
+				urlstring += (urlstring.indexOf("?") < 0)
+					? "?" + paramName + "=" + paramValue
+					: "&" + paramName + "=" + paramValue;
+			}
+			return urlstring;
 		},
-		
+
 		drawFavicon : function() {
 			clearTimeout(window.sliMpd.drawFaviconTimeout);
 			window.sliMpd.currentPlayer.drawFavicon();
 			window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
 		},
-		
+
 		fireRequestAndNotify : function(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);
 			});
 		},
-		
+
 		checkNotify : function(endcodedResponse) {
 			try {
-	        	var notifyConf = JSON.parse(endcodedResponse);
-	        	if (typeof notifyConf.notify !== 'undefined') {
-	        		this.notify(notifyConf);
-	        	}
-		    } catch(e) {
-		    	//console.log(e + ' no json response in SliMpd::checkNotify()');
+				var notifyConf = JSON.parse(endcodedResponse);
+				if (typeof notifyConf.notify !== "undefined") {
+					this.notify(notifyConf);
+				}
+			} catch(e) {
+				//console.log(e + " no json response in SliMpd::checkNotify()");
 			}
 		},
-		
+
 		// TODO: respect playersize + visible xwax gui for positioning
 		notify : function(notifyConf) {
-    		$.notify({
+			$.notify({
 				// options
 				message: notifyConf.message
 			},{
 				// settings
-				type: (notifyConf.type || 'info'),
+				type: (notifyConf.type || "info"),
 				z_index: 10000,
 				offset: {
-					x: '10',
-					y: '110'
+					x: "10",
+					y: "110"
 				},
 				placement: {
 					from: "bottom",
@@ -81,10 +81,10 @@ $(document).ready(function() {
 				},
 			});
 		},
-		
+
 		notifyError : function(errorUrl) {
 			// TODO: get message from language file
-    		this.notify({
+			this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
 				type : "danger"
 			});
@@ -93,23 +93,23 @@ $(document).ready(function() {
 		/* toggle between mpd-control and local player (jPlayer) */
 		togglePlayer : function() {
 			var perspective = -1000;
-			var originPrev = '50% 50%';
-			var originNew = '50% 50%';
+			var originPrev = "50% 50%";
+			var originNew = "50% 50%";
 			var ease = Back.easeInOut.config(1);
 			var easeIn = Power2.easeIn;
 			var easeOut = Power2.easeOut;
 			var speed = 0.5;
 			var classToRemove = window.sliMpd.conf.color.mpd.bodyclass;
 			var classToAdd = window.sliMpd.conf.color.local.bodyclass;
-			
+
 			var tweenIn;
 			var tweenOut;
 			var timeScale = 0.7;
-			
-			$('.player-local,.player-mpd').removeClass('hidden');
-			
+
+			$(".player-local,.player-mpd").removeClass("hidden");
+
 			var transformPreviousPlayerFrom = {
-				display: 'block',
+				display: "block",
 				transformOrigin: originPrev,
 				transformPerspective: perspective,
 				zIndex: 1030,
@@ -118,172 +118,165 @@ $(document).ready(function() {
 				z:0
 			}
 			var transformPreviousPlayerTo = {
-				display: 'none',
+				display: "none",
 				rotationX: 90,
-				y: $('.player-mpd').height()/2,
+				y: $(".player-mpd").height()/2,
 				z: -5,
-				//opacity: 0,
 				ease: ease
 			}
 			var transformNewPlayerFrom = {
 				transformOrigin: originNew,
 				transformPerspective: perspective,
-				display: 'block',
+				display: "block",
 				zIndex: 1029,
-				//opacity: 0.5,
 				rotationX: -90,
-				y: -$('.player-mpd').height()/2,
+				y: -$(".player-mpd").height()/2,
 				z: -5
 			}
 			var transformNewPlayerTo = {
-				display: 'block',
+				display: "block",
 				rotationX: 0,
 				y:0,
 				z:0,
-				//opacity: 1,
 				delay:0.02,
 				ease: ease
 			}
 
-			
 
-			if(window.sliMpd.currentPlayer.mode === 'mpd') {
+			if(window.sliMpd.currentPlayer.mode === "mpd") {
 				// activate local player
 				window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
 
 				// reduce poll amount of inactive mpd player
 				window.sliMpd.mpdPlayer.pollWorker.postMessage({
-					cmd: 'setMiliseconds',
+					cmd: "setMiliseconds",
 					value: window.sliMpd.mpdPlayer.intervalInactive
 				});
 
 				// flip animation for both players
-				tweenIn = TweenLite.fromTo($('.player-mpd'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				tweenOut = TweenLite.fromTo($('.player-local'), speed, transformNewPlayerFrom, transformNewPlayerTo);
-				
+				tweenIn = TweenLite.fromTo($(".player-mpd"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenLite.fromTo($(".player-local"), speed, transformNewPlayerFrom, transformNewPlayerTo);
+
 				tweenIn.timeScale(timeScale);
 				tweenOut.timeScale(timeScale);
-				
-				//TweenLite.fromTo($('.permaplayer-wrapper'), speed, {rotationX: 0 }, {rotationX: 90});
+
+				//TweenLite.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 0 }, {rotationX: 90});
 			} else {
 				// pause local player when switching to mpd
-				window.sliMpd.currentPlayer.process({'action':'pause'});
+				window.sliMpd.currentPlayer.process({"action":"pause"});
 
 				// activate mpd player
 				window.sliMpd.currentPlayer = window.sliMpd.mpdPlayer;
 
 				// increase poll amount as mpd player is now active
 				window.sliMpd.mpdPlayer.pollWorker.postMessage({
-					cmd: 'setMiliseconds',
+					cmd: "setMiliseconds",
 					value: window.sliMpd.mpdPlayer.intervalActive
 				});
 				window.sliMpd.currentPlayer.refreshInterval();
 
 				// flip animation for both players
-				tweenIn = TweenLite.fromTo($('.player-local'), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				tweenOut = TweenLite.fromTo($('.player-mpd'), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				tweenIn = TweenLite.fromTo($(".player-local"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenLite.fromTo($(".player-mpd"), speed, transformNewPlayerFrom, transformNewPlayerTo);
 
 				tweenIn.timeScale(timeScale);
 				tweenOut.timeScale(timeScale);
-				
-				//TweenLite.fromTo($('.permaplayer-wrapper'), speed, {rotationX: 90 }, {rotationX: 0});
-				
+
+				//TweenLite.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 90 }, {rotationX: 0});
+
 				classToRemove = window.sliMpd.conf.color.local.bodyclass;
 				classToAdd = window.sliMpd.conf.color.mpd.bodyclass;
 			}
 
 			// change body-class for colorizing all links in half of animation time
 			// TODO: is window.setTimeout() correct or should it be on another element?
-			//window.setTimeout(function (){ $('body').addClass(classToAdd).removeClass(classToRemove); }, speed/2*1000);
-			$('body').addClass(classToAdd).removeClass(classToRemove);
+			//window.setTimeout(function (){ $("body").addClass(classToAdd).removeClass(classToRemove); }, speed/2*1000);
+			$("body").addClass(classToAdd).removeClass(classToRemove);
 
-			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: '/' });
+			$.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: "/" });
 			window.sliMpd.drawFavicon();
 			window.sliMpd.currentPlayer.drawWaveform();
 		} 
-    });
-    
-    window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({
-    	el : 'nav.main-nav'
-    });
-    window.sliMpd.navbar.render();
-    
-    window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
-		el : '.player-xwax',
+	});
+
+	window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({
+		el : "nav.main-nav"
+	});
+	window.sliMpd.navbar.render();
+
+	window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
+		el : ".player-xwax",
 		showWaveform : true
-    });
-    window.sliMpd.xwax.render();
-    
+	});
+	window.sliMpd.xwax.render();
+
 	window.sliMpd.modal = new window.sliMpd.modules.ModalView({
-    	el : '#global-modal .modal-content'
-    });
-    
-    window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer({
-    	el : '.permaplayer.player-local'
-    });
-    window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer({
-    	el : '.permaplayer.player-mpd'
-    });
-    
-    window.sliMpd.currentPlayer = ($.cookie("playerMode") === 'mpd')
+		el : "#global-modal .modal-content"
+	});
+
+	window.sliMpd.localPlayer = new window.sliMpd.modules.LocalPlayer({
+		el : ".permaplayer.player-local"
+	});
+	window.sliMpd.mpdPlayer = new window.sliMpd.modules.MpdPlayer({
+		el : ".permaplayer.player-mpd"
+	});
+
+	window.sliMpd.currentPlayer = ($.cookie("playerMode") === "mpd")
 		? window.sliMpd.mpdPlayer
-    	: window.sliMpd.localPlayer;
-    
-    
-    window.sliMpd.router = new window.sliMpd.modules.Router();
-    
-    window.Backbone.history.start({
-    	pushState : true
-    });
-    
+		: window.sliMpd.localPlayer;
+
+	window.sliMpd.router = new window.sliMpd.modules.Router();
+
+	window.Backbone.history.start({
+		pushState : true
+	});
+
 	window.sliMpd.drawFavicon();
 
 	/* toggle between display tags and display filepath */
-	$('.fileModeToggle a').on('click', function(e) {
+	$(".fileModeToggle a").on("click", function(e) {
 		e.preventDefault();
-		$('body').toggleClass('ffn');
-		$(this).find('i').toggleClass('fa-toggle-off').toggleClass('fa-toggle-on');
+		$("body").toggleClass("ffn");
+		$(this).find("i").toggleClass("fa-toggle-off").toggleClass("fa-toggle-on");
 	});
-	
+
 	// delegate calls to data-toggle="lightbox"
-	$(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
+	$(document).delegate("*[data-toggle='lightbox']", "click", function(event) {
 		event.preventDefault();
 		return $(this).ekkoLightbox({
 			always_show_close: true,
-			gallery_parent_selector: 'body'
+			gallery_parent_selector: "body"
 		});
 	});
-	
-	$(document).on('keydown', null, 'ctrl+space', function(){
+
+	$(document).on("keydown", null, "ctrl+space", function(){
 		// FIXME: this does not work with open autocomplete-widget. obviously ac overrides key bindings
-		$('#mainsearch').focus().select();
+		$("#mainsearch").focus().select();
 		return false;
 	});
-	
-	
-	$('.navbar-upper').affix({
-  		offset: {bottom: 200}
+
+	$(".navbar-upper").affix({
+		offset: {bottom: 200}
 	});
-	
+
 	NProgress.configure({
 		showSpinner: false,
-		parent: '#nprog-container',
+		parent: "#nprog-container",
 		speed: 100,
 		trickleRate: 0.02,
 		trickleSpeed: 800
 	});
-	
-	
+
 	// TODO: is it correct to place this here (excluded from all bootstrap-views)?
 	$(function(){
-	    $('#top-link-block').removeClass('hidden').affix({
-	        // how far to scroll down before link "slides" into view
-	        offset: {top:100}
-	    });
+		$("#top-link-block").removeClass("hidden").affix({
+			// how far to scroll down before link "slides" into view
+			offset: {top:100}
+		});
 	});
-	$('#top-link-block a').on('click', function(e) {
+	$("#top-link-block a").on("click", function(e) {
 		e.preventDefault();
-		$('html,body').animate({scrollTop:0},'fast');
+		$("html,body").animate({scrollTop:0},"fast");
 		return false;
 	});
 
@@ -292,34 +285,32 @@ $(document).ready(function() {
 	 * as the browser is not displaying the text there is no nedd to fetch string from language file
 	 */
 	window.onbeforeunload=function(){
-		if(window.sliMpd.currentPlayer.mode === 'local' && window.sliMpd.currentPlayer.nowPlayingState === 'play') {
-			return 'local audio is currently playing';
+		if(window.sliMpd.currentPlayer.mode === "local" && window.sliMpd.currentPlayer.nowPlayingState === "play") {
+			return "local audio is currently playing";
 		}
 	}
 
 	/*
 	 * add lazy resize listener
 	 */
-	$(window).bind('resizeEnd', function() {
+	$(window).bind("resizeEnd", function() {
 		window.sliMpd.currentPlayer.drawWaveform();
 		window.sliMpd.currentPlayer.drawTimeGrid();
 	});
 	$(window).resize(function() {
 		if(this.resizeTO) clearTimeout(this.resizeTO);
 		this.resizeTO = setTimeout(function() {
-			$(this).trigger('resizeEnd');
+			$(this).trigger("resizeEnd");
 		}, 500);
 	});
 
 	// add some smooth animation on initial loading
 	var timeScale = 1;
-	$(window.sliMpd.localPlayer.el).css('z-index',1027);
-	$(window.sliMpd.mpdPlayer.el).css('z-index',1028);
-	$(window.sliMpd.currentPlayer.el).css('z-index',1030);
-	TweenLite.set([$('.permaplayer'), $('.main-nav')],{opacity:1});
-	TweenLite.fromTo($('.main-nav'), 0.75, { y: -$('.main-nav').height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
-	TweenLite.fromTo($('#main'), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
-	TweenLite.fromTo($('.permaplayer'), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
+	$(window.sliMpd.localPlayer.el).css("z-index",1027);
+	$(window.sliMpd.mpdPlayer.el).css("z-index",1028);
+	$(window.sliMpd.currentPlayer.el).css("z-index",1030);
+	TweenLite.set([$(".permaplayer"), $(".main-nav")],{opacity:1});
+	TweenLite.fromTo($(".main-nav"), 0.75, { y: -$(".main-nav").height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
+	TweenLite.fromTo($("#main"), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
+	TweenLite.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
 });
-
-
