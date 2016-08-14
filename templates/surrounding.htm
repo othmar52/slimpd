@@ -3,16 +3,16 @@
 	<head>
 		<title>{{ config.title }}</title>
 		<meta charset="utf-8">
-    	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<meta name="HandheldFriendly" content="True">
-    	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-    	
-    	<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
-    	{% set cssfiles = [
-    		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
-    		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
-    		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+
+		<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
+		{% set cssfiles = [
+			'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
+			'vendor-dist/components/font-awesome/css/font-awesome.min.css',
+			'vendor-dist/webfontkit/open-sans/open-sans.min.css',
 			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
 			'vendor-dist/rstacruz/nprogress/nprogress.css',
 			'vendor-dist/codrops/BookBlock/css/bookblock.css',
@@ -29,7 +29,7 @@
 			'skin/default/css/widget-autocomplete.css',
 			'skin/default/css/player/player.css'
 		] %}
-    	 
+
 		{% for cssfile in cssfiles %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
 		{% endfor %}
@@ -51,36 +51,33 @@
 {% endif %}
 				<div class="main-content">
 					{% include 'modules/errorbox.htm' %}
-					
-					
+
 					{% for type in ['genre', 'artist', 'label'] %}
 						{% if action == 'library.'~type~'s' %}
 							{% include 'modules/typelist.htm' %}
 						{% endif %}
-						
+
 						{% if action == type~'.tracks' %}
 							{% include 'modules/typelist-nav.htm' %}
 							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
-						
+
 						{% if action == type~'.albums' %}
 							{% include 'modules/typelist-nav.htm' %}
 							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
-					
-					
-					{% endfor%}				
-					
+					{% endfor%}
+
 					{% if action == 'maintainance.trackdebug' %}
-					{% include 'modules/trackdebug.htm' %}
+						{% include 'modules/trackdebug.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'maintainance.albumdebug' %}
-					{% include 'modules/albumdebug.htm' %}
+						{% include 'modules/albumdebug.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'landing' %}
-					
+
 					<div class="container">
 						<h2>Browse</h2>
 						<div class="row">
@@ -117,26 +114,26 @@
 						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
 					</div>
 					{% endif %}
-					
+
 					{% if action == 'playlists' %}
 						{% include 'modules/playlists.htm' %}
-					{% endif %}	
-					
+					{% endif %}
+
 					{% if action == 'showplaylist' %}
 						{% include 'modules/playlist.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'filebrowser' %}
 						<div class="filebrowser">
 						{% include 'partials/filebrowser/layout.htm' %}
 						</div>
 					{% endif %}
-					
+
 					{% if action == 'library.year' %}
 						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
 						{% include 'modules/albumlist.htm' with { 'itemlist': albumlist } %}
 					{% endif %}
-					
+
 					{% if action == 'library.albums' %}
 						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">Albums (work in progress)</h2>
 						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
@@ -146,24 +143,21 @@
 					{% if action == 'importer' %}
 						{% include 'modules/importer.htm' %}
 					{% endif %}
-					
-					
+
 					{% if action == '404' %}
 						{% include 'modules/404.htm' %}
 					{% endif %}
-					
-					
-					
+
 					{% if action == 'album.detail' %}
 						{% include 'partials/album/layout-detailview.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'albumtracks' %}
 						{% for item in itemlist %}
 							{% include 'partials/trackrow-albumview.htm' %}
 						{% endfor %}
 					{% endif %}
-					
+
 					{% if action == 'playlist' %}
 						<h2>{{'currentlyplaying'|ll}}</h2>
 						{% if item.relativePath %}
@@ -173,38 +167,37 @@
 						{% endif %}
 						{% include 'modules/nowplaying-list.htm' %}
 					{% endif %}
-					
-					
+
 					{% if action == 'searchresult.all' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'all', youtubechunk:'music' } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.track' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'track', youtubechunk:'song'  } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.album' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'album', youtubechunk:'music album'  } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.artist' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'artist', youtubechunk:'music artist'  } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.label' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'label', youtubechunk:'music label'  } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.genre' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'genre', youtubechunk:'music genre'  } %}
 						{% include 'modules/searchresult-items.htm' %}
 					{% endif %}
-					
+
 					{% if action == 'searchresult.dirname' %}
 						{% include 'modules/searchresult-nav.htm' with { 'searchcurrent' : 'dirname', youtubechunk:''  } %}
 						{% include 'modules/searchresult-items.htm' %}
@@ -215,23 +208,22 @@
 					{% endif %}
 
 					</div>
-					
 {% if not nosurrounding %}
-  				</div>
+				</div>
 			</div>
 		</div>
-		
+
 		{% include 'modules/xwaxgui.htm'%}
-		
+
 		<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 		<div class="row permaplayer player-local bg-col4 navbar-fixed-bottom fade-start {{ (playerMode == 'mpd') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'local'} %}
 		</div>
-		
+
 		<div class="row permaplayer player-mpd bg-col4 navbar-fixed-bottom fade-start {{ (playerMode == 'local') ? 'hidden' : '' }}">
 			{% include 'partials/player/permaplayer.htm' with {'player': 'mpd'} %}
 		</div>
-		
+
 		<div class="fileModeToggle" {# TODO: create button instead of anchor #}>
 			<a href="#toggleFilenameMode()" title="toggle filename mode"><i class='fa fa-toggle-off fa-lg'></i></a>
 		</div>
@@ -241,31 +233,28 @@
 		</div>
 
 		<span id="top-link-block" class="hidden">
-		    <a href="#t" class="btn btn-default">
-		        <i class="glyphicon glyphicon-chevron-up"></i>
-		    </a>
+			<a href="#t" class="btn btn-default">
+				<i class="glyphicon glyphicon-chevron-up"></i>
+			</a>
 		</span><!-- /top-link-block -->
-		
-		
-		
-		
+
 		<!-- Modal -->
 		<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog modal-lg" role="document">
-		    <div class="modal-content bg-col1">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-		      </div>
-		      <div class="modal-body">
-		        ...{# ajax-loaded markup will be placed here #}
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		        <button type="button" class="btn btn-primary">Save changes</button>
-		      </div>
-		    </div>
-		  </div>
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content bg-col1">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+					</div>
+					<div class="modal-body">
+						...{# ajax-loaded markup will be placed here #}
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script type="text/javascript">
 			var sliMpd = sliMpd || {};
@@ -293,10 +282,10 @@
 				absFilePrefix: '{{ config.absFilePrefix }}'
 			};
 		</script>
-		
+
 		{% set jsfiles = [
-    		'vendor-dist/components/jquery/jquery.min.js',
-    		'vendor-dist/rstacruz/nprogress/nprogress.js',
+			'vendor-dist/components/jquery/jquery.min.js',
+			'vendor-dist/rstacruz/nprogress/nprogress.js',
 			'vendor-dist/components/jqueryui/jquery-ui.min.js',
 			'vendor-dist/twbs/bootstrap/dist/js/bootstrap.min.js',
 			'vendor-dist/twbs/bootstrap/js/dropdown.js',
@@ -327,9 +316,9 @@
 			'js/backbone-modules/XwaxPlayer.js',
 			'js/backbone-modules/Router.js',
 			'js/app.js'
-    		]
+			]
 		%}
-    	 
+
 		{% for jsfile in jsfiles %}
 		<script src="{{fileroot}}{{jsfile}}"></script>
 		{% endfor %}
