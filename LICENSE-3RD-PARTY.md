@@ -1,5 +1,8 @@
 <h2 id="3rd-party-license">3rd Party License</h2>
 
+---
+#### [☰](https://github.com/othmar52/slimpd/wiki) HOME
+#### [☰](https://github.com/othmar52/slimpd/blob/master/README.md) FEATURES
 * [The MIT License (MIT)](#the-mit-licensemit)
 * [Codrops](#codrops)
 * [SIL OPEN FONT LICENSE Version 1.1](#sil-open-font-license-version-11)
