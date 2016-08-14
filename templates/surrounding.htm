@@ -82,26 +82,39 @@
 					{% if action == 'landing' %}
 					
 					<div class="container">
+						<h2>Browse</h2>
 						<div class="row">
-							<div class="col-md-3 col-sm-4 col-xs-6">
-								<div class="dummy"></div>
-								<a href="{{root}}genres/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'genres'|ll}}</a>
+							<div class="col-sm-4 col-md-3">
+								<div class="thumbnail bg-col2">
+									<a href="{{root}}artists/page/1" class="genre-link item-link ajax-link bg-col2 ">
+										<div class="caption centered-text">{{'artists'|ll}}</div>
+									</a>
+								</div>
 							</div>
-							<div class="col-md-3 col-sm-4 col-xs-6">
-								<div class="dummy"></div>
-								<a href="{{root}}labels/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'labels'|ll}}</a>
+							<div class="col-sm-4 col-md-3">
+								<div class="thumbnail bg-col2">
+									<a href="{{root}}albums/page/1" class="genre-link item-link ajax-link bg-col2 ">
+										<div class="caption centered-text">{{'albums'|ll}}</div>
+									</a>
+								</div>
 							</div>
-							<div class="col-md-3 col-sm-4 col-xs-6">
-								<div class="dummy"></div>
-								<a href="{{root}}artists/page/1" class="genre-link item-link ajax-link link-tile bg-col2">{{'artists'|ll}}</a>
+							<div class="col-sm-4 col-md-3">
+								<div class="thumbnail bg-col2">
+									<a href="{{root}}labels/page/1" class="genre-link item-link ajax-link bg-col2 ">
+										<div class="caption centered-text">{{'labels'|ll}}</div>
+									</a>
+								</div>
 							</div>
-							<div class="col-md-3 col-sm-4 col-xs-6">
-								<div class="dummy"></div>
-								<a href="#/albums/page/1" class="genre-link item-link ajax-link link-tile bg-col2">
-									<span style="padding:3em;" {{'niymarkup'|ll|raw}}>{{'albums'|ll}}</span>
-								</a>
+							<div class="col-sm-4 col-md-3">
+								<div class="thumbnail bg-col2">
+									<a href="{{root}}genres/page/1" class="genre-link item-link ajax-link bg-col2 ">
+										<div class="caption centered-text">{{'genres'|ll}}</div>
+									</a>
+								</div>
 							</div>
-					  	</div>
+						</div>
+						<h2>Recently added Albums</h2>
+						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
 					</div>
 					{% endif %}
 					
@@ -124,6 +137,12 @@
 						{% include 'modules/albumlist.htm' with { 'itemlist': albumlist } %}
 					{% endif %}
 					
+					{% if action == 'library.albums' %}
+						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">Albums (work in progress)</h2>
+						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
+						{% include 'modules/searchresult-items.htm' %}
+					{% endif %}
+
 					{% if action == 'importer' %}
 						{% include 'modules/importer.htm' %}
 					{% endif %}

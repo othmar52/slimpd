@@ -1,28 +1,18 @@
 {% if itemlist|length > 0 %}
-<div class="albums_container">
-{% include 'modules/paginator.htm' %}
-<br />
+<div class="row">
 	{% for item in itemlist %}
-	<div class="col-sm-6 col-md-2 tile-square ">
-		<div class="">
-			<div class="dummy"></div>
-			<a href="{{root}}album/{{item.id}}" class="link-tile tile-info-bottom bg-col4 ajax-link">
-				<div class="tile-img">
-					<img src="{{root}}image-300/album/{{item.id}}">
-				</div>
-				<div class="tile-hover-data bg-col3">
-					<div class="tile_title">{{item.title}}</div>
-					<div class="tile_band">
-						{% include 'partials/artist/string.htm' %}
-					</div>
+	 <div class="col-sm-4 col-md-2">
+		<div class="thumbnail bg-col2">
+			<a href="{{root}}album/{{item.id}}" class=" bg-col4 ajax-link">
+				<div class="img-placeholder" style="background-image:url({{root}}image-300/album/{{item.id}}); background-size: cover; background-position: 50%"></div>
+				<div class="caption">
+					<div class="shorten col2">{% include 'partials/artist/string.htm' %}</div>
+					<div class="shorten">{{item.title}}</div>
 				</div>
 			</a>
 		</div>
 	</div>
 	{% endfor %}
-	<div class="clearfix"> </div>
-	{% include 'modules/paginator.htm' %}
-	
 </div>
 {% else %}
 	<div>

@@ -8,7 +8,10 @@ $app->get('/', function() use ($app, $vars){
 
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
-    $app->render('surrounding.htm', $vars);
+	$vars['itemlist'] = \Slimpd\Album::getAll(12, 0);
+	$vars['totalresults'] = \Slimpd\Album::getCountAll();
+	$vars['renderitems'] = getRenderItems($vars['itemlist']);
+	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/djscreen', function() use ($app, $vars){
@@ -16,7 +19,7 @@ $app->get('/djscreen', function() use ($app, $vars){
     $app->render('djscreen.htm', $vars);
 });
 
-foreach(array('artist', 'label', 'genre') as $className) {
+foreach(array('artist', 'label', 'genre', 'album') as $className) {
 	// stringlist of artist|label|genre
 	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $vars, $className){
 		$classPath = "\\Slimpd\\" . ucfirst($className);
@@ -66,7 +69,11 @@ foreach(array('artist', 'label', 'genre') as $className) {
 		);
 		$vars['searchterm'] = $searchterm;
 		$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-		$vars['renderitems'] = convertInstancesArrayToRenderItems($vars['itemlist']);
+		if($className === 'album') {
+			$vars['renderitems'] = getRenderItems($vars['itemlist']);
+		} else {
+			$vars['renderitems'] = convertInstancesArrayToRenderItems($vars['itemlist']);
+		}
 		$app->render('surrounding.htm', $vars);
 	});
 }
