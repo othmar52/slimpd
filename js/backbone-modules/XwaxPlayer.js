@@ -96,8 +96,10 @@
 			var minutes 	= Math.floor(seconds / 60) % 60;
 			seconds 		= seconds % 60;
 
-			if (hour > 0)	return hour + ":" + this.zeroPad(minutes, 2) + ":" + this.zeroPad(seconds, 2);
-			else			return minutes + ":" + this.zeroPad(seconds, 2);
+			if (hour > 0) {
+				return hour + ":" + this.zeroPad(minutes, 2) + ":" + this.zeroPad(seconds, 2);
+			}
+			return minutes + ":" + this.zeroPad(seconds, 2);
 		},
 
 		zeroPad : function(number, n) {
