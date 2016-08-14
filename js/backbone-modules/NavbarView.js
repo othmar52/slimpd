@@ -54,7 +54,7 @@
 
 			this.tabAutocomplete = this.searchfield.autocomplete({
 				source: function( request, response ) {
-					NProgress.start();
+					window.NProgress.start();
 					var $this = $(this);
 					var $element = $(this.element);
 					var previous_request = $element.data( "jqXHR" );
@@ -70,7 +70,7 @@
 						url: window.sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($("#mainsearch").val()),
 						dataType: "json",
 						success: function( data ) {
-							NProgress.done();
+							window.NProgress.done();
 							response( data );
 						},
 						messages: {
@@ -252,13 +252,13 @@
 			// change ajax-url
 			var that = this;
 			this.searchfield.autocomplete("option", "source", function( request, response ) {
-				NProgress.start();
+				window.NProgress.start();
 				$.ajax({
 					url: window.sliMpd.conf.absRefPrefix + "autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 					dataType: "json",
 					type: "get",
 					success: function( data ) {
-						NProgress.done();
+						window.NProgress.done();
 						response( data );
 					},
 					messages: {
