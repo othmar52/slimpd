@@ -133,7 +133,7 @@
 		// TODO: make markup more generic and move this to AbstractPlayer
 		setPlayPauseIcon(item) {
 			var control = $(".localplayer-play-pause");
-			if (this.nowPlayingState == "play") {
+			if (this.nowPlayingState === "play") {
 				$(control).addClass("localplayer-pause").removeClass("localplayer-play").html("<i class='fa fa-pause sign-ctrl fa-lg'></i>");
 			} else {
 				$(control).addClass("localplayer-play").removeClass("localplayer-pause").html("<i class='fa fa-play sign-ctrl fa-lg'></i>");

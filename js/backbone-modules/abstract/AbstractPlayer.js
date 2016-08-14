@@ -64,7 +64,7 @@
 		// fetch markup with trackinfos
 		redraw(item) {
 			item = item || { item : 0};
-			var url = sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
+			var url =  window.sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
 			if(this.mode === "xwax") {
 				url = window.sliMpd.setGetParameter(url, "deck", this.deckIndex);
 				if(this.showWaveform === false) {
@@ -91,7 +91,7 @@
 		updateStateIcons() {
 			var that = this;
 			["repeat", "random", "consume"].forEach(function(prop) {
-				if(that.state[prop] == "1") {
+				if(that.state[prop] === "1") {
 					$(".status-"+prop, that.$el).addClass("active");
 				} else {
 					$(".status-"+prop, that.$el).removeClass("active");
@@ -100,49 +100,12 @@
 		},
 
 		process(item) {
-			//console.log("AbstractPlayer::process()"); console.log(item);
-			switch(item.action) {
-				case "play": this.play(item); break;
-				case "pause":this.pause(item); break;
-				case "togglePause": this.togglePause(item); break;
-				case "toggleRepeat": this.toggleRepeat(item); break;
-				case "toggleRandom": this.toggleRandom(item); break;
-				case "toggleConsume": this.toggleConsume(item); break;
-				case "next": this.next(item); break;
-				case "prev": this.prev(item); break;
-				case "seek": this.seek(item); break;
-				case "seekzero": this.seekzero(item); break;
-				case "remove": this.remove(item); break;
-				case "softclearPlaylist":	 this.softclearPlaylist(item); break;
-
-				case "appendTrack":			this.appendTrack(item);				break;
-				case "appendTrackAndPlay":	 this.appendTrackAndPlay(item);		 break;
-				case "injectTrack":			this.injectTrack(item);				break;
-				case "injectTrackAndPlay":	 this.injectTrackAndPlay(item);		 break;
-				case "replaceTrack":		   this.replaceTrack(item);			   break;
-				case "softreplaceTrack":	   this.softreplaceTrack(item);		   break;
-
-				case "appendDir":			  this.appendDir(item);				  break;
-				case "appendDirAndPlay":	   this.appendDirAndPlay(item);		   break;
-				case "injectDir":			  this.injectDir(item);				  break;
-				case "injectDirAndPlay":	   this.injectDirAndPlay(item);		   break;
-				case "replaceDir":			 this.replaceDir(item);				 break;
-				case "softreplaceDir":		 this.softreplaceDir(item);			 break;
-
-				case "appendPlaylist":		 this.appendPlaylist(item);			 break;
-				case "appendPlaylistAndPlay":  this.appendPlaylistAndPlay(item);	  break;
-				case "injectPlaylist":		 this.injectPlaylist(item);			 break;
-				case "injectPlaylistAndPlay":  this.injectPlaylistAndPlay(item);	  break;
-				case "replacePlaylist":		this.replacePlaylist(item);			break;
-				case "softreplacePlaylist":	this.softreplacePlaylist(item);		break;
-
-				case "soundEnded": this.soundEnded(item); break;
-				case "removeDupes": this.removeDupes(item); break;
-				default:
-					console.log("ERROR: invalid action \""+ item.action +"\" in "+ this.mode +"Player-item. exiting...");
-					return;
+			if(typeof this[item.action] === 'function') {
+				this[item.action](item);
+				return;
 			}
-
+			//console.log("ERROR: invalid action \""+ item.action +"\" in "+ this.mode +"Player-item. exiting...");
+			return;
 		},
 
 		// define those methods in inherited implementation of AbstractPlayer
@@ -205,7 +168,7 @@
 				suffix = "";
 				selector = "#css-"+this.mode+"player";
 			}
-			$(selector).attr("href", sliMpd.conf.absRefPrefix + "css/"+ this.mode +"player/"+ ((hash) ? hash : "0") + suffix);
+			$(selector).attr("href", window.sliMpd.conf.absRefPrefix + "css/"+ this.mode +"player/"+ ((hash) ? hash : "0") + suffix);
 
 		},
 
@@ -266,7 +229,7 @@
 			var pixelGap = width / this.nowPlayingDuration * (3600/ strokePerHour); 
 
 			for (var i=0; i < this.nowPlayingDuration/(3600/strokePerHour); i++) {
-				ctx.fillStyle = ((i+1)%changeColorAfter == 0) ? this.timeGridStrokeColor2 : this.timeGridStrokeColor;
+				ctx.fillStyle = ((i+1)%changeColorAfter === 0) ? this.timeGridStrokeColor2 : this.timeGridStrokeColor;
 				ctx.fillRect(pixelGap*(i+1),0,1,height);
 			}
 
