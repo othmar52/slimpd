@@ -158,7 +158,7 @@
 		},
 
 		close() {
-			console.log("AbstractView::destroyView");
+			//console.log("AbstractView::destroyView");
 			this.remove();
 			this.unbind();
 		},
@@ -178,7 +178,7 @@
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			if(typeof $el.attr("data-player") == "undefined") {
-				console.log("ERROR: missing player-item. exiting...");
+				//console.log("ERROR: missing player-item. exiting...");
 				return;
 			}
 			try {
@@ -304,7 +304,7 @@
 		},
 
 		clearinputClickListener(e) {
-			console.log("clearinputClickListener()");
+			//console.log("clearinputClickListener()");
 			var $el = $(e.currentTarget);
 			$( $el.attr("data-selector") ).val("").focus();
 			$el.hide();
@@ -314,7 +314,7 @@
 			try {
 				window.sliMpd.xwax.pollWorker.postMessage({ cmd: "refreshIntervalDelayed"});
 			} catch (error) {
-				console.log("ERROR window.sliMpd.xwax.pollWorker.postMessage::refreshIntervalDelayed()");
+				//console.log("ERROR window.sliMpd.xwax.pollWorker.postMessage::refreshIntervalDelayed()");
 			}
 		},
 
