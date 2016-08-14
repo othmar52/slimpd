@@ -1307,4 +1307,4 @@ applies to:
    See the License for the specific language governing permissions and
    limitations under the License.
 ***
-<p align="right"><a href="https://github.com/othmar52/slimpd/edit/master/LICENSE-3RD-PARTY.md/#3rd-party-license"><strong>Return To Top</strong></a></p>
+<p align="right"><a href="#top"><strong>Return To Top</strong></a></p>
