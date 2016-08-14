@@ -1,3 +1,5 @@
+<h2 id="3rd-party-license">3rd Party License</h2>
+
 ### The MIT License (MIT)  
 applies to:  
 - puppet-mpd, Copyright (c) 2014 Adam Jahn  
@@ -27,7 +29,6 @@ applies to:
 - Slim, Copyright (c) 2012 Josh Lockhart  
 - Slim-Views, Copyright (c) 2013-2014 Josh Lockhart & Andrew Smith  
 - bootstrap, Copyright (c) 2011-2016 Twitter, Inc.  
-- 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -267,9 +268,6 @@ applies to:
 - phpThumb, Copyright (c) 2014-2016 James Heinrich  
 - SphinxSearch PHP API, Copyright (c) 2012-2013 Romain Neutron  
 - xwax-1.5-osc, Copyright (c) 2012-2014 Mark Hills, Olivier Gauthier, othmar52  
-- 
-
-
 
 Version 2, June 1991
 
@@ -1298,3 +1296,5 @@ applies to:
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+***
+<p align="right"><a href="#top"><strong>Return To Top</strong></a></p>
