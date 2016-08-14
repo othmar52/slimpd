@@ -1,8 +1,6 @@
-/*global TweenLite NProgress*/
-
 $.fn.random = function() {
 	return this.eq(Math.floor(Math.random() * this.length));
-}
+};
 
 Array.prototype.max = function() {
   return Math.max.apply(null, this);
@@ -11,6 +9,7 @@ Array.prototype.max = function() {
 $(document).ready(function() {
 	"use strict";
 	var $ = window.jQuery;
+	var NProgress = window.NProgress;
 	window.sliMpd = $.extend(true, window.sliMpd, {
 		modules : {},
 
@@ -93,6 +92,7 @@ $(document).ready(function() {
 
 		/* toggle between mpd-control and local player (jPlayer) */
 		togglePlayer : function() {
+			var TweenLite = window.TweenLite;
 			var perspective = -1000;
 			var originPrev = "50% 50%";
 			var originNew = "50% 50%";
