@@ -77,51 +77,18 @@ html, body {
 }
 
 
-
-
-
-
-
-
-
-/* tile listing in <base>/library/year/YYYY (consider removal) - begin */
-.dummy {
-    margin-top: 100%;
+.thumbnail {
+	padding: 0;
+	border: none;
+	border-radius: 0;
 }
 
-.link-tile {
-    position: absolute;
-    top: 15px;
-    bottom: 0;
-    left: 15px;
-    right: 0;
-    text-align:center;
-    padding-top:calc(50% - 30px);
+.thumbnail .caption {
+	color: inherit;
 }
 
-.tile-square {
-	margin-bottom: 2.5em;
-	overflow: hidden;
-}
-
-.tile-square a{
-	height: 100%;
-}
-
-.tile-img img {
+.img-placeholder {
 	width: 100%;
-	height: 100%;
+	padding-bottom: 100%;
 }
-
-.tile-info-bottom {
-	padding-top: 0;
-	top: auto;
-}
-
-.tile-hover-data {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-}
-/* tile listing in <base>/library/year/YYYY (consider removal) - end */
 
