@@ -51,7 +51,7 @@
 					//console.log($(this).data("jPlayer").status);
 					var jStatus = $(this).data("jPlayer").status;
 					that.nowPlayingPercent = jStatus.currentPercentAbsolute;
-					that.nowPlayingState = (jStatus.paused===false && jStatus.currentTime > 0) ? "play" : "pause";
+					that.nowPlayingState = (jStatus.paused === false && jStatus.currentTime > 0) ? "play" : "pause";
 					that.nowPlayingDuration = jStatus.duration;
 					that.nowPlayingElapsed = jStatus.currentTime;
 					//that.nowPlayingItem = jStatus.src;
@@ -76,7 +76,7 @@
 
 		play(item) {
 			// TODO: check why item.ext is sometimes "vorbis" instead of "ogg" 			
-			item.ext = (item.ext == "vorbis") ? "ogg" : item.ext;
+			item.ext = (item.ext === "vorbis") ? "ogg" : item.ext;
 
 			// WARNING: jPlayer"s essential Audio formats are: mp3 or m4a.
 			// wav, flac, ogg, m4a plays fine in chromium under linux but we have to add an unused mp3-property...
@@ -150,7 +150,7 @@
 		},
 
 		togglePause(item) {
-			if (this.nowPlayingState == "play") {
+			if (this.nowPlayingState === "play") {
 				$(this.playerSelector).jPlayer("pause");
 				this.nowPlayingState = "pause";
 			} else {
@@ -180,7 +180,7 @@
 			// for now use all rendered tracks as playlist
 
 			//console.log("local soundEnded()");
-			if(this.state.random == 1) {
+			if(this.state.random === "1") {
 				//console.log("local random is active");
 				$("#main .track-row:not(.track-"+ this.nowPlayingItem+")").random().find(".is-playbtn").click();
 			} else {
