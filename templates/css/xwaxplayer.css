@@ -1,9 +1,9 @@
 .track-{{ relativePathHash}}:before {
-	{% set content = 'A' %}
-	{% if deck == '1' %}{% set content = 'B' %}{% endif %}
-	{% if deck == '2' %}{% set content = 'C' %}{% endif %}
-	{% if deck == '3' %}{% set content = 'D' %}{% endif %}
-	content: '{{content}}';
+	{% set content = "A" %}
+	{% if deck == "1" %}{% set content = "B" %}{% endif %}
+	{% if deck == "2" %}{% set content = "C" %}{% endif %}
+	{% if deck == "3" %}{% set content = "D" %}{% endif %}
+	content: "{{content}}";
 	position: absolute;
 	left: -1em;
 	color: #444;
