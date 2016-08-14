@@ -8,7 +8,8 @@
 * [GNU General Public License Version 2](#gnu-general-public-license-version-2)
 * [GNU General Public License Version 3](#gnu-general-public-license-version-3)
 * [BSD 3-Clause "New" or "Revised" License](#bsd-3-clause-new-or-revised-license)
-* [Apache License Version 2.0](#apache-license-version-2.0)
+* [Apache License Version 2.0](#apache-license-version-2.0)  
+
 ***
 
 <h3 id="the-mit-licensemit">The MIT License (MIT)</h3>
@@ -1306,4 +1307,4 @@ applies to:
    See the License for the specific language governing permissions and
    limitations under the License.
 ***
-<p align="right"><a href="#top"><strong>Return To Top</strong></a></p>
+<p align="right"><a href="https://github.com/othmar52/slimpd/edit/master/LICENSE-3RD-PARTY.md/#3rd-party-license"><strong>Return To Top</strong></a></p>
