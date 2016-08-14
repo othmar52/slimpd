@@ -1,4 +1,4 @@
-<h2 id="3rd-party-license">3rd Party License</h2>
+<h2 id="3rd-party-licenses">3rd Party Licenses</h2>
 
 ---
 #### [☰](https://github.com/othmar52/slimpd/wiki) HOME
