@@ -41,6 +41,7 @@
 			 * without pushing this to history 
 			 */
 			var pathStripper = /#.*$/;
+			var Backbone = window.Backbone;
 
 			// Normalize the fragment.
 			fragment = Backbone.history.getFragment(fragment || "");
@@ -84,7 +85,7 @@
 
 			// TODO: add proper loading animation
 			this.$body.addClass("is-loading");
-			NProgress.start();
+			window.NProgress.start();
 			$("<div class='modal-backdrop fade in' id='loading-backdrop'></div>").appendTo(this.$body);
 			this.ajaxLoading = true;
 			$.ajax({
@@ -100,13 +101,13 @@
 				this.currentView.render(true);
 				this.$content.html(this.currentView.$el);
 				this.$body.removeClass("is-loading");
-				NProgress.done();
+				window.NProgress.done();
 				$("#loading-backdrop").remove();
 				this.ajaxLoading = false;
 			}.bind(this))
 			.fail(function() {
 				this.$body.removeClass("is-loading");
-				NProgress.done();
+				window.NProgress.done();
 				$("#loading-backdrop").remove();
 				this.ajaxLoading = false;
 				window.sliMpd.notifyError(url);
@@ -144,7 +145,7 @@
 		// @see: issue #3
 		_extractParameters(route, fragment) {
 			var params = route.exec(fragment).slice(1);
-			return _.map(params, function(param, i) {
+			return window._.map(params, function(param, i) {
 				// Don"t decode the search params.
 				if (i === params.length - 1) {
 					return param;
