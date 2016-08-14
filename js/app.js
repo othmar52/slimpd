@@ -1,3 +1,5 @@
+/*global TweenLite NProgress*/
+
 $.fn.random = function() {
 	return this.eq(Math.floor(Math.random() * this.length));
 }
@@ -8,7 +10,6 @@ Array.prototype.max = function() {
 
 $(document).ready(function() {
 	"use strict";
-
 	var $ = window.jQuery;
 	window.sliMpd = $.extend(true, window.sliMpd, {
 		modules : {},
