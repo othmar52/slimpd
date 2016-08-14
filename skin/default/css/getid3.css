@@ -1,66 +1,46 @@
-/**
-* Common elements
-*/
 
-
-
-
-table.table td {
+td {
 	font: 9pt sans-serif;
-	padding-top:    1px;
-	padding-bottom: 1px;
-	padding-left:   5px;
-	padding-right:  5px;
+	padding: 1px 5px;
 }
 
-table.table td.header {
-	background-color: #cccccc;
-	padding-top:    2px;
-	padding-bottom: 2px;
-	font-weight: bold;
-}
-
-table.table tr.even_files {
+.even_files {
 	background-color: #fefefe;
 }
 
-table.table tr.odd_files {
+.odd_files {
 	background-color: #e9e9e9;
 }
 
-table.dump {
+.dump {
 	border-top:  solid 1px #373737;
 	border-left: solid 1px #373737;
 	margin: 2px;
 }
 
-table.dump td {
+.dump td {
 	font: 9pt sans-serif;
-	padding-top:    1px;
-	padding-bottom: 1px;
-	padding-left:   5px;
-	padding-right:  5px;
 	border-right:  solid 1px #373737;
 	border-bottom: solid 1px #373737;
 }
 
-td.dump_string {
+.dump_string {
 	font-weight: bold;
 	color: rgb(59,187,47);
-	font-family: Zawgyi-One,sans-serif;
+	font-family: sans-serif;
 }
 
-td.dump_integer {
+.dump_integer {
 	color: #FF5050;
 	font-weight: bold;
 }
 
-td.dump_double {
+.dump_double {
 	color: #FF9900;
 	font-weight: bold;
 }
 
-td.dump_boolean {
+.dump_boolean {
 	color: #5487F4;
 	font-weight: bold;
 }
@@ -69,52 +49,3 @@ td.dump_boolean {
 	color: red
 }
 
-
-/**
-* Tool Tips
-*/
-
-.tooltip {
-    font: 9pt sans-serif;
-    background: #ffffe1;
-    color: 	black;
-    border: 	black 1px solid;
-    margin: 	2px;
-    padding: 	7px;
-    position: 	absolute;
-    top: 	10px;
-    left: 	10px;
-    z-index: 	10000;
-    visibility: hidden;
-}
-
-.tooltip p {
-     margin-top:   -2px;
-     margin-bottom: 4px;
-}
-
-
-/**
-* Forms
-*/
-
-table.form td {
- 	font: 9pt/135% sans-serif;
- 	padding: 2px;
-}
-
-select, input {
-	font: 9pt/135% sans-serif;
-}
-
-.select, .field {
-	width: 260px;
-}
-
-#sel_field {
-	width: 85px;
-}
-
-.button {
-	margin-top: 10px;
-}
