@@ -10,6 +10,7 @@ $(document).ready(function() {
 	"use strict";
 	var $ = window.jQuery;
 	var NProgress = window.NProgress;
+
 	window.sliMpd = $.extend(true, window.sliMpd, {
 		modules : {},
 
@@ -24,7 +25,7 @@ $(document).ready(function() {
 		 * @param {string} paramName
 		 * @param {string} paramValue
 		 */
-		setGetParameter : function(urlstring, paramName, paramValue) {
+		setGetParameter(urlstring, paramName, paramValue) {
 			if (urlstring.indexOf(paramName + "=") >= 0) {
 				var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
 				var suffix = urlstring.substring(urlstring.indexOf(paramName));
@@ -39,19 +40,19 @@ $(document).ready(function() {
 			return urlstring;
 		},
 
-		drawFavicon : function() {
+		drawFavicon() {
 			clearTimeout(window.sliMpd.drawFaviconTimeout);
 			window.sliMpd.currentPlayer.drawFavicon();
 			window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
 		},
 
-		fireRequestAndNotify : function(url) {
+		fireRequestAndNotify(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);
 			});
 		},
 
-		checkNotify : function(endcodedResponse) {
+		checkNotify(endcodedResponse) {
 			try {
 				var notifyConf = JSON.parse(endcodedResponse);
 				if (typeof notifyConf.notify !== "undefined") {
@@ -63,7 +64,7 @@ $(document).ready(function() {
 		},
 
 		// TODO: respect playersize + visible xwax gui for positioning
-		notify : function(notifyConf) {
+		notify(notifyConf) {
 			$.notify({
 				// options
 				message: notifyConf.message
@@ -82,7 +83,7 @@ $(document).ready(function() {
 			});
 		},
 
-		notifyError : function(errorUrl) {
+		notifyError(errorUrl) {
 			// TODO: get message from language file
 			this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
@@ -91,8 +92,11 @@ $(document).ready(function() {
 		},
 
 		/* toggle between mpd-control and local player (jPlayer) */
-		togglePlayer : function() {
+		togglePlayer() {
 			var TweenLite = window.TweenLite;
+			var Back = window.Back;
+			var Power2 = window.Power2;
+
 			var perspective = -1000;
 			var originPrev = "50% 50%";
 			var originNew = "50% 50%";
@@ -117,14 +121,14 @@ $(document).ready(function() {
 				rotationX: 0,
 				y: 0,
 				z:0
-			}
+			};
 			var transformPreviousPlayerTo = {
 				display: "none",
 				rotationX: 90,
 				y: $(".player-mpd").height()/2,
 				z: -5,
 				ease: ease
-			}
+			};
 			var transformNewPlayerFrom = {
 				transformOrigin: originNew,
 				transformPerspective: perspective,
@@ -133,7 +137,7 @@ $(document).ready(function() {
 				rotationX: -90,
 				y: -$(".player-mpd").height()/2,
 				z: -5
-			}
+			};
 			var transformNewPlayerTo = {
 				display: "block",
 				rotationX: 0,
@@ -141,7 +145,7 @@ $(document).ready(function() {
 				z:0,
 				delay:0.02,
 				ease: ease
-			}
+			};
 
 
 			if(window.sliMpd.currentPlayer.mode === "mpd") {
@@ -299,7 +303,9 @@ $(document).ready(function() {
 		window.sliMpd.currentPlayer.drawTimeGrid();
 	});
 	$(window).resize(function() {
-		if(this.resizeTO) clearTimeout(this.resizeTO);
+		if(this.resizeTO) {
+			clearTimeout(this.resizeTO);
+		}
 		this.resizeTO = setTimeout(function() {
 			$(this).trigger("resizeEnd");
 		}, 500);
@@ -307,6 +313,8 @@ $(document).ready(function() {
 
 	// add some smooth animation on initial loading
 	var timeScale = 1;
+	var TweenLite = window.TweenLite;
+	var Quint = window.Quint;
 	$(window.sliMpd.localPlayer.el).css("z-index",1027);
 	$(window.sliMpd.mpdPlayer.el).css("z-index",1028);
 	$(window.sliMpd.currentPlayer.el).css("z-index",1030);
