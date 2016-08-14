@@ -1,6 +1,17 @@
 <h2 id="3rd-party-license">3rd Party License</h2>
 
-### The MIT License (MIT)  
+* [The MIT License (MIT)](#the-mit-licensemit)
+* [Codrops](#codrops)
+* [SIL OPEN FONT LICENSE Version 1.1](#sil-open-font-license-version-11)
+* [Creative Commons Attribution 3.0 Unported](#creative-commons-attribution-3.0-unported)
+* [Standard "No Charge" GreenSock License](#standard-no-charge-greensock-license)
+* [GNU General Public License Version 2](#gnu-general-public-license-version-2)
+* [GNU General Public License Version 3](#gnu-general-public-license-version-3)
+* [BSD 3-Clause "New" or "Revised" License](#bsd-3-clause-new-or-revised-license)
+* [Apache License Version 2.0](#apache-license-version-2.0)
+***
+
+<h3 id="the-mit-licensemit">The MIT License (MIT)</h3>
 applies to:  
 - puppet-mpd, Copyright (c) 2014 Adam Jahn  
 - backbone, Copyright (c) 2010-2015 Jeremy Ashkenas, DocumentCloud  
@@ -36,7 +47,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ***
-### Codrops  
+<h3 id="codrops">Codrops</h3>
 __Licensing & Terms of Use__  
 applies to:  
 - BookBlock, Copyright (c) 2016 Codrops  
@@ -49,12 +60,11 @@ Copyright (c) <dates>, font awesome http://fontawesome.io/license/.
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
 http://scripts.sil.org/OFL
-
-
------------------------------------------------------------
-### __SIL OPEN FONT LICENSE Version 1.1__ - 26 February 2007
------------------------------------------------------------
-
+***
+     -----------------------------------------------------
+<h3 id="sil-open-font-license-version-1.1">SIL OPEN FONT LICENSE Version 1.1</h3>
+     -----------------------------------------------------
+       26 February 2007
 PREAMBLE
 The goals of the Open Font License (OFL) are to stimulate worldwide
 development of collaborative font projects, to support the font creation
@@ -120,7 +130,7 @@ permission.
 5) The Font Software, modified or unmodified, in part or in whole,
 must be distributed entirely under this license, and must not be
 distributed under any other license. The requirement for fonts to
-remain under this license does not apply to any document created
+remain under this license does not apply to any document created
 using the Font Software.
 
 TERMINATION
@@ -138,7 +148,7 @@ DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
 ***
-### Creative Commons Attribution 3.0 Unported
+<h3 id="creative-commons-attribution-3.0-unported">Creative Commons Attribution 3.0 Unported</h3>
 applies to:  
 - Applies to all Font Awesome project files that are not a part of the Font or Code licenses., Copyright (c) Font-Awesome
 
@@ -206,10 +216,9 @@ Except for the limited purpose of indicating to the public that the Work is lice
 
 Creative Commons may be contacted at https://creativecommons.org/.  
 ***
-
-### Standard "No Charge" GreenSock License
-
+<h3 id="standard-no-charge-greensock-license">Standard "No Charge" GreenSock License</h3>
 Copyright 2006-2015, GreenSock, Inc. Updated 2012-05-15
+
 applies to:  
 - greensock-js, Copyright (c) 2014-2015 GreenSock
 
@@ -261,15 +270,15 @@ C. The terms and conditions of this Agreement shall prevail notwithstanding any 
 
 D. GREENSOCK and you agree that any xerographically or electronically reproduced copy of this Agreement shall have the same legal force and effect as any copy bearing original signatures of the parties.
 ***
-### GNU GENERAL PUBLIC LICENSE
+<h3 id="gnu-general-public-license-version-2">GNU GENERAL PUBLIC LICENSE</h3>
+Version 2, June 1991
+
 applies to:  
 - bootstrap-lightbox, Copyright (c) 2014 Hendrismit  
 - getID3, Copyright (c) 2014-2016 James Heinrich  
 - phpThumb, Copyright (c) 2014-2016 James Heinrich  
 - SphinxSearch PHP API, Copyright (c) 2012-2013 Romain Neutron  
 - xwax-1.5-osc, Copyright (c) 2012-2014 Mark Hills, Olivier Gauthier, othmar52  
-
-Version 2, June 1991
 
 Copyright (C) 1989, 1991 Free Software Foundation, Inc.  
 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
@@ -398,8 +407,9 @@ signature of Ty Coon, 1 April 1989
 Ty Coon, President of Vice
 This General Public License does not permit incorporating your program into proprietary programs. If your program is a subroutine library, you may consider it more useful to permit linking proprietary applications with the library. If this is what you want to do, use the GNU Lesser General Public License instead of this License.
 ***
-###                     GNU GENERAL PUBLIC LICENSE
+<h3 id="gnu-general-public-license-version-3">GNU GENERAL PUBLIC LICENSE</h3>
                        Version 3, 29 June 2007
+                       
 applies to:  
 - MMP, Copyright (c) 2016 Maxim Antonov
 
@@ -1075,9 +1085,7 @@ the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
 <http://www.gnu.org/philosophy/why-not-lgpl.html>.
 ***
-### BSD 3-clause "New" or "Revised" License
-Full name
-BSD 3-clause "New" or "Revised" License
+<h3 id="bsd-3-clause-new-or-revised-license">BSD 3-clause "New" or "Revised" License</h3>
 http://www.opensource.org/licenses/BSD-3-Clause
 
 Copyright (c) 2009-2016 by the Twig Team.
@@ -1093,9 +1101,10 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***
-###                                Apache License
+<h3 id="apache-license-version-2.0">Apache License</h3>
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
+                        
 applies to:  
 - webfontkit/open-sans, Copyright (c) 2014 Davidson Alencar  
 
