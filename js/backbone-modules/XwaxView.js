@@ -37,23 +37,23 @@
 		notrunningTolerance : 2,
 		notrunningCounter : 0,
 
-		initialize : function(options) {
+		initialize(options) {
 			this.showWaveform = options.showWaveform;
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
 
-		render : function() {
+		render() {
 			// only render page once (to prevent multiple click listeners)
 			if (this.rendered) {
 				return;
 			}
-			//console.log('calling XwaxGui::render()');
-			this.toggler = $('.xwax-gui-toggler');
+			//console.log("calling XwaxGui::render()");
+			this.toggler = $(".xwax-gui-toggler");
 			window.sliMpd.modules.AbstractView.prototype.render.call(this);
 			this.rendered = true;
 		},
 
-		toggleXwaxGui : function() {
+		toggleXwaxGui() {
 			if(this.visible === false) {
 				this.showXwaxGui();
 			} else {
@@ -61,10 +61,10 @@
 			}
 		},
 
-		showXwaxGui : function() {
+		showXwaxGui() {
 			for(var i=0; i< this.totalDecks; i++) {
 				var deckView = new window.sliMpd.modules.XwaxPlayer({
-					el : '.xwax-deck-'+i,
+					el : ".xwax-deck-"+i,
 					deckIndex : i,
 					showWaveform : this.showWaveform
 				});
@@ -74,81 +74,81 @@
 				}
 				this.visible = true;
 			}
-			$('body').addClass('slimplayer xwax-enabled');
-			$('.xwax-error').removeClass('hidden');
-			this.toggler.removeClass('btn-default').addClass('btn-success');
+			$("body").addClass("slimplayer xwax-enabled");
+			$(".xwax-error").removeClass("hidden");
+			this.toggler.removeClass("btn-default").addClass("btn-success");
 
-			this.pollWorker = new Worker(sliMpd.conf.absFilePrefix+'js/poll-worker.js');
+			this.pollWorker = new Worker(sliMpd.conf.absFilePrefix+"js/poll-worker.js");
 			var that = this;
-			this.pollWorker.addEventListener('message', function(e) {
+			this.pollWorker.addEventListener("message", function(e) {
 				that.processPollData(e.data);
 			}, false);
 
 			this.pollWorker.postMessage({
-				cmd: 'setPollUrl',
-				value: sliMpd.conf.absRefPrefix + 'xwaxstatus'
+				cmd: "setPollUrl",
+				value: sliMpd.conf.absRefPrefix + "xwaxstatus"
 			});
 
 			this.pollWorker.postMessage({
-				cmd: 'setMiliseconds',
+				cmd: "setMiliseconds",
 				value: this.intervalActive
 			});
 
 			this.pollWorker.postMessage({
-				cmd: 'start'
+				cmd: "start"
 			});
 		},
 
-		hideXwaxGui : function() {
+		hideXwaxGui() {
 			this.lastDeckTracks = [];
 			this.lastTimecodes = [];
 			this.pollWorker.postMessage({
-				cmd: 'stop'
+				cmd: "stop"
 			});
 			this.pollWorker = null;
 
-			//console.log('hideXwaxGui()');
+			//console.log("hideXwaxGui()");
 			this.deckViews.forEach(function (view){
-				//console.log('destroying view ' + view.deckIndex);
+				//console.log("destroying view " + view.deckIndex);
 				view.close();
 			});
-			$('body').removeClass('slimplayer xwax-enabled');
-			this.toggler.removeClass('btn-success').removeClass('btn-danger').addClass('btn-default');
+			$("body").removeClass("slimplayer xwax-enabled");
+			this.toggler.removeClass("btn-success").removeClass("btn-danger").addClass("btn-default");
 			this.xwaxRunning = false;
 			this.deckViews = [];
 			this.visible = false;
 		},
 		
-		processXwaxNotRunning : function() {
-			//console.log('processXwaxNotRunning()');
+		processXwaxNotRunning() {
+			//console.log("processXwaxNotRunning()");
 
-			// sometimes we have connection errors with xwax's socket
+			// sometimes we have connection errors with xwax"s socket
 			// instead of disabling xwax stuff immediatly wait for x more poll request
 			this.notrunningCounter++;
 			if(this.notrunningCounter < this.notrunningTolerance) {
 				this.pollWorker.postMessage({
-					cmd: 'setMiliseconds',
+					cmd: "setMiliseconds",
 					value: this.intervalActive
 				});
 				return;
 			}
 
-			this.toggler.removeClass('btn-success').addClass('btn-danger');
+			this.toggler.removeClass("btn-success").addClass("btn-danger");
 			this.xwaxRunning = false;
-			$('.player-xwax').addClass('no-connection');
+			$(".player-xwax").addClass("no-connection");
 			this.pollWorker.postMessage({
-				cmd: 'setMiliseconds',
+				cmd: "setMiliseconds",
 				value: this.intervalInactive
 			});
 		},
 		
-		processPollData : function (data){
+		processPollData(data){
 			if(this.visible === false) {
 				return;
 			}
 
 			try {
-				if (typeof data.notify !== 'undefined') {
+				if (typeof data.notify !== "undefined") {
 					this.processXwaxNotRunning();
 					return;
 				}
@@ -158,19 +158,19 @@
 			}
 			this.notrunningCounter = 0;
 			if(this.xwaxRunning === false) {
-				this.toggler.removeClass('btn-danger').addClass('btn-success');
-				$('.player-xwax').removeClass('no-connection');
+				this.toggler.removeClass("btn-danger").addClass("btn-success");
+				$(".player-xwax").removeClass("no-connection");
 			}
 
 			this.xwaxRunning = true;
 			/*
-			console.log('pitch ' + data[0].pitch);
-			console.log('player_diff ' + data[0].player_diff);
-			console.log('player_sync_pitch ' + data[0].player_sync_pitch);
-			console.log('player_target_position ' + data[0].player_target_position);
-			console.log('timecode_control ' + data[0].timecode_control);
-			console.log('timecode_speed ' + data[0].timecode_speed);
-			console.log('-----------------------------');
+			console.log("pitch " + data[0].pitch);
+			console.log("player_diff " + data[0].player_diff);
+			console.log("player_sync_pitch " + data[0].player_sync_pitch);
+			console.log("player_target_position " + data[0].player_target_position);
+			console.log("timecode_control " + data[0].timecode_control);
+			console.log("timecode_speed " + data[0].timecode_speed);
+			console.log("-----------------------------");
 			*/
 			for(var i=0; i< this.totalDecks; i++) {
 				this.deckViews[i].nowPlayingPercent = data[i].percent;
@@ -195,9 +195,9 @@
 				if(this.lastDeckTracks[i] !== data[i].path) {
 					this.lastDeckTracks[i] = data[i].path;
 					this.deckViews[i].nowPlayingItem = data[i].path;
-					var hash = (data[i].item === null) ? '0000000' : data[i].item.relativePathHash;
+					var hash = (data[i].item === null) ? "0000000" : data[i].item.relativePathHash;
 					this.deckViews[i].redraw({hash: hash});
-					//console.log('redraw deck ' + i);
+					//console.log("redraw deck " + i);
 				}
 				if(this.lastTimecodes[i] !== data[i].timecode) {
 					this.lastTimecodes[i] = data[i].timecode;
