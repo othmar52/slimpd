@@ -17,7 +17,7 @@ $(document).ready(function() {
 		 * @param {string} paramName
 		 * @param {string} paramValue
 		 */
-		setGetParameter : function(urlstring, paramName, paramValue) {
+		setGetParameter(urlstring, paramName, paramValue) {
 			if (urlstring.indexOf(paramName + "=") >= 0) {
 				var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
 				var suffix = urlstring.substring(urlstring.indexOf(paramName));
@@ -32,13 +32,13 @@ $(document).ready(function() {
 			return urlstring;
 		},
 
-		fireRequestAndNotify : function(url) {
+		fireRequestAndNotify(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);
 			});
 		},
 
-		checkNotify : function(endcodedResponse) {
+		checkNotify(endcodedResponse) {
 			try {
 				var notifyConf = JSON.parse(endcodedResponse);
 				if (typeof notifyConf.notify !== 'undefined') {
@@ -49,7 +49,7 @@ $(document).ready(function() {
 			}
 		},
 
-		notify : function(notifyConf) {
+		notify(notifyConf) {
 			////////////////////////////////////////////////
 			// FIXME:
 			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property 'title' of undefined
@@ -66,7 +66,7 @@ $(document).ready(function() {
 			$.notify();
 		},
 
-		notifyError : function(errorUrl) {
+		notifyError(errorUrl) {
 			this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
 				type : "danger"
