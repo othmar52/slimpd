@@ -62,6 +62,62 @@ var FavIconX = (function() {
 		};
 	}
 
+	// Generates the background square
+	function generateBackground(ctx, w, h){
+		if(backgroundColor === "transparent") {
+			return;
+		}
+		context.fillStyle = backgroundColor;
+		context.fillRect(0,0,100,100);
+	}
+
+	// gets a mid color according to current value
+	// col1 = 0%, col2 = 100%
+	function getMidColor(col1, col2){
+		var rgb1 = hexToRgb(col1);
+		var rgb2 = hexToRgb(col2);
+		var avg = [0, 0, 0];
+		var invV = (100 - (animValue || value)) / 100;
+		for(var i=0; i<3; i++){
+			avg[i] = rgb1[i] * invV + rgb2[i] * (1-invV);
+		}
+		return rgbToHex(Math.round(avg[0]), Math.round(avg[1]), Math.round(avg[2]));
+	}
+
+	// because i don"t speak in radians
+	function toRad(deg){
+		return deg * Math.PI / 180;
+	}
+
+	// Generates the overlay shape
+	// TODO: support overlay functionality for square-shape
+	function generateOverlay(ctx, w, h){
+		ctx.strokeStyle = overlayColor;
+		ctx.fillStyle = overlayColor;
+		if(overlay === "play"){
+			ctx.beginPath();
+			ctx.moveTo(w*0.38, h*0.3);
+			ctx.lineTo(w*0.38, h*0.7);
+			ctx.lineTo(w*0.75, h*0.5);
+			ctx.lineTo(w*0.38, h*0.3);
+			ctx.closePath();
+			ctx.fill();
+		} else if(overlay === "pause"){
+			ctx.lineWidth = 2;
+			ctx.beginPath();
+			ctx.moveTo(w*0.38,h*0.3);
+			ctx.lineTo(w*0.38,h*0.7);
+			ctx.closePath();
+			ctx.stroke();
+
+			ctx.beginPath();
+			ctx.moveTo(w*0.62,h*0.3);
+			ctx.lineTo(w*0.62,h*0.7);
+			ctx.closePath();
+			ctx.stroke();
+		}
+	}
+
 	// let"s get a boring circle first
 	function generateCircle(v){
 		var graphValue = v || value;
@@ -196,44 +252,6 @@ var FavIconX = (function() {
 		}
 	}
 
-	// Generates the overlay shape
-	// TODO: support overlay functionality for square-shape
-	function generateOverlay(ctx, w, h){
-		ctx.strokeStyle = overlayColor;
-		ctx.fillStyle = overlayColor;
-		if(overlay === "play"){
-			ctx.beginPath();
-			ctx.moveTo(w*0.38, h*0.3);
-			ctx.lineTo(w*0.38, h*0.7);
-			ctx.lineTo(w*0.75, h*0.5);
-			ctx.lineTo(w*0.38, h*0.3);
-			ctx.closePath();
-			ctx.fill();
-		} else if(overlay === "pause"){
-			ctx.lineWidth = 2;
-			ctx.beginPath();
-			ctx.moveTo(w*0.38,h*0.3);
-			ctx.lineTo(w*0.38,h*0.7);
-			ctx.closePath();
-			ctx.stroke();
-
-			ctx.beginPath();
-			ctx.moveTo(w*0.62,h*0.3);
-			ctx.lineTo(w*0.62,h*0.7);
-			ctx.closePath();
-			ctx.stroke();
-		}
-	}
-
-	// Generates the background square
-	function generateBackground(ctx, w, h){
-		if(backgroundColor === "transparent") {
-			return;
-		}
-		context.fillStyle = backgroundColor;
-		context.fillRect(0,0,100,100);
-	}
-
 	// (255, 0, 0) => "#FF0000"
 	function rgbToHex(r, g, b) {
 		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -247,24 +265,6 @@ var FavIconX = (function() {
 		var g = (nb >> 8) & 255;
 		var b = nb & 255;
 		return [r,g,b];
-	}
-
-	// because i don"t speak in radians
-	function toRad(deg){
-		return deg * Math.PI / 180;
-	}
-
-	// gets a mid color according to current value
-	// col1 = 0%, col2 = 100%
-	function getMidColor(col1, col2){
-		var rgb1 = hexToRgb(col1);
-		var rgb2 = hexToRgb(col2);
-		var avg = [0, 0, 0];
-		var inv_v = (100 - (animValue || value)) / 100;
-		for(var i=0; i<3; i++){
-			avg[i] = rgb1[i] * inv_v + rgb2[i] * (1-inv_v);
-		}
-		return rgbToHex(Math.round(avg[0]), Math.round(avg[1]), Math.round(avg[2]));
 	}
 
 	// draw me a check mark
@@ -385,7 +385,7 @@ var FavIconX = (function() {
 	// we get to the public methods now.
 	return {
 		// a helper to configure mucho settings at once
-		config: function(cfg){
+		config(cfg){
 			shape = cfg.shape || shape;
 			doughnutRadius = cfg.doughnutRadius || doughnutRadius;
 			overlay = cfg.overlay || overlay;
@@ -413,8 +413,10 @@ var FavIconX = (function() {
 		// when specified the animated overrides the component setting.
 		// when specified the speed orrides the component setting
 		// callback called once the animation is finished
-		setValue: function(v, isAnimated, animSpeed, callback){
-			if(v<0 || v>100) throw "value must be between 0 and 100";
+		setValue(v, isAnimated, animSpeed, callback){
+			if(v<0 || v>100) {
+				throw "value must be between 0 and 100";
+			}
 			animCallback = callback !== undefined ? callback : animCallback;
 			animValue = value;
 			value = v;
@@ -437,12 +439,12 @@ var FavIconX = (function() {
 		},
 
 		// returns the current value of the widget
-		getValue: function(){
+		getValue(){
 			return animValue || value;
 		},
 
 		// restoring the past... or is it...
-		reset: function(){
+		reset(){
 			setDefaults();
 			if(originalIcon){
 				head.removeChild(icon);
@@ -456,7 +458,7 @@ var FavIconX = (function() {
 		},
 
 		// displays the awesome checkbox. colors can be tweaked here
-		complete: function(fgColor, bgColor){
+		complete(fgColor, bgColor){
 			isReset = false;
 			generateSuccess(fgColor, bgColor);
 			refreshFavIcon();
@@ -464,11 +466,11 @@ var FavIconX = (function() {
 		},
 
 		// displays the even more awesome cross. colors can be tweaked here
-		fail: function(fgColor, bgColor){
+		fail(fgColor, bgColor){
 			isReset = false;
 			generateFailure(fgColor, bgColor);
 			refreshFavIcon();
 			document.title = oldTitle;
 		}
 	};
-})();
+}());
