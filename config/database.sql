@@ -367,6 +367,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `error` text,
+  `added` int(11) unsigned NOT NULL DEFAULT '0',
 
   PRIMARY KEY (`id`),
   KEY `relativePathHash` (`relativePathHash`),

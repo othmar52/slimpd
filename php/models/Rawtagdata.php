@@ -63,6 +63,7 @@ class Rawtagdata extends \Slimpd\AbstractModel
 	protected $lastScan;
 	protected $importStatus;
 	protected $error;
+	protected $added;
 
 	public static $tableName = 'rawtagdata';
 
@@ -237,7 +238,9 @@ class Rawtagdata extends \Slimpd\AbstractModel
 	public function setError($value) {
 		$this->error = $value;
 	}
-	
+	public function setAdded($value) {
+		$this->added = $value;
+	}
 	
 	
 
@@ -414,5 +417,9 @@ class Rawtagdata extends \Slimpd\AbstractModel
 	
 	public function getError() {
 		return $this->error;
+	}
+
+	public function getAdded() {
+		return $this->added;
 	}
 }

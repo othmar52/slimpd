@@ -8,7 +8,7 @@ $app->get('/', function() use ($app, $vars){
 
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
-	$vars['itemlist'] = \Slimpd\Album::getAll(12, 0);
+	$vars['itemlist'] = \Slimpd\Album::getAll(12, 0, "added desc");
 	$vars['totalresults'] = \Slimpd\Album::getCountAll();
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
