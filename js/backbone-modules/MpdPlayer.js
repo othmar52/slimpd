@@ -75,7 +75,7 @@
 		},
 
 		togglePause(item) {
-			if(this.nowPlayingState == "play") {
+			if(this.nowPlayingState === "play") {
 				window.sliMpd.fireRequestAndNotify(window.sliMpd.conf.absRefPrefix + "mpdctrl/pause");
 				this.nowPlayingState = "pause";
 			} else {
@@ -306,7 +306,7 @@
 			}
 
 			// update trackinfo only onTrackChange()
-			if(this.previousPlayingItem != this.nowPlayingItem) {
+			if(this.previousPlayingItem !== this.nowPlayingItem) {
 				// make sure we do not reload after initial rendering of sliMpd
 				if(this.previousPlayingItem !== "") {
 					// update view in case current route shows playlist and track has changed
