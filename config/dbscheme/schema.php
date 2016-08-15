@@ -265,6 +265,7 @@ class Schema extends AbstractSchema
       . "  `lastScan` int(11) unsigned NOT NULL DEFAULT '0',\r"
       . "  `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"
       . "  `error` text,\r"
+      . "  `added` int(11) unsigned NOT NULL DEFAULT '0',\r"
       . "  PRIMARY KEY (`id`),\r"
       . "  KEY `relativePathHash` (`relativePathHash`),\r"
       . "  KEY `relativeDirectoryPathHash` (`relativeDirectoryPathHash`),\r"

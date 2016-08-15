@@ -265,7 +265,15 @@ abstract class AbstractModel {
 	
 	public function insert() {
 		$app = \Slim\Slim::getInstance();
-		
+
+		// automatically add timestamp if possible
+		$setter = 'setAdded';
+		if(method_exists(get_called_class(), $setter)) {
+			$getter = 'getAdded';
+			if($this->$getter() < 1) {
+				$this->$setter(time());
+			}
+		}
 		$mapped = $this->mapInstancePropertiesToDatabaseKeys();
 		$query = 'INSERT INTO '. self::getTableName().' (' . join(",", array_keys($mapped)) . ') VALUES (';
 		foreach($mapped as $value) {
@@ -465,7 +473,7 @@ abstract class AbstractModel {
 		return $return;
 	}
 
-	public static function getAll($itemsperPage = 500, $currentPage = 1) {
+	public static function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if($itemsperPage > 500) {
 			$itemsperPage = 500;
@@ -474,7 +482,16 @@ abstract class AbstractModel {
 		
 		$db = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName();
-		$query .= ' ORDER BY title ASC '; // TODO: handle ordering
+		// TODO: validate orderBy. for now use a quick and dirty whitelist
+		switch($orderBy) {
+			case "added desc":
+				$orderBy = " ORDER BY added desc ";
+				break;
+			default:
+				$orderBy = " ORDER BY title ASC ";
+				break;
+		}
+		$query .= $orderBy; // TODO: handle ordering
 		#$query .= ' ORDER BY trackCount DESC '; // TODO: handle ordering
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit
 		#echo $query; die();
