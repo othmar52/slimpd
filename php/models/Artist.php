@@ -53,14 +53,11 @@ class Artist extends AbstractModel
 			$class = strtolower($classPath);
 		}
 		if(isset($GLOBALS['unified' . $class . 's']) === FALSE) {
+			$GLOBALS['unified' . $class . 's'] = array();
 			if(method_exists($classPath, 'unifyItemnames')) {
 				if(isset($app->config[$class .'s'])) {
 					$GLOBALS['unified' . $class . 's'] = $classPath::unifyItemnames($app->config[$class .'s']);
-				} else {
-					$GLOBALS['unified' . $class . 's'] = array();
 				}
-			} else {
-				$GLOBALS['unified' . $class . 's'] = array();
 			}
 		}
 		
@@ -173,6 +170,4 @@ class Artist extends AbstractModel
 	public function getAlbumCount() {
 		return $this->albumCount;
 	}
-	
-	
 }
