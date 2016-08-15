@@ -123,7 +123,7 @@
 			$(".xwax-deck-"+ this.deckIndex+"-status-progressbar").css("width", "calc("+ this.timeLineLight.progress() *100 +"% - 15px)");
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		},
-		updateTimecode : function(timecode) {
+		updateTimecode(timecode) {
 			this.timecode = timecode;
 			$(".xwax-deck-"+ this.deckIndex+ " .timecoder").text(timecode);
 		}

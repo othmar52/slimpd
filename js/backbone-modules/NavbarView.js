@@ -257,7 +257,7 @@
 					url: window.sliMpd.conf.absRefPrefix + "autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 					dataType: "json",
 					type: "get",
-					success: function( data ) {
+					success( data ) {
 						window.NProgress.done();
 						response( data );
 					},

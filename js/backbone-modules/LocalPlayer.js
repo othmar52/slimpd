@@ -36,7 +36,7 @@
 			/* init local player */
 			$(this.playerSelector).jPlayer({
 				cssSelectorAncestor: "#jp_container_1",
-				swfPath: sliMpd.conf.absFilePrefix + "vendor-dist/happyworm/jplayer/dist/jplayer",
+				swfPath: window.sliMpd.conf.absFilePrefix + "vendor-dist/happyworm/jplayer/dist/jplayer",
 				supplied: "mp3",
 				useStateClassSkin: false,
 				autoBlur: false,
@@ -44,10 +44,10 @@
 				keyEnabled: false,
 				remainingDuration: false,
 				toggleDuration: true,
-				ended: function() {
+				ended() {
 					that.soundEnded({});
 				},
-				progress: function(e,data){
+				progress(e,data){
 					//console.log($(this).data("jPlayer").status);
 					var jStatus = $(this).data("jPlayer").status;
 					that.nowPlayingPercent = jStatus.currentPercentAbsolute;
@@ -61,7 +61,7 @@
 					// @see: http://jplayer.org/latest/developer-guide/#jPlayer-events
 					that.drawTimeGrid();
 				},
-				seeked: function() {
+				seeked() {
 					window.sliMpd.drawFavicon();
 				}
 			});
