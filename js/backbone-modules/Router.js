@@ -92,7 +92,7 @@
 				url: window.sliMpd.setGetParameter(url, "nosurrounding", "1")
 			}).done(function(response) {
 				if(this.previousView) {
-					this.previousView.remove()
+					this.previousView.remove();
 				}
 				this.currentView = new window.sliMpd.modules.PageView({
 					name : name,
@@ -125,7 +125,7 @@
 					// TODO: which router variable to use for comparison?
 					// sliMpd.router.$body.context.location.pathname
 					// sliMpd.router.currentView.name
-					if(urlRegex.test("/"+window.sliMpd.router.currentView.name) == true) {
+					if(urlRegex.test("/"+window.sliMpd.router.currentView.name) === true) {
 						var targetUrl = window.sliMpd.router.currentView.name;
 						window.sliMpd.router.navigate(targetUrl, {
 							trigger : true

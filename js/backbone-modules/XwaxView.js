@@ -3,7 +3,6 @@
  */
 (function() {
 	"use strict";
-
 	var $ = window.jQuery,
 		_ = window._;
 	window.sliMpd = $.extend(true, window.sliMpd, {
@@ -56,9 +55,9 @@
 		toggleXwaxGui() {
 			if(this.visible === false) {
 				this.showXwaxGui();
-			} else {
-				this.hideXwaxGui();
+				return;
 			}
+			this.hideXwaxGui();
 		},
 
 		showXwaxGui() {
@@ -188,7 +187,7 @@
 				this.deckViews[i].nowPlayingDuration = data[i].length;
 				this.deckViews[i].nowPlayingElapsed = data[i].position;
 
-				if(this.showWaveform == true) {
+				if(this.showWaveform === true) {
 					this.deckViews[i].timelineSetValue(data[i].percent);
 				}
 				this.deckViews[i].updateStateIcons();

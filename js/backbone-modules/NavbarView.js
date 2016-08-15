@@ -263,7 +263,7 @@
 					},
 					messages: {
 						noResults: "",
-						results: function() {}
+						results() {}
 					}
 				});
 			});

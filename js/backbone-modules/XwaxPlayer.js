@@ -116,7 +116,7 @@
 		},
 
 		updateSlider(item) {
-			if(this.showWaveform != true) {
+			if(this.showWaveform !== true) {
 				return;
 			}
 			// TODO: how to respect parents padding on absolute positioned div with width 100% ?
