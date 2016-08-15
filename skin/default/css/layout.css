@@ -360,3 +360,15 @@ body.vstretch14 {
 .fade-start {
 	opacity: 0;
 }
+
+
+/* different styles for mobile view */
+@media(max-width:991px){
+	body {
+		font-size: 1em;
+	}
+
+	.btn {
+		padding: 3px 6px;
+	}
+}

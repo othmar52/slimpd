@@ -255,11 +255,20 @@ hr.player-divider {
 /* different player height for mobile view */
 @media(max-width:991px){
 	.permaplayer {
-		height: 122px;
-		padding-top: 1em;
+		height: 130px;
+		padding-top: 2em;
 	}
 
 	.status-timestring {
 		width: 136px;
+	}
+
+	.timegrid-wrapper {
+		display: none;
+	}
+
+	.trackmeta-xs {
+		padding-top: 1em;
+		padding-bottom: 2em;
 	}
 }

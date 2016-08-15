@@ -3,7 +3,8 @@
 	{% if values["1st"] %}
 
 .spotcol-{{ colname }} .col2,
-.spotcol-{{ colname }} .col2 a {
+.spotcol-{{ colname }} .col2 a,
+.spotcol-{{ colname }} .active .fa {
 	color: {{ values["1st"] }};
 	transition: {{trans}};
 }
