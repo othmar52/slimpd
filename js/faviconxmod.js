@@ -71,6 +71,21 @@ var FavIconX = (function() {
 		context.fillRect(0,0,100,100);
 	}
 
+	// (255, 0, 0) => "#FF0000"
+	function rgbToHex(r, g, b) {
+		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+	}
+
+	// "#FF0000" => [255, 0, 0]
+	function hexToRgb(hex) {
+		hex = hex.indexOf("#") === 0 ? hex.substring(1) : hex;
+		var nb = parseInt(hex, 16);
+		var r = (nb >> 16) & 255;
+		var g = (nb >> 8) & 255;
+		var b = nb & 255;
+		return [r,g,b];
+	}
+
 	// gets a mid color according to current value
 	// col1 = 0%, col2 = 100%
 	function getMidColor(col1, col2){
@@ -250,21 +265,6 @@ var FavIconX = (function() {
 		} else if(shape === "square"){
 			generateSquare(v);
 		}
-	}
-
-	// (255, 0, 0) => "#FF0000"
-	function rgbToHex(r, g, b) {
-		return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-	}
-
-	// "#FF0000" => [255, 0, 0]
-	function hexToRgb(hex) {
-		hex = hex.indexOf("#") === 0 ? hex.substring(1) : hex;
-		var nb = parseInt(hex, 16);
-		var r = (nb >> 16) & 255;
-		var g = (nb >> 8) & 255;
-		var b = nb & 255;
-		return [r,g,b];
 	}
 
 	// draw me a check mark
