@@ -4,8 +4,8 @@ function getFilePathHash($inputString) {
 	return str_pad(dechex(crc32($inputString)), 8, "0", STR_PAD_LEFT) . str_pad(strlen($inputString), 3, "0", STR_PAD_LEFT);
 }
 
-function sortHelper($a,$b){
-	return strlen($b)-strlen($a);
+function sortHelper($string1,$string2){
+	return strlen($string2) - strlen($string1);
 }
 
 function remU($input){
@@ -30,10 +30,10 @@ function cleanSearchterm($searchterm) {
 function addStars($searchterm) {
 	$str = "*" . str_replace(["_", "-", "/", " ", "(", ")"], "* *", $searchterm) . "*";
 	// single letters like "o" in "typo o negative" must not get a star appended because the lack of results 
-	if(preg_match("/\ ([A-Za-z]){1}\*/", $str, $m)) {
+	if(preg_match("/\ ([A-Za-z]){1}\*/", $str, $matches)) {
 		$str = str_replace(
-			" ".$m[1]."*",
-			" ".$m[1],
+			" ".$matches[1]."*",
+			" ".$matches[1],
 			$str
 		);
 	}
@@ -158,7 +158,7 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 }
 
 function fileLog($mixed) {
-	$filename = APP_ROOT . "cache/log-" . $date = date("Y-M-d") . ".log";
+	$filename = APP_ROOT . "cache/log-" . date("Y-M-d") . ".log";
 	if(is_string($mixed) === TRUE) {
 		$data = $mixed . "\n";
 	}
@@ -177,45 +177,49 @@ function fileLog($mixed) {
  * @return string the converted string
  */
 function az09($string, $preserve = "", $strToLower = TRUE) {
-	$c = array();
-	$c[] = array("a","à","á","â","ã","ä","å","ª");
-	$c[] = array("A","À","Á","Â","Ã","Ä","Å");
-	$c[] = array("e","é","ë","ê","è");
-	$c[] = array("E","È","É","Ê","Ë","€");
-	$c[] = array("i","ì","í","î","ï");
-	$c[] = array("I","Ì","Í","Î","Ï","¡");
-	$c[] = array("o","ò","ó","ô","õ","ö","ø");
-	$c[] = array("O","Ò","Ó","Ô","Õ","Ö");
-	$c[] = array("u","ù","ú","û","ü");
-	$c[] = array("U","Ù","Ú","Û","Ü");
-	$c[] = array("n","ñ");
-	$c[] = array("y","ÿ","ý");
-	$c[] = array("Y","Ý","Ÿ");
-	$c[] = array("x","×");
-	$c[] = array("ae","æ");
-	$c[] = array("AE","Æ");
-	$c[] = array("c","ç","¢","©");
-	$c[] = array("C","Ç");
-	$c[] = array("D","Ð");
-	$c[] = array("s","ß","š");
-	$c[] = array("S","$","§","Š");
-	$c[] = array("tm","™");
-	$c[] = array("r","®");
-	#$c[] = array("(","{", "[", "<");
-	#$c[] = array(")","}", "]", ">");
-	$c[] = array("0","Ø");
-	$c[] = array("2","²");
-	$c[] = array("3","³");
-	$c[] = array("and","&");
-	for($ca=0; $ca<count($c); $ca++){
-		for($e=1; $e<count($c[$ca]); $e++){
-			if(strpos($preserve, $c[$ca][$e]) !== FALSE) {
+	$charGroup = array();
+	$charGroup[] = array("a","à","á","â","ã","ä","å","ª");
+	$charGroup[] = array("A","À","Á","Â","Ã","Ä","Å");
+	$charGroup[] = array("e","é","ë","ê","è");
+	$charGroup[] = array("E","È","É","Ê","Ë","€");
+	$charGroup[] = array("i","ì","í","î","ï");
+	$charGroup[] = array("I","Ì","Í","Î","Ï","¡");
+	$charGroup[] = array("o","ò","ó","ô","õ","ö","ø");
+	$charGroup[] = array("O","Ò","Ó","Ô","Õ","Ö");
+	$charGroup[] = array("u","ù","ú","û","ü");
+	$charGroup[] = array("U","Ù","Ú","Û","Ü");
+	$charGroup[] = array("n","ñ");
+	$charGroup[] = array("y","ÿ","ý");
+	$charGroup[] = array("Y","Ý","Ÿ");
+	$charGroup[] = array("x","×");
+	$charGroup[] = array("ae","æ");
+	$charGroup[] = array("AE","Æ");
+	$charGroup[] = array("c","ç","¢","©");
+	$charGroup[] = array("C","Ç");
+	$charGroup[] = array("D","Ð");
+	$charGroup[] = array("s","ß","š");
+	$charGroup[] = array("S","$","§","Š");
+	$charGroup[] = array("tm","™");
+	$charGroup[] = array("r","®");
+	#$charGroup[] = array("(","{", "[", "<");
+	#$charGroup[] = array(")","}", "]", ">");
+	$charGroup[] = array("0","Ø");
+	$charGroup[] = array("2","²");
+	$charGroup[] = array("3","³");
+	$charGroup[] = array("and","&");
+	for($cgIndex=0; $cgIndex<count($charGroup); $cgIndex++){
+		for($charIndex=1; $charIndex<count($charGroup[$cgIndex]); $charIndex++){
+			if(strpos($preserve, $charGroup[$cgIndex][$charIndex]) !== FALSE) {
 				continue;
 			}
-			$string = str_replace(($c[$ca][$e]),$c[$ca][0], $string);
+			$string = str_replace(
+				$charGroup[$cgIndex][$charIndex],
+				$charGroup[$cgIndex][0],
+				$string
+			);
 		}
 	}
-	unset($c);
+	unset($charGroup);
 	$string = preg_replace("/[^a-zA-Z0-9". $preserve ."]/", "", $string);
 	$string = ($strToLower === TRUE) ? strtolower($string) : $string;
 	return($string);
@@ -274,7 +278,7 @@ function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
  * 
  * @return (array) : filename-strings
  */
-function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeTypeIfPossible = TRUE) {
+function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeType = TRUE) {
 	$foundFiles = array();
 	if( is_dir($dir) == FALSE) {
 	  return $foundFiles;
@@ -287,7 +291,7 @@ function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeT
 			$validExtensions = array_keys($app->config["mimetypes"][$ext]);
 		}
 		if(is_string($app->config["mimetypes"][$ext]) === TRUE) {
-			$checkMimeTypeIfPossible = FALSE;
+			$checkMimeType = FALSE;
 		}
 	}
 	// make sure we have a trailing slash
@@ -303,13 +307,12 @@ function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeT
 		if(in_array($foundExt, $validExtensions) === FALSE) {
 			continue;
 		}
-		if($checkMimeTypeIfPossible == TRUE && array_key_exists($ext, $app->config["mimetypes"])) {
+		if($checkMimeType == TRUE && array_key_exists($ext, $app->config["mimetypes"])) {
 			if(finfo_file($finfo, $dir.$file) !== $app->config["mimetypes"][$ext][$foundExt]) {
 				continue;
 			}
 		}
 		$foundFiles[] = (($addFilePath == TRUE)? $dir : "") . $file;
-		
 	}
 
 	finfo_close($finfo);
@@ -370,26 +373,27 @@ function uniqueArrayOrderedByRelevance(array $input) {
 
 /// build a list of trigrams for a given keywords
 function buildTrigrams ( $keyword ) {
-	$t = "__" . $keyword . "__";
+	$pattern = "__" . $keyword . "__";
 	$trigrams = "";
-	for ( $i=0; $i<strlen($t)-2; $i++ ) {
-		$trigrams .= substr ( $t, $i, 3 ) . " ";
+	for ($charIndex=0; $charIndex<strlen($pattern)-2; $charIndex++) {
+		$trigrams .= substr($pattern, $charIndex, 3 ) . " ";
 	}
 	return $trigrams;
 }
 
-function MakeSuggestion($keyword,$ln) {
+function MakeSuggestion($keyword, $sphinxPDO) {
 	$trigrams = buildTrigrams($keyword);
 	$query = "\"$trigrams\"/1";
 	$len = strlen($keyword);
 
 	$delta = LENGTH_THRESHOLD;
-	$stmt = $ln->prepare("
-			SELECT *, weight() as w, w+:delta-ABS(len-:len) as myrank
-			FROM slimpdsuggest
-			WHERE MATCH(:match) AND len BETWEEN :lowlen AND :highlen
-			ORDER BY myrank DESC, freq DESC
-			LIMIT 0,:topcount OPTION ranker=wordcount");
+	$stmt = $sphinxPDO->prepare("
+		SELECT *, weight() as w, w+:delta-ABS(len-:len) as myrank
+		FROM slimpdsuggest
+		WHERE MATCH(:match) AND len BETWEEN :lowlen AND :highlen
+		ORDER BY myrank DESC, freq DESC
+		LIMIT 0,:topcount OPTION ranker=wordcount
+	");
 
 	$stmt->bindValue(":match", $query, PDO::PARAM_STR);
 	$stmt->bindValue(":len", $len, PDO::PARAM_INT);
@@ -403,7 +407,7 @@ function MakeSuggestion($keyword,$ln) {
 	if (!$rows = $stmt->fetchAll()) {
 		return false;
 	}
-	
+
 	// further restrict trigram matches with a sane Levenshtein distance limit
 	foreach ($rows as $match) {
 		$suggested = $match["keyword"];
@@ -411,15 +415,14 @@ function MakeSuggestion($keyword,$ln) {
 			return $suggested;
 		}
 	}
-
 	return $keyword;
 }
 
-function MakePhaseSuggestion($words,$query,$ln_sph) {
+function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	$suggested = array();
 	$llimf = 0;
 	$i = 0;
-	foreach ($words  as $key => $word) {
+	foreach ($words as $key => $word) {
 		if ($word["docs"] != 0) {
 			$llimf +=$word["docs"];
 		}
@@ -437,7 +440,7 @@ function MakePhaseSuggestion($words,$query,$ln_sph) {
 	}
 	if(count($mis) > 0) {
 		foreach ($mis as $m) {
-			$re = MakeSuggestion($m, $ln_sph);
+			$re = MakeSuggestion($m, $sphinxPDO);
 			if ($re && $m !== $re) {
 				$suggested[$m] = $re;
 			}
@@ -608,7 +611,7 @@ function deliver($file, $app) {
 	$filePath  = realpath($file);
 	$pathParts = pathinfo($filePath);
 	$fileName  = $pathParts["basename"];
-	$fileExt   = $pathParts["extension"];
+	#$fileExt   = $pathParts["extension"];
 
 	if (is_file($filePath) === FALSE) {
 		deliveryError(404);
