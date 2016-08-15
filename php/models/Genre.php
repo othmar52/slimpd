@@ -83,19 +83,19 @@ class Genre extends AbstractModel
 		$finalGenres = array();
 		if(trim($itemString) === '') {
 			$finalGenres['unknown'] = "Unknown";
-			debugLog("Phase 0: nothing to do with an emty string. result: " . join(", ", $finalGenres));
+			debugLog("Phase 0: nothing to do with an emtpy string. result: " . join(", ", $finalGenres));
 			return $finalGenres;
 		}
 		
 		
 		if(preg_match("/^hash0x([a-f0-9]{7})$/", az09($itemString))) {
 			// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
+			// TODO: read from config: "importer.unknowngenre"
 			$finalGenres['unknown'] = "Unknown";
 			debugLog("Phase 0: nothing to do with an useleass hassh string. result: " . join(", ", $finalGenres));
 			return $finalGenres;
 		}
-		
-		
+
 		$originalItemString = $itemString; // TODO: lets see if we need it anymore...
 		$itemString = str_replace(array("(",")","[","]", "{","}", "<", ">"), " ", $itemString);
 		// phase 1: check if we already have a common genre
@@ -305,11 +305,14 @@ class Genre extends AbstractModel
 			$GLOBALS['genreCache'] = array();
 		}
 		
-		
-		// activate parser
-		$genreStringArray = self::parseGenreStringAdvanced($itemString);
-		
-		// string beuatyfiing & 1 workaround for a parser bug
+		$genreStringArray = [];
+		$tmpGlue = "tmpGlu3";
+		foreach(trimExplode($tmpGlue, str_ireplace($app->config['genre-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
+			// activate parser
+			$genreStringArray = array_merge($genreStringArray, self::parseGenreStringAdvanced($itemPart));
+		}
+
+		// string beautyfying & 1 workaround for a parser bug
 		$genreStringArray = self::cleanUpGenreStringArray($genreStringArray);
 
 		
