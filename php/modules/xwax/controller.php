@@ -9,6 +9,6 @@ $app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $vars){
 $app->get('/xwaxstatus(/)', function() use ($app, $vars){
 	$xwax = new \Slimpd\Xwax();
 	$deckStats = $xwax->fetchAllDeckStats();
-	echo json_encode($deckStats);
+	deliverJson($deckStats);
 	$app->stop();
 });

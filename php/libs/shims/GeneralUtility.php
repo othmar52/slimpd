@@ -98,8 +98,13 @@ function notifyJson($message, $type="info") {
 	$out->notify = 1;
 	$out->message = $message;
 	$out->type = $type;
-	echo json_encode($out);
-	exit;
+	deliverJson($out);
+}
+
+function deliverJson($data) {
+	header('Content-Type: application/json');
+	echo json_encode($data);
+	exit();
 }
 
 /**

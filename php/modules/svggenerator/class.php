@@ -190,11 +190,8 @@ class Svggenerator {
 		
 		$values = explode("\n", $peaks);
 		$values = array_map('trim', $values);
-		
-		header("Content-Type: application/json");
-		echo json_encode($this->limitArray($values, $resolution));
-		exit;
-		
+
+		deliverJson($this->limitArray($values, $resolution));
 	}
 	
 	public function setPeakFilePath() {

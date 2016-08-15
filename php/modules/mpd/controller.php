@@ -50,7 +50,7 @@ $app->get('/mpdstatus(/)', function() use ($app, $vars){
 		$vars['mpd']['status']['duration'] = "0";
 		$vars['mpd']['status']['percent'] = "0";
 	}
-	echo json_encode($vars['mpd']['status']);
+	deliverJson($vars['mpd']['status']);
 	$app->stop();
 });
 

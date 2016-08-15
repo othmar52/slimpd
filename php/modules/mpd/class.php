@@ -492,9 +492,7 @@ class mpd
 		//	$temp	= mysql_fetch_assoc($query);
 		//	$data['volume'] = -$temp['mute_volume'];
 		//}
-		header('Content-Type: application/json');
-		echo json_encode($data);
-		exit();
+		deliverJson($data);
 		
 	}
 

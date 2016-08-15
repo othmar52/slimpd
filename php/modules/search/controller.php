@@ -466,8 +466,8 @@ $app->get('/autocomplete/:type/', function($type) use ($app, $vars) {
 
 	// TODO: read usage of file-logging from config
 	#fileLog($timLogData);
-
-	echo json_encode($result); exit;
+	deliverJson($result);
+	$app->stop();
 })->name('autocomplete');
 
 
