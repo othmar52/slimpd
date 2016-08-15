@@ -41,26 +41,26 @@ $(document).ready(function() {
 		checkNotify(endcodedResponse) {
 			try {
 				var notifyConf = JSON.parse(endcodedResponse);
-				if (typeof notifyConf.notify !== 'undefined') {
+				if (typeof notifyConf.notify !== "undefined") {
 					this.notify(notifyConf);
 				}
 			} catch(e) {
-				//console.log(e + ' no json response in SliMpd::checkNotify()');
+				//console.log(e + " no json response in SliMpd::checkNotify()");
 			}
 		},
 
 		notify(notifyConf) {
 			////////////////////////////////////////////////
 			// FIXME:
-			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property 'title' of undefined
-			// check notify's-template variable for title
+			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property "title" of undefined
+			// check notify"s-template variable for title
 			//////////////////////////////////////////////// 
 			$.notify({
 				// options
 				message: notifyConf.message
 			},{
 				// settings
-				type: (notifyConf.type || 'info'),
+				type: (notifyConf.type || "info"),
 				z_index: 10000
 			});
 			$.notify();
@@ -75,7 +75,7 @@ $(document).ready(function() {
 	});
 
 	window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
-		el : '.player-xwax',
+		el : ".player-xwax",
 		showWaveform : false
 	});
 	window.sliMpd.xwax.render();
