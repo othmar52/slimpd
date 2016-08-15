@@ -288,7 +288,7 @@
 					onUpdateScope: this
 				});
 
-				if(this.nowPlayingState == "play") {
+				if(this.nowPlayingState === "play") {
 					this.timelineSetValue(this.nowPlayingPercent);
 				} else {
 					this.timeLineLight.pause();
@@ -312,7 +312,7 @@
 					// update view in case current route shows playlist and track has changed
 					forcePageReload = true;
 				}
-				this.previousPlayingItem = this.nowPlayingItem
+				this.previousPlayingItem = this.nowPlayingItem;
 				this.redraw("");
 				this.refreshInterval();
 			}
@@ -377,7 +377,7 @@
 
 		// TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
 		setPlayPauseIcon(item) {
-			if(this.nowPlayingState == "play") {
+			if(this.nowPlayingState === "play") {
 				$(".mpd-status-playpause", this.$el).addClass("fa-pause");
 				$(".mpd-status-playpause", this.$el).removeClass("fa-play");
 			} else {
@@ -388,7 +388,7 @@
 		},
 
 		formatTime(seconds) {
-			if(typeof seconds == "undefined") {
+			if(typeof seconds === "undefined") {
 				return "-- : --";
 			}
 			seconds 	= Math.round(seconds);

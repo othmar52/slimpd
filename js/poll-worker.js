@@ -37,19 +37,20 @@ self.poll = function(queryString) {
 	ajax.open("GET", self.pollUrl + ((queryString)?queryString:""), true);
 	ajax.onreadystatechange = function(){
 		if(this.readyState === XMLHttpRequest.DONE){
-			if(this.status == 200){
+			if(this.status === 200){
 				try {
 					self.postMessage(JSON.parse(this.responseText));
+					return;
 				} catch(e) {
 					self.postMessage("Poll-response is not parsable as JSON! terminating worker...");
 					self.close();
+					return;
 				}
-			} else{
-				self.postMessage("Response status is not 200 but " + this.statusText + "! terminating worker...");
-				self.close();
 			}
+			self.postMessage("Response status is not 200 but " + this.statusText + "! terminating worker...");
+			self.close();
 		}
-	}
+	};
 	ajax.send(null);
 	self.poller = setTimeout(
 		self.poll,

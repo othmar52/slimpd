@@ -83,10 +83,10 @@
 			// TODO: really provide alternative urls instead of adding an invalid url for mp3
 
 			var jPlayerConfObject = {
-				"mp3" : sliMpd.conf.absRefPrefix + "deliver/" + item.item,
+				"mp3" : window.sliMpd.conf.absRefPrefix + "deliver/" + item.item,
 				"supplied": item.ext + ",mp3"
 			};
-			jPlayerConfObject[item.ext] = sliMpd.conf.absRefPrefix + "deliver/" + item.item;
+			jPlayerConfObject[item.ext] = window.sliMpd.conf.absRefPrefix + "deliver/" + item.item;
 			$(this.playerSelector).jPlayer(
 				"setMedia",
 				jPlayerConfObject
