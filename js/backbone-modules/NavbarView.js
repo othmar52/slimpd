@@ -46,49 +46,49 @@
 				});
 
 				that.enableAutocompleteDelayed();
-
-				// TODO : insert tabbedautocomplete js code
-				// TODO : on rendering of search-results, re-init click listener:
-				// $(".ui-autocomplete a.ajax-link").off("click", this.genericClickListener).on("click", this.genericClickListener);
 			});
 
 			this.tabAutocomplete = this.searchfield.autocomplete({
-				source: function( request, response ) {
+				source( request, response ) {
 					window.NProgress.start();
 					var $this = $(this);
 					var $element = $(this.element);
-					var previous_request = $element.data( "jqXHR" );
-					if( previous_request ) {
+					var previousRequest = $element.data( "jqXHR" );
+					if( previousRequest ) {
 						// a previous request has been made.
 						// though we don"t know if it"s concluded
 						// we can try and kill it in case it hasn"t
-						previous_request.abort();
+						// TODO: not sure if killing request really works
+						previousRequest.abort();
 					}
 					// Store new AJAX request
 					$element.data( "jqXHR", $.ajax( {
 						type: "GET",
 						url: window.sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($("#mainsearch").val()),
 						dataType: "json",
-						success: function( data ) {
+						success( data ) {
 							window.NProgress.done();
 							response( data );
 						},
 						messages: {
 							noResults: "",
-							results: function() {}
+							results() {}
 						}
 					}));
 				},
+
 				sourceCategory: "all",
 				minLength: 3,
 				delay: 300,
-				focus: function( event, ui ) {
+
+				focus( event, ui ) {
 					$(".ui-helper-hidden-accessible").hide();
 					if(typeof ui.item !== "undefined") {
 						ui.item.value = that.stripTags(ui.item.value);
 					}
 				},
-				select: function( event, ui ) {
+
+				select( event, ui ) {
 					// do not navigate away with visible modal
 					if(window.sliMpd.modal.$modal.hasClass("in")) {
 						return false;
@@ -225,7 +225,7 @@
 				// TODO: limit functionality on focused item
 				//focused = $("#mainsearch").data("ui-autocomplete").menu.element.find("li.ui-state-focus").length;
 
-				if ( isOpen /*&& focused == 1*/ && event.keyCode == $.ui.keyCode.LEFT) {
+				if ( isOpen /*&& focused == 1*/ && event.keyCode === $.ui.keyCode.LEFT) {
 					var prev = $(".ac-nav button.btn-primaryactive").prev();
 					if(prev.length) {
 						that.changeAutocompleteUrl(prev.attr("data-filter"));
@@ -233,7 +233,7 @@
 					}
 				}
 
-				if ( isOpen /*&& focused == 1*/ && event.keyCode == $.ui.keyCode.RIGHT) {
+				if ( isOpen /*&& focused == 1*/ && event.keyCode === $.ui.keyCode.RIGHT) {
 					var next = $(".ac-nav button.btn-primaryactive").next();
 					if(next.length) {
 						that.changeAutocompleteUrl(next.attr("data-filter"));
