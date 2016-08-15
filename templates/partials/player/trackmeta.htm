@@ -3,9 +3,9 @@
 
 	<div><span class="shorten">{% include 'partials/artist/link.htm' %}</span></div>
 	<div><span class="shorten">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span></div>
-	<div><span class="shorten"><span class="dark uc small">ALBUM</span> {% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
+	<div class="hidden-sm hidden-xs"><span class="shorten"><span class="dark uc small">ALBUM</span> {% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span></div>
 
-	<div class="small dark darker-links" style="margin-top: 0.4em;">
+	<div class="small dark darker-links hidden-sm hidden-xs" style="margin-top: 0.4em;">
 		{% include 'partials/year/link.htm' %} |
 		{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %} |
 		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}

@@ -5,7 +5,24 @@
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
 	{% endif %}
-		<div class="col-lg-6 col-md-5">
+		<div class="col-xs-12 visible-sm visible-xs">
+			<div class="row">
+				<div class="col-xs-4 centered-text">
+					{% include 'partials/player/'~player~'-controls-primary.htm' %}
+				</div>
+				<div class="col-xs-4 centered-text">
+					{% include 'partials/button/player-toggle-'~player~'.htm' %}
+					<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+				</div>
+				<div class="col-xs-4 centered-text">
+					{% include 'partials/player/'~player~'-controls-secondary.htm' %}
+				</div>
+				<div class="col-xs-12 centered-text">
+					{% include 'partials/player/trackmeta-slim.htm' %}
+				</div>
+			</div>
+		</div>
+		<div class="col-xs-12 col-md-6">
 			<div class="row player-section-top">
 				<div class="slimplayer-show" style="float:left;">
 					{% include 'partials/button/player-toggle-'~player~'.htm' %}
@@ -15,11 +32,14 @@
 				{% include 'partials/player/'~player~'-seekbar.htm' %}
 
 				<span class="primary-controls">
-				{% include 'partials/player/'~player~'-controls-primary.htm' %}
+					<div class="hidden-xs hidden-sm">
+						{% include 'partials/player/'~player~'-controls-primary.htm' %}
+					</div>
+				{% include 'partials/player/'~player~'-time.htm' %}
 				</span>
 			</div>
-			<hr class="player-divider slimplayer-hidden"/>
-			<div class="slimplayer-hidden">
+			<hr class="player-divider slimplayer-hidden hidden-sm hidden-xs"/>
+			<div class="slimplayer-hidden hidden-sm hidden-xs">
 				{% include 'partials/button/player-toggle-'~player~'.htm' %}
 				{% include 'partials/button/xwaxgui-toggle.htm' %}
 
@@ -28,8 +48,7 @@
 				</div>
 			</div>
 		</div>
-
-		<div class="col-lg-6 col-md-6">
+		<div class="col-md-6 hidden-xs hidden-sm">
 			<div class="row">
 				<div class="media">
 					<div class="media-left">
@@ -59,10 +78,10 @@
 							<div class="slimplayer-show-tc">
 							{% include 'partials/player/trackmeta-slim.htm' %}
 							</div>
-							<div class="toggle-player-size-wrapper slimplayer-show">
+							<div class="toggle-player-size-wrapper slimplayer-show hidden-sm hidden-xs">
 								<button class="toggle-player-size btn btn-trnsp" title="toggle playersize"><i class='fa fa-chevron-up'></i></button>
 							</div>
-							<div class="toggle-player-size-wrapper slimplayer-hidden">
+							<div class="toggle-player-size-wrapper slimplayer-hidden hidden-sm hidden-xs">
 								<button class="toggle-player-size btn btn-trnsp" title="toggle playersize"><i class='fa fa-chevron-down'></i></button>
 							</div>
 						</div>
@@ -70,9 +89,7 @@
 				</div>
 			</div>
 		</div>
-
-	    {% include 'partials/player/nowplaying-string.htm' %}
-
+		{% include 'partials/player/nowplaying-string.htm' %}
 	{% if player == 'local' %}
 	</div>
 </div>
