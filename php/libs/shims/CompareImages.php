@@ -44,13 +44,13 @@ class compareImages
 		return $img;
 	}
 
-	private function colorMeanValue($i) {
+	private function colorMeanValue($fileName) {
 		/*returns the mean value of the colors and the list of all pixel's colors*/
 		$colorList = array();
 		$colorSum = 0;
 		for($horiz = 0;$horiz<8;$horiz++) {
 			for($verti = 0;$verti<8;$verti++) {
-				$rgb = imagecolorat($i, $horiz, $verti);
+				$rgb = imagecolorat($fileName, $horiz, $verti);
 				$colorList[] = $rgb & 0xFF;
 				$colorSum += $rgb & 0xFF;
 			}
