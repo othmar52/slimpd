@@ -43,6 +43,16 @@
 		{% endfor %}
 		<script src="{{fileroot}}vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
 	</head>
+	<!--style>
+	.blur {
+	  -webkit-animation: blur 2s infinite;
+	}
+
+	@-webkit-keyframes blur {
+	  0%, 100%  { -webkit-filter: blur(0px); }
+	  50% { -webkit-filter: blur(6px); }
+	}
+</style-->
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
 			{% include 'modules/header-menu.htm' %}
@@ -239,7 +249,7 @@
 		</span><!-- /top-link-block -->
 
 		<!-- Modal -->
-		<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal" id="global-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			<div class="modal-dialog modal-lg" role="document">
 				<div class="modal-content bg-col1">
 					<div class="modal-header">

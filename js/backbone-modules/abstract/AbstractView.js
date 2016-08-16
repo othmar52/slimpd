@@ -41,7 +41,7 @@
 			$(".toggle-player-size", this.$el).off("click", this.playerSizeToggleTriggerListener).on("click", this.playerSizeToggleTriggerListener);
 			$(".xwax-gui-toggler", this.$el).off("click", this.xwaxGuiToggleTriggerListener).on("click", this.xwaxGuiToggleTriggerListener);
 
-			
+
 			/* display selected value in dropdown instead of dropdown-label */
 			// TODO: choose more generic attribute-names. maybe we add "label-dropdowns" which has nothing to do with sorting...
 			var that = this;
@@ -61,7 +61,7 @@
 				//that.searchfield.autocomplete("close");
 			});
 
-			
+
 			$(".dropdown-toggle", this.$el).dropdown();
 			$(".toggle-tooltip", this.$el).tooltip();
 			$("[data-toggle=\"popover\"]", this.$el).popover({

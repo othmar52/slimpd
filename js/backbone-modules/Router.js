@@ -38,7 +38,7 @@
 			 * work against backbone"s default behaviour - begin
 			 *
 			 * force rendering of view - even if we request the same (current) route again
-			 * without pushing this to history 
+			 * without pushing this to history
 			 */
 			var pathStripper = /#.*$/;
 			var Backbone = window.Backbone;
@@ -59,7 +59,7 @@
 				Backbone.history.loadUrl(fragment);
 				return;
 			}
-			/* work against backbone"s default behaviour - end */ 
+			/* work against backbone"s default behaviour - end */
 
 			window.Backbone.Router.prototype.navigate.call(this, fragment, options);
 		},
@@ -86,7 +86,7 @@
 			// TODO: add proper loading animation
 			this.$body.addClass("is-loading");
 			window.NProgress.start();
-			$("<div class='modal-backdrop fade in' id='loading-backdrop'></div>").appendTo(this.$body);
+			$("<div class='modal-backdrop in' id='loading-backdrop'></div>").appendTo(this.$body);
 			this.ajaxLoading = true;
 			$.ajax({
 				url: window.sliMpd.setGetParameter(url, "nosurrounding", "1")

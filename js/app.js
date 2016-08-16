@@ -331,4 +331,30 @@ $(document).ready(function() {
 	//animate track rows
 	TweenMax.staggerFrom($(".track-row"), 0.75, { force3D:true, rotationZ: 0.01, y: 30, ease: Quint.easeOut, delay: basicDelay+0.35 }, 0.1);
 	TweenMax.staggerFrom($(".track-row"), 0.35, { force3D:true, rotationZ: 0.01, opacity:0, ease: Quint.easeOut, delay: basicDelay+0.35 }, 0.1);
+
+	//click animations
+	$.support.transition = false;
+
+	var blurElement = {a:0};
+
+	$("#global-modal").on('show.bs.modal', function () {
+			//$.support.transition = false;
+			TweenMax.set($('.modal-content'), { transformPerspective: 600, transformOrigin: 'top center',force3D:true, rotationZ: 0.01});
+			TweenMax.from($('.modal-content'),1,{ scale: 1.1, rotationZ:0, opacity: 0, ease: Cubic.easeOut, delay:0.25 });
+			//TweenMax.to($('.modal-backdrop'),1,{ opacity: 0, delay: 3 });
+			//TweenMax.to(blurElement, 0, {a:10, onUpdate: applyBlur, ease: Expo.easeOut});
+			//TweenMax.set([$('.container'), $('.permaplayer')], { webkitFilter:"blur(" + 4 + "px)", filter:"blur(" + 4 + "px)"});
+			//TweenMax.set($('body'), { paddingRight: '0px', delay: 0.01});
+	});
+	$("#global-modal").on('hide.bs.modal', function () {
+			//TweenMax.to(blurElement, 0, {a:0, onUpdate: applyBlur, ease: Expo.easeOut});
+			//TweenMax.set([$('.container'), $('.permaplayer')], { webkitFilter:"blur(" + 0 + "px)", filter:"blur(" + 0 + "px)"});
+	});
+	/*
+	function applyBlur()
+	{
+			TweenMax.set([$('.container'), $('.permaplayer')], { webkitFilter:"blur(" + blurElement.a + "px)", filter:"blur(" + blurElement.a + "px)"});
+
+	}
+	*/
 });
