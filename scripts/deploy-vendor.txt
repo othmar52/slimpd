@@ -133,8 +133,7 @@ components/jquery-cookie/jquery.cookie.js
 components/jquery/jquery.min.js
 components/jquery/jquery.min.map
 
-components/greensock-js/greensock-js-built.js
-components/greensock-js/src/minified/TweenMax.min.js
+greensock/GreenSock-JS/src/minified/TweenMax.min.js
 
 components/backbone/backbone-min.map
 components/backbone/backbone-min.js
