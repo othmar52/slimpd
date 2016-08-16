@@ -19,7 +19,6 @@
         "happyworm/jplayer": "^2.9",
         "components/jquery-cookie": "1.4.1.2",
         "components/backbone": "^1.2",
-        "components/greensock-js": "dev-master",
         "hendrismit/bootstrap-lightbox": "master",
         "mouse0270/bootstrap-notify": "master",
         "jeresig/jquery.hotkeys": "master",
@@ -29,7 +28,8 @@
         "othmar52/xwax-1.5-osc": "master",
         "rstacruz/nprogress": "master",
 	"mmp/mmp": "dev-master",
-        "codrops/BookBlock": "master"
+        "codrops/BookBlock": "master",
+        "greensock/GreenSock-JS": "master"
     },
     "repositories": [
         {
@@ -143,6 +143,18 @@
                 "version": "master",
                 "source": {
                     "url": "git@github.com:codrops/BookBlock.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
+        },
+        {  
+            "type": "package",
+            "package": {
+                "name": "greensock/GreenSock-JS",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:greensock/GreenSock-JS.git",
                     "type": "git",
                     "reference": "origin/master"
                 }

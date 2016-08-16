@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "353d995439c8bdff2d8b2a2cf0127c89",
-    "content-hash": "f0bda6bb4f797fd5b0dda1576511c73a",
+    "hash": "378c1e5c4d0ca3a0fff12f0ca668ee6e",
+    "content-hash": "ba66cf374041f1308cd0a2f4d8d8392c",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -120,50 +120,6 @@
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
             "time": "2016-05-18 10:46:59"
-        },
-        {
-            "name": "components/greensock-js",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/janoist1/GreenSock-JS.git",
-                "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/janoist1/GreenSock-JS/zipball/80dead45b22e333e9c43c3020349afc4a3c7c145",
-                "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145",
-                "shasum": ""
-            },
-            "require": {
-                "robloach/component-installer": "*"
-            },
-            "type": "component",
-            "extra": {
-                "component": {
-                    "scripts": [
-                        "src/minified/*.js",
-                        "src/minified/easing/*.js",
-                        "src/minified/plugins/*.js",
-                        "src/minified/utils/*.js"
-                    ],
-                    "files": []
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "NO CHARGE"
-            ],
-            "description": "GSAP: Professional-Grade HTML5 Animation",
-            "homepage": "http://www.greensock.com/gsap-js/",
-            "keywords": [
-                "HTML5",
-                "JS",
-                "animation",
-                "component",
-                "gsap"
-            ],
-            "time": "2014-03-25 17:29:32"
         },
         {
             "name": "components/jquery",
@@ -387,6 +343,17 @@
                 "util"
             ],
             "time": "2015-10-16 14:27:39"
+        },
+        {
+            "name": "greensock/GreenSock-JS",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:greensock/GreenSock-JS.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2016-07-18 22:41:26"
         },
         {
             "name": "guzzlehttp/command",
@@ -1642,7 +1609,6 @@
         "james-heinrich/getid3": 20,
         "ricbra/php-discogs-api": 20,
         "lusitanian/oauth": 20,
-        "components/greensock-js": 20,
         "mmp/mmp": 20
     },
     "prefer-stable": false,

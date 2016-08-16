@@ -263,52 +263,6 @@
         ]
     },
     {
-        "name": "components/greensock-js",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/janoist1/GreenSock-JS.git",
-            "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/janoist1/GreenSock-JS/zipball/80dead45b22e333e9c43c3020349afc4a3c7c145",
-            "reference": "80dead45b22e333e9c43c3020349afc4a3c7c145",
-            "shasum": ""
-        },
-        "require": {
-            "robloach/component-installer": "*"
-        },
-        "time": "2014-03-25 17:29:32",
-        "type": "component",
-        "extra": {
-            "component": {
-                "scripts": [
-                    "src/minified/*.js",
-                    "src/minified/easing/*.js",
-                    "src/minified/plugins/*.js",
-                    "src/minified/utils/*.js"
-                ],
-                "files": []
-            }
-        },
-        "installation-source": "source",
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "NO CHARGE"
-        ],
-        "description": "GSAP: Professional-Grade HTML5 Animation",
-        "homepage": "http://www.greensock.com/gsap-js/",
-        "keywords": [
-            "HTML5",
-            "JS",
-            "animation",
-            "component",
-            "gsap"
-        ]
-    },
-    {
         "name": "hendrismit/bootstrap-lightbox",
         "version": "master",
         "version_normalized": "9999999-dev",
@@ -1692,6 +1646,18 @@
         "source": {
             "type": "git",
             "url": "git@github.com:codrops/BookBlock.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
+    },
+    {
+        "name": "greensock/GreenSock-JS",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:greensock/GreenSock-JS.git",
             "reference": "origin/master"
         },
         "type": "library",

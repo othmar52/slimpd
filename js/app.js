@@ -93,7 +93,7 @@ $(document).ready(function() {
 
 		/* toggle between mpd-control and local player (jPlayer) */
 		togglePlayer() {
-			var TweenLite = window.TweenLite;
+			var TweenMax = window.TweenMax;
 			var Back = window.Back;
 			var Power2 = window.Power2;
 
@@ -159,13 +159,13 @@ $(document).ready(function() {
 				});
 
 				// flip animation for both players
-				tweenIn = TweenLite.fromTo($(".player-mpd"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				tweenOut = TweenLite.fromTo($(".player-local"), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				tweenIn = TweenMax.fromTo($(".player-mpd"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenMax.fromTo($(".player-local"), speed, transformNewPlayerFrom, transformNewPlayerTo);
 
 				tweenIn.timeScale(timeScale);
 				tweenOut.timeScale(timeScale);
 
-				//TweenLite.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 0 }, {rotationX: 90});
+				//TweenMax.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 0 }, {rotationX: 90});
 			} else {
 				// pause local player when switching to mpd
 				window.sliMpd.currentPlayer.process({"action":"pause"});
@@ -181,13 +181,13 @@ $(document).ready(function() {
 				window.sliMpd.currentPlayer.refreshInterval();
 
 				// flip animation for both players
-				tweenIn = TweenLite.fromTo($(".player-local"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-				tweenOut = TweenLite.fromTo($(".player-mpd"), speed, transformNewPlayerFrom, transformNewPlayerTo);
+				tweenIn = TweenMax.fromTo($(".player-local"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
+				tweenOut = TweenMax.fromTo($(".player-mpd"), speed, transformNewPlayerFrom, transformNewPlayerTo);
 
 				tweenIn.timeScale(timeScale);
 				tweenOut.timeScale(timeScale);
 
-				//TweenLite.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 90 }, {rotationX: 0});
+				//TweenMax.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 90 }, {rotationX: 0});
 
 				classToRemove = window.sliMpd.conf.color.local.bodyclass;
 				classToAdd = window.sliMpd.conf.color.mpd.bodyclass;
@@ -313,14 +313,14 @@ $(document).ready(function() {
 
 	// add some smooth animation on initial loading
 	var timeScale = 1;
-	var TweenLite = window.TweenLite;
+	var TweenMax = window.TweenMax;
 	var Quint = window.Quint;
 	$(window.sliMpd.localPlayer.el).css("z-index",1027);
 	$(window.sliMpd.mpdPlayer.el).css("z-index",1028);
 	$(window.sliMpd.currentPlayer.el).css("z-index",1030);
-	TweenLite.set([$(".permaplayer"), $(".main-nav")],{opacity:1});
-	TweenLite.fromTo($(".main-nav"), 0.75, { y: -$(".main-nav").height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
-	TweenLite.fromTo($("#main"), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
+	TweenMax.set([$(".permaplayer"), $(".main-nav")],{opacity:1});
+	TweenMax.fromTo($(".main-nav"), 0.75, { y: -$(".main-nav").height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
+	TweenMax.fromTo($("#main"), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
 	//TweenMax.staggerFrom($(".track-row"),2, { y: -30, opacity:0, ease: Quint.easeOut, delay: 0.15 }, 0.2).timeScale(timeScale);
-	TweenLite.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
+	TweenMax.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
 });
