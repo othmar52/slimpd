@@ -89,7 +89,7 @@
 	height: 20px;
 }
 
-hr.player-divider {
+.player-divider {
 	margin: 0 0 0.3em 0;
 	width: 110%; /* TODO: best practice for full width border */
 }

@@ -27,11 +27,13 @@
   -moz-opacity: 1;
   opacity: 1;
 }
+/*
 .ekko-lightbox .modal-header h4.modal-title {
   font-weight: 100;
   color: #fff;
   padding: 0;
 }
+*/
 .ekko-lightbox .modal-body {
   padding: 0;
 }

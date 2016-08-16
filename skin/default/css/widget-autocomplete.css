@@ -38,8 +38,8 @@
 	white-space: nowrap;
 }
 
-.ui-autocomplete .ui-menu-item > a.ui-corner-all.ui-state-hover,
-.ui-autocomplete .ui-menu-item > a.ui-corner-all.ui-state-active {
+.ui-corner-all .ui-state-hover,
+.ui-corner-all .ui-state-active {
 	color: #ffffff;
 	text-decoration: none;
 	background-color: #0088cc;
