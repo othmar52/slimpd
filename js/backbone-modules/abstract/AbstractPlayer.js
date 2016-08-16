@@ -256,23 +256,31 @@
 				: window.sliMpd.conf.waveform.mirrored;
 			var that = this;
 
-			$.getJSON($waveFormWrapper.attr("data-jsonurl") , function( vals ) {
-				var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
-				var maxVal = vals.max();
-				for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
-					that.drawBar(
-						j,
-						(that.bufferMeasure(Math.floor(j * (vals.length / that.waveformSettings.canvas.width)), len, vals) * maxVal/10)
-						*
-						(that.waveformSettings.canvas.height / maxVal)
-						+
-						1
+			$.ajax({
+				url: $waveFormWrapper.attr("data-jsonurl"),
+				dataType: 'json',
+				success: function( vals ) {
+					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
+					var maxVal = vals.max();
+					for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
+						that.drawBar(
+							j,
+							(that.bufferMeasure(Math.floor(j * (vals.length / that.waveformSettings.canvas.width)), len, vals) * maxVal/10)
+							*
+							(that.waveformSettings.canvas.height / maxVal)
+							+
+							1
+						);
+					}
+					$waveFormWrapper.html("");
+					$(that.waveformSettings.canvas).appendTo($waveFormWrapper);
+				},
+				error: function( response ) {
+					$waveFormWrapper.html(
+						$("<p />").html("error generating waveform...")
 					);
 				}
-				$waveFormWrapper.html("");
-				$(that.waveformSettings.canvas).appendTo($waveFormWrapper);
 			});
-
 		},
 
 		bufferMeasure(position, length, data) {

@@ -81,11 +81,13 @@ class Svggenerator {
 	}
 
 	public function fireRetryHeaderAndExit() {
-		\Slim\Slim::getInstance()->response->headers->set('Retry-After', 5);
+		$newResponse = \Slim\Slim::getInstance()->response();
+		$newResponse->headers->set('Retry-After', 5);
+		# TODO: check why slim's setStatus does not work
+		#$newResponse->setStatus(503);
 		header('HTTP/1.1 503 Service Temporarily Unavailable');
 		header('Status: 503 Service Temporarily Unavailable');
-		header('Retry-After: 5'); //seconds
-		exit;
+		return $newResponse;
 	}
 	
 	public function findValues($byte1, $byte2) {
@@ -96,8 +98,9 @@ class Svggenerator {
 	
 	public function generateSvg($pixel=300) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			# TODO: send a dummy svg to client?
-			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');
+			$app = \Slim\Slim::getInstance();
+			$app->response->redirect($app->config['root'] . 'imagefallback-100/broken');
+			return;
 		}
 		
 		$peaks = file_get_contents($this->peakValuesFilePath);
@@ -150,7 +153,6 @@ class Svggenerator {
 			}
 		}
     
-		header("Content-Type: image/svg+xml");
 		$app = \Slim\Slim::getInstance();
 		switch( $app->request->get('colorFor') ) {
 			case 'mpd':
@@ -166,20 +168,23 @@ class Svggenerator {
 				$color = $app->config['colors']['defaultwaveform'];
 				break;
 		}
-		\Slim\Slim::getInstance()->render(
+		$newResponse = $app->response();
+		$newResponse->headers->set('Content-Type', 'image/svg+xml');
+		$app->render(
 			'svg/waveform.svg',
 			array(
 				'peakvalues' => $renderValues,
 				'color' => $color
 			)
 		);
-		exit;
+		return $newResponse;
 	}
 
 	public function generateJson($resolution=300) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			# TODO: send a dummy svg to client?
-			die('peakValuesFilePath: "' .$this->peakValuesFilePath . '" does not exist');
+			$app = \Slim\Slim::getInstance();
+			$app->response->redirect($app->config['root'] . 'imagefallback-100/broken');
+			return;
 		}
 		
 		$peaks = file_get_contents($this->peakValuesFilePath);
