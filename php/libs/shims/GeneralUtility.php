@@ -128,7 +128,17 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 		return;
 	}
 	
-	// TODO: check colors (especially the color after linebreaks)
+
+	// TODO: read from config
+	$shellColorize = TRUE;
+
+	if($shellColorize !== TRUE) {
+		echo $msg ."\n";
+		ob_flush();
+		return;
+	}
+
+	// TODO: check colors (especially the color and boldness after linebreaks)
 	#$black 		= "33[0;30m";
 	#$darkgray 	= "33[1;30m";
 	#$blue 		= "33[0;34m";
@@ -145,19 +155,13 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	#$yellow 	= "33[1;33m";
 	#$lightgray 	= "33[0;37m";
 	#$white 		= "33[1;37m";
-
-	$shellColorize = TRUE;
-	$prefix = "";
-	$suffix = "";
-	if($shellColorize == TRUE) {
-		switch($color) {
-			case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
-			case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
-			case "red":    $prefix = "\033[1;31m"; $suffix = "\033[37m"; break;
-			case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
-			case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
-			default:       $prefix = "";         $suffix = "";         break;
-		}
+	switch($color) {
+		case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
+		case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
+		case "red":    $prefix = "\033[1;31m"; $suffix = "\033[37m"; break;
+		case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
+		case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
+		default:       $prefix = "";         $suffix = "";         break;
 	}
 	echo $prefix . $msg . $suffix . "\n";
 	ob_flush();
@@ -262,14 +266,16 @@ function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
 		$result = $temp;
 	}
 
-	if ($limit != 0) {
-		if ($limit < 0) {
-			$result = array_slice($result, 0, $limit);
-		} elseif (count($result) > $limit) {
-			$lastElements = array_slice($result, $limit - 1);
-			$result = array_slice($result, 0, $limit - 1);
-			$result[] = implode($delim, $lastElements);
-		}
+	if($limit === 0) {
+		return $result;
+	}
+	if ($limit < 0) {
+		return array_slice($result, 0, $limit);
+	}
+	if (count($result) > $limit) {
+		$lastElements = array_slice($result, $limit - 1);
+		$result = array_slice($result, 0, $limit - 1);
+		$result[] = implode($delim, $lastElements);
 	}
 	return $result;
 }
