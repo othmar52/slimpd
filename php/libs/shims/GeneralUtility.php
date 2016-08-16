@@ -692,12 +692,12 @@ function deliver($file, $app) {
 		flush();
 		if (connection_status()!=0) {
 			@fclose($file);
-			exit;
+			$app->stop();
 		}
 	}
  
 	@fclose($file);
-	exit;
+	$app->stop();
 }
 
 
@@ -714,9 +714,15 @@ function deliveryError( $code = 401, $msg = null ) {
 	if(!$msg) {
 		$msg = $msgs[$code];
 	}
+
+	$app = \Slim\Slim::getInstance();
+	$newResponse = $app->response();
+	$newResponse->body(
+		sprintf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>", $code, $msg, $msg)
+	);
+	$newResponse->status($code);
 	header(sprintf("HTTP/1.0 %s %s",$code,$msg));
-	printf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>",$code,$msg,$msg);
-	exit;
+	$app->stop();
 }
 
 function getMimeType ( $filename ) {
