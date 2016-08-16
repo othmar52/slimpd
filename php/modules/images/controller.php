@@ -14,8 +14,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 			return;
 		}
 		
-		$image->dump($imagesize);
-		exit();
+		$image->dump($imagesize, $app);
 	});
 	
 	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
@@ -29,8 +28,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumId());
 			return;
 		}
-		$image->dump($imagesize);
-		exit();
+		$image->dump($imagesize, $app);
 	});
 	
 	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
@@ -41,14 +39,14 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 			return;
 		}
-		$image->dump($imagesize);
+		$image->dump($imagesize, $app);
 	});
 	
 	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Bitmap();
 		
 		$image->setRelativePath(join(DS, $itemParams));
-		$image->dump($imagesize);
+		$image->dump($imagesize, $app);
 	})->name('imagepath-' .$imagesize);
 	
 	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){

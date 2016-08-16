@@ -24,10 +24,10 @@ class Bitmap extends AbstractModel
 	
 	public static $tableName = 'bitmap';
 	
-	public function dump($preConf) {
+	public function dump($preConf, $app) {
 		$imgDirecoryPrefix = ($this->getTrackId())
 			? APP_ROOT
-			: \Slim\Slim::getInstance()->config['mpd']['musicdir'];
+			: $app->config['mpd']['musicdir'];
 			
 		$phpThumb = self::getPhpThumb();	
 		$phpThumb->setSourceFilename($imgDirecoryPrefix . $this->getRelativePath());
@@ -52,29 +52,22 @@ class Bitmap extends AbstractModel
 				$phpThumb->GenerateThumbnail();
 				\phpthumb_functions::EnsureDirectoryExists(
 					dirname($phpThumb->cache_filename),
-					octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
+					octdec($app->config['config']['dirCreateMask'])
 				);
 				$phpThumb->RenderToFile($phpThumb->cache_filename);
-				if(is_file($phpThumb->cache_filename) === TRUE) {
-					chmod($phpThumb->cache_filename, 0777);
-				} else {
+				if(is_file($phpThumb->cache_filename) === FALSE) {
 					// something went wrong
-					$app = \Slim\Slim::getInstance();
 					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
 					return;
 				}
 			}
-			# TODO: why does slim's set header not work?
-			#\Slim\Slim::getInstance()->response()->headers->set('Content-Type', 'image/jpeg');
-			header('Content-Type: image/jpeg');
-			readfile($phpThumb->cache_filename);
-			exit();
+			$newResponse = $app->response();
+			$newResponse->body(
+				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
+			);
+			$newResponse->headers->set('Content-Type', 'image/jpeg');
+			return $newResponse;
 		} catch(\Exception $e) {
-			$app = \Slim\Slim::getInstance();
-			header('Location: ' . $app->config['root'] . 'imagefallback-'.$preConf.'/broken');#
-			exit;
-
-			# TODO: check why slim's redirect does not work
 			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
 			return;
 		}
@@ -91,15 +84,14 @@ class Bitmap extends AbstractModel
 			
 			// multiple usage of same image files are possible...
 			if($this->getAlbumId() > 0) {
-				$searchParams['albumId'] = $this->getAlbumId(); 
+				$searchParams['albumId'] = $this->getAlbumId();
 			}			
 			$b2 = Bitmap::getInstanceByAttributes($searchParams);
 
-			if($b2 !== NULL) {
-				$this->setId($b2->getId());
-			} else {
+			if($b2 === NULL) {
 				return $this->insert();
 			}
+			$this->setId($b2->getId());
 		}
 			
 		$app = \Slim\Slim::getInstance();
