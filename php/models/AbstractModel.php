@@ -50,11 +50,10 @@ abstract class AbstractModel {
 		while($record = $result->fetch_assoc()) {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
-			if($singleInstance === FALSE) {
-				$instances[] = $instance;
-			} else {
+			if($singleInstance !== FALSE) {
 				return $instance;
 			}
+			$instances[] = $instance;
 		}
 		return $instances;
 	}
@@ -527,17 +526,21 @@ abstract class AbstractModel {
 
 		$maxAttempts = 1000;
 		$counter = 0;
-		while (TRUE) {
-			$try = $db->query(
-				"SELECT id FROM ". self::getTableName() ." WHERE id = " . mt_rand(1, $higestId)
-			)->fetch_assoc()['id'];
-			if($try !== NULL) {
-				return self::getInstanceByAttributes( ['id' => $try] );
+		try {
+			while (TRUE) {
+				$try = $db->query(
+					"SELECT id FROM ". self::getTableName() ." WHERE id = " . mt_rand(1, $higestId)
+				)->fetch_assoc()['id'];
+				if($try !== NULL) {
+					return self::getInstanceByAttributes( ['id' => $try] );
+				}
+				if($counter > $maxAttempts) {
+					throw new \Exception("OOPZ! couldn't fetch random instance of " . self::getTableName(), 1);
+				}
+				$counter++;
 			}
-			if($counter > $maxAttempts) {
-				die('sorry - coldn\'t fetch random ' . self::getTableName() );
-			}
-			$counter++;
+		} catch(\Exception $e) {
+			return FALSE;
 		}
 	}
 
