@@ -313,14 +313,22 @@ $(document).ready(function() {
 
 	// add some smooth animation on initial loading
 	var timeScale = 1;
+	var basicDelay = 0.15;
 	var TweenMax = window.TweenMax;
 	var Quint = window.Quint;
 	$(window.sliMpd.localPlayer.el).css("z-index",1027);
 	$(window.sliMpd.mpdPlayer.el).css("z-index",1028);
 	$(window.sliMpd.currentPlayer.el).css("z-index",1030);
+
+	//animate basic layout
 	TweenMax.set([$(".permaplayer"), $(".main-nav")],{opacity:1});
-	TweenMax.fromTo($(".main-nav"), 0.75, { y: -$(".main-nav").height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
-	TweenMax.fromTo($("#main"), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
-	//TweenMax.staggerFrom($(".track-row"),2, { y: -30, opacity:0, ease: Quint.easeOut, delay: 0.15 }, 0.2).timeScale(timeScale);
-	TweenMax.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
+	TweenMax.fromTo($(".main-nav"), 0.75, { force3D:true, z:0.01, rotationZ:0.01, y: -$(".main-nav").height() }, { force3D:true, z:0, rotationZ:0, y:0, opacity:1, ease: Quint.easeOut, delay: basicDelay }).timeScale(timeScale);
+	//TweenMax.fromTo($("#main"), 1, { scale: 1.5, transformOrigin: "top center" }, { scale:1, transformOrigin: "top center", ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
+	//TweenMax.fromTo($("#main"), 0.5, { y:-10, z:0.01, rotationZ: 0.01 }, { force3D:true, z:0.01, rotationZ:0, y:0, ease: Quint.easeOut, delay: basicDelay+0.15 }).timeScale(timeScale);
+	TweenMax.fromTo($("#main"), 0.75, { opacity:0 }, { opacity:1, ease: Cubic.easeOut, delay: basicDelay+0.15 }).timeScale(timeScale);
+	TweenMax.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: basicDelay+1 }).timeScale(timeScale);
+
+	//animate track rows
+	TweenMax.staggerFrom($(".track-row"), 0.75, { force3D:true, rotationZ: 0.01, y: 30, ease: Quint.easeOut, delay: basicDelay+0.35 }, 0.1);
+	TweenMax.staggerFrom($(".track-row"), 0.35, { force3D:true, rotationZ: 0.01, opacity:0, ease: Quint.easeOut, delay: basicDelay+0.35 }, 0.1);
 });
