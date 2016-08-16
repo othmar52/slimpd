@@ -727,12 +727,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "920e717f38c65c58db29c5c2586a92789be541dd"
+                "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/920e717f38c65c58db29c5c2586a92789be541dd",
-                "reference": "920e717f38c65c58db29c5c2586a92789be541dd",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/7c7eb57be2adc90b28e167c124c368f1d04b0460",
+                "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460",
                 "shasum": ""
             },
             "require": {
@@ -755,7 +755,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-07-28 12:30:10"
+            "time": "2016-08-13 14:02:30"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -1423,12 +1423,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc"
+                "reference": "2d6011bd6f6086b3409f85c6dd0ec61b90091a04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
-                "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
+                "url": "https://api.github.com/repos/symfony/process/zipball/2d6011bd6f6086b3409f85c6dd0ec61b90091a04",
+                "reference": "2d6011bd6f6086b3409f85c6dd0ec61b90091a04",
                 "shasum": ""
             },
             "require": {
@@ -1464,7 +1464,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-08-07 15:19:41"
+            "time": "2016-08-16 16:09:30"
         },
         {
             "name": "twbs/bootstrap",
@@ -1523,12 +1523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759"
+                "reference": "21039777d8519dacf81e070489c953e92164842d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
-                "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21039777d8519dacf81e070489c953e92164842d",
+                "reference": "21039777d8519dacf81e070489c953e92164842d",
                 "shasum": ""
             },
             "require": {
@@ -1576,7 +1576,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-07-28 20:58:48"
+            "time": "2016-08-15 17:25:09"
         },
         {
             "name": "webfontkit/open-sans",
