@@ -11,6 +11,7 @@ DIR_DEST="vendor-dist"
 rm -Rf "$SCRIPT_PATH/../$DIR_DEST/"*
 cd "$SCRIPT_PATH/../$DIR_SOURCE"
 
+# copy files and directories of deploy-vendor.txt
 while IFS='' read -r line || [[ -n "$line" ]]; do
 	if [[ -d "$line" ]]
 	then
@@ -22,8 +23,23 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 		echo "found file $line"
 		cp --parents "$line" "$SCRIPT_PATH/../$DIR_DEST/"
 	fi
-    #echo "Text read from file: $line"
+	#echo "Text read from file: $line"
 done < "$SCRIPT_PATH/deploy-vendor.txt"
+
+
+# add missing license files
+echo ""
+echo "adding licenses..."
+DIR_SOURCE="licenses"
+cd "$SCRIPT_PATH/$DIR_SOURCE"
+find . -type f| while read filepath; do
+	if [[ -f "$filepath" ]]
+	then
+		echo "found file $filepath"
+		cp --parents "$filepath" "$SCRIPT_PATH/../$DIR_DEST/"
+	fi
+    #echo "Text read from file: $line"
+done
 
 # TODO: we need to execute some copied files - pest practice to achieve that?
 chmod +x "$SCRIPT_PATH/../$DIR_DEST/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh"
