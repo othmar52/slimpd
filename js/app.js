@@ -321,6 +321,6 @@ $(document).ready(function() {
 	TweenLite.set([$(".permaplayer"), $(".main-nav")],{opacity:1});
 	TweenLite.fromTo($(".main-nav"), 0.75, { y: -$(".main-nav").height() }, { y:0, opacity:1, ease: Quint.easeOut }).timeScale(timeScale);
 	TweenLite.fromTo($("#main"), 1, { scale: 0.97 }, { scale:1, opacity:1, ease: Quint.easeOut, delay: 0.15 }).timeScale(timeScale);
-	TweenMax.staggerFrom($(".track-row"),2, { y: -30, opacity:0, ease: Quint.easeOut, delay: 0.15 }, 0.2).timeScale(timeScale);
+	//TweenMax.staggerFrom($(".track-row"),2, { y: -30, opacity:0, ease: Quint.easeOut, delay: 0.15 }, 0.2).timeScale(timeScale);
 	TweenLite.fromTo($(".permaplayer"), 0.75, { y: $(window.sliMpd.currentPlayer.el).height() }, { y:0, opacity:1, ease: Quint.easeOut, delay: 1 }).timeScale(timeScale);
 });
