@@ -246,7 +246,7 @@ abstract class AbstractModel {
 		$return = array();
 		$calledClass = get_called_class();
 		#echo $calledClass;
-		foreach(get_class_vars($calledClass) as $classVar => $value) {
+		foreach(array_keys(get_class_vars($calledClass)) as $classVar) {
 			$getter = 'get'.ucfirst($classVar);
 			if($classVar === 'tableName') {
 				continue;

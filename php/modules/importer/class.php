@@ -1373,7 +1373,7 @@ class Importer {
 		$deletedFilesize = 0;
 		
 		$msgKeep = $app->ll->str('importer.image.keep');
-		$msgDestroy = $app->ll->str('importer.image.destroy');
+		#$msgDestroy = $app->ll->str('importer.image.destroy');
 		$msgProcessing = $app->ll->str('importer.image.dupecheck.processing');
 		while ($record = $result->fetch_assoc()) {
 			$this->updateJob(array(

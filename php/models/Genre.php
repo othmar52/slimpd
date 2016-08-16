@@ -198,7 +198,7 @@ class Genre extends AbstractModel
 		cliLog("REMAINING CHUNKWURST:" . $joinedRemainingChunks, 7);
 		$foundPreservedMatch = FALSE;
 		foreach($GLOBALS['preserveGenreChunks'] as $preserve => $genreString) {
-			if(preg_match("/".str_replace(".", "\.", $preserve) . "/", $joinedRemainingChunks, $m)) {
+			if(preg_match("/".str_replace(".", "\.", $preserve) . "/", $joinedRemainingChunks)) {
 				$finalGenres[az09($preserve)] = $genreString;
 				$foundPreservedMatch = TRUE;
 				cliLog("found genre based on partly preserved pattern: $preserve = ".$genreString, 7);

@@ -240,12 +240,12 @@ class AlbumMigrator {
 		$indexChunks = $this->tracks[$idx]['relativePath'] . " ";
 		
 		if(isset($this->r[$idx]) === TRUE) {
-			foreach($this->r[$idx] as $attrType => $scoreCombo) {
+			foreach($this->r[$idx] as $scoreCombo) {
 				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
 			}
 		}
 		if(isset($this->r['album']) === TRUE) {
-			foreach($this->r['album'] as $attrType => $scoreCombo) {
+			foreach($this->r['album'] as $scoreCombo) {
 				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
 			}
 		}
@@ -794,7 +794,7 @@ class AlbumMigrator {
 	}
 	
 	private function scoreAllTracksWithAttribute($attrName, $attrValue, $score = 1) {
-		foreach($this->tracks as $idx => $bla) {
+		foreach(array_keys($this->tracks) as $idx) {
 			$this->scoreAttribute($idx, $attrName, $attrValue, $score);
 		}
 	}

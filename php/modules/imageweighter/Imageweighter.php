@@ -41,7 +41,7 @@ class Imageweighter
 		
 		foreach($rawConf['image-weights'] as $rawKey => $valueChunk) {
 			$filenames = trimExplode("\n", $valueChunk, TRUE);
-			$cleanRawKey = str_replace('%s', '', $rawKey);
+			#$cleanRawKey = str_replace('%s', '', $rawKey);
 			if(strpos($rawKey, '%s') !== FALSE) {
 				foreach(range(1,$keyRange) as $num) {
 					$finalKey = sprintf($rawKey, strval($num));

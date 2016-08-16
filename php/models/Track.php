@@ -368,8 +368,10 @@ class Track extends \Slimpd\AbstractModel
 		// assign all string-parts to category
 		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
 		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
-		$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
-		
+
+		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
+		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
+
 		if($artistString == "") {
 			$regularArtists[] = "Unknown Artist";
 		}
