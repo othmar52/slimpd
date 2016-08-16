@@ -94,6 +94,23 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			
 			new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array()) {
 				return \Slim\Slim::getInstance()->ll->str($hans, $vars);
+			}),
+
+			new \Twig_SimpleFilter('getType', function ($var) {
+				return gettype($var);
+			}),
+
+			new \Twig_SimpleFilter("dumpImagestream", function ($input, $mimeType) {
+				$imageinfo = array();
+				if ($imagechunkcheck = \getid3_lib::GetDataImageSize($input, $imageinfo)) {
+					$attributes = [
+						"src='data:" .$mimeType.";base64,".base64_encode($input)."'",
+						"width='". $imagechunkcheck[0] ."'",
+						"height='". $imagechunkcheck[1] ."'"
+					];
+					return "<img " . join(" " , $attributes) . ">";
+				}
+				return "<i>invalid image data</i></td></tr>";
 			})
         );
     }
@@ -123,6 +140,38 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			
 			new \Twig_SimpleTest('instanceofDirectory', function ($item) {
 				return $item instanceof \Slimpd\_Directory;
+			}),
+
+			new \Twig_SimpleTest('typeString', function ($value) {
+				return is_string($value);
+			}),
+
+			new \Twig_SimpleTest('typeArray', function ($value) {
+				return is_array($value);
+			}),
+
+			new \Twig_SimpleTest('typeBoolean', function ($value) {
+				return is_bool($value);
+			}),
+
+			new \Twig_SimpleTest('typeDouble', function ($value) {
+				return is_double($value);
+			}),
+
+			new \Twig_SimpleTest('typeFloat', function ($value) {
+				return is_float($value);
+			}),
+
+			new \Twig_SimpleTest('typeInteger', function ($value) {
+				return is_int($value);
+			}),
+
+			new \Twig_SimpleTest('typeNull', function ($value) {
+				return is_null($value);
+			}),
+
+			new \Twig_SimpleTest('typeObject', function ($value) {
+				return is_object($value);
 			})
         );
     }

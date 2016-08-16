@@ -150,7 +150,7 @@ $app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app
 	\getid3_lib::CopyTagsToComments($tagData);
 	\getid3_lib::ksort_recursive($tagData);
 
-	$vars['dumpstring'] = table_var_dump($tagData, false, 'UTF-8');
+	$vars['dumpvar'] = $tagData;
 	$vars['getid3version'] = $getID3->version();
 	$app->render('appless.htm', $vars);
 });
