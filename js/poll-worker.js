@@ -2,33 +2,10 @@ self.pollInterval = 2000;
 self.pollUrl = "/mpdstatus";
 self.addEventListener("message", function(e) {
 	var data = e.data;
-	switch (data.cmd) {
-		case "start":
-			self.poll();
-			break;
-		case "setMiliseconds":
-			if(data.value < 2000) {
-				self.postMessage("Invalid bvalue for miliseconds: " + data.value + "! terminating worker...");
-				self.close();
-				break;
-			}
-			self.pollInterval = data.value;
-			break;
-		case "setPollUrl":
-			self.pollUrl = data.value;
-			break;
-		case "refreshInterval":
-			clearTimeout(self.poller);
-			self.poll();
-			break;
-		case "refreshIntervalDelayed":
-			clearTimeout(self.poller);
-			setTimeout(function(){self.poll("?force=1");},200);
-			break;
-		case "stop":
-			self.close();
-			break;
+	if(typeof self[e.data.cmd] !== "function") {
+		return;
 	}
+	self[e.data.cmd](e.data);
 }, false);
 
 self.poll = function(queryString) {
@@ -57,3 +34,34 @@ self.poll = function(queryString) {
 		self.pollInterval
 	);
 };
+
+self.start = function() {
+	self.poll();
+};
+
+self.setMiliseconds = function(data) {
+	if(data.value < 2000) {
+		self.postMessage("Invalid value for miliseconds: " + data.value + "! terminating worker...");
+		self.close();
+		return;
+	}
+	self.pollInterval = data.value;
+}
+
+self.setPollUrl = function(data) {
+	self.pollUrl = data.value;
+}
+
+self.refreshInterval = function() {
+	clearTimeout(self.poller);
+	self.poll();
+}
+
+self.refreshIntervalDelayed = function() {
+	clearTimeout(self.poller);
+	setTimeout(function(){self.poll("?force=1");},200);
+}
+
+self.stop = function() {
+	self.close();
+}
