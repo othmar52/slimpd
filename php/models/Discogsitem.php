@@ -126,7 +126,7 @@ class Discogsitem extends AbstractModel
 		$matchScore = array();
 		$data = $this->getResponse(TRUE);
 		
-		foreach($rawTagDataInstances as $rawId => $rawItem) {
+		foreach($rawTagDataInstances as $rawItem) {
 			$localStrings = [
 				$rawItem->getArtist(),
 				$rawItem->getTitle(),

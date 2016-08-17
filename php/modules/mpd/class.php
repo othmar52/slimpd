@@ -76,8 +76,6 @@ class mpd
 		$listPos = isset($status['song']) ? $status['song'] : 0;
 		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
-		$totalPages = $this->getCurrentPlaylistTotalPages();
-		
 		$currentPage = floor($listPos/$itemsPerPage)+1;
 		return $currentPage;
 	}

@@ -353,7 +353,7 @@ class AlbumMigrator {
 			'album',
 		);
 		foreach($attrNames as $attrName) {
-			foreach($this->tracks as $idx => $foo) {
+			foreach(array_keys($this->tracks) as $idx) {
 				$this->mostScored[$idx][$attrName] = $this->getMostScored($idx, $attrName);
 			}
 			$this->mostScored['album'][$attrName] = $this->getMostScored('album', $attrName);
