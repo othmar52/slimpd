@@ -128,64 +128,45 @@ class filebrowser {
 		// append trailing slash if missing
 		$path = rtrim($path, DS) . DS;
 
-		if($systemdir === TRUE) {
-			$base = APP_ROOT;
-			switch($path) {
-				case "cache/":
-				case "embedded/":
-				case "peakfiles/":
-					break;
-				default:
-					$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$base .$path]));
-					return FALSE;
-			}
-			return [
-				"base" => APP_ROOT,
-				"dir" => $path
-			];
-		}
-
 		$base = $app->config["mpd"]["musicdir"];
 		$path = ($path === $base) ? "" : $path;
+		$realpath = realpath($base.$path) . DS;
+		$return = ["base" => $base, "dir" => $path];
 
-		if(is_dir($base .$path) === FALSE){ //} || $this->checkAccess($path, $baseDirs) === FALSE) {
-			$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$base .$path]));
+		// avoid path disclosure outside relevant directories
+		if(!$realpath) {
+			$app->flashNow("error", $app->ll->str("filebrowser.realpathempty", [$base.$path]));
+			return FALSE;
+		}
+
+		if($systemdir === TRUE && in_array($path, ["cache/", "embedded/", "peakfiles/"]) === TRUE) {
+			$base = APP_ROOT;
+		}
+
+		if(is_dir($realpath) === FALSE){ //} || $this->checkAccess($path, $baseDirs) === FALSE) {
+			$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$realpath]));
 			return FALSE;
 		}
 
 		// check filesystem permission
-		if(is_readable($base . $path) === FALSE) {
+		if(is_readable($realpath) === FALSE) {
 			$app->flashNow("error", $app->ll->str("filebrowser.dirpermission", [$path]));
 			return FALSE;
 		}
 
-		if($app->config["filebrowser"]["restrict-to-musicdir"] !== "1") {
-			return [
-				"base" => $base,
-				"dir" => $path
-			];
-		}
-
-		// avoid path disclosure outside relevant directories
-		$realpath = realpath($base.$path) . DS;
-
-		if(!$realpath) {
-			$app->flashNow("error", $app->ll->str("filebrowser.realpathempty", [$base.$path]));
-			return FALSE;
+		if($app->config["filebrowser"]["restrict-to-musicdir"] !== "1" || $systemdir === TRUE) {
+			return $return;
 		}
 
 		// and again we do the same musicdir/alternative_musicdir check...
 		// TODO: move this to a proper place
 		if(stripos($realpath, $app->config["mpd"]["musicdir"]) !== 0
 		&& stripos($realpath, $app->config["mpd"]["alternative_musicdir"]) !== 0 ) {
-			$app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$base .$path, $app->config["mpd"]["musicdir"]]));
+			$app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
 			return FALSE;
 		}
 
-		return [
-			"base" => $base,
-			"dir" => $path
-		];
+		return $return;
 	}
 
 	/**
