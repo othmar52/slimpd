@@ -165,10 +165,9 @@ class Systemcheck {
 		// check if db-schema is correct
 		if($check['dbSchema']['skip'] === FALSE) {
 			\Helper::setConfig( getDatabaseDiffConf($app) );
-			$db = \Helper::getDbObject();
 	        $tmpdb = \Helper::getTmpDbObject();
 	        \Helper::loadTmpDb($tmpdb);
-	        $diff = new \dbDiff($db, $tmpdb);
+	        $diff = new \dbDiff(\Helper::getDbObject(), $tmpdb);
 	        $difference = $diff->getDifference();
 	        if(!count($difference['up']) && !count($difference['down'])) {
 				$check['dbSchema']['status'] = 'success';

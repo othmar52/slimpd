@@ -289,25 +289,25 @@ abstract class AbstractModel {
 		} else {
 			// check if we have a record with this path
 			$classPath = get_called_class();
-			$i2 = new $classPath;
+			$instance = new $classPath;
 			
 			if(method_exists($classPath, 'getRelativePathHash') === TRUE) {
-				$i2 = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
-				if($i2 === NULL && $this->getRelativePathHash() !== '') {
+				$instance = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
+				if($instance === NULL && $this->getRelativePathHash() !== '') {
 					return $this->insert();
 				}
 			}
 			
 			
-			if($i2 === NULL && method_exists($classPath, 'getRelativePath') === TRUE) {
-				$i2 = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+			if($instance === NULL && method_exists($classPath, 'getRelativePath') === TRUE) {
+				$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
 			}
 			
-			if($i2 === NULL && method_exists($classPath, 'getAz09') === TRUE) {
-				$i2 = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+			if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
+				$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
 			}
-			if($i2 !== NULL && $i2->getId() > 0) {
-				$this->setId($i2->getId());
+			if($instance !== NULL && $instance->getId() > 0) {
+				$this->setId($instance->getId());
 			} else {
 				return $this->insert();
 			}
@@ -329,16 +329,16 @@ abstract class AbstractModel {
 		} else {
 			// check if we have a record with this path
 			$classPath = get_called_class();
-			$i2 = new $classPath;
+			$instance = new $classPath;
 			if(method_exists($classPath, 'getRelativePath') === TRUE) {
-				$i2 = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+				$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
 			}
 			
 			if(method_exists($classPath, 'getAz09') === TRUE) {
-				$i2 = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+				$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
 			}
-			if($i2 !== NULL && $i2->getId() > 0) {
-				$this->setId($i2->getId());
+			if($instance !== NULL && $instance->getId() > 0) {
+				$this->setId($instance->getId());
 			} else {
 				// no idea which database item should be deleted...
 				return FALSE;
@@ -386,37 +386,37 @@ abstract class AbstractModel {
 			if($az09 === '' || preg_match("/^hash0x([a-f0-9]{7})$/", $az09)) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
 				$itemIds[$idForUnknown] = $idForUnknown;
-			} else {
-				
-				
-				// unify items based on config
-				if (array_key_exists($az09, $GLOBALS['unified' . $class . 's']) === TRUE) {
-					$itemPart = $GLOBALS['unified' . $class . 's'][$az09];
-					$az09 = az09($itemPart);
-				}
-				
-				// check if we alread have an id
-				// permformance improvement ~8%
-				if(isset($GLOBALS[$class . 'Cache'][$az09]) === TRUE) {
-					$itemIds[$GLOBALS[$class . 'Cache'][$az09]] = $GLOBALS[$class . 'Cache'][$az09];
-					continue;
-				}
-				
-				$query = "SELECT id FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
-				$result = $app->db->query($query);
-				$record = $result->fetch_assoc();
-				if($record) {
-					$itemId = $record['id'];
-				} else {
-					$g = new $classPath();
-					$g->setTitle($itemPart);
-					$g->setAz09($az09);
-					$g->insert();
-					$itemId = $app->db->insert_id;
-				}
-				$itemIds[$itemId] = $itemId;
-				$GLOBALS[$class .'Cache'][$az09] = $itemId;
+				continue;
 			}
+				
+				
+			// unify items based on config
+			if (array_key_exists($az09, $GLOBALS['unified' . $class . 's']) === TRUE) {
+				$itemPart = $GLOBALS['unified' . $class . 's'][$az09];
+				$az09 = az09($itemPart);
+			}
+			
+			// check if we alread have an id
+			// permformance improvement ~8%
+			if(isset($GLOBALS[$class . 'Cache'][$az09]) === TRUE) {
+				$itemIds[$GLOBALS[$class . 'Cache'][$az09]] = $GLOBALS[$class . 'Cache'][$az09];
+				continue;
+			}
+			
+			$query = "SELECT id FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$result = $app->db->query($query);
+			$record = $result->fetch_assoc();
+			if($record) {
+				$itemId = $record['id'];
+			} else {
+				$instance = new $classPath();
+				$instance->setTitle($itemPart);
+				$instance->setAz09($az09);
+				$instance->insert();
+				$itemId = $app->db->insert_id;
+			}
+			$itemIds[$itemId] = $itemId;
+			$GLOBALS[$class .'Cache'][$az09] = $itemId;
 		}
 		return $itemIds;
 		
@@ -427,8 +427,8 @@ abstract class AbstractModel {
 		$itemIds = '';
 		$return = array();
 		$classPath = get_called_class();
-		if(preg_match("/\\\([^\\\]*)$/", $classPath, $m)) {
-			$getter = 'get' . $m[1] . 'Id';
+		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
+			$getter = 'get' . $matches[1] . 'Id';
 		} else {
 			$getter = 'get' . $classPath . 'Id';
 		}
@@ -479,7 +479,6 @@ abstract class AbstractModel {
 		}
 		$currentPage = ($currentPage < 1) ? 1 : $currentPage;
 		
-		$db = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName();
 		// TODO: validate orderBy. for now use a quick and dirty whitelist
 		switch($orderBy) {
@@ -494,7 +493,7 @@ abstract class AbstractModel {
 		#$query .= ' ORDER BY trackCount DESC '; // TODO: handle ordering
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit
 		#echo $query; die();
-		$result = $db->query($query);
+		$result = \Slim\Slim::getInstance()->db->query($query);
 
 		$calledClass =get_called_class();
 		while($record = $result->fetch_assoc()) {
@@ -507,9 +506,8 @@ abstract class AbstractModel {
 	}
 	
 	public static function getCountAll() {
-		$db = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName();
-		$result = $db->query($query);
+		$result = \Slim\Slim::getInstance()->db->query($query);
 		if($result === FALSE) {
 			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
 			return 0;
@@ -518,17 +516,17 @@ abstract class AbstractModel {
 	}
 	
 	public static function getRandomInstance() {
-		$db = \Slim\Slim::getInstance()->db;
+		$database = \Slim\Slim::getInstance()->db;
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
-		$higestId = $db->query("SELECT id FROM ". self::getTableName() ." ORDER BY id DESC LIMIT 0, 1")->fetch_assoc()['id'];
+		$higestId = $database->query("SELECT id FROM ". self::getTableName() ." ORDER BY id DESC LIMIT 0, 1")->fetch_assoc()['id'];
 
 		$maxAttempts = 1000;
 		$counter = 0;
 		try {
 			while (TRUE) {
-				$try = $db->query(
+				$try = $database->query(
 					"SELECT id FROM ". self::getTableName() ." WHERE id = " . mt_rand(1, $higestId)
 				)->fetch_assoc()['id'];
 				if($try !== NULL) {

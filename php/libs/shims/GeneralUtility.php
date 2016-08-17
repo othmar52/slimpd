@@ -14,8 +14,8 @@ function remU($input){
 
 function timeStringToSeconds($time) {
 	$sec = 0;
-	foreach (array_reverse(explode(":", $time)) as $k => $v) {
-		$sec += pow(60, $k) * $v;
+	foreach (array_reverse(explode(":", $time)) as $key => $value) {
+		$sec += pow(60, $key) * $value;
 	}
 	return $sec;
 }
@@ -374,14 +374,10 @@ function formatByteSize($bytes) {
 }
 
 function uniqueArrayOrderedByRelevance(array $input) {
-	$acv=array_count_values($input);
+	$acv = array_count_values($input);
 	arsort($acv); 
-	$result=array_keys($acv);
-	return $result;	
+	return array_keys($acv);	
 }
-
-
-
 
 /// build a list of trigrams for a given keywords
 function buildTrigrams ( $keyword ) {
@@ -433,42 +429,42 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	$suggested = array();
 	$llimf = 0;
-	$i = 0;
+	$idx = 0;
 	foreach ($words as $key => $word) {
 		if ($word["docs"] != 0) {
 			$llimf +=$word["docs"];
 		}
-		$i++;
+		$idx++;
 	}
-	if($i === 0) {
+	if($idx === 0) {
 		return FALSE;
 	}
-	$llimf = $llimf / ($i * $i);
+	$llimf = $llimf / ($idx * $idx);
 	$mis = [];
 	foreach ($words  as $key => $word) {
 		if ($word["docs"] == 0 | $word["docs"] < $llimf) {
 			$mis[] = $word["keyword"];
 		}
 	}
-	if(count($mis) > 0) {
-		foreach ($mis as $m) {
-			$re = MakeSuggestion($m, $sphinxPDO);
-			if ($re && $m !== $re) {
-				$suggested[$m] = $re;
-			}
-		}
-		if(count($words) ==1 && empty($suggested)) {
-			return FALSE;
-		}
-		$phrase = explode(" ", $query);
-		foreach ($phrase as $k => $word) {
-			if (isset($suggested[strtolower($word)])) {
-				$phrase[$k] = $suggested[strtolower($word)];
-			}
-		}
-		return join(" ", $phrase);
+	if(count($mis) < 1) {
+		return FALSE;
 	}
-	return FALSE;
+	foreach ($mis as $m) {
+		$re = MakeSuggestion($m, $sphinxPDO);
+		if ($re && $m !== $re) {
+			$suggested[$m] = $re;
+		}
+	}
+	if(count($words) ==1 && empty($suggested)) {
+		return FALSE;
+	}
+	$phrase = explode(" ", $query);
+	foreach ($phrase as $k => $word) {
+		if (isset($suggested[strtolower($word)])) {
+			$phrase[$k] = $suggested[strtolower($word)];
+		}
+	}
+	return join(" ", $phrase);
 }
 
 // TODO: recursify and remove identical codeblocks
@@ -482,75 +478,75 @@ function getRenderItems() {
 		"itembreadcrumbs" => [],
 	);
 	
-	foreach($args as $i) {
-		if(is_object($i)) {
-			switch(get_class($i)) {
+	foreach($args as $item) {
+		if(is_object($item)) {
+			switch(get_class($item)) {
 				case "Slimpd\Album":
-					if(isset($return["albums"][$i->getId()]) === FALSE) {
-						$return["albums"][$i->getId()] = $i;
+					if(isset($return["albums"][$item->getId()]) === FALSE) {
+						$return["albums"][$item->getId()] = $item;
 					}
-					if(isset($return["itembreadcrumbs"][$i->getRelativePathHash()]) === FALSE) {
-						$return["itembreadcrumbs"][$i->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($i->getRelativePath());
+					if(isset($return["itembreadcrumbs"][$item->getRelativePathHash()]) === FALSE) {
+						$return["itembreadcrumbs"][$item->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item->getRelativePath());
 					}
 					break;
 				case "Slimpd\Artist":
-					if(isset($return["artists"][$i->getId()]) === FALSE) {
-						$return["artists"][$i->getId()] = $i;
+					if(isset($return["artists"][$item->getId()]) === FALSE) {
+						$return["artists"][$item->getId()] = $item;
 					}
 					break;
 				case "Slimpd\Label":
-					if(isset($return["labels"][$i->getId()]) === FALSE) {
-						$return["labels"][$i->getId()] = $i;
+					if(isset($return["labels"][$item->getId()]) === FALSE) {
+						$return["labels"][$i->getId()] = $item;
 					}
 					break;
 				case "Slimpd\Genre":
-					if(isset($return["genres"][$i->getId()]) === FALSE) {
-						$return["genres"][$i->getId()] = $i;
+					if(isset($return["genres"][$item->getId()]) === FALSE) {
+						$return["genres"][$item->getId()] = $item;
 					}
 					break;
 				case "Slimpd\Track":
-					if(isset($return["itembreadcrumbs"][$i->getRelativePathHash()]) === FALSE) {
-						$return["itembreadcrumbs"][$i->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($i->getRelativePath());
+					if(isset($return["itembreadcrumbs"][$item->getRelativePathHash()]) === FALSE) {
+						$return["itembreadcrumbs"][$item->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item->getRelativePath());
 					}
 					break;
 			}
 		}
-		if(is_array($i)) {
-			foreach($i as $ii) {
-				if(is_object($ii)) {
-					switch(get_class($ii)) {
-						case "Slimpd\Album":
-							if(isset($return["albums"][$ii->getId()]) === FALSE) {
-								$return["albums"][$ii->getId()] = $ii;
-							}
-							if(isset($return["itembreadcrumbs"][$ii->getRelativePathHash()]) === FALSE) {
-								$return["itembreadcrumbs"][$ii->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($ii->getRelativePath());
-							}
-							break;
-						case "Slimpd\Artist":
-							if(isset($return["artists"][$ii->getId()]) === FALSE) {
-								$return["artists"][$ii->getId()] = $ii;
-							}
-							break;
-						case "Slimpd\Label":
-							if(isset($return["labels"][$ii->getId()]) === FALSE) {
-								$return["labels"][$ii->getId()] = $ii;
-							}
-							break;
-						case "Slimpd\Genre":
-							if(isset($return["genres"][$ii->getId()]) === FALSE) {
-								$return["genres"][$ii->getId()] = $ii;
-							}
-							break;
-						case "Slimpd\Track":
-							if(isset($return["itembreadcrumbs"][$ii->getRelativePathHash()]) === FALSE) {
-								$return["itembreadcrumbs"][$ii->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($ii->getRelativePath());
-							}
-							break;
-					}
+		if(is_array($item)) {
+			foreach($item as $item2) {
+				if(is_object($item2) === FALSE) {
+					continue;
+				}
+				switch(get_class($item2)) {
+					case "Slimpd\Album":
+						if(isset($return["albums"][$item2->getId()]) === FALSE) {
+							$return["albums"][$item2->getId()] = $item2;
+						}
+						if(isset($return["itembreadcrumbs"][$item2->getRelativePathHash()]) === FALSE) {
+							$return["itembreadcrumbs"][$item2->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item2->getRelativePath());
+						}
+						break;
+					case "Slimpd\Artist":
+						if(isset($return["artists"][$item2->getId()]) === FALSE) {
+							$return["artists"][$item2->getId()] = $item2;
+						}
+						break;
+					case "Slimpd\Label":
+						if(isset($return["labels"][$item2->getId()]) === FALSE) {
+							$return["labels"][$item2->getId()] = $item2;
+						}
+						break;
+					case "Slimpd\Genre":
+						if(isset($return["genres"][$item2->getId()]) === FALSE) {
+							$return["genres"][$item2->getId()] = $item2;
+						}
+						break;
+					case "Slimpd\Track":
+						if(isset($return["itembreadcrumbs"][$item2->getRelativePathHash()]) === FALSE) {
+							$return["itembreadcrumbs"][$item2->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item2->getRelativePath());
+						}
+						break;
 				}
 			}
-			
 		}
 	}
 	return $return;
@@ -563,27 +559,27 @@ function convertInstancesArrayToRenderItems($input) {
 		"artists" => []
 	];
 	
-	foreach($input as $i) {
-		if(is_object($i)) {
-			switch(get_class($i)) {
-				case "Slimpd\Artist":
-					if(isset($return["artists"][$i->getId()]) === FALSE) {
-						$return["artists"][$i->getId()] = $i;
-					}
-					break;
-				case "Slimpd\Label":
-					if(isset($return["labels"][$i->getId()]) === FALSE) {
-						$return["labels"][$i->getId()] = $i;
-					}
-					break;
-				case "Slimpd\Genre":
-					if(isset($return["genres"][$i->getId()]) === FALSE) {
-						$return["genres"][$i->getId()] = $i;
-					}
-					break;
-			}
+	foreach($input as $item) {
+		if(is_object($item) === FALSE) {
+			continue;
 		}
-
+		switch(get_class($item)) {
+			case "Slimpd\Artist":
+				if(isset($return["artists"][$item->getId()]) === FALSE) {
+					$return["artists"][$item->getId()] = $item;
+				}
+				break;
+			case "Slimpd\Label":
+				if(isset($return["labels"][$item->getId()]) === FALSE) {
+					$return["labels"][$item->getId()] = $item;
+				}
+				break;
+			case "Slimpd\Genre":
+				if(isset($return["genres"][$item->getId()]) === FALSE) {
+					$return["genres"][$item->getId()] = $item;
+				}
+				break;
+		}
 	}
 	return $return;
 }
@@ -1272,9 +1268,9 @@ function nfostring2html($inputstring) {
 	);
 
 	$str = str_replace("&", "&", $inputstring);
-	for ($i = 0; $i < 256; $i++) {
-		if ($conv_table[$i] != 0) {
-			$str = str_replace(chr($i), "&#".$conv_table[$i].";", $str);
+	for ($idx = 0; $idx < 256; $idx++) {
+		if ($conv_table[$idx] != 0) {
+			$str = str_replace(chr($idx), "&#".$conv_table[$idx].";", $str);
 		}
 	}
 	$str = str_replace(" ", "&nbsp;", $str);
