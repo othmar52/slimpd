@@ -596,9 +596,10 @@ function deliver($file, $app) {
 
 	//check if http_range is sent by browser (or download manager)
 	$range = "";
+
 	if(isset($app->environment["HTTP_RANGE"])) {
 		@list($size_unit, $range_orig) = @explode("=", $app->environment["HTTP_RANGE"], 2);
-		if ($size_unit !== "bytes") {
+		if ($size_unit == "bytes") {
 			//multiple ranges could be specified at the same time, but for simplicity only serve the first range
 			//http://tools.ietf.org/id/draft-ietf-http-range-retrieval-00.txt
 			@list($range, $extra_ranges) = @explode(",", $range_orig, 2);
