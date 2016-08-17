@@ -359,20 +359,14 @@ abstract class AbstractModel {
 		
 		$app = \Slim\Slim::getInstance();
 		$classPath = get_called_class();
-		if(preg_match("/\\\([^\\\]*)$/", $classPath, $m)) {
-			$class = strtolower($m[1]);
-		} else {
-			$class = strtolower($classPath);
+		$class = strtolower($classPath);
+		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
+			$class = strtolower($matches[1]);
 		}
 		if(isset($GLOBALS['unified' . $class . 's']) === FALSE) {
-			if(method_exists($classPath, 'unifyItemnames')) {
-				if(isset($app->config[$class .'s'])) {
-					$GLOBALS['unified' . $class . 's'] = $classPath::unifyItemnames($app->config[$class .'s']);
-				} else {
-					$GLOBALS['unified' . $class . 's'] = array();
-				}
-			} else {
-				$GLOBALS['unified' . $class . 's'] = array();
+			$GLOBALS['unified' . $class . 's'] = array();
+			if(method_exists($classPath, 'unifyItemnames') && isset($app->config[$class .'s'])) {
+				$GLOBALS['unified' . $class . 's'] = $classPath::unifyItemnames($app->config[$class .'s']);
 			}
 		}
 		
@@ -410,13 +404,16 @@ abstract class AbstractModel {
 			$record = $result->fetch_assoc();
 			if($record) {
 				$itemId = $record['id'];
-			} else {
-				$instance = new $classPath();
-				$instance->setTitle($itemPart);
-				$instance->setAz09($az09);
-				$instance->insert();
-				$itemId = $app->db->insert_id;
+				$itemIds[$itemId] = $itemId;
+				$GLOBALS[$class .'Cache'][$az09] = $itemId;
+				continue;
 			}
+			$instance = new $classPath();
+			$instance->setTitle($itemPart);
+			$instance->setAz09($az09);
+			$instance->insert();
+			$itemId = $app->db->insert_id;
+
 			$itemIds[$itemId] = $itemId;
 			$GLOBALS[$class .'Cache'][$az09] = $itemId;
 		}
@@ -425,7 +422,7 @@ abstract class AbstractModel {
 	}
 	
 	
-	public static function getInstancesForRendering($args) {
+	public static function getInstancesForRendering() {
 		$idString = '';
 		$return = array();
 		$classPath = get_called_class();
@@ -436,11 +433,11 @@ abstract class AbstractModel {
 					if(is_object($item) === FALSE) {
 						continue;
 					}
-					$idString .= self::getIdComaString($classPath, $item);
+					$idString .= self::getIdCommaString($classPath, $item);
 				}
 			}
 			if(is_object($argument) === TRUE) {
-				$idString .= self::getIdComaString($classPath, $argument);
+				$idString .= self::getIdCommaString($classPath, $argument);
 			}
 		}
 	
@@ -451,7 +448,7 @@ abstract class AbstractModel {
 		return $return;
 	}
 
-	private static function getIdComaString($classPath, $instance) {
+	private static function getIdCommaString($classPath, $instance) {
 		$idString = "";
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
 			$getter = 'get' . $matches[1] . 'Id';
