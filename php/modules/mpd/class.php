@@ -33,24 +33,10 @@ class mpd
 		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
 		
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
-		
-		$totalPages = $this->getCurrentPlaylistTotalPages();
-		
+
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
 
-		if(1 == 2) {
-			echo "<pre>";
-			echo "minIndex:    " . $minIndex . "\n";
-			echo "maxIndex:    " . $maxIndex . "\n";
-			echo "listPos:     " . $listPos . "\n";
-			echo "listLength:  " . $listLength . "\n";
-			echo "totalPages:  " . $totalPages . "\n";
-			echo "pageNum:     " . $pageNum . "\n";
-			echo "itemsPerPage:" . $itemsPerPage . "\n";
-			die();
-		}
-		
 		$files = $this->mpd('playlist');
 		if($files === FALSE) {
 			return array();
@@ -61,7 +47,7 @@ class mpd
 				continue;
 			}
 			$track = \Slimpd\Track::getInstanceByPath($filepath);
-			
+
 			if($track === NULL) {
 				$track = new \Slimpd\Track();
 				$track->setRelativePath($filepath);
@@ -69,8 +55,6 @@ class mpd
 			}
 			$playlist[$idx] = $track;
 		}
-		
-		
 		return $playlist;
 	}
 	
@@ -403,7 +387,7 @@ class mpd
 			case 'removeDupes':
 				// TODO: remove requirement of having mpc installed
 				$cmd = APP_ROOT . 'vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
-				exec($cmd, $result);
+				exec($cmd);
 				// TODO: count removed dupes and display result
 				notifyJson("MPD: removed dupes in current playlist", 'mpd');
 				break;

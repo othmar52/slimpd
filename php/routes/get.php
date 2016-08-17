@@ -124,15 +124,12 @@ $app->get('/deliver/:item+', function($item) use ($app, $vars){
 	}
 	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['musicdir'] . $path, $app);
-		$app->stop();
 	}
 	
 	if(is_file($app->config['mpd']['alternative_musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
-		$app->stop();
 	}
-	echo "Ivalid file: " . $path;
-	$app->stop();
+	deliveryError(404, "Invalid file: " . $path);
 });
 
 

@@ -139,13 +139,12 @@ class Importer {
 			$t->setImportStatus(2);
 			
 			// TODO: handle not found files
-			if(is_file($app->config['mpd']['musicdir'] . $record['relativePath']) === TRUE) {
-				$t->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relativePath']) );
-			} else {
+			if(is_file($app->config['mpd']['musicdir'] . $record['relativePath']) === FALSE) {
 				$t->setError('invalid file');
 				$t->update();
 				continue;
 			}
+			$t->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relativePath']) );
 			
 			// skip very large files
 			// TODO: how to handle this?
@@ -235,22 +234,25 @@ class Importer {
 				$bitmap->setEmbedded(1);
 				// setAlbumId() will be applied later because at this time we havn't any albumId's but tons of bitmap-record-dupes
 				
-				if(isset($bitmapData['picturetype']) !== FALSE) {
-					$bitmap->setEmbeddedName($bitmapData['picturetype'] . '.ext');
-				} else {
-					$bitmap->setEmbeddedName('Other.ext');
-				}
+				$bitmap->setEmbeddedName(
+					(isset($bitmapData['picturetype']) !== FALSE)
+						? $bitmapData['picturetype'] . '.ext'
+						: 'Other.ext'
+				);
 				
 				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()));
 				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getEmbeddedName()));
-				
-				if($imageSize !== FALSE) {
-					$bitmap->setWidth($imageSize[0]);
-					$bitmap->setHeight($imageSize[1]);
-					$bitmap->setMimeType($imageSize['mime']);
-				} else {
+
+				if($imageSize === FALSE) {
 					$bitmap->setError(1);
+					$bitmap->update();
+					continue;
 				}
+
+				$bitmap->setWidth($imageSize[0]);
+				$bitmap->setHeight($imageSize[1]);
+				$bitmap->setMimeType($imageSize['mime']);
+
 				# TODO: can we call insert() immediatly instead of letting check the update() function itself?
 				# this could save performance...
 				$bitmap->update();
@@ -513,8 +515,6 @@ class Importer {
 		
 		$app = \Slim\Slim::getInstance();
 		
-		$phpThumb = Bitmap::getPhpThumb();
-		
 		$query = "SELECT count(id) AS itemCountTotal FROM album WHERE lastScan <= filemtime;";
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
@@ -531,10 +531,10 @@ class Importer {
 				'insertedImages' => $insertedImages
 			));
 			
-			$a = new Album();
-			$a->setId($record['id']);
-			$a->setLastScan(time());
-			$a->setImportStatus(2);
+			$album = new Album();
+			$album->setId($record['id']);
+			$album->setLastScan(time());
+			$album->setImportStatus(2);
 			
 			$foundAlbumImages = $this->getFilesystemImagesForMusicFile($record['relativePath'].'filename-not-relevant.mp3');
 
@@ -550,19 +550,22 @@ class Importer {
 				$bitmap->setFilesize(filesize($imagePath));
 				$bitmap->setAlbumId($record['id']);
 				
-				if($imageSize !== FALSE) {
-					$bitmap->setWidth($imageSize[0]);
-					$bitmap->setHeight($imageSize[1]);
-					$bitmap->setMimeType($imageSize['mime']);
-				} else {
+				if($imageSize === FALSE) {
 					$bitmap->setError(1);
+					$bitmap->update();
+					cliLog("ERROR getting image size from " . $relativePath, 2, 'red');
+					continue;
 				}
+				$bitmap->setWidth($imageSize[0]);
+				$bitmap->setHeight($imageSize[1]);
+				$bitmap->setMimeType($imageSize['mime']);
+
 				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelativePath()));
 				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getRelativePath()));
 				$bitmap->update();
 				$insertedImages++;
 			}
-			$a->update();
+			$album->update();
 		}
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemCountChecked . ' directories',
@@ -672,18 +675,18 @@ class Importer {
 
 	/**
 	 * decrease timestamps - so all tracks will get remigrated on next standard-update-run
-	 * 
+	 * TODO: consider to remove because maybe tons of files gets remigrated
 	 */
 	public function modifyDirectoryTimestamps($relativeDirectoryPath) {
-		$db = \Slim\Slim::getInstance()->db;
+		$database = \Slim\Slim::getInstance()->db;
 		$query = "
 			UPDATE album
 			SET
 				lastScan = lastScan-1,
 				filemtime = filemtime-1
 			WHERE
-				relativePath LIKE '". $db->real_escape_string($relativeDirectoryPath)."%'";
-		$db->query($query);
+				relativePath LIKE '". $database->real_escape_string($relativeDirectoryPath)."%'";
+		$database->query($query);
 		return;
 	}
 	
@@ -733,12 +736,11 @@ class Importer {
 		$importer->beginJob($data, __FUNCTION__);
 		return;
 	}
-	
+
 	/**
 	 * queStandardUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
 	public static function queStandardUpdate() {
-		$app = \Slim\Slim::getInstance();
 		$data = array(
 			'standardUpdate' => 1
 		);
@@ -747,7 +749,7 @@ class Importer {
 		$importer->beginJob($data, __FUNCTION__);
 		return;
 	}
-	
+
 	private function beginJob($data = array(), $function = '') {
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$app = \Slim\Slim::getInstance();
@@ -1101,7 +1103,6 @@ class Importer {
 		$currentSong = "";
 		$currentPlaylist = "";
 		$currentSection = "";
-		$dirs = array();
 		
 		//$songs = array();
 		//$playlists = array();
@@ -1367,13 +1368,12 @@ class Importer {
 			ORDER BY albumId;";
 		$result = $app->db->query($query);
 		
-		$images = array();
 		$previousKey = '';
 
 		$deletedFilesize = 0;
 		
-		$msgKeep = $app->ll->str('importer.image.keep');
-		$msgDestroy = $app->ll->str('importer.image.destroy');
+		#$msgKeep = $app->ll->str('importer.image.keep');
+		#$msgDestroy = $app->ll->str('importer.image.destroy');
 		$msgProcessing = $app->ll->str('importer.image.dupecheck.processing');
 		while ($record = $result->fetch_assoc()) {
 			$this->updateJob(array(
@@ -1443,8 +1443,7 @@ class Importer {
 		$result = $app->db->query($query);
 		
 		$counter = 0;
-		$previousAlbumId = 0;
-		
+
 		while($record = $result->fetch_assoc()) {
 			$counter++;
 			
@@ -2035,88 +2034,4 @@ class Importer {
 		fwrite ( $out,  "\n");
 		$app->stop();
 	}
-
-	public function extractInfosFromAlbumFiles() {
-		
-		# TODO:  tons of guessing out of messy common shemes like:
-		
-		// Chemical_Brothers_-_Augumented_-1998__MTM/17_No_Name.mp3
-		// Sasha_Donatello_Knox_Kastis_Torrau_Arnas_D_O_Smoke_Cone_(Lnoe013)/Sasha_Donatello_Knox_Kastis_Torrau_Arnas_D-Smoke_Cone_(UNER_Live_Club_Mix).mp3
-		// Maceo_Plex-Galactic_Cinema_(DJ-Kicks)/Maceo_Plex-Mind_On_Fire_(Original_Mix).mp3
-		// 01. Artist A -Tracktitle.ext
-		// Lauschgift/07-Tokio-Paris.mp3
-		// adiemus_2-cantata_mundi_2002/112_chorale_vi_and_cantus_-_song_of_aeolus.mp3
-		// enigma-the_screen_behind_the_mirror_2000/103_enigma-gravity_of_love.mp3
-		// Kenny-KENNY01-Kenny-200X/A1-Sulfurex-Point_Break_(Mutant_Metallique_Remix).wav
-		// Dezakore-DEZAK001-Various_Artists-Dezak-YYYY/A2-MSD-Swinger.wav
-		// Moloko/Extract_from_CD_4-Track_4.mp3
-		// techno_MIXES/DJ_Dave_Clarke_and_Umek-Live___Convex_Prag.mp3
-		// red_hot_chili_peppers-blood_sugar_sex_magik-NEU/red_hot_chili_peppers-suck_my_kiss.mp3
-		// mixed/Die_fantastischen_Vier-Das_Kind_vor_dem_Euch_alle_warnten.mp3
-		// nine_inch_nails-pretty_hate_machine/Nine_Inch_Nails-Pretty_Hate_Machine-05-Something_I_Can.mp3
-		// beatles_yellow_submarine/Track-14.mp3
-		// kaipron/Aria6_(Aria_Giovanni).asf
-		
-		// fat_boy_slim/05-grace-i_want_to_live_oakenfold_and_osborne_mix.mp3
-		
-		// Exciter/Depeche_Mode-13-Goodnight_Lovers.mp3
-		
-		// Only_ElectroHouse_Vol.16/Da_Silva-Wiretrip_(Edson_Pride_Darknite_Mix).mp3
-		
-		// Freshlub_Music_Releases_Of_Electrohouse_16.12.2008/X-Aro_Project-Interference_(Original_Mix).mp3
-		
-		// /Robert_Plant_(1984.02.08)_Open_Arms_(Midas_Touch)_(SBD_320)/Disc_2_(of_2)/3-Slow_Dancer.mp3
-		
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

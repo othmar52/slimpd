@@ -128,7 +128,17 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 		return;
 	}
 	
-	// TODO: check colors (especially the color after linebreaks)
+
+	// TODO: read from config
+	$shellColorize = TRUE;
+
+	if($shellColorize !== TRUE) {
+		echo $msg ."\n";
+		ob_flush();
+		return;
+	}
+
+	// TODO: check colors (especially the color and boldness after linebreaks)
 	#$black 		= "33[0;30m";
 	#$darkgray 	= "33[1;30m";
 	#$blue 		= "33[0;34m";
@@ -145,19 +155,13 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	#$yellow 	= "33[1;33m";
 	#$lightgray 	= "33[0;37m";
 	#$white 		= "33[1;37m";
-
-	$shellColorize = TRUE;
-	$prefix = "";
-	$suffix = "";
-	if($shellColorize == TRUE) {
-		switch($color) {
-			case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
-			case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
-			case "red":    $prefix = "\033[1;31m"; $suffix = "\033[37m"; break;
-			case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
-			case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
-			default:       $prefix = "";         $suffix = "";         break;
-		}
+	switch($color) {
+		case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
+		case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
+		case "red":    $prefix = "\033[1;31m"; $suffix = "\033[37m"; break;
+		case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
+		case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
+		default:       $prefix = "";         $suffix = "";         break;
 	}
 	echo $prefix . $msg . $suffix . "\n";
 	ob_flush();
@@ -262,14 +266,16 @@ function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
 		$result = $temp;
 	}
 
-	if ($limit != 0) {
-		if ($limit < 0) {
-			$result = array_slice($result, 0, $limit);
-		} elseif (count($result) > $limit) {
-			$lastElements = array_slice($result, $limit - 1);
-			$result = array_slice($result, 0, $limit - 1);
-			$result[] = implode($delim, $lastElements);
-		}
+	if($limit === 0) {
+		return $result;
+	}
+	if ($limit < 0) {
+		return array_slice($result, 0, $limit);
+	}
+	if (count($result) > $limit) {
+		$lastElements = array_slice($result, $limit - 1);
+		$result = array_slice($result, 0, $limit - 1);
+		$result[] = implode($delim, $lastElements);
 	}
 	return $result;
 }
@@ -692,12 +698,12 @@ function deliver($file, $app) {
 		flush();
 		if (connection_status()!=0) {
 			@fclose($file);
-			exit;
+			$app->stop();
 		}
 	}
  
 	@fclose($file);
-	exit;
+	$app->stop();
 }
 
 
@@ -714,9 +720,15 @@ function deliveryError( $code = 401, $msg = null ) {
 	if(!$msg) {
 		$msg = $msgs[$code];
 	}
+
+	$app = \Slim\Slim::getInstance();
+	$newResponse = $app->response();
+	$newResponse->body(
+		sprintf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>", $code, $msg, $msg)
+	);
+	$newResponse->status($code);
 	header(sprintf("HTTP/1.0 %s %s",$code,$msg));
-	printf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>",$code,$msg,$msg);
-	exit;
+	$app->stop();
 }
 
 function getMimeType ( $filename ) {
@@ -1270,95 +1282,6 @@ function nfostring2html($inputstring) {
 	return $str;
 	
 }
-
-
-/* copied from /vendor/james-heinrich/getid3/demos/demo.browse.php */
-function string_var_dump($variable) {
-	if (version_compare(PHP_VERSION, "4.3.0", ">=")) {
-		return print_r($variable, true);
-	}
-	ob_start();
-	var_dump($variable);
-	$dumpedvariable = ob_get_contents();
-	ob_end_clean();
-	return $dumpedvariable;
-}
-
-/**
- * copied from /vendor/james-heinrich/getid3/demos/demo.browse.php
- * TODO: move to twig template instead of having html in php
- */
-function table_var_dump($variable, $wrap_in_td=false, $encoding='ISO-8859-1') {
-	$returnstring = '';
-	switch (gettype($variable)) {
-		case 'array':
-			$returnstring .= ($wrap_in_td ? '<td>' : '');
-			$returnstring .= '<table class="dump" cellspacing="0" cellpadding="2">';
-			foreach ($variable as $key => $value) {
-				$returnstring .= '<tr><td valign="top"><b>'.str_replace("\x00", ' ', $key).'</b></td>'."\n";
-				$returnstring .= '<td valign="top">'.gettype($value);
-				if (is_array($value)) {
-					$returnstring .= '&nbsp;('.count($value).')';
-				} elseif (is_string($value)) {
-					$returnstring .= '&nbsp;('.strlen($value).')';
-				}
-				//if (($key == 'data') && isset($variable['image_mime']) && isset($variable['dataoffset'])) {
-				if (($key == 'data') && isset($variable['image_mime'])) {
-					$imageinfo = array();
-					if ($imagechunkcheck = \getid3_lib::GetDataImageSize($value, $imageinfo)) {
-						$returnstring .= "</td>"."\n".'<td><img src="data:'.$variable['image_mime'].';base64,'.base64_encode($value).'" width="'.$imagechunkcheck[0].'" height="'.$imagechunkcheck[1].'"></td></tr>'."\n";
-					} else {
-						$returnstring .= "</td>"."\n".'<td><i>invalid image data</i></td></tr>'."\n";
-					}
-				} else {
-					$returnstring .= "</td>"."\n".table_var_dump($value, true, $encoding).'</tr>'."\n";
-				}
-			}
-			$returnstring .= "</table>\n";
-			$returnstring .= ($wrap_in_td ? "</td>\n" : "");
-			break;
-
-		case 'boolean':
-			$returnstring .= ($wrap_in_td ? '<td class="dump_boolean">' : '').($variable ? 'TRUE' : 'FALSE').($wrap_in_td ? "</td>"."\n" : '');
-			break;
-
-		case 'integer':
-			$returnstring .= ($wrap_in_td ? '<td class="dump_integer">' : '').$variable.($wrap_in_td ? "</td>"."\n" : '');
-			break;
-
-		case 'double':
-		case 'float':
-			$returnstring .= ($wrap_in_td ? '<td class="dump_double">' : '').$variable.($wrap_in_td ? "</td>"."\n" : '');
-			break;
-
-		case 'object':
-		case 'null':
-			$returnstring .= ($wrap_in_td ? '<td>' : '').string_var_dump($variable).($wrap_in_td ? "</td>"."\n" : '');
-			break;
-
-		case 'string':
-			$returnstring = htmlentities($variable, ENT_QUOTES | ENT_SUBSTITUTE, $encoding);
-			$returnstring = ($wrap_in_td ? '<td class="dump_string">' : '').nl2br($returnstring).($wrap_in_td ? "</td>"."\n" : '');
-			break;
-
-		default:
-			$imageinfo = array();
-			if (($imagechunkcheck = \getid3_lib::GetDataImageSize($variable, $imageinfo)) && ($imagechunkcheck[2] >= 1) && ($imagechunkcheck[2] <= 3)) {
-				$returnstring .= ($wrap_in_td ? '<td>' : '');
-				$returnstring .= '<table class="dump" cellspacing="0" cellpadding="2">';
-				$returnstring .= '<tr><td><b>type</b></td><td>'.\getid3_lib::ImageTypesLookup($imagechunkcheck[2]).'</td></tr>'."\n";
-				$returnstring .= '<tr><td><b>width</b></td><td>'.number_format($imagechunkcheck[0]).' px</td></tr>'."\n";
-				$returnstring .= '<tr><td><b>height</b></td><td>'.number_format($imagechunkcheck[1]).' px</td></tr>'."\n";
-				$returnstring .= '<tr><td><b>size</b></td><td>'.number_format(strlen($variable)).' bytes</td></tr></table>'."\n";
-				$returnstring .= ($wrap_in_td ? "</td>"."\n" : '');
-			} else {
-				$returnstring .= ($wrap_in_td ? '<td>' : '').nl2br(htmlspecialchars(str_replace("\x00", ' ', $variable))).($wrap_in_td ? "</td>"."\n" : '');
-			}
-			break;
-	}
-	return $returnstring;
-}
-
 
 function rrmdir($dir) {
 	if (is_dir($dir)) {

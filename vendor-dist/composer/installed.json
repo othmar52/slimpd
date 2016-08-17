@@ -1181,18 +1181,18 @@
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/process.git",
-            "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc"
+            "reference": "2d6011bd6f6086b3409f85c6dd0ec61b90091a04"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
-            "reference": "489010d6598a9e3d0f52bba5b3c14cb130d5f7cc",
+            "url": "https://api.github.com/repos/symfony/process/zipball/2d6011bd6f6086b3409f85c6dd0ec61b90091a04",
+            "reference": "2d6011bd6f6086b3409f85c6dd0ec61b90091a04",
             "shasum": ""
         },
         "require": {
             "php": ">=5.5.9"
         },
-        "time": "2016-08-07 15:19:41",
+        "time": "2016-08-16 16:09:30",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1486,107 +1486,6 @@
         ]
     },
     {
-        "name": "james-heinrich/getid3",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JamesHeinrich/getID3.git",
-            "reference": "920e717f38c65c58db29c5c2586a92789be541dd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/920e717f38c65c58db29c5c2586a92789be541dd",
-            "reference": "920e717f38c65c58db29c5c2586a92789be541dd",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-07-28 12:30:10",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "getid3/getid3.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL"
-        ],
-        "description": "PHP script that extracts useful information from popular multimedia file formats",
-        "homepage": "http://www.getid3.org/",
-        "keywords": [
-            "codecs",
-            "php",
-            "tags"
-        ]
-    },
-    {
-        "name": "twig/twig",
-        "version": "1.x-dev",
-        "version_normalized": "1.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/twigphp/Twig.git",
-            "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
-            "reference": "b7cd3a88dcab5189a7f6d7f8756b17cd25faf759",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.2.7"
-        },
-        "require-dev": {
-            "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
-        },
-        "time": "2016-07-28 20:58:48",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.24-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Twig_": "lib/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com",
-                "homepage": "http://fabien.potencier.org",
-                "role": "Lead Developer"
-            },
-            {
-                "name": "Armin Ronacher",
-                "email": "armin.ronacher@active-4.com",
-                "role": "Project Founder"
-            },
-            {
-                "name": "Twig Team",
-                "homepage": "http://twig.sensiolabs.org/contributors",
-                "role": "Contributors"
-            }
-        ],
-        "description": "Twig, the flexible, fast, and secure template language for PHP",
-        "homepage": "http://twig.sensiolabs.org",
-        "keywords": [
-            "templating"
-        ]
-    },
-    {
         "name": "james-heinrich/phpthumb",
         "version": "v1.7.14",
         "version_normalized": "1.7.14.0",
@@ -1662,5 +1561,106 @@
         },
         "type": "library",
         "installation-source": "source"
+    },
+    {
+        "name": "james-heinrich/getid3",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JamesHeinrich/getID3.git",
+            "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/7c7eb57be2adc90b28e167c124c368f1d04b0460",
+            "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-08-13 14:02:30",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "getid3/getid3.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "description": "PHP script that extracts useful information from popular multimedia file formats",
+        "homepage": "http://www.getid3.org/",
+        "keywords": [
+            "codecs",
+            "php",
+            "tags"
+        ]
+    },
+    {
+        "name": "twig/twig",
+        "version": "1.x-dev",
+        "version_normalized": "1.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/twigphp/Twig.git",
+            "reference": "21039777d8519dacf81e070489c953e92164842d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/21039777d8519dacf81e070489c953e92164842d",
+            "reference": "21039777d8519dacf81e070489c953e92164842d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.2.7"
+        },
+        "require-dev": {
+            "symfony/debug": "~2.7",
+            "symfony/phpunit-bridge": "~2.7"
+        },
+        "time": "2016-08-15 17:25:09",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.24-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Twig_": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com",
+                "homepage": "http://fabien.potencier.org",
+                "role": "Lead Developer"
+            },
+            {
+                "name": "Armin Ronacher",
+                "email": "armin.ronacher@active-4.com",
+                "role": "Project Founder"
+            },
+            {
+                "name": "Twig Team",
+                "homepage": "http://twig.sensiolabs.org/contributors",
+                "role": "Contributors"
+            }
+        ],
+        "description": "Twig, the flexible, fast, and secure template language for PHP",
+        "homepage": "http://twig.sensiolabs.org",
+        "keywords": [
+            "templating"
+        ]
     }
 ]

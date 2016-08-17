@@ -25,7 +25,6 @@ import getopt
 import hashlib
 import os
 import os.path as op
-import re
 import struct
 import sys
 
@@ -44,7 +43,7 @@ def calculateUID(filepath):
     start = f.tell()
     if f.read(3) == "ID3":
         # Bytes w major/minor version (3-4)
-        version = f.read(2)
+        f.read(2)
         # Flags byte (5)
         flags = struct.unpack("B", f.read(1))[0]
         # Flat bit 4 means footer is present (10 bytes)
@@ -87,18 +86,16 @@ def main(argv):
     except getopt.GetoptError:
         print "error du fut... tips richti ju gaxbaer!!!"
         sys.exit(2)
-        
     for opt, arg in opts:
         if opt in ("-3", "--mp3"):
             if not op.isfile(arg):
                 print "ERROR: Argument %s is not a file" % (arg)
                 sys.exit(2)
-				
             hans = calcsum(arg,True)
             print hans
-			
         elif opt in ("-h", "--help"):
             print "USEAGE: -3 fullpathToFile OR --mp3=fullpathToFile"
-            
+
+
 if __name__ == "__main__":
     main(sys.argv[1:])

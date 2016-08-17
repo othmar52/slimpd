@@ -249,7 +249,7 @@ body.standalone {
 	font-size:1.8em;
 }
 
-body.vstretch14 {
+.vstretch14 {
 	-webkit-transform:scale(1,1.4); /* Safari and Chrome */
 	-moz-transform:scale(1,1.4); /* Firefox */
 	-ms-transform:scale(1,1.4); /* IE 9 */
