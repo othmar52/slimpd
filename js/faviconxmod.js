@@ -402,7 +402,7 @@ var FavIconX = (function() {
 			fillColor2 = cfg.fillColor2 || fillColor2;
 			updateTitle = cfg.updateTitle || updateTitle;
 			titleRenderer = cfg.titleRenderer || titleRenderer;
-			animCallback = cfg.callback !== undefined ? cfg.callback : animCallback;
+			animCallback = (typeof cfg.callback !== "undefined") ? cfg.callback : animCallback;
 			generateBitmap();
 			refreshFavIcon();
 			return FavIconX;
@@ -417,14 +417,14 @@ var FavIconX = (function() {
 			if(v<0 || v>100) {
 				throw "value must be between 0 and 100";
 			}
-			animCallback = callback !== undefined ? callback : animCallback;
+			animCallback = (typeof callback !== "undefined") ? callback : animCallback;
 			animValue = value;
 			value = v;
 			isReset = false;
-			if(isAnimated !== undefined ? isAnimated : animated){
+			if(typeof isAnimated !== "undefined" ? isAnimated : animated){
 				var steps = animValue - value;
 				if(animValue !== value){
-					animInterval = Math.abs(Math.ceil((animSpeed !== undefined ? animSpeed : animationSpeed) / steps));
+					animInterval = Math.abs(Math.ceil((typeof animSpeed !== "undefined" ? animSpeed : animationSpeed) / steps));
 					incValue(animValue > value ? -1 : 1);
 				}
 			} else {

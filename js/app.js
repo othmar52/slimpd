@@ -288,12 +288,13 @@ $(document).ready(function() {
 	/*
 	 * force confirmation when user leaves sliMpd in case local audio is playing
 	 * as the browser is not displaying the text there is no nedd to fetch string from language file
+	 * TODO: make this optinal via config
 	 */
-	window.onbeforeunload=function(){
+	window.onbeforeunload = function(){
 		if(window.sliMpd.currentPlayer.mode === "local" && window.sliMpd.currentPlayer.nowPlayingState === "play") {
 			return "local audio is currently playing";
 		}
-	}
+	};
 
 	/*
 	 * add lazy resize listener
