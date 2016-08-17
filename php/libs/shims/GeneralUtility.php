@@ -633,11 +633,12 @@ function deliver($file, $app) {
 	// allow a file to be streamed instead of sent as an attachment
 	// set appropriate headers for attachment or streamed file
 	header("Content-Disposition: " . (
-		(isset($_REQUEST['stream']))
+		($app->request->get("stream") === "1")
 			? "attachment; filename=\"".str_replace('"', "_",$fileName)."\""
 			: "inline;"
 		)
 	);
+
 
 	header("Content-Type: " . getMimeType($fileName));
 	header("Accept-Ranges: bytes");
