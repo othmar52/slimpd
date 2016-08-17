@@ -43,9 +43,9 @@
 	color: #ffffff;
 	text-decoration: none;
 	background-color: #0088cc;
-	border-radius: 0px;
-	-webkit-border-radius: 0px;
-	-moz-border-radius: 0px;
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
 	background-image: none;
 }
 /* https://gist.github.com/daz/2168334 end */
