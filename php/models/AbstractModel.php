@@ -283,33 +283,10 @@ abstract class AbstractModel {
 	}
 	
 	public function update() {
-		if($this->getId() > 0) {
-			// we already have an id ...
-		} else {
-			// check if we have a record with this path
-			$classPath = get_called_class();
-			$instance = new $classPath;
-			
-			if(method_exists($classPath, 'getRelativePathHash') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
-				if($instance === NULL && $this->getRelativePathHash() !== '') {
-					return $this->insert();
-				}
-			}
-			
-			
-			if($instance === NULL && method_exists($classPath, 'getRelativePath') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
-			}
-			
-			if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
-			}
-			if($instance !== NULL && $instance->getId() > 0) {
-				$this->setId($instance->getId());
-			} else {
-				return $this->insert();
-			}
+		$this->searchExistingId();
+		// we can't update. lets insert new record
+		if($this->getId() < 1) {
+			return $this->insert();
 		}
 			
 		$app = \Slim\Slim::getInstance();
@@ -320,6 +297,32 @@ abstract class AbstractModel {
 		}
 		$query = substr($query,0,-1) . ' WHERE id=' . (int)$this->getId() . ";";
 		$app->db->query($query);
+	}
+
+	private function searchExistingId() {
+		if($this->getId() > 0) {
+			return;
+		}
+		// check if we have a record with this path
+		$classPath = get_called_class();
+		$instance = new $classPath;
+
+		if(method_exists($classPath, 'getRelativePathHash') === TRUE) {
+			$instance = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
+			if($instance === NULL && $this->getRelativePathHash() !== '') {
+				return;
+			}
+		}
+		if($instance === NULL && method_exists($classPath, 'getRelativePath') === TRUE) {
+			$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+		}
+		if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
+			$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+		}
+		if($instance === NULL || $instance->getId() < 1) {
+			return;
+		}
+		$this->setId($instance->getId());
 	}
 	
 	public function delete() {
