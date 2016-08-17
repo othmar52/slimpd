@@ -148,7 +148,7 @@ abstract class AbstractModel {
 		return $instances;
 	}
 	
-	public static function getCountLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
+	public static function getCountLikeAttributes(array $attributeArray) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -157,15 +157,14 @@ abstract class AbstractModel {
 			return $instances;
 		}
 		
-		$db = \Slim\Slim::getInstance()->db;
+		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $db->real_escape_string($key) . ' LIKE "%'. $db->real_escape_string($value) .'%" OR ';
+			$query .= $database->real_escape_string($key) . ' LIKE "%'. $database->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
-		#echo $query; die();
-		return $db->query($query)->fetch_assoc()['itemCountTotal'];
+		return $database->query($query)->fetch_assoc()['itemCountTotal'];
 	}
 	
 	public static function getInstanceByAttributes(array $attributeArray, $orderBy = FALSE) {
