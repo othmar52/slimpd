@@ -423,52 +423,49 @@ abstract class AbstractModel {
 	
 	
 	public static function getInstancesForRendering($args) {
-		$itemIds = '';
+		$idString = '';
 		$return = array();
 		$classPath = get_called_class();
+		for($i=0; $i < func_num_args();$i++) {
+			$argument = func_get_arg($i);
+			if(is_array($argument) === TRUE) {
+				foreach($argument as $item) {
+					if(is_object($item) === FALSE) {
+						continue;
+					}
+					$idString .= self::getIdComaString($classPath, $item);
+				}
+			}
+			if(is_object($argument) === TRUE) {
+				$idString .= self::getIdComaString($classPath, $argument);
+			}
+		}
+	
+		$itemIds = array_unique(trimExplode(",", $idString, TRUE));
+		foreach($itemIds as $itemId) {
+			$return[$itemId] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+		}
+		return $return;
+	}
+
+	private static function getIdComaString($classPath, $instance) {
+		$idString = "";
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
 			$getter = 'get' . $matches[1] . 'Id';
 		} else {
 			$getter = 'get' . $classPath . 'Id';
 		}
-		
-		for($i=0; $i < func_num_args();$i++) {
-			$argument = func_get_arg($i);
-			if(is_array($argument) === TRUE) {
-				foreach($argument as $item) {
-					if(is_object($item) === TRUE) {
-						if(method_exists($item, $getter) === TRUE) {
-							$itemIds .= $item->$getter() . ',';
-						}
-						#$itemIds .= $item->$getter() . ',';
-						if(method_exists($item, 'getRemixerId') === TRUE) {
-							$itemIds .= $item->getRemixerId() . ',';
-						}
-						if(method_exists($item, 'getFeaturingId') === TRUE) {
-							$itemIds .= $item->getFeaturingId() . ',';
-						}
-					}
-				}
-			}
-			if(is_object($argument) === TRUE) {
-				#$itemIds .= $argument->$getter() . ',';
-				if(method_exists($argument, $getter) === TRUE) {
-					$itemIds .= $argument->$getter() . ',';
-				}
-				if(method_exists($argument, 'getRemixerId') === TRUE) {
-					$itemIds .= $argument->getRemixerId() . ',';
-				}
-				if(method_exists($argument, 'getFeaturingId') === TRUE) {
-					$itemIds .= $argument->getFeaturingId() . ',';
-				}
-			}
+		if(method_exists($instance, $getter) === TRUE) {
+			$idString .= $instance->$getter() . ',';
 		}
-	
-		$itemIds = array_unique(explode(",", substr($itemIds, 0, -1)));
-		foreach($itemIds as $itemId) {
-			$return[$itemId] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+		#$itemIds .= $item->$getter() . ',';
+		if(method_exists($instance, 'getRemixerId') === TRUE) {
+			$idString .= $instance->getRemixerId() . ',';
 		}
-		return $return;
+		if(method_exists($instance, 'getFeaturingId') === TRUE) {
+			$idString .= $instance->getFeaturingId() . ',';
+		}
+		return $idString;
 	}
 
 	public static function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
