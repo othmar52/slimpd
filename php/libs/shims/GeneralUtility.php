@@ -467,7 +467,40 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	return join(" ", $phrase);
 }
 
-// TODO: recursify and remove identical codeblocks
+
+function addRenderItem($instance, &$return) {#
+	switch(get_class($instance)) {
+		case "Slimpd\Album":
+			if(isset($return["albums"][$instance->getId()]) === FALSE) {
+				$return["albums"][$instance->getId()] = $instance;
+			}
+			if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
+				$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+			}
+			break;
+		case "Slimpd\Artist":
+			if(isset($return["artists"][$instance->getId()]) === FALSE) {
+				$return["artists"][$instance->getId()] = $instance;
+			}
+			break;
+		case "Slimpd\Label":
+			if(isset($return["labels"][$instance->getId()]) === FALSE) {
+				$return["labels"][$instance->getId()] = $instance;
+			}
+			break;
+		case "Slimpd\Genre":
+			if(isset($return["genres"][$instance->getId()]) === FALSE) {
+				$return["genres"][$instance->getId()] = $instance;
+			}
+			break;
+		case "Slimpd\Track":
+			if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
+				$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+			}
+			break;
+	}
+}
+
 function getRenderItems() {
 	$args = func_get_args();
 	$return = array(
@@ -478,74 +511,16 @@ function getRenderItems() {
 		"itembreadcrumbs" => [],
 	);
 	
-	foreach($args as $item) {
-		if(is_object($item)) {
-			switch(get_class($item)) {
-				case "Slimpd\Album":
-					if(isset($return["albums"][$item->getId()]) === FALSE) {
-						$return["albums"][$item->getId()] = $item;
-					}
-					if(isset($return["itembreadcrumbs"][$item->getRelativePathHash()]) === FALSE) {
-						$return["itembreadcrumbs"][$item->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item->getRelativePath());
-					}
-					break;
-				case "Slimpd\Artist":
-					if(isset($return["artists"][$item->getId()]) === FALSE) {
-						$return["artists"][$item->getId()] = $item;
-					}
-					break;
-				case "Slimpd\Label":
-					if(isset($return["labels"][$item->getId()]) === FALSE) {
-						$return["labels"][$item->getId()] = $item;
-					}
-					break;
-				case "Slimpd\Genre":
-					if(isset($return["genres"][$item->getId()]) === FALSE) {
-						$return["genres"][$item->getId()] = $item;
-					}
-					break;
-				case "Slimpd\Track":
-					if(isset($return["itembreadcrumbs"][$item->getRelativePathHash()]) === FALSE) {
-						$return["itembreadcrumbs"][$item->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item->getRelativePath());
-					}
-					break;
-			}
+	foreach($args as $argument) {
+		if(is_object($argument) === TRUE) {
+			addRenderItem($argument, $return);
 		}
-		if(is_array($item)) {
-			foreach($item as $item2) {
-				if(is_object($item2) === FALSE) {
+		if(is_array($argument) === TRUE) {
+			foreach($argument as $item) {
+				if(is_object($item) === FALSE) {
 					continue;
 				}
-				switch(get_class($item2)) {
-					case "Slimpd\Album":
-						if(isset($return["albums"][$item2->getId()]) === FALSE) {
-							$return["albums"][$item2->getId()] = $item2;
-						}
-						if(isset($return["itembreadcrumbs"][$item2->getRelativePathHash()]) === FALSE) {
-							$return["itembreadcrumbs"][$item2->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item2->getRelativePath());
-						}
-						break;
-					case "Slimpd\Artist":
-						if(isset($return["artists"][$item2->getId()]) === FALSE) {
-							$return["artists"][$item2->getId()] = $item2;
-						}
-						break;
-					case "Slimpd\Label":
-						if(isset($return["labels"][$item2->getId()]) === FALSE) {
-							$return["labels"][$item2->getId()] = $item2;
-						}
-						break;
-					case "Slimpd\Genre":
-						if(isset($return["genres"][$item2->getId()]) === FALSE) {
-							$return["genres"][$item2->getId()] = $item2;
-						}
-						break;
-					case "Slimpd\Track":
-						if(isset($return["itembreadcrumbs"][$item2->getRelativePathHash()]) === FALSE) {
-							$return["itembreadcrumbs"][$item2->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($item2->getRelativePath());
-						}
-						break;
-				}
+				addRenderItem($item, $return);
 			}
 		}
 	}
@@ -556,30 +531,16 @@ function convertInstancesArrayToRenderItems($input) {
 	$return = [
 		"genres" => [],
 		"labels" => [],
-		"artists" => []
+		"artists" => [],
+		"albums" => [],
+		"itembreadcrumbs" => [],
 	];
 	
 	foreach($input as $item) {
 		if(is_object($item) === FALSE) {
 			continue;
 		}
-		switch(get_class($item)) {
-			case "Slimpd\Artist":
-				if(isset($return["artists"][$item->getId()]) === FALSE) {
-					$return["artists"][$item->getId()] = $item;
-				}
-				break;
-			case "Slimpd\Label":
-				if(isset($return["labels"][$item->getId()]) === FALSE) {
-					$return["labels"][$item->getId()] = $item;
-				}
-				break;
-			case "Slimpd\Genre":
-				if(isset($return["genres"][$item->getId()]) === FALSE) {
-					$return["genres"][$item->getId()] = $item;
-				}
-				break;
-		}
+		addRenderItem($item, $return);
 	}
 	return $return;
 }
