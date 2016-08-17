@@ -450,10 +450,9 @@ abstract class AbstractModel {
 
 	private static function getIdCommaString($classPath, $instance) {
 		$idString = "";
+		$getter = 'get' . $classPath . 'Id';
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
 			$getter = 'get' . $matches[1] . 'Id';
-		} else {
-			$getter = 'get' . $classPath . 'Id';
 		}
 		if(method_exists($instance, $getter) === TRUE) {
 			$idString .= $instance->$getter() . ',';
