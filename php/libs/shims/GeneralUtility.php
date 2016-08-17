@@ -307,7 +307,7 @@ function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeT
 		}
 	}
 	// make sure we have a trailing slash
-	$dir .= (substr($dir, -1) !== DS) ? DS : "";
+	$dir = rtrim($dir, DS) . DS;
 	
 	$finfo = finfo_open(FILEINFO_MIME_TYPE);
 	$handle=opendir ($dir);
@@ -1173,7 +1173,7 @@ function getMimeType ( $filename ) {
 }
 
 function nfostring2html($inputstring) {
-	$conv_table = array(
+	$convTable = array(
 		/* 0*/ 0x0000, 0x263a, 0x263b, 0x2665, 0x2666,
 		/* 5*/ 0x2663, 0x2660, 0x2022, 0x25d8, 0x0000,
 		/* 10*/ 0x0000, 0x2642, 0x2640, 0x0000, 0x266b,
@@ -1230,12 +1230,12 @@ function nfostring2html($inputstring) {
 
 	$str = str_replace("&", "&", $inputstring);
 	for ($idx = 0; $idx < 256; $idx++) {
-		if ($conv_table[$idx] != 0) {
-			$str = str_replace(chr($idx), "&#".$conv_table[$idx].";", $str);
+		if ($convTable[$idx] != 0) {
+			$str = str_replace(chr($idx), "&#".$convTable[$idx].";", $str);
 		}
 	}
 	$str = str_replace(" ", "&nbsp;", $str);
-	$str = str_replace("\n", "<br />\n", $str);
+	$str = nl2br($str);
 	return $str;
 	
 }
