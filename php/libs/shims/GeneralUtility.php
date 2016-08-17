@@ -468,36 +468,32 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 }
 
 
-function addRenderItem($instance, &$return) {#
-	switch(get_class($instance)) {
-		case "Slimpd\Album":
-			if(isset($return["albums"][$instance->getId()]) === FALSE) {
-				$return["albums"][$instance->getId()] = $instance;
-			}
-			if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
-				$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
-			}
-			break;
-		case "Slimpd\Artist":
-			if(isset($return["artists"][$instance->getId()]) === FALSE) {
-				$return["artists"][$instance->getId()] = $instance;
-			}
-			break;
-		case "Slimpd\Label":
-			if(isset($return["labels"][$instance->getId()]) === FALSE) {
-				$return["labels"][$instance->getId()] = $instance;
-			}
-			break;
-		case "Slimpd\Genre":
-			if(isset($return["genres"][$instance->getId()]) === FALSE) {
-				$return["genres"][$instance->getId()] = $instance;
-			}
-			break;
-		case "Slimpd\Track":
-			if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
-				$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
-			}
-			break;
+function addRenderItem($instance, &$return) {
+	$class = get_class($instance);
+	if($class === "Slimpd\Artist") {
+		$return["artists"][$instance->getId()] = $instance;
+		return;
+	}
+	if($class === "Slimpd\Label") {
+		$return["labels"][$instance->getId()] = $instance;
+		return;
+	}
+	if($class === "Slimpd\Genre") {
+		$return["genres"][$instance->getId()] = $instance;
+		return;
+	}
+	if($class === "Slimpd\Track") {
+		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
+			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+		}
+		return;
+	}
+	if($class === "Slimpd\Album") {
+		$return["albums"][$instance->getId()] = $instance;
+		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
+			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+		}
+		return;
 	}
 }
 
