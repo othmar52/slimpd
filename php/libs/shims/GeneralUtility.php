@@ -496,7 +496,7 @@ function getRenderItems() {
 					break;
 				case "Slimpd\Label":
 					if(isset($return["labels"][$item->getId()]) === FALSE) {
-						$return["labels"][$i->getId()] = $item;
+						$return["labels"][$item->getId()] = $item;
 					}
 					break;
 				case "Slimpd\Genre":
