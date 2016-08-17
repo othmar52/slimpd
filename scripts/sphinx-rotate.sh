@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+SCRIPT_PATH=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 CONFIG="config.ini"
 CONFIG_LOCAL="config_local.ini"
 
