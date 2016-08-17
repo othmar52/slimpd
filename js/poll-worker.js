@@ -47,22 +47,22 @@ self.setMiliseconds = function(data) {
 		return;
 	}
 	self.pollInterval = data.value;
-}
+};
 
 self.setPollUrl = function(data) {
 	self.pollUrl = data.value;
-}
+};
 
 self.refreshInterval = function() {
 	clearTimeout(self.poller);
 	self.poll();
-}
+};
 
 self.refreshIntervalDelayed = function() {
 	clearTimeout(self.poller);
 	setTimeout(function(){self.poll("?force=1");},200);
-}
+};
 
 self.stop = function() {
 	self.close();
-}
+};
