@@ -75,7 +75,7 @@ class Discogsitem extends AbstractModel
 		}
 		return;
 		
-		echo "<pre>" . print_r($data,1); die();
+		#echo "<pre>" . print_r($data,1); die();
 		$counter = 0;
 		foreach($data['tracklist'] as $t) {
 			$counter++;
