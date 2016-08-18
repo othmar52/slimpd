@@ -14,25 +14,19 @@ class Svggenerator {
 	public function __construct($arg) {
 		$config = \Slim\Slim::getInstance()->config['mpd'];
 		$arg = join(DS, $arg);
+		$track = NULL;
 		if(is_numeric($arg) === TRUE) {
-			$t = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$arg));
-			if(is_object($t) === TRUE) {
-				$this->absolutePath = $config['musicdir'] . $t->getRelativePath();
-				$this->fingerprint = $t->getFingerprint();
-				$this->ext = $t->getAudioDataFormat();
-			}
+			$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$arg));
 		}
-		
-		// 2016-07-18 TODO: why the hell is here a string condition?
-		if(is_string($arg) === TRUE) {
-			$t = \Slimpd\Track::getInstanceByAttributes(array('relativePathHash' => getFilePathHash($arg)));
-			if(is_object($t) === TRUE) {
-				$this->absolutePath = $config['musicdir'] . $t->getRelativePath();
-				$this->fingerprint = $t->getFingerprint();
-				$this->ext = $t->getAudioDataFormat();
-			}
+		if(is_numeric($arg) === FALSE) {
+			$track = \Slimpd\Track::getInstanceByAttributes(array('relativePathHash' => getFilePathHash($arg)));
 		}
-		
+		if(is_object($track) === TRUE) {
+			$this->absolutePath = $config['musicdir'] . $track->getRelativePath();
+			$this->fingerprint = $track->getFingerprint();
+			$this->ext = $track->getAudioDataFormat();
+		}
+
 		if($this->fingerprint === NULL) {
 			if(ALTDIR && is_file($config['alternative_musicdir'].$arg) === TRUE) {
 				$arg = $config['alternative_musicdir'].$arg;
@@ -46,7 +40,7 @@ class Svggenerator {
 			}
 		}
 		
-		// systemcheck testfiles are not within our music_dirs or in our database
+		// systemcheck testfiles are not within our music_dirs nsor in our database
 		if($this->fingerprint === NULL) {
 			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
 				$this->absolutePath = realpath(DS.$arg);
@@ -61,11 +55,12 @@ class Svggenerator {
 		
 		if(!preg_match("/^([a-f0-9]){32}$/", $this->fingerprint)) {
 			// extract the fingerprint
-			if($fp = \Slimpd\Importer::extractAudioFingerprint($this->absolutePath)) {
-				$this->fingerprint = $fp;
+			if($fingerprint = \Slimpd\Importer::extractAudioFingerprint($this->absolutePath)) {
+				$this->fingerprint = $fingerprint;
 			} else {
-				# TODO: handle missing fingerprint 
-				die('invalid fingerprint: ' . $this->absolutePath);
+				# TODO: handle missing fingerprint
+				return NULL;
+				#die('invalid fingerprint: ' . $this->absolutePath);
 			}
 		}
 		$this->setPeakFilePath();
@@ -108,8 +103,7 @@ class Svggenerator {
 			$this->fireRetryHeaderAndExit();
 		}
 		
-		$values = explode("\n", $peaks);
-		$values = array_map('trim', $values);
+		$values = array_map('trim', explode("\n", $peaks));
 		
 		$values = $this->limitArray($values, $pixel);
 		$amount = count($values);
@@ -137,32 +131,25 @@ class Svggenerator {
 			// increase difference between low peak and high peak
 			$percent = $percent*0.01*$percent;
 			$diffPercent = 100 - $percent;
-			
+
+			$stroke = array(
+				'x' => number_format($i/($amount/100), 5, '.', ''),
+				'y1' => number_format($diffPercent/2, 2, '.', ''),
+				'y2' => number_format($diffPercent/2 + $percent, 2, '.', '')
+			);
 			if(\Slim\Slim::getInstance()->request->get('mode') === 'half') {
-				$renderValues[] = array(
-					'x' => number_format($i/($amount/100), 5, '.', ''),
-					'y1' => number_format($diffPercent, 2, '.', ''),
-					'y2' => 100
-				);
-			} else {
-				$renderValues[] = array(
-					'x' => number_format($i/($amount/100), 5, '.', ''),
-					'y1' => number_format($diffPercent/2, 2, '.', ''),
-					'y2' => number_format($diffPercent/2 + $percent, 2, '.', '')
-				);
+				$stroke["y1"] = number_format($diffPercent, 2, '.', '');
+				$stroke["y2"] = 100;
 			}
+			$renderValues[] = $stroke;
 		}
     
 		$app = \Slim\Slim::getInstance();
 		switch( $app->request->get('colorFor') ) {
 			case 'mpd':
-				$color = $app->config['colors'][ $app->config['spotcolor']['mpd'] ]['1st'];
-				break;
 			case 'local':
-				$color = $app->config['colors'][ $app->config['spotcolor']['local'] ]['1st'];
-				break;
 			case 'xwax':
-				$color = $app->config['colors'][ $app->config['spotcolor']['xwax'] ]['1st'];
+				$color = $app->config['colors'][ $app->config['spotcolor'][$app->request->get('colorFor')] ]['1st'];
 				break;
 			default:
 				$color = $app->config['colors']['defaultwaveform'];
