@@ -21,7 +21,6 @@ class mpd
 		if($filePaths === FALSE) {
 			return $playlist;
 		}
-		$status = $this->mpd('status');
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
@@ -51,7 +50,6 @@ class mpd
 	public function getCurrentPlaylistCurrentPage() {
 		$status = $this->mpd('status');
 		$listPos = isset($status['song']) ? $status['song'] : 0;
-		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 		$currentPage = floor($listPos/$itemsPerPage)+1;
 		return $currentPage;
@@ -483,8 +481,8 @@ class mpd
 
 		
 
-		$line = trim(fgets($socket, 1024)); 
-		if (substr($line, 0, 3) == 'ACK') {
+		$line = trim(fgets($socket, 1024));
+		if (substr($line, 0, 3) === 'ACK') {
 			fclose($socket);
 			$app->flashNow('error', $app->ll->str('error.mpdgeneral', array($line)));
 			return FALSE;
@@ -496,10 +494,6 @@ class mpd
 			return FALSE;
 		}
 
-		$mpdVersion = (preg_match('#([0-9]+\.[0-9]+\.[0-9]+)$#', $line, $matches))
-			? $matches[1]
-			: '0.5.0';
-
 		$array = array();
 		while (!feof($socket)) {
 			$line = trim(@fgets($socket, 1024));
@@ -510,26 +504,16 @@ class mpd
 			}
 			if (substr($line, 0, 2) == 'OK') {
 				fclose($socket);
-				if ($command == 'status' && isset($array['time']) && version_compare($mpdVersion, '0.16.0', '<')) {
-					list($seconds, $dummy) = explode(':', $array['time'], 2);
-					$array['elapsed'] = $seconds;
-				}
 				return $array;
 			}
-			if ($command == 'playlist' && version_compare($mpdVersion, '0.16.0', '<')) {
-				// 0:directory/filename.extension
-				list($key, $value) = explode(':', $line, 2);
+			list($key, $value) = explode(': ', $line, 2);
+			if ($command == 'playlist' || $command == 'playlistinfo') {
 				$array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
-			} elseif ($command == 'playlist' || $command == 'playlistinfo') {
-				// 0:file: directory/filename.extension
-				list($key, $value) = explode(': ', $line, 2);
-				$array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
-			} else {
-				// name: value
-				list($key, $value) = explode(': ', $line, 2);
-				$array[$key] = $value;	
+				continue;
 			}
-		}    
+			// name: value
+			$array[$key] = $value;
+		}
 		fclose($socket);
 		$app->flashNow('error', $app->ll->str('error.mpdconnectionclosed', array($line)));
 		return FALSE;
