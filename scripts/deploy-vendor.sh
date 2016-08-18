@@ -2,7 +2,7 @@
 
 # TODO: log all invalid paths end echo it after copying
 
-SCRIPT_PATH=$(cd `dirname "${BASH_SOURCE[0]}"` && pwd)
+SCRIPT_PATH=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 
 DIR_SOURCE="vendor"
 DIR_DEST="vendor-dist"

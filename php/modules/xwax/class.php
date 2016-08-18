@@ -125,7 +125,6 @@ class Xwax {
 	}
 
 	public function getCurrentlyPlayedTrack($deckIndex) {
-		$return = array();
 		$app = \Slim\Slim::getInstance();
 		$xConf = $app->config['xwax'];
 		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));

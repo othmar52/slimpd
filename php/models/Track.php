@@ -272,7 +272,10 @@ class Track extends \Slimpd\AbstractModel
 		#TODO: $titleString = "Time To Remember - MAZTEK Remix"
 		
 		
-		
+		/*
+		 * for development/debuggung only
+		 */
+		/*
 		$tests = array(
 			array("placeholder index 0"),
 			array("Stel", "Your Parents Are Here (Ian F. Remix)", "Stel_-_Your_Parents_Are_Here-(JLYLTD015)-WEB-2009-WiTF"),
@@ -312,7 +315,7 @@ class Track extends \Slimpd\AbstractModel
 			array("Infuze", "Black Out (with TADT)"), // not solved yet
 			
 		);
-		
+
 		$performTest = 0;
 		if($performTest>0) {
 			$inputArtistString = $tests[$performTest][0];
@@ -324,6 +327,7 @@ class Track extends \Slimpd\AbstractModel
 				$inputDirectoryName = $tests[$performTest][3];
 			}
 		}
+		*/
 		
 		$artistString = $inputArtistString;
 		$titleString = $inputTitleString;

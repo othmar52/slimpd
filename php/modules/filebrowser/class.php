@@ -140,7 +140,8 @@ class filebrowser {
 		}
 
 		if($systemdir === TRUE && in_array($path, ["cache/", "embedded/", "peakfiles/"]) === TRUE) {
-			$base = APP_ROOT;
+			$return['base'] = APP_ROOT;
+			$realpath = realpath(APP_ROOT.$path) . DS;
 		}
 
 		if(is_dir($realpath) === FALSE){ //} || $this->checkAccess($path, $baseDirs) === FALSE) {
@@ -171,18 +172,18 @@ class filebrowser {
 
 	/**
 	 * get content of the next silblings directory
-	 * @param string $d: directorypath
+	 * @param string $path: directorypath
 	 * @return object
 	 */
-	public function getNextDirectoryContent($d) {
+	public function getNextDirectoryContent($path) {
 		$app = \Slim\Slim::getInstance();
 		
 		// make sure we have directory separator as last char
-		$d .= (substr($d,-1) !== DS) ? DS : "";
+		$path .= (substr($path,-1) !== DS) ? DS : "";
 		
 		// fetch content of the parent directory
 		$parentDirectory = new \Slimpd\filebrowser();
-		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
+		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
 		if($parentDirectory->directory === "./") {
 			$parentDirectory = new \Slimpd\filebrowser();
 			$parentDirectory->getDirectoryContent($app->config["mpd"]["musicdir"], TRUE);
@@ -196,24 +197,24 @@ class filebrowser {
 			if($found === TRUE) {
 				return $this->getDirectoryContent($subDir->fullpath);
 			}
-			if($subDir->fullpath."/" == $d) {
+			if($subDir->fullpath."/" === $path) {
 				$found = TRUE;
 			}
 		}
 		$app->flashNow("error", $app->ll->str("filebrowser.nonextdir"));
-		return $this->getDirectoryContent($d);
+		return $this->getDirectoryContent($path);
 	}
 
 	/**
 	 * get content of the previous silblings directory
-	 * @param string $d: directorypath
+	 * @param string $path: directorypath
 	 * @return object
 	 */
-	 public function getPreviousDirectoryContent($d) {
+	 public function getPreviousDirectoryContent($path) {
 		$app = \Slim\Slim::getInstance();
-		$d .= (substr($d,-1) !== DS) ? DS : "";
+		$path .= (substr($path,-1) !== DS) ? DS : "";
 		$parentDirectory = new \Slimpd\filebrowser();
-		$parentDirectory->getDirectoryContent(dirname($d), TRUE);
+		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
 		if($parentDirectory->directory === "./") {
 			$parentDirectory = new \Slimpd\filebrowser();
 			$parentDirectory->getDirectoryContent($app->config["mpd"]["musicdir"], TRUE);
@@ -222,17 +223,17 @@ class filebrowser {
 		$prev = 0;
 		
 		foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
-			if($subDir->fullpath."/" === $d) {
+			if($subDir->fullpath."/" === $path) {
 				if($prev === 0) {
 					$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
-					return $this->getDirectoryContent($d);
+					return $this->getDirectoryContent($path);
 				}
 				return $this->getDirectoryContent($prev);
 			}
 			$prev = $subDir->fullpath;
 		}
 		$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
-		return $this->getDirectoryContent($d);
+		return $this->getDirectoryContent($path);
 	}
 
 	public static function fetchBreadcrumb($relativePath) {
