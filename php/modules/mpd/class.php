@@ -16,22 +16,16 @@ class mpd
 	}
 
 	public function getCurrentPlaylist($pageNum = 1) {
+		$playlist = array();
 		$filePaths = $this->mpd('playlist');
 		if($filePaths === FALSE) {
-			return [];
+			return $playlist;
 		}
-		#print_r($files); die();
-		// calculate the portion which should be rendered
 		$status = $this->mpd('status');
-		//$listPos = isset($status['song']) ? $status['song'] : 0;
-		//$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
-
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
 
-		$playlist = array();
 		foreach($filePaths as $idx => $filePath) {
 			if($idx < $minIndex || $idx >= $maxIndex) {
 				continue;
@@ -303,19 +297,19 @@ class mpd
 				}
 
 				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestExistingItemInMpdDatabase = $this->findClosestExistingItem($itemPath);
+				$closestMpdItem = $this->findClosestExistingItem($itemPath);
 
 				// special case when we try to play a single new file (without parent-dir) out of mpd root
-				if($closestExistingItemInMpdDatabase === NULL && $config['disallow_full_database_update'] == '1') {
+				if($closestMpdItem === NULL && $config['disallow_full_database_update'] == '1') {
 					# TODO: send warning to client?
 					return FALSE;
 				}
 
-				\Slimpd\importer::queDirectoryUpdate($closestExistingItemInMpdDatabase);
+				\Slimpd\importer::queDirectoryUpdate($closestMpdItem);
 
 				// trailing slash on directories does not work - lets remove it
-				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestExistingItemInMpdDatabase, DS)) . '"');
-				notifyJson("MPD: updating directory " . $closestExistingItemInMpdDatabase, 'mpd');
+				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestMpdItem, DS)) . '"');
+				notifyJson("MPD: updating directory " . $closestMpdItem, 'mpd');
 				return;
 			case 'seekPercent':
 				$currentSong = $this->mpd('currentsong');
@@ -346,9 +340,6 @@ class mpd
 			case 'toggleConsume':
 				$status = $this->mpd('status');
 				$this->mpd('consume ' . (int)($status['consume'] xor 1));
-				break;
-			case 'playlistStatus':
-				$this->playlistStatus();
 				break;
 
 			case 'playIndex':
@@ -385,11 +376,8 @@ class mpd
 			case 'loopGain'://			loopGain();
 
 			case 'playlistTrack'://	playlistTrack();
-
-				die('sorry, not implemented yet');
-				break;
 			default:
-				die('unsupported');
+				notifyJson("sorry, not implemented yet", "mpd");
 				break;
 		}
 	}
@@ -429,57 +417,20 @@ class mpd
 		return NULL;
 	}
 
-	private function playlistStatus() {
-		$playlist	= $this->mpd('playlist');
-		$status 	= $this->mpd('status');
-
-		$data = array();
-		$data['hash']			= md5(implode('<seperation>', $playlist));
-		$data['listpos']		= isset($status['song']) ? (int) $status['song'] : 0;
-		$data['volume']			= (int) $status['volume'];
-		$data['repeat']			= (int) $status['repeat'];
-		$data['shuffle']		= (int) $status['random'];
-
-		$data['isplaying'] = 0;
-		if ($status['state'] == 'stop')		$data['isplaying'] = 0;
-		if ($status['state'] == 'play')		$data['isplaying'] = 1;
-		if ($status['state'] == 'pause')	$data['isplaying'] = 3;
-
-		$data['miliseconds'] = ($status['state'] == 'stop') ? 0 : (int) round($status['elapsed'] * 1000);
-
-		$data['gain'] = -1;
-
-		$mpdVersion = '0.15.0';
-		if (version_compare($mpdVersion, '0.16.0', '>=')) {
-			$gain = $this->mpd('replay_gain_status');
-			$data['gain'] = (string) $gain['replay_gain_mode'];
-		}
-
-		// TODO: get mute volume from database
-		//if ($data['volume'] == 0) {
-		//	$query	= mysql_query('SELECT mute_volume FROM player WHERE player_id = ' . (int) $cfg['player_id']);
-		//	$temp	= mysql_fetch_assoc($query);
-		//	$data['volume'] = -$temp['mute_volume'];
-		//}
-		deliverJson($data);
-
-	}
-
 	public function softclearPlaylist() {
-		$status 		= $this->mpd('status');
-		$songId		= isset($status['songid']) ? $status['songid'] : 0;
-		if($songId > 0) {
-			// move current song to first position
-			$this->mpd('moveid ' . $songId . ' 0');
-
-			$playlistLength		= isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-			if($playlistLength > 1) {
-				$this->mpd('delete 1:' . $playlistLength);
-			}
-		} else {
+		$status = $this->mpd('status');
+		$currentSongId = isset($status['songid']) ? $status['songid'] : 0;
+		if($currentSongId < 1) {
 			$this->mpd('clear');
+			return;
 		}
 
+		// move current song to first position
+		$this->mpd('moveid ' . $currentSongId . ' 0');
+		$playlistLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+		if($playlistLength > 1) {
+			$this->mpd('delete 1:' . $playlistLength);
+		}
 	}
 
 	public function appendPlaylist($playlist, $targetPosition = FALSE) {
@@ -488,11 +439,12 @@ class mpd
 			if($t->getError() === 'notfound') {
 				continue;
 			}
-			if($targetPosition === FALSE) {
-				$this->mpd('add "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '"');
-			} else {
-				$this->mpd('addid "' . str_replace("\"", "\\\"", $t->getRelativePath()) . '" ' . ($targetPosition+$counter));
+			$trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelativePath()) . "\""; 
+			$cmd = "add " . $trackPath;
+			if($targetPosition !== FALSE) {
+				$cmd = "addid " . $trackPath . " " . ($targetPosition+$counter);
 			}
+			$this->mpd($cmd);
 			$counter ++;
 		}
 		return $counter;
@@ -509,10 +461,14 @@ class mpd
 			$socket = fsockopen(
 				$app->config['mpd']['host'],
 				$app->config['mpd']['port'],
-				$error_no,
-				$error_string,
+				$errorNo,
+				$errorString,
 				3
 			);
+			if($socket === FALSE) {
+				$app->flashNow('error', $errorString . "(" . $errorNo . ")");
+				return FALSE;
+			}
 		} catch (\Exception $e) {
 			$app->flashNow('error', $app->ll->str('error.mpdconnect'));
 			return FALSE;
