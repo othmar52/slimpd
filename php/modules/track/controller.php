@@ -122,21 +122,13 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	$vars['action'] = 'maintainance.trackdebug';
 	$itemRelativePath = '';
 	$itemRelativePathHash = '';
-	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
-		$search = array('id' => (int)$itemParams[0]);
-	} else {
-		$itemRelativePath = join(DS, $itemParams);
-		$itemRelativePathHash = getFilePathHash($itemRelativePath);
-		$search = array('relativePathHash' => $itemRelativePathHash);
-	}
-	$vars['item'] = \Slimpd\Track::getInstanceByAttributes($search);
-	if($vars['item'] === NULL) {
-		$item = new \Slimpd\Track();
-		$item->setRelativePath($itemRelativePath);
-		$item->setRelativePathHash($itemRelativePathHash);
-		$vars['item'] = $item;
-	}
-	$vars['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes($search);
+	$vars['item'] = (count($itemParams) === 1 && is_numeric($itemParams[0]))
+		? \Slimpd\Track::getInstanceByAttributes(['id' => (int)$itemParams[0]])
+		: \Slimpd\Track::getInstanceByPath(join(DS, $itemParams), TRUE);
+
+	$vars['itemraw'] = \Slimpd\Rawtagdata::getInstanceByAttributes(
+		['relativePathHash' => $vars['item']->getRelativePathHash()]
+	);
 	$vars['renderitems'] = getRenderItems($vars['item']);
 	$app->render('surrounding.htm', $vars);
 });

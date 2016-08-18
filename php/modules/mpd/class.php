@@ -12,51 +12,31 @@ class mpd
 		if($listlength < 1) {
 			return NULL;
 		}
-
-		$track = \Slimpd\Track::getInstanceByPath($files[$listpos]);
-		if($track !== NULL) {
-			return $track;
-		}
-		// obviously the played track is not imported in slimpd-database...
-		// TODO: trigger whole update procedure for this single track
-		// for now we simply create a dummy instance
-		$track = new \Slimpd\Track();
-		$track->setRelativePath($files[$listpos]);
-		$track->setRelativePathHash(getFilePathHash($files[$listpos]));
-		return $track;
-
+		return \Slimpd\Track::getInstanceByPath($files[$listpos], TRUE);
 	}
 
 	public function getCurrentPlaylist($pageNum = 1) {
-
+		$filePaths = $this->mpd('playlist');
+		if($filePaths === FALSE) {
+			return [];
+		}
 		#print_r($files); die();
 		// calculate the portion which should be rendered
 		$status = $this->mpd('status');
-		$listPos = isset($status['song']) ? $status['song'] : 0;
-		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+		//$listPos = isset($status['song']) ? $status['song'] : 0;
+		//$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
 
 		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
 
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
 
-		$files = $this->mpd('playlist');
-		if($files === FALSE) {
-			return array();
-		}
 		$playlist = array();
-		foreach($files as $idx => $filepath) {
+		foreach($filePaths as $idx => $filePath) {
 			if($idx < $minIndex || $idx >= $maxIndex) {
 				continue;
 			}
-			$track = \Slimpd\Track::getInstanceByPath($filepath);
-
-			if($track === NULL) {
-				$track = new \Slimpd\Track();
-				$track->setRelativePath($filepath);
-				$track->setRelativePathHash(getFilePathHash($filepath));
-			}
-			$playlist[$idx] = $track;
+			$playlist[$idx] = \Slimpd\Track::getInstanceByPath($filePath, TRUE);
 		}
 		return $playlist;
 	}
@@ -150,6 +130,7 @@ class mpd
 		return in_array($cmd, $commandList);
 	}
 
+	/*
 	private function getIsPlaylist($cmd) {
 		$commandList = [
 			"appendPlaylist",
@@ -161,6 +142,7 @@ class mpd
 		];
 		return in_array($cmd, $commandList);
 	}
+	*/
 
 	private function getItemPath($item) {
 		if(is_numeric($item) === TRUE) {
@@ -201,7 +183,7 @@ class mpd
 		$targetPosition = $this->getTargetPosition($cmd);
 		$itemPath = $this->getItemPath($item);
 		$itemType = $this->getItemType($itemPath);
-		$isPlaylist = $this->getIsPlaylist($cmd);
+		//$isPlaylist = $this->getIsPlaylist($cmd);
 		$clearPlaylist = $this->getClearPlaylist($cmd);
 		$softclearPlaylist = $this->getSoftClear($cmd);
 

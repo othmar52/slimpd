@@ -66,16 +66,24 @@ class Track extends \Slimpd\AbstractModel
 	/**
 	 * in case tracks have been added via playlist containing absolute paths that does not mpd-music dir try to fix the path...
 	 */
-	public static function getInstanceByPath($pathString) {
+	public static function getInstanceByPath($pathString, $createDummy = FALSE) {
 		$altMusicDir = \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir'];
 		if(strlen($altMusicDir) > 0) {
 			if(stripos($pathString, $altMusicDir) === 0) {
 				$pathString = substr($pathString, strlen($altMusicDir));
 			}
 		}
-		return self::getInstanceByAttributes(
+		$instance = self::getInstanceByAttributes(
 			array('relativePathHash' => getFilePathHash($pathString))
 		);
+		if($instance !== NULL || $createDummy === FALSE) {
+			return $instance;
+		}
+		// track is not imported in sliMpd database
+		$track = new \Slimpd\Track();
+		$track->setRelativePath($pathString);
+		$track->setRelativePathHash(getFilePathHash($pathString));
+		return $track;
 	}
 		
 	public function setFeaturedArtistsAndRemixers() {
