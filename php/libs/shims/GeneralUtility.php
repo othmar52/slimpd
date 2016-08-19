@@ -480,25 +480,25 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 
 function addRenderItem($instance, &$return) {
 	$class = get_class($instance);
-	if($class === "Slimpd\Artist") {
+	if($class === "Slimpd\Models\Artist") {
 		$return["artists"][$instance->getId()] = $instance;
 		return;
 	}
-	if($class === "Slimpd\Label") {
+	if($class === "Slimpd\Models\Label") {
 		$return["labels"][$instance->getId()] = $instance;
 		return;
 	}
-	if($class === "Slimpd\Genre") {
+	if($class === "Slimpd\Models\Genre") {
 		$return["genres"][$instance->getId()] = $instance;
 		return;
 	}
-	if($class === "Slimpd\Track") {
+	if($class === "Slimpd\Models\Track") {
 		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
 			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
 		}
 		return;
 	}
-	if($class === "Slimpd\Album") {
+	if($class === "Slimpd\Models\Album") {
 		$return["albums"][$instance->getId()] = $instance;
 		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
 			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
@@ -510,10 +510,10 @@ function addRenderItem($instance, &$return) {
 function getRenderItems() {
 	$args = func_get_args();
 	$return = array(
-		"genres" => call_user_func_array(array("\\Slimpd\\Genre","getInstancesForRendering"), $args),
-		"labels" => call_user_func_array(array("\\Slimpd\\Label","getInstancesForRendering"), $args),
-		"artists" => call_user_func_array(array("\\Slimpd\\Artist","getInstancesForRendering"), $args),
-		"albums" => call_user_func_array(array("\\Slimpd\\Album","getInstancesForRendering"), $args),
+		"genres" => call_user_func_array(array("\\Slimpd\\Models\\Genre","getInstancesForRendering"), $args),
+		"labels" => call_user_func_array(array("\\Slimpd\\Models\\Label","getInstancesForRendering"), $args),
+		"artists" => call_user_func_array(array("\\Slimpd\\Models\\Artist","getInstancesForRendering"), $args),
+		"albums" => call_user_func_array(array("\\Slimpd\\Models\\Album","getInstancesForRendering"), $args),
 		"itembreadcrumbs" => [],
 	);
 	

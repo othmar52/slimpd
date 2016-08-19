@@ -1,7 +1,7 @@
 <?php
 
 
-$importer = new \Slimpd\importer();
+$importer = new \Slimpd\Modules\Importer();
 
 
 
@@ -85,7 +85,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 		exit;
 	}
 
-	foreach(\Slimpd\Importer::getInitialDatabaseQueries() as $query) {
+	foreach(\Slimpd\Modules\Importer::getInitialDatabaseQueries() as $query) {
 		$app->db->query($query);
 	}
 });
@@ -146,7 +146,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	    die(1);
 	}
 
-	foreach(\Slimpd\Importer::getInitialDatabaseQueries() as $query) {
+	foreach(\Slimpd\Modules\Importer::getInitialDatabaseQueries() as $query) {
 		$app->db->query($query);
 	}
 	$importer->triggerImport();

@@ -8,8 +8,8 @@ $app->get('/', function() use ($app, $vars){
 
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
-	$vars['itemlist'] = \Slimpd\Album::getAll(12, 0, "added desc");
-	$vars['totalresults'] = \Slimpd\Album::getCountAll();
+	$vars['itemlist'] = \Slimpd\Models\Album::getAll(12, 0, "added desc");
+	$vars['totalresults'] = \Slimpd\Models\Album::getCountAll();
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
 });
@@ -22,7 +22,7 @@ $app->get('/djscreen', function() use ($app, $vars){
 foreach(array('artist', 'label', 'genre', 'album') as $className) {
 	// stringlist of artist|label|genre
 	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $vars, $className){
-		$classPath = "\\Slimpd\\" . ucfirst($className);
+		$classPath = "\\Slimpd\\Models\\" . ucfirst($className);
 		$vars['action'] = 'library.'. $className .'s';
 		$currentPage = 1;
 		$itemsPerPage = 100;
@@ -81,7 +81,7 @@ foreach(array('artist', 'label', 'genre', 'album') as $className) {
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 	$vars['action'] = 'library.year';
 	
-	$vars['albumlist'] = \Slimpd\Album::getInstancesByAttributes(
+	$vars['albumlist'] = \Slimpd\Models\Album::getInstancesByAttributes(
 		array('year' => $itemString)
 	);
 	
@@ -119,7 +119,7 @@ $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars)
 $app->get('/deliver/:item+', function($item) use ($app, $vars){
 	$path = join(DS, $item);
 	if(is_numeric($path)) {
-		$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$path));
+		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$path));
 		$path = ($track === NULL) ? '' : $track->getRelativePath();
 	}
 	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {

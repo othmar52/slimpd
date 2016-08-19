@@ -39,23 +39,14 @@ $twig->addExtension(new \Slimpd_Twig_Extension());
 
 // LOAD MODULES
 call_user_func(function() use ($app) {
-    $path = APP_ROOT . 'php' . DS . 'modules' . DS;
+    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
     foreach (scandir($path) as $dir) {
     	// suppress warning with "@" and avoid tons of is_file()-checks 
 		@include_once($path . $dir . DS . 'class.php');
     }
 });
 
-// LOAD MODELS
-call_user_func(function() use ($app) {
-    $path = APP_ROOT . 'php' . DS . 'models' . DS;
-    foreach (scandir($path) as $file) {
-        $dir = $path . $file;
-        if (is_file($path . $file) && is_readable($path . $file)) {
-            include_once $path . $file;
-        }
-    }
-});
+
 
 $config = $app->configLoaderINI->loadConfig('master.ini');
 switch($config['config']['langkey']) {
@@ -102,7 +93,7 @@ $app->error(function(\Exception $e) use ($app, $vars){
 
 // LOAD CONTROLLERS
 call_user_func(function() use ($app, $vars) {
-    $path = APP_ROOT . 'php' . DS . 'modules' . DS;
+    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
     foreach (scandir($path) as $dir) {
     	// suppress warning with "@" and avoid tons of is_file()-checks 
 		@include_once($path . $dir . DS . 'controller.php');
