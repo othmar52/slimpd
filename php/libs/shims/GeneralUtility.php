@@ -12,6 +12,16 @@ function remU($input){
 	return trim(preg_replace("!\s+!", " ", str_replace("_", " ", $input)));
 }
 
+function fixCaseSensitivity($input){
+	if(strtolower($input) == $input) {
+		return ucwords($input);
+	}
+	if(strtoupper($input) == $input && strlen($input)>3) {
+		return ucwords(strtolower($input));
+	}
+	return $input;
+}
+
 function timeStringToSeconds($time) {
 	$sec = 0;
 	foreach (array_reverse(explode(":", $time)) as $key => $value) {
