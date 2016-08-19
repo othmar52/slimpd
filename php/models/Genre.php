@@ -78,6 +78,7 @@ class Genre extends AbstractModel
 
 	public static function parseGenreStringAdvanced($itemString) {
 		$app = \Slim\Slim::getInstance();
+		$classPath = get_called_class();
 		$finalGenres = array();
 		if(trim($itemString) === '') {
 			$finalGenres['unknown'] = "Unknown";
@@ -99,12 +100,17 @@ class Genre extends AbstractModel
 		cliLog("----------", 6);
 		cliLog("GenreParser  1: with genreString: $originalItemString", 6);
 		$az09 = az09($itemString);
-		if(isset($GLOBALS['unifiedCommonGenres'][$az09])) {
-			$finalGenres[] = $GLOBALS['unifiedCommonGenres'][$az09];
+		
+		
+		// check if we alread have an id
+		// permformance improvement ~8%
+		$itemId = self::cacheRead($app, get_called_class(), $az09);
+		if($itemId !== FALSE) {
+			$finalGenres[$az09] = $itemString;
 			cliLog("GenreParser exiting in phase 1 with result: " . join(", ", $finalGenres), 6);
 			return $finalGenres;
+			
 		}
-		
 		
 		// phase 2: check if we have multiple common genres
 		
@@ -114,26 +120,27 @@ class Genre extends AbstractModel
 		$chunks = trimExplode($tmpGlue, str_ireplace($app->config['genre-glue'], $tmpGlue, $itemString), TRUE);
 		foreach($chunks as $chunk) {
 			$az09 = az09($chunk);
-			if(isset($GLOBALS['unifiedCommonGenres'][$az09])) {
-				$finalGenres[$az09] = $GLOBALS['unifiedCommonGenres'][$az09];
+			
+			if(isset($app->importerCache[$classPath]["unified"][$az09])) {
+				$finalGenres[$az09] = $app->importerCache[$classPath]["unified"][$az09];
 				$itemString = str_ireplace($chunk, "", $itemString);
 				cliLog("GenreParser FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7);
-			} else {
-				// very fuzzy check if we have an url
-				if(preg_match("/^(http|www)([a-z0-9\.\/\:]*)\.[a-z]{2,4}$/i", $chunk)) {
-					$itemString = str_ireplace($chunk, "", $itemString);
-					cliLog("GenreParser TRASHING url-chunk: $chunk", 7);
-					continue;
-				}
-				// very fuzzy check if we have an url
-				if(preg_match("/(myspace|blogspot).com$/i", $chunk)) {
-					$itemString = str_ireplace($chunk, "", $itemString);
-					cliLog("GenreParser TRASHING: trash url-chunk: $chunk", 7);
-					continue;
-				}
-				cliLog("GenreParser BAD-CHUNK: $chunk - entering phase 3...", 7);
-				$badChunk = TRUE;
+				continue;
 			}
+			// very fuzzy check if we have an url
+			if(preg_match("/^(http|www)([a-z0-9\.\/\:]*)\.[a-z]{2,4}$/i", $chunk)) {
+				$itemString = str_ireplace($chunk, "", $itemString);
+				cliLog("GenreParser TRASHING url-chunk: $chunk", 7);
+				continue;
+			}
+			// very fuzzy check if we have an url
+			if(preg_match("/(myspace|blogspot).com$/i", $chunk)) {
+				$itemString = str_ireplace($chunk, "", $itemString);
+				cliLog("GenreParser TRASHING: trash url-chunk: $chunk", 7);
+				continue;
+			}
+			cliLog("GenreParser BAD-CHUNK: $chunk - entering phase 3...", 7);
+			$badChunk = TRUE;
 		}
 		
 		if($badChunk === FALSE) {
@@ -158,8 +165,8 @@ class Genre extends AbstractModel
 				cliLog("GenreParser REMOVING: trash url-chunk: $chunk",7);
 				continue;
 			}
-			if(isset($GLOBALS['unifiedCommonGenres'][$az09])) {
-				$finalGenres[$az09] = $GLOBALS['unifiedCommonGenres'][$az09];
+			if(isset($app->importerCache[$classPath]["unified"][$az09])) {
+				$finalGenres[$az09] = $app->importerCache[$classPath]["unified"][$az09];
 				$itemString = str_ireplace($chunk, "", $itemString);
 				cliLog("GenreParser FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7); 
 			} else {
@@ -188,16 +195,16 @@ class Genre extends AbstractModel
 		}
 		$joinedRemainingChunks = strtolower(join(".", $chunks));
 		
-		if(isset($GLOBALS['preserveGenreChunks'][$joinedRemainingChunks]) === TRUE) {
-			$finalGenres[az09($joinedRemainingChunks)] = $GLOBALS['preserveGenreChunks'][$joinedRemainingChunks];
-			cliLog("found genre based on full preserved pattern: $joinedRemainingChunks = ".$GLOBALS['preserveGenreChunks'][$joinedRemainingChunks], 7);
+		if(isset($app->importerCache[$classPath]["preserved"][$joinedRemainingChunks]) === TRUE) {
+			$finalGenres[az09($joinedRemainingChunks)] = $app->importerCache[$classPath]["preserved"][$joinedRemainingChunks];
+			cliLog("found genre based on full preserved pattern: $joinedRemainingChunks = ".$app->importerCache[$classPath]["preserved"][$joinedRemainingChunks], 7);
 			cliLog("exiting in phase 4 with result: " . join(", ", $finalGenres), 6);
 			return $finalGenres;
 		}
 
 		cliLog("REMAINING CHUNKWURST:" . $joinedRemainingChunks, 7);
 		$foundPreservedMatch = FALSE;
-		foreach($GLOBALS['preserveGenreChunks'] as $preserve => $genreString) {
+		foreach($app->importerCache[$classPath]["preserved"] as $preserve => $genreString) {
 			if(preg_match("/".str_replace(".", "\.", $preserve) . "/", $joinedRemainingChunks)) {
 				$finalGenres[az09($preserve)] = $genreString;
 				$foundPreservedMatch = TRUE;
@@ -270,32 +277,7 @@ class Genre extends AbstractModel
 	
 	public static function getIdsByString($itemString) {
 		$app = \Slim\Slim::getInstance();
-		// get unified common-genres
-		if(isset($GLOBALS['unifiedCommonGenres']) === FALSE) {
-			if(isset($app->config['common-genres'])) {
-				$GLOBALS['unifiedCommonGenres'] = self::unifyItemnames($app->config['common-genres']);
-			} else {
-				$GLOBALS['unifiedCommonGenres'] = array();
-			}
-		}
-		
-		// build a special whitelist
-		if(isset($GLOBALS['preserveGenreChunks']) === FALSE) {
-			$recursiveIterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($app->config['genre-preserve-junks']));
-			$GLOBALS['preserveGenreChunks'] = array();
-			foreach ($recursiveIterator as $leafValue) {
-			    $keys = array();
-			    foreach (range(0, $recursiveIterator->getDepth()) as $depth) {
-			        $keys[] = $recursiveIterator->getSubIterator($depth)->key();
-			    }
-			    $GLOBALS['preserveGenreChunks'][ join('.', $keys) ] = $leafValue;
-			}
-		}
-		
-		// make sure we have a cache to avoid tons of queries
-		if(isset($GLOBALS['genreCache']) === FALSE) {
-			$GLOBALS['genreCache'] = array();
-		}
+		self::cacheUnifier($app, get_called_class());
 		
 		$genreStringArray = [];
 		$tmpGlue = "tmpGlu3";
@@ -317,8 +299,9 @@ class Genre extends AbstractModel
 
 			// check if we alread have an id
 			// permformance improvement ~8%
-			if(isset($GLOBALS['genreCache'][$az09]) === TRUE) {
-				$itemIds[$GLOBALS['genreCache'][$az09]] = $GLOBALS['genreCache'][$az09];
+			$itemId = self::cacheRead($app, get_called_class(), $az09);
+			if($itemId !== FALSE) {
+				$itemIds[$itemId] = $itemId;
 				continue;
 			}
 			
@@ -326,19 +309,68 @@ class Genre extends AbstractModel
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
 			if($record) {
-				$itemId = $record['id'];
-			} else {
-				$g = new \Slimpd\Genre();
-				$g->setTitle($genreString);
-				$g->setAz09($az09);
-				$g->insert();
-				$itemId = $app->db->insert_id;
+				$itemId = $record["id"];
+				$itemIds[$record["id"]] = $record["id"];
+				self::cacheWrite($app, get_called_class(), $az09, $record["id"]);
+				continue;
 			}
+
+			$instance = new \Slimpd\Genre();
+			$instance->setTitle($genreString);
+			$instance->setAz09($az09);
+			$instance->insert();
+			$itemId = $app->db->insert_id;
+
 			$itemIds[$itemId] = $itemId;
-			$GLOBALS['genreCache'][$az09] = $itemId;
+			self::cacheWrite($app, get_called_class(), $az09, $itemId);
 		}
 		
 		return $itemIds;
 
+	}
+
+	public static function cacheUnifier($app, $classPath) {
+		if(isset($app->importerCache[$classPath]) === TRUE) {
+			return;
+		}
+		if(isset($app->importerCache) === FALSE) {
+			$app->importerCache = array();
+		}
+		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
+		$tmpArray = $app->importerCache;
+		$tmpArray[$classPath] = array(
+			"unified" => array(),
+			"cache" => array(),
+			"preserve" => array()
+		);
+		
+		// build a special whitelist
+		$recursiveIterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($app->config['genre-preserve-junks']));
+		foreach ($recursiveIterator as $leafValue) {
+			$keys = array();
+			foreach (range(0, $recursiveIterator->getDepth()) as $depth) {
+				$keys[] = $recursiveIterator->getSubIterator($depth)->key();
+			}
+			$tmpArray[$classPath]['preserve'][ join('.', $keys) ] = $leafValue;
+		}
+
+		
+		
+		$app->importerCache = $tmpArray;
+		if(method_exists($classPath, "unifyItemnames") === FALSE) {
+			return;
+		}
+		
+
+
+		$class = (preg_match("/\\\([^\\\]*)$/", $classPath, $matches))
+			? strtolower($matches[1])
+			: strtolower($classPath);
+
+		if(isset($app->config[$class ."s"]) === FALSE) {
+			return;
+		}
+		$tmpArray[$classPath]["unified"] = $classPath::unifyItemnames($app->config[$class ."s"]);
+		$app->importerCache = $tmpArray;
 	}
 }

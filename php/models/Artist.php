@@ -22,7 +22,7 @@ class Artist extends AbstractModel
 
 	public static function getArtistBlacklist() {
 		$app = \Slim\Slim::getInstance();
-		// get unified common-genres
+		// get unified artist-blacklist
 		if(isset($GLOBALS["artist-blacklist"]) === TRUE) {
 			return $GLOBALS["artist-blacklist"];
 		}
@@ -48,18 +48,8 @@ class Artist extends AbstractModel
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $m)) {
 			$class = strtolower($m[1]);
 		}
-		if(isset($GLOBALS["unified" . $class . "s"]) === FALSE) {
-			$GLOBALS["unified" . $class . "s"] = array();
-			if(method_exists($classPath, "unifyItemnames")) {
-				if(isset($app->config[$class ."s"])) {
-					$GLOBALS["unified" . $class . "s"] = $classPath::unifyItemnames($app->config[$class ."s"]);
-				}
-			}
-		}
 
-		if(isset($GLOBALS[$class . "Cache"]) === FALSE) {
-			$GLOBALS[$class . "Cache"] = array();
-		}
+		self::cacheUnifier($app, $classPath);
 
 		$itemIds = array();
 		$tmpGlue = "tmpGlu3";
@@ -76,53 +66,59 @@ class Artist extends AbstractModel
 			// TODO: read articles from config
 			foreach(array("The", "Die", ) as $matchArticle) {
 				// search for prefixed article
-				if(preg_match("/^".$matchArticle." (.*)$/i", $itemPart, $m)) {
+				if(preg_match("/^".$matchArticle." (.*)$/i", $itemPart, $matches)) {
 					$artistArticle = $matchArticle." ";
-					$itemPart = $m[1];
+					$itemPart = $matches[1];
 					$az09 = az09($itemPart);
 					#var_dump($itemString); die("prefixed-article");
 				}
 				// search for suffixed article
-				if(preg_match("/^(.*)([\ ,]+)".$matchArticle."/i", $itemPart, $m)) {
+				if(preg_match("/^(.*)([\ ,]+)".$matchArticle."/i", $itemPart, $matches)) {
 					$artistArticle = $matchArticle." ";
-					$itemPart = remU($m[1]);
+					$itemPart = remU($matches[1]);
 					$az09 = az09($itemPart);
 					#var_dump($m); die("suffixed-article");
 				}
 			}
 
 			// unify items based on config
-			if (array_key_exists($az09, $GLOBALS["unified" . $class . "s"]) === TRUE) {
-				$itemPart = $GLOBALS["unified" . $class . "s"][$az09];
+			if(isset($app->importerCache[$classPath]["unified"][$az09]) === TRUE) {
+				$itemPart = $app->importerCache[$classPath]["unified"][$az09];
 				$az09 = az09($itemPart);
 			}
 
 			// check if we alread have an id
 			// permformance improvement ~8%
-			if(isset($GLOBALS[$class . "Cache"][$az09]) === TRUE) {
-				$itemIds[$GLOBALS[$class . "Cache"][$az09]] = $GLOBALS[$class . "Cache"][$az09];
+			$itemId = self::cacheRead($app, $classPath, $az09);
+			if($itemId !== FALSE) {
+				$itemIds[$itemId] = $itemId;
 				continue;
 			}
 
-			$query = "SELECT id FROM artist WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$query = "SELECT id FROM " . self::$tableName ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
 			if($record) {
 				$itemId = $record["id"];
-			} else {
-				$g = new $classPath();
-				$g->setTitle(ucwords(strtolower($itemPart)));
-				$g->setAz09($az09);
-				$g->setArticle($artistArticle);
-				$g->insert();
-				$itemId = $app->db->insert_id;
+				$itemIds[$record["id"]] = $record["id"];
+				self::cacheWrite($app, $classPath, $az09, $record["id"]);
+				continue;
 			}
+			
+			$instance = new $classPath();
+			$instance->setTitle(ucwords(strtolower($itemPart)));
+			$instance->setAz09($az09);
+			$instance->setArticle($artistArticle);
+			$instance->insert();
+			$itemId = $app->db->insert_id;
+			
 			$itemIds[$itemId] = $itemId;
-			$GLOBALS[$class ."Cache"][$az09] = $itemId;
+			self::cacheWrite($app, $classPath, $az09, $itemId);
 		}
 		return $itemIds;
 
 	}
+
 
 	//setter
 	public function setId($value) {

@@ -363,17 +363,9 @@ abstract class AbstractModel {
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
 			$class = strtolower($matches[1]);
 		}
-		if(isset($GLOBALS['unified' . $class . 's']) === FALSE) {
-			$GLOBALS['unified' . $class . 's'] = array();
-			if(method_exists($classPath, 'unifyItemnames') && isset($app->config[$class .'s'])) {
-				$GLOBALS['unified' . $class . 's'] = $classPath::unifyItemnames($app->config[$class .'s']);
-			}
-		}
-		
-		if(isset($GLOBALS[$class . 'Cache']) === FALSE) {
-			$GLOBALS[$class . 'Cache'] = array();
-		}
-		
+
+		self::cacheUnifier($app, $classPath);
+
 		$itemIds = array();
 		$tmpGlue = "tmpGlu3";
 		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
@@ -384,30 +376,32 @@ abstract class AbstractModel {
 				$itemIds[$idForUnknown] = $idForUnknown;
 				continue;
 			}
-				
-				
+
 			// unify items based on config
-			if (array_key_exists($az09, $GLOBALS['unified' . $class . 's']) === TRUE) {
-				$itemPart = $GLOBALS['unified' . $class . 's'][$az09];
+			if(isset($app->importerCache[$classPath]["unified"][$az09]) === TRUE) {
+				$itemPart = $app->importerCache[$classPath]["unified"][$az09];
 				$az09 = az09($itemPart);
 			}
 			
 			// check if we alread have an id
 			// permformance improvement ~8%
-			if(isset($GLOBALS[$class . 'Cache'][$az09]) === TRUE) {
-				$itemIds[$GLOBALS[$class . 'Cache'][$az09]] = $GLOBALS[$class . 'Cache'][$az09];
+			$itemId = self::cacheRead($app, $classPath, $az09);
+			if($itemId !== FALSE) {
+				$itemIds[$itemId] = $itemId;
 				continue;
 			}
-			
+
 			$query = "SELECT id FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
+
 			if($record) {
-				$itemId = $record['id'];
-				$itemIds[$itemId] = $itemId;
-				$GLOBALS[$class .'Cache'][$az09] = $itemId;
+				$itemId = $record["id"];
+				$itemIds[$record["id"]] = $record["id"];
+				self::cacheWrite($app, $classPath, $az09, $record["id"]);
 				continue;
 			}
+
 			$instance = new $classPath();
 			$instance->setTitle($itemPart);
 			$instance->setAz09($az09);
@@ -415,13 +409,57 @@ abstract class AbstractModel {
 			$itemId = $app->db->insert_id;
 
 			$itemIds[$itemId] = $itemId;
-			$GLOBALS[$class .'Cache'][$az09] = $itemId;
+			self::cacheWrite($app, $classPath, $az09, $itemId);
 		}
 		return $itemIds;
 		
 	}
-	
-	
+
+	public static function cacheRead($app, $classPath, $az09) {
+		self::cacheUnifier($app, $classPath);
+		if(isset($app->importerCache[$classPath]["cache"][$az09]) === TRUE) {
+			return $app->importerCache[$classPath]["cache"][$az09];
+		}
+		return FALSE;
+	}
+
+	public static function cacheWrite($app, $classPath, $az09, $itemId) {
+		self::cacheUnifier($app, $classPath);
+		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
+		$tmpArray = $app->importerCache;
+		$tmpArray[$classPath]["cache"][$az09] = $itemId;
+		$app->importerCache = $tmpArray;
+	}
+
+	public static function cacheUnifier($app, $classPath) {
+		if(isset($app->importerCache[$classPath]) === TRUE) {
+			return;
+		}
+		if(isset($app->importerCache) === FALSE) {
+			$app->importerCache = array();
+		}
+		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
+		$tmpArray = $app->importerCache;
+		$tmpArray[$classPath] = array(
+			"unified" => array(),
+			"cache" => array()
+		);
+		$app->importerCache = $tmpArray;
+		if(method_exists($classPath, "unifyItemnames") === FALSE) {
+			return;
+		}
+
+		$class = (preg_match("/\\\([^\\\]*)$/", $classPath, $matches))
+			? strtolower($matches[1])
+			: strtolower($classPath);
+
+		if(isset($app->config[$class ."s"]) === FALSE) {
+			return;
+		}
+		$tmpArray[$classPath]["unified"] = $classPath::unifyItemnames($app->config[$class ."s"]);
+		$app->importerCache = $tmpArray;
+	}
+
 	public static function getInstancesForRendering() {
 		$idString = '';
 		$return = array();
