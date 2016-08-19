@@ -24,8 +24,8 @@ class Genre extends AbstractModel
 					$return[substr($az09,1)] = $genreString;
 					$return[substr($az09,0,-1)] = $genreString;
 				}
-				
 			}
+			// TODO: read from config
 			foreach(array('generale', 'general', 'classic', 'allgemein', 'original', 'other', 'engeneral') as $uselessAddon) {
 				$return[$uselessAddon . $az09] = $genreString;
 				$return[$az09 . $uselessAddon] = $genreString;
@@ -80,43 +80,78 @@ class Genre extends AbstractModel
 		$app = \Slim\Slim::getInstance();
 		$classPath = get_called_class();
 		$finalGenres = array();
-		if(trim($itemString) === '') {
-			$finalGenres['unknown'] = "Unknown";
-			cliLog("GenreParser Phase 0: nothing to do with an emtpy string. result: " . join(", ", $finalGenres), 6);
+		$badChunk = FALSE;
+		cliLog("----------GENRE-PARSER----------", 6);
+		cliLog("INPUT: " . $itemString, 6);
+
+		self::parseGenreStringPhase1($itemString, $finalGenres, $badChunk);
+		if($badChunk === FALSE) {
+			cliLog("  FINAL RESULT: " . join(", ", $finalGenres), 6);
 			return $finalGenres;
 		}
 
+		$badChunk = FALSE;
+		self::parseGenreStringPhase2($app, $itemString, $finalGenres, $badChunk);
+		if($badChunk === FALSE) {
+			cliLog("  FINAL RESULT: " . join(", ", $finalGenres), 6);
+			return $finalGenres;
+		}
+
+		$badChunk = FALSE;
+		self::parseGenreStringPhase3($app, $itemString, $finalGenres, $badChunk);
+		if($badChunk === FALSE) {
+			cliLog("  FINAL RESULT: " . join(", ", $finalGenres), 6);
+			return $finalGenres;
+		}
+
+		$badChunk = FALSE;
+		self::parseGenreStringPhase4($app, $itemString, $finalGenres, $badChunk);
+		if($badChunk === FALSE) {
+			cliLog("  FINAL RESULT: " . join(", ", $finalGenres), 6);
+			return $finalGenres;
+		}
+
+		$badChunk = FALSE;
+		self::parseGenreStringPhase5($app, $itemString, $finalGenres, $badChunk);
+		cliLog("  FINAL RESULT: " . join(", ", $finalGenres), 6);
+		return $finalGenres;
+	}
+
+	public static function parseGenreStringPhase1(&$itemString, &$finalGenres, &$badChunk) {
+		cliLog(" Phase 1: check if we do have a string we can work with", 6);
+		if(trim($itemString) === '') {
+			$finalGenres['unknown'] = "Unknown";
+			cliLog("  nothing to do with an emtpy string.", 7);
+			return;
+		}
 		if(preg_match("/^hash0x([a-f0-9]{7})$/", az09($itemString))) {
 			// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
 			// TODO: read from config: "importer.unknowngenre"
 			$finalGenres['unknown'] = "Unknown";
-			cliLog("GenreParser Phase 0: nothing to do with an useleass hash string. result: " . join(", ", $finalGenres), 6);
-			return $finalGenres;
+			cliLog("  nothing to do with an useless hash string.", 7);
+			return;
 		}
+		cliLog("  genre seems useable. continue...", 7);
+		$badChunk = TRUE;
+	}
 
-		$originalItemString = $itemString; // TODO: lets see if we need it anymore...
+	public static function parseGenreStringPhase2($app, &$itemString, &$finalGenres, &$badChunk) {
+		cliLog(" Phase 2: check if we do have a single cached genre", 6);
 		$itemString = str_replace(array("(",")","[","]", "{","}", "<", ">"), " ", $itemString);
-		// phase 1: check if we already have a common genre
-		cliLog("----------", 6);
-		cliLog("GenreParser  1: with genreString: $originalItemString", 6);
 		$az09 = az09($itemString);
-		
-		
-		// check if we alread have an id
-		// permformance improvement ~8%
 		$itemId = self::cacheRead($app, get_called_class(), $az09);
 		if($itemId !== FALSE) {
 			$finalGenres[$az09] = $itemString;
-			cliLog("GenreParser exiting in phase 1 with result: " . join(", ", $finalGenres), 6);
-			return $finalGenres;
-			
+			return;
 		}
-		
-		// phase 2: check if we have multiple common genres
-		
+		cliLog("  continue...", 7);
+		$badChunk = TRUE;
+	}
+
+	public static function parseGenreStringPhase3($app, &$itemString, &$finalGenres, &$badChunk) {
+		cliLog(" Phase 3: check if we do have multiple cached genres", 6);
+		$classPath = get_called_class();
 		$tmpGlue = "tmpGlu3";
-		$badChunk = FALSE;
-		cliLog("GenreParser Phase 2", 6);
 		$chunks = trimExplode($tmpGlue, str_ireplace($app->config['genre-glue'], $tmpGlue, $itemString), TRUE);
 		foreach($chunks as $chunk) {
 			$az09 = az09($chunk);
@@ -124,33 +159,33 @@ class Genre extends AbstractModel
 			if(isset($app->importerCache[$classPath]["unified"][$az09])) {
 				$finalGenres[$az09] = $app->importerCache[$classPath]["unified"][$az09];
 				$itemString = str_ireplace($chunk, "", $itemString);
-				cliLog("GenreParser FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7);
+				cliLog("  FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7);
 				continue;
 			}
 			// very fuzzy check if we have an url
 			if(preg_match("/^(http|www)([a-z0-9\.\/\:]*)\.[a-z]{2,4}$/i", $chunk)) {
 				$itemString = str_ireplace($chunk, "", $itemString);
-				cliLog("GenreParser TRASHING url-chunk: $chunk", 7);
+				cliLog("  TRASHING url-chunk: $chunk", 7);
 				continue;
 			}
 			// very fuzzy check if we have an url
 			if(preg_match("/(myspace|blogspot).com$/i", $chunk)) {
 				$itemString = str_ireplace($chunk, "", $itemString);
-				cliLog("GenreParser TRASHING: trash url-chunk: $chunk", 7);
+				cliLog("  TRASHING: trash url-chunk: $chunk", 7);
 				continue;
 			}
-			cliLog("GenreParser BAD-CHUNK: $chunk - entering phase 3...", 7);
+			cliLog("  BAD-CHUNK: $chunk - entering phase 4...", 7);
 			$badChunk = TRUE;
 		}
 		
-		if($badChunk === FALSE) {
-			cliLog("GenreParser exiting in phase 2 with result: " . join(", ", $finalGenres), 6);
-			return $finalGenres;
-		}
+	}
+
+	public static function parseGenreStringPhase4($app, &$itemString, &$finalGenres, &$badChunk) {
+		cliLog(" Phase 4: check remaining chunks", 6);
+		$classPath = get_called_class();
 		#print_r($app->config['genre-replace-chunks']); die();
-		// phase 3: tiny chunks
+		// phase 4: tiny chunks
 		# TODO: would camel-case splitting make sense?
-		cliLog("GenreParser Phase 3", 6);
 		$splitBy = array_merge($app->config['genre-glue'], array(" ", "-", ".", "_", ""));
 		$badChunk = FALSE;
 		$chunks = trimExplode($tmpGlue, str_ireplace($splitBy, $tmpGlue, $itemString), TRUE);
@@ -158,57 +193,53 @@ class Genre extends AbstractModel
 			$az09 = az09($chunk);
 			if(isset($app->config['genre-replace-chunks'][$az09])) {
 				$itemString = str_ireplace($chunk, $app->config['genre-replace-chunks'][$az09], $itemString);
-				cliLog("GenreParser REPLACING $chunk with: ".$app->config['genre-replace-chunks'][$az09], 7);
+				cliLog("  REPLACING $chunk with: ".$app->config['genre-replace-chunks'][$az09], 7);
 			}
 			if(isset($app->config['genre-remove-chunks'][$az09])) {
 				$itemString = str_ireplace($chunk, "", $itemString);
-				cliLog("GenreParser REMOVING: trash url-chunk: $chunk",7);
+				cliLog("  REMOVING: trash url-chunk: $chunk",7);
 				continue;
 			}
 			if(isset($app->importerCache[$classPath]["unified"][$az09])) {
 				$finalGenres[$az09] = $app->importerCache[$classPath]["unified"][$az09];
 				$itemString = str_ireplace($chunk, "", $itemString);
-				cliLog("GenreParser FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7);
+				cliLog("  FINAL-CHUNK: $chunk = ".$finalGenres[$az09], 7);
 				continue;
 			}
 			if(trim(az09($chunk)) !== '' && trim(az09($chunk)) !== 'and') {
-				cliLog("GenreParser BAD-CHUNK: $chunk - entering phase 4...", 7);
+				cliLog("  BAD-CHUNK: $chunk - entering phase 5...", 7);
 				$badChunk = TRUE;
 			}
 		}
+	}
 
-		if($badChunk === FALSE) {
-			cliLog("GenreParser exiting in phase 3 with result: " . join(", ", $finalGenres), 6);
-			return $finalGenres;
-		}
-
-		// phase 4: remaining tiny chunks
-		cliLog("GenreParser Phase 4", 6);
+	public static function parseGenreStringPhase5($app, &$itemString, &$finalGenres, &$badChunk) {
+		cliLog(" Phase 5: check remaining chunks after replacement and removal", 6);
+		$classPath = get_called_class();
 		$splitBy = array_merge($app->config['genre-glue'], array(" ", "-", ".", "_", ""));
 		$badChunk = FALSE;
 		$chunks = trimExplode($tmpGlue, str_ireplace($splitBy, $tmpGlue, $itemString), TRUE);
 		if(count($chunks) === 1) {
 			$az09 = az09($chunks[0]);
 			$finalGenres[$az09] = $chunks[0];
-			cliLog("exiting phase 4 with result: " . join(", ", $finalGenres), 6);
+			cliLog("  only one chunk left. lets assume \"". $chunks[0] ."\" is a genre", 7);
 			return $finalGenres; 
 		}
 		$joinedChunkRest = strtolower(join(".", $chunks));
 		
 		if(isset($app->importerCache[$classPath]["preserved"][$joinedChunkRest]) === TRUE) {
 			$finalGenres[az09($joinedChunkRest)] = $app->importerCache[$classPath]["preserved"][$joinedChunkRest];
-			cliLog("found genre based on full preserved pattern: $joinedChunkRest = ".$app->importerCache[$classPath]["preserved"][$joinedChunkRest], 7);
-			cliLog("exiting in phase 4 with result: " . join(", ", $finalGenres), 6);
+			cliLog("  found genre based on full preserved pattern: $joinedChunkRest = ".$app->importerCache[$classPath]["preserved"][$joinedChunkRest], 7);
 			return $finalGenres;
 		}
 
-		cliLog("REMAINING CHUNKWURST:" . $joinedChunkRest, 7);
+		cliLog("  REMAINING CHUNKS:" . $joinedChunkRest, 7);
 		$foundPreservedMatch = FALSE;
 		foreach($app->importerCache[$classPath]["preserved"] as $preserve => $genreString) {
 			if(preg_match("/".str_replace(".", "\.", $preserve) . "/", $joinedChunkRest)) {
 				$finalGenres[az09($preserve)] = $genreString;
 				$foundPreservedMatch = TRUE;
-				cliLog("found genre based on partly preserved pattern: $preserve = ".$genreString, 7);
+				cliLog("  found genre based on partly preserved pattern: $preserve = ".$genreString, 7);
 				$removeChunks = explode('.', $preserve);
 				$az09Chunks = array_map('az09', $chunks);
 				foreach($removeChunks as $removeChunk) {
@@ -226,10 +257,8 @@ class Genre extends AbstractModel
 		foreach($chunks as $chunk) {
 			$az09 = az09($chunk);
 			$finalGenres[$az09] = $chunk;
-			cliLog("GenreParser giving up and creating new genre: $az09 = ".$chunk, 7);
+			cliLog("  giving up and creating new genre: $az09 = ".$chunk, 7);
 		}
-		cliLog("GenreParser exiting phase 4 with result: " . join(", ", $finalGenres), 6);
-		return $finalGenres;
 	}
 
 	// check for all uppercase or all lowercase and do apply corrections
@@ -268,7 +297,6 @@ class Genre extends AbstractModel
 		
 		return $output;
 	}
-
 	
 	public static function getIdsByString($itemString) {
 		$app = \Slim\Slim::getInstance();
