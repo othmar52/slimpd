@@ -35,7 +35,6 @@ class MpdDatabaseParser {
 		if(is_file($this->dbFile) === TRUE || is_readable($this->dbFile) === TRUE) {
 			// check if we have a plaintext or gzipped mpd-databasefile
 			$this->gzipped = testBinary($this->dbFile);
-
 			return $this;
 		}
 		$this->error = TRUE;
@@ -54,10 +53,10 @@ class MpdDatabaseParser {
 
 		// Keep repeating until the end of the input file
 		while(!gzeof($inFile)) {
-		// Read buffer-size bytes
-		// Both fwrite and gzread and binary-safe
-		  fwrite($outFile, gzread($inFile, $bufferSize));
-		}  
+			// Read buffer-size bytes
+			// Both fwrite and gzread and binary-safe
+			fwrite($outFile, gzread($inFile, $bufferSize));
+		}
 		// Files are done, close files
 		fclose($outFile);
 		gzclose($inFile);
@@ -91,8 +90,6 @@ class MpdDatabaseParser {
 		while($record = $result->fetch_assoc()) {
 			$this->dirOrphans[ $record["relativePathHash"] ] = $record["id"];
 		}
-
-		
 	}
 
 	public function parse(&$importer) {
@@ -149,11 +146,10 @@ class MpdDatabaseParser {
 					break;
 
 				case "mtime" :
-					if($this->currentSection == "directory") {
-						$this->rawTagItem->setDirectoryMtime($attr[1]);
-					} else {
-						$this->rawTagItem->setFilemtime($attr[1]);
-					}
+					$setter = ($this->currentSection == "directory")
+						? "setDirectoryMtime"
+						: "setFilemtime";
+					$this->rawTagItem->$setter($attr[1]);
 					break;
 				case "Time"  : $this->rawTagItem->setMiliseconds($attr[1]*1000); break;
 				case "Artist": $this->rawTagItem->setArtist($attr[1]); break;
