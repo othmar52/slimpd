@@ -23,7 +23,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	protected $relativePathHash;
 	protected $relativeDirectoryPath;
 	protected $relativeDirectoryPathHash;
-	protected $directoryMtime;
+	protected $directoryMtime = 0;
 	
 	protected $initialKey;
 	protected $textBpm;
@@ -39,7 +39,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	protected $fingerprint;
 	protected $mimeType;
 	protected $filesize;
-	protected $filemtime;
+	protected $filemtime = 0;
 	protected $miliseconds;
 	protected $dynamicRange;
 	

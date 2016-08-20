@@ -777,7 +777,7 @@ class Importer {
 		$this->lastJobStatusUpdate = $this->jobBegin;
 	}
 	
-	private function updateJob($data = array()) {
+	public function updateJob($data = array()) {
 		$microtime = microtime(TRUE);
 		if($microtime - $this->lastJobStatusUpdate < $this->jobStatusInterval) {
 			return;
@@ -1019,333 +1019,74 @@ class Importer {
 			'msg' => $app->ll->str('importer.processing.mpdfile')
 		), __FUNCTION__);
 		
-		// check if mpd_db_file exists
-		if(is_file($app->config['mpd']['dbfile']) == FALSE || is_readable($app->config['mpd']['dbfile']) === FALSE) {
+		$mpdParser = new \Slimpd\Modules\importer\MpdDatabaseParser($app->config['mpd']['dbfile']);
+		if($mpdParser->error === TRUE) {
 			$msg = $app->ll->str('error.mpd.dbfile', array($app->config['mpd']['dbfile']));
 			cliLog($msg, 1, 'red', TRUE);
-			$this->finishJob(array(
-				'msg' => $msg
-			));
+			$this->finishJob(array('msg' => $msg));
 			$app->stop();
 		}
-		
-		# TODO: check if mpd-database file is plaintext or gzipped or sqlite
-		# TODO: processing mpd-sqlite db or gzipped db
-		
+
 		$this->updateJob(array(
 			'msg' => $app->ll->str('importer.collecting.mysqlitems')
 		));
 		
-		
-		// get timestamps of all tracks and directories from mysql database
-		$fileTimestampsMysql = array();
-		$directoryTimestampsMysql = array();
-		
-		// get all existing track-ids to determine orphans
-		$deadMysqlFiles = array();
-		
-		$query = "SELECT id, relativePathHash, relativeDirectoryPathHash, filemtime, directoryMtime FROM rawtagdata;";
-		$result = $app->db->query($query);
-		while($record = $result->fetch_assoc()) {
-			$deadMysqlFiles[ $record['relativePathHash'] ] = $record['id'];
-			$fileTimestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
-			
-			// get the oldest directory timestamp stored in rawtagdata
-			if(isset($directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) === FALSE) {
-				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = 9999999999;
-			}
-			if($record['directoryMtime'] < $directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ]) {
-				$directoryTimestampsMysql[ $record['relativeDirectoryPathHash'] ] = $record['directoryMtime']; 
-			}
-		}
-		
-		// get all existing album-ids to determine orphans
-		$deadMysqlAlbums = array();
-		$query = "SELECT id, relativePathHash FROM album;";
-		$result = $app->db->query($query);
-		while($record = $result->fetch_assoc()) {
-			$deadMysqlAlbums[ $record['relativePathHash'] ] = $record['id'];
-		}
-		
-		
+	
 		$dbFilePath = $app->config['mpd']['dbfile'];
 		$this->updateJob(array(
-                        'msg' => $app->ll->str('importer.testdbfile')
-                ));
+			'msg' => $app->ll->str('importer.testdbfile')
+        ));
 		
-		// check if we have a plaintext or gzipped mpd-databasefile
-		$isBinary = testBinary($dbFilePath);
-		
-		if($isBinary === TRUE) {
+		if($mpdParser->gzipped === TRUE) {
 			$this->updateJob(array(
-	                        'msg' => $app->ll->str('importer.gunzipdbfile')
-	                ));
-			// decompress databasefile
-			$bufferSize = 4096; // read 4kb at a time (raising this value may increase performance)
-			$outFileName = APP_ROOT . 'cache/mpd-database-plaintext';
-			
-			// Open our files (in binary mode)
-			$inFile = gzopen($app->config['mpd']['dbfile'], 'rb');
-			$outFile = fopen($outFileName, 'wb');
-			
-			// Keep repeating until the end of the input file
-			while(!gzeof($inFile)) {
-			// Read buffer-size bytes
-			// Both fwrite and gzread and binary-safe
-			  fwrite($outFile, gzread($inFile, $bufferSize));
-			}  
-			// Files are done, close files
-			fclose($outFile);
-			gzclose($inFile);
-			$dbFilePath = $outFileName;
+				'msg' => $app->ll->str('importer.gunzipdbfile')
+            ));
+			$mpdParser->decompressDbFile();
 		}
 		
+		$mpdParser->readMysqlTstamps();
+		$mpdParser->parse($this);
 		
-		$dbfile = explode("\n", file_get_contents($dbFilePath));
-		$currentDirectory = "";
-		$currentSong = "";
-		$currentPlaylist = "";
-		$currentSection = "";
 		
-		//$songs = array();
-		//$playlists = array();
 		
-		$dircount = 0;
-		
-		$unmodifiedFiles = 0;
-		
-		$level = -1;
-		$opendirs = array();
-		
-		// set initial attributes
-		$mtime = 0;
-		$time = 0;
-		$artist = '';
-		$title = '';
-		$track = '';
-		$album = '';
-		$date = '';
-		$genre = '';
-		$mtimeDirectory = 0;
-		
-		foreach($dbfile as $line) {
-			if(trim($line) === "") {
-				continue; // skip empty lines
-			}
-			
-			$attr = explode (": ", $line, 2);
-			array_map('trim', $attr);
-			if(count($attr === 1)) {
-				switch($attr[0]) {
-					case 'info_begin': break;
-					case 'info_end': break;
-					case 'playlist_end':
-						// TODO: what to do with playlists fetched by mpd-database???
-						//$playlists[] = $currentDirectory . DS . $currentPlaylist;
-						$currentPlaylist = "";
-						$currentSection = "";
-						break;
-					case 'song_end':
-						$this->itemCountChecked++;
-						
-						// single music files directly in mpd-musicdir-root must not get a leading slash
-						$dirRelativePath = ($currentDirectory === '') ? '' : $currentDirectory . DS;
-						$directoryHash = getFilePathHash($dirRelativePath);
-						
-						// further we have to read directory-modified-time manually because there is no info
-						// about mpd-root-directory in mpd-database-file
-						$mtimeDirectory = ($currentDirectory === '')
-							? filemtime($app->config['mpd']['musicdir'])
-							:  $mtimeDirectory;
-						
-						$trackRelativePath =  $dirRelativePath . $currentSong;
-						$trackHash = getFilePathHash($trackRelativePath);
-						
-						
-						
-						$this->updateJob(array(
-							'msg' => 'processed ' . $this->itemCountChecked . ' files',
-							'currentfile' => $currentDirectory . DS . $currentSong,
-							'deadfiles' => count($deadMysqlFiles),
-							'unmodified_files' => $unmodifiedFiles
-						));
-						
-						$insertOrUpdateRawtagData = FALSE;
-						// compare timestamps of mysql-database-entry(rawtagdata) and mpddatabase
-						if(isset($fileTimestampsMysql[$trackHash]) === FALSE) {
-							cliLog('mpd-file does not exist in rawtagdata: ' . $trackRelativePath, 5);
-							$insertOrUpdateRawtagData = TRUE;
-						} else {
-							if($mtime > $fileTimestampsMysql[$trackHash]) {
-								cliLog('mpd-file timestamp is newer: ' . $trackRelativePath, 5);
-								$insertOrUpdateRawtagData = TRUE;
-							}
-						}
-						
-						if(isset($directoryTimestampsMysql[$directoryHash]) === FALSE) {
-							cliLog('mpd-directory does not exist in rawtagdata: ' . $dirRelativePath, 5);
-							$insertOrUpdateRawtagData = TRUE;
-						} else {
-							if($mtimeDirectory > $directoryTimestampsMysql[$directoryHash]) {
-								cliLog('mpd-directory timestamp is newer: ' . $trackRelativePath, 5);
-								$insertOrUpdateRawtagData = TRUE;
-							}
-						}
-						
-						if($insertOrUpdateRawtagData === FALSE) {
-							// track has not been modified - no need for updating
-							unset($fileTimestampsMysql[$trackHash]);
-							unset($deadMysqlFiles[$trackHash]);
-							$unmodifiedFiles++;
-							
-							if(array_key_exists($directoryHash, $deadMysqlAlbums)) {
-								unset($deadMysqlAlbums[$directoryHash]);
-							}
-						} else {
-							
-							$t = new Rawtagdata();
-							if(isset($deadMysqlFiles[$trackHash])) {
-								$t->setId($deadMysqlFiles[$trackHash]);
-								// file is alive - remove it from dead items
-								unset($deadMysqlFiles[$trackHash]);
-							}
-
-							$t->setArtist($artist);
-							$t->setTitle($title);
-							$t->setAlbum($album);
-							$t->setGenre($genre);
-							$t->setYear($date);
-							$t->setTrackNumber($track);
-								
-							$t->setRelativePath($trackRelativePath);
-							$t->setRelativePathHash($trackHash);
-							$t->setRelativeDirectoryPath($dirRelativePath);
-							$t->setRelativeDirectoryPathHash($directoryHash);
-							
-							$t->setDirectoryMtime($mtimeDirectory);
-							
-							$t->setFilemtime($mtime);
-							$t->setMiliseconds($time*1000);
-							
-							$t->setlastScan(0);
-							
-							$t->setImportStatus(1);
-							$t->update();
-							
-							unset($t);
-							
-							$this->itemCountProcessed++;
-						}
-
-						cliLog("#" . $this->itemCountChecked . " " . $currentDirectory . DS . $currentSong, 2);
-						
-						//$songs[] = $currentDirectory . DS . $currentSong;
-						$currentSong = "";
-						$currentSection = "";
-						
-						// reset song attributes
-						$mtime = 0;
-						$time = 0;
-						$artist = '';
-						$title = '';
-						$track = '';
-						$album = '';
-						$date = '';
-						$genre = '';
-		
-						break;
-					default: break;
-				}
-			}
-			if(isset($attr[1]) === TRUE && in_array($attr[0], ['Time','Artist','Title','Track','Album','Genre','Date'])) {
-				// believe it or not - some people store html in their tags
-				$attr[1] = preg_replace('!\s+!', ' ', (trim(strip_tags($attr[1]))));
-			}
-			switch($attr[0]) {
-				case 'directory':
-					$currentSection = "directory";
-					break;
-				case 'begin':
-					$level++;
-					$opendirs = explode(DS, $attr[1]);
-					$currentSection = "directory";
-					$currentDirectory = $attr[1];
-					break;
-				case 'song_begin':
-					$currentSection = "song";
-					$currentSong = $attr[1];
-					break;
-				case 'playlist_begin':
-					$currentSection = "playlist";
-					$currentPlaylist = $attr[1];
-					break;
-				case 'end':
-					$level--;
-					//$dirs[$currentDirectory] = TRUE;
-					$dircount++;
-					array_pop($opendirs);
-					$currentDirectory = join(DS, $opendirs);
-					$currentSection = "";
-					
-					break;
-					
-				case 'mtime' :
-					if($currentSection == "directory") {
-						$mtimeDirectory = $attr[1];
-					} else {
-						$mtime = $attr[1];
-					}
-					break;
-				case 'Time'  : $time   = $attr[1]; break;
-				case 'Artist': $artist = $attr[1]; break;
-				case 'Title' : $title  = $attr[1]; break;
-				case 'Track' : $track  = $attr[1]; break;
-				case 'Album' : $album  = $attr[1]; break;
-				case 'Genre' : $genre  = $attr[1]; break;
-				case 'Date'  : $date   = $attr[1]; break;
-			}
-		}
 
 		// delete dead items in table:rawtagdata & table:track & table:trackindex
-		if(count($deadMysqlFiles) > 0) {
-			Rawtagdata::deleteRecordsByIds($deadMysqlFiles);
-			Track::deleteRecordsByIds($deadMysqlFiles);
-			Trackindex::deleteRecordsByIds($deadMysqlFiles);
+		if(count($mpdParser->fileOrphans) > 0) {
+			Rawtagdata::deleteRecordsByIds($mpdParser->fileOrphans);
+			Track::deleteRecordsByIds($mpdParser->fileOrphans);
+			Trackindex::deleteRecordsByIds($mpdParser->fileOrphans);
 
 			// TODO: last check if those 3 tables has identical totalCount()
 			// reason: basis is only rawtagdata and not all 3 tables
 		}
 
 		// delete dead items in table:album & table:albumindex
-		if(count($deadMysqlAlbums) > 0) {
-			print_r($deadMysqlAlbums);
-			Album::deleteRecordsByIds($deadMysqlAlbums);
-			Albumindex::deleteRecordsByIds($deadMysqlAlbums);
+		if(count($mpdParser->dirOrphans) > 0) {
+			print_r($mpdParser->dirOrphans);
+			Album::deleteRecordsByIds($mpdParser->dirOrphans);
+			Albumindex::deleteRecordsByIds($mpdParser->dirOrphans);
 		}
 
 
-		cliLog("dircount: " . $dircount);
-		cliLog("songs: " . $this->itemCountChecked);
+		cliLog("dircount: " . $mpdParser->dirCount);
+		cliLog("songs: " . $mpdParser->itemsChecked);
 		//cliLog("playlists: " . count($playlists));
 		
 		# TODO: flag&handle dead items in mysql-database
 		//cliLog("dead dirs: " . count($deadMysqlDirectories));
-		cliLog("dead songs: " . count($deadMysqlFiles));
+		cliLog("dead songs: " . count($mpdParser->fileOrphans));
 		#print_r($deadMysqlFiles);
 		
-		$this->itemCountTotal = $this->itemCountChecked;
+		$this->itemCountTotal = $mpdParser->itemsChecked;
 		$this->finishJob(array(
-			'msg' => 'processed ' . $this->itemCountChecked . ' files',
-			'directorycount' => $dircount,
-			'deletedRecords' => count($deadMysqlFiles),
-			'unmodified_files' => $unmodifiedFiles
+			'msg' => 'processed ' . $mpdParser->itemsChecked . ' files',
+			'directorycount' => $mpdParser->dirCount,
+			'deletedRecords' => count($mpdParser->fileOrphans),
+			'unmodified_files' => $mpdParser->itemsUnchanged
 		), __FUNCTION__);
 		
-		// destroy large arrays
-		unset($deadMysqlFiles);
-		unset($fileTimestampsMysql);
-		unset($directoryTimestampsMysql);
-		
+		// destroy parser with large array properties
+		unset($mpdParser);
 		return;
 	}
 
