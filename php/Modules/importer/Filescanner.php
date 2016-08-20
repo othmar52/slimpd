@@ -286,31 +286,34 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// commentsTags
 		foreach($commentsTags as $tagName => $setter) {
-			if(isset($data['comments'][$tagName]) === TRUE) {
-				$tagValue = $this->extractTagString($data['comments'][$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
+			if(isset($data['comments'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['comments'][$tagName]);
+			if($tagValue !== FALSE) {
+				$rawTagData->$setter($tagValue);
 			}
 		}
 		
 		// baseTags
 		foreach($baseTags as $tagName => $setter) {
-			if(isset($data[$tagName]) === TRUE) {
-				$tagValue = $this->extractTagString($data[$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
+			if(isset($data[$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data[$tagName]);
+			if($tagValue !== FALSE) {
+				$rawTagData->$setter($tagValue);
 			}
 		}
 		
 		// audio
 		foreach($audio as $tagName => $setter) {
-			if(isset($data['audio'][$tagName]) === TRUE) {
-				$tagValue = $this->extractTagString($data['audio'][$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
+			if(isset($data['audio'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['audio'][$tagName]);
+			if($tagValue !== FALSE) {
+				$rawTagData->$setter($tagValue);
 			}
 		}
 		if (isset($data['mpc']['header']['profile'])) {
@@ -328,11 +331,12 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 
 		// video
 		foreach($video as $tagName => $setter) {
-			if(isset($data['video'][$tagName]) === TRUE) {
-				$tagValue = $this->extractTagString($data['video'][$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
+			if(isset($data['video'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['video'][$tagName]);
+			if($tagValue !== FALSE) {
+				$rawTagData->$setter($tagValue);
 			}
 		}
 
@@ -341,22 +345,24 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 			foreach($commonTags as $tagName => $setter) {
-				if(isset($data['tags'][$tagGroup][$tagName]) === TRUE) {
-					$tagValue = $this->extractTagString($data['tags'][$tagGroup][$tagName]);
-					if($tagValue !== FALSE) {
-						$rawTagData->$setter($tagValue);
-					}
+				if(isset($data['tags'][$tagGroup][$tagName]) === FALSE) {
+					continue;
+				}
+				$tagValue = $this->extractTagString($data['tags'][$tagGroup][$tagName]);
+				if($tagValue !== FALSE) {
+					$rawTagData->$setter($tagValue);
 				}
 			}
 			if(isset($data['tags'][$tagGroup]['text']) === FALSE) {
 				continue;
 			}
 			foreach($textTags as $tagName => $setter) {
-				if(isset($data['tags'][$tagGroup]['text'][$tagName]) === TRUE) {
-					$tagValue = $this->extractTagString($data['tags'][$tagGroup]['text'][$tagName]);
-					if($tagValue !== FALSE) {
-						$rawTagData->$setter($tagValue);
-					}
+				if(isset($data['tags'][$tagGroup]['text'][$tagName]) === FALSE) {
+					continue;
+				}
+				$tagValue = $this->extractTagString($data['tags'][$tagGroup]['text'][$tagName]);
+				if($tagValue !== FALSE) {
+					$rawTagData->$setter($tagValue);
 				}
 			}
 		}
