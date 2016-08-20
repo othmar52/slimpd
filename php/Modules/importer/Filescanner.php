@@ -27,7 +27,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		$getID3 = new \getID3;
 		
 		// get timestamps of all images from mysql database
-		$imageTimestampsMysql = array();
+		//$imageTimestampsMysql = array();
 		
 			////////////////////////////////////////////////////////////////
 			// TEMP reset database status for testing purposes

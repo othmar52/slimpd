@@ -79,27 +79,27 @@ class ConfigLoaderINI {
 			return $returnArray;
 		}
 
-		foreach ($array as $key=>$value) {
+		foreach (array_keys($array) as $key) {
 			$e = explode(':', $key);
 			if (empty($e[1]) === TRUE) {
 				$returnArray[$key] = $array[$key];
 				continue;
 			}
 
-			$x = array();
+			$tmpArray = array();
 			foreach ($e as $tk=>$tv) {
-				$x[$tk] = trim($tv);
+				$tmpArray[$tk] = trim($tv);
 			}
-			$x = array_reverse($x, true);
-			foreach ($x as $k=>$v) {
-				$c = $x[0];
+			$tmpArray = array_reverse($tmpArray, true);
+			foreach (array_keys($tmpArray) as $key2) {
+				$c = $tmpArray[0];
 				if (empty($returnArray[$c])) {
 					$returnArray[$c] = array();
 				}
-				if (isset($returnArray[$x[1]])) {
-					$returnArray[$c] = array_merge($returnArray[$c], $returnArray[$x[1]]);
+				if (isset($returnArray[$tmpArray[1]])) {
+					$returnArray[$c] = array_merge($returnArray[$c], $returnArray[$tmpArray[1]]);
 				}
-				if ($k === 0) {
+				if ($key2 === 0) {
 					$returnArray[$c] = array_merge($returnArray[$c], $array[$key]);
 				}
 			}

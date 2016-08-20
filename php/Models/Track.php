@@ -94,7 +94,7 @@ class Track extends \Slimpd\Models\AbstractModel
 		
 		
 		
-		$regexFeat = "/([\ \(\[])featuring\ |([\ \(\[])ft(.?)\ |([\ \(\[])feat(.?)\ |([\ \(\[])ft\.|([\ \(\[])feat\./i";
+		#$regexFeat = "/([\ \(\[])featuring\ |([\ \(\[])ft(.?)\ |([\ \(\[])feat(.?)\ |([\ \(\[])ft\.|([\ \(\[])feat\./i";
 		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
 		$regexRemix = "/(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)/i";
 		$regexRemix2 = "/(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)/i";

@@ -1207,7 +1207,7 @@ class AlbumMigrator {
 		// 101 - 1XX, 201 - 20X
 		$discRange = TRUE;
 		foreach($rangeNess as $range) {
-			if(preg_match("/^(\d{1})01-/", $range, $m) === 0) {
+			if(preg_match("/^(\d{1})01-/", $range) === 0) {
 				$discRange = FALSE;
 			}
 		}

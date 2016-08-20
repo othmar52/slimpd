@@ -126,7 +126,7 @@ class Xwax {
 
 	public function getCurrentlyPlayedTrack($deckIndex) {
 		$app = \Slim\Slim::getInstance();
-		$xConf = $app->config['xwax'];
+		#$xConf = $app->config['xwax'];
 		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
 		$deckItem = ($deckStatus['path'] !== NULL)
 			 ? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]

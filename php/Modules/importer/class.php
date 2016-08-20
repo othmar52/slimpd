@@ -403,9 +403,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->updateJob(array(
 			'msg' => $app->ll->str('importer.collecting.mysqlitems')
 		));
-		
-	
-		$dbFilePath = $app->config['mpd']['dbfile'];
+
 		$this->updateJob(array(
 			'msg' => $app->ll->str('importer.testdbfile')
         ));
@@ -634,7 +632,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$result = $app->db->query($query);
 		
 		$counter = 0;
-		$previousAlbumId = 0;
+		#$previousAlbumId = 0;
 		
 		while($record = $result->fetch_assoc()) {
 			$counter++;
@@ -786,7 +784,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 
 
-	public function setDefaultLabels($forceAllAlbums = FALSE) {
+	public function setDefaultLabels() {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 7;
 		
@@ -958,7 +956,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 
 	
-	public function extractAllMp3FingerPrints($forceAllAlbums = FALSE) {
+	public function extractAllMp3FingerPrints() {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 10;
 		

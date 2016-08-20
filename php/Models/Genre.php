@@ -78,7 +78,6 @@ class Genre extends \Slimpd\Models\AbstractModel
 
 	public static function parseGenreStringAdvanced($itemString) {
 		$app = \Slim\Slim::getInstance();
-		$classPath = get_called_class();
 		$finalGenres = array();
 		$badChunk = FALSE;
 		cliLog("----------GENRE-PARSER----------", 6);
