@@ -146,7 +146,6 @@ class MpdDatabaseParser {
 					array_pop($this->openDirs);
 					$this->currentDir = join(DS, $this->openDirs);
 					$this->currentSection = "";
-
 					break;
 
 				case "mtime" :
@@ -178,7 +177,7 @@ class MpdDatabaseParser {
 			$this->currentSection = "";
 			return;
 		}
-		
+
 		// process"song_end"
 		$this->itemsChecked++;
 
@@ -189,7 +188,7 @@ class MpdDatabaseParser {
 		// further we have to read directory-modified-time manually because there is no info
 		// about mpd-root-directory in mpd-database-file
 		if($this->currentDir === "") {
-			$this->rawTagItem->setDirectoryMtime(filemtime($app->config["mpd"]["musicdir"]));
+			$this->rawTagItem->setDirectoryMtime(filemtime(\Slim\Slim::getInstance()->config["mpd"]["musicdir"]));
 		}
 
 		$this->rawTagItem->setRelativePath($this->rawTagItem->getRelativeDirectoryPath() . $this->currentSong);
