@@ -1220,13 +1220,22 @@ class AlbumMigrator {
 	}
 
 	
-
-	
 	/**
-	 * TODO: remove this strange syntax "goto" of copy/pasted method
+	 * checks if passed number array is gapless
 	 * 
 	 */
-	private function extractNumericRangeness($input) {
+	private function extractNumericRangeness($numbers) {
+		$noGaps = range(1,max($numbers));
+		return array_diff($noGaps,$numbers);
+	}
+	
+	/**
+	 * 
+	 * TODO: maybe this function is useful to identify missing tracks of an album!?
+	 * (TODO): remove this strange syntax "goto" of copy/pasted method
+	 */
+	/*
+	private function extractNumericRangenessOld($input) {
 
 		//last value is dropped so add something useless to be dropped
 		array_push($input, null);
@@ -1258,6 +1267,7 @@ class AlbumMigrator {
 
 		return $rangeArray;
 	}
+	*/
 
 	
 	// setter
