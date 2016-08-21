@@ -182,6 +182,7 @@ class Genre extends \Slimpd\Models\AbstractModel
 	public static function parseGenreStringPhase4($app, &$itemString, &$finalGenres, &$badChunk) {
 		cliLog(" Phase 4: check remaining chunks", 6);
 		$classPath = get_called_class();
+		$tmpGlue = "tmpGlu3";
 		#print_r($app->config['genre-replace-chunks']); die();
 		// phase 4: tiny chunks
 		# TODO: would camel-case splitting make sense?
@@ -215,6 +216,7 @@ class Genre extends \Slimpd\Models\AbstractModel
 	public static function parseGenreStringPhase5($app, &$itemString, &$finalGenres, &$badChunk) {
 		cliLog(" Phase 5: check remaining chunks after replacement and removal", 6);
 		$classPath = get_called_class();
+		$tmpGlue = "tmpGlu3";
 		$splitBy = array_merge($app->config['genre-glue'], array(" ", "-", ".", "_", ""));
 		$badChunk = FALSE;
 		$chunks = trimExplode($tmpGlue, str_ireplace($splitBy, $tmpGlue, $itemString), TRUE);
