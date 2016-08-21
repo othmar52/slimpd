@@ -449,6 +449,8 @@ class AlbumMigrator {
 		}
 		$this->guessAttributesByDirectoryName($t['relativeDirectoryPath']);
 
+		$this->scoreLabelByLabelDirectory($t['relativeDirectoryPath']);
+
 		// TODO: post procession:
 		$this->postProcessRecommendations();
 		// in case bestartistmatch == album title take the 2nd best match for track artist  
@@ -685,6 +687,38 @@ class AlbumMigrator {
 		}
 	}
 
+	private function scoreLabelByLabelDirectory($albumPath) {
+		cliLog("--- add LABEL based on directory ---", 8);
+		cliLog("  album directory: " . $albumPath, 8);
+		$app = \Slim\Slim::getInstance();
+
+		// check config
+		if(isset($app->config['label-parent-directories']) === FALSE) {
+			cliLog("  aborting because no label directories configured",8);
+			return;
+		}
+
+		foreach($app->config['label-parent-directories'] as $labelDir) {
+			$labelDir = rtrim($labelDir, DS) . DS; // append trailingSlash
+			cliLog("  configured label dir: " . $labelDir, 10);
+			if(stripos($albumPath, $labelDir) !== 0) {
+				cliLog("  no match: " . $labelDir, 8);
+				continue;
+			}
+			// use directory name as label name
+			$newLabelString = basename(dirname($albumPath));
+
+			// do some cleanup
+			$newLabelString = ucwords(remU($newLabelString));
+			cliLog("  match: " . $newLabelString, 8);
+			$this->scoreAttribute('album', 'label', $newLabelString, 5);
+			foreach(array_keys($this->tracks) as $idx) {
+				$this->scoreAttribute($idx, 'label', $newLabelString, 5);
+			}
+			return;
+		}
+		return;
+	}
 
 	private function recommend($idx, $attrArray, $score = 1) {
 		$rgx = new \Slimpd\RegexHelper();
