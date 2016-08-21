@@ -48,8 +48,6 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			// TODO: extend directory scan with additional relevant files
 			$this->searchImagesInFilesystem();
 		}
-		// phase 6: makes sure each album record gets all genreIds which appears on albumTracks
-		#$importer->fixAlbumGenres();
 		
 		// phase 7: check configured label-directories and update table:track:labelId
 		# TODO: move this funtionality to album-migrator
@@ -525,80 +523,6 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->finishJob(array(
 			'msg' => $msg,
 			'deletedFileSize' => formatByteSize($deletedFilesize)
-		), __FUNCTION__);
-		return;
-	}
-
-	public function fixAlbumGenres($forceAllAlbums = FALSE) {
-		$app = \Slim\Slim::getInstance();
-		
-		// reset
-		// UPDATE album SET importStatus=2
-		
-		
-		$this->jobPhase = 6;
-		$this->beginJob(array(
-			'currentItem' => "fetching all track-genres for inserting into table:album ..."
-		), __FUNCTION__);
-		
-		$query = "SELECT count(id) AS itemCountTotal FROM album" .(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<3 " : "");
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
-		
-		// collect all genreIds provided by tracks
-		$genreIdsFromTracks = '';
-		$query = "
-			SELECT
-				track.albumId,
-				track.genreId AS genreId
-			FROM track
-			LEFT JOIN album ON track.albumId=album.id
-			".(($forceAllAlbums === FALSE) ? " WHERE album.importStatus<3 " : "")."
-			ORDER BY track.albumId;
-		";
-		$result = $app->db->query($query);
-		
-		$counter = 0;
-
-		while($record = $result->fetch_assoc()) {
-			$counter++;
-			
-			$this->updateJob(array(
-				'updatedAlbums' => $this->itemCountProcessed,
-				'currentItem' => 'albumId: ' . $record['albumId']
-			));
-			
-			
-			if($counter === 1) {
-				$genreIdsFromTracks = '';
-				$previousKey = $record['albumId'];
-			}
-			if($record['albumId'] == $previousKey) {
-				$genreIdsFromTracks .= $record['genreId'] . ',';
-			} else {
-				$album = new Album();
-				$album->setId($previousKey);
-				$album->setImportStatus(3);
-				
-				// extract unique genreIds ordered by relevance
-				$album->setGenreId(
-					join(
-						",",
-						uniqueArrayOrderedByRelevance(
-							trimExplode(",", $genreIdsFromTracks, TRUE)
-						)
-					)
-				);
-				cliLog($app->ll->str('importer.fixgenre.msg', array($album->getId(), $album->getGenreId())), 3);
-				$album->update();
-				$this->itemCountChecked++;
-				$this->itemCountProcessed++;
-				unset($album);
-				$genreIdsFromTracks = '';
-			}
-			$previousKey = $record['albumId'];
-		}
-		$this->finishJob(array(
-			'updatedAlbums' => $this->itemCountProcessed,
 		), __FUNCTION__);
 		return;
 	}
