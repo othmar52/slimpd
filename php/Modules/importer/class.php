@@ -924,37 +924,6 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 		return;
 	}
-
-	// TODO: where to move pythonscript?
-	// TODO: general wrapper for shell-executing stuff
-	public static function extractAudioFingerprint($absolutePath, $returnCommand = FALSE) {
-		$ext = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
-		switch($ext) {
-			case 'mp3':
-				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
-					' ' . APP_ROOT . "scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
-				break;
-			case 'flac':
-				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_metaflac'] .
-					' --show-md5sum ' . escapeshellargDirty($absolutePath);
-				break;
-			default:
-				# TODO: can we get md5sum with php in a performant way?
-				$cmd = \Slim\Slim::getInstance()->config['modules']['bin_md5'] .' ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
-		}
-		if($returnCommand === TRUE) {
-			return $cmd;
-		}
-		#echo $cmd . "\n";
-		$response = exec($cmd);
-		if(preg_match("/^[0-9a-f]{32}$/", $response)) {
-			return $response;
-		}
-		return FALSE;
-	} 
-
-
-
 	
 	public function extractAllMp3FingerPrints() {
 		$app = \Slim\Slim::getInstance();
@@ -1001,7 +970,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 			
-			if($fp = self::extractAudioFingerprint($fullPath)) {
+			if($fp = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath)) {
 				$i = new Rawtagdata();
 				$i->setId($record['id']);
 				$i->setFingerprint($fp);

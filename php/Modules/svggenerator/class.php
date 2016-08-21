@@ -55,7 +55,7 @@ class Svggenerator {
 		
 		if(!preg_match("/^([a-f0-9]){32}$/", $this->fingerprint)) {
 			// extract the fingerprint
-			if($fingerprint = \Slimpd\Modules\Importer::extractAudioFingerprint($this->absolutePath)) {
+			if($fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($this->absolutePath)) {
 				$this->fingerprint = $fingerprint;
 			} else {
 				# TODO: handle missing fingerprint
