@@ -12,7 +12,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
-		foreach(\Slimpd\Modules\Importer::getInitialDatabaseQueries() as $query) {
+		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
 			\Slim\Slim::getInstance()->db->query($query);
 		}
 	}

@@ -32,8 +32,8 @@ $app->get('/remigrate', function () use ($app, $importer) {
 });
 
 
-$app->get('/builddictsql', function () use ($app, $importer) {
-	$importer->buildDictionarySql();
+$app->get('/builddictsql', function () use ($app) {
+	\Slimpd\Modules\importer\DatabaseStuff::buildDictionarySql();
 });
 
 $app->get('/database-cleaner', function () use ($app) {
@@ -85,7 +85,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 		exit;
 	}
 
-	foreach(\Slimpd\Modules\Importer::getInitialDatabaseQueries() as $query) {
+	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
 		$app->db->query($query);
 	}
 });
@@ -146,7 +146,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	    die(1);
 	}
 
-	foreach(\Slimpd\Modules\Importer::getInitialDatabaseQueries() as $query) {
+	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
 		$app->db->query($query);
 	}
 	$importer->triggerImport();
