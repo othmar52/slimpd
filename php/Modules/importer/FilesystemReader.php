@@ -3,9 +3,16 @@ namespace Slimpd\Modules\importer;
 
 class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	
+	// a whitelist with common directory names like "cover", "artwork" 
 	protected $artworkDirNames = array();
+
+	// a list with real existing directories which maches whitelist entries 
+	protected $artworkDirCache = array();
+	
+	// a list with filepaths of already scanned directories
 	protected $dirImgCache = array();
 
+	// result
 	public $foundImgPaths = array();
 	
 	private function getCachedOrScan($dirPath) {
@@ -47,7 +54,6 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->pluralizeArtworkDirNames();
 		
 		$directory = dirname($musicFilePath) . DS;
-		$directoryHash = getFilePathHash($directory);
 
 		$app = \Slim\Slim::getInstance();
 
@@ -56,34 +62,17 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		if($app->config['images']['look_cover_directory']) {
-			
 			// search for specific named subdirectories
-			if(is_dir($app->config['mpd']['musicdir'] . $directory) === TRUE) {
-				$handle=opendir($app->config['mpd']['musicdir'] . $directory);
-				while ($dirname = readdir ($handle)) {
-					if(is_dir($app->config['mpd']['musicdir'] . $directory . $dirname)) {
-						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$this->getCachedOrScan($directory . $dirname);
-						}
-					}
-				}
-				closedir($handle);
+			foreach($this->lookupSpecialDirNames($directory) as $specialDir) {
+				$this->getCachedOrScan($directory . $specialDir);
 			}
 		}
 
 		if($app->config['images']['look_silbling_directory']) {
-			$parentDir = $app->config['mpd']['musicdir'] . dirname($directory) . DS;
+			$parentDir = dirname($directory) . DS;
 			// search for specific named silbling directories
-			if(is_dir($parentDir) === TRUE) {
-				$handle=opendir($parentDir);
-				while ($dirname = readdir ($handle)) {
-					if(is_dir($parentDir . $dirname)) {
-						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$this->getCachedOrScan($parentDir . $dirname);
-						}
-					}
-				}
-				closedir($handle);
+			foreach($this->lookupSpecialDirNames($parentDir) as $specialDir) {
+				$this->getCachedOrScan($parentDir . $specialDir);
 			}
 		}
 
@@ -93,6 +82,40 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 		return $this->foundImgPaths;
 	}
+
+	private function lookupSpecialDirNames($parentPath) {
+		$app = \Slim\Slim::getInstance();
+		if(is_dir($app->config['mpd']['musicdir'] . $parentPath) === FALSE) {
+			return;
+		}
+		$dirHash = getFilePathHash($parentPath);
+		// make sure that a single directory will not be scanned twice
+		// so check if we have scanned the directory already for special names directories
+		if(array_key_exists($dirHash, $this->artworkDirCache) === TRUE) {
+			return $this->artworkDirCache[$dirHash];
+		}
+
+		// create new cache entry
+		$this->artworkDirCache[$dirHash] = [];
+		
+		// scan filesystem
+		$handle = opendir($app->config['mpd']['musicdir'] . $parentPath);
+		while($dirname = readdir ($handle)) {
+			// skip files
+			if(is_dir($app->config['mpd']['musicdir'] . $parentPath . $dirname) === FALSE) {
+				continue;
+			}
+			// check if directory name matches configured values 
+			if(in_array(az09($dirname), $this->artworkDirNames) === FALSE) {
+				continue;
+			}
+			
+			// add matches to cache result set
+			$this->artworkDirCache[$dirHash] = [$dirname];
+		}
+		closedir($handle);
+		return $this->artworkDirCache[$dirHash];
+	} 
 
 	private function pluralizeArtworkDirNames() {
 		if(count($this->artworkDirNames)>0) {
@@ -118,7 +141,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	 */
 	public function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeType = TRUE) {
 		$foundFiles = array();
-		if( is_dir($dir) == FALSE) {
+		if(is_dir($dir) == FALSE) {
 		  return $foundFiles;
 		}
 		
@@ -136,7 +159,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		$dir = rtrim($dir, DS) . DS;
 		
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
-		$handle=opendir ($dir);
+		$handle = opendir ($dir);
 		while ($file = readdir ($handle)) {
 			$foundExt = strtolower(preg_replace("/^.*\./", "", $file));
 			if(is_dir($dir . $file) === TRUE) {
