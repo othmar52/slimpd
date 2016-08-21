@@ -98,7 +98,7 @@ function flattenWhitespace($input) {
  * @return string : empty string or get-parameter-string which is needed for Slim redirects 
  */
 function getNoSurSuffix($prefixQuestionmark = TRUE) {
-	return  (\Slim\Slim::getInstance()->request->get("nosurrounding") == 1)
+	return (\Slim\Slim::getInstance()->request->get("nosurrounding") == 1)
 		? (($prefixQuestionmark)? "?":"") . "nosurrounding=1"
 		: "";
 }
@@ -133,11 +133,10 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if($verbosity > \Slim\Slim::getInstance()->config["config"]["cli-verbosity"] && $fatal === FALSE) {
 		return;
 	}
-	
+
 	if(PHP_SAPI !== "cli") {
 		return;
 	}
-	
 
 	// TODO: read from config
 	$shellColorize = TRUE;
@@ -187,7 +186,6 @@ function fileLog($mixed) {
 	}
 	file_put_contents($filename, $data, FILE_APPEND);
 }
-
 
 /**
  * converts exotic characters in similar [A-Za-z0-9]
@@ -290,8 +288,6 @@ function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
 	return $result;
 }
 
-
-
 function path2url($mixed) {
 	if(is_array($mixed) === TRUE) {
 		$mixed = join("", $mixed);
@@ -302,15 +298,15 @@ function path2url($mixed) {
 
 function getDatabaseDiffConf($app) {
 	return array(
-		"host" => $app->config["database"]["dbhost"],
-		"user" => $app->config["database"]["dbusername"],
-		"password" => $app->config["database"]["dbpassword"],
-		"db" => $app->config["database"]["dbdatabase"],
-		"savedir" => APP_ROOT . "config/dbscheme",
-		"verbose" => "On",
+		"host"         => $app->config["database"]["dbhost"],
+		"user"         => $app->config["database"]["dbusername"],
+		"password"     => $app->config["database"]["dbpassword"],
+		"db"           => $app->config["database"]["dbdatabase"],
+		"savedir"      => APP_ROOT . "config/dbscheme",
+		"verbose"      => "On",
 		"versiontable" => "db_revisions",
-		"aliastable" => "db_alias",
-		"aliasprefix" => "slimpd_v"
+		"aliastable"   => "db_alias",
+		"aliasprefix"  => "slimpd_v"
 	);
 }
 
@@ -371,7 +367,6 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 	$stmt->bindValue(":topcount",TOP_COUNT, PDO::PARAM_INT);
 	$stmt->execute();
 
-
 	if (!$rows = $stmt->fetchAll()) {
 		return false;
 	}
@@ -401,7 +396,7 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	}
 	$docsCount = $docsCount / ($idx * $idx);
 	$mismatches = [];
-	foreach ($words  as $key => $word) {
+	foreach ($words as $key => $word) {
 		if ($word["docs"] == 0 | $word["docs"] < $docsCount) {
 			$mismatches[] = $word["keyword"];
 		}
@@ -466,7 +461,7 @@ function getRenderItems() {
 		"albums" => call_user_func_array(array("\\Slimpd\\Models\\Album","getInstancesForRendering"), $args),
 		"itembreadcrumbs" => [],
 	);
-	
+
 	foreach($args as $argument) {
 		if(is_object($argument) === TRUE) {
 			addRenderItem($argument, $return);
@@ -491,7 +486,7 @@ function convertInstancesArrayToRenderItems($input) {
 		"albums" => [],
 		"itembreadcrumbs" => [],
 	];
-	
+
 	foreach($input as $item) {
 		if(is_object($item) === FALSE) {
 			continue;
@@ -516,7 +511,7 @@ function testBinary($filePath) {
  * IMPORTANT TODO: check why performance on huge files is so bad (seeking-performance in large mixes is pretty poor compared to serving the mp3-mix directly)
  */
 function deliver($file, $app) {
-	
+
 	/**
 	 * Copyright 2012 Armand Niculescu - media-division.com
 	 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -552,7 +547,7 @@ function deliver($file, $app) {
 		deliveryError(500);
 	}
 
-	$fileSize  = filesize($filePath);
+	$fileSize = filesize($filePath);
 
 	//check if http_range is sent by browser (or download manager)
 	$range = "";
@@ -590,7 +585,7 @@ function deliver($file, $app) {
 	header("Pragma: public");
 	header("Expires: -1");
 	header("Cache-Control: public, must-revalidate, post-check=0, pre-check=0");
-	
+
 	// allow a file to be streamed instead of sent as an attachment
 	// set appropriate headers for attachment or streamed file
 	header("Content-Disposition: " . (
@@ -599,7 +594,6 @@ function deliver($file, $app) {
 			: "inline;"
 		)
 	);
-
 
 	header("Content-Type: " . getMimeType($fileName));
 	header("Accept-Ranges: bytes");
@@ -621,7 +615,6 @@ function deliver($file, $app) {
 	@fclose($file);
 	$app->stop();
 }
-
 
 function deliveryError( $code = 401, $msg = null ) {
 	$msgs = array(
@@ -726,7 +719,6 @@ function nfostring2html($inputstring) {
 	$str = str_replace(" ", "&nbsp;", $str);
 	$str = nl2br($str);
 	return $str;
-	
 }
 
 function rrmdir($dir) {
@@ -744,7 +736,6 @@ function rrmdir($dir) {
 		rmdir($dir);
 	}
 }
-
 
 function renderCliHelp() {
 	$app = \Slim\Slim::getInstance();
@@ -765,7 +756,6 @@ function renderCliHelp() {
 	cliLog("  https://github.com/othmar52/slimpd");
 	cliLog("");
 }
-
 
 function clearPhpThumbTempFiles($phpThumb) {
 	foreach($phpThumb->tempFilesToDelete as $delete) {
