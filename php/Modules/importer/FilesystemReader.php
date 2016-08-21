@@ -4,41 +4,66 @@ namespace Slimpd\Modules\importer;
 class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	
 	protected $artworkDirNames = array();
-	protected $directoryImages = array();
+	protected $dirImgCache = array();
+
+	public $foundImgPaths = array();
 	
+	private function getCachedOrScan($dirPath) {
+		$dirHash = getFilePathHash($dirPath);
+		// make sure that a single directory will not be scanned twice
+		// so check if we have scanned the directory already
+		if(array_key_exists($dirHash, $this->dirImgCache) === TRUE) {
+			// add cached image paths to result set
+			foreach($this->dirImgCache[$dirHash] as $imgPath) {
+				$this->foundImgPaths[$imgPath] = $imgPath;
+			}
+			return;
+		}
+
+		// read from filesystem
+		$scanned = $this->getDirectoryFiles(
+			\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $dirPath
+		);
+
+		// create cache entry cache array
+		$this->dirImgCache[$dirHash] = [];
+
+
+		foreach($scanned as $imgPath) {
+			// remove prefixed music directory
+			$relativePath = substr($imgPath, strlen(\Slim\Slim::getInstance()->config['mpd']['musicdir']));
+			// write found files to cache array
+			$this->dirImgCache[$dirHash][$relativePath] = $relativePath;
+			// add to result set
+			$this->foundImgPaths[$relativePath] = $relativePath;
+		}
+	}
+
 	public function getFilesystemImagesForMusicFile($musicFilePath) {
+		// reset result
+		$this->foundImgPaths = [];
+		
+		// makes sure we have pluralized common directory names
+		$this->pluralizeArtworkDirNames();
+		
 		$directory = dirname($musicFilePath) . DS;
 		$directoryHash = getFilePathHash($directory);
-
-		$foundAlbumImages = array();
 
 		$app = \Slim\Slim::getInstance();
 
 		if($app->config['images']['look_current_directory']) {
-			// make sure that a single directory will not be scanned twice
-			// so check if have scanned the directory already
-			$images = (array_key_exists($directoryHash, $this->directoryImages) === TRUE)
-				? $this->directoryImages[ $directoryHash ]
-				: $this->getDirectoryFiles($app->config['mpd']['musicdir'] . $directory);
-
-			$this->directoryImages[ $directoryHash ] = $images;
-			if(count($images) > 0) {
-				$foundAlbumImages = array_merge($foundAlbumImages, $images);
-			}
+			$this->getCachedOrScan($directory);
 		}
 
 		if($app->config['images']['look_cover_directory']) {
-			$this->pluralizeartworkDirNames();
+			
 			// search for specific named subdirectories
 			if(is_dir($app->config['mpd']['musicdir'] . $directory) === TRUE) {
 				$handle=opendir($app->config['mpd']['musicdir'] . $directory);
 				while ($dirname = readdir ($handle)) {
 					if(is_dir($app->config['mpd']['musicdir'] . $directory . $dirname)) {
 						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$foundAlbumImages = array_merge(
-								$foundAlbumImages,
-								$this->getDirectoryFiles($app->config['mpd']['musicdir'] . $directory . $dirname)
-							);
+							$this->getCachedOrScan($directory . $dirname);
 						}
 					}
 				}
@@ -47,18 +72,14 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		if($app->config['images']['look_silbling_directory']) {
-			$this->pluralizeartworkDirNames();
 			$parentDir = $app->config['mpd']['musicdir'] . dirname($directory) . DS;
-			// search for specific named subdirectories
+			// search for specific named silbling directories
 			if(is_dir($parentDir) === TRUE) {
 				$handle=opendir($parentDir);
 				while ($dirname = readdir ($handle)) {
 					if(is_dir($parentDir . $dirname)) {
 						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$foundAlbumImages = array_merge(
-								$foundAlbumImages,
-								$this->getDirectoryFiles($parentDir . $dirname)
-							);
+							$this->getCachedOrScan($parentDir . $dirname);
 						}
 					}
 				}
@@ -66,27 +87,14 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 			}
 		}
 
-		if($app->config['images']['look_parent_directory'] && count($foundAlbumImages) === 0) {
+		if($app->config['images']['look_parent_directory'] && count($this->foundImgPaths) === 0) {
 			$parentDir = dirname($directory) . DS;
-			$parentDirHash = getFilePathHash($parentDir);
-			// check if have scanned the directory already
-			$images = (array_key_exists($parentDirHash, $this->directoryImages) === TRUE)
-				? $this->directoryImages[ $parentDirHash ]
-				: $this->getDirectoryFiles($app->config['mpd']['musicdir'] . $parentDir);
-			$this->directoryImages[ $parentDirHash ] = $images;
-			if(count($images) > 0) {
-				$foundAlbumImages = array_merge($foundAlbumImages, $images);
-			}
+			$this->getCachedOrScan($parentDir);
 		}
-
-		$return = array();
-		foreach($foundAlbumImages as $imagePath){
-			$return[] = str_replace($app->config['mpd']['musicdir'], '', $imagePath);
-		}
-		return $return;
+		return $this->foundImgPaths;
 	}
 
-	private function pluralizeartworkDirNames() {
+	private function pluralizeArtworkDirNames() {
 		if(count($this->artworkDirNames)>0) {
 			// we already have pluralized those strings
 			return;
