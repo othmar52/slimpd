@@ -11,8 +11,7 @@ use Slimpd\Models\Rawtagdata;
 use Slimpd\Models\Bitmap;
 
 class Importer extends \Slimpd\Modules\importer\AbstractImporter {
-	protected $artworkDirNames = array();
-	protected $directoryImages = array();
+
 	
 	// waiting until mpd has finished his internal database-update
 	protected $waitingLoop = 0;
@@ -135,6 +134,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$result = $app->db->query($query);
 		$insertedImages = 0;
 		
+		$filesystemReader = new \Slimpd\Modules\importer\FilesystemReader();
+
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
 			cliLog($record['id'] . ' ' . $record['relativePath'], 2);
@@ -149,7 +150,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$album->setLastScan(time());
 			$album->setImportStatus(2);
 			
-			$foundAlbumImages = $this->getFilesystemImagesForMusicFile($record['relativePath'].'filename-not-relevant.mp3');
+			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relativePath'].'filename-not-relevant.mp3');
 
 			foreach($foundAlbumImages as $relativePath) {
 				$imagePath = $app->config['mpd']['musicdir'] . $relativePath;
@@ -184,107 +185,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			'msg' => 'processed ' . $this->itemCountChecked . ' directories',
 			'insertedImages' => $insertedImages
 		), __FUNCTION__);
-		$this->directoryImages = array();
 		return;
 	}
 
-	public function getFilesystemImagesForMusicFile($musicFilePath) {
-		$directory = dirname($musicFilePath) . DS;
-		$directoryHash = getFilePathHash($directory);
-
-		$foundAlbumImages = array();
-
-		$app = \Slim\Slim::getInstance();
-
-		if($app->config['images']['look_current_directory']) {
-			// make sure that a single directory will not be scanned twice
-			// so check if have scanned the directory already
-			$images = (array_key_exists($directoryHash, $this->directoryImages) === TRUE)
-				? $this->directoryImages[ $directoryHash ]
-				: getDirectoryFiles($app->config['mpd']['musicdir'] . $directory);
-
-			$this->directoryImages[ $directoryHash ] = $images;
-			if(count($images) > 0) {
-				$foundAlbumImages = array_merge($foundAlbumImages, $images);
-			}
-		}
-
-		if($app->config['images']['look_cover_directory']) {
-			$this->pluralizeartworkDirNames();
-			// search for specific named subdirectories
-			if(is_dir($app->config['mpd']['musicdir'] . $directory) === TRUE) {
-				$handle=opendir($app->config['mpd']['musicdir'] . $directory);
-				while ($dirname = readdir ($handle)) {
-					if(is_dir($app->config['mpd']['musicdir'] . $directory . $dirname)) {
-						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$foundAlbumImages = array_merge(
-								$foundAlbumImages,
-								getDirectoryFiles($app->config['mpd']['musicdir'] . $directory . $dirname)
-							);
-						}
-					}
-				}
-				closedir($handle);
-			}
-		}
-
-		if($app->config['images']['look_silbling_directory']) {
-			$this->pluralizeartworkDirNames();
-			$parentDir = $app->config['mpd']['musicdir'] . dirname($directory) . DS;
-			// search for specific named subdirectories
-			if(is_dir($parentDir) === TRUE) {
-				$handle=opendir($parentDir);
-				while ($dirname = readdir ($handle)) {
-					if(is_dir($parentDir . $dirname)) {
-						if(in_array(az09($dirname), $this->artworkDirNames)) {
-							$foundAlbumImages = array_merge(
-								$foundAlbumImages,
-								getDirectoryFiles($parentDir . $dirname)
-							);
-						}
-					}
-				}
-				closedir($handle);
-			}
-		}
-
-		if($app->config['images']['look_parent_directory'] && count($foundAlbumImages) === 0) {
-			$parentDir = dirname($directory) . DS;
-			$parentDirHash = getFilePathHash($parentDir);
-			// check if have scanned the directory already
-			$images = (array_key_exists($parentDirHash, $this->directoryImages) === TRUE)
-				? $this->directoryImages[ $parentDirHash ]
-				: getDirectoryFiles($app->config['mpd']['musicdir'] . $parentDir);
-			$this->directoryImages[ $parentDirHash ] = $images;
-			if(count($images) > 0) {
-				$foundAlbumImages = array_merge($foundAlbumImages, $images);
-			}
-		}
-
-		$return = array();
-		foreach($foundAlbumImages as $imagePath){
-			$return[] = str_replace($app->config['mpd']['musicdir'], '', $imagePath);
-		}
-		return $return;
-	}
-
-	private function pluralizeartworkDirNames() {
-		if(count($this->artworkDirNames)>0) {
-			// we already have pluralized those strings
-			return;
-		}
-
-		$app = \Slim\Slim::getInstance();
-		if($app->config['images']['look_cover_directory'] != TRUE && $app->config['images']['look_silbling_directory'] != TRUE) {
-			// disabled by config
-			return;
-		}
-
-		foreach($app->config['images']['common_artwork_dir_names'] as $dirname) {
-			$this->artworkDirNames[] = az09($dirname);
-			$this->artworkDirNames[] = az09($dirname) . 's';
-		}
-	}
+	
 
 	/**
 	 * decrease timestamps - so all tracks will get remigrated on next standard-update-run

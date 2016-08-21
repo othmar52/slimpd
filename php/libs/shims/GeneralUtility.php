@@ -291,56 +291,6 @@ function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
 }
 
 
-/**
- * getDirectoryFiles() read all files of given directory without recursion
- * @param $dir (string): Directory to search
- * @param $ext (string): fileextension or name of configured fileextension group
- * @param $addFilePath (boolean): prefix every matching file with input-dir in output array-entries
- * @param $checkMimeType (boolean): perform a mimetype check and skip file if mimetype dous not match configuration
- * 
- * @return (array) : filename-strings
- */
-function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeType = TRUE) {
-	$foundFiles = array();
-	if( is_dir($dir) == FALSE) {
-	  return $foundFiles;
-	}
-	
-	$app = \Slim\Slim::getInstance();
-	$validExtensions = array(strtolower($ext));
-	if(array_key_exists($ext, $app->config["mimetypes"])) {
-		if(is_array($app->config["mimetypes"][$ext]) === TRUE) {
-			$validExtensions = array_keys($app->config["mimetypes"][$ext]);
-		}
-		if(is_string($app->config["mimetypes"][$ext]) === TRUE) {
-			$checkMimeType = FALSE;
-		}
-	}
-	// make sure we have a trailing slash
-	$dir = rtrim($dir, DS) . DS;
-	
-	$finfo = finfo_open(FILEINFO_MIME_TYPE);
-	$handle=opendir ($dir);
-	while ($file = readdir ($handle)) {
-		$foundExt = strtolower(preg_replace("/^.*\./", "", $file));
-		if(is_dir($dir . $file) === TRUE) {
-			continue;
-		}
-		if(in_array($foundExt, $validExtensions) === FALSE) {
-			continue;
-		}
-		if($checkMimeType == TRUE && array_key_exists($ext, $app->config["mimetypes"])) {
-			if(finfo_file($finfo, $dir.$file) !== $app->config["mimetypes"][$ext][$foundExt]) {
-				continue;
-			}
-		}
-		$foundFiles[] = (($addFilePath == TRUE)? $dir : "") . $file;
-	}
-
-	finfo_close($finfo);
-	closedir($handle);
-	return $foundFiles;
-}
 
 function path2url($mixed) {
 	if(is_array($mixed) === TRUE) {
