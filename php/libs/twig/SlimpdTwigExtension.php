@@ -74,9 +74,9 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			new \Twig_SimpleFilter('fingerprintshorty', function ($mixed, $length=2, $separator='...') {
 				if(is_object($mixed) === TRUE) {
 					if(method_exists($mixed, 'getFingerprint') === TRUE) {
-						$fp = $mixed->getFingerprint();
-						if(strlen($fp) === 32) {
-							return substr($fp, 0, $length) . $separator . substr($fp, $length*-1);
+						$fingerPrint = $mixed->getFingerprint();
+						if(strlen($fingerPrint) === 32) {
+							return substr($fingerPrint, 0, $length) . $separator . substr($fingerPrint, $length*-1);
 						}
 					}
 				}

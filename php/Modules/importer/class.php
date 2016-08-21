@@ -970,22 +970,21 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 			
-			if($fp = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath)) {
-				$i = new Rawtagdata();
-				$i->setId($record['id']);
-				$i->setFingerprint($fp);
-				$i->update();
+			if($fingerPrint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath)) {
+				$rawTagData = new Rawtagdata();
+				$rawTagData->setId($record['id']);
+				$rawTagData->setFingerprint($fingerPrint);
+				$rawTagData->update();
 				
-				$i = new Track();
-				$i->setId($record['id']);
-				$i->setFingerprint($fp);
-				$i->update();
+				$track = new Track();
+				$track->setId($record['id']);
+				$track->setFingerprint($fingerPrint);
+				$track->update();
 				
-				cliLog("fingerprint: " . $fp . " for " . $record['relativePath'],3);
-			} else {
-				cliLog("ERROR: regex fingerprint result " . $record['relativePath'], 1, 'red');
+				cliLog("fingerprint: " . $fingerPrint . " for " . $record['relativePath'],3);
 				continue;
 			}
+			cliLog("ERROR: regex fingerprint result " . $record['relativePath'], 1, 'red');
 		}
 		$this->finishJob(array(), __FUNCTION__);
 		return;
