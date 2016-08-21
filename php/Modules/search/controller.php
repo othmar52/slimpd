@@ -246,7 +246,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				$rows = $stmt->fetchAll();
 				$meta = $ln_sph->query("SHOW META")->fetchAll();
 				foreach($meta as $m) {
-				    $meta_map[$m["Variable_name"]] = $m["Value"];
+					$meta_map[$m["Variable_name"]] = $m["Value"];
 				}
 				
 				if(count($rows) === 0 && !$app->request()->params("nosuggestion")) {
@@ -382,16 +382,12 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 	}
 	if(count($rows) === 0 && $app->request->get("suggested") != 1) {
 		$words = array();
-		foreach($meta_map as $k=>$v) {
-			if(preg_match("/keyword\[\d+]/", $k)) {
-				preg_match("/\d+/", $k,$key);
-				$key = $key[0];
-				$words[$key]["keyword"] = $v;
+		foreach($meta_map as $key => $value) {
+			if(preg_match("/keyword\[([\d]*)\]/", $key, $matches)) {
+				$words[ $matches[1] ]["keyword"] = $value;
 			}
-			if(preg_match("/docs\[\d+]/", $k)) {
-				preg_match("/\d+/", $k,$key);
-				$key = $key[0];
-				$words[$key]["docs"] = $v;
+			if(preg_match("/docs\[([\d]*)\]/", $key, $matches)) {
+				$words[ $matches[1] ]["docs"] = $value;
 			}
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);

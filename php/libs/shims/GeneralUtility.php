@@ -388,40 +388,40 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 
 function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	$suggested = array();
-	$llimf = 0;
+	$docsCount = 0;
 	$idx = 0;
 	foreach ($words as $key => $word) {
 		if ($word["docs"] != 0) {
-			$llimf +=$word["docs"];
+			$docsCount +=$word["docs"];
 		}
 		$idx++;
 	}
 	if($idx === 0) {
 		return FALSE;
 	}
-	$llimf = $llimf / ($idx * $idx);
-	$mis = [];
+	$docsCount = $docsCount / ($idx * $idx);
+	$mismatches = [];
 	foreach ($words  as $key => $word) {
-		if ($word["docs"] == 0 | $word["docs"] < $llimf) {
-			$mis[] = $word["keyword"];
+		if ($word["docs"] == 0 | $word["docs"] < $docsCount) {
+			$mismatches[] = $word["keyword"];
 		}
 	}
-	if(count($mis) < 1) {
+	if(count($mismatches) < 1) {
 		return FALSE;
 	}
-	foreach ($mis as $m) {
-		$re = MakeSuggestion($m, $sphinxPDO);
-		if ($re && $m !== $re) {
-			$suggested[$m] = $re;
+	foreach ($mismatches as $mismatch) {
+		$result = MakeSuggestion($mismatch, $sphinxPDO);
+		if ($result && $mismatch !== $result) {
+			$suggested[$mismatch] = $result;
 		}
 	}
 	if(count($words) ==1 && empty($suggested)) {
 		return FALSE;
 	}
 	$phrase = explode(" ", $query);
-	foreach ($phrase as $k => $word) {
+	foreach ($phrase as $key => $word) {
 		if (isset($suggested[strtolower($word)])) {
-			$phrase[$k] = $suggested[strtolower($word)];
+			$phrase[$key] = $suggested[strtolower($word)];
 		}
 	}
 	return join(" ", $phrase);
