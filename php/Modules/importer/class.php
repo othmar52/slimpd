@@ -11,7 +11,7 @@ use Slimpd\Models\Rawtagdata;
 use Slimpd\Models\Bitmap;
 
 class Importer extends \Slimpd\Modules\importer\AbstractImporter {
-	protected $commonArtworkDirectoryNames = array();
+	protected $artworkDirNames = array();
 	protected $directoryImages = array();
 	
 	// waiting until mpd has finished his internal database-update
@@ -53,13 +53,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->updateCounterCache();
 		
 		// phase 10
-		$this->extractAllMp3FingerPrints();
-		
-		
-		// phase X: add trackcount to albumRecords
-		
-		// phase X: add trackcount & albumcount to genre records
-		
+		$this->extractAllMp3FingerPrints();		
 		// phase X: add fingerprint to rawtagdata+track table
 		
 		// phase 9
@@ -216,13 +210,13 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		if($app->config['images']['look_cover_directory']) {
-			$this->pluralizeCommonArtworkDirectoryNames();
+			$this->pluralizeartworkDirNames();
 			// search for specific named subdirectories
 			if(is_dir($app->config['mpd']['musicdir'] . $directory) === TRUE) {
 				$handle=opendir($app->config['mpd']['musicdir'] . $directory);
 				while ($dirname = readdir ($handle)) {
 					if(is_dir($app->config['mpd']['musicdir'] . $directory . $dirname)) {
-						if(in_array(az09($dirname), $this->commonArtworkDirectoryNames)) {
+						if(in_array(az09($dirname), $this->artworkDirNames)) {
 							$foundAlbumImages = array_merge(
 								$foundAlbumImages,
 								getDirectoryFiles($app->config['mpd']['musicdir'] . $directory . $dirname)
@@ -235,14 +229,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		if($app->config['images']['look_silbling_directory']) {
-			$this->pluralizeCommonArtworkDirectoryNames();
+			$this->pluralizeartworkDirNames();
 			$parentDir = $app->config['mpd']['musicdir'] . dirname($directory) . DS;
 			// search for specific named subdirectories
 			if(is_dir($parentDir) === TRUE) {
 				$handle=opendir($parentDir);
 				while ($dirname = readdir ($handle)) {
 					if(is_dir($parentDir . $dirname)) {
-						if(in_array(az09($dirname), $this->commonArtworkDirectoryNames)) {
+						if(in_array(az09($dirname), $this->artworkDirNames)) {
 							$foundAlbumImages = array_merge(
 								$foundAlbumImages,
 								getDirectoryFiles($parentDir . $dirname)
@@ -274,8 +268,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		return $return;
 	}
 
-	private function pluralizeCommonArtworkDirectoryNames() {
-		if(count($this->commonArtworkDirectoryNames)>0) {
+	private function pluralizeartworkDirNames() {
+		if(count($this->artworkDirNames)>0) {
 			// we already have pluralized those strings
 			return;
 		}
@@ -287,8 +281,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		foreach($app->config['images']['common_artwork_dir_names'] as $dirname) {
-			$this->commonArtworkDirectoryNames[] = az09($dirname);
-			$this->commonArtworkDirectoryNames[] = az09($dirname) . 's';
+			$this->artworkDirNames[] = az09($dirname);
+			$this->artworkDirNames[] = az09($dirname) . 's';
 		}
 	}
 
