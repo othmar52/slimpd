@@ -612,7 +612,8 @@ function deliver($file, $app) {
 		if ($size_unit == "bytes") {
 			//multiple ranges could be specified at the same time, but for simplicity only serve the first range
 			//http://tools.ietf.org/id/draft-ietf-http-range-retrieval-00.txt
-			@list($range, $extra_ranges) = @explode(",", $range_orig, 2);
+			$tmp = trimExplode(",", $range_orig);
+			$range = $tmp[0];
 		} else {
 			deliveryError(416);
 		}

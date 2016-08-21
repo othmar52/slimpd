@@ -657,7 +657,10 @@ class AlbumMigrator {
 						break;
 				}
 				if(stripos($result, 'vinyl') !== FALSE) {
-					$this->recommend($idx, array('source' => 'Vinyl'));
+					$this->recommend('album', array('source' => 'Vinyl'));
+					foreach(array_keys($this->tracks) as $idx) {
+						$this->recommend($idx, array('source' => 'Vinyl'));
+					}
 				}
 			}
 		}
