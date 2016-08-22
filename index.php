@@ -26,6 +26,8 @@ $app = new \Slim\Slim(array(
 ));
 
 require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
+require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'shims' . DS . 'StringUtility.php';
+require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'shims' . DS . 'FilesystemUtility.php';
 require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
 require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'twig'  . DS . 'SlimpdTwigExtension.php';
 
