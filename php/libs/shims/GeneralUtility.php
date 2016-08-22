@@ -95,6 +95,18 @@ function flattenWhitespace($input) {
 }
 
 /**
+ * replaces curly+square braces with normal braces
+ */
+function unifyBraces($input) {
+	return str_replace(
+		["[", "]","{", "}"],
+		["(", ")","(", ")"],
+		$input
+	);
+}
+
+
+/**
  * @return string : empty string or get-parameter-string which is needed for Slim redirects 
  */
 function getNoSurSuffix($prefixQuestionmark = TRUE) {
