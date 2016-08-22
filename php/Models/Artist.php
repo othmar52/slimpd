@@ -45,8 +45,8 @@ class Artist extends \Slimpd\Models\AbstractModel
 		$app = \Slim\Slim::getInstance();
 		$classPath = get_called_class();
 		$class = strtolower($classPath);
-		if(preg_match("/\\\([^\\\]*)$/", $classPath, $m)) {
-			$class = strtolower($m[1]);
+		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
+			$class = strtolower($matches[1]);
 		}
 
 		self::cacheUnifier($app, $classPath);
@@ -77,7 +77,7 @@ class Artist extends \Slimpd\Models\AbstractModel
 					$artistArticle = $matchArticle." ";
 					$itemPart = remU($matches[1]);
 					$az09 = az09($itemPart);
-					#var_dump($m); die("suffixed-article");
+					#var_dump($matches); die("suffixed-article");
 				}
 			}
 

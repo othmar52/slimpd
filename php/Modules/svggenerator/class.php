@@ -117,15 +117,15 @@ class Svggenerator {
 		$renderValues = array();
 		
 		
-		foreach($values as $i => $v) {
+		foreach($values as $idx => $value) {
 			$strokeCounter++;
-			$avgPeak += $v;
-			if($strokeCounter>=($strokeBorder + $strokeLine)){
-				$strokeCounter = 0;
-				$avgPeak = $avgPeak/($strokeBorder + $strokeLine+1);
-			} else {
+			$avgPeak += $value;
+			if($strokeCounter < ($strokeBorder + $strokeLine)){
 				continue;
 			}
+			$strokeCounter = 0;
+			$avgPeak = $avgPeak/($strokeBorder + $strokeLine+1);
+
 			$percent = $avgPeak/($max/100);
 			
 			// increase difference between low peak and high peak
@@ -133,7 +133,7 @@ class Svggenerator {
 			$diffPercent = 100 - $percent;
 
 			$stroke = array(
-				'x' => number_format($i/($amount/100), 5, '.', ''),
+				'x' => number_format($idx/($amount/100), 5, '.', ''),
 				'y1' => number_format($diffPercent/2, 2, '.', ''),
 				'y2' => number_format($diffPercent/2 + $percent, 2, '.', '')
 			);
@@ -349,12 +349,7 @@ class Svggenerator {
       //provjera da li se radi o mono ili stereo wavu
       $channel = hexdec(substr($heading[6], 0, 2));
       
-      if($channel == 2){
-        $omjer = 40;
-      }
-      else{
-        $omjer = 80;
-      }
+      $ratio = ($channel == 2) ? 40 : 80;
 
       while(!feof($handle)){
         $bytes = array();
@@ -379,7 +374,7 @@ class Svggenerator {
         }
 
         //skip bytes for memory optimization
-        fread ($handle, $omjer);
+        fread ($handle, $ratio);
       }
       
       // close and cleanup
@@ -397,25 +392,25 @@ class Svggenerator {
 		// 512MB is not enough for files > 4hours (XXX entries)
 		# TODO: add a note in documentation
 		ini_set ('memory_limit', '1024M'); // extracted wav-data is very large (500000 entries)
-		$c = count($input);
-		if($c < $max) {
+		$count = count($input);
+		if($count < $max) {
 			return $input;
 		}
-		$f = (floor($c / $max)) + 1;
+		$floor = (floor($count / $max)) + 1;
 		
 		$output = array();
 		$prev = 0;
 		$current = 0;
 		
-		for($i = 0; $i < $c; $i++) {
+		for($idx = 0; $idx < $count; $idx++) {
 			$current++;
-			$prev = ($input[$i] > $prev) ? $input[$i] : $prev;
-			if($current == $f) {
+			$prev = ($input[$idx] > $prev) ? $input[$idx] : $prev;
+			if($current == $floor) {
 				$output[] = $prev;
 				$current = 0;
 				$prev = 0;
 			}
-			unset($input[$i]);
+			unset($input[$idx]);
 		}
 		return $output;
 	}

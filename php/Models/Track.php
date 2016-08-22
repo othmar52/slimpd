@@ -592,12 +592,11 @@ class Track extends \Slimpd\Models\AbstractModel
 		
 	}
 
-	public static function ensureRecordIdExists($id) {
-		$db = \Slim\Slim::getInstance()->db;
-		if($db->query("SELECT id FROM " . self::$tableName . " WHERE id=" . (int)$id)->num_rows == $id) {
+	public static function ensureRecordIdExists($itemId) {
+		if(\Slim\Slim::getInstance()->db->query("SELECT id FROM " . self::$tableName . " WHERE id=" . (int)$itemId)->num_rows == $itemId) {
 			return;
 		}
-		$db->query("INSERT INTO " . self::$tableName . " (id) VALUES (".(int)$id.")");
+		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::$tableName . " (id) VALUES (".(int)$itemId.")");
 		return;
 	}
 	

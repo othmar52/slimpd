@@ -86,12 +86,12 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 			if($this->getAlbumId() > 0) {
 				$searchParams['albumId'] = $this->getAlbumId();
 			}			
-			$b2 = Bitmap::getInstanceByAttributes($searchParams);
+			$bitmap2 = Bitmap::getInstanceByAttributes($searchParams);
 
-			if($b2 === NULL) {
+			if($bitmap2 === NULL) {
 				return $this->insert();
 			}
-			$this->setId($b2->getId());
+			$this->setId($bitmap2->getId());
 		}
 			
 		$app = \Slim\Slim::getInstance();
