@@ -1,13 +1,8 @@
 <?php
 namespace Slimpd\Models;
 
-class Bitmap extends \Slimpd\Models\AbstractModel
+class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 {
-	protected $id;
-	protected $relPath;
-	protected $relPathHash;
-	protected $filemtime;
-	protected $filesize;
 	protected $mimeType;
 	protected $width;
 	protected $height;
@@ -143,21 +138,6 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 
 		
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
-	public function setRelPath($value) {
-		$this->relPath = $value;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-	}
-	public function setFilemtime($value) {
-		$this->filemtime = $value;
-	}
-	public function setFilesize($value) {
-		$this->filesize = $value;
-	}
 	public function setMimeType($value) {
 		$this->mimeType = $value;
 	}
@@ -197,21 +177,6 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-	public function getId() {
-		return $this->id;
-	}
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
-	public function getFilemtime() {
-		return $this->filemtime;
-	}
-	public function getFilesize() {
-		return $this->filesize;
-	}
 	public function getMimeType() {
 		return $this->mimeType;
 	}

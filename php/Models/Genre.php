@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Genre extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $title;
 	protected $parent;
 	protected $az09;
@@ -37,9 +36,6 @@ class Genre extends \Slimpd\Models\AbstractModel
 	}
 
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setTitle($value) {
 		$this->title = $value;
 	}
@@ -57,9 +53,6 @@ class Genre extends \Slimpd\Models\AbstractModel
 	}
 
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getTitle() {
 		return $this->title;
 	}

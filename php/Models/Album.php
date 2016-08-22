@@ -1,20 +1,16 @@
 <?php
 namespace Slimpd\Models;
 
-class Album extends \Slimpd\Models\AbstractModel
+class Album extends \Slimpd\Models\AbstractFilesystemItem
 {
-	protected $id;
 	protected $artistId;
 	protected $title;
-	protected $relPath;
-	protected $relPathHash;
 	protected $year;
 	protected $month;
 	protected $genreId;
 	protected $labelId;
 	protected $catalogNr;
 	
-	protected $filemtime;
 	protected $added;
 	protected $discs;
 	
@@ -53,20 +49,11 @@ class Album extends \Slimpd\Models\AbstractModel
 	
 	
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setArtistId($value) {
 		$this->artistId = $value;
 	}
 	public function setTitle($value) {
 		$this->title = $value;
-	}
-	public function setRelPath($value) {
-		$this->relPath = $value;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
 	}
 	public function setYear($value) {
 		$this->year = $value;
@@ -82,9 +69,6 @@ class Album extends \Slimpd\Models\AbstractModel
 	}
 	public function setCatalogNr($value) {
 		$this->catalogNr = $value;
-	}
-	public function setFilemtime($value) {
-		$this->filemtime = $value;
 	}
 	public function setAdded($value) {
 		$this->added = $value;
@@ -133,20 +117,11 @@ class Album extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getArtistId() {
 		return $this->artistId;
 	}
 	public function getTitle() {
 		return $this->title;
-	}
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
 	}
 	public function getYear() {
 		return $this->year;
@@ -162,9 +137,6 @@ class Album extends \Slimpd\Models\AbstractModel
 	}
 	public function getCatalogNr() {
 		return $this->catalogNr;
-	}
-	public function getFilemtime() {
-		return $this->filemtime;
 	}
 	public function getAdded() {
 		return $this->added;

@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Trackindex extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $artist;
 	protected $title;
 	protected $allchunks;
@@ -19,9 +18,6 @@ class Trackindex extends \Slimpd\Models\AbstractModel
 	}
 
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setArtist($value) {
 		$this->artist = $value;
 	}
@@ -34,9 +30,6 @@ class Trackindex extends \Slimpd\Models\AbstractModel
 
 
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getArtist() {
 		return $this->artist;
 	}

@@ -5,6 +5,7 @@ namespace Slimpd\Models;
 abstract class AbstractModel {
 		
 	public static $tableName;
+	protected $id;
 	
 	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
@@ -582,5 +583,11 @@ abstract class AbstractModel {
 		$query = "DELETE FROM " . self::getTableName() . " WHERE id IN (" . join(',', $idArray) . ");";
 		\Slim\Slim::getInstance()->db->query($query);
 	}
-
+	
+	public function getId() {
+		return $this->id;
+	}
+	public function setId($value) {
+		$this->id = $value;
+	}
 }

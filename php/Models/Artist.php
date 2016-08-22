@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Artist extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $title;
 	protected $article;
 	protected $az09;
@@ -121,9 +120,6 @@ class Artist extends \Slimpd\Models\AbstractModel
 
 
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setTitle($value) {
 		$this->title = $value;
 	}
@@ -141,9 +137,6 @@ class Artist extends \Slimpd\Models\AbstractModel
 	}
 
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getTitle() {
 		return $this->title;
 	}

@@ -1,9 +1,8 @@
 <?php
 namespace Slimpd\Models;
 
-class Rawtagdata extends \Slimpd\Models\AbstractModel
+class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem
 {
-	protected $id;
 	protected $artist;
 	protected $title;
 	protected $album;
@@ -18,11 +17,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	protected $remixer;
 	protected $language;
 	protected $country;
-	
-	protected $relPath;
-	protected $relPathHash;
-	protected $relDirPath;
-	protected $relDirPathHash;
+
 	protected $directoryMtime = 0;
 	
 	protected $initialKey;
@@ -38,8 +33,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 
 	protected $fingerprint;
 	protected $mimeType;
-	protected $filesize;
-	protected $filemtime = 0;
 	protected $miliseconds;
 	protected $dynamicRange;
 	
@@ -69,10 +62,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 
 
 	//setter
-	
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setArtist($value) {
 		$this->artist = $value;
 	}
@@ -116,18 +105,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 		$this->country = $value;
 	}
 	//...
-	public function setRelPath($value) {
-		$this->relPath = $value;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-	}
-	public function setRelDirPath($value) {
-		$this->relDirPath = $value;
-	}
-	public function setRelDirPathHash($value) {
-		$this->relDirPathHash = $value;
-	}
 	public function setDirectoryMtime($value) {
 		$this->directoryMtime = $value;
 	}
@@ -168,12 +145,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	}
 	public function setMimeType($value) {
 		$this->mimeType = $value;
-	}
-	public function setFilesize($value) {
-		$this->filesize = $value;
-	}
-	public function setFilemtime($value) {
-		$this->filemtime = $value;
 	}
 	public function setMiliseconds($value) {
 		$this->miliseconds = $value;
@@ -248,10 +219,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-
-	public function getId() {
-		return $this->id;
-	}
 	public function getArtist() {
 		return $this->artist;
 	}
@@ -295,18 +262,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 		return $this->country;
 	}
 	// ...
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
-	public function getRelDirPath() {
-		return $this->relDirPath;
-	}
-	public function getRelDirPathHash() {
-		return $this->relDirPathHash;
-	}
 	public function getDirectoryMtime() {
 		return $this->directoryMtime;
 	}
@@ -347,12 +302,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	}
 	public function getMimeType() {
 		return $this->mimeType;
-	}
-	public function getFilesize() {
-		return $this->filesize;
-	}
-	public function getFilemtime() {
-		return $this->filemtime;
 	}
 	public function getMiliseconds() {
 		return $this->miliseconds;

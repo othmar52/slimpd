@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Discogsitem extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $tstamp;
 	protected $type;
 	protected $extid;
@@ -193,9 +192,6 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 
 	
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setTstamp($value) {
 		$this->tstamp = $value;
 	}
@@ -211,9 +207,6 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getTstamp() {
 		return $this->tstamp;
 	}

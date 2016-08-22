@@ -1,9 +1,8 @@
 <?php
 namespace Slimpd\Models;
 
-class Track extends \Slimpd\Models\AbstractModel
+class Track extends \Slimpd\Models\AbstractFilesystemItem
 {
-	protected $id;
 	protected $title;
 	
 	protected $artistId;
@@ -13,10 +12,6 @@ class Track extends \Slimpd\Models\AbstractModel
 	protected $genreId;
 	protected $labelId;
 	protected $catalogNr;
-	
-	protected $relPath;
-	protected $relPathHash;
-	protected $relDirPathHash;
 	
 	protected $fingerprint;
 	protected $mimeType;
@@ -607,9 +602,6 @@ class Track extends \Slimpd\Models\AbstractModel
 
 	
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setArtistId($value) {
 		$this->artistId = $value;
 	}
@@ -622,27 +614,12 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function setRemixerId($value) {
 		$this->remixerId = $value;
 	}
-	public function setRelPath($value) {
-		$this->relPath = $value;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-	}
-	public function setRelDirPathHash($value) {
-		$this->relDirPathHash = $value;
-	}
 	
 	public function setFingerprint($value) {
 		$this->fingerprint = $value;
 	}
 	public function setMimeType($value) {
 		$this->mimeType = $value;
-	}
-	public function setFilesize($value) {
-		$this->filesize = $value;
-	}
-	public function setFilemtime($value) {
-		$this->filemtime = $value;
 	}
 	public function setMiliseconds($value) {
 		$this->miliseconds = $value;
@@ -758,9 +735,6 @@ class Track extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getArtistId() {
 		return $this->artistId;
 	}
@@ -773,15 +747,7 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function getRemixerId() {
 		return $this->remixerId;
 	}
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
-	public function getRelDirPathHash() {
-		return $this->relDirPathHash;
-	}
+
 	
 	public function getFingerprint() {
 		return $this->fingerprint;
@@ -789,12 +755,7 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function getMimeType() {
 		return $this->mimeType;
 	}
-	public function getFilesize() {
-		return $this->filesize;
-	}
-	public function getFilemtime() {
-		return $this->filemtime;
-	}
+
 	public function getMiliseconds() {
 		return $this->miliseconds;
 	}

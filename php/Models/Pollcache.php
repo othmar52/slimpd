@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Pollcache extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $microtstamp;
 	protected $type;
 	protected $deckindex;
@@ -13,15 +12,6 @@ class Pollcache extends \Slimpd\Models\AbstractModel
 	protected $response;
 	
 	public static $tableName = 'pollcache';
-
-	public function setId($value) {
-		$this->id = $value;
-	}
-	
-	public function getId() {
-		return $this->id;
-	}
-	
 	
 	public function setMicrotstamp($value) {
 		$this->microtstamp = $value;

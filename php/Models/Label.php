@@ -3,7 +3,6 @@ namespace Slimpd\Models;
 
 class Label extends \Slimpd\Models\AbstractModel
 {
-	protected $id;
 	protected $title;
 	protected $az09;
 	protected $trackCount;
@@ -12,9 +11,6 @@ class Label extends \Slimpd\Models\AbstractModel
 	public static $tableName = 'label';
 
 	//setter
-	public function setId($value) {
-		$this->id = $value;
-	}
 	public function setTitle($value) {
 		$this->title = $value;
 	}
@@ -30,9 +26,6 @@ class Label extends \Slimpd\Models\AbstractModel
 	
 	
 	// getter
-	public function getId() {
-		return $this->id;
-	}
 	public function getTitle() {
 		return $this->title;
 	}
