@@ -31,7 +31,7 @@
 
 			$(".ac-ajax-form", this.$el).on("submit", function(e) {
 				e.preventDefault();
-				var url = window.sliMpd.setGetParameter($(this).attr("action"), "q", that.searchfield.val());
+				var url = window.sliMpd.router.setGetParameter($(this).attr("action"), "q", that.searchfield.val());
 
 				// reset form to default action (has been modified by autocomplete)
 				$(this).attr("action", $(this).attr("data-defaultaction"));

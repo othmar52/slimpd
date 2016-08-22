@@ -10,28 +10,6 @@ $(document).ready(function() {
 		modules : {},
 		xwax : false,
 
-		/**
-		 * adds get-paramter to url, respecting existing and not-existing params
-		 * TODO: currently not compatible with urlstring that contains a #hash
-		 * @param {string} urlstring
-		 * @param {string} paramName
-		 * @param {string} paramValue
-		 */
-		setGetParameter(urlstring, paramName, paramValue) {
-			if (urlstring.indexOf(paramName + "=") >= 0) {
-				var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
-				var suffix = urlstring.substring(urlstring.indexOf(paramName));
-				suffix = suffix.substring(suffix.indexOf("=") + 1);
-				suffix = (suffix.indexOf("&") >= 0) ? suffix.substring(suffix.indexOf("&")) : "";
-				urlstring = prefix + paramName + "=" + paramValue + suffix;
-			} else {
-				urlstring += (urlstring.indexOf("?") < 0)
-					? "?" + paramName + "=" + paramValue
-					: "&" + paramName + "=" + paramValue;
-			}
-			return urlstring;
-		},
-
 		fireRequestAndNotify(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);

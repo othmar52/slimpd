@@ -201,7 +201,7 @@
 			var that = this;
 			window.NProgress.start();
 			$.ajax({
-				url: window.sliMpd.setGetParameter($el.attr("href"), "nosurrounding", "1")
+				url: window.sliMpd.router.setGetParameter($el.attr("href"), "nosurrounding", "1")
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
 				$($el.attr("data-ajaxtarget")).html(response);
@@ -219,7 +219,7 @@
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			$.ajax({
-				url: window.sliMpd.setGetParameter($el.attr("data-href"), "nosurrounding", "1")
+				url: window.sliMpd.router.setGetParameter($el.attr("data-href"), "nosurrounding", "1")
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
 				if($el.hasClass("trigger-hide-modal")) {

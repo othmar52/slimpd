@@ -66,12 +66,12 @@
 			item = item || { item : 0};
 			var url =  window.sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
 			if(this.mode === "xwax") {
-				url = window.sliMpd.setGetParameter(url, "deck", this.deckIndex);
+				url = window.sliMpd.router.setGetParameter(url, "deck", this.deckIndex);
 				if(this.showWaveform === false) {
-					url = window.sliMpd.setGetParameter(url, "type", "djscreen");
+					url = window.sliMpd.router.setGetParameter(url, "type", "djscreen");
 				} 
 			} else {
-				url = window.sliMpd.setGetParameter(url, "item", item.item);
+				url = window.sliMpd.router.setGetParameter(url, "item", item.item);
 			}
 
 			$.ajax({
