@@ -3,33 +3,24 @@ namespace Slimpd\Models;
 
 class Track extends \Slimpd\Models\AbstractTrack
 {
-	
-	
 	protected $artistId;
 	protected $featuringId;
 	protected $remixerId;
 	protected $albumId;
 	protected $genreId;
 	protected $labelId;
-	
-	
-	// ...
+
 	protected $disc;
 	protected $transcoded;
-	
-	
 	protected $lastScan;
-	
 	protected $isMixed;
-	
+	protected $dr;
+
 	protected $discogsId;
 	protected $rolldabeatsId;
 	protected $beatportId;
 	protected $junoId;
-	
-	
-	protected $dr;
-	
+
 	public static $tableName = 'track';
 
 	
@@ -62,9 +53,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 		$inputArtistString = $this->getArtistId();
 		$inputTitleString = $this->getTitle();
 		
-		
-		
-		#$regexFeat = "/([\ \(\[])featuring\ |([\ \(\[])ft(.?)\ |([\ \(\[])feat(.?)\ |([\ \(\[])ft\.|([\ \(\[])feat\./i";
 		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
 		$regexRemix = "/(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)/i";
 		$regexRemix2 = "/(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)/i";
@@ -75,6 +63,376 @@ class Track extends \Slimpd\Models\AbstractTrack
 		$remixerArtists = array();
 		$titlePattern = '';
 		
+		$performTest = 0;
+		if($performTest>0) {
+			$testData = $this->getTestData($index);
+			$inputArtistString = $testData[0];
+			$inputTitleString = $testData[1];
+			if(isset($testData[2])) {
+				$inputFileName = $testData[2];
+			}
+			if(isset($testData[3])) {
+				$inputDirectoryName = $testData[3];
+			}
+		}
+		
+		$artistString = $inputArtistString;
+		$titleString = $inputTitleString;
+		
+		
+		// in case we dont have artist nor title string take the filename as a basis
+		if($artistString == "" && $titleString == "") {
+			if($this->getRelPath() !== "") {
+				$titleString = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($this->getRelPath()));
+				$titleString = str_replace("_", " ", $titleString);
+			}
+		}
+
+		// in case artist string is missing try to get it from title string
+		if($artistString == "" && $titleString != "") {
+			$tmp = trimExplode(" - ", $titleString, TRUE, 2);
+			if(count($tmp) == 2) {
+				$artistString = $tmp[0];
+				$titleString = $tmp[1];
+			}
+		}
+
+		// in case title string is missing try to get it from artist string
+		if($artistString != "" && $titleString == "") {
+			$tmp = trimExplode(" - ", $artistString, TRUE, 2);
+			if(count($tmp) == 2) {
+				$artistString = $tmp[0];
+				$titleString = $tmp[1];
+			}
+		}
+
+		$artistString = flattenWhitespace(unifyBraces($artistString));
+		$titleString = flattenWhitespace(unifyBraces($titleString));
+
+		// assign all string-parts to category
+		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
+		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
+
+		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
+		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
+
+		if($artistString == "") {
+			$regularArtists[] = "Unknown Artist";
+		}
+		
+		// parse ARTIST string for featured artists REGEX 1
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			$artistString = str_replace(
+				$matches[2] .$matches[3] . ' ' . $matches[4],
+				" ",
+				$artistString
+			);
+			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+		}
+		// parse ARTIST string for featured artists REGEX 2
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			$artistString = str_replace(
+				$matches[2] .$matches[3] . $matches[4],
+				" ",
+				$artistString
+			);
+			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+		}
+		
+		$regularArtists = array_merge($regularArtists, preg_split($regexArtist, $artistString));
+		
+		// parse TITLE string for featured artists REGEX 1
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$matches[2] .$matches[3] . ' ' . $matches[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
+		}
+		
+		// parse TITLE string for featured artists REGEX 2
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			#print_r($matches); die();
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$matches[2] .$matches[3] . $matches[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
+		}
+
+		// parse title string for remixer regex 1
+		if(preg_match($regexRemix, $titleString, $matches)) {
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[2]));
+		}
+		// parse title string for remixer regex 1
+		if(preg_match($regexRemix2, $titleString, $matches)) {
+			#print_r($matches); die();
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[3]));
+		}
+		
+		// clean up extracted remixer-names with common strings
+		$tmp = array();
+		foreach($remixerArtists as $remixerArtist) {
+			if(isset($artistBlacklist[ strtolower($remixerArtist)]) === TRUE) {
+				continue;
+			}
+			$tmp[] = str_ireplace($artistBlacklist, "", $remixerArtist);
+		}
+		$remixerArtists = $tmp;
+		
+		
+		// clean up extracted featuring-names with common strings
+		$tmp = array();
+		foreach($featuredArtists as $featuredArtist) {
+			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
+				continue;
+			}
+			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
+		}
+		$featuredArtists = $tmp;
+		
+		
+		$regularArtists = array_unique(array_filter($regularArtists));
+		$featuredArtists = array_unique($featuredArtists);
+		$remixerArtists = array_unique($remixerArtists);
+		
+		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
+		$allArtists = array_merge($regularArtists, $featuredArtists, $remixerArtists);
+		usort($allArtists,'sortHelper');
+		$titlePattern = str_ireplace($allArtists, "%s", $titleString);
+		
+
+		// remove possible brackets from featuredArtists
+		#$tmp = array();
+		#foreach($featuredArtists as $featuredArtist) {
+		#	$tmp[] = str_replace(array("(", ")"), "", $featuredArtist);
+		#}
+		#$featuredArtists = $tmp;
+		
+		if(substr_count($titlePattern, "%s") !== count($remixerArtists)) {
+			// oh no - we have a problem
+			// reset extracted remixers
+			$titlePattern = $titleString;
+			$remixerArtists = array();
+		}
+		
+		/* TODO: do we need this?
+		// remove " (" from titlepattern in case that are the last 2 chars
+		if(preg_match("/(.*)\ \($/", $titlePattern, $matches)) {
+			$titlePattern = $matches[1];
+		}
+		*/
+		
+		// clean up artist names
+		// unfortunately there are artist names like "45 Thieves"
+		$regularArtists = $this->removeLeadingNumbers($regularArtists);
+		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
+
+		$this->setFeaturingId('');
+		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
+		if(count($featuredArtists) > 0) { 
+			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
+		}
+
+		$this->setRemixerId('');
+		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
+		if(count($remixerArtists) > 0) {
+			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
+		}
+		
+		// replace multiple whitespace with a single whitespace
+		$titlePattern = preg_replace('!\s+!', ' ', $titlePattern);
+		// remove whitespace before bracket
+		$titlePattern = str_replace(' )', ')', $titlePattern);
+		$this->setTitle($titlePattern);
+		
+		/*
+		echo "inputArtist: " . $inputArtistString . "\n";
+		echo "inputTitle: " . $inputTitleString . "\n";
+		echo "regular: " . print_r($regularArtists,1);
+		echo "feat: " . print_r($featuredArtists,1);
+		echo "remixer: " . print_r($remixerArtists,1);
+		echo "titlePattern: " . $titlePattern . "\n";
+		die();
+		*/
+		return;
+	}
+	
+	
+	// fix artists names like
+	// 01.Dread Bass
+	// 01 - Cookie Monsters
+	public function removeLeadingNumbers($inputArray) {
+		$out = array();
+		#TODO: move to customizeable config
+		$whitelist = array(
+			"45 thieves",
+			#"60 minute man"
+		);
+		foreach($inputArray as $string) {
+			if(in_array(strtolower($string), $whitelist) === FALSE) {
+				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $matches)) {
+					if($matches[1] < 21) {
+						#print_r($matches); die();
+						$string = $matches[3].$matches[4];
+					}
+				}
+			}
+			$out[] = $string;
+		}
+		return $out;
+	}
+	
+
+
+
+	# TODO: extract catNr from labelString
+	public function setLabelAndCatalogueNr() {
+		
+	}
+	
+	public function jsonSerialize() {
+		return get_object_vars($this);
+	}
+
+
+	
+	//setter
+	public function setArtistId($value) {
+		$this->artistId = $value;
+	}
+	public function setFeaturingId($value) {
+		$this->featuringId = $value;
+	}
+	public function setRemixerId($value) {
+		$this->remixerId = $value;
+	}
+	
+
+	// ...
+	
+	public function setDisc($value) {
+		$this->disc = $value;
+	}
+	public function setAlbumId($value) {
+		$this->albumId = $value;
+	}
+	public function setLabelId($value) {
+		$this->labelId = $value;
+	}
+	public function setTranscoded($value) {
+		$this->transcoded = $value;
+	}
+	public function setLastScan($value) {
+		$this->lastScan = $value;
+	}
+	public function setGenreId($value) {
+		$this->genreId = $value;
+	}
+	
+	
+	public function setIsMixed($value) {
+		$this->isMixed = $value;
+	}
+	
+	public function setDiscogsId($value) {
+		$this->discogsId = $value;
+	}
+	public function setRolldabeatsId($value) {
+		$this->rolldabeatsId = $value;
+	}
+	public function setBeatportId($value) {
+		$this->beatportId = $value;
+	}
+	public function setJunoId($value) {
+		$this->junoId = $value;
+	}
+	
+	public function setDr($value) {
+		$this->dr = $value;
+	}
+	
+	
+	
+	
+	// getter
+	public function getArtistId() {
+		return $this->artistId;
+	}
+	public function getFeaturingId() {
+		return $this->featuringId;
+	}
+	public function getRemixerId() {
+		return $this->remixerId;
+	}
+
+	// ...
+	public function getDisc() {
+		return $this->disc;
+	}
+	public function getAlbumId() {
+		return $this->albumId;
+	}
+	public function getLabelId() {
+		return $this->labelId;
+	}
+	
+	public function getTranscoded() {
+		return $this->transcoded;
+	}
+	public function getLastScan() {
+		return $this->lastScan;
+	}
+	public function getGenreId() {
+		return $this->genreId;
+	}
+
+	
+	public function getIsMixed() {
+		return $this->isMixed;
+	}
+	
+	public function getDiscogsId() {
+		return $this->discogsId;
+	}
+	public function getRolldabeatsId() {
+		return $this->rolldabeatsId;
+	}
+	public function getBeatportId() {
+		return $this->beatportId;
+	}
+	public function getJunoId() {
+		return $this->junoId;
+	}
+	
+	public function getDr() {
+		return $this->dr;
+	}
+	
+	private function getTestData($index) {
 		#$artistString = "Ed Rush & Optical (Featuring Tali";
 		#$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
 		#$artistString = "Ed Rush & Optical ft Tali";
@@ -253,7 +611,7 @@ class Track extends \Slimpd\Models\AbstractTrack
 		/*
 		 * for development/debuggung only
 		 */
-		/*
+		
 		$tests = array(
 			array("placeholder index 0"),
 			array("Stel", "Your Parents Are Here (Ian F. Remix)", "Stel_-_Your_Parents_Are_Here-(JLYLTD015)-WEB-2009-WiTF"),
@@ -293,387 +651,11 @@ class Track extends \Slimpd\Models\AbstractTrack
 			array("Infuze", "Black Out (with TADT)"), // not solved yet
 			
 		);
-
-		$performTest = 0;
-		if($performTest>0) {
-			$inputArtistString = $tests[$performTest][0];
-			$inputTitleString = $tests[$performTest][1];
-			if(isset($tests[$performTest][2])) {
-				$inputFileName = $tests[$performTest][2];
-			}
-			if(isset($tests[$performTest][3])) {
-				$inputDirectoryName = $tests[$performTest][3];
-			}
+		
+		if(isset($tests[$index]) === TRUE) {
+			return $tests[$index];
 		}
-		*/
+		return FALSE;
 		
-		$artistString = $inputArtistString;
-		$titleString = $inputTitleString;
-		
-		
-		// in case we dont have artist nor title string take the filename as a basis
-		if($artistString == "" && $titleString == "") {
-			if($this->getRelPath() !== "") {
-				$titleString = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($this->getRelPath()));
-				$titleString = str_replace("_", " ", $titleString);
-			}
-		}
-		
-		// in case artist string is missing try to get it from title string
-		if($artistString == "" && $titleString != "") {
-			$tmp = trimExplode(" - ", $titleString, TRUE, 2);
-			if(count($tmp) == 2) {
-				$artistString = $tmp[0];
-				$titleString = $tmp[1];
-			}
-		}
-		
-		// in case title string is missing try to get it from artist string
-		if($artistString != "" && $titleString == "") {
-			$tmp = trimExplode(" - ", $artistString, TRUE, 2);
-			if(count($tmp) == 2) {
-				$artistString = $tmp[0];
-				$titleString = $tmp[1];
-			}
-		}
-		$artistString = str_replace(array("[", "]"), array("(", ")"), $artistString);
-		$titleString = str_replace(array("[", "]"), array("(", ")"), $titleString);
-		
-		// replace multiple whitespace with a single whitespace
-		$artistString = preg_replace('!\s+!', ' ', $artistString);
-		$titleString = preg_replace('!\s+!', ' ', $titleString);
-		
-		
-		
-		// assign all string-parts to category
-		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
-		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
-
-		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
-		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
-
-		if($artistString == "") {
-			$regularArtists[] = "Unknown Artist";
-		}
-		
-		// parse ARTIST string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			$artistString = str_replace(
-				$matches[2] .$matches[3] . ' ' . $matches[4],
-				" ",
-				$artistString
-			);
-			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
-		}
-		// parse ARTIST string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			$artistString = str_replace(
-				$matches[2] .$matches[3] . $matches[4],
-				" ",
-				$artistString
-			);
-			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
-		}
-		
-		$regularArtists = array_merge($regularArtists, preg_split($regexArtist, $artistString));
-		
-		// parse TITLE string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			
-			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
-				$titleString = str_replace(
-					$matches[2] .$matches[3] . ' ' . $matches[4],
-					" ",
-					$titleString
-				);
-				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
-			}
-		}
-		
-		// parse TITLE string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $matches)) {
-			#print_r($matches); die();
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
-				$titleString = str_replace(
-					$matches[2] .$matches[3] . $matches[4],
-					" ",
-					$titleString
-				);
-				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
-			}
-		}
-
-		// parse title string for remixer regex 1
-		if(preg_match($regexRemix, $titleString, $matches)) {
-			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[2]));
-		}
-		// parse title string for remixer regex 1
-		if(preg_match($regexRemix2, $titleString, $matches)) {
-			#print_r($matches); die();
-			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[3]));
-		}
-		
-		// clean up extracted remixer-names with common strings
-		$tmp = array();
-		foreach($remixerArtists as $remixerArtist) {
-			if(isset($artistBlacklist[ strtolower($remixerArtist)]) === TRUE) {
-				continue;
-			}
-			$tmp[] = str_ireplace($artistBlacklist, "", $remixerArtist);
-		}
-		$remixerArtists = $tmp;
-		
-		
-		// clean up extracted featuring-names with common strings
-		$tmp = array();
-		foreach($featuredArtists as $featuredArtist) {
-			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
-				continue;
-			}
-			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
-		}
-		$featuredArtists = $tmp;
-		
-		
-		$regularArtists = array_unique(array_filter($regularArtists));
-		$featuredArtists = array_unique($featuredArtists);
-		$remixerArtists = array_unique($remixerArtists);
-		
-		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
-		$allArtists = array_merge($regularArtists, $featuredArtists, $remixerArtists);
-		usort($allArtists,'sortHelper');
-		$titlePattern = str_ireplace($allArtists, "%s", $titleString);
-		
-
-		// remove possible brackets from featuredArtists
-		#$tmp = array();
-		#foreach($featuredArtists as $featuredArtist) {
-		#	$tmp[] = str_replace(array("(", ")"), "", $featuredArtist);
-		#}
-		#$featuredArtists = $tmp;
-		
-		if(substr_count($titlePattern, "%s") !== count($remixerArtists)) {
-			// oh no - we have a problem
-			// reset extracted remixers
-			$titlePattern = $titleString;
-			$remixerArtists = array();
-		}
-		
-		/* TODO: do we need this?
-		// remove " (" from titlepattern in case that are the last 2 chars
-		if(preg_match("/(.*)\ \($/", $titlePattern, $matches)) {
-			$titlePattern = $matches[1];
-		}
-		*/
-		
-		// clean up artist names
-		// unfortunately there are artist names like "45 Thieves"
-		$regularArtists = $this->removeLeadingNumbers($regularArtists);
-		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
-
-		$this->setFeaturingId('');
-		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
-		if(count($featuredArtists) > 0) { 
-			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
-		}
-
-		$this->setRemixerId('');
-		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
-		if(count($remixerArtists) > 0) {
-			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
-		}
-		
-		// replace multiple whitespace with a single whitespace
-		$titlePattern = preg_replace('!\s+!', ' ', $titlePattern);
-		// remove whitespace before bracket
-		$titlePattern = str_replace(' )', ')', $titlePattern);
-		
-		
-		$this->setTitle($titlePattern);
-		return;
-		
-		echo "inputArtist: " . $inputArtistString . "\n";
-		echo "inputTitle: " . $inputTitleString . "\n";
-		echo "regular: " . print_r($regularArtists,1);
-		echo "feat: " . print_r($featuredArtists,1);
-		echo "remixer: " . print_r($remixerArtists,1);
-		echo "titlePattern: " . $titlePattern . "\n";
-		die();
-		
-	}
-	
-	
-	// fix artists names like
-	// 01.Dread Bass
-	// 01 - Cookie Monsters
-	public function removeLeadingNumbers($inputArray) {
-		$out = array();
-		#TODO: move to customizeable config
-		$whitelist = array(
-			"45 thieves",
-			#"60 minute man"
-		);
-		foreach($inputArray as $string) {
-			if(in_array(strtolower($string), $whitelist) === FALSE) {
-				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $matches)) {
-					if($matches[1] < 21) {
-						#print_r($matches); die();
-						$string = $matches[3].$matches[4];
-					}
-				}
-			}
-			$out[] = $string;
-				
-			
-		}
-		return $out;
-	}
-	
-
-
-
-	# TODO: extract catNr from labelString
-	public function setLabelAndCatalogueNr() {
-		
-	}
-	
-	public function jsonSerialize() {
-		return get_object_vars($this);
-	}
-
-
-	
-	//setter
-	public function setArtistId($value) {
-		$this->artistId = $value;
-	}
-	public function setFeaturingId($value) {
-		$this->featuringId = $value;
-	}
-	public function setRemixerId($value) {
-		$this->remixerId = $value;
-	}
-	
-
-	// ...
-	
-	public function setDisc($value) {
-		$this->disc = $value;
-	}
-	public function setAlbumId($value) {
-		$this->albumId = $value;
-	}
-	public function setLabelId($value) {
-		$this->labelId = $value;
-	}
-	public function setTranscoded($value) {
-		$this->transcoded = $value;
-	}
-	public function setLastScan($value) {
-		$this->lastScan = $value;
-	}
-	public function setGenre($value) {
-		$this->genre = $value;
-	}
-	public function setGenreId($value) {
-		$this->genreId = $value;
-	}
-	
-	
-	public function setIsMixed($value) {
-		$this->isMixed = $value;
-	}
-	
-	public function setDiscogsId($value) {
-		$this->discogsId = $value;
-	}
-	public function setRolldabeatsId($value) {
-		$this->rolldabeatsId = $value;
-	}
-	public function setBeatportId($value) {
-		$this->beatportId = $value;
-	}
-	public function setJunoId($value) {
-		$this->junoId = $value;
-	}
-	
-	public function setDr($value) {
-		$this->dr = $value;
-	}
-	
-	
-	
-	
-	// getter
-	public function getArtistId() {
-		return $this->artistId;
-	}
-	public function getFeaturingId() {
-		return $this->featuringId;
-	}
-	public function getRemixerId() {
-		return $this->remixerId;
-	}
-
-	// ...
-	public function getDisc() {
-		return $this->disc;
-	}
-	public function getAlbumId() {
-		return $this->albumId;
-	}
-	public function getLabelId() {
-		return $this->labelId;
-	}
-	
-	public function getTranscoded() {
-		return $this->transcoded;
-	}
-	public function getLastScan() {
-		return $this->lastScan;
-	}
-	public function getGenre() {
-		return $this->genre;
-	}
-	public function getGenreId() {
-		return $this->genreId;
-	}
-
-	
-	public function getIsMixed() {
-		return $this->isMixed;
-	}
-	
-	public function getDiscogsId() {
-		return $this->discogsId;
-	}
-	public function getRolldabeatsId() {
-		return $this->rolldabeatsId;
-	}
-	public function getBeatportId() {
-		return $this->beatportId;
-	}
-	public function getJunoId() {
-		return $this->junoId;
-	}
-	
-	public function getDr() {
-		return $this->dr;
 	}
 }
