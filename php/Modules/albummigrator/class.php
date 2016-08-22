@@ -87,7 +87,7 @@ class AlbumMigrator {
 
 	// attribute with highest score from recommendations
 	protected $mostScored = array();
-	protected $defaultScoreForRealTagAttrs = 5;
+	protected $scoreForRealTags = 5;
 
 	
 	private function getMostScored($idx, $attrName) {
@@ -366,60 +366,60 @@ class AlbumMigrator {
 
 
 		// collect specific data for comparison
-		foreach($this->tracks as $idx => $t) {
+		foreach($this->tracks as $idx => $track) {
 
-			$this->artists[$idx] = $t['artist'];
-			$this->albums[$idx] = $t['album'];
-			$this->albumArtists[$idx] = $t['albumArtist'];
-			$this->genres[$idx] = $t['genre'];
-			$this->comments[$idx] = $t['comment'];
-			$this->years[$idx] = $t['year'];
-			$this->labels[$idx] = $t['publisher'];
-			$this->catalogNumbers[$idx] = $t['catalogNr'];
-			$this->discogsReleaseIds[$idx] = $t['textDiscogsReleaseId'];
-			$this->sources[$idx] = $t['textSource'];
-			$this->urls[$idx] = $t['textUrlUser'];
+			$this->artists[$idx] = $track['artist'];
+			$this->albums[$idx] = $track['album'];
+			$this->albumArtists[$idx] = $track['albumArtist'];
+			$this->genres[$idx] = $track['genre'];
+			$this->comments[$idx] = $track['comment'];
+			$this->years[$idx] = $track['year'];
+			$this->labels[$idx] = $track['publisher'];
+			$this->catalogNumbers[$idx] = $track['catalogNr'];
+			$this->discogsReleaseIds[$idx] = $track['textDiscogsReleaseId'];
+			$this->sources[$idx] = $track['textSource'];
+			$this->urls[$idx] = $track['textUrlUser'];
 
-			$this->mimeTypes[$idx] = $t['mimeType'];
-			$this->audioBitrates[$idx] = $t['audioBitrate'];
-			$this->audioBitrateModes[$idx] = $t['audioBitrateMode'];
-			$this->audioSampleRates[$idx] = $t['audioSampleRate'];
-			$this->audioDataformats[$idx] = $t['audioDataformat'];
-			$this->audioEncoders[$idx] = $t['audioEncoder'];
-			$this->audioLosslesss[$idx] = $t['audioLossless'];
+			$this->mimeTypes[$idx] = $track['mimeType'];
+			$this->audioBitrates[$idx] = $track['audioBitrate'];
+			$this->audioBitrateModes[$idx] = $track['audioBitrateMode'];
+			$this->audioSampleRates[$idx] = $track['audioSampleRate'];
+			$this->audioDataformats[$idx] = $track['audioDataformat'];
+			$this->audioEncoders[$idx] = $track['audioEncoder'];
+			$this->audioLosslesss[$idx] = $track['audioLossless'];
 
-			$this->totalTrackss[$idx] = $t['totalTracks'];
+			$this->totalTrackss[$idx] = $track['totalTracks'];
 
-			$this->filenameCases[$idx] = $this->getFilenameCase( basename($t['relPath']) );
+			$this->filenameCases[$idx] = $this->getFilenameCase( basename($track['relPath']) );
 
-			$this->filenameSchemes[$idx] = $this->getFilenameScheme( basename($t['relPath']), $idx);
-			$this->artistSchemes[$idx] = $this->getArtistOrTitleScheme($t['artist'], $idx, 'artist'); // we can use the same
-			$this->titleSchemes[$idx] = $this->getArtistOrTitleScheme($t['title'], $idx, 'title');
-			$this->albumSchemes[$idx] = $this->getAlbumScheme($t['album'], $idx);
-			$this->numberSchemes[$idx] = $this->getNumberScheme($t['trackNumber'], $idx);
+			$this->filenameSchemes[$idx] = $this->getFilenameScheme( basename($track['relPath']), $idx);
+			$this->artistSchemes[$idx] = $this->getArtistOrTitleScheme($track['artist'], $idx, 'artist'); // we can use the same
+			$this->titleSchemes[$idx] = $this->getArtistOrTitleScheme($track['title'], $idx, 'title');
+			$this->albumSchemes[$idx] = $this->getAlbumScheme($track['album'], $idx);
+			$this->numberSchemes[$idx] = $this->getNumberScheme($track['trackNumber'], $idx);
 
 			// album gets the most recent timestamp of all tracks for attribute "added"
-			$this->mostRecentAdded = ($t['added'] > $this->mostRecentAdded) ? $t['added'] : $this->mostRecentAdded;
+			$this->mostRecentAdded = ($track['added'] > $this->mostRecentAdded) ? $track['added'] : $this->mostRecentAdded;
 
 			// add score for real unmodified attributes
-			$this->scoreAttribute($idx, 'artist',    $t['artist'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'artist',    $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'title',     $t['title'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'genre',     $t['genre'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'comment',   $t['comment'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'year',      $t['year'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'label',     $t['publisher'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'catalogNr', $t['catalogNr'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'discogsId', $t['textDiscogsReleaseId'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'source',    $t['textSource'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'urlUser',   $t['textUrlUser'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute('album', 'title',  $t['album'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute('album', 'artist', $t['albumArtist'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute('album', 'artist', $t['artist'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'artist',    $track['artist'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'artist',    $track['albumArtist'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'title',     $track['title'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'genre',     $track['genre'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'comment',   $track['comment'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'year',      $track['year'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'label',     $track['publisher'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'catalogNr', $track['catalogNr'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'discogsId', $track['textDiscogsReleaseId'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'source',    $track['textSource'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'urlUser',   $track['textUrlUser'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'title',  $track['album'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'artist', $track['albumArtist'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'artist', $track['artist'], $this->scoreForRealTags);
 		}
-		$this->guessAttributesByDirectoryName($t['relDirPath']);
+		$this->guessAttributesByDirectoryName($track['relDirPath']);
 
-		$this->scoreLabelByLabelDirectory($t['relDirPath']);
+		$this->scoreLabelByLabelDirectory($track['relDirPath']);
 
 		// TODO: post procession:
 		$this->postProcessRecommendations();
@@ -504,7 +504,6 @@ class AlbumMigrator {
 		}
 
 		$this->addChronologyScore();
-
 		$this->handleAsAlbumScore /= $trackCount;
 		$this->handleAsAlbum = ($this->handleAsAlbumScore>$decisionBoundry) ? TRUE : FALSE;
 		return;
@@ -551,7 +550,7 @@ class AlbumMigrator {
 							'trackNumber' => $matches[2],
 							$artistOrTitle => $matches[4]
 						));
-						#$this->scoreAttribute($idx, $artistOrTitle, $value, ($this->defaultScoreForRealTagAttrs*(-1)));
+						#$this->scoreAttribute($idx, $artistOrTitle, $value, ($this->scoreForRealTags*(-1)));
 						break;
 					case 'artist-title':
 						$this->recommend($idx, array(
@@ -636,18 +635,18 @@ class AlbumMigrator {
 		$this->recommend('album', array('title' => remU($value)));
 
 		if(preg_match_all("/".$rgx->mayBracket.$rgx->year.$rgx->mayBracket."/", $value, $matches)) {
-			foreach($matches as $i) {
-				foreach($i as $x) {
-					$this->scoreAttribute('album', 'year', $x);
-					$this->scoreAllTracksWithAttribute('year', $x);
+			foreach($matches as $matches2) {
+				foreach($matches2 as $match) {
+					$this->scoreAttribute('album', 'year', $match);
+					$this->scoreAllTracksWithAttribute('year', $match);
 				}
 			}
 		}
 		if(preg_match_all("/".$rgx->catNr."/", $value, $matches)) {
-			foreach($matches as $i) {
-				foreach($i as $x) {
-					$this->scoreAttribute('album', 'catalogNr', $x);
-					$this->scoreAllTracksWithAttribute('catalogNr', $x);
+			foreach($matches as $matches2) {
+				foreach($matches2 as $match) {
+					$this->scoreAttribute('album', 'catalogNr', $match);
+					$this->scoreAllTracksWithAttribute('catalogNr', $match);
 				}
 			}
 		}
@@ -719,7 +718,7 @@ class AlbumMigrator {
 		
 		// remove various artists in case we find it in albumtitle
 		if($idx == 'album' && isset($attrArray['title'])) {
-			if(preg_match("/".$rgx->va.$rgx->glue. $rgx->anything.$rgx->dEndInsens, $attrArray['title'], $matches)) {
+			if(preg_match("/".$rgx->various.$rgx->glue. $rgx->anything.$rgx->dEndInsens, $attrArray['title'], $matches)) {
 				#print_r($matches);
 				$this->scoreAttribute('album', 'title', $matches[2], 3);
 				$this->scoreAttribute('album', 'title', $attrArray['title'], -2);
@@ -831,7 +830,7 @@ class AlbumMigrator {
 					if(isset($this->r[$idx][$attrName][$attrValue]) === FALSE) {
 						$this->r[$idx][$attrName][$attrValue] = 0;
 					}
-					$this->r[$idx][$attrName][$attrValue] -= $this->defaultScoreForRealTagAttrs;
+					$this->r[$idx][$attrName][$attrValue] -= $this->scoreForRealTags;
 					#print_r($this->r[$idx][$attrName][$attrValue]); die();
 					return;
 				}
