@@ -16,7 +16,7 @@ class Track extends \Slimpd\Models\AbstractModel
 	
 	protected $relPath;
 	protected $relPathHash;
-	protected $directoryPathHash;
+	protected $relDirPathHash;
 	
 	protected $fingerprint;
 	protected $mimeType;
@@ -628,8 +628,8 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function setRelPathHash($value) {
 		$this->relPathHash = $value;
 	}
-	public function setDirectoryPathHash($value) {
-		$this->directoryPathHash = $value;
+	public function setRelDirPathHash($value) {
+		$this->relDirPathHash = $value;
 	}
 	
 	public function setFingerprint($value) {
@@ -779,8 +779,8 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function getRelPathHash() {
 		return $this->relPathHash;
 	}
-	public function getDirectoryPathHash() {
-		return $this->directoryPathHash;
+	public function getRelDirPathHash() {
+		return $this->relDirPathHash;
 	}
 	
 	public function getFingerprint() {

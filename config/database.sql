@@ -176,7 +176,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `remixerId` varchar(255) NOT NULL DEFAULT '',
   `relPath` text NOT NULL,
   `relPathHash` varchar(11) NOT NULL,
-  `directoryPathHash` varchar(11) NOT NULL,
+  `relDirPathHash` varchar(11) NOT NULL,
   
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `mimeType` varchar(64) NOT NULL DEFAULT '',

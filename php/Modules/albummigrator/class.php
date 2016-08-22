@@ -299,7 +299,7 @@ class AlbumMigrator {
 		$track->setId($rawArray['id']);
 		$track->setRelPath($rawArray['relPath']);
 		$track->setRelPathHash($rawArray['relPathHash']);
-		$track->setDirectoryPathHash($rawArray['relDirPathHash']);
+		$track->setRelDirPathHash($rawArray['relDirPathHash']);
 		$track->setFingerprint($rawArray['fingerprint']);
 		$track->setMimeType($rawArray['mimeType']);
 		$track->setFilesize($rawArray['filesize']);

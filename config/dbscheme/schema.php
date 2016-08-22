@@ -292,7 +292,7 @@ class Schema extends AbstractSchema
       . "  `remixerId` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `relPath` text NOT NULL,\r"
       . "  `relPathHash` varchar(11) NOT NULL,\r"
-      . "  `directoryPathHash` varchar(11) NOT NULL,\r"
+      . "  `relDirPathHash` varchar(11) NOT NULL,\r"
       . "  `fingerprint` varchar(32) NOT NULL DEFAULT '',\r"
       . "  `mimeType` varchar(64) NOT NULL DEFAULT '',\r"
       . "  `filesize` bigint(20) unsigned NOT NULL DEFAULT '0',\r"
