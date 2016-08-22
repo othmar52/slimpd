@@ -14,18 +14,17 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 9;
 		$this->beginJob(array(
-			'currentItem' => "fetching all track-labels for inserting into table:album ..."
+			'currentItem' => "counting items to process for displaying progressbar ..."
 		), __FUNCTION__);
 		foreach(array('artist', 'genre', 'label') as $table) {
 			// reset all counters
-			$query = "UPDATE " . $table . " SET trackCount=0, albumCount=0";
-			$app->db->query($query);
+			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0");
 			
 			$query = "SELECT count(id) AS itemCountTotal FROM " . $table;
 			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		}
 		
-		// collect all genreIds, labelIds, artistIds, remixerIds, featuringIds provided by tracks
+		// collect all genreIds, labelIds, artistIds, remixerIds, featuringIds, albumId provided by tracks
 		$tables = array(
 			'Artist' => array(),
 			'Genre' => array(),
@@ -34,9 +33,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// to be able to display a progress status
 		$all = array();
-		
-		$query = "SELECT id,albumId,artistId,remixerId,featuringId,genreId,labelId FROM track";
-		$result = $app->db->query($query);
+		$result = $app->db->query("SELECT id,albumId,artistId,remixerId,featuringId,genreId,labelId FROM track");
 		
 		while($record = $result->fetch_assoc()) {
 			$all['al' . $record['albumId']] = NULL;
@@ -46,13 +43,11 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				'currentItem' => 'trackId: ' . $record['id']
 			));
 			
-			foreach(array('artistId', 'remixerId', 'featuringId') as $itemIds) {
-				$itemIds = trimExplode(",", $record[$itemIds], TRUE);
-				foreach($itemIds as $itemId) {
-					$tables['Artist'][$itemId]['tracks'][ $record['id'] ] = NULL;
-					$tables['Artist'][$itemId]['albums'][ $record['albumId'] ] = NULL;
-					$all['ar' . $itemId] = NULL;
-				}
+			$itemIds = trimExplode(",", join(",", [$record["artistId"],$record["remixerId"],$record["featuringId"]]), TRUE);
+			foreach($itemIds as $itemId) {
+				$tables['Artist'][$itemId]['tracks'][ $record['id'] ] = NULL;
+				$tables['Artist'][$itemId]['albums'][ $record['albumId'] ] = NULL;
+				$all['ar' . $itemId] = NULL;
 			}
 			$itemIds = trimExplode(",", $record['genreId'], TRUE);
 			foreach($itemIds as $itemId) {
@@ -60,7 +55,6 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				$tables['Genre'][$itemId]['albums'][ $record['albumId'] ] = NULL;
 				$all['ge' . $itemId] = NULL;
 			}
-			
 			$itemIds = trimExplode(",", $record['labelId'], TRUE);
 			foreach($itemIds as $itemId) {
 				$tables['Label'][$itemId]['tracks'][ $record['id'] ] = NULL;
@@ -70,8 +64,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 		
 		foreach($tables as $className => $tableData) {
-			$msg = "updating table:".$className." with trackCount and albumCount";
-			cliLog($msg, 3);
+			cliLog("updating table:".$className." with trackCount and albumCount", 3);
 			foreach($tableData as $itemId => $data) {
 				
 				$classPath = "\\Slimpd\\Models\\" . $className;
@@ -99,8 +92,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				WHERE trackCount=0
 				AND albumCount=0
 				AND id>" . (($className === 'Artist') ? 11 : 10); // unknown artist, various artists,...
-			$msg = "deleting ".$className."s  with trackCount=0 AND albumCount=0";
-			cliLog($msg, 3);
+			cliLog("deleting ".$className."s  with trackCount=0 AND albumCount=0", 3);
 			$app->db->query($query);
 		}
 		unset($tables);
