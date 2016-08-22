@@ -46,12 +46,13 @@ class Track extends \Slimpd\Models\AbstractTrack
 		$track->setRelPathHash(getFilePathHash($pathString));
 		return $track;
 	}
-		
+
+	// TODO: move the whole guessing stuff to album migrator
 	public function setFeaturedArtistsAndRemixers() {
 		$artistBlacklist = \Slimpd\Models\Artist::getArtistBlacklist();
 
-		$inputArtistString = $this->getArtistId();
-		$inputTitleString = $this->getTitle();
+		$artistStringVanilla = $this->getArtistId();
+		$titleStringVanilla = $this->getTitle();
 		
 		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
 		$regexRemix = "/(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)/i";
@@ -65,19 +66,13 @@ class Track extends \Slimpd\Models\AbstractTrack
 		
 		$performTest = 0;
 		if($performTest>0) {
-			$testData = $this->getTestData($index);
-			$inputArtistString = $testData[0];
-			$inputTitleString = $testData[1];
-			if(isset($testData[2])) {
-				$inputFileName = $testData[2];
-			}
-			if(isset($testData[3])) {
-				$inputDirectoryName = $testData[3];
-			}
+			$testData = $this->getTestData($performTest);
+			$artistStringVanilla = $testData[0];
+			$titleStringVanilla = $testData[1];
 		}
-		
-		$artistString = $inputArtistString;
-		$titleString = $inputTitleString;
+
+		$artistString = $artistStringVanilla;
+		$titleString = $titleStringVanilla;
 		
 		
 		// in case we dont have artist nor title string take the filename as a basis
@@ -269,15 +264,16 @@ class Track extends \Slimpd\Models\AbstractTrack
 		$titlePattern = str_replace(' )', ')', $titlePattern);
 		$this->setTitle($titlePattern);
 		
-		/*
-		echo "inputArtist: " . $inputArtistString . "\n";
-		echo "inputTitle: " . $inputTitleString . "\n";
-		echo "regular: " . print_r($regularArtists,1);
-		echo "feat: " . print_r($featuredArtists,1);
-		echo "remixer: " . print_r($remixerArtists,1);
-		echo "titlePattern: " . $titlePattern . "\n";
-		die();
-		*/
+		if($performTest > 0) {
+			cliLog("----------ARTIST-PARSER---------", 1, "purple");
+			cliLog(" inputArtist: " . $artistStringVanilla);
+			cliLog(" inputTitle: " . $titleStringVanilla);
+			cliLog(" regular: " . print_r($regularArtists,1));
+			cliLog(" feat: " . print_r($featuredArtists,1));
+			cliLog(" remixer: " . print_r($remixerArtists,1));
+			cliLog(" titlePattern: " . $titlePattern);
+			\Slim\Slim::getInstance()->stop();
+		}
 		return;
 	}
 	
@@ -432,186 +428,187 @@ class Track extends \Slimpd\Models\AbstractTrack
 		return $this->dr;
 	}
 	
-	private function getTestData($index) {
-		#$artistString = "Ed Rush & Optical (Featuring Tali";
-		#$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
-		#$artistString = "Ed Rush & Optical ft Tali";
-		
-		#$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
-		#$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
-		#$titleString = "Something About Love (Original Mix)";
-		#$titleString = "Channel 7 (Sutekh 233 Channels Remix)";
-		#$titleString = "Levels (Cazzette`s NYC Mode Radio Mix)";
-		#$titleString = "fory one ways (david j & dj k bass bomber remix)";
-		#$titleString = "Music For Bagpipes (V & Z Remix)";
-		#$titleString = "Ballerino _Original Mix";
-		#$titleString = "to ardent feat. nancy sinatra (horse meat disco remix)";
-		#$titleString = "Crushed Ice (Remix)";
-		#$titleString = "Hells Bells (Gino's & Snake Remix)";
-		#$titleString = "Hot Love (DJ Koze 12 Inch Mix)";
-		#$titleString = "Skeleton keys (Omni Trio remix";
-		#$titleString = "A Perfect Lie (Theme Song)(Gabriel & Dresden Remix)";
-		#$titleString = "Princess Of The Night (Meyerdierks Digital Exclusiv Remix)";
-		#$titleString = "Hello Piano (DJ Chus And Sharp & Smooth Remix)";
-		#$titleString = "De-Phazz feat. Pat Appleton / Mambo Craze [Extended Version]";
-		#$titleString = "Toller titel (ft ftartist a) (RemixerA & RemixerB Remix)";
-		#$titleString = "Toller titel (RemixerA & RemixerB Remix) (ft ftartist a)";
-		#$titleString = "Been a Long Time (Axwell Unreleased Remix)";
-		#$titleString = "Feel 2009 (Deepside Deejays Rework)";
-		#$titleString = "Jeff And Jane Hudson - Los Alamos";
-		
-		#TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
-		#TODO: $artistString = "Lionel Richie With Little Big Town";
-		#TODO: $artistString = "B-Tight Und Sido";
-		#TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
-		#TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
-		#TODO: $titleString = "Time To Remember - MAZTEK Remix"
-		
-		# common errors in extracted artists
-		# Rob Mello No Ears Vocal
-		# Robin Dubstep
-		# Rob Hayes Club
-		# Robert Owens Full Version
-		# Robert Owens - Marcus Intalex remix
-		# Robert Rivera Instrumental
-		# Robert Owens Radio Edit
-		# Rocky Nti - Chords Remix
-		# Roc Slanga Album Versio
-		# Rosanna Rocci with Michael Morgan
-		# Bob Marley with Mc Lyte
-		# AK1200 with MC Navigator
-		# Marcus Intalex w/ MC Skibadee
-		# Mixed By Krafty Kuts
-		# Mixed by London Elektricity
-		# VA Mixed By Juju
-		# Va - Mixed By DJ Friction
-		# Written By Patrick Neate
-		# Charles Webster Main Vocal
-		# Various
-		# 01 - Bryan Gee
-		# 03 - DJ Hazard
-		# Andy C presents Ram Raiders
-		# London Elektricity/Landslide
-		# Brockie B2B Mampi Swift
-		# Matty Bwoy (Sta remix)
-		# Va - Womc - Disc 2
-		# LTJ Bukem Presents
-		# V.A.(Mixed By Nu:Tone f.SP MC)
-		# 6Blocc_VS._R.A.W.
-		# Goldie (VIP Mix)
-		# Top Buzz Present Jungle Techno
-		# VA (mixed by The Green Man)
-		# VA (mixed by Tomkin
-		# VA - Knowledge presents
-		# VA - Subliminal Volume 1
-		# Special Extended
-		# Original 12-Inch Disco
-		# Actually Extended
-		# El Bosso meets the Skadiolas
-		# Desmond Dekker/The Specials
-		# Flora Paar - Yapacc rework - bonus track version
-		# feat Flora Paar - Yapacc
-		# Helena Majdeaniec i Czerwono Czarni
-		# Maciej Kossowski i Czerwono Czarni
-		# DJ Sinner - Original DJ
-		# Victor Simonelli Presents Solution
-		# Full Continous DJ
-		# Robag Wruhme Mit Wighnomy Brothers Und Delhia
-		# Sound W/ Paul St. Hilaire
-		# (Thomas Krome Remix)
-		# (Holy Ghost Remix)
-		# D-Region Full Vocal
+	
+	
+	/* Testdata for development/debuggung only
+	
+	#$artistString = "Ed Rush & Optical (Featuring Tali";
+	#$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
+	#$artistString = "Ed Rush & Optical ft Tali";
+	
+	#$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
+	#$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
+	#$titleString = "Something About Love (Original Mix)";
+	#$titleString = "Channel 7 (Sutekh 233 Channels Remix)";
+	#$titleString = "Levels (Cazzette`s NYC Mode Radio Mix)";
+	#$titleString = "fory one ways (david j & dj k bass bomber remix)";
+	#$titleString = "Music For Bagpipes (V & Z Remix)";
+	#$titleString = "Ballerino _Original Mix";
+	#$titleString = "to ardent feat. nancy sinatra (horse meat disco remix)";
+	#$titleString = "Crushed Ice (Remix)";
+	#$titleString = "Hells Bells (Gino's & Snake Remix)";
+	#$titleString = "Hot Love (DJ Koze 12 Inch Mix)";
+	#$titleString = "Skeleton keys (Omni Trio remix";
+	#$titleString = "A Perfect Lie (Theme Song)(Gabriel & Dresden Remix)";
+	#$titleString = "Princess Of The Night (Meyerdierks Digital Exclusiv Remix)";
+	#$titleString = "Hello Piano (DJ Chus And Sharp & Smooth Remix)";
+	#$titleString = "De-Phazz feat. Pat Appleton / Mambo Craze [Extended Version]";
+	#$titleString = "Toller titel (ft ftartist a) (RemixerA & RemixerB Remix)";
+	#$titleString = "Toller titel (RemixerA & RemixerB Remix) (ft ftartist a)";
+	#$titleString = "Been a Long Time (Axwell Unreleased Remix)";
+	#$titleString = "Feel 2009 (Deepside Deejays Rework)";
+	#$titleString = "Jeff And Jane Hudson - Los Alamos";
+	
+	#TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
+	#TODO: $artistString = "Lionel Richie With Little Big Town";
+	#TODO: $artistString = "B-Tight Und Sido";
+	#TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
+	#TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
+	#TODO: $titleString = "Time To Remember - MAZTEK Remix"
+	
+	# common errors in extracted artists
+	# Rob Mello No Ears Vocal
+	# Robin Dubstep
+	# Rob Hayes Club
+	# Robert Owens Full Version
+	# Robert Owens - Marcus Intalex remix
+	# Robert Rivera Instrumental
+	# Robert Owens Radio Edit
+	# Rocky Nti - Chords Remix
+	# Roc Slanga Album Versio
+	# Rosanna Rocci with Michael Morgan
+	# Bob Marley with Mc Lyte
+	# AK1200 with MC Navigator
+	# Marcus Intalex w/ MC Skibadee
+	# Mixed By Krafty Kuts
+	# Mixed by London Elektricity
+	# VA Mixed By Juju
+	# Va - Mixed By DJ Friction
+	# Written By Patrick Neate
+	# Charles Webster Main Vocal
+	# Various
+	# 01 - Bryan Gee
+	# 03 - DJ Hazard
+	# Andy C presents Ram Raiders
+	# London Elektricity/Landslide
+	# Brockie B2B Mampi Swift
+	# Matty Bwoy (Sta remix)
+	# Va - Womc - Disc 2
+	# LTJ Bukem Presents
+	# V.A.(Mixed By Nu:Tone f.SP MC)
+	# 6Blocc_VS._R.A.W.
+	# Goldie (VIP Mix)
+	# Top Buzz Present Jungle Techno
+	# VA (mixed by The Green Man)
+	# VA (mixed by Tomkin
+	# VA - Knowledge presents
+	# VA - Subliminal Volume 1
+	# Special Extended
+	# Original 12-Inch Disco
+	# Actually Extended
+	# El Bosso meets the Skadiolas
+	# Desmond Dekker/The Specials
+	# Flora Paar - Yapacc rework - bonus track version
+	# feat Flora Paar - Yapacc
+	# Helena Majdeaniec i Czerwono Czarni
+	# Maciej Kossowski i Czerwono Czarni
+	# DJ Sinner - Original DJ
+	# Victor Simonelli Presents Solution
+	# Full Continous DJ
+	# Robag Wruhme Mit Wighnomy Brothers Und Delhia
+	# Sound W/ Paul St. Hilaire
+	# (Thomas Krome Remix)
+	# (Holy Ghost Remix)
+	# D-Region Full Vocal
 
+	
+	#######################################################
+	# special remixer Strings - currently ignored at all
+	# TODO: try to extract relevant data
+	#######################################################
+	# Prins Thomas, Lindstrom
+	# WWW.TRANCEDL.COM
+	# James Zabiela/Guy J
+	# With - D. Mark
+	# Featuring - Kate's Propellers
+	# Vocals - Mike Donovan
+	# Recorded By [Field Recording] - David Franzke
+	# Guitar - D. Meteo *
+	# Remix - Burnt Friedman *
+	# Double Bass - Akira Ando Saxophone - Elliott Levin
+	# Piano - Kiwi Menrath
+	# Featuring - MC Soom-T
+	# Featuring - MC Soom-T Remix - Dabrye
+	# Featuring - Lady Dragon, Sach
+	# Electric Piano - Kiwi Menrath
+	# Co-producer - Thomas Fehlmann
+	# Producer - Steb Sly Vocals - Shawna Sulek
+	# Edited By - Dixon
+	# Producer [Additional] - Oren Gerlitz, Robot Koch Producer [Additional], Lyrics By [Additional] - Sasha Perera Remix - Jahcoozi
+	# Bass [2nd] - Matt Saunderson
+	# Producer [Additional], Remix - Glimmers, The
+	# Remix, Producer [Additional] - Âme
+	# Keyboards [Psyche Keys] - Daves W.
+	# Co-producer - Usual Suspects, The (2)
+	# Fancy Guitar Solo - Tobi Neumann
+	# 4DJsonline.com
+	# [WWW.HOUSESLBEAT.COM]
+	# Backing Vocals - Clara Hill, Nadir Mansouri Mixed By - Axel Reinemer
+	# Edited By - Dixon, Phonique Remix - DJ Spinna
+	# Bass - Magic Number Clarinet [Bass], Flugelhorn, Flute, Trumpet, Arranged By [Horns] - Pete Wraight Remix - Atjazz Saxophone [Soprano] - Dave O'Higgins
+	# Remix - Slapped Eyeballers, The Vocals - Kink Artifishul
+	# Vocals [Featuring], Written By [Lyrics] - Rich Medina
+	# RemixedBy: PTH Projects
+	# AdditionalProductionBy: Simon Green
+	# Simple Jack Remix, Amine Edge & DANCE Edit
+	# http://toque-musicall.blogspot.com
+	# Vocals [Featuring] - Laura Darlington
+	# Mohammed Yousuf (Arranged By); Salim Akhtar (Bass); Salim Jaffery (Drums); Arif Bharoocha (Guitar); Mohammed Ali Rashid (Organ)
+	# Eric Fernandes (Bass); Ahsan Sajjad (Drums, Lead Vocals); Norman Braganza (Lead Guitar); Fasahat Hussein Syed (Sitar, Keyboards, Tabla)
+	# RemixedBy: Parov Stelar & Raul Irie/AdditionalProductionBy: Parov Stelar & Raul Irie
+	# RemixedBy: Roland Schwarz & Parov Stelar
+	# Engineer [Additional], Mixed By [Additional] - Tobi Neumann Vocals - Dinky
+	# Vocals, Guitar - Stan Eknatz
+	
+	
+	
+	#$artistString = "Ed Rush & Optical (Featuring Tali";
+	#$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
+	#$artistString = "Ed Rush & Optical ft Tali";
+	
+	#$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
+	#$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
+	#$titleString = "Something About Love (Original Mix)";
+	#$titleString = "Channel 7 (Sutekh 233 Channels Remix)";
+	#$titleString = "Levels (Cazzette`s NYC Mode Radio Mix)";
+	#$titleString = "fory one ways (david j & dj k bass bomber remix)";
+	#$titleString = "Music For Bagpipes (V & Z Remix)";
+	#$titleString = "Ballerino _Original Mix";
+	#$titleString = "to ardent feat. nancy sinatra (horse meat disco remix)";
+	#$titleString = "Crushed Ice (Remix)";
+	#$titleString = "Hells Bells (Gino's & Snake Remix)";
+	#$titleString = "Hot Love (DJ Koze 12 Inch Mix)";
+	#$titleString = "Skeleton keys (Omni Trio remix";
+	#$titleString = "A Perfect Lie (Theme Song)(Gabriel & Dresden Remix)";
+	#$titleString = "Princess Of The Night (Meyerdierks Digital Exclusiv Remix)";
+	#$titleString = "Hello Piano (DJ Chus And Sharp & Smooth Remix)";
+	#$titleString = "De-Phazz feat. Pat Appleton / Mambo Craze [Extended Version]";
+	#$titleString = "Toller titel (ft ftartist a) (RemixerA & RemixerB Remix)";
+	#$titleString = "Toller titel (RemixerA & RemixerB Remix) (ft ftartist a)";
+	#$titleString = "Been a Long Time (Axwell Unreleased Remix)";
+	#$titleString = "Feel 2009 (Deepside Deejays Rework)";
+	#$titleString = "Jeff And Jane Hudson - Los Alamos";
+	
+	#TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
+	#TODO: $artistString = "Lionel Richie With Little Big Town";
+	#TODO: $artistString = "B-Tight Und Sido";
+	#TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
+	#TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
+	#TODO: $titleString = "Time To Remember - MAZTEK Remix"
+						
 		
-		#######################################################
-		# special remixer Strings - currently ignored at all
-		# TODO: try to extract relevant data
-		#######################################################
-		# Prins Thomas, Lindstrom
-		# WWW.TRANCEDL.COM
-		# James Zabiela/Guy J
-		# With - D. Mark
-		# Featuring - Kate's Propellers
-		# Vocals - Mike Donovan
-		# Recorded By [Field Recording] - David Franzke
-		# Guitar - D. Meteo *
-		# Remix - Burnt Friedman *
-		# Double Bass - Akira Ando Saxophone - Elliott Levin
-		# Piano - Kiwi Menrath
-		# Featuring - MC Soom-T
-		# Featuring - MC Soom-T Remix - Dabrye
-		# Featuring - Lady Dragon, Sach
-		# Electric Piano - Kiwi Menrath
-		# Co-producer - Thomas Fehlmann
-		# Producer - Steb Sly Vocals - Shawna Sulek
-		# Edited By - Dixon
-		# Producer [Additional] - Oren Gerlitz, Robot Koch Producer [Additional], Lyrics By [Additional] - Sasha Perera Remix - Jahcoozi
-		# Bass [2nd] - Matt Saunderson
-		# Producer [Additional], Remix - Glimmers, The
-		# Remix, Producer [Additional] - Âme
-		# Keyboards [Psyche Keys] - Daves W.
-		# Co-producer - Usual Suspects, The (2)
-		# Fancy Guitar Solo - Tobi Neumann
-		# 4DJsonline.com
-		# [WWW.HOUSESLBEAT.COM]
-		# Backing Vocals - Clara Hill, Nadir Mansouri Mixed By - Axel Reinemer
-		# Edited By - Dixon, Phonique Remix - DJ Spinna
-		# Bass - Magic Number Clarinet [Bass], Flugelhorn, Flute, Trumpet, Arranged By [Horns] - Pete Wraight Remix - Atjazz Saxophone [Soprano] - Dave O'Higgins
-		# Remix - Slapped Eyeballers, The Vocals - Kink Artifishul
-		# Vocals [Featuring], Written By [Lyrics] - Rich Medina
-		# RemixedBy: PTH Projects
-		# AdditionalProductionBy: Simon Green
-		# Simple Jack Remix, Amine Edge & DANCE Edit
-		# http://toque-musicall.blogspot.com
-		# Vocals [Featuring] - Laura Darlington
-		# Mohammed Yousuf (Arranged By); Salim Akhtar (Bass); Salim Jaffery (Drums); Arif Bharoocha (Guitar); Mohammed Ali Rashid (Organ)
-		# Eric Fernandes (Bass); Ahsan Sajjad (Drums, Lead Vocals); Norman Braganza (Lead Guitar); Fasahat Hussein Syed (Sitar, Keyboards, Tabla)
-		# RemixedBy: Parov Stelar & Raul Irie/AdditionalProductionBy: Parov Stelar & Raul Irie
-		# RemixedBy: Roland Schwarz & Parov Stelar
-		# Engineer [Additional], Mixed By [Additional] - Tobi Neumann Vocals - Dinky
-		# Vocals, Guitar - Stan Eknatz
-		
-		
-		
-		#$artistString = "Ed Rush & Optical (Featuring Tali";
-		#$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
-		#$artistString = "Ed Rush & Optical ft Tali";
-		
-		#$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
-		#$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
-		#$titleString = "Something About Love (Original Mix)";
-		#$titleString = "Channel 7 (Sutekh 233 Channels Remix)";
-		#$titleString = "Levels (Cazzette`s NYC Mode Radio Mix)";
-		#$titleString = "fory one ways (david j & dj k bass bomber remix)";
-		#$titleString = "Music For Bagpipes (V & Z Remix)";
-		#$titleString = "Ballerino _Original Mix";
-		#$titleString = "to ardent feat. nancy sinatra (horse meat disco remix)";
-		#$titleString = "Crushed Ice (Remix)";
-		#$titleString = "Hells Bells (Gino's & Snake Remix)";
-		#$titleString = "Hot Love (DJ Koze 12 Inch Mix)";
-		#$titleString = "Skeleton keys (Omni Trio remix";
-		#$titleString = "A Perfect Lie (Theme Song)(Gabriel & Dresden Remix)";
-		#$titleString = "Princess Of The Night (Meyerdierks Digital Exclusiv Remix)";
-		#$titleString = "Hello Piano (DJ Chus And Sharp & Smooth Remix)";
-		#$titleString = "De-Phazz feat. Pat Appleton / Mambo Craze [Extended Version]";
-		#$titleString = "Toller titel (ft ftartist a) (RemixerA & RemixerB Remix)";
-		#$titleString = "Toller titel (RemixerA & RemixerB Remix) (ft ftartist a)";
-		#$titleString = "Been a Long Time (Axwell Unreleased Remix)";
-		#$titleString = "Feel 2009 (Deepside Deejays Rework)";
-		#$titleString = "Jeff And Jane Hudson - Los Alamos";
-		
-		#TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
-		#TODO: $artistString = "Lionel Richie With Little Big Town";
-		#TODO: $artistString = "B-Tight Und Sido";
-		#TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
-		#TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
-		#TODO: $titleString = "Time To Remember - MAZTEK Remix"
-		
-		
-		/*
-		 * for development/debuggung only
-		 */
-		
+	 */
+	private function getTestData($index) {
 		$tests = array(
 			array("placeholder index 0"),
 			array("Stel", "Your Parents Are Here (Ian F. Remix)", "Stel_-_Your_Parents_Are_Here-(JLYLTD015)-WEB-2009-WiTF"),
@@ -656,6 +653,5 @@ class Track extends \Slimpd\Models\AbstractTrack
 			return $tests[$index];
 		}
 		return FALSE;
-		
 	}
 }
