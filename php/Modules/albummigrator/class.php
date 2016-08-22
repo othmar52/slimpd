@@ -402,7 +402,7 @@ class AlbumMigrator {
 			$this->comments[$idx] = $t['comment'];
 			$this->years[$idx] = $t['year'];
 			$this->labels[$idx] = $t['publisher'];
-			$this->catalogNumbers[$idx] = $t['textCatalogNumber'];
+			$this->catalogNumbers[$idx] = $t['catalogNr'];
 			$this->discogsReleaseIds[$idx] = $t['textDiscogsReleaseId'];
 			$this->sources[$idx] = $t['textSource'];
 			$this->urls[$idx] = $t['textUrlUser'];
@@ -436,7 +436,7 @@ class AlbumMigrator {
 			$this->scoreAttribute($idx, 'comment',   $t['comment'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'year',      $t['year'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'label',     $t['publisher'], $this->defaultScoreForRealTagAttrs);
-			$this->scoreAttribute($idx, 'catalogNr', $t['textCatalogNumber'], $this->defaultScoreForRealTagAttrs);
+			$this->scoreAttribute($idx, 'catalogNr', $t['catalogNr'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'discogsId', $t['textDiscogsReleaseId'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'source',    $t['textSource'], $this->defaultScoreForRealTagAttrs);
 			$this->scoreAttribute($idx, 'urlUser',   $t['textUrlUser'], $this->defaultScoreForRealTagAttrs);

@@ -237,7 +237,7 @@ class Schema extends AbstractSchema
       . "  `textPeakDb` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `textPerceivedDb` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `textRating` varchar(255) NOT NULL DEFAULT '',\r"
-      . "  `textCatalogNumber` varchar(255) NOT NULL DEFAULT '',\r"
+      . "  `catalogNr` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `textDiscogsReleaseId` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `textUrlUser` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `textSource` varchar(255) NOT NULL DEFAULT '',\r"

@@ -335,7 +335,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `textPeakDb` varchar(255) NOT NULL DEFAULT '',
   `textPerceivedDb` varchar(255) NOT NULL DEFAULT '',
   `textRating` varchar(255) NOT NULL DEFAULT '',
-  `textCatalogNumber` varchar(255) NOT NULL DEFAULT '',
+  `catalogNr` varchar(255) NOT NULL DEFAULT '',
   `textDiscogsReleaseId` varchar(255) NOT NULL DEFAULT '',
   `textUrlUser` varchar(255) NOT NULL DEFAULT '',
   `textSource` varchar(255) NOT NULL DEFAULT '',

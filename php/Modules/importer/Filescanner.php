@@ -221,7 +221,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			'track' => 'setTrackNumber',
 			'year' => 'setYear',
 			'comment' => 'setComment',
-			'catalog' => 'setTextCatalogNumber',
+			'catalog' => 'setCatalogNr',
 			'discogs_release_id' => 'setTextDiscogsReleaseId',
 			'discogs-id' => 'setTextDiscogsReleaseId',
 			'country' => 'setCountry',
@@ -244,12 +244,12 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		);
 		
 		$textTags = array(
-			'CATALOG' => 'setTextCatalogNumber',
-			'Catalog #' => 'setTextCatalogNumber',
+			'CATALOG' => 'setCatalogNr',
+			'Catalog #' => 'setCatalogNr',
 			'Source' => 'setTextSource',
 			'COUNTRY' => 'setCountry',
 			'DISCOGS_RELEASE_ID' => 'setTextDiscogsReleaseId',
-			'Discogs-id' => 'setTextCatalogNumber',
+			'Discogs-id' => 'setCatalogNr',
 			'DYNAMIC RANGE' => 'setDynamicRange',
 			'TraktorPeakDB' => 'setTextPeakDb',
 			'TraktorPerceivedDB' => 'setTextPerceivedDb',
