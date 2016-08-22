@@ -261,7 +261,7 @@
 				dataType: 'json',
 				success: function( vals ) {
 					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
-					var maxVal = vals.max();
+					var maxVal = that.getMaxVal(vals);
 					for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
 						that.drawBar(
 							j,
@@ -305,6 +305,14 @@
 			}
 
 			this.waveformSettings.context.fillRect(x, y, w, h);
+		},
+
+		getMaxVal(inputArray) {
+			var max = 0;
+			for(var i=0; i<inputArray.length; i++) {
+				max = (inputArray[i] > max) ? inputArray[i] : max;
+			}
+			return max;
 		},
 
 		/* only for polled mpd player implementation - begin */

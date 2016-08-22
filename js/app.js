@@ -1,7 +1,3 @@
-Array.prototype.max = function() {
-  return Math.max.apply(null, this);
-};
-
 $(document).ready(function() {
 	"use strict";
 	var $ = window.jQuery;
