@@ -91,7 +91,7 @@
 		updateStateIcons() {
 			var that = this;
 			["repeat", "random", "consume"].forEach(function(prop) {
-				if(that.state[prop] === "1") {
+				if(that.state[prop] === 1) {
 					$(".status-"+prop, that.$el).addClass("active");
 				} else {
 					$(".status-"+prop, that.$el).removeClass("active");

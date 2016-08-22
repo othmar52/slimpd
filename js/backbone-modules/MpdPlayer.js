@@ -262,9 +262,9 @@
 			this.nowPlayingElapsed = data.elapsed;
 			this.nowPlayingItem = data.songid;
 
-			this.state.repeat = data.repeat;
-			this.state.random = data.random;
-			this.state.consume = data.consume;
+			this.state.repeat = parseInt(data.repeat);
+			this.state.random = parseInt(data.random);
+			this.state.consume = parseInt(data.consume);
 
 			// helper var to avoid double page reload (trackchange + playlistchange)
 			var forcePageReload = false;
