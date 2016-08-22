@@ -113,15 +113,15 @@
 		pause(item) { return; },
 		togglePause(item) { return; },
 		toggleRepeat(item) {
-			this.state.repeat = (this.state.repeat == 1) ? 0 : 1;
+			this.state.repeat = (this.state.repeat === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		toggleRandom(item) {
-			this.state.random = (this.state.random == 1) ? 0 : 1;
+			this.state.random = (this.state.random === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		toggleConsume(item) {
-			this.state.consume = (this.state.consume == 1) ? 0 : 1;
+			this.state.consume = (this.state.consume === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		setPlayPauseIcon() { return; },
