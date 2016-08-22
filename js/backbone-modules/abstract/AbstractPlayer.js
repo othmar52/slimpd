@@ -100,7 +100,7 @@
 		},
 
 		process(item) {
-			if(typeof this[item.action] === 'function') {
+			if(typeof this[item.action] === "function") {
 				this[item.action](item);
 				return;
 			}
@@ -173,7 +173,7 @@
 		},
 
 		drawFavicon() {
-			FavIconX.config({
+			window.FavIconX.config({
 				updateTitle: false,
 				shape: "doughnut",
 				doughnutRadius: 7,
@@ -183,7 +183,7 @@
 				fillColor: this.faviconDoghnutColor,
 				borderWidth : 1.2,
 				backgroundColor : this.faviconBackgroundColor,
-				titleRenderer: function(v, t){
+				titleRenderer(v, t){
 					return $(".player-"+ this.mode +" .now-playing-string").text();
 				}
 			}).setValue(this.nowPlayingPercent);
@@ -259,7 +259,7 @@
 			$.ajax({
 				url: $waveFormWrapper.attr("data-jsonurl"),
 				dataType: 'json',
-				success: function( vals ) {
+				success(vals) {
 					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
 					var maxVal = that.getMaxVal(vals);
 					for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
@@ -275,7 +275,7 @@
 					$waveFormWrapper.html("");
 					$(that.waveformSettings.canvas).appendTo($waveFormWrapper);
 				},
-				error: function( response ) {
+				error(response) {
 					$waveFormWrapper.html(
 						$("<p />").html("error generating waveform...")
 					);
