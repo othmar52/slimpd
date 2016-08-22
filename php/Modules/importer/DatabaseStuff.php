@@ -151,9 +151,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 
 	public static function buildDictionarySql() {
 		$app = \Slim\Slim::getInstance();
-		foreach(['freq_threshold', 'suggest_debug', 'length_threshold', 'levenshtein_threshold', 'top_count'] as $var) {
-			define (strtoupper($var), intval($app->config['sphinx'][$var]) );
-		}
+		\Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($app->config['sphinx']);
 
 		$input  = fopen ("php://stdin", "r");
 		$output = fopen ("php://stdout", "w+");

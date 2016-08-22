@@ -40,18 +40,14 @@ foreach(array_keys($sortfields1) as $className) {
 			$vars["itemids"] = $itemId;
 			$itemsPerPage = 20;
 			$maxCount = 1000;
-			
-			// TODO: move sphinx constants to somewhere else
-			foreach(["freq_threshold", "suggest_debug", "length_threshold", "levenshtein_threshold", "top_count"] as $var) {
-				define (strtoupper($var), intval($app->config["sphinx"][$var]) );
-			}
-			$ln_sph = new \PDO("mysql:host=".$app->config["sphinx"]["host"].";port=9306;charset=utf8;", "","");
+
+			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
 			
 			foreach(["album","track"] as $resultType) {
 				
 				// get total results for all types (albums + tracks)
 				$sphinxTypeIndex = ($resultType === "album") ? 2 : 4;
-				$stmt = $ln_sph->prepare("
+				$stmt = $sphinxPdo->prepare("
 					SELECT id FROM ". $app->config["sphinx"]["mainindex"]."
 					WHERE MATCH('@".$className."Ids \"". $term ."\"')
 					AND type=:type
@@ -60,7 +56,7 @@ foreach(array_keys($sortfields1) as $className) {
 				");
 				$stmt->bindValue(":type", $sphinxTypeIndex, PDO::PARAM_INT);
 				$stmt->execute();
-				$meta = $ln_sph->query("SHOW META")->fetchAll();
+				$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 				$vars["search"][$resultType]["total"] = 0;
 				foreach($meta as $m) {
 					if($m["Variable_name"] === "total_found") {
@@ -76,7 +72,7 @@ foreach(array_keys($sortfields1) as $className) {
 					$sortQuery = ($sort !== "relevance")?  " ORDER BY " . $sort . " " . $direction : "";
 					$vars["search"]["activesorting"] = $sort . "-" . $direction;
 					
-					$stmt = $ln_sph->prepare("
+					$stmt = $sphinxPdo->prepare("
 						SELECT id,type,itemid,artistIds,display
 						FROM ". $app->config["sphinx"]["mainindex"]."
 						WHERE MATCH('@".$className."Ids \"". $term ."\"')
@@ -137,9 +133,6 @@ foreach(array_keys($sortfields) as $currentType) {
 	$app->get(
 		"/search".$currentType."/page/:currentPage/sort/:sort/:direction",
 		function($currentPage, $sort, $direction) use ($app, $vars, $currentType, $sortfields){
-		foreach(["freq_threshold", "suggest_debug", "length_threshold", "levenshtein_threshold", "top_count"] as $var) {
-			define (strtoupper($var), intval($app->config["sphinx"][$var]) );
-		}
 		
 		# TODO: evaluate if modifying searchterm makes sense
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
@@ -161,8 +154,8 @@ foreach(array_keys($sortfields) as $currentType) {
 		$itemsPerPage = 20;
 		$maxCount = 1000;
 		$result = [];
-		
-		$ln_sph = new \PDO("mysql:host=".$app->config["sphinx"]["host"].";port=9306;charset=utf8;", "","");
+
+		$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
 		
 		// those values have to match sphinxindex:srcslimpdmain:type
 		$filterTypeMapping = array(
@@ -180,7 +173,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			$vars["timelog"][$type."-total"] = new \Slimpd\ExecutionTime();
 			$vars["timelog"][$type."-total"]->Start();
 			// get result count for each resulttype 
-			$stmt = $ln_sph->prepare("
+			$stmt = $sphinxPdo->prepare("
 				SELECT itemid,type FROM ". $app->config["sphinx"]["mainindex"]."
 				WHERE MATCH(:match)
 				" . (($type !== "all") ? " AND type=:type " : "") . "
@@ -193,7 +186,7 @@ foreach(array_keys($sortfields) as $currentType) {
 			}
 			
 			$stmt->execute();
-			$meta = $ln_sph->query("SHOW META")->fetchAll();
+			$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 			$vars["search"][$type]["total"] = 0;
 			foreach($meta as $m) {
 				if($m["Variable_name"] === "total_found") {
@@ -218,7 +211,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				
 				$vars["search"][$type]["time"] = microtime(TRUE);
 				
-				$stmt = $ln_sph->prepare("
+				$stmt = $sphinxPdo->prepare("
 					SELECT id,type,itemid,display FROM ". $app->config["sphinx"]["mainindex"]."
 					WHERE MATCH(:match)
 					" . (($currentType !== "all") ? " AND type=:type " : "") . "
@@ -244,7 +237,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				
 				$stmt->execute();
 				$rows = $stmt->fetchAll();
-				$meta = $ln_sph->query("SHOW META")->fetchAll();
+				$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 				foreach($meta as $m) {
 					$meta_map[$m["Variable_name"]] = $m["Value"];
 				}
@@ -263,7 +256,7 @@ foreach(array_keys($sortfields) as $currentType) {
 							$words[$key]["docs"] = $v;
 						}
 					}
-					$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+					$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
 					if($suggest !== FALSE) {
 						$app->response->redirect($app->urlFor(
 							"search".$currentType,
@@ -317,9 +310,6 @@ foreach(array_keys($sortfields) as $currentType) {
 
 
 $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
-	foreach(["freq_threshold", "suggest_debug", "length_threshold", "levenshtein_threshold", "top_count"] as $var) {
-		define (strtoupper($var), intval($app->config["sphinx"][$var]) );
-	}
 	$term = $app->request->get("q");
 	
 	$originalTerm = ($app->request->get("qo")) ? $app->request->get("qo") : $term;
@@ -333,7 +323,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 	$current = 1;
 	$result = [];
 	
-	$ln_sph = new \PDO("mysql:host=".$app->config["sphinx"]["host"].";port=9306;charset=utf8;", "","");
+	$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
 	
 	// those values have to match sphinxindex:srcslimpdautocomplete
 	$filterTypeMapping = array(
@@ -345,7 +335,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 		"dirname" => 6,
 	);
 	
-	$stmt = $ln_sph->prepare("
+	$stmt = $sphinxPdo->prepare("
 		SELECT id,type,itemid,display,trackCount,albumCount FROM ". $app->config["sphinx"]["mainindex"]."
 		WHERE MATCH(:match)
 		" . (($type !== "all") ? " AND type=:type " : "") . "
@@ -375,7 +365,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 	$timLogData[] = " execute() " . (microtime(TRUE) - $timeLogBegin);
 	$rows = $stmt->fetchAll();
 	$timLogData[] = " fetchAll() " . (microtime(TRUE) - $timeLogBegin);
-	$meta = $ln_sph->query("SHOW META")->fetchAll();
+	$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 	$timLogData[] = " metaFetch() " . (microtime(TRUE) - $timeLogBegin);
 	foreach($meta as $m) {
 	    $meta_map[$m["Variable_name"]] = $m["Value"];
@@ -390,7 +380,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 				$words[ $matches[1] ]["docs"] = $value;
 			}
 		}
-		$suggest = MakePhaseSuggestion($words, $term, $ln_sph);
+		$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
 		$timLogData[] = " MakePhaseSuggestion() " . (microtime(TRUE) - $timeLogBegin);
 		if($suggest !== FALSE) {
 			$app->response->redirect(
@@ -479,8 +469,9 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	}
 
 	// get total items of directory from sphinx
-	$ln_sph = new \PDO("mysql:host=".$app->config["sphinx"]["host"].";port=9306;charset=utf8;", "","");
-	$stmt = $ln_sph->prepare("
+	$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+	
+	$stmt = $sphinxPdo->prepare("
 		SELECT id
 		FROM ". $app->config["sphinx"]["mainindex"]."
 		WHERE MATCH(:match)
@@ -490,7 +481,7 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	$stmt->bindValue(":match", "'@allchunks \"". join(DS, $itemParams) . DS . "\"'", PDO::PARAM_STR);
 	$stmt->bindValue(":type", 4, PDO::PARAM_INT);
 	$stmt->execute();
-	$meta = $ln_sph->query("SHOW META")->fetchAll();
+	$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 	$total = 0;
 	foreach($meta as $m) {
 		if($m["Variable_name"] === "total_found") {
@@ -502,8 +493,8 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	$itemsPerPage = 20;
 	$currentPage = intval($app->request->get("page"));
 	$currentPage = ($currentPage === 0) ? 1 : $currentPage;
-	$ln_sph = new \PDO("mysql:host=".$app->config["sphinx"]["host"].";port=9306;charset=utf8;", "","");
-	$stmt = $ln_sph->prepare("
+	$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+	$stmt = $sphinxPdo->prepare("
 		SELECT itemid
 		FROM ". $app->config["sphinx"]["mainindex"]."
 		WHERE MATCH('@allchunks \"". $directory->fullpath. "\"')

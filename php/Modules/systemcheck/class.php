@@ -217,7 +217,7 @@ class Systemcheck {
 		// check sphinx connection
 		$check['sxConn']['status'] = 'success';
 		try {
-			$ln_sph = new \PDO('mysql:host='.$this->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
+			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
 		} catch (\Exception $e) {
 			$check['sxConn']['status'] = 'danger';
 			$check['sxSchema']['skip'] = TRUE;
@@ -229,8 +229,8 @@ class Systemcheck {
 			$schemaError = FALSE;
 			$contentError = FALSE;
 			foreach(['main', 'suggest'] as $indexName) {
-				$ln_sph = new \PDO('mysql:host='.$app->config['sphinx']['host'].';port=9306;charset=utf8;', '','');
-				$stmt = $ln_sph->prepare(
+				$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+				$stmt = $sphinxPdo->prepare(
 					"SELECT ". $app->config['sphinx']['fields_'.$indexName]." FROM ". $app->config['sphinx'][$indexName . 'index']." LIMIT 1;"
 				);
 				$stmt->execute();
@@ -242,7 +242,7 @@ class Systemcheck {
 				} else {
 					$check['sxSchema']['status'] = 'sucess';
 					$check['sxContent']['skip'] = FALSE;
-					$meta = $ln_sph->query("SHOW META")->fetchAll();
+					$meta = $sphinxPdo->query("SHOW META")->fetchAll();
 					foreach($meta as $m) {
 						if($m['Variable_name'] === 'total_found') {
 							if($m['Value'] < 1) {
