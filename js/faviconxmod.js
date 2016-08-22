@@ -247,40 +247,43 @@ var FavIconX = (function() {
 
 	// starting point to the app... couldn"t hide it in the code better
 	function init(){
-		if(canvas && canvas.getContext){
-			icon = getIconRef();
-			oldTitle = document.title;
-			canvas.height = canvas.width = 16;
-			context = canvas.getContext("2d");
-		} else {
+		if(!canvas || !canvas.getContext){
 			throw "No support for Canvas, no chocolate for you! =(";
+			return;
 		}
+		icon = getIconRef();
+		oldTitle = document.title;
+		canvas.height = canvas.width = 16;
+		context = canvas.getContext("2d");
 	}
 
 	// this, as the method name suggests, is called once the anim has stopped.
 	function stopAnim(){
-		if(animCallback){
-			animCallback.call(this, value);
-			animCallback = null;
+		if(!animCallback){
+			return;
 		}
+		animCallback.call(this, value);
+		animCallback = null;
 	}
 
 	// animation: called again and again until we get to the right value
 	function incValue(inc){
 		animValue += inc;
-		if(isReset !== true){
-			generateBitmap(animValue);
-			refreshFavIcon();
-			if(animValue !== null && animated){
-				if(animValue === value){
-					stopAnim();
-				} else {
-					setTimeout(function(){
-						incValue(animValue > value ? -1 : 1);
-					}, animInterval);
-				}
-			}
+		if(isReset === true){
+			return;
 		}
+		generateBitmap(animValue);
+		refreshFavIcon();
+		if(animValue === null || !animated){
+			return;
+		}
+		if(animValue === value){
+			stopAnim();
+			return;
+		}
+		setTimeout(function(){
+			incValue(animValue > value ? -1 : 1);
+		}, animInterval);
 	}
 
 	// let"s get things started.
@@ -332,13 +335,13 @@ var FavIconX = (function() {
 					animInterval = Math.abs(Math.ceil((typeof animSpeed !== "undefined" ? animSpeed : animationSpeed) / steps));
 					incValue(animValue > value ? -1 : 1);
 				}
-			} else {
-				animValue = null;
-				generateBitmap();
-				refreshFavIcon();
-				if(animCallback){
-					animCallback.call(this, v);
-				}
+				return FavIconX;
+			}
+			animValue = null;
+			generateBitmap();
+			refreshFavIcon();
+			if(animCallback){
+				animCallback.call(this, v);
 			}
 			return FavIconX;
 		},
