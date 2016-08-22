@@ -40,7 +40,7 @@ var FavIconX = (function() {
 	var titleRenderer;
 
 	function setDefaults(){
-		shape = "circle";
+		shape = "doughnut";
 		doughnutRadius = 6;
 		overlay = false;
 		overlayColor = "#000";
@@ -105,7 +105,6 @@ var FavIconX = (function() {
 	}
 
 	// Generates the overlay shape
-	// TODO: support overlay functionality for square-shape
 	function generateOverlay(ctx, w, h){
 		ctx.strokeStyle = overlayColor;
 		ctx.fillStyle = overlayColor;
@@ -131,39 +130,6 @@ var FavIconX = (function() {
 			ctx.closePath();
 			ctx.stroke();
 		}
-	}
-
-	// let"s get a boring circle first
-	function generateCircle(v){
-		var graphValue = v || value;
-		var centerX = canvas.width / 2;
-		var centerY = canvas.height / 2;
-		var radius = 7 - borderWidth / 2;
-		var deg = graphValue * 3.6 - 90;
-
-		canvas.width = canvas.width;
-
-		generateBackground(context, canvas.width, canvas.height);
-
-		context.lineWidth = borderWidth;
-		context.strokeStyle = borderColor2 ? getMidColor(borderColor, borderColor2) : borderColor;
-		context.beginPath();
-		context.arc(centerX, centerY, radius, 0, toRad(360), false);
-		context.closePath();
-		context.fillStyle = shadowColor;
-		context.fill();
-		context.stroke();
-		if(graphValue < 1){
-			generateOverlay(context, canvas.width, canvas.height);
-			return;
-		}
-		context.fillStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
-		context.beginPath();
-		context.moveTo(8,8);
-		context.arc(centerX, centerY, radius, toRad(-90), toRad(deg), false);
-		context.closePath();
-		context.fill();
-		generateOverlay(context, canvas.width, canvas.height);
 	}
 
 	// spelling doughnut just feels wrong
@@ -198,72 +164,11 @@ var FavIconX = (function() {
 		generateOverlay(context, canvas.width, canvas.height);
 	}
 
-	// something a bit more fancy
-	function generateSquare(v){
-		var graphValue = v || value;
-		var centerX = canvas.width / 2;
-		var centerY = canvas.height / 2;
-		var borderRadius = 2;
-		var x = 1;
-		var y = 1;
-		var width = 14;
-		var height = 14;
-		var deg = graphValue * 3.6 - 90;
-
-		generateBackground(context, canvas.width, canvas.height);
-
-		canvas.width = canvas.width;
-		context.beginPath();
-		context.strokeStyle = borderColor2 ? getMidColor(borderColor, borderColor2) : borderColor;
-		context.lineWidth = borderWidth;
-		context.fillStyle = shadowColor;
-		context.moveTo(x + borderRadius, y);
-		context.lineTo(x + width - borderRadius, y);
-		context.quadraticCurveTo(x + width, y, x + width, y + borderRadius);
-		context.lineTo(x + width, y + height - borderRadius);
-		context.quadraticCurveTo(x + width, y + height, x + width - borderRadius, y + height);
-		context.lineTo(x + borderRadius, y + height);
-		context.quadraticCurveTo(x, y + height, x, y + height - borderRadius);
-		context.lineTo(x, y + borderRadius);
-		context.quadraticCurveTo(x, y, x + borderRadius, y);
-		context.closePath();
-		context.stroke();
-		if(graphValue < 1){
-			generateOverlay(context, canvas.width, canvas.height);
-			return;
-		}
-		context.clip();
-		context.beginPath();
-		context.moveTo(8,8);
-		context.fillStyle = "rgba(255, 0, 0, 0)";
-		context.arc(centerX, centerY, 12, toRad(-90), toRad(deg), false); // we clip the rest
-		context.closePath();
-		context.fill();
-		context.clip();
-		context.beginPath();
-		context.fillStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
-		context.moveTo(x + borderRadius, y);
-		context.lineTo(x + width - borderRadius, y);
-		context.quadraticCurveTo(x + width, y, x + width, y + borderRadius);
-		context.lineTo(x + width, y + height - borderRadius);
-		context.quadraticCurveTo(x + width, y + height, x + width - borderRadius, y + height);
-		context.lineTo(x + borderRadius, y + height);
-		context.quadraticCurveTo(x, y + height, x, y + height - borderRadius);
-		context.lineTo(x, y + borderRadius);
-		context.quadraticCurveTo(x, y, x + borderRadius, y);
-		context.closePath();
-		context.fill();
-		generateOverlay(context, canvas.width, canvas.height);
-	}
 
 	// Generates the wanted shape
 	function generateBitmap(v){
-		if(shape === "circle"){
-			generateCircle(v);
-		} else if(shape === "doughnut"){
+		if(shape === "doughnut"){
 			generateDoughnut(v);
-		} else if(shape === "square"){
-			generateSquare(v);
 		}
 	}
 
