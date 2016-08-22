@@ -586,14 +586,6 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 	public function setLabelAndCatalogueNr() {
 		
 	}
-
-	public static function ensureRecordIdExists($itemId) {
-		if(\Slim\Slim::getInstance()->db->query("SELECT id FROM " . self::$tableName . " WHERE id=" . (int)$itemId)->num_rows == $itemId) {
-			return;
-		}
-		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::$tableName . " (id) VALUES (".(int)$itemId.")");
-		return;
-	}
 	
 	public function jsonSerialize() {
 		return get_object_vars($this);

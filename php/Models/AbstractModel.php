@@ -583,7 +583,15 @@ abstract class AbstractModel {
 		$query = "DELETE FROM " . self::getTableName() . " WHERE id IN (" . join(',', $idArray) . ");";
 		\Slim\Slim::getInstance()->db->query($query);
 	}
-	
+
+	public static function ensureRecordIdExists($itemId) {
+		if(\Slim\Slim::getInstance()->db->query("SELECT id FROM " . self::getTableName() . " WHERE id=" . (int)$itemId)->num_rows == $itemId) {
+			return;
+		}
+		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::getTableName() . " (id) VALUES (".(int)$itemId.")");
+		return;
+	}
+
 	public function getId() {
 		return $this->id;
 	}

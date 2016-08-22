@@ -9,14 +9,6 @@ class Trackindex extends \Slimpd\Models\AbstractModel
 	
 	public static $tableName = 'trackindex';
 
-	public static function ensureRecordIdExists($itemId) {
-		if(\Slim\Slim::getInstance()->db->query("SELECT id FROM " . self::$tableName . " WHERE id=" . (int)$itemId)->num_rows == $itemId) {
-			return;
-		}
-		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::$tableName . " (id) VALUES (".(int)$itemId.")");
-		return;
-	}
-
 	//setter
 	public function setArtist($value) {
 		$this->artist = $value;
