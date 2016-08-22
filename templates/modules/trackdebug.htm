@@ -4,8 +4,8 @@
 
 <h3>Track-debug<br>
 <span class="small">
-	{% set dirs = item.relativePath|split('/') %}
-	<a href="{{root}}filebrowser/{{ itemraw.relativeDirectoryPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	{% set dirs = item.relPath|split('/') %}
+	<a href="{{root}}filebrowser/{{ itemraw.relDirPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}

@@ -145,7 +145,7 @@
 	{# music files #}
 	{% if files.music|length %}
 	{% for item in files.music %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 		<div class="row">
 			<div class="col-md-12 vcenter">
 				<div class="vcinner">
@@ -167,7 +167,7 @@
 				</div>
 			</div>
 			{# ajax load target for xwax-control #}
-			<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
+			<div class="ajax-xwax-{{ item.relPathHash }} col-md-12"></div>
 		</div>
 	</div>
 	{% endfor %}

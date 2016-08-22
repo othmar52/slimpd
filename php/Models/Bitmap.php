@@ -4,8 +4,8 @@ namespace Slimpd\Models;
 class Bitmap extends \Slimpd\Models\AbstractModel
 {
 	protected $id;
-	protected $relativePath;
-	protected $relativePathHash;
+	protected $relPath;
+	protected $relPathHash;
 	protected $filemtime;
 	protected $filesize;
 	protected $mimeType;
@@ -30,7 +30,7 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 			: $app->config['mpd']['musicdir'];
 			
 		$phpThumb = self::getPhpThumb();	
-		$phpThumb->setSourceFilename($imgDirecoryPrefix . $this->getRelativePath());
+		$phpThumb->setSourceFilename($imgDirecoryPrefix . $this->getRelPath());
 		$phpThumb->setParameter('config_output_format', 'jpg');
 		
 		switch($preConf) {
@@ -79,7 +79,7 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 		} else {
 			// check if we have a record with this path
 			$searchParams = array(
-				'relativePath' => $this->getRelativePath()
+				'relPath' => $this->getRelPath()
 			);
 			
 			// multiple usage of same image files are possible...
@@ -115,11 +115,11 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 			return FALSE;
 		}
 		
-		if(!$this->getRelativePath()) {
+		if(!$this->getRelPath()) {
 			// invalid instance 
 			return FALSE;
 		}
-		$bitmapPath = APP_ROOT . $this->getRelativePath(); 
+		$bitmapPath = APP_ROOT . $this->getRelPath(); 
 		if(is_file($bitmapPath) === TRUE && is_writeable($bitmapPath) === TRUE) {
 			unlink($bitmapPath);
 		}
@@ -146,11 +146,11 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 	public function setId($value) {
 		$this->id = $value;
 	}
-	public function setRelativePath($value) {
-		$this->relativePath = $value;
+	public function setRelPath($value) {
+		$this->relPath = $value;
 	}
-	public function setRelativePathHash($value) {
-		$this->relativePathHash = $value;
+	public function setRelPathHash($value) {
+		$this->relPathHash = $value;
 	}
 	public function setFilemtime($value) {
 		$this->filemtime = $value;
@@ -200,11 +200,11 @@ class Bitmap extends \Slimpd\Models\AbstractModel
 	public function getId() {
 		return $this->id;
 	}
-	public function getRelativePath() {
-		return $this->relativePath;
+	public function getRelPath() {
+		return $this->relPath;
 	}
-	public function getRelativePathHash() {
-		return $this->relativePathHash;
+	public function getRelPathHash() {
+		return $this->relPathHash;
 	}
 	public function getFilemtime() {
 		return $this->filemtime;

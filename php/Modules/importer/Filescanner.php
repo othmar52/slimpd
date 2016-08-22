@@ -45,34 +45,34 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 		$query = "
 			SELECT id,
-				relativePath, relativePathHash, filemtime,
-				relativeDirectoryPath, relativeDirectoryPathHash, directoryMtime 
-			FROM rawtagdata 
+				relPath, relPathHash, filemtime,
+				relDirPath, relDirPathHash, directoryMtime
+			FROM rawtagdata
 			WHERE lastScan < filemtime";// LIMIT 200000,1000;";
-			
+
 		$result = $app->db->query($query);
 		$this->extractedImages = 0;
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
-			cliLog($record['id'] . ' ' . $record['relativePath'], 2);
+			cliLog($record['id'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemCountChecked . ' files',
-				'currentItem' => $record['relativePath'],
+				'currentItem' => $record['relPath'],
 				'extractedImages' => $this->extractedImages
 			));
 			$rawTagData = new Rawtagdata();
 			$rawTagData->setId($record['id']);
-			$rawTagData->setRelativePath($record['relativePath']);
+			$rawTagData->setRelPath($record['relPath']);
 			$rawTagData->setLastScan(time());
 			$rawTagData->setImportStatus(2);
 			
 			// TODO: handle not found files
-			if(is_file($app->config['mpd']['musicdir'] . $record['relativePath']) === FALSE) {
+			if(is_file($app->config['mpd']['musicdir'] . $record['relPath']) === FALSE) {
 				$rawTagData->setError('invalid file');
 				$rawTagData->update();
 				continue;
 			}
-			$rawTagData->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relativePath']) );
+			$rawTagData->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relPath']) );
 			
 			// skip very large files
 			// TODO: how to handle this?
@@ -82,7 +82,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 			
-			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relativePath']);
+			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
 			$this->mapTagsToRawtagdataInstance($rawTagData, $tagData);
 			
@@ -138,7 +138,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 
 			$phpThumb->resetObject();
 			$phpThumb->setSourceData($rawImageData);
-			$phpThumb->setParameter('config_cache_prefix', $record['relativePathHash'].'_' . $bitmapIndex . '_');
+			$phpThumb->setParameter('config_cache_prefix', $record['relPathHash'].'_' . $bitmapIndex . '_');
 			$phpThumb->SetCacheFilename();
 			$phpThumb->GenerateThumbnail();
 			\phpthumb_functions::EnsureDirectoryExists(
@@ -158,14 +158,14 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			// remove tempfiles of phpThumb
 			clearPhpThumbTempFiles($phpThumb);
 			
-			$relativePath = str_replace(APP_ROOT, '', $phpThumb->cache_filename);
-			$relativePathHash = getFilePathHash($relativePath);
+			$relPath = str_replace(APP_ROOT, '', $phpThumb->cache_filename);
+			$relPathHash = getFilePathHash($relPath);
 			
 			$imageSize = GetImageSize($phpThumb->cache_filename);
 			
 			$bitmap = new Bitmap();
-			$bitmap->setRelativePath($relativePath);
-			$bitmap->setRelativePathHash($relativePathHash);
+			$bitmap->setRelPath($relPath);
+			$bitmap->setRelPathHash($relPathHash);
 			$bitmap->setFilemtime(filemtime($phpThumb->cache_filename));
 			$bitmap->setFilesize(filesize($phpThumb->cache_filename));
 			$bitmap->setRawTagDataId($record['id']); # TODO: is there any more need for both ID's?
@@ -264,7 +264,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			'dataformat' => 'setAudioDataformat',
 			'encoder' => 'setAudioEncoder',
 			'lossless' => 'setAudioLossless',
-			'compression_ratio' => 'setAudioCompressionRatio',
+			'compression_ratio' => 'setAudioComprRatio',
 			'bitrate' => 'setAudioBitrate',
 			'bitrate_mode' => 'setAudioBitrateMode',
 			'bits_per_sample' => 'setAudioBitsPerSample',
@@ -370,7 +370,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		// override description of audiocodec
 		// @see: https://github.com/othmar52/slimpd/issues/25
 		// @see: https://github.com/JamesHeinrich/getID3/issues/48
-		$ext = strtolower(preg_replace('/^.*\./', '', $rawTagData->getRelativePath())); 
+		$ext = strtolower(preg_replace('/^.*\./', '', $rawTagData->getRelPath())); 
 		if($ext !== 'm4a') {
 			return;
 		}

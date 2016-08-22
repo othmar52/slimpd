@@ -1,1 +1,1 @@
-.track-{{ relativePathHash }}>.row {border-left: 2px solid {{ color }}; transition: border-width ease 0.2s;}
+.track-{{ relPathHash }}>.row {border-left: 2px solid {{ color }}; transition: border-width ease 0.2s;}

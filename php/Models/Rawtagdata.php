@@ -19,10 +19,10 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	protected $language;
 	protected $country;
 	
-	protected $relativePath;
-	protected $relativePathHash;
-	protected $relativeDirectoryPath;
-	protected $relativeDirectoryPathHash;
+	protected $relPath;
+	protected $relPathHash;
+	protected $relDirPath;
+	protected $relDirPathHash;
 	protected $directoryMtime = 0;
 	
 	protected $initialKey;
@@ -49,7 +49,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	protected $audioSampleRate;
 	protected $audioChannels;
 	protected $audioLossless;
-	protected $audioCompressionRatio;
+	protected $audioComprRatio;
 	protected $audioDataformat;
 	protected $audioEncoder;
 	protected $audioProfile;
@@ -116,17 +116,17 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 		$this->country = $value;
 	}
 	//...
-	public function setRelativePath($value) {
-		$this->relativePath = $value;
+	public function setRelPath($value) {
+		$this->relPath = $value;
 	}
-	public function setRelativePathHash($value) {
-		$this->relativePathHash = $value;
+	public function setRelPathHash($value) {
+		$this->relPathHash = $value;
 	}
-	public function setRelativeDirectoryPath($value) {
-		$this->relativeDirectoryPath = $value;
+	public function setRelDirPath($value) {
+		$this->relDirPath = $value;
 	}
-	public function setRelativeDirectoryPathHash($value) {
-		$this->relativeDirectoryPathHash = $value;
+	public function setRelDirPathHash($value) {
+		$this->relDirPathHash = $value;
 	}
 	public function setDirectoryMtime($value) {
 		$this->directoryMtime = $value;
@@ -200,8 +200,8 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	public function setAudioLossless($value) {
 		$this->audioLossless = $value;
 	}
-	public function setAudioCompressionRatio($value) {
-		$this->audioCompressionRatio = $value;
+	public function setAudioComprRatio($value) {
+		$this->audioComprRatio = $value;
 	}
 	public function setAudioDataformat($value) {
 		$this->audioDataformat = $value;
@@ -295,17 +295,17 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 		return $this->country;
 	}
 	// ...
-	public function getRelativePath() {
-		return $this->relativePath;
+	public function getRelPath() {
+		return $this->relPath;
 	}
-	public function getRelativePathHash() {
-		return $this->relativePathHash;
+	public function getRelPathHash() {
+		return $this->relPathHash;
 	}
-	public function getRelativeDirectoryPath() {
-		return $this->relativeDirectoryPath;
+	public function getRelDirPath() {
+		return $this->relDirPath;
 	}
-	public function getRelativeDirectoryPathHash() {
-		return $this->relativeDirectoryPathHash;
+	public function getRelDirPathHash() {
+		return $this->relDirPathHash;
 	}
 	public function getDirectoryMtime() {
 		return $this->directoryMtime;
@@ -379,8 +379,8 @@ class Rawtagdata extends \Slimpd\Models\AbstractModel
 	public function getAudioLossless() {
 		return $this->audioLossless;
 	}
-	public function getAudioCompressionRatio() {
-		return $this->audioCompressionRatio;
+	public function getAudioComprRatio() {
+		return $this->audioComprRatio;
 	}
 	public function getAudioDataformat() {
 		return $this->audioDataformat;

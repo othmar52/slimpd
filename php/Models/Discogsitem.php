@@ -131,7 +131,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 				$rawItem->getArtist(),
 				$rawItem->getTitle(),
 				$rawItem->getTrackNumber(),
-				basename($rawItem->getRelativePath())
+				basename($rawItem->getRelPath())
 			];
 			$counter = 0;
 			foreach($data['tracklist'] as $t) {

@@ -15,8 +15,8 @@
 							<span class="shortenXX">{% include 'partials/artist/link.htm' %}</span>
 							
 						{% else %}
-							{% if item.relativePath %}
-								{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+							{% if item.relPath %}
+								{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 								{% include 'partials/track/not-imported-badge.htm' %}
 							{% else %}
 								{% include 'partials/track/no-track-selected-badge.htm' %}

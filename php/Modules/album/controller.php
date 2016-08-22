@@ -36,7 +36,7 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 			}
 		}
 		
-		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelativePath());
+		$vars['breadcrumb'] = \Slimpd\filebrowser::fetchBreadcrumb($vars['album']->getRelPath());
 		
 		if($what === '/markup/widget-album') {
 			$app->render('modules/widget-album.htm', $vars);

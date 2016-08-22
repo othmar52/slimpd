@@ -68,27 +68,27 @@ class MpdDatabaseParser {
 		$app = \Slim\Slim::getInstance();
 		// get timestamps of all tracks and directories from mysql database
 		// get all existing track-ids to determine orphans		
-		$query = "SELECT id, relativePathHash, relativeDirectoryPathHash, filemtime, directoryMtime FROM rawtagdata;";
+		$query = "SELECT id, relPathHash, relDirPathHash, filemtime, directoryMtime FROM rawtagdata;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->fileOrphans[ $record["relativePathHash"] ] = $record["id"];
-			$this->fileTstamps[ $record["relativePathHash"] ] = $record["filemtime"];
+			$this->fileOrphans[ $record["relPathHash"] ] = $record["id"];
+			$this->fileTstamps[ $record["relPathHash"] ] = $record["filemtime"];
 
 			// get the oldest directory timestamp stored in rawtagdata
-			if(isset($this->dirTstamps[ $record["relativeDirectoryPathHash"] ]) === FALSE) {
-				$this->dirTstamps[ $record["relativeDirectoryPathHash"] ] = 9999999999;
+			if(isset($this->dirTstamps[ $record["relDirPathHash"] ]) === FALSE) {
+				$this->dirTstamps[ $record["relDirPathHash"] ] = 9999999999;
 			}
-			if($record["directoryMtime"] < $this->dirTstamps[ $record["relativeDirectoryPathHash"] ]) {
-				$this->dirTstamps[ $record["relativeDirectoryPathHash"] ] = $record["directoryMtime"]; 
+			if($record["directoryMtime"] < $this->dirTstamps[ $record["relDirPathHash"] ]) {
+				$this->dirTstamps[ $record["relDirPathHash"] ] = $record["directoryMtime"]; 
 			}
 		}
 
 		// get all existing album-ids to determine orphans
 		$this->dirOrphans = array();
-		$query = "SELECT id, relativePathHash FROM album;";
+		$query = "SELECT id, relPathHash FROM album;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->dirOrphans[ $record["relativePathHash"] ] = $record["id"];
+			$this->dirOrphans[ $record["relPathHash"] ] = $record["id"];
 		}
 	}
 
@@ -178,8 +178,8 @@ class MpdDatabaseParser {
 		$this->itemsChecked++;
 
 		// single music files directly in mpd-musicdir-root must not get a leading slash
-		$this->rawTagItem->setRelativeDirectoryPath(($this->currentDir === "") ? "" : $this->currentDir . DS);
-		$this->rawTagItem->setRelativeDirectoryPathHash(getFilePathHash($this->rawTagItem->getRelativeDirectoryPath()));
+		$this->rawTagItem->setRelDirPath(($this->currentDir === "") ? "" : $this->currentDir . DS);
+		$this->rawTagItem->setRelDirPathHash(getFilePathHash($this->rawTagItem->getRelDirPath()));
 
 		// further we have to read directory-modified-time manually because there is no info
 		// about mpd-root-directory in mpd-database-file
@@ -187,24 +187,24 @@ class MpdDatabaseParser {
 			$this->rawTagItem->setDirectoryMtime(filemtime(\Slim\Slim::getInstance()->config["mpd"]["musicdir"]));
 		}
 
-		$this->rawTagItem->setRelativePath($this->rawTagItem->getRelativeDirectoryPath() . $this->currentSong);
-		$this->rawTagItem->setRelativePathHash(getFilePathHash($this->rawTagItem->getRelativePath()));
+		$this->rawTagItem->setRelPath($this->rawTagItem->getRelDirPath() . $this->currentSong);
+		$this->rawTagItem->setRelPathHash(getFilePathHash($this->rawTagItem->getRelPath()));
 
 		if($this->updateOrInsert() === FALSE) {
 			// track has not been modified - no need for updating
-			unset($this->fileTstamps[$this->rawTagItem->getRelativePathHash()]);
-			unset($this->fileOrphans[$this->rawTagItem->getRelativePathHash()]);
+			unset($this->fileTstamps[$this->rawTagItem->getRelPathHash()]);
+			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 			$this->itemsUnchanged++;
 
-			if(array_key_exists($this->rawTagItem->getRelativeDirectoryPathHash(), $this->dirOrphans)) {
-				unset($this->dirOrphans[$this->rawTagItem->getRelativeDirectoryPathHash()]);
+			if(array_key_exists($this->rawTagItem->getRelDirPathHash(), $this->dirOrphans)) {
+				unset($this->dirOrphans[$this->rawTagItem->getRelDirPathHash()]);
 			}
 		} else {
 
-			if(isset($this->fileOrphans[$this->rawTagItem->getRelativePathHash()])) {
-				$this->rawTagItem->setId($this->fileOrphans[$this->rawTagItem->getRelativePathHash()]);
+			if(isset($this->fileOrphans[$this->rawTagItem->getRelPathHash()])) {
+				$this->rawTagItem->setId($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 				// file is alive - remove it from dead items
-				unset($this->fileOrphans[$this->rawTagItem->getRelativePathHash()]);
+				unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 			}
 
 			$this->rawTagItem->setlastScan(0);
@@ -226,20 +226,20 @@ class MpdDatabaseParser {
 	 * compare timestamps of mysql-database-entry(rawtagdata) and mpddatabase
 	 */
 	private function updateOrInsert() {
-		if(isset($this->fileTstamps[$this->rawTagItem->getRelativePathHash()]) === FALSE) {
-			cliLog("mpd-file does not exist in rawtagdata: " . $this->rawTagItem->getRelativePath(), 5);
+		if(isset($this->fileTstamps[$this->rawTagItem->getRelPathHash()]) === FALSE) {
+			cliLog("mpd-file does not exist in rawtagdata: " . $this->rawTagItem->getRelPath(), 5);
 			return TRUE;
 		}
-		if($this->rawTagItem->getFilemtime() > $this->fileTstamps[$this->rawTagItem->getRelativePathHash()]) {
-			cliLog("mpd-file timestamp is newer: " . $this->rawTagItem->getRelativePath(), 5);
+		if($this->rawTagItem->getFilemtime() > $this->fileTstamps[$this->rawTagItem->getRelPathHash()]) {
+			cliLog("mpd-file timestamp is newer: " . $this->rawTagItem->getRelPath(), 5);
 			return TRUE;
 		}
-		if(isset($this->dirTstamps[$this->rawTagItem->getRelativeDirectoryPathHash()]) === FALSE) {
-			cliLog("mpd-directory does not exist in rawtagdata: " . $this->rawTagItem->getRelativeDirectoryPath(), 5);
+		if(isset($this->dirTstamps[$this->rawTagItem->getRelDirPathHash()]) === FALSE) {
+			cliLog("mpd-directory does not exist in rawtagdata: " . $this->rawTagItem->getRelDirPath(), 5);
 			return TRUE;
 		}
-		if($this->rawTagItem->getDirectoryMtime() > $this->dirTstamps[$this->rawTagItem->getRelativeDirectoryPathHash()]) {
-			cliLog("mpd-directory timestamp is newer: " . $this->rawTagItem->getRelativePath(), 5);
+		if($this->rawTagItem->getDirectoryMtime() > $this->dirTstamps[$this->rawTagItem->getRelDirPathHash()]) {
+			cliLog("mpd-directory timestamp is newer: " . $this->rawTagItem->getRelPath(), 5);
 			return TRUE;
 		}
 		return FALSE;

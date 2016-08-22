@@ -31,7 +31,7 @@
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
-		<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+		<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 		{% if item.id %}
 			{% include 'partials/trackrow-1.htm' %}
 		{% else %}

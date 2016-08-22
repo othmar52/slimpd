@@ -14,7 +14,7 @@
 				<h3 class="nomargin">
 					{% include 'partials/artist/link.htm' %}
 					-
-					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+					{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				</h3>
 				<div class="row replace-me-with-proper-css"><br></div>
 				<div class="dark uc tinyfont dark">Album</div>
@@ -23,13 +23,13 @@
 			</div>
 			<div class="col-md-12 ffn-show">
 				<div class="dark uc tinyfont darker-links">{{'filename'|ll}}</div>
-				<h3 class="nomargin">{{ item.relativePath|split('/')|last }}</h3>
+				<h3 class="nomargin">{{ item.relPath|split('/')|last }}</h3>
 				<div class="row replace-me-with-proper-css"><br></div>
 				<div class="dark uc tinyfont dark">{{'dirname'|ll}}</div>
 				<h4>
 					<span class="tinyfont darker-links">
 						{% include 'partials/filebrowser/breadcrumb.htm' with {
-								breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+								breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 								skiplast: 1 }
 						%}
 					</span>

@@ -20,18 +20,18 @@ abstract class AbstractImporter {
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
 		
-		$relativePath = (isset($data['relativePath']) === TRUE)
-			? $app->db->real_escape_string($data['relativePath'])
+		$relPath = (isset($data['relPath']) === TRUE)
+			? $app->db->real_escape_string($data['relPath'])
 			: '';
 		//$this->itemCountTotal = 0;
 		$query = "INSERT INTO importer
-			(jobPhase, jobStart, jobLastUpdate, jobStatistics, relativePath)
+			(jobPhase, jobStart, jobLastUpdate, jobStatistics, relPath)
 			VALUES (
 				".(int)$this->jobPhase.",
 				". $this->jobBegin.",
 				". $this->jobBegin. ",
 				'" .serialize($data)."',
-				'". $relativePath ."')";
+				'". $relPath ."')";
 		$app->db->query($query);
 		$this->jobId = $app->db->insert_id;
 		$this->lastJobStatusUpdate = $this->jobBegin;

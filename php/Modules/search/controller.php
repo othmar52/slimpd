@@ -296,7 +296,7 @@ foreach(array_keys($sortfields) as $currentType) {
 								break;
 							case "dirname":
 								$tmp = \Slimpd\Models\Album::getInstanceByAttributes(array("id" => $row["itemid"]));
-								$obj = new \Slimpd\Models\Directory($tmp->getRelativePath());
+								$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
 								$obj->breadcrumb = \Slimpd\filebrowser::fetchBreadcrumb($obj->fullpath);
 								break;
 						}

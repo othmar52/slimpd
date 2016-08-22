@@ -6,8 +6,8 @@ class Album extends \Slimpd\Models\AbstractModel
 	protected $id;
 	protected $artistId;
 	protected $title;
-	protected $relativePath;
-	protected $relativePathHash;
+	protected $relPath;
+	protected $relPathHash;
 	protected $year;
 	protected $month;
 	protected $genreId;
@@ -35,13 +35,13 @@ class Album extends \Slimpd\Models\AbstractModel
 	public static $tableName = 'album';
 	
 	
-	public function getAlbumByRelativePath($relativePath) {
+	public function getAlbumByRelPath($relPath) {
 		
 		$app = \Slim\Slim::getInstance();
 		$query = "
 			SELECT * 
 			FROM album
-			WHERE relativePathHash=\"" . getFilePathHash($relativePath) . "\"";
+			WHERE relPathHash=\"" . getFilePathHash($relPath) . "\"";
 		$result = $app->db->query($query);
 		$record = $result->fetch_assoc();
 		if($record === NULL) {
@@ -62,11 +62,11 @@ class Album extends \Slimpd\Models\AbstractModel
 	public function setTitle($value) {
 		$this->title = $value;
 	}
-	public function setRelativePath($value) {
-		$this->relativePath = $value;
+	public function setRelPath($value) {
+		$this->relPath = $value;
 	}
-	public function setRelativePathHash($value) {
-		$this->relativePathHash = $value;
+	public function setRelPathHash($value) {
+		$this->relPathHash = $value;
 	}
 	public function setYear($value) {
 		$this->year = $value;
@@ -142,11 +142,11 @@ class Album extends \Slimpd\Models\AbstractModel
 	public function getTitle() {
 		return $this->title;
 	}
-	public function getRelativePath() {
-		return $this->relativePath;
+	public function getRelPath() {
+		return $this->relPath;
 	}
-	public function getRelativePathHash() {
-		return $this->relativePathHash;
+	public function getRelPathHash() {
+		return $this->relPathHash;
 	}
 	public function getYear() {
 		return $this->year;

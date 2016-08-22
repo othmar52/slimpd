@@ -14,8 +14,8 @@ class Track extends \Slimpd\Models\AbstractModel
 	protected $labelId;
 	protected $catalogNr;
 	
-	protected $relativePath;
-	protected $relativePathHash;
+	protected $relPath;
+	protected $relPathHash;
 	protected $directoryPathHash;
 	
 	protected $fingerprint;
@@ -29,7 +29,7 @@ class Track extends \Slimpd\Models\AbstractModel
 	protected $audioSampleRate;
 	protected $audioChannels;
 	protected $audioLossless;
-	protected $audioCompressionRatio;
+	protected $audioComprRatio;
 	protected $audioDataformat;
 	protected $audioEncoder;
 	protected $audioProfile;
@@ -74,15 +74,15 @@ class Track extends \Slimpd\Models\AbstractModel
 			}
 		}
 		$instance = self::getInstanceByAttributes(
-			array('relativePathHash' => getFilePathHash($pathString))
+			array('relPathHash' => getFilePathHash($pathString))
 		);
 		if($instance !== NULL || $createDummy === FALSE) {
 			return $instance;
 		}
 		// track is not imported in sliMpd database
 		$track = new \Slimpd\Models\Track();
-		$track->setRelativePath($pathString);
-		$track->setRelativePathHash(getFilePathHash($pathString));
+		$track->setRelPath($pathString);
+		$track->setRelPathHash(getFilePathHash($pathString));
 		return $track;
 	}
 		
@@ -343,8 +343,8 @@ class Track extends \Slimpd\Models\AbstractModel
 		
 		// in case we dont have artist nor title string take the filename as a basis
 		if($artistString == "" && $titleString == "") {
-			if($this->getRelativePath() !== "") {
-				$titleString = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($this->getRelativePath()));
+			if($this->getRelPath() !== "") {
+				$titleString = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($this->getRelPath()));
 				$titleString = str_replace("_", " ", $titleString);
 			}
 		}
@@ -623,11 +623,11 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function setRemixerId($value) {
 		$this->remixerId = $value;
 	}
-	public function setRelativePath($value) {
-		$this->relativePath = $value;
+	public function setRelPath($value) {
+		$this->relPath = $value;
 	}
-	public function setRelativePathHash($value) {
-		$this->relativePathHash = $value;
+	public function setRelPathHash($value) {
+		$this->relPathHash = $value;
 	}
 	public function setDirectoryPathHash($value) {
 		$this->directoryPathHash = $value;
@@ -664,8 +664,8 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function setAudioLossless($value) {
 		$this->audioLossless = $value;
 	}
-	public function setAudioCompressionRatio($value) {
-		$this->audioCompressionRatio = $value;
+	public function setAudioComprRatio($value) {
+		$this->audioComprRatio = $value;
 	}
 	public function setAudioDataformat($value) {
 		$this->audioDataformat = $value;
@@ -774,11 +774,11 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function getRemixerId() {
 		return $this->remixerId;
 	}
-	public function getRelativePath() {
-		return $this->relativePath;
+	public function getRelPath() {
+		return $this->relPath;
 	}
-	public function getRelativePathHash() {
-		return $this->relativePathHash;
+	public function getRelPathHash() {
+		return $this->relPathHash;
 	}
 	public function getDirectoryPathHash() {
 		return $this->directoryPathHash;
@@ -815,8 +815,8 @@ class Track extends \Slimpd\Models\AbstractModel
 	public function getAudioLossless() {
 		return $this->audioLossless;
 	}
-	public function getAudioCompressionRatio() {
-		return $this->audioCompressionRatio;
+	public function getAudioComprRatio() {
+		return $this->audioComprRatio;
 	}
 	public function getAudioDataformat() {
 		return $this->audioDataformat;

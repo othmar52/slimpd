@@ -14,7 +14,7 @@ foreach([
 	$app->get('/markup/'.$markupSnippet, function() use ($app, $vars, $markupSnippet){
 		
 		// maybe we cant find item in mpd or mysql database because it has been accessed via filebrowser
-		$itemRelativePath = '';
+		$itemRelPath = '';
 		
 		$templateFile = 'modules/'.$markupSnippet.'.htm';
 		$vars['action'] = $markupSnippet;
@@ -34,7 +34,7 @@ foreach([
 				$mpd = new \Slimpd\Modules\mpd\mpd();
 				$vars['item'] = $mpd->getCurrentlyPlayedTrack();
 				if($vars['item'] !== NULL) {
-					$itemRelativePath = $vars['item']->getRelativePath();
+					$itemRelPath = $vars['item']->getRelPath();
 				}
 				break;
 			case 'xwaxplayer':
@@ -43,7 +43,7 @@ foreach([
 				$vars['item'] = $xwax->getCurrentlyPlayedTrack($vars['decknum']);
 				
 				if($vars['item'] !== NULL) {
-					$itemRelativePath = $vars['item']->getRelativePath();
+					$itemRelPath = $vars['item']->getRelPath();
 				}
 				if($app->request->get('type') == 'djscreen') {
 					$markupSnippet = 'standalone-trackview';
@@ -68,8 +68,8 @@ foreach([
 					if(ALTDIR && strpos($itemPath, $app->config['mpd']['alternative_musicdir']) === 0) {
 						$itemPath = substr($itemPath, strlen($app->config['mpd']['alternative_musicdir']));
 					}
-					$search = array('relativePathHash' => getFilePathHash($itemPath));
-					$itemRelativePath = $itemPath;
+					$search = array('relPathHash' => getFilePathHash($itemPath));
+					$itemRelPath = $itemPath;
 				}
 				$vars['item'] = \Slimpd\Models\Track::getInstanceByAttributes($search);
 				// no break
@@ -79,26 +79,26 @@ foreach([
 		$vars['renderitems'] = getRenderItems($itemsToRender);
 		
 		if(is_null($vars['item']) === FALSE && $vars['item']->getId() > 0) {
-			$itemRelativePath = $vars['item']->getRelativePath();
+			$itemRelPath = $vars['item']->getRelPath();
 		} else {
 			// playing track has not been imported in slimpd database yet...
 			// so we are not able to get any renderitems
 			$item = new \Slimpd\Models\Track();
-			$item->setRelativePath($itemRelativePath);
-			$item->setRelativePathHash(getFilePathHash($itemRelativePath));
+			$item->setRelPath($itemRelPath);
+			$item->setRelPathHash(getFilePathHash($itemRelPath));
 			$vars['item'] = $item;
 		}
 		
 		// TODO: remove external liking as soon we have implemented a proper functionality
 		$vars['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-			urlencode($vars['mpd']['alternative_musicdir'] . $itemRelativePath);
+			urlencode($vars['mpd']['alternative_musicdir'] . $itemRelPath);
 		
 		$app->render($templateFile, $vars);
 		$app->stop();
 	});
 	
-	$app->get('/css/'.$markupSnippet . '/:relativePathHash', function($relativePathHash) use ($app, $vars, $markupSnippet){
-		$vars['relativePathHash'] = $relativePathHash;
+	$app->get('/css/'.$markupSnippet . '/:relPathHash', function($relPathHash) use ($app, $vars, $markupSnippet){
+		$vars['relPathHash'] = $relPathHash;
 		$vars['deck'] = $app->request->get('deck');
 		if($markupSnippet === 'localplayer') {
 			$vars['color'] = $vars['colors'][ $vars['spotcolor']['local'] ]['1st'];
@@ -120,14 +120,14 @@ foreach([
 
 $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = 'maintainance.trackdebug';
-	$itemRelativePath = '';
-	$itemRelativePathHash = '';
+	$itemRelPath = '';
+	$itemRelPathHash = '';
 	$vars['item'] = (count($itemParams) === 1 && is_numeric($itemParams[0]))
 		? \Slimpd\Models\Track::getInstanceByAttributes(['id' => (int)$itemParams[0]])
 		: \Slimpd\Models\Track::getInstanceByPath(join(DS, $itemParams), TRUE);
 
 	$vars['itemraw'] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(
-		['relativePathHash' => $vars['item']->getRelativePathHash()]
+		['relPathHash' => $vars['item']->getRelPathHash()]
 	);
 	$vars['renderitems'] = getRenderItems($vars['item']);
 	$app->render('surrounding.htm', $vars);

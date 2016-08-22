@@ -13,7 +13,7 @@
 	<div class="ffn-hidden">
 		<div class="col-xs-2 col-sm-3 vcenter">
 			<div class="vcinner">
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 			</div>
 		</div>
 		<div class="col-xs-5 col-sm-3 vcenter">
@@ -35,7 +35,7 @@
 	<div class="ffn-show">
 		<div class="col-md-9 vcenter">
 			<div class="vcinner">
-				{{ item.relativePath|split('/')|last }}<br>
+				{{ item.relPath|split('/')|last }}<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with { hiderootlink: 1 }%}</span>
 			</div>
 		</div>
@@ -48,6 +48,6 @@
 			{% include 'partials/track/audioformat.htm' %}
 		</div>
 	</div>
-	<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
+	<div class="ajax-xwax-{{ item.relPathHash }} col-md-12"></div>
 </div>
 {% endblock %}

@@ -45,7 +45,7 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Models\Bitmap();
 		
-		$image->setRelativePath(join(DS, $itemParams));
+		$image->setRelPath(join(DS, $itemParams));
 		$image->dump($imagesize, $app);
 	})->name('imagepath-' .$imagesize);
 	

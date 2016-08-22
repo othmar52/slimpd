@@ -105,7 +105,7 @@ $app->get('/markup/widget-directory/:itemParams+', function($itemParams) use ($a
 	
 	/// try to fetch album entry for this directory
 	$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
-		array('relativePathHash' => getFilePathHash($fileBrowser->directory))
+		array('relPathHash' => getFilePathHash($fileBrowser->directory))
 	);
 	$app->render('modules/widget-directory.htm', $vars);
 });

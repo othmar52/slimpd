@@ -39,7 +39,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 		$totalItems,
 		$itemsPerPage,
 		$currentPage,
-		$app->config['root'] . 'showplaylist/'.$playlist->getRelativePath() .'?page=(:num)'
+		$app->config['root'] . 'showplaylist/'.$playlist->getRelPath() .'?page=(:num)'
 	);
 	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
     $app->render('surrounding.htm', $vars);

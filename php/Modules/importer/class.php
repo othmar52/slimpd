@@ -90,17 +90,17 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
 		$deletedRecords = 0;
-		$query = "SELECT id, relativePath, embedded FROM bitmap;";
+		$query = "SELECT id, relPath, embedded FROM bitmap;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
 			$prefix = ($record['embedded'] == '1')
 				? APP_ROOT.'embedded'
 				: $app->config['mpd']['musicdir'];
-			if(is_file($prefix . $record['relativePath']) === TRUE) {
-				cliLog('keeping database-entry for ' . $record['relativePath'], 3);
+			if(is_file($prefix . $record['relPath']) === TRUE) {
+				cliLog('keeping database-entry for ' . $record['relPath'], 3);
 			} else {
-				cliLog('deleting database-entry for ' . $record['relativePath'], 3);
+				cliLog('deleting database-entry for ' . $record['relPath'], 3);
 				$bitmap = new Bitmap();
 				$bitmap->setId($record['id']);
 				$bitmap->delete(); 
@@ -108,7 +108,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			}
 			$this->itemCountProcessed++;
 			$this->updateJob(array(
-				'currentItem' => $record['relativePath'],
+				'currentItem' => $record['relPath'],
 				'deletedRecords' => $deletedRecords
 			));
 		}
@@ -135,7 +135,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$query = "SELECT count(id) AS itemCountTotal FROM album WHERE lastScan <= filemtime;";
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
-		$query = "SELECT id, relativePath, relativePathHash, filemtime FROM album WHERE lastScan <= filemtime;";
+		$query = "SELECT id, relPath, relPathHash, filemtime FROM album WHERE lastScan <= filemtime;";
 		$result = $app->db->query($query);
 		$insertedImages = 0;
 		
@@ -143,10 +143,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
-			cliLog($record['id'] . ' ' . $record['relativePath'], 2);
+			cliLog($record['id'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemCountChecked . ' files',
-				'currentItem' => $record['relativePath'],
+				'currentItem' => $record['relPath'],
 				'insertedImages' => $insertedImages
 			));
 			
@@ -155,16 +155,16 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$album->setLastScan(time());
 			$album->setImportStatus(2);
 			
-			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relativePath'].'filename-not-relevant.mp3');
+			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relPath'].'filename-not-relevant.mp3');
 
-			foreach($foundAlbumImages as $relativePath) {
-				$imagePath = $app->config['mpd']['musicdir'] . $relativePath;
-				$relativePathHash = getFilePathHash($relativePath);
+			foreach($foundAlbumImages as $relPath) {
+				$imagePath = $app->config['mpd']['musicdir'] . $relPath;
+				$relPathHash = getFilePathHash($relPath);
 				$imageSize = GetImageSize($imagePath);
 
 				$bitmap = new Bitmap();
-				$bitmap->setRelativePath($relativePath);
-				$bitmap->setRelativePathHash($relativePathHash);
+				$bitmap->setRelPath($relPath);
+				$bitmap->setRelPathHash($relPathHash);
 				$bitmap->setFilemtime(filemtime($imagePath));
 				$bitmap->setFilesize(filesize($imagePath));
 				$bitmap->setAlbumId($record['id']);
@@ -172,15 +172,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);
 					$bitmap->update();
-					cliLog("ERROR getting image size from " . $relativePath, 2, 'red');
+					cliLog("ERROR getting image size from " . $relPath, 2, 'red');
 					continue;
 				}
 				$bitmap->setWidth($imageSize[0]);
 				$bitmap->setHeight($imageSize[1]);
 				$bitmap->setMimeType($imageSize['mime']);
 
-				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelativePath()));
-				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getRelativePath()));
+				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelPath()));
+				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getRelPath()));
 				$bitmap->update();
 				$insertedImages++;
 			}
@@ -199,7 +199,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	 * decrease timestamps - so all tracks will get remigrated on next standard-update-run
 	 * TODO: consider to remove because maybe tons of files gets remigrated
 	 */
-	public function modifyDirectoryTimestamps($relativeDirectoryPath) {
+	public function modifyDirectoryTimestamps($relDirPath) {
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "
 			UPDATE album
@@ -207,7 +207,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				lastScan = lastScan-1,
 				filemtime = filemtime-1
 			WHERE
-				relativePath LIKE '". $database->real_escape_string($relativeDirectoryPath)."%'";
+				relPath LIKE '". $database->real_escape_string($relDirPath)."%'";
 		$database->query($query);
 		return;
 	}
@@ -219,15 +219,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// check if we really have something to process
 		$runImporter = FALSE;
-		$query = "SELECT id, relativePath FROM importer
+		$query = "SELECT id, relPath FROM importer
 			WHERE jobPhase=0 AND jobEnd=0";
 			
 		$result = \Slim\Slim::getInstance()->db->query($query);
 		$directories = array();
 		while($record = $result->fetch_assoc()) {
 			$runImporter = TRUE;
-			if(strlen($record['relativePath']) > 0) {
-				$directories[ $record['relativePath'] ] = $record['relativePath'];
+			if(strlen($record['relPath']) > 0) {
+				$directories[ $record['relPath'] ] = $record['relPath'];
 			}
 			$this->jobId = $record['id'];
 			$this->finishJob(array(), __FUNCTION__);
@@ -243,15 +243,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	/**
 	 * queDirectoryUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
-	public static function queDirectoryUpdate($relativePath) {
+	public static function queDirectoryUpdate($relPath) {
 		$app = \Slim\Slim::getInstance();
-		if(is_dir($app->config['mpd']['musicdir'] .$relativePath ) === FALSE) {
+		if(is_dir($app->config['mpd']['musicdir'] .$relPath ) === FALSE) {
 			// no need to process invalid directory
 			return;
 		}
-		cliLog('adding dir to que: ' . $relativePath, 5);
+		cliLog('adding dir to que: ' . $relPath, 5);
 		$data = array(
-			'relativePath' => $relativePath
+			'relPath' => $relPath
 		);
 		$importer = new self();
 		$importer->jobPhase = 0;
@@ -365,7 +365,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				trackId,
 				embedded,
 				CONCAT(albumId, '.', width, '.', height, '.', filesize) as dupes,
-				relativePath,
+				relPath,
 				filesize
 			FROM  bitmap
 			WHERE error=0 AND embedded=1
@@ -382,27 +382,27 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		while ($record = $result->fetch_assoc()) {
 			$this->updateJob(array(
 				'msg' => $msgProcessing,
-				'currentItem' => $record['relativePath']
+				'currentItem' => $record['relPath']
 			));
 			$this->itemCountChecked++;
 			if($this->itemCountChecked === 1) {
 				$previousKey = $record['dupes'];
-				cliLog($app->ll->str('importer.image.keep', array($record['relativePath'])), 3);
+				cliLog($app->ll->str('importer.image.keep', array($record['relPath'])), 3);
 				continue;
 			}
 			if($record['dupes'] === $previousKey) {
-				$msg = $app->ll->str('importer.image.destroy', array($record['relativePath']));
+				$msg = $app->ll->str('importer.image.destroy', array($record['relPath']));
 				$bitmap = new Bitmap();
 				$bitmap->setId($record['id']);
 				$bitmap->setTrackId($record['trackId']);
 				$bitmap->setEmbedded($record['embedded']);
-				$bitmap->setRelativePath($record['relativePath']);
+				$bitmap->setRelPath($record['relPath']);
 				$bitmap->destroy();
 				
 				$this->itemCountProcessed++;
 				$deletedFilesize += $record['filesize'];
 			} else {
-				$msg = $app->ll->str('importer.image.keep', array($record['relativePath']));
+				$msg = $app->ll->str('importer.image.keep', array($record['relPath']));
 			}
 			cliLog($msg, 3);
 			$previousKey = $record['dupes'];
@@ -442,7 +442,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		
 		$query = "
-			SELECT id, relativePath
+			SELECT id, relPath
 			FROM rawtagdata
 			WHERE audioDataFormat='mp3' AND fingerprint=''";
 			
@@ -452,14 +452,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->itemCountChecked++;
 			
 			$this->updateJob(array(
-				'currentItem' => 'albumId: ' . $record['relativePath']
+				'currentItem' => 'albumId: ' . $record['relPath']
 			));
 			
 			$this->itemCountProcessed++;
 			
-			$fullPath = $app->config['mpd']['musicdir'] . $record['relativePath'];
+			$fullPath = $app->config['mpd']['musicdir'] . $record['relPath'];
 			if(is_file($fullPath) == FALSE || is_readable($fullPath) === FALSE) {
-				cliLog("ERROR: fileaccess " . $record['relativePath'], 1, 'red');
+				cliLog("ERROR: fileaccess " . $record['relPath'], 1, 'red');
 				continue;
 			}
 			
@@ -474,10 +474,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$track->setFingerprint($fingerPrint);
 				$track->update();
 				
-				cliLog("fingerprint: " . $fingerPrint . " for " . $record['relativePath'],3);
+				cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 				continue;
 			}
-			cliLog("ERROR: regex fingerprint result " . $record['relativePath'], 1, 'red');
+			cliLog("ERROR: regex fingerprint result " . $record['relPath'], 1, 'red');
 		}
 		$this->finishJob(array(), __FUNCTION__);
 		return;

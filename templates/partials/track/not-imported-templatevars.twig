@@ -2,15 +2,15 @@
 {% set playerCtrlItem = item.id %}
 {% set parentDir = '' %}
 {% set fileName = '' %}
-{% set waveformSvgUrl = [root,"audiosvg/width/550/",item.relativePath]|path2url %}
-{% set waveformJsonUrl = [root,"audiojson/resolution/2500/",item.relativePath]|path2url %}
+{% set waveformSvgUrl = [root,"audiosvg/width/550/",item.relPath]|path2url %}
+{% set waveformJsonUrl = [root,"audiojson/resolution/2500/",item.relPath]|path2url %}
 {% set placeholderSvgUrl = fileroot~"skin/default/img/loading-waveform.svg" %}
 {% set artworkUrl = root~"image-100/album/"~item.albumId %}
 	    	
 {% if not item.id %}
-	{% set playerCtrlItem = item.relativePath %}
-	{% set artworkUrl = [root,"image-100/searchfor/",item.relativePath]|path2url %}
-	{% set dirs = item.relativePath|split('/') %}
+	{% set playerCtrlItem = item.relPath %}
+	{% set artworkUrl = [root,"image-100/searchfor/",item.relPath]|path2url %}
+	{% set dirs = item.relPath|split('/') %}
 	{% set tmp = root~"filebrowser" %}
 	
 	{% for i,dir in dirs %}
@@ -24,7 +24,7 @@
 		{% endif %}
 	{% endfor%}
 {% endif %}
-{% if not item.relativePath %}
+{% if not item.relPath %}
 	{% set waveformSvgUrl = fileroot~"skin/default/img/notrack.svg" %}
 	{% set placeholderSvgUrl = fileroot~"skin/default/img/notrack.svg" %}
 {% endif %}

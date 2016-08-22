@@ -5,13 +5,13 @@
 		<div class="vcinner">
 			{% include 'partials/button/playtrack.htm' %}
 			{% include 'partials/button/showtrackwidget.htm' %}
-			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relativePathHash~'-plw'~num } %}
+			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relPathHash~'-plw'~num } %}
 		</div>
 	</div>
 	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter">
 			<div class="vcinner">
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 			</div>
 		</div>
 		<div class="col-md-3 vcenter">
@@ -33,10 +33,10 @@
 	<div class="ffn-show">
 		<div class="col-md-9 vcenter">
 			<div class="vcinner">
-				{{ item.relativePath|split('/')|last }}<br>
+				{{ item.relPath|split('/')|last }}<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
 					hiderootlink: 1,
-					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 					skiplast: 1 } %}</span>
 			</div>
 		</div>
@@ -47,7 +47,7 @@
 		<br />{% include 'partials/track/audioformat.htm' %}
 		</div>
 	</div>
-	<div class="ajax-xwax-{{ item.relativePathHash }}-plw{{ num }} col-md-12"></div>
+	<div class="ajax-xwax-{{ item.relPathHash }}-plw{{ num }} col-md-12"></div>
 </div>
 
 {% endblock %}

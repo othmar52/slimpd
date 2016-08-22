@@ -5,7 +5,7 @@ class File {
 	public $fullpath;
 	public $ext;
 	public $name;
-	public $relativePathHash;
+	public $relPathHash;
 
 	
 	
@@ -15,7 +15,7 @@ class File {
 			$this->fullpath = $fileidentifier;
 			$this->name = baseName($fileidentifier);
 			$this->ext = strtolower(preg_replace('/^.*\./', '', $this->name));
-			$this->relativePathHash = getFilePathHash($fileidentifier);
+			$this->relPathHash = getFilePathHash($fileidentifier);
 		} catch (Exception $e) {
 			
 		}

@@ -142,7 +142,7 @@ class mpd
 			if($instance === NULL) {
 				return FALSE;
 			}
-			return $instance->getRelativePath();
+			return $instance->getRelPath();
 		}
 		if(is_string($item) === TRUE) {
 			return $item;
@@ -231,7 +231,7 @@ class mpd
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
-				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
+				notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
 				return;
 			case 'appendTrack':
 			case 'appendTrackAndPlay':
@@ -278,7 +278,7 @@ class mpd
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
-				notifyJson("MPD: added " . $playlist->getRelativePath() . " (". $counter ." tracks) to playlist", 'mpd');
+				notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
 				break;
 
 				
@@ -437,7 +437,7 @@ class mpd
 			if($t->getError() === 'notfound') {
 				continue;
 			}
-			$trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelativePath()) . "\""; 
+			$trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelPath()) . "\""; 
 			$cmd = "add " . $trackPath;
 			if($targetPosition !== FALSE) {
 				$cmd = "addid " . $trackPath . " " . ($targetPosition+$counter);

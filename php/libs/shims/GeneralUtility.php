@@ -438,15 +438,15 @@ function addRenderItem($instance, &$return) {
 		return;
 	}
 	if($class === "Slimpd\Models\Track") {
-		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
-			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+		if(isset($return["itembreadcrumbs"][$instance->getRelPathHash()]) === FALSE) {
+			$return["itembreadcrumbs"][$instance->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelPath());
 		}
 		return;
 	}
 	if($class === "Slimpd\Models\Album") {
 		$return["albums"][$instance->getId()] = $instance;
-		if(isset($return["itembreadcrumbs"][$instance->getRelativePathHash()]) === FALSE) {
-			$return["itembreadcrumbs"][$instance->getRelativePathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelativePath());
+		if(isset($return["itembreadcrumbs"][$instance->getRelPathHash()]) === FALSE) {
+			$return["itembreadcrumbs"][$instance->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelPath());
 		}
 		return;
 	}

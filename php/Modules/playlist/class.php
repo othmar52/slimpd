@@ -3,7 +3,7 @@ namespace Slimpd\Playlist;
 use Slimpd\Models\Track;
 class playlist
 {
-	protected $relativePath;
+	protected $relPath;
 	protected $absolutePath;
 	protected $filename;
 	protected $errorPath = TRUE;
@@ -13,22 +13,22 @@ class playlist
 	protected $tracks = [];		// track-instances
 	private $fetchedLength = FALSE;
 	
-	public function __construct($relativePath) {
+	public function __construct($relPath) {
 		$app = \Slim\Slim::getInstance();
 		foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
-			if(is_file($path . $relativePath) === TRUE) {
-				$this->setRelativePath($relativePath);
-				$this->setAbsolutePath($path . $relativePath);
+			if(is_file($path . $relPath) === TRUE) {
+				$this->setRelPath($relPath);
+				$this->setAbsolutePath($path . $relPath);
 				$this->setErrorPath(FALSE);
 			}
 		}
 		
 		if($this->getErrorPath() === TRUE) {
-			$app->flashNow('error', 'playlist file ' . $relativePath . ' does not exist');
+			$app->flashNow('error', 'playlist file ' . $relPath . ' does not exist');
 			return $this;
 		}
-		$this->setFilename(basename($this->getRelativePath()));
-		$this->setExt(strtolower(preg_replace('/^.*\./', '', $this->getRelativePath())));
+		$this->setFilename(basename($this->getRelPath()));
+		$this->setExt(strtolower(preg_replace('/^.*\./', '', $this->getRelPath())));
 	}
 	
 	public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
@@ -93,14 +93,14 @@ class playlist
 				if(ALTDIR && strpos($itemPath, \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']) === 0) {
 					$itemPath = substr($itemPath, strlen(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']));
 				}
-				$track->setRelativePath($itemPath);
-				$track->setRelativePathHash(getFilePathHash($itemPath));
+				$track->setRelPath($itemPath);
+				$track->setRelPathHash(getFilePathHash($itemPath));
 			}
 
-			if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $track->getRelativePath()) === FALSE) {
+			if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $track->getRelPath()) === FALSE) {
 				$track->setError('notfound');
 			} else {
-				$track->setAudioDataformat(strtolower(preg_replace('/^.*\./', '', $track->getRelativePath())));
+				$track->setAudioDataformat(strtolower(preg_replace('/^.*\./', '', $track->getRelPath())));
 			}
 			$return[] = $track;
 		}
@@ -120,11 +120,11 @@ class playlist
     }
 	
 	
-	public function setRelativePath($relativePath) {
-		$this->relativePath = $relativePath;
+	public function setRelPath($relPath) {
+		$this->relPath = $relPath;
 	}
-	public function getRelativePath() {
-		return $this->relativePath;
+	public function getRelPath() {
+		return $this->relPath;
 	}
 	
 	public function setAbsolutePath($absolutePath) {

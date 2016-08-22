@@ -161,7 +161,7 @@
 
 					{% if action == 'playlist' %}
 						<h2>{{'currentlyplaying'|ll}}</h2>
-						{% if item.relativePath %}
+						{% if item.relPath %}
 							{% include 'modules/nowplaying-track.htm' %}
 						{% else %}
 							{% include 'partials/track/no-track-selected-badge.htm' %}

@@ -1,5 +1,5 @@
-{% if not trackpath %}{% set trackpath = item.relativePath %}{% endif %}
-{% if not targetselector %}{% set targetselector = item.relativePathHash %}{% endif %}
+{% if not trackpath %}{% set trackpath = item.relPath %}{% endif %}
+{% if not targetselector %}{% set targetselector = item.relPathHash %}{% endif %}
 <button role="control"
    href="{{root}}markup/widget-deckselector?item={{ trackpath|path2url }}"
    title="show deckselector TRNSL"

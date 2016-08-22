@@ -38,11 +38,11 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 
 		foreach($scanned as $imgPath) {
 			// remove prefixed music directory
-			$relativePath = substr($imgPath, strlen(\Slim\Slim::getInstance()->config['mpd']['musicdir']));
+			$relPath = substr($imgPath, strlen(\Slim\Slim::getInstance()->config['mpd']['musicdir']));
 			// write found files to cache array
-			$this->dirImgCache[$dirHash][$relativePath] = $relativePath;
+			$this->dirImgCache[$dirHash][$relPath] = $relPath;
 			// add to result set
-			$this->foundImgPaths[$relativePath] = $relativePath;
+			$this->foundImgPaths[$relPath] = $relPath;
 		}
 	}
 

@@ -307,14 +307,14 @@ abstract class AbstractModel {
 		$classPath = get_called_class();
 		$instance = new $classPath;
 
-		if(method_exists($classPath, 'getRelativePathHash') === TRUE) {
-			$instance = $classPath::getInstanceByAttributes(array('relativePathHash' => $this->getRelativePathHash()));
-			if($instance === NULL && $this->getRelativePathHash() !== '') {
+		if(method_exists($classPath, 'getRelPathHash') === TRUE) {
+			$instance = $classPath::getInstanceByAttributes(array('relPathHash' => $this->getRelPathHash()));
+			if($instance === NULL && $this->getRelPathHash() !== '') {
 				return;
 			}
 		}
-		if($instance === NULL && method_exists($classPath, 'getRelativePath') === TRUE) {
-			$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+		if($instance === NULL && method_exists($classPath, 'getRelPath') === TRUE) {
+			$instance = $classPath::getInstanceByAttributes(array('relPath' => $this->getRelPath()));
 		}
 		if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
 			$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
@@ -332,8 +332,8 @@ abstract class AbstractModel {
 			// check if we have a record with this path
 			$classPath = get_called_class();
 			$instance = new $classPath;
-			if(method_exists($classPath, 'getRelativePath') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('relativePath' => $this->getRelativePath()));
+			if(method_exists($classPath, 'getRelPath') === TRUE) {
+				$instance = $classPath::getInstanceByAttributes(array('relPath' => $this->getRelPath()));
 			}
 			
 			if(method_exists($classPath, 'getAz09') === TRUE) {

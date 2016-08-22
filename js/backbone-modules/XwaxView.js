@@ -194,7 +194,7 @@
 				if(this.lastDeckTracks[i] !== data[i].path) {
 					this.lastDeckTracks[i] = data[i].path;
 					this.deckViews[i].nowPlayingItem = data[i].path;
-					var hash = (data[i].item === null) ? "0000000" : data[i].item.relativePathHash;
+					var hash = (data[i].item === null) ? "0000000" : data[i].item.relPathHash;
 					this.deckViews[i].redraw({hash: hash});
 					//console.log("redraw deck " + i);
 				}

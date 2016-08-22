@@ -25,8 +25,8 @@ namespace Slimpd\Modules;
  */
 
 class AlbumMigrator {
-	protected $relativeDirectoryPathHash;
-	protected $relativeDirectoryPath;
+	protected $relDirPathHash;
+	protected $relDirPath;
 	public $directoryMtime;
 
 	protected $tracks;
@@ -126,7 +126,7 @@ class AlbumMigrator {
 		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 3, 'purple'); #die();
 
 		
-		#if($this->tracks[0]['relativePath'] == 'newroot/crse002cd--Calibre-Musique_Concrete-2CD-CRSE002CD-2001-sour/101-calibre-deep_everytime.mp3') {
+		#if($this->tracks[0]['relPath'] == 'newroot/crse002cd--Calibre-Musique_Concrete-2CD-CRSE002CD-2001-sour/101-calibre-deep_everytime.mp3') {
 			#print_r($this->r); die();
 		#}
 
@@ -157,8 +157,8 @@ class AlbumMigrator {
 		#$album->setLabelId(join(",", Label::getIdsByString($mergedFromTracks['label'])));
 		$album->setCatalogNr($this->mostScored['album']['catalogNr']);
 
-		$album->setRelativePath($this->getRelativeDirectoryPath());
-		$album->setRelativePathHash($this->getRelativeDirectoryPathHash());
+		$album->setRelPath($this->getRelDirPath());
+		$album->setRelPathHash($this->getRelDirPathHash());
 		$album->setFilemtime($this->getDirectoryMtime());
 		$album->setAdded($this->mostRecentAdded);
 
@@ -237,7 +237,7 @@ class AlbumMigrator {
 	}
 
 	private function updateTrackIndex($trackId, $idx) {
-		$indexChunks = $this->tracks[$idx]['relativePath'] . " ";
+		$indexChunks = $this->tracks[$idx]['relPath'] . " ";
 
 		if(isset($this->r[$idx]) === TRUE) {
 			foreach($this->r[$idx] as $scoreCombo) {
@@ -254,7 +254,7 @@ class AlbumMigrator {
 		$indexChunks .= str_replace(
 			array('/', '_', '-', '.'),
 			' ',
-			$this->tracks[$idx]['relativePath']
+			$this->tracks[$idx]['relPath']
 		);
 		// make sure to use identical ids in table:trackindex and table:track
 		\Slimpd\Models\Trackindex::ensureRecordIdExists($trackId);
@@ -268,7 +268,7 @@ class AlbumMigrator {
 
 
 	private function updateAlbumIndex($albumId) {
-		$indexChunks = $this->tracks[0]['relativeDirectoryPath'] . " ";
+		$indexChunks = $this->tracks[0]['relDirPath'] . " ";
 		if(isset($this->r['album']) === TRUE) {
 			foreach($this->r['album'] as $scoreCombo) {
 				$indexChunks .= join(" ", array_keys($scoreCombo)) . " ";
@@ -278,7 +278,7 @@ class AlbumMigrator {
 		$indexChunks .= str_replace(
 			array('/', '_', '-', '.'),
 			' ',
-			$this->tracks[0]['relativeDirectoryPath']
+			$this->tracks[0]['relDirPath']
 		);
 		// make sure to use identical ids in table:trackindex and table:track
 		\Slimpd\Models\Albumindex::ensureRecordIdExists($albumId);
@@ -297,21 +297,21 @@ class AlbumMigrator {
 
 		$track = new \Slimpd\Models\Track();
 		$track->setId($rawArray['id']);
-		$track->setRelativePath($rawArray['relativePath']);
-		$track->setRelativePathHash($rawArray['relativePathHash']);
-		$track->setDirectoryPathHash($rawArray['relativeDirectoryPathHash']);
+		$track->setRelPath($rawArray['relPath']);
+		$track->setRelPathHash($rawArray['relPathHash']);
+		$track->setDirectoryPathHash($rawArray['relDirPathHash']);
 		$track->setFingerprint($rawArray['fingerprint']);
 		$track->setMimeType($rawArray['mimeType']);
 		$track->setFilesize($rawArray['filesize']);
 		$track->setFilemtime($rawArray['filemtime']);
 		$track->setMiliseconds(round($rawArray['miliseconds']*1000));
 		$track->setAudioDataformat($rawArray['audioDataformat']);
-		$track->setAudioCompressionRatio($rawArray['audioCompressionRatio']);
+		$track->setAudioComprRatio($rawArray['audioComprRatio']);
 		$track->setAudioEncoder(($rawArray['audioEncoder']) ? $rawArray['audioEncoder'] : 'Unknown encoder');
 		if ($rawArray['audioLossless']) {
 			$track->setAudioLossless($rawArray['audioLossless']);
 			$track->setAudioProfile('Lossless compression');
-			if ($rawArray['audioCompressionRatio'] == 1) {
+			if ($rawArray['audioComprRatio'] == 1) {
 				$track->setAudioProfile('Lossless');
 			}
 		}
@@ -417,9 +417,9 @@ class AlbumMigrator {
 
 			$this->totalTrackss[$idx] = $t['totalTracks'];
 
-			$this->filenameCases[$idx] = $this->getFilenameCase( basename($t['relativePath']) );
+			$this->filenameCases[$idx] = $this->getFilenameCase( basename($t['relPath']) );
 
-			$this->filenameSchemes[$idx] = $this->getFilenameScheme( basename($t['relativePath']), $idx);
+			$this->filenameSchemes[$idx] = $this->getFilenameScheme( basename($t['relPath']), $idx);
 			$this->artistSchemes[$idx] = $this->getArtistOrTitleScheme($t['artist'], $idx, 'artist'); // we can use the same
 			$this->titleSchemes[$idx] = $this->getArtistOrTitleScheme($t['title'], $idx, 'title');
 			$this->albumSchemes[$idx] = $this->getAlbumScheme($t['album'], $idx);
@@ -447,9 +447,9 @@ class AlbumMigrator {
 
 			
 		}
-		$this->guessAttributesByDirectoryName($t['relativeDirectoryPath']);
+		$this->guessAttributesByDirectoryName($t['relDirPath']);
 
-		$this->scoreLabelByLabelDirectory($t['relativeDirectoryPath']);
+		$this->scoreLabelByLabelDirectory($t['relDirPath']);
 
 		// TODO: post procession:
 		$this->postProcessRecommendations();
@@ -1308,12 +1308,12 @@ class AlbumMigrator {
 
 	
 	// setter
-	public function setRelativeDirectoryPathHash($value) {
-		$this->relativeDirectoryPathHash = $value;
+	public function setRelDirPathHash($value) {
+		$this->relDirPathHash = $value;
 	}
 
-	public function setRelativeDirectoryPath($value) {
-		$this->relativeDirectoryPath = $value;
+	public function setRelDirPath($value) {
+		$this->relDirPath = $value;
 	}
 
 	public function setDirectoryMtime($value) {
@@ -1326,12 +1326,12 @@ class AlbumMigrator {
 	}
 
 	// getter
-	public function getRelativeDirectoryPathHash() {
-		return $this->relativeDirectoryPathHash;
+	public function getRelDirPathHash() {
+		return $this->relDirPathHash;
 	}
 
-	public function getRelativeDirectoryPath() {
-		return $this->relativeDirectoryPath;
+	public function getRelDirPath() {
+		return $this->relDirPath;
 	}
 
 	public function getDirectoryMtime() {

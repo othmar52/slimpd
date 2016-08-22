@@ -1,4 +1,4 @@
-.track-{{ relativePathHash}}:before {
+.track-{{ relPathHash}}:before {
 	{% set content = "A" %}
 	{% if deck == "1" %}{% set content = "B" %}{% endif %}
 	{% if deck == "2" %}{% set content = "C" %}{% endif %}

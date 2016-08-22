@@ -1,6 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-<div class="row missing-track-row mouseover track-{{ item.relativePathHash }}">
+<div class="row missing-track-row mouseover track-{{ item.relPathHash }}">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
 			{% if hidethumb != 1 %}
@@ -19,7 +19,7 @@
 	
 	<div class="col-md-10 vcenter">
 		<div class="vcinner">
-			{% include 'partials/track/not-found-badge.htm' %} {{ item.relativePath }}
+			{% include 'partials/track/not-found-badge.htm' %} {{ item.relPath }}
 		</div>
 	</div>
 </div>

@@ -19,10 +19,10 @@ class Svggenerator {
 			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$arg));
 		}
 		if(is_numeric($arg) === FALSE) {
-			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('relativePathHash' => getFilePathHash($arg)));
+			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('relPathHash' => getFilePathHash($arg)));
 		}
 		if(is_object($track) === TRUE) {
-			$this->absolutePath = $config['musicdir'] . $track->getRelativePath();
+			$this->absolutePath = $config['musicdir'] . $track->getRelPath();
 			$this->fingerprint = $track->getFingerprint();
 			$this->ext = $track->getAudioDataFormat();
 		}

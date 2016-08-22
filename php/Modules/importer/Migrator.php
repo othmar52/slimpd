@@ -31,10 +31,10 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	public static function getMigratedTimstamps($tablename) {
 		$timestampsMysql = array();
 		
-		$query = "SELECT relativePathHash,filemtime FROM " . az09($tablename);
+		$query = "SELECT relPathHash,filemtime FROM " . az09($tablename);
 		$result = \Slim\Slim::getInstance()->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$timestampsMysql[ $record['relativePathHash'] ] = $record['filemtime'];
+			$timestampsMysql[ $record['relPathHash'] ] = $record['filemtime'];
 		}
 		return $timestampsMysql;
 	}
@@ -67,7 +67,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$query = "SELECT count(id) AS itemCountTotal FROM rawtagdata";
 		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
 		
-		$query = "SELECT * FROM rawtagdata ORDER BY relativeDirectoryPathHash ";
+		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash ";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemCountChecked++;
@@ -76,23 +76,23 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			}
 			
 			// directory had changed within the loop
-			if($record['relativeDirectoryPathHash'] !== $this->prevAlb->getRelativeDirectoryPathHash() ) {
+			if($record['relDirPathHash'] !== $this->prevAlb->getRelDirPathHash() ) {
 				$this->mayMigrate();
 				cliLog('resetting previousAlbum', 10);
 				$this->newPrevAlb($record);
-				cliLog('  adding hash of dir '. $record['relativeDirectoryPath'] .' to previousAlbum', 10);
+				cliLog('  adding hash of dir '. $record['relDirPath'] .' to previousAlbum', 10);
 				$this->skipAlbum = TRUE;
 			}
 			
 			$this->updateJob(array(
-				'currentItem' => $record['relativePath'],
+				'currentItem' => $record['relPath'],
 				'migratedAlbums' => $this->migratedAlbums
 			));
 			$this->checkTrackSkip($record);
 			$this->prevAlb->addTrack($record);
-			cliLog('adding track to previousAlbum: ' . $record['relativePath'], 10);
+			cliLog('adding track to previousAlbum: ' . $record['relPath'], 10);
 			
-			cliLog("#" . $this->itemCountChecked . " " . $record['relativePath'],2);
+			cliLog("#" . $this->itemCountChecked . " " . $record['relPath'],2);
 			
 			// dont forget to check the last directory
 			if($this->itemCountChecked === $this->itemCountTotal && $this->itemCountTotal > 1) {
@@ -108,14 +108,14 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 
 	private function checkAlbumSkip() {	
 		// decide if we have to process album or if we can skip it
-		if(isset($this->dbTstampsAlbum[ $this->prevAlb->getRelativeDirectoryPathHash() ]) === FALSE) {
-			cliLog('album does NOT exist in migrated data. migrating: ' . $this->prevAlb->getRelativeDirectoryPath(), 5);
+		if(isset($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ]) === FALSE) {
+			cliLog('album does NOT exist in migrated data. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
 			$this->skipAlbum = FALSE;
 			return;
 		}
-		if($this->dbTstampsAlbum[ $this->prevAlb->getRelativeDirectoryPathHash() ] < $this->prevAlb->getDirectoryMtime()) {
-			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->prevAlb->getRelativeDirectoryPath(), 5);
-			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->prevAlb->getRelativeDirectoryPathHash() ] .' raw: ' . $this->prevAlb->getDirectoryMtime(), 10, 'yellow');
+		if($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] < $this->prevAlb->getDirectoryMtime()) {
+			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
+			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] .' raw: ' . $this->prevAlb->getDirectoryMtime(), 10, 'yellow');
 			$this->skipAlbum = FALSE;
 			return;
 		}
@@ -123,13 +123,13 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	
 	private function checkTrackSkip($record) {
 				// decide if we have to process album based on single-track-change or if we can skip it
-		if(isset($this->dbTstampsTrack[ $record['relativePathHash'] ]) === FALSE) {
-			cliLog('track does NOT exist in migrated data. migrating: ' . $record['relativePath'], 5);
+		if(isset($this->dbTstampsTrack[ $record['relPathHash'] ]) === FALSE) {
+			cliLog('track does NOT exist in migrated data. migrating: ' . $record['relPath'], 5);
 			$this->skipAlbum = FALSE;
 			return;
 		} 
-		if($this->dbTstampsTrack[ $record['relativePathHash'] ] < $record['filemtime']) {
-			cliLog('track-imestamp raw is more recent than migrated. migrating: ' . $record['relativePath'], 5);
+		if($this->dbTstampsTrack[ $record['relPathHash'] ] < $record['filemtime']) {
+			cliLog('track-imestamp raw is more recent than migrated. migrating: ' . $record['relPath'], 5);
 			$this->skipAlbum = FALSE;
 		}
 	}
@@ -137,7 +137,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	private function mayMigrate() {
 		$this->checkAlbumSkip();
 		if($this->skipAlbum === TRUE) {
-			cliLog('skipping migration for: ' . $this->prevAlb->getRelativeDirectoryPath(), 5);
+			cliLog('skipping migration for: ' . $this->prevAlb->getRelDirPath(), 5);
 			return;
 		}
 		$this->prevAlb->run();
@@ -146,8 +146,8 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	
 	private function newPrevAlb($record) {
 		$this->prevAlb = new \Slimpd\Modules\AlbumMigrator();
-		$this->prevAlb->setRelativeDirectoryPathHash($record['relativeDirectoryPathHash']);
-		$this->prevAlb->setRelativeDirectoryPath($record['relativeDirectoryPath']);
+		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
+		$this->prevAlb->setRelDirPath($record['relDirPath']);
 		$this->prevAlb->setDirectoryMtime($record['directoryMtime']);
 	}
 }

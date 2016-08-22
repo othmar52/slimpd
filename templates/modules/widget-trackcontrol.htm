@@ -12,7 +12,7 @@
      
 	<div class="row">
 	  	<div class="col-md-10">
-	  		<object class="waveform svg-ajax-object" data="{{fileroot}}skin/default/img/loading-waveform.svg" data-svgurl="{{root}}audiosvg/width/5000/{{ item.relativePath|path2url }}?color=3" type="image/svg+xml"></object>
+	  		<object class="waveform svg-ajax-object" data="{{fileroot}}skin/default/img/loading-waveform.svg" data-svgurl="{{root}}audiosvg/width/5000/{{ item.relPath|path2url }}?color=3" type="image/svg+xml"></object>
 		</div>
 		
 		<div class="col-md-2">
@@ -59,7 +59,7 @@
   		</button>
   	</div>
   	<div id="trackwidget-techspecs" style="display:none;">
-  		<div class="nfo">{{item.relativePath}}</div>
+  		<div class="nfo">{{item.relPath}}</div>
 	  	{% if item.id %}
 	    <div class="row">
 			<div class="col-md-3">
@@ -81,7 +81,7 @@
 			</div>
 			
 			<div class="col-md-3">
-				<div><span title="compression ratio">CR:</span> {{item.audioCompressionRatio}}</div>
+				<div><span title="compression ratio">CR:</span> {{item.audioComprRatio}}</div>
 				<div>lastScan: {{item.lastScan|date("m/d/Y")}}</div>
 				<div>Fingerprint: <span title="{{item.fingerprint}}">{{item|fingerprintshorty}}</span></div>
 			</div>
@@ -91,7 +91,7 @@
 		{% endif %}
 	</div>
   
-	{% set dirs = item.relativePath|split('/') %}
+	{% set dirs = item.relPath|split('/') %}
 	{% set fullpath = '' %}
 	{% for dir in dirs %}
 		{% if loop.last == false %}
@@ -121,7 +121,7 @@
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-					data-player='{"action":"appendTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ playerCtrlItem|path2url }}"}'
+					data-player='{"action":"appendTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/appendTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="{{'pbctrl.append.title'|ll}}">
 					<i class="fa fa-plus"></i> {{'pbctrl.append'|ll}}
 				</button>
@@ -130,7 +130,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-					data-player='{"action":"injectTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ playerCtrlItem|path2url }}"}'
+					data-player='{"action":"injectTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/injectTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="{{'pbctrl.inject.title'|ll}}">
 					<i class="fa fa-plus"></i> {{'pbctrl.inject'|ll}}
 				</button>
@@ -139,7 +139,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-					data-player='{"action":"injectTrackAndPlay","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ playerCtrlItem|path2url }}"}'
+					data-player='{"action":"injectTrackAndPlay","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/injectTrackAndPlay/{{ playerCtrlItem|path2url }}"}'
 		  			title="{{'pbctrl.injectandplay.title'|ll}}">
 					<i class="fa fa-play"></i> {{'pbctrl.injectandplay'|ll}}
 				</button>
@@ -148,7 +148,7 @@
 			
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-					data-player='{"action":"replaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ playerCtrlItem|path2url }}"}'
+					data-player='{"action":"replaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/replaceTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="{{'pbctrl.clearandplay.title'|ll}}">
 					<i class="fa fa-play"></i> {{'pbctrl.clearandplay'|ll}}
 				</button>
@@ -156,7 +156,7 @@
 			</div>
 			<div class="col-md-12">
 		  		<button role="control" class="btn btn-default player-ctrl is-playbtn trigger-hide-modal"
-					data-player='{"action":"softreplaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ playerCtrlItem|path2url }}"}'
+					data-player='{"action":"softreplaceTrack","item":"{{ playerCtrlItem|path2url }}","ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/softreplaceTrack/{{ playerCtrlItem|path2url }}"}'
 		  			title="{{'pbctrl.softclearandplay.title'|ll}}">
 					<i class="fa fa-trash"></i> {{'pbctrl.softclearandplay'|ll}}
 				</button>
@@ -199,7 +199,7 @@
 	  			{% set colidx = (xwax.decks > 3) ? 4 : 12/xwax.decks %}
 	  				{% for i in 1..xwax.decks %}
 	  				<div class="col-md-{{colidx}}">
-	  					<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relativePath|path2url}}" class="ajax-rqst btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
+	  					<button role="control" data-href="{{root}}xwax/load_track/{{i}}/{{item.relPath|path2url}}" class="ajax-rqst btn btn-default btn-lg" title="Send track to xwax deck {{i}}">
 							<span class="glyphicon glyphicon-cd" aria-hidden="true"></span> {{i}}
 						</button>
 	  				</div>
@@ -216,7 +216,7 @@
 	  			<h3>Download</h3>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}deliver/{{item.relativePath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
+	  			<a href="{{root}}deliver/{{item.relPath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-download"></i> Album</a>
@@ -246,7 +246,7 @@
 	  		</div>
 
 			<div class="col-md-12">
-				<a href="{{root}}maintainance/trackid3/{{ item.relativePath|path2url }}" target="_blank"><i class="fa fa-eye"></i> dump metadata</a>
+				<a href="{{root}}maintainance/trackid3/{{ item.relPath|path2url }}" target="_blank"><i class="fa fa-eye"></i> dump metadata</a>
 			</div>
 
 	  		<div class="col-md-12">

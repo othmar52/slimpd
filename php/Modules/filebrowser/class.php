@@ -236,8 +236,8 @@ class filebrowser {
 		return $this->getDirectoryContent($path);
 	}
 
-	public static function fetchBreadcrumb($relativePath) {
-		$bread = trimExplode(DS, $relativePath, TRUE);
+	public static function fetchBreadcrumb($relPath) {
+		$bread = trimExplode(DS, $relPath, TRUE);
 		$breadgrow = "";
 		$items = array();
 		foreach($bread as $part) {
