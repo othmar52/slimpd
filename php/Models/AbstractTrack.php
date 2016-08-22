@@ -6,6 +6,7 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $title;
 	protected $year;
 	protected $comment;
+	protected $trackNumber;
 	protected $catalogNr;
 
 	protected $fingerprint;
@@ -40,6 +41,9 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getComment() {
 		return $this->comment;
+	}
+	public function getTrackNumber() {
+		return $this->trackNumber;
 	}
 	public function getCatalogNr() {
 		return $this->catalogNr;
@@ -115,6 +119,9 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function setComment($value) {
 		$this->comment = $value;
+	}
+	public function setTrackNumber($value) {
+		$this->trackNumber = $value;
 	}
 	public function setCatalogNr($value) {
 		$this->catalogNr = $value;

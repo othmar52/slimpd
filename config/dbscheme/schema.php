@@ -313,7 +313,7 @@ class Schema extends AbstractSchema
       . "  `videoResolutionY` int(10) unsigned NOT NULL DEFAULT '0',\r"
       . "  `videoFramerate` int(10) unsigned NOT NULL DEFAULT '0',\r"
       . "  `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',\r"
-      . "  `number` varchar(8) DEFAULT NULL,\r"
+      . "  `trackNumber` varchar(8) DEFAULT NULL,\r"
       . "  `error` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `albumId` varchar(11) NOT NULL DEFAULT '',\r"
       . "  `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',\r"

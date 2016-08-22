@@ -9,7 +9,7 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 			return;
 		}
 		$vars['itemlist'] = \Slimpd\Models\Track::getInstancesByAttributes(
-			['albumId' => $albumId], FALSE, 200, 1, 'number ASC'
+			['albumId' => $albumId], FALSE, 200, 1, 'trackNumber ASC'
 		);
 		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
 		$vars['albumimages'] = [];

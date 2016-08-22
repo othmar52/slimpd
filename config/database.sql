@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `videoFramerate` int(10) unsigned NOT NULL DEFAULT '0',
   
   `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(8) DEFAULT NULL,
+  `trackNumber` varchar(8) DEFAULT NULL,
   `error` varchar(255) NOT NULL DEFAULT '',
   `albumId` varchar(11) NOT NULL DEFAULT '',
   `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',

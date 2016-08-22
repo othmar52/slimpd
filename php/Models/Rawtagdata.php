@@ -9,7 +9,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	
 	protected $date;
 	protected $publisher;
-	protected $trackNumber;
 	protected $totalTracks;
 	protected $albumArtist;
 	protected $remixer;
@@ -53,9 +52,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	}
 	public function setPublisher($value) {
 		$this->publisher = $value;
-	}
-	public function setTrackNumber($value) {
-		$this->trackNumber = $value;
 	}
 	public function setTotalTracks($value) {
 		$this->totalTracks = $value;
@@ -144,9 +140,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	}
 	public function getPublisher() {
 		return $this->publisher;
-	}
-	public function getTrackNumber() {
-		return $this->trackNumber;
 	}
 	public function getTotalTracks() {
 		return $this->totalTracks;

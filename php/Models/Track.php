@@ -15,7 +15,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 	
 	// ...
 	protected $disc;
-	protected $number;
 	protected $transcoded;
 	
 	
@@ -577,9 +576,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 	public function setDisc($value) {
 		$this->disc = $value;
 	}
-	public function setNumber($value) {
-		$this->number = $value;
-	}
 	public function setAlbumId($value) {
 		$this->albumId = $value;
 	}
@@ -638,9 +634,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 	// ...
 	public function getDisc() {
 		return $this->disc;
-	}
-	public function getNumber() {
-		return $this->number;
 	}
 	public function getAlbumId() {
 		return $this->albumId;

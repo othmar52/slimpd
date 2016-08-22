@@ -199,7 +199,7 @@ class AlbumMigrator {
 			$track->setCatalogNr($this->mostScored[$idx]['catalogNr']);
 
 			$track->setDisc($this->mostScored[$idx]['disc']);
-			$track->setNumber($this->mostScored[$idx]['number']);
+			$track->setTrackNumber($this->mostScored[$idx]['trackNumber']);
 
 			$track->setComment($this->mostScored[$idx]['comment']);
 			$track->setYear($this->mostScored[$idx]['year']);
@@ -345,7 +345,7 @@ class AlbumMigrator {
 			'catalogNr',
 			'label',
 			'source',
-			'number',
+			'trackNumber',
 			'disc',
 			'genre',
 			'comment',
@@ -580,7 +580,7 @@ class AlbumMigrator {
 					case 'prefixed-vinyl':
 						#print_r($m); die($result);
 						$this->recommend($idx, array(
-							'number' => $m[2],
+							'trackNumber' => $m[2],
 							$artistOrTitle => $m[4]
 						));
 						#$this->scoreAttribute($idx, $artistOrTitle, $value, ($this->defaultScoreForRealTagAttrs*(-1)));
@@ -594,7 +594,7 @@ class AlbumMigrator {
 					case 'prefixed-number-artist-title':
 					case 'prefixed-vinyl-artist-title':
 						$this->recommend($idx, array(
-							'number' => $m[1],
+							'trackNumber' => $m[1],
 							'artist' => $m[2],
 							'title' => $m[3]
 						));
@@ -771,13 +771,13 @@ class AlbumMigrator {
 			#cliLog($attrArray[$prop]);
 			#cliLog($rgx->dStart.$rgx->num.$rgx->glue.$rgx->noMinus.$rgx->glue.$rgx->noMinus.$rgx->dEndInsens);
 			if(preg_match($rgx->dStart.$rgx->num.$rgx->glue.$rgx->noMinus.$rgx->glue.$rgx->noMinus.$rgx->dEndInsens, $attrArray[$prop], $m)) {
-				$this->scoreAttribute($idx, 'number', $m[1], 3);
+				$this->scoreAttribute($idx, 'trackNumber', $m[1], 3);
 				$this->scoreAttribute($idx, 'artist', $m[2], 3);
 				$this->scoreAttribute($idx, 'title', $m[3], 3);
 				$this->scoreAttribute($idx, $prop, $attrArray[$prop], -2);
 			}
 			if(preg_match($rgx->dStart.$rgx->vinyl.$rgx->glue.$rgx->noMinus.$rgx->glue.$rgx->noMinus.$rgx->dEndInsens, $attrArray[$prop], $m)) {
-				$this->scoreAttribute($idx, 'number', $m[1], 3);
+				$this->scoreAttribute($idx, 'trackNumber', $m[1], 3);
 				$this->scoreAttribute($idx, 'artist', $m[2], 3);
 				$this->scoreAttribute($idx, 'title', $m[3], 3);
 				$this->scoreAttribute('album', 'source', 'Vinyl', 3);
@@ -791,7 +791,7 @@ class AlbumMigrator {
 				$this->scoreAttribute($idx, 'year', $m[2], 3);
 				$this->scoreAttribute('album', 'year', $m[2], 3);
 				$this->scoreAttribute('album', 'title', $m[3], 3);
-				$this->scoreAttribute($idx, 'number', $m[4], 3);
+				$this->scoreAttribute($idx, 'trackNumber', $m[4], 3);
 				$this->scoreAttribute($idx, 'title', $m[5], 3);
 				$this->scoreAttribute($idx, $prop, $attrArray[$prop], -3);
 			}
@@ -871,7 +871,7 @@ class AlbumMigrator {
 					return;
 				}
 				break;
-			case 'number':
+			case 'trackNumber':
 				$attrValue = ltrim($attrValue, '0');
 				// in case we have letters make sure no combinations of different letters get scored (like 'if', 'be', ...)
 				if(is_numeric($attrValue) === FALSE) {
@@ -1105,7 +1105,7 @@ class AlbumMigrator {
 					case 'classic-vinyl':
 					case 'classicscene-vinyl':
 						$this->recommend($idx, array(
-							'number' => remU($m[1]),
+							'trackNumber' => remU($m[1]),
 							'artist' => remU($m[2]),
 							'title' => remU($m[3])
 						));
@@ -1113,7 +1113,7 @@ class AlbumMigrator {
 					case 'noartist':
 					case 'noartist-vinyl':
 						$this->recommend($idx, array(
-							'number' => remU($m[1]),
+							'trackNumber' => remU($m[1]),
 							'title' => remU($m[2])
 						));
 						break;
@@ -1127,7 +1127,7 @@ class AlbumMigrator {
 					case 'album-vinyl-artist-title':
 						$this->recommend($idx, array(
 							'album' => remU($m[1]),
-							'number' => remU($m[2]),
+							'trackNumber' => remU($m[2]),
 							'artist' => remU($m[3]),
 							'title' => remU($m[4])
 						));
@@ -1172,26 +1172,26 @@ class AlbumMigrator {
 		}
 		if(intval($value) == strval($value) && is_numeric($value) === TRUE) {
 			$this->extractedTrackNumbers[$idx] = $value;
-			$this->recommend($idx, array('number' => $value));
+			$this->recommend($idx, array('trackNumber' => $value));
 			return 'simple'; // 1, 2, 3
 		}
 
 		if(ltrim($value,'0') != strval($value)) {
 			$this->extractedTrackNumbers[$idx] = intval($value);
-			$this->recommend($idx, array('number' => intval($value)));
+			$this->recommend($idx, array('trackNumber' => intval($value)));
 			return 'leadingzero';	// 01, 02
 		}
 		if(preg_match("/^(\d*)\/(\d*)$/", $value, $m)) {
 			$this->extractedTrackNumbers[$idx] = intval($m[1]);
 			$this->extractedTotalTracks[$idx] = intval($m[2]);
-			$this->recommend($idx, array('number' => intval($m[1])));
+			$this->recommend($idx, array('trackNumber' => intval($m[1])));
 			$this->recommend('album', array('totalTracks' => intval($m[2])));
 			return 'slashsplit'; // 01/12 , 2/12
 		}
 		if(preg_match("/^([a-zA-Z]{1,2})(?:[\/-]{1})(\d*)$/", $value)) {
 			if($idx !== NULL) { 
 				$this->extractedTrackNumbers[$idx] = $value;
-				$this->recommend($idx, array('number' => $value, 'source' => 'Vinyl'));
+				$this->recommend($idx, array('trackNumber' => $value, 'source' => 'Vinyl'));
 				$this->recommend('album', array('source' => 'Vinyl'));
 			}
 			return 'vinyl';	// AA1, B2, C34, A-1, A/4
