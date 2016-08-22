@@ -344,8 +344,6 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 			}
 		}
 		
-		
-		
 		// in case artist string is missing try to get it from title string
 		if($artistString == "" && $titleString != "") {
 			$tmp = trimExplode(" - ", $titleString, TRUE, 2);
@@ -512,25 +510,18 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		// clean up artist names
 		// unfortunately there are artist names like "45 Thieves"
 		$regularArtists = $this->removeLeadingNumbers($regularArtists);
-		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
-		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
-		
-		
 		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
+
+		$this->setFeaturingId('');
+		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
 		if(count($featuredArtists) > 0) { 
 			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
-		} else {
-			# TODO: currently empty values are ignored in AbstractModel::update()
-			# this is relevant for old exisiting database-items which already have an invalid featuringId-value 
-			$this->setFeaturingId('');
 		}
-		
+
+		$this->setRemixerId('');
+		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
 		if(count($remixerArtists) > 0) {
 			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
-		} else {
-			# TODO: currently empty values are ignored in AbstractModel::update()
-			# this is relevant for old exisiting database-items which already have an invalid remixerId-value
-			$this->setRemixerId('');
 		}
 		
 		// replace multiple whitespace with a single whitespace
