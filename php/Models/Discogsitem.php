@@ -160,12 +160,11 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 				// in case we have a discogs duration compare durations
 				if(strlen($t['duration']) > 0) {
 					$extSeconds = timeStringToSeconds($t['duration']);
+					$higher = $extSeconds;
+					$lower =  $rawItem->getMiliseconds();
 					if($rawItem->getMiliseconds() > $extSeconds) {
 						$higher = $rawItem->getMiliseconds();
 						$lower =  $extSeconds;
-					} else {
-						$higher = $extSeconds;
-						$lower =  $rawItem->getMiliseconds();
 					}
 					$matchScore[$rawItem->getId()][$extIndex] += floor($lower/($higher/100));
 				}

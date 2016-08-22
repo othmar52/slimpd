@@ -21,9 +21,8 @@ class Localization
 			if(isset(self::$lang[$langkey . '.' . $itemkey])) {
 				if(count($vars) === 0) {
 					return self::$lang[$langkey . '.' . $itemkey];
-				} else {
-					return vsprintf(self::$lang[$langkey . '.' . $itemkey], $vars);
 				}
+				return vsprintf(self::$lang[$langkey . '.' . $itemkey], $vars);
 			}
 		}
 		return 'TRNSLT:' . $itemkey;

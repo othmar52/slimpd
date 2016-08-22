@@ -190,6 +190,9 @@ class MpdDatabaseParser {
 		$this->rawTagItem->setRelPath($this->rawTagItem->getRelDirPath() . $this->currentSong);
 		$this->rawTagItem->setRelPathHash(getFilePathHash($this->rawTagItem->getRelPath()));
 
+		cliLog("#" . $this->itemsChecked . " " . $this->currentDir . DS . $this->currentSong, 2);
+		$this->currentSong = "";
+		$this->currentSection = "";
 		if($this->updateOrInsert() === FALSE) {
 			// track has not been modified - no need for updating
 			unset($this->fileTstamps[$this->rawTagItem->getRelPathHash()]);
@@ -199,25 +202,21 @@ class MpdDatabaseParser {
 			if(array_key_exists($this->rawTagItem->getRelDirPathHash(), $this->dirOrphans)) {
 				unset($this->dirOrphans[$this->rawTagItem->getRelDirPathHash()]);
 			}
-		} else {
-
-			if(isset($this->fileOrphans[$this->rawTagItem->getRelPathHash()])) {
-				$this->rawTagItem->setId($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
-				// file is alive - remove it from dead items
-				unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
-			}
-
-			$this->rawTagItem->setlastScan(0);
-			$this->rawTagItem->setImportStatus(1);
-			$this->rawTagItem->update();
-			$this->itemsProcessed++;
+			// reset song attributes
+			$this->rawTagItem = new \Slimpd\Models\Rawtagdata();
+			return;
 		}
 
-		cliLog("#" . $this->itemsChecked . " " . $this->currentDir . DS . $this->currentSong, 2);
+		if(isset($this->fileOrphans[$this->rawTagItem->getRelPathHash()])) {
+			$this->rawTagItem->setId($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
+			// file is alive - remove it from dead items
+			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
+		}
 
-		$this->currentSong = "";
-		$this->currentSection = "";
-
+		$this->rawTagItem->setlastScan(0);
+		$this->rawTagItem->setImportStatus(1);
+		$this->rawTagItem->update();
+		$this->itemsProcessed++;
 		// reset song attributes
 		$this->rawTagItem = new \Slimpd\Models\Rawtagdata();
 	}

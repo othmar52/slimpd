@@ -384,26 +384,26 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		}
 		
 		// parse ARTIST string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $m)) {
-			$sFeat = trim($m[4]);
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
 			$artistString = str_replace(
-				$m[2] .$m[3] . ' ' . $m[4],
+				$matches[2] .$matches[3] . ' ' . $matches[4],
 				" ",
 				$artistString
 			);
 			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
 		}
 		// parse ARTIST string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $m)) {
-			$sFeat = trim($m[4]);
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
 			$artistString = str_replace(
-				$m[2] .$m[3] . $m[4],
+				$matches[2] .$matches[3] . $matches[4],
 				" ",
 				$artistString
 			);
@@ -413,15 +413,15 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		$regularArtists = array_merge($regularArtists, preg_split($regexArtist, $artistString));
 		
 		// parse TITLE string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $m)) {
-			$sFeat = trim($m[4]);
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			$sFeat = trim($matches[4]);
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
 			
 			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
 				$titleString = str_replace(
-					$m[2] .$m[3] . ' ' . $m[4],
+					$matches[2] .$matches[3] . ' ' . $matches[4],
 					" ",
 					$titleString
 				);
@@ -430,15 +430,15 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		}
 		
 		// parse TITLE string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $m)) {
-			#print_r($m); die();
-			$sFeat = trim($m[4]);
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			#print_r($matches); die();
+			$sFeat = trim($matches[4]);
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
 			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
 				$titleString = str_replace(
-					$m[2] .$m[3] . $m[4],
+					$matches[2] .$matches[3] . $matches[4],
 					" ",
 					$titleString
 				);
@@ -447,13 +447,13 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		}
 
 		// parse title string for remixer regex 1
-		if(preg_match($regexRemix, $titleString, $m)) {
-			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $m[2]));
+		if(preg_match($regexRemix, $titleString, $matches)) {
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[2]));
 		}
 		// parse title string for remixer regex 1
-		if(preg_match($regexRemix2, $titleString, $m)) {
-			#print_r($m); die();
-			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $m[3]));
+		if(preg_match($regexRemix2, $titleString, $matches)) {
+			#print_r($matches); die();
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[3]));
 		}
 		
 		// clean up extracted remixer-names with common strings
@@ -504,8 +504,8 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		
 		/* TODO: do we need this?
 		// remove " (" from titlepattern in case that are the last 2 chars
-		if(preg_match("/(.*)\ \($/", $titlePattern, $m)) {
-			$titlePattern = $m[1];
+		if(preg_match("/(.*)\ \($/", $titlePattern, $matches)) {
+			$titlePattern = $matches[1];
 		}
 		*/
 		
@@ -565,10 +565,10 @@ class Track extends \Slimpd\Models\AbstractFilesystemItem
 		);
 		foreach($inputArray as $string) {
 			if(in_array(strtolower($string), $whitelist) === FALSE) {
-				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $m)) {
-					if($m[1] < 21) {
-						#print_r($m); die();
-						$string = $m[3].$m[4];
+				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $matches)) {
+					if($matches[1] < 21) {
+						#print_r($matches); die();
+						$string = $matches[3].$matches[4];
 					}
 				}
 			}

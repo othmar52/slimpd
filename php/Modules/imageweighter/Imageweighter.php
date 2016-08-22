@@ -47,9 +47,9 @@ class Imageweighter
 					$finalKey = sprintf($rawKey, strval($num));
 					$conf[$finalKey] = $this->addPaddedNumberSuffixes($filenames, $num, $num);
 				}
-			} else {
-				$conf[$rawKey] = $this->addPaddedNumberSuffixes($filenames, 1, $keyRange);
+				continue;
 			}
+			$conf[$rawKey] = $this->addPaddedNumberSuffixes($filenames, 1, $keyRange);
 		}
 		$weightArray = [];
 		$typeArray = [];
@@ -84,19 +84,16 @@ class Imageweighter
 		$return = array();
 		foreach(range($minNumber,$maxNumber) as $num) {
 			foreach($input as $filename) {
-				
+				$value1 = $filename;
+				$value2 = $filename . $num;
+				$value3 = $filename . str_pad($num, 2, '0', STR_PAD_LEFT);
+				$value4 = $filename . str_pad($num, 3, '0', STR_PAD_LEFT);
 				if (strpos($filename, '%s') !== FALSE) {
 					$value1 = sprintf($filename, strval($num));
 					$value2 = sprintf($filename, strval(str_pad($num, 2, '0', STR_PAD_LEFT)));
 					$value3 = sprintf($filename, strval(str_pad($num, 3, '0', STR_PAD_LEFT)));
 					$value4 = sprintf($filename, strval(str_pad($num, 3, '0', STR_PAD_LEFT)));
-				} else {
-					$value1 = $filename;
-					$value2 = $filename . $num;
-					$value3 = $filename . str_pad($num, 2, '0', STR_PAD_LEFT);
-					$value4 = $filename . str_pad($num, 3, '0', STR_PAD_LEFT);
 				}
-				
 				$return[$value1] = $value1;
 				$return[$value2] = $value2;
 				$return[$value3] = $value3;
