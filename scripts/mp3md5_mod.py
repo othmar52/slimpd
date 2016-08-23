@@ -82,7 +82,7 @@ def calcsum(filepath, mp3mode):
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "h3:", ["mp3=", "help"])
+        opts, dummy_args = getopt.getopt(argv, "h3:", ["mp3=", "help"])
     except getopt.GetoptError:
         print "error du fut... tips richti ju gaxbaer!!!"
         sys.exit(2)
