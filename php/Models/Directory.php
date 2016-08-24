@@ -17,8 +17,9 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 
 		// avoid path disclosure outside allowed directories
 		$base = $app->config['mpd']['musicdir'];
-		$d = ($this->relPath === $base) ? '' : $this->relPath;
-		$realpath = realpath(rtrim($base .$d, DS));
+		// special handling for root directory
+		$relPath = ($this->relPath === $base) ? '' : $this->relPath;
+		$realpath = realpath(rtrim($base .$relPath, DS));
 		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
 		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
 			return FALSE;
