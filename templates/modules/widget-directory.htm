@@ -2,7 +2,7 @@
 <div class="modal-body">	
     {% include 'partials/modal/close-button-top.htm' %}
     <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</div>
-	<h2 class="nomargin">{{ breadcrumb|last.name }}</h2>
+	<h2 class="nomargin">{{ breadcrumb|last.title }}</h2>
 	<div class="row">
 	 	<div class="col-md-12">
 		<h4><i class="fa fa-folder-o fa-lg"></i> subdirectories <span class="badge">{{ subDirectories.total }}</span> /
@@ -18,25 +18,25 @@
 	<div class="row">
 		<div class="col-md-4">
 			<h3>{{'playbackcontrol'|ll}}</h3>
-			<button role="control" title="{{'pbctrl.append.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"{{root}}mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.append.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"{{root}}mpdctrl/appendDir/{{ [directory,item.title]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
 				{{'pbctrl.append'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ [directory,item.title]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.appendandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.clearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"{{root}}mpdctrl/replaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.clearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"{{root}}mpdctrl/replaceDir/{{ [directory,item.title]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.clearandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.softclearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"{{root}}mpdctrl/softreplaceDir/{{ [directory,item.name]|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.softclearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"{{root}}mpdctrl/softreplaceDir/{{ [directory,item.title]|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.softclearandplay'|ll}}
 			</button>
@@ -49,20 +49,20 @@
 				<i class="fa fa-lg fa-eye"></i> {{'viewasalbum'|ll}}
 			</a>
 			{% endif %}
-			<a class="ajax-link btn btn-default" href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" title="{{'filebrowser'|ll}}" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}filebrowser/{{ [directory,item.title]|path2url }}" title="{{'filebrowser'|ll}}" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> {{'filebrowser'|ll}}
 			</a>
-			<a class="ajax-link btn btn-default" href="{{root}}directory/{{ [directory,item.name]|path2url }}" title="{{'viewdirtracksrecursive.title'|ll}}" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}directory/{{ [directory,item.title]|path2url }}" title="{{'viewdirtracksrecursive.title'|ll}}" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> {{'viewdirtracksrecursive'|ll}}
 			</a>
 		</div>
 
 		<div class="col-md-4">
 			<h3>Administration</h3>
-			<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="{{root}}tools/clean-rename-confirm/{{ [directory,item.name]|path2url }}">
+			<button role="control" title="recursive remove special chars" class="btn btn-default trigger-modal" data-href="{{root}}tools/clean-rename-confirm/{{ [directory,item.title]|path2url }}">
 				Ã <i class="fa fa-arrow-right"></i> A remove special chars
 			</button>
-			<button role="control" data-href="{{root}}mpdctrl/update/{{ [directory,item.name]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default" data-dismiss="modal">
+			<button role="control" data-href="{{root}}mpdctrl/update/{{ [directory,item.title]|path2url }}" title="update mpd database" class="ajax-rqst btn btn-default" data-dismiss="modal">
 				<i class="fa fa-lg fa-refresh"></i> rescan &amp; update MPD database
 			</button>
 		</div>

@@ -290,7 +290,7 @@ foreach(array_keys($sortfields) as $currentType) {
 							case "dirname":
 								$tmp = \Slimpd\Models\Album::getInstanceByAttributes(array("id" => $row["itemid"]));
 								$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
-								$obj->breadcrumb = \Slimpd\filebrowser::fetchBreadcrumb($obj->fullpath);
+								$obj->setBreadcrumb(\Slimpd\filebrowser::fetchBreadcrumb($obj->getRelPath()));
 								break;
 						}
 						$vars["itemlist"][] = $obj;
@@ -478,7 +478,7 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 		AND type=:type
 		LIMIT 1;
 	");
-	$stmt->bindValue(":match", "'@allchunks \"". join(DS, $itemParams) . DS . "\"'", PDO::PARAM_STR);
+	$stmt->bindValue(":match", "'@allchunks \"". $directory->getRelPath() . "\"'", PDO::PARAM_STR);
 	$stmt->bindValue(":type", 4, PDO::PARAM_INT);
 	$stmt->execute();
 	$meta = $sphinxPdo->query("SHOW META")->fetchAll();
@@ -497,7 +497,7 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	$stmt = $sphinxPdo->prepare("
 		SELECT itemid
 		FROM ". $app->config["sphinx"]["mainindex"]."
-		WHERE MATCH('@allchunks \"". $directory->fullpath. "\"')
+		WHERE MATCH('@allchunks \"". $directory->relPath. "\"')
 		AND type=:type
 		ORDER BY sort1 ASC
 		LIMIT :offset,:max

@@ -1,37 +1,60 @@
 <?php
 namespace Slimpd\Models;
-class File {
-	
-	public $fullpath;
-	public $ext;
-	public $name;
-	public $relPathHash;
 
-	
-	
-	public function __construct($fileidentifier)
-	{
+class File extends \Slimpd\Models\AbstractFilesystemItem {
+	protected $exists = FALSE;
+	protected $ext = '';
+	public function __construct($relPath) {
 		try {
-			$this->fullpath = $fileidentifier;
-			$this->name = baseName($fileidentifier);
-			$this->ext = strtolower(preg_replace('/^.*\./', '', $this->name));
-			$this->relPathHash = getFilePathHash($fileidentifier);
-		} catch (Exception $e) {
-			
-		}
-		
+			$this->relPath = $relPath;
+			$this->title = basename($relPath);
+			// TODO: move ext to string functions
+			$this->ext = strtolower(preg_replace('/^.*\./', '', $relPath));
+			$this->relPathHash = getFilePathHash($relPath);
+		} catch (Exception $e) {}
 	}
-	
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
 
-    public function __set($property, $value) {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-    }
+	public function validate() {
+		$app = \Slim\Slim::getInstance();
 
+		// avoid path disclosure outside allowed directories
+		$base = $app->config['mpd']['musicdir'];
+		$realpath = realpath($base .$this->getRelPath());
+		// TODO: callable check with alternative_musicdir stuff
+		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
+		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
+			return FALSE;
+		}
+
+		// check existence
+		if(is_file($realpath) === FALSE) {
+			return FALSE;
+		}
+		$this->setExists(TRUE);
+		return TRUE;
+	}
+
+	public function getExists() {
+		return $this->exists;
+	}
+
+	public function setExists($value) {
+		$this->exists = $value;
+	}
+
+	public function getBreadcrumb() {
+		return $this->breadcrumb;
+	}
+
+	public function setBreadcrumb($value) {
+		$this->breadcrumb = $value;
+	}
+
+	public function getExt() {
+		return $this->ext;
+	}
+
+	public function setExt($value) {
+		$this->ext = $value;
+	}
 }

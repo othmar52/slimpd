@@ -1,34 +1,23 @@
 <?php
 namespace Slimpd\Models;
-class Directory {
-	
-	public $fullpath;
-	public $name;
-	public $hash;
-	public $breadcrumb;
+
+class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $exists = FALSE;
-
-	
-	
-	public function __construct($directory)
-	{
-
+	protected $breadcrumb;
+	public function __construct($dirPath) {
 		try {
-			$this->fullpath = $directory;
-			$this->name = basename($directory);
-			$this->hash = getFilePathHash($this->name);
-		} catch (Exception $e) {
-			
-		}
-		
+			$this->relPath = $dirPath;
+			$this->title = basename($dirPath);
+			$this->relPathHash = getFilePathHash($this->relPath);
+		} catch (Exception $e) {}
 	}
-	
+
 	public function validate() {
 		$app = \Slim\Slim::getInstance();
 
 		// avoid path disclosure outside allowed directories
 		$base = $app->config['mpd']['musicdir'];
-		$d = ($this->fullpath === $base) ? '' : $this->fullpath;
+		$d = ($this->relPath === $base) ? '' : $this->relPath;
 		$realpath = realpath(rtrim($base .$d, DS));
 		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
 		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
@@ -39,19 +28,23 @@ class Directory {
 		if(is_dir($realpath) === FALSE) {
 			return FALSE;
 		}
-		$this->exists = TRUE;
+		$this->setExists(TRUE);
 		return TRUE;
 	}
 
-    public function __get($property) {
-        if (property_exists($this, $property)) {
-            return $this->$property;
-        }
-    }
+	public function getExists() {
+		return $this->exists;
+	}
 
-    public function __set($property, $value) {
-        if (property_exists($this, $property)) {
-            $this->$property = $value;
-        }
-    }
+	public function setExists($value) {
+		$this->exists = $value;
+	}
+
+	public function getBreadcrumb() {
+		return $this->breadcrumb;
+	}
+
+	public function setBreadcrumb($value) {
+		$this->breadcrumb = $value;
+	}
 }

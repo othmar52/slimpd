@@ -90,11 +90,11 @@ class filebrowser {
 			if($this->files["total"] > $maxIndex && $ignoreLimit === FALSE) {
 				continue;
 			}
-			$f = new \Slimpd\Models\File($dir . $file);
-			$group = (isset($extTypes[$f->ext]) === TRUE)
-				? $extTypes[$f->ext]
+			$fileInstance = new \Slimpd\Models\File($dir.$file);
+			$group = (isset($extTypes[$fileInstance->getExt()]) === TRUE)
+				? $extTypes[$fileInstance->getExt()]
 				: "other";
-			$this->files[$group][] = new \Slimpd\Models\File($dir . $file);
+			$this->files[$group][] = $fileInstance;
 			$this->files["count"]++;
 		}
 		return;
@@ -195,9 +195,9 @@ class filebrowser {
 		
 		foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
 			if($found === TRUE) {
-				return $this->getDirectoryContent($subDir->fullpath);
+				return $this->getDirectoryContent($subDir->getRelPath());
 			}
-			if($subDir->fullpath."/" === $path) {
+			if($subDir->getRelPath()."/" === $path) {
 				$found = TRUE;
 			}
 		}
@@ -223,14 +223,14 @@ class filebrowser {
 		$prev = 0;
 		
 		foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
-			if($subDir->fullpath."/" === $path) {
+			if($subDir->getRelPath()."/" === $path) {
 				if($prev === 0) {
 					$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
 					return $this->getDirectoryContent($path);
 				}
 				return $this->getDirectoryContent($prev);
 			}
-			$prev = $subDir->fullpath;
+			$prev = $subDir->getRelPath();
 		}
 		$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
 		return $this->getDirectoryContent($path);
