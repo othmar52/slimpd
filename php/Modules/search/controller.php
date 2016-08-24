@@ -22,7 +22,7 @@ foreach(array_keys($sortfields1) as $className) {
 		
 		// albumlist+tracklist of artist|genre|label
 		$app->get(
-		"/".$className."/:idemId/".$show."s/page/:currentPage/sort/:sort/:direction",
+		"/".$className."/:itemId/".$show."s/page/:currentPage/sort/:sort/:direction",
 		function($itemId, $currentPage, $sort, $direction) use ($app, $vars, $className, $show, $sortfields1) {
 			$vars["action"] = $className."." . $show."s";
 			$vars["itemtype"] = $className;
@@ -114,9 +114,27 @@ foreach(array_keys($sortfields1) as $className) {
 					$vars["paginator"]->setMaxPagesToShow(paginatorPages($currentPage));
 				}
 			}
+			// redirect to tracks in case we have zero albums
+			if($show === "album" && $vars["search"]["album"]["total"] === "0" && $vars["search"]["track"]["total"] > 0) {
+				$app->response->redirect(
+					$app->urlFor(
+						$className . "-show-track",
+						["itemId" => $itemId, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
+					) . getNoSurSuffix(), 301
+				);
+			}
+			// redirect to albums in case we have zero tracks
+			if($show === "track" && $vars["search"]["track"]["total"] === "0" && $vars["search"]["album"]["total"] > 0) {
+				$app->response->redirect(
+					$app->urlFor(
+						$className . "-show-album",
+						["itemId" => $itemId, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
+					) . getNoSurSuffix(), 301
+				);
+			}
 			$vars["renderitems"] = getRenderItems($vars["itemlist"]);
-		    $app->render("surrounding.htm", $vars);
-		});
+			$app->render("surrounding.htm", $vars);
+		})->name($className . "-show-". $show);
 		
 	}
 }
