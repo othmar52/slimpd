@@ -106,6 +106,7 @@ class Svggenerator {
 		$values = array_map('trim', explode("\n", $peaks));
 		
 		$values = $this->limitArray($values, $pixel);
+		$values = $this->beautifyPeaks($values);
 		$amount = count($values);
 		$max = max($values);
 		
@@ -182,8 +183,10 @@ class Svggenerator {
 		
 		$values = explode("\n", $peaks);
 		$values = array_map('trim', $values);
+		$values = $this->limitArray($values, $resolution);
+		$values = $this->beautifyPeaks($values);
 
-		deliverJson($this->limitArray($values, $resolution));
+		deliverJson($values);
 	}
 	
 	public function setPeakFilePath() {
@@ -362,14 +365,16 @@ class Svggenerator {
         	
           //get value for 8-bit wav
           case 1:
-              $data[] = $this->findValues($bytes[0], $bytes[1]);
+			$newVal = $this->findValues($bytes[0], $bytes[1]) - 128;
+			$data[]= ($newVal < 0) ? 0 : $newVal;
               break;
 			  
           //get value for 16-bit wav
           case 2:
             $temp = (ord($bytes[1]) & 128) ? 0 : 128;
             $temp = chr((ord($bytes[1]) & 127) + $temp);
-            $data[]= floor($this->findValues($bytes[0], $temp) / 256);
+			$newVal = floor($this->findValues($bytes[0], $temp) / 256) - 128;
+            $data[]= ($newVal < 0) ? 0 : $newVal;
             break;
         }
 
@@ -385,9 +390,8 @@ class Svggenerator {
 	  
 	}
 
-    
-	private function limitArray($input, $max = 22000)
-	{
+	private function limitArray($input, $max = 22000) {
+		#echo "<pre>" . print_r($input, 1); die();
 		#echo ini_get('memory_limit'); die();
 		// 512MB is not enough for files > 4hours (XXX entries)
 		# TODO: add a note in documentation
@@ -413,6 +417,38 @@ class Svggenerator {
 			unset($input[$idx]);
 		}
 		return $output;
+	}
+
+	private function beautifyPeaks($input) {
+		$beauty = array();
+		$avg = array_sum($input)/count($input);
+		$max = max($input);
+
+		// results of visual testing with dozens of random files
+		// max:128 ->  best multiplicator -> 1.4
+		// max:82  ->  best multiplicator -> 2.3
+
+		// that gives us those guiding values
+		// max: 128 -> 1.4
+		// max: 1   -> 4
+
+		// now try to find the best multiplicator for ($max/$avg) by playing around...
+		$multiMax = 3.3;
+		$multiMin = 1.4;
+		$multi100th = ($multiMax-$multiMin)/100;
+
+		$rangeMax = 128;
+		$range100th = $rangeMax/100;
+		$invertedRangePercent = 100 - $max / $range100th;
+		$multiplicator = $multiMin + $invertedRangePercent * $multi100th;
+		foreach($input as $value) {
+			if($value < 1) {
+				$beauty[] = $value;
+				continue;
+			}
+			$beauty[] = floor($value * ($max/$avg) * $multiplicator);
+		}
+		return $beauty;
 	}
 	public function getCmdTempwav() {
 		return $this->cmdTempwav;
