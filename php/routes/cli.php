@@ -102,7 +102,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 		foreach(['music','playlist','info','image','other'] as $key) {
 			foreach($fileBrowser->files[$key] as $file) {
 				// just to make sure we do not delete unwanted stuff :)
-				$delete = realpath(APP_ROOT . $file->relPath);
+				$delete = realpath(APP_ROOT . $file->getRelPath());
 				if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
 					continue;
 				}
@@ -111,7 +111,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 		}
 		foreach($fileBrowser->subDirectories['dirs'] as $dir) {
 			// just to make sure we do not delete unwanted stuff :)
-			$delete = realpath(APP_ROOT . $dir->relPath);
+			$delete = realpath(APP_ROOT . $dir->getRelPath());
 			if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
 				continue;
 			}
