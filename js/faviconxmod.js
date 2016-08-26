@@ -249,7 +249,6 @@ var FavIconX = (function() {
 	function init(){
 		if(!canvas || !canvas.getContext){
 			throw "No support for Canvas, no chocolate for you! =(";
-			return;
 		}
 		icon = getIconRef();
 		oldTitle = document.title;

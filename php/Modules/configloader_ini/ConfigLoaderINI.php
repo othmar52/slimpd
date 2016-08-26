@@ -80,27 +80,27 @@ class ConfigLoaderINI {
 		}
 
 		foreach (array_keys($array) as $key) {
-			$e = explode(':', $key);
-			if (empty($e[1]) === TRUE) {
+			$exp = explode(':', $key);
+			if (empty($exp[1]) === TRUE) {
 				$returnArray[$key] = $array[$key];
 				continue;
 			}
 
 			$tmpArray = array();
-			foreach ($e as $tk=>$tv) {
+			foreach ($exp as $tk=>$tv) {
 				$tmpArray[$tk] = trim($tv);
 			}
 			$tmpArray = array_reverse($tmpArray, true);
 			foreach (array_keys($tmpArray) as $key2) {
-				$c = $tmpArray[0];
-				if (empty($returnArray[$c])) {
-					$returnArray[$c] = array();
+				$newKey = $tmpArray[0];
+				if (empty($returnArray[$newKey])) {
+					$returnArray[$newKey] = array();
 				}
 				if (isset($returnArray[$tmpArray[1]])) {
-					$returnArray[$c] = array_merge($returnArray[$c], $returnArray[$tmpArray[1]]);
+					$returnArray[$newKey] = array_merge($returnArray[$newKey], $returnArray[$tmpArray[1]]);
 				}
 				if ($key2 === 0) {
-					$returnArray[$c] = array_merge($returnArray[$c], $array[$key]);
+					$returnArray[$newKey] = array_merge($returnArray[$newKey], $array[$key]);
 				}
 			}
 			$returnArray[$key] = $array[$key];
@@ -114,32 +114,32 @@ class ConfigLoaderINI {
 			 return $returnArray;
 		}
 
-		foreach ($array as $key=>$value) {
+		foreach ($array as $key => $value) {
 			if (is_array($value)) {
 				$array[$key] = $this->recursive_parse($value);
 			}
-			$x = explode('.', $key);
-			if (empty($x[1]) === TRUE) {
+			$varName = explode('.', $key);
+			if (empty($varName[1]) === TRUE) {
 				$returnArray[$key] = $array[$key];
 				continue;
 			}
 
-			$x = array_reverse($x, true);
+			$varName = array_reverse($varName, TRUE);
 			if (isset($returnArray[$key])) {
 				unset($returnArray[$key]);
 			}
-			if (!isset($returnArray[$x[0]])) {
-				$returnArray[$x[0]] = array();
+			if (!isset($returnArray[ $varName[0] ])) {
+				$returnArray[ $varName[0] ] = array();
 			}
-			$first = true;
-			foreach ($x as $k=>$v) {
-				if ($first === true) {
+			$first = TRUE;
+			foreach ($varName as $v) {
+				if ($first === TRUE) {
 					$b = $array[$key];
-					$first = false;
+					$first = FALSE;
 				}
 				$b = array($v=>$b);
 			}
-			$returnArray[$x[0]] = array_replace_recursive($returnArray[$x[0]], $b[$x[0]]);
+			$returnArray[ $varName[0] ] = array_replace_recursive($returnArray[ $varName[0] ], $b[ $varName[0] ]);
 		}
 		return $returnArray;
 	}
