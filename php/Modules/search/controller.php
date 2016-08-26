@@ -515,7 +515,7 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	$stmt = $sphinxPdo->prepare("
 		SELECT itemid
 		FROM ". $app->config["sphinx"]["mainindex"]."
-		WHERE MATCH('@allchunks \"". $directory->relPath. "\"')
+		WHERE MATCH('@allchunks \"". $directory->getRelPath(). "\"')
 		AND type=:type
 		ORDER BY sort1 ASC
 		LIMIT :offset,:max
