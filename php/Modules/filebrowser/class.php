@@ -64,40 +64,47 @@ class filebrowser {
 
 			// directories
 			if(is_dir($base . $dir . $file) === TRUE) {
-				$this->subDirectories["total"]++;
-				if($this->filter === "files" && $ignoreLimit === FALSE) {
-					continue;
-				}
-				if($this->subDirectories["total"] < $minIndex && $ignoreLimit === FALSE) {
-					continue;
-				}
-				if($this->subDirectories["total"] > $maxIndex && $ignoreLimit === FALSE) {
-					continue;
-				}
-				$this->subDirectories["dirs"][] = new \Slimpd\Models\Directory($dir . $file);
-				$this->subDirectories["count"]++;
+				$this->handleDirectory($dir.$file, $minIndex, $maxIndex, $ignoreLimit);
 				continue;
 			}
 
 			// files
-			$this->files["total"]++;
-			if($this->filter === "dirs" && $ignoreLimit === FALSE) {
-				continue;
-			}
-			if($this->files["total"] < $minIndex && $ignoreLimit === FALSE) {
-				continue;
-			}
-			if($this->files["total"] > $maxIndex && $ignoreLimit === FALSE) {
-				continue;
-			}
-			$fileInstance = new \Slimpd\Models\File($dir.$file);
-			$group = (isset($extTypes[$fileInstance->getExt()]) === TRUE)
-				? $extTypes[$fileInstance->getExt()]
-				: "other";
-			$this->files[$group][] = $fileInstance;
-			$this->files["count"]++;
+			$this->handleFile($dir.$file, $minIndex, $maxIndex, $ignoreLimit, $extTypes);
 		}
 		return;
+	}
+
+	private function handleFile($relPath, $minIndex, $maxIndex, $ignoreLimit, $extTypes) {
+		$this->files["total"]++;
+		if($this->filter === "dirs" && $ignoreLimit === FALSE) {
+			return;
+		}
+		if($this->files["total"] < $minIndex && $ignoreLimit === FALSE) {
+			return;
+		}
+		if($this->files["total"] > $maxIndex && $ignoreLimit === FALSE) {
+			return;
+		}
+		$fileInstance = new \Slimpd\Models\File($relPath);
+		$group = (isset($extTypes[$fileInstance->getExt()]) === TRUE)
+			? $extTypes[$fileInstance->getExt()]
+			: "other";
+		$this->files[$group][] = $fileInstance;
+		$this->files["count"]++;
+	}
+	private function handleDirectory($relPath, $minIndex, $maxIndex, $ignoreLimit) {
+		$this->subDirectories["total"]++;
+		if($this->filter === "files" && $ignoreLimit === FALSE) {
+			return;
+		}
+		if($this->subDirectories["total"] < $minIndex && $ignoreLimit === FALSE) {
+			return;
+		}
+		if($this->subDirectories["total"] > $maxIndex && $ignoreLimit === FALSE) {
+			return;
+		}
+		$this->subDirectories["dirs"][] = new \Slimpd\Models\Directory($relPath);
+		$this->subDirectories["count"]++;
 	}
 
 	private function getExtMapping() {
