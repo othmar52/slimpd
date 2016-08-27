@@ -66,7 +66,8 @@ class ConfigLoaderINI {
 		}
 
 		//return config
-		return $this->buildConfig($masterConfig, $additionalConfig);
+		$config = $this->buildConfig($masterConfig, $additionalConfig);
+		return $this->postProcess($config);
 	}
 
 	private function prepareFilePath($path = '') {
@@ -176,7 +177,13 @@ class ConfigLoaderINI {
 				}
 			}
 		}
+		return $config;
+	}
 
+	/**
+	 * override some config values based on other config values
+	 */
+	private function postProcess($config) {
 		if(array_key_exists('destructiveness', $config) === FALSE) {
 			return $config;
 		}
@@ -189,5 +196,4 @@ class ConfigLoaderINI {
 		}
 		return $config;
 	}
-
 }
