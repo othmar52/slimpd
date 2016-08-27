@@ -91,7 +91,7 @@
 							</div>
 							<div class="col-sm-4 col-md-3">
 								<div class="thumbnail bg-col2">
-									<a href="{{root}}albums/page/1" class="genre-link item-link ajax-link bg-col2 ">
+									<a href="{{root}}albums/page/1/sort/added/desc" class="genre-link item-link ajax-link bg-col2 ">
 										<div class="caption centered-text">{{'albums'|ll}}</div>
 									</a>
 								</div>
@@ -112,7 +112,7 @@
 							</div>
 						</div>
 						<h2>Recently added Albums</h2>
-						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
+						{% include 'modules/albumlist.htm' with { 'showalltile' : '1'} %}
 					</div>
 					{% endif %}
 
@@ -135,10 +135,30 @@
 						{% include 'modules/albumlist.htm' with { 'itemlist': albumlist } %}
 					{% endif %}
 
-					{% if action == 'library.albums' %}
-						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">Albums (work in progress)</h2>
-						{% include 'modules/albumlist.htm' with { 'itemlist': itemlist } %}
-						{% include 'modules/searchresult-items.htm' %}
+					{% if action == 'albums' %}
+						<div class="row replace-me-with-proper-css"><br><br></div>
+						<div class="row">
+							<div class="col-md-3">
+								<h2>Albums <span class="badge">{{totalresults}}</span></h2>
+							</div>
+							<div class="col-md-6 centered-text">
+								{% include 'modules/paginator.htm' %}
+							</div>
+							<div class="col-md-3">
+								<div class="pull-right">
+									{{'sorting'|ll}}
+									{% include 'partials/dropdown-albumlist-sorting.htm' %}
+								</div>
+							</div>
+						</div>
+						{% include 'modules/albumlist.htm' %}
+						<div class="row">
+							<div class="col-md-3"></div>
+							<div class="col-md-6 centered-text">
+								{% include 'modules/paginator.htm' %}
+							</div>
+							<div class="col-md-3"></div>
+						</div>
 					{% endif %}
 
 					{% if action == 'importer' %}

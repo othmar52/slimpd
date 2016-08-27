@@ -1,14 +1,12 @@
 <?php
 
 $app->get('/', function() use ($app, $vars){
-	$vars['action'] = "landing";
-	// TODO: $app->auth->check('library');
-	$app->render('surrounding.htm', $vars);
+	$app->response->redirect($app->config['root'] . 'library', 303);
 });
 
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
-	$vars['itemlist'] = \Slimpd\Models\Album::getAll(12, 0, "added desc");
+	$vars['itemlist'] = \Slimpd\Models\Album::getAll(11, 0, "added desc");
 	$vars['totalresults'] = \Slimpd\Models\Album::getCountAll();
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
@@ -19,7 +17,7 @@ $app->get('/djscreen', function() use ($app, $vars){
 	$app->render('djscreen.htm', $vars);
 });
 
-foreach(array('artist', 'label', 'genre', 'album') as $className) {
+foreach(array('artist', 'label', 'genre') as $className) {
 	// stringlist of artist|label|genre
 	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $vars, $className){
 		$classPath = "\\Slimpd\\Models\\" . ucfirst($className);

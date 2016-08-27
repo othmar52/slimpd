@@ -140,6 +140,55 @@ foreach(array_keys($sortfields1) as $className) {
 }
 
 
+// albums
+$app->get("/albums/page/:currentPage/sort/:sort/:direction", function($currentPage, $sort, $direction) use ($app, $vars) {
+	$vars["action"] = "albums";
+	$vars["itemlist"] = [];
+
+	$itemsPerPage = 18;
+	$maxCount = 1000;
+
+	$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+	// TODO: check against whitelist to avoid SQL Injection
+	$sortQuery = " ORDER BY " . $sort . " " . $direction;
+	$vars["activesorting"] = $sort . "-" . $direction;
+	$vars["totalresults"] = \Slimpd\Models\Album::getCountAll();
+
+	$stmt = $sphinxPdo->prepare("
+		SELECT id,type,itemid,artistIds,display
+		FROM ". $app->config["sphinx"]["mainindex"]."
+		WHERE type=:type
+		GROUP BY itemid,type
+			".$sortQuery."
+			LIMIT :offset,:max;
+	");
+	$stmt->bindValue(":offset", ($currentPage-1)*$itemsPerPage , PDO::PARAM_INT);
+	$stmt->bindValue(":max", $itemsPerPage, PDO::PARAM_INT);
+	$stmt->bindValue(":type", 2, PDO::PARAM_INT);
+
+	$stmt->execute();
+	$rows = $stmt->fetchAll();
+
+	foreach($rows as $row) {
+		$vars["itemlist"][] = \Slimpd\Models\Album::getInstanceByAttributes(array("id" => $row["itemid"]));
+	}
+
+	$vars["paginator"] = new JasonGrimes\Paginator(
+		$vars["totalresults"],
+		$itemsPerPage,
+		$currentPage,
+		$app->config["root"] ."albums/page/(:num)/sort/".$sort."/".$direction
+	);
+	$vars["paginator"]->setMaxPagesToShow(paginatorPages($currentPage));
+
+	$vars["renderitems"] = getRenderItems($vars["itemlist"]);
+	$app->render("surrounding.htm", $vars);
+});
+
+
+
+
+
 $app->get("/alphasearch/", function() use ($app, $vars){
 	$type = $app->request()->get("searchtype");
 	$term = $app->request()->get("searchterm");
