@@ -94,7 +94,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	private function parseNml($rawFileContent, $minIndex, $maxIndex) {
 		if(isValidXml($rawFileContent) === FALSE) {
-			$app = \Slim\Slim::getInstance()->flashNow('error', 'invalid XML ' . $this->getTitle());
+			\Slim\Slim::getInstance()->flashNow('error', 'invalid XML ' . $this->getTitle());
 			return;
 		}
 		$playlistContent = new \SimpleXMLElement($rawFileContent);

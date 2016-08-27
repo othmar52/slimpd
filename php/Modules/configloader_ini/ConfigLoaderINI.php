@@ -190,7 +190,7 @@ class ConfigLoaderINI {
 
 		// override destructiveness values based on specific config key
 		if($config['destructiveness']['disable-all'] === '1') {
-			foreach($config['destructiveness'] as $key => $value) {
+			foreach(array_keys($config['destructiveness']) as $key) {
 				$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
 			}
 		}
