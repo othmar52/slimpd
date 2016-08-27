@@ -21,7 +21,7 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 		foreach($bitmaps as $bitmap) {
 			switch($bitmap->getPictureType()) {
 				case 'front':
-					if($foundFront === TRUE && $app->config['images']['hide_front_duplicates'] == '1') {
+					if($foundFront === TRUE && $app->config['images']['hide_front_duplicates'] === '1') {
 						continue;
 					}
 					$vars['albumimages'][] = $bitmap;
@@ -55,6 +55,7 @@ $app->get("/albums/page/:currentPage/sort/:sort/:direction", function($currentPa
 
 	$vars['itemlist'] = \Slimpd\Models\Album::getAll($itemsPerPage, $currentPage, $sort . " " . $direction);
 	$vars["totalresults"] = \Slimpd\Models\Album::getCountAll();
+	$vars["activesorting"] = $sort . "-" . $direction;
 
 	$vars["paginator"] = new JasonGrimes\Paginator(
 		$vars["totalresults"],
@@ -66,8 +67,6 @@ $app->get("/albums/page/:currentPage/sort/:sort/:direction", function($currentPa
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
 });
-
-
 
 $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = 'maintainance.albumdebug';
