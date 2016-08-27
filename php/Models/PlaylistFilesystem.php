@@ -68,12 +68,11 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 				}
 				$track->setRelPath($itemPath);
 				$track->setRelPathHash(getFilePathHash($itemPath));
+				$track->setAudioDataformat(getFileExt($track->getRelPath()));
 			}
 
 			if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $track->getRelPath()) === FALSE) {
 				$track->setError('notfound');
-			} else {
-				$track->setAudioDataformat(getFileExt($track->getRelPath()));
 			}
 			$return[] = $track;
 		}
