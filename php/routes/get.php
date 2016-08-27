@@ -3,7 +3,7 @@
 $app->get('/', function() use ($app, $vars){
 	$vars['action'] = "landing";
 	// TODO: $app->auth->check('library');
-    $app->render('surrounding.htm', $vars);
+	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/library(/)', function() use ($app, $vars){
@@ -16,7 +16,7 @@ $app->get('/library(/)', function() use ($app, $vars){
 
 $app->get('/djscreen', function() use ($app, $vars){
 	$vars['action'] = "djscreen";
-    $app->render('djscreen.htm', $vars);
+	$app->render('djscreen.htm', $vars);
 });
 
 foreach(array('artist', 'label', 'genre', 'album') as $className) {
@@ -28,7 +28,7 @@ foreach(array('artist', 'label', 'genre', 'album') as $className) {
 		$itemsPerPage = 100;
 		$searchterm = FALSE;
 		$orderBy = FALSE;
-		
+
 		foreach($itemParams as $i => $urlSegment) {
 			switch($urlSegment) {
 				case 'page':
@@ -80,14 +80,14 @@ foreach(array('artist', 'label', 'genre', 'album') as $className) {
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 	$vars['action'] = 'library.year';
-	
+
 	$vars['albumlist'] = \Slimpd\Models\Album::getInstancesByAttributes(
 		array('year' => $itemString)
 	);
-	
+
 	// get all relational items we need for rendering
 	$vars['renderitems'] = getRenderItems($vars['albumlist']);
-    $app->render('surrounding.htm', $vars);
+	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/css/spotcolors.css', function() use ($app, $vars){
@@ -125,7 +125,7 @@ $app->get('/deliver/:item+', function($item) use ($app, $vars){
 	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['musicdir'] . $path, $app);
 	}
-	
+
 	if(is_file($app->config['mpd']['alternative_musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
 	}
@@ -153,23 +153,23 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 		$app->notFound();
 		return;
 	}
-	
+
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
-	
+
 	// do not block other requests of this client
 	session_write_close();
-	
+
 	// IMPORTANT TODO: move this to an exec-wrapper
 	$cmd = APP_ROOT . 'vendor-dist/othmar52/clean-rename/clean-rename '
 		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
 	exec($cmd, $result);
-	
+
 	$vars['result'] = join("\n", $result);
 	$vars['directory'] = $fileBrowser;
 	$vars['cmd'] = $cmd;
 	$vars['action'] = 'clean-rename';
-	
+
 	$app->render('modules/widget-cleanrename.htm', $vars);
 });
 
