@@ -10,7 +10,7 @@ $app->get('/playlists', function() use ($app, $vars){
 
 $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = "showplaylist";
-	$playlist = new \Slimpd\playlist\playlist(join(DS, $itemParams));
+	$playlist = new \Slimpd\Models\PlaylistFilesystem(join(DS, $itemParams));
 
 	if($playlist->getErrorPath() === TRUE) {
 		$app->render('surrounding.htm', $vars);
@@ -42,12 +42,12 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 		$app->config['root'] . 'showplaylist/'.$playlist->getRelPath() .'?page=(:num)'
 	);
 	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-    $app->render('surrounding.htm', $vars);
+	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/markup/widget-playlist/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = 'widget-playlist';
-	$vars['playlist'] = new \Slimpd\playlist\playlist(join(DS, $itemParams));
+	$vars['playlist'] = new \Slimpd\Models\PlaylistFilesystem(join(DS, $itemParams));
 	$vars['playlist']->fetchTrackRange(0, 5);
 	$vars['playlisttracks'] = $vars['playlist']->getTracks();
 	$vars['renderitems'] = getRenderItems($vars['playlist']->getTracks());

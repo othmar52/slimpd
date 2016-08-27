@@ -161,7 +161,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$handle = opendir ($dir);
 		while ($file = readdir ($handle)) {
-			$foundExt = strtolower(preg_replace("/^.*\./", "", $file));
+			$foundExt = getFileExt($file);
 			if(is_dir($dir . $file) === TRUE) {
 				continue;
 			}

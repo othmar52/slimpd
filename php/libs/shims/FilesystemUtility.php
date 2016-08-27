@@ -1,5 +1,10 @@
 <?php
 
+function getFileExt($filePath, $toLower = TRUE) {
+	//$ext = preg_replace('/^.*\./', '', $filePath);
+	$ext = pathinfo($filePath, PATHINFO_EXTENSION);
+	return ($toLower === TRUE) ? strtolower($ext) : $ext;
+}
 
 function getMimeType ($filename) {
 	$mimeExtensionMapping = parse_ini_file(APP_ROOT . "config/mimetypes.ini", TRUE);
@@ -151,4 +156,15 @@ function deliver($file, $app) {
  
 	@fclose($file);
 	$app->stop();
+}
+
+/**
+ * checks if the string is parseable as XML
+ */
+function isValidXml ($xmlstring) {
+	libxml_use_internal_errors( true );
+	$doc = new \DOMDocument('1.0', 'utf-8');
+	$doc->loadXML($xmlstring);
+	$errors = libxml_get_errors();
+	return empty($errors);
 }

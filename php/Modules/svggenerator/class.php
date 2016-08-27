@@ -35,15 +35,15 @@ class Svggenerator {
 			}
 			if(is_file($arg) === TRUE) {
 				$this->absolutePath = $arg;
-				$this->ext = strtolower(pathinfo($arg, PATHINFO_EXTENSION));
+				$this->ext = getFileExt($arg);
 			}
 		}
 
-		// systemcheck testfiles are not within our music_dirs nsor in our database
+		// systemcheck testfiles are not within our music_dirs nor in our database
 		if($this->fingerprint === NULL) {
 			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
 				$this->absolutePath = realpath(DS.$arg);
-				$this->ext = strtolower(pathinfo(DS.$arg, PATHINFO_EXTENSION));
+				$this->ext = getFileExt(DS.$arg);
 			}
 		}
 

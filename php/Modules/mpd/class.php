@@ -1,7 +1,6 @@
 <?php
 namespace Slimpd\Modules\mpd;
 use Slimpd\Models\Track;
-use Slimpd\playlist;
 class mpd
 {
 	public function getCurrentlyPlayedTrack() {
@@ -225,7 +224,7 @@ class mpd
 				break;
 			case 'injectPlaylist':
 			case 'injectPlaylistAndPlay':
-				$playlist = new \Slimpd\playlist\playlist($itemPath);
+				$playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
 				$playlist->fetchTrackRange(0,1000, TRUE);
 				$counter = $this->appendPlaylist($playlist, $targetPosition);
 				if($firePlay === TRUE) {
@@ -271,7 +270,7 @@ class mpd
 			case 'replacePlaylist':
 			case 'replacePlaylistAndPlay':
 			case 'softreplacePlaylist':
-				$playlist = new \Slimpd\playlist\playlist($itemPath);
+				$playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
 
 				$playlist->fetchTrackRange(0,1000, TRUE);
 				$counter = $this->appendPlaylist($playlist);

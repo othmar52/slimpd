@@ -129,7 +129,7 @@ class Xwax {
 		#$xConf = $app->config['xwax'];
 		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
 		$deckItem = ($deckStatus['path'] !== NULL)
-			 ? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
+			 ? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
 			 : NULL;
 		return $deckItem;
 	}
@@ -146,7 +146,7 @@ class Xwax {
 			}
 			$deckStatus = self::clientResponseToArray($response);
 			$deckStatus['item'] = ($deckStatus['path'] !== NULL)
-				? \Slimpd\playlist\playlist::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]->jsonSerialize()
+				? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]->jsonSerialize()
 				: NULL;
 			$return[] = $deckStatus;
 		}

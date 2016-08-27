@@ -370,8 +370,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		// override description of audiocodec
 		// @see: https://github.com/othmar52/slimpd/issues/25
 		// @see: https://github.com/JamesHeinrich/getID3/issues/48
-		$ext = strtolower(preg_replace('/^.*\./', '', $rawTagData->getRelPath())); 
-		if($ext !== 'm4a') {
+		if(getFileExt($rawTagData->getRelPath()) !== 'm4a') {
 			return;
 		}
 		if(@$data['audio']['codec'] === 'Apple Lossless Audio Codec') {
@@ -394,8 +393,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 	// TODO: where to move pythonscript?
 	// TODO: general wrapper for shell-executing stuff
 	public static function extractAudioFingerprint($absolutePath, $returnCommand = FALSE) {
-		$ext = strtolower(pathinfo($absolutePath, PATHINFO_EXTENSION));
-		switch($ext) {
+		switch(getFileExt($absolutePath)) {
 			case 'mp3':
 				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
 					' ' . APP_ROOT . "scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
