@@ -74,7 +74,7 @@
 			// first time page loaded markup is delivered by backend, no need for ajax call!
 			if (!this.rendered) {
 				this.currentView = new window.sliMpd.modules.PageView({
-					name : name,
+					name,
 					templateString : "",
 					el : "#main>.main-content"
 				});

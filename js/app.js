@@ -97,7 +97,7 @@ $(document).ready(function() {
 				rotationX: 90,
 				y: $(".player-mpd").height()/2,
 				z: -5,
-				ease: ease
+				ease
 			};
 			var transformNewPlayerFrom = {
 				transformOrigin: originNew,
@@ -114,7 +114,7 @@ $(document).ready(function() {
 				y:0,
 				z:0,
 				delay:0.02,
-				ease: ease
+				ease
 			};
 
 

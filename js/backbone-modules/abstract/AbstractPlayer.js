@@ -75,7 +75,7 @@
 			}
 
 			$.ajax({
-				url: url
+				url
 			}).done(function(response){
 				// place markup in DOM
 				this._template = _.template(response);
@@ -258,7 +258,7 @@
 
 			$.ajax({
 				url: $waveFormWrapper.attr("data-jsonurl"),
-				dataType: 'json',
+				dataType: "json",
 				success(vals) {
 					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
 					var maxVal = that.getMaxVal(vals);
