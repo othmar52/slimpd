@@ -514,13 +514,13 @@ abstract class AbstractModel {
 		$currentPage = ($currentPage < 1) ? 1 : $currentPage;
 		
 		$query = "SELECT * FROM ". self::getTableName();
-		// TODO: validate orderBy. for now use a quick and dirty whitelist
+		// IMPORTANT TODO: validate orderBy to avoid sql injection
 		switch($orderBy) {
-			case "added desc":
-				$orderBy = " ORDER BY added desc ";
+			case "":
+				$orderBy = " ORDER BY title ASC ";
 				break;
 			default:
-				$orderBy = " ORDER BY title ASC ";
+				$orderBy = " ORDER BY " . $orderBy . " ";
 				break;
 		}
 		$query .= $orderBy; // TODO: handle ordering

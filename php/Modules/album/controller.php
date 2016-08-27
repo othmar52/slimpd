@@ -47,6 +47,26 @@ foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 	});
 }
 
+// stringlist of artist|label|genre
+$app->get("/albums/page/:currentPage/sort/:sort/:direction", function($currentPage, $sort, $direction) use ($app, $vars) {
+	$vars["action"] = "albums";
+	$vars["itemlist"] = [];
+	$itemsPerPage = 18;
+
+	$vars['itemlist'] = \Slimpd\Models\Album::getAll($itemsPerPage, $currentPage, $sort . " " . $direction);
+	$vars["totalresults"] = \Slimpd\Models\Album::getCountAll();
+
+	$vars["paginator"] = new JasonGrimes\Paginator(
+		$vars["totalresults"],
+		$itemsPerPage,
+		$currentPage,
+		$app->config["root"] ."albums/page/(:num)/sort/".$sort."/".$direction
+	);
+	$vars["paginator"]->setMaxPagesToShow(paginatorPages($currentPage));
+	$vars['renderitems'] = getRenderItems($vars['itemlist']);
+	$app->render('surrounding.htm', $vars);
+});
+
 
 
 $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $vars){
