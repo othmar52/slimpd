@@ -95,7 +95,7 @@
 					this.previousView.remove();
 				}
 				this.currentView = new window.sliMpd.modules.PageView({
-					name : name,
+					name,
 					templateString : response
 				});
 				this.currentView.render(true);
