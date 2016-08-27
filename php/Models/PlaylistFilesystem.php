@@ -30,7 +30,6 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 	public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
 		$app = \Slim\Slim::getInstance();
 		$raw = file_get_contents($app->config['mpd']['musicdir'] . $this->relPath);
-		$itemPaths = array();
 		switch($this->getExt()) {
 			case 'm3u':
 			case 'pls':
@@ -41,16 +40,16 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 				$this->parseNml($raw, $minIndex, $maxIndex);
 				break;
 			default :
-				$app = \Slim\Slim::getInstance()->flashNow('error', 'playlist extension ' . $this->getExt() . ' is not supported');
+				$app->flashNow('error', 'playlist extension ' . $this->getExt() . ' is not supported');
 				return;
 		}
 		$this->fetchedLength === TRUE;
 
 		if($pathOnly === FALSE) {
 			$this->tracks = self::pathStringsToTrackInstancesArray($this->itemPaths);
-		} else {
-			$this->tracks = self::pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
+			return;
 		}
+		$this->tracks = self::pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
 	}
 
 	public static function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
