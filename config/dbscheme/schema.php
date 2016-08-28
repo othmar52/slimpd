@@ -151,6 +151,7 @@ class Schema extends AbstractSchema
       "DROP TABLE IF EXISTS `importer`",
       "CREATE TABLE `importer` (\r"
       . "  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
+      . "  `batchId` int(11) unsigned NOT NULL DEFAULT '0',\r"
       . "  `jobPhase` int(11) NOT NULL DEFAULT '0',\r"
       . "  `jobStart` double NOT NULL,\r"
       . "  `jobLastUpdate` double NOT NULL,\r"

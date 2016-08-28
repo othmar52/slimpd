@@ -433,6 +433,7 @@ CREATE TABLE IF NOT EXISTS `editorial` (
 
 CREATE TABLE IF NOT EXISTS `importer` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `batchId` int(11) unsigned NOT NULL DEFAULT '0',
   `jobPhase` int(11) NOT NULL DEFAULT '0',
   `jobStart` DOUBLE NOT NULL,
   `jobLastUpdate` DOUBLE NOT NULL,
