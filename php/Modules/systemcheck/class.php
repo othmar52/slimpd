@@ -15,8 +15,8 @@ class Systemcheck {
 	}
 
 	public function runChecks() {
+		$app = \Slim\Slim::getInstance();
 		$check = array(
-
 			// filesystem
 			'fsMusicdirconf'=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirslash'=> array('status' => 'warning','hide' => FALSE, 'skip' => TRUE),
@@ -42,60 +42,13 @@ class Systemcheck {
 			'sxSchema'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'sxContent'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 
+			'skipAudioTests'=> FALSE
 		);
 
-		$this->audioFormats = array(
-			'mp3' => array(
-				'811d1030efefb4bde7b5126e740ff34c' => 'testfile-online-convert.com.mp3'
-			),
-			'flac' => array(
-				'd84bd2fdeb119b724e3441af376d7159' => 'testfile-online-convert.com.flac'
-			),
-			'wav' => array(
-				'f719fd7c146c5f1f7a3808477c379ee9' => 'testfile.wav'
-			),
-			'm4a' => array(
-				'f3ecf7790e9394981c09915efc5668d0' => 'testfile-online-audio-converter.com.m4a'
-			),
-			'aif' => array(
-				'50ccced31bbeae8ca5dfe989d9a5e08d' => 'testfile-online-convert.com.aif'
-			),
-			'aac' => array(
-				'070aab812298dec6ac937080e6d3adae' => 'testfile-online-convert.com.aac'
-			),
-			'ogg' => array(
-				'5b97a2865f9d0c4f28b2c0894ac37502' => 'testfile-online-audio-converter.com.ogg'
-			),
-			'wma' => array(
-				'06a76631d599a699e93ea9462f7f0feb' => 'testfile-online-audio-converter.com.wma'
-			),
-			'ac3' => array(
-				'dc713d0a458118bf61ae2905c2b8e483' => 'testfile-converted-with-www.zamzar.com.ac3'
-			)
-		);
+		
 
-		$check['audioFormats'] = array_keys($this->audioFormats);
-		$check['audioFormatsUc'] = array_map('ucfirst', $check['audioFormats']);
-		$check['skipAudioTests'] = FALSE;
-
-		foreach($this->audioFormats as $format => $data) {
-			$check['fp'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
-				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
-				'cmd' => '',
-				'resultExpected' => array_keys($data)[0],
-				'resultReal' => FALSE,
-			);
-			$check['wf'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
-				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
-				'cmd' => ''
-			);
-
-		}
-
-		$app = \Slim\Slim::getInstance();
-
+		
 		$this->runMusicdirChecks($check);
-
 		$this->runAppDirChecks($check);
 
 		// check if we can connect to database
@@ -107,22 +60,14 @@ class Systemcheck {
 			$check['dbPerms']['skip'] = FALSE;
 		}
 
-
 		$this->runDatabasePermissionCheck($check, $app);
-
 		$this->runDatabaseSchemaCheck($check, $app);
-
 		$this->runDatabaseContentCheck($check);
-
 		$this->runMpdChecks($check);
-
 		$this->runSphinxChecks($check);
-
+		$this->buildAudioCheckConf($check);
 		$this->runAudioChecks($check);
-
-
 		return $check;
-
 	}
 
 	private function runMusicdirChecks(&$check) {
@@ -276,20 +221,16 @@ class Systemcheck {
 				$check['sxSchema']['msg'] = $stmt->errorInfo()[2];
 				$schemaError = TRUE;
 				$check['sxContent']['skip'] = TRUE;
-			} else {
-				$check['sxSchema']['status'] = 'sucess';
-				$check['sxContent']['skip'] = FALSE;
-				$meta = $sphinxPdo->query("SHOW META")->fetchAll();
-				foreach($meta as $m) {
-					if($m['Variable_name'] === 'total_found') {
-						if($m['Value'] < 1) {
-							$contentError = TRUE;
-						} else {
-							$check['sxContent'][$indexName]['total'] = $m['Value'];
-						}
-					}
-				}
+				continue;
 			}
+			$check['sxSchema']['status'] = 'sucess';
+			$check['sxContent']['skip'] = FALSE;
+			$total = parseMetaForTotal($sphinxPdo->query("SHOW META")->fetchAll());
+			if($total < 1) {
+				$contentError = TRUE;
+				continue;
+			}
+			$check['sxContent'][$indexName]['total'] = $total;
 		}
 		$check['sxSchema']['status'] = ($schemaError === TRUE) ? 'danger' : 'success';
 		$check['sxContent']['status'] = ($contentError === TRUE) ? 'danger' : 'success';
@@ -298,6 +239,55 @@ class Systemcheck {
 		}
 	}
 
+	private function buildAudioCheckConf(&$check) {
+		$this->audioFormats = array(
+			'mp3' => array(
+				'811d1030efefb4bde7b5126e740ff34c' => 'testfile-online-convert.com.mp3'
+			),
+			'flac' => array(
+				'd84bd2fdeb119b724e3441af376d7159' => 'testfile-online-convert.com.flac'
+			),
+			'wav' => array(
+				'f719fd7c146c5f1f7a3808477c379ee9' => 'testfile.wav'
+			),
+			'm4a' => array(
+				'f3ecf7790e9394981c09915efc5668d0' => 'testfile-online-audio-converter.com.m4a'
+			),
+			'aif' => array(
+				'50ccced31bbeae8ca5dfe989d9a5e08d' => 'testfile-online-convert.com.aif'
+			),
+			'aac' => array(
+				'070aab812298dec6ac937080e6d3adae' => 'testfile-online-convert.com.aac'
+			),
+			'ogg' => array(
+				'5b97a2865f9d0c4f28b2c0894ac37502' => 'testfile-online-audio-converter.com.ogg'
+			),
+			'wma' => array(
+				'06a76631d599a699e93ea9462f7f0feb' => 'testfile-online-audio-converter.com.wma'
+			),
+			'ac3' => array(
+				'dc713d0a458118bf61ae2905c2b8e483' => 'testfile-converted-with-www.zamzar.com.ac3'
+			)
+		);
+
+		$check['audioFormats'] = array_keys($this->audioFormats);
+		$check['audioFormatsUc'] = array_map('ucfirst', $check['audioFormats']);
+
+		foreach($this->audioFormats as $format => $data) {
+			$check['fp'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
+				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'cmd' => '',
+				'resultExpected' => array_keys($data)[0],
+				'resultReal' => FALSE,
+			);
+			$check['wf'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
+				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'cmd' => ''
+			);
+
+		}
+	}
+		
 	private function runAudioChecks(&$check) {
 		if($check['skipAudioTests'] === TRUE) {
 			return;
@@ -326,7 +316,6 @@ class Systemcheck {
 				continue;
 			}
 			$peakfile = APP_ROOT . "peakfiles/".$ext.DS. substr($check[$checkFp]['resultExpected'],0,3) . DS . $check[$checkFp]['resultExpected'];
-			#echo $peakfile; die();
 			$tmpMp3 = APP_ROOT . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.mp3';
 			$tmpWav = APP_ROOT . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.wav';
 
@@ -348,8 +337,9 @@ class Systemcheck {
 			if(is_file($tmpWav) === FALSE) {
 				$check[$checkWf]['status'] = 'danger';
 			}
-			unset($response);
-			unset($returnStatus);
+			@unlink($peakfile);
+			@unlink($tmpMp3);
+			@unlink($tmpWav);
 		}
 	}
 }

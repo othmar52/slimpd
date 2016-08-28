@@ -27,6 +27,20 @@ function addStars($searchterm) {
 	return $str;
 }
 
+
+function parseMetaForTotal($metaArray) {
+	$return = "0";
+	foreach($metaArray as $metaData) {
+		if($metaData["Variable_name"] !== "total_found") {
+			continue;
+		}
+		return $metaData["Value"];
+	}
+	return $return;
+}
+
+
+
 /**
  * Builds querystring to use for sphinx-queries
  * we have to make sure that /autocomplete and /search* gives us the same results
