@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="col-md-10">
-		<h2>Recent Importer Jobs</h2>
+		<h2>Recent Importer Jobs <span class="small uc">TODO: auto refresh</span></h2>
 	</div>
 	<div class="col-md-2">
 		<button role="control" data-href="{{root}}importer/triggerUpdate" title="update sliMpd-db based on MPD-db" class="ajax-rqst btn btn-default">
@@ -23,41 +23,37 @@ td.ar {
 	te_xt-align: right;
 }
 </style>
-
-
 	{% for item in itemlist %}
 		<div class="row">
 			<div class="col-md-3">
-			{{item.jobStart|round(0, 'floor')|date("m/d/Y H:i:s")}}
+			{{item.jobStart|timeElapsedString}}
 			</div>
 			<div class="col-md-2">
-			{% if item.jobStatistics.progressPercent == 100 %}
+			{% if item.status == 'finished' %}
 				<div class="progress">
 					<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
 					100% in {{ item.jobStatistics.runtimeSeconds|formatSeconds }}
 					</div>
 				</div>
-			{% else %}
+			{% endif %}
+			{% if item.status == 'running' %}
 				running...
+			{% endif %}
+			{% if item.status == 'interrupted' %}
+			<span class="label label-warning">
+				interrupted after {{item.interruptedAfter|formatSeconds }}
+			</span>
 			{% endif %}
 			</div>
 			<div class="col-md-7">
-				<button class="btn btn-trnsp toggle-content pull-right" data-toggle="#importer-batch-{{item.batchId}}" data-text1="show details" data-text2="hide details">
-					details
+				<button class="btn btn-trnsp toggle-content pull-right" data-toggle="#importer-batch-{{item.batchId}}" data-text1="Details" data-text2="Hide Details">
+					Details
 				</button>
-					
 			</div>
 		</div>
-		
 		<div class="row" id="importer-batch-{{item.batchId}}" {{ (item.showDetails) ? '' : 'style="display:none;"' }}>
 			{% include 'partials/importer/stats-table.htm' with {'itemlist': item.phases} %}
 		</div>
-		
 		<hr />
-	
 	{% endfor %}
-	
-
-
-
 {% include 'partials/importer/phase-description.htm' %}

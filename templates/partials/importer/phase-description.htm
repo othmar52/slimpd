@@ -22,7 +22,7 @@ Bitmap-records are completed with an album Id.
 <hr />
 <h4 class="dark"><span class="badge">Phase 5</span> Delete Extracted Image Duplicates</h4>
 <p>In many cases all tracks of an album have identical album images embeded within their id3v2-tags. There is no need to store these duplicate images.<br />
-sliMpd makes a "fuzzy" comparison, and deletes the duplicate images in the table:bitmap, and the filesystem (with write privliges).</p>
+sliMpd makes a "fuzzy" comparison, and deletes the duplicate images in the table:bitmap, and the filesystem (application directory "embedded").</p>
 <hr />
 <h4 class="dark"><span class="badge">Phase 6</span> Search images in filesystem</h4>
 <p>Based on your <a class="item-link col2" href="https://github.com/othmar52/slimpd/wiki/Configuration#images" target="_blank">configuration</a>, several directories will be scanned for album images. For each found image a record in table:bitmap will be created.</p>

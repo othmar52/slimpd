@@ -46,8 +46,8 @@ function unifyBraces($input) {
 
 /**
  * php's escapeshellarg() invalidates pathes with some specialchars
- *      escapeshellarg("/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3")
- *          results in "/testdir/pathtest-uselessx/testfile.mp3"
+ *	  escapeshellarg("/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3")
+ *		  results in "/testdir/pathtest-uselessx/testfile.mp3"
  * TODO: check if this is a security issue
  * @see: issue #4
  */
@@ -119,16 +119,16 @@ function az09($string, $preserve = "", $strToLower = TRUE) {
  * If $onlyNonEmptyValues is set, then all blank ("") values are removed.
  * Usage: 256
  *
- * @param   string      Delimiter string to explode with
- * @param   string      The string to explode
- * @param   boolean     If set, all empty values will be removed in output
- * @param   integer     If positive, the result will contain a maximum of
- *                       $limit elements, if negative, all components except
- *                       the last -$limit are returned, if zero (default),
- *                       the result is not limited at all. Attention though
- *                       that the use of this parameter can slow down this
- *                       function.
- * @return  array       Exploded values
+ * @param   string	  Delimiter string to explode with
+ * @param   string	  The string to explode
+ * @param   boolean	 If set, all empty values will be removed in output
+ * @param   integer	 If positive, the result will contain a maximum of
+ *					   $limit elements, if negative, all components except
+ *					   the last -$limit are returned, if zero (default),
+ *					   the result is not limited at all. Attention though
+ *					   that the use of this parameter can slow down this
+ *					   function.
+ * @return  array	   Exploded values
  */
 function trimExplode($delim, $string, $removeEmptyValues = FALSE, $limit = 0) {
 	$explodedValues = explode($delim, $string);
@@ -261,3 +261,40 @@ function getMicrotimeFloat() {
 	return str_replace(",", ".", microtime(TRUE));
 }
 
+/**
+ * Thanks to "Glavić"
+ * http://stackoverflow.com/questions/1416697/converting-timestamp-to-time-ago-in-php-e-g-1-day-ago-2-days-ago
+ * TODO: translate
+ */
+function timeElapsedString($datetime, $full = false) {
+	$now = new DateTime;
+	$ago = new DateTime("@".floor($datetime));
+	$diff = $now->diff($ago);
+
+	$diff->w = floor($diff->d / 7);
+	$diff->d -= $diff->w * 7;
+
+	$string = array(
+		'y' => 'year',
+		'm' => 'month',
+		'w' => 'week',
+		'd' => 'day',
+		'h' => 'hour',
+		'i' => 'minute',
+		's' => 'second',
+	);
+	foreach($string as $key => &$value) {
+		if ($diff->$key) {
+			$value = $diff->$key . ' ' . $value . ($diff->$key > 1 ? 's' : '');
+			continue;
+		}
+		unset($string[$key]);
+	}
+
+	if (!$full) {
+		$string = array_slice($string, 0, 1);
+	}
+	return $string
+		? implode(', ', $string) . ' ago'
+		: 'just now';
+}
