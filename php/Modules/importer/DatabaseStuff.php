@@ -37,8 +37,6 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		while($record = $result->fetch_assoc()) {
 			$all['al' . $record['albumId']] = NULL;
-			$this->itemsChecked = count($all);
-			
 			$this->updateJob(array(
 				'currentItem' => 'trackId: ' . $record['id']
 			));
@@ -77,11 +75,10 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				$msg .= ", albumCount:" .  $item->getAlbumCount();
 				$item->update();
 				$this->itemsProcessed++;
-				$this->itemsChecked = count($all);
+				$this->itemsChecked++;
 				$this->updateJob(array(
 					'currentItem' => $msg
 				));
-				
 				cliLog($msg, 7);
 			}
 			

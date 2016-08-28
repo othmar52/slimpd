@@ -32,6 +32,10 @@
 	background-color: {{ values["1st"] }};
 	transition: {{trans}};
 }
+.spotcol-{{ colname }} .progress-bar {
+	background-color: {{ values["1st"] }};
+	color: #000;
+}
 
 	{% endif %}
 {% endfor %}

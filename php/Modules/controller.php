@@ -5,7 +5,7 @@ $app->get('/importer(/)', function() use ($app, $vars){
 	$vars['action'] = 'importer';
 	$vars['servertime'] = time();;
 	
-	$query = "SELECT * FROM importer ORDER BY batchId DESC, jobPhase ASC LIMIT 30;";
+	$query = "SELECT * FROM importer ORDER BY batchId DESC, jobPhase ASC LIMIT 200;";
 	$result = $app->db->query($query);
 	$showDetail = TRUE;
 	while($record = $result->fetch_assoc() ) {
