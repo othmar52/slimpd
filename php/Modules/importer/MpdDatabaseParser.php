@@ -25,6 +25,7 @@ class MpdDatabaseParser {
 	public $fileCount = 0;
 	public $dirCount = 0;
 	public $itemsUnchanged = 0;
+	public $itemsTotal = 0;
 	public $itemsChecked = 0;
 	public $itemsProcessed = 0;
 
@@ -71,6 +72,7 @@ class MpdDatabaseParser {
 		$query = "SELECT id, relPathHash, relDirPathHash, filemtime, directoryMtime FROM rawtagdata;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
+			$this->itemsTotal++;
 			$this->fileOrphans[ $record["relPathHash"] ] = $record["id"];
 			$this->fileTstamps[ $record["relPathHash"] ] = $record["filemtime"];
 
@@ -104,6 +106,9 @@ class MpdDatabaseParser {
 			array_map("trim", $attr);
 			if(count($attr === 1)) {
 				$this->handleStructuralLine($attr[0]);
+				$importer->setItemsTotal($this->itemsTotal);
+				$importer->setItemsChecked($this->itemsChecked);
+				$importer->setItemsProcessed($this->itemsProcessed);
 				$importer->updateJob(array(
 					"msg" => "processed " . $this->itemsChecked . " files",
 					"currentfile" => $this->currentDir . DS . $this->currentSong,

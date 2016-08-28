@@ -43,16 +43,16 @@
 		<td class="ar" title="{{ item.jobStatistics.speedItemsPerMinute }}">{{ item.jobStatistics.speedItemsPerMinute|shorty }}
 		<td class="ar" title="{{ item.jobStatistics.speedItemsPerHour }}">{{ item.jobStatistics.speedItemsPerHour|shorty }}</td>
 		</td>
-		<td>{{ item.jobStatistics.itemCountTotal }}</td>
-		<td>{{ item.jobStatistics.itemCountChecked }}</td>
-		<td>{{ item.jobStatistics.itemCountProcessed }}</td>
+		<td>{{ item.jobStatistics.itemsTotal|shorty }}</td>
+		<td>{{ item.jobStatistics.itemsChecked|shorty }}</td>
+		<td>{{ item.jobStatistics.itemsProcessed|shorty }}</td>
 		<td>
 			{% if item.jobStatistics.extractedImages %}
-				<strong>Extracted Images:</strong> {{ item.jobStatistics.extractedImages }}<br/> 
+				<strong>Extracted Images:</strong> {{ item.jobStatistics.extractedImages|shorty }}<br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.insertedImages %}
-				<strong>Inserted Images:</strong> {{ item.jobStatistics.insertedImages }}<br/> 
+				<strong>Inserted Images:</strong> {{ item.jobStatistics.insertedImages|shorty }}<br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.deletedFileSize %}
@@ -60,27 +60,27 @@
 			{% endif %}
 			
 			{% if item.jobStatistics.insertedAlbums %}
-				<strong>Inserted Albums:</strong> <a href="{{root}}album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums }}</a><br/> 
+				<strong>Inserted Albums:</strong> <a href="{{root}}album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums|shorty }}</a><br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.updatedAlbums %}
-				<strong>Updated Albums:</strong> {{ item.jobStatistics.updatedAlbums }}<br /> 
+				<strong>Updated Albums:</strong> {{ item.jobStatistics.updatedAlbums|shorty }}<br /> 
 			{% endif %}
 			
 			{% if item.jobStatistics.deadfiles %}
-				<strong>Dead Files:</strong> {{ item.jobStatistics.deadfiles }}<br/> 
+				<strong>Dead Files:</strong> {{ item.jobStatistics.deadfiles|shorty }}<br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.unmodified_files %}
-				<strong>Unmodified Files:</strong> {{ item.jobStatistics.unmodified_files }}<br/> 
+				<strong>Unmodified Files:</strong> {{ item.jobStatistics.unmodified_files|shorty }}<br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.directorycount %}
-				<strong>Directory Count:</strong> {{ item.jobStatistics.directorycount }}<br/> 
+				<strong>Directory Count:</strong> {{ item.jobStatistics.directorycount|shorty }}<br/> 
 			{% endif %}
 			
 			{% if item.jobStatistics.deletedRecords %}
-				<strong>Deleted Records:</strong> {{ item.jobStatistics.deletedRecords }}<br/> 
+				<strong>Deleted Records:</strong> {{ item.jobStatistics.deletedRecords|shorty }}<br/> 
 			{% endif %}
 			
 			

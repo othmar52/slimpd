@@ -61,9 +61,9 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->jobPhase = 0;
 		$this->jobId = $batchJobId;
 		$this->jobBegin = $batchJobBegin;
-		$this->itemCountChecked = Track::getCountAll();
-		$this->itemCountProcessed = $this->itemCountChecked;
-		$this->itemCountTotal = $this->itemCountChecked;
+		$this->itemsChecked = Track::getCountAll();
+		$this->itemsProcessed = $this->itemsChecked;
+		$this->itemsTotal = $this->itemsChecked;
 		$this->finishJob(array('msg' => 'finished sliMpd import/update process'), __FUNCTION__);
 	}
 	public function scanMusicFileTags() {
@@ -93,14 +93,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemCountTotal FROM bitmap";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$query = "SELECT count(id) AS itemsTotal FROM bitmap";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$deletedRecords = 0;
 		$query = "SELECT id, relPath, embedded FROM bitmap;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->itemCountChecked++;
+			$this->itemsChecked++;
 			$prefix = ($record['embedded'] == '1')
 				? APP_ROOT.'embedded'
 				: $app->config['mpd']['musicdir'];
@@ -113,7 +113,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$bitmap->delete(); 
 				$deletedRecords++;
 			}
-			$this->itemCountProcessed++;
+			$this->itemsProcessed++;
 			$this->updateJob(array(
 				'currentItem' => $record['relPath'],
 				'deletedRecords' => $deletedRecords
@@ -139,8 +139,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemCountTotal FROM album WHERE lastScan <= filemtime;";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$query = "SELECT count(id) AS itemsTotal FROM album WHERE lastScan <= filemtime;";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$query = "SELECT id, relPath, relPathHash, filemtime FROM album WHERE lastScan <= filemtime;";
 		$result = $app->db->query($query);
@@ -149,10 +149,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$filesystemReader = new \Slimpd\Modules\importer\FilesystemReader();
 
 		while($record = $result->fetch_assoc()) {
-			$this->itemCountChecked++;
+			$this->itemsChecked++;
 			cliLog($record['id'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
-				'msg' => 'processed ' . $this->itemCountChecked . ' files',
+				'msg' => 'processed ' . $this->itemsChecked . ' files',
 				'currentItem' => $record['relPath'],
 				'insertedImages' => $insertedImages
 			));
@@ -194,7 +194,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$album->update();
 		}
 		$this->finishJob(array(
-			'msg' => 'processed ' . $this->itemCountChecked . ' directories',
+			'msg' => 'processed ' . $this->itemsChecked . ' directories',
 			'insertedImages' => $insertedImages
 		), __FUNCTION__);
 		return;
@@ -344,7 +344,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		cliLog("dead songs: " . count($mpdParser->fileOrphans));
 		#print_r($deadMysqlFiles);
 
-		$this->itemCountTotal = $mpdParser->itemsChecked;
+		$this->itemsTotal = $mpdParser->itemsChecked;
 		$this->finishJob(array(
 			'msg' => 'processed ' . $mpdParser->itemsChecked . ' files',
 			'directorycount' => $mpdParser->dirCount,
@@ -364,8 +364,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemCountTotal FROM  bitmap WHERE error=0 AND trackId > 0";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$query = "SELECT count(id) AS itemsTotal FROM  bitmap WHERE error=0 AND trackId > 0";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		$query = "
 			SELECT
 				id,
@@ -391,8 +391,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				'msg' => $msgProcessing,
 				'currentItem' => $record['relPath']
 			));
-			$this->itemCountChecked++;
-			if($this->itemCountChecked === 1) {
+			$this->itemsChecked++;
+			if($this->itemsChecked === 1) {
 				$previousKey = $record['dupes'];
 				cliLog($app->ll->str('importer.image.keep', array($record['relPath'])), 3);
 				continue;
@@ -406,7 +406,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$bitmap->setRelPath($record['relPath']);
 				$bitmap->destroy();
 
-				$this->itemCountProcessed++;
+				$this->itemsProcessed++;
 				$deletedFilesize += $record['filesize'];
 			} else {
 				$msg = $app->ll->str('importer.image.keep', array($record['relPath']));
@@ -415,7 +415,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$previousKey = $record['dupes'];
 		}
 
-		$msg = $app->ll->str('importer.destroyimages.result', array($this->itemCountProcessed, formatByteSize($deletedFilesize)));
+		$msg = $app->ll->str('importer.destroyimages.result', array($this->itemsProcessed, formatByteSize($deletedFilesize)));
 		cliLog($msg);
 
 		$this->finishJob(array(
@@ -442,10 +442,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 
 		$query = "
-			SELECT count(id) AS itemCountTotal
+			SELECT count(id) AS itemsTotal
 			FROM rawtagdata
 			WHERE audioDataFormat='mp3' AND fingerprint=''";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		
 		$query = "
@@ -456,13 +456,13 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$result = $app->db->query($query);
 
 		while($record = $result->fetch_assoc()) {
-			$this->itemCountChecked++;
+			$this->itemsChecked++;
 
 			$this->updateJob(array(
 				'currentItem' => 'albumId: ' . $record['relPath']
 			));
 
-			$this->itemCountProcessed++;
+			$this->itemsProcessed++;
 
 			$fullPath = $app->config['mpd']['musicdir'] . $record['relPath'];
 			if(is_file($fullPath) == FALSE || is_readable($fullPath) === FALSE) {
@@ -499,7 +499,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			if($this->waitingLoop === 0) {
 				$this->waitingLoop = time();
 				// fake total items with total seconds
-				$this->itemCountTotal = (int)$this->maxWaitingTime;
+				$this->itemsTotal = (int)$this->maxWaitingTime;
 				$this->beginJob(array(), __FUNCTION__);
 			}
 			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
@@ -507,8 +507,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$this->finishJob(NULL, __FUNCTION__);
 				\Slim\Slim::getInstance()->stop();
 			}
-			$this->itemCountProcessed = time()-$this->waitingLoop;
-			$this->itemCountChecked = time()-$this->waitingLoop;
+			$this->itemsProcessed = time()-$this->waitingLoop;
+			$this->itemsChecked = time()-$this->waitingLoop;
 			$this->updateJob(array(), __FUNCTION__);
 			//cliLog('waiting '. (time()-$this->waitingLoop - $this->maxWaitingTime)*-1 .' sec. until mpd\'s internal database-update has finished');
 			sleep($recursionInterval);
@@ -516,7 +516,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			return $this->waitForMpd();
 		}
 		if($this->waitingLoop > 0) {
-			$this->itemCountProcessed = $this->itemCountTotal;
+			$this->itemsProcessed = $this->itemsTotal;
 			cliLog('mpd seems to be ready. continuing...', 1, 'green');
 			$this->finishJob(NULL, __FUNCTION__);
 		}

@@ -108,13 +108,13 @@ abstract class AbstractModel {
 		}
 		
 		$database = \Slim\Slim::getInstance()->db;
-		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= ' FIND_IN_SET('. (int)$value .',' .$database->real_escape_string($key) . ') OR ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ') OR '
 		$query .= ')'; // close bracket
-		return $database->query($query)->fetch_assoc()['itemCountTotal'];
+		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
 	
 	public static function getInstancesLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
@@ -159,13 +159,13 @@ abstract class AbstractModel {
 		}
 		
 		$database = \Slim\Slim::getInstance()->db;
-		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . ' LIKE "%'. $database->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
-		return $database->query($query)->fetch_assoc()['itemCountTotal'];
+		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
 	
 	public static function getInstanceByAttributes(array $attributeArray, $orderBy = FALSE) {
@@ -213,13 +213,13 @@ abstract class AbstractModel {
 		}
 		
 		$database = \Slim\Slim::getInstance()->db;
-		$query = "SELECT count(*) AS itemCountTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(*) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 		
-		return $database->query($query)->fetch_assoc()['itemCountTotal'];
+		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
 	
 	private static function getTableName() {
@@ -540,13 +540,13 @@ abstract class AbstractModel {
 	}
 	
 	public static function getCountAll() {
-		$query = "SELECT count(id) AS itemCountTotal FROM ". self::getTableName();
+		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName();
 		$result = \Slim\Slim::getInstance()->db->query($query);
 		if($result === FALSE) {
 			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
 			return 0;
 		}
-		return $result->fetch_assoc()['itemCountTotal'];
+		return $result->fetch_assoc()['itemsTotal'];
 	}
 	
 	public static function getRandomInstance() {

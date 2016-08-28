@@ -64,14 +64,14 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->migratedAlbums = 0;
 		
 		
-		$query = "SELECT count(id) AS itemCountTotal FROM rawtagdata";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$query = "SELECT count(id) AS itemsTotal FROM rawtagdata";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		
 		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash ";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->itemCountChecked++;
-			if($this->itemCountChecked === 1) {
+			$this->itemsChecked++;
+			if($this->itemsChecked === 1) {
 				$this->newPrevAlb($record);
 			}
 			
@@ -92,16 +92,16 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->prevAlb->addTrack($record);
 			cliLog('adding track to previousAlbum: ' . $record['relPath'], 10);
 			
-			cliLog("#" . $this->itemCountChecked . " " . $record['relPath'],2);
+			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
 			
 			// dont forget to check the last directory
-			if($this->itemCountChecked === $this->itemCountTotal && $this->itemCountTotal > 1) {
+			if($this->itemsChecked === $this->itemsTotal && $this->itemsTotal > 1) {
 				$this->mayMigrate();
 			}
 		}
 
 		$this->finishJob(array(
-			'msg' => 'migrated ' . $this->itemCountChecked . ' files',
+			'msg' => 'migrated ' . $this->itemsChecked . ' files',
 			'migratedAlbums' => $this->migratedAlbums
 		), __FUNCTION__);
 	}

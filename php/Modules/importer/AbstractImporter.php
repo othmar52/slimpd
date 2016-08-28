@@ -10,21 +10,21 @@ abstract class AbstractImporter {
 	protected $lastJobStatusUpdate = 0; // timestamp
 
 	// counters needed for calculating estimated time and speed [Tracks/minute]
-	protected $itemCountChecked = 0;	
-	protected $itemCountProcessed = 0;
-	protected $itemCountTotal = 0;
+	protected $itemsChecked = 0;
+	protected $itemsProcessed = 0;
+	protected $itemsTotal = 0;
 
 	protected function beginJob($data = array(), $function = '') {
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$app = \Slim\Slim::getInstance();
 		$this->jobBegin = getMicrotimeFloat();
-		$this->itemCountChecked = 0;
-		$this->itemCountProcessed = 0;
+		$this->itemsChecked = 0;
+		$this->itemsProcessed = 0;
 		
 		$relPath = (isset($data['relPath']) === TRUE)
 			? $app->db->real_escape_string($data['relPath'])
 			: '';
-		//$this->itemCountTotal = 0;
+		//$this->itemsTotal = 0;
 		$query = "INSERT INTO importer
 			(batchId, jobPhase, jobStart, jobLastUpdate, jobStatistics, relPath)
 			VALUES (
@@ -78,46 +78,46 @@ abstract class AbstractImporter {
 		
 		\Slim\Slim::getInstance()->db->query($query);
 		$this->jobId = 0;
-		$this->itemCountChecked = 0;
-		$this->itemCountProcessed = 0;
-		$this->itemCountTotal = 0;
+		$this->itemsChecked = 0;
+		$this->itemsProcessed = 0;
+		$this->itemsTotal = 0;
 		$this->lastJobStatusUpdate = $microtime;
 		return;
 	}
 
 	protected function calculateSpeed(&$data) {
-		$data['itemCountChecked'] = $this->itemCountChecked;
-		$data['itemCountProcessed'] = $this->itemCountProcessed;
-		$data['itemCountTotal'] = $this->itemCountTotal;
+		$data['itemsChecked'] = $this->itemsChecked;
+		$data['itemsProcessed'] = $this->itemsProcessed;
+		$data['itemsTotal'] = $this->itemsTotal;
 
 		// this spped will be relevant for javascript animated progressbar
 		$data['speedPercentPerSecond'] = 0;
 
 		$data['runtimeSeconds'] = $data['microTimestamp'] - $this->jobBegin;
-		if($this->itemCountChecked < 1 || $this->itemCountTotal <1) {
+		if($this->itemsChecked < 1 || $this->itemsTotal <1) {
 			return;
 		}
 
 		$seconds = getMicrotimeFloat() - $this->jobBegin;
 
-		$itemsPerMinute = $this->itemCountChecked/$seconds*60;
+		$itemsPerMinute = $this->itemsChecked/$seconds*60;
 		$data['speedItemsPerMinute'] = floor($itemsPerMinute);
 		$data['speedItemsPerHour'] = floor($itemsPerMinute*60);
-		$data['speedPercentPerSecond'] = ($itemsPerMinute/60)/($this->itemCountTotal/100);
+		$data['speedPercentPerSecond'] = ($itemsPerMinute/60)/($this->itemsTotal/100);
 
-		$minutesRemaining = ($this->itemCountTotal - $this->itemCountChecked) / $itemsPerMinute;
+		$minutesRemaining = ($this->itemsTotal - $this->itemsChecked) / $itemsPerMinute;
 		if($data['progressPercent'] !== 0) {
 			$data['estimatedRemainingSeconds'] = 0;
 			$data['estimatedTotalRuntime'] = $data['runtimeSeconds'];
 			return;
 		}
 
-		$data['progressPercent'] = floor($this->itemCountChecked / ($this->itemCountTotal/100));
+		$data['progressPercent'] = floor($this->itemsChecked / ($this->itemsTotal/100));
 		// make sure we don not display 100% in case it is not finished
 		$data['progressPercent'] = ($data['progressPercent']>99) ? 99 : $data['progressPercent'];
 
 		$data['estimatedRemainingSeconds'] = round($minutesRemaining*60);
-		$data['estimatedTotalRuntime'] = round($this->itemCountTotal/$itemsPerMinute*60);
+		$data['estimatedTotalRuntime'] = round($this->itemsTotal/$itemsPerMinute*60);
 	}
 
 	protected function getLastBatchId() {
@@ -127,5 +127,17 @@ abstract class AbstractImporter {
 			return $batchId;
 		}
 		return 0;
+	}
+
+	public function setItemsTotal($value) {
+		$this->itemsTotal = $value;
+	}
+
+	public function setItemsChecked($value) {
+		$this->itemsChecked = $value;
+	}
+
+	public function setItemsProcessed($value) {
+		$this->itemsProcessed = $value;
 	}
 }

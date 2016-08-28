@@ -38,9 +38,9 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			////////////////////////////////////////////////////////////////
 		
 		$query = "
-			SELECT COUNT(*) AS itemCountTotal
+			SELECT COUNT(*) AS itemsTotal
 			FROM rawtagdata WHERE lastScan < filemtime";
-		$this->itemCountTotal = (int) $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 			
 			
 		$query = "
@@ -53,10 +53,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		$result = $app->db->query($query);
 		$this->extractedImages = 0;
 		while($record = $result->fetch_assoc()) {
-			$this->itemCountChecked++;
+			$this->itemsChecked++;
 			cliLog($record['id'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
-				'msg' => 'processed ' . $this->itemCountChecked . ' files',
+				'msg' => 'processed ' . $this->itemsChecked . ' files',
 				'currentItem' => $record['relPath'],
 				'extractedImages' => $this->extractedImages
 			));

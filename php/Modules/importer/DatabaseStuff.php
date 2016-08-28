@@ -20,8 +20,8 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			// reset all counters
 			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0");
 			
-			$query = "SELECT count(id) AS itemCountTotal FROM " . $table;
-			$this->itemCountTotal += $app->db->query($query)->fetch_assoc()['itemCountTotal'];
+			$query = "SELECT count(id) AS itemsTotal FROM " . $table;
+			$this->itemsTotal += $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		}
 		
 		// collect all genreIds, labelIds, artistIds, remixerIds, featuringIds, albumId provided by tracks
@@ -37,7 +37,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		while($record = $result->fetch_assoc()) {
 			$all['al' . $record['albumId']] = NULL;
-			$this->itemCountChecked = count($all);
+			$this->itemsChecked = count($all);
 			
 			$this->updateJob(array(
 				'currentItem' => 'trackId: ' . $record['id']
@@ -76,8 +76,8 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				$item->setAlbumCount( count($data['albums']) );
 				$msg .= ", albumCount:" .  $item->getAlbumCount();
 				$item->update();
-				$this->itemCountProcessed++;
-				$this->itemCountChecked = count($all);
+				$this->itemsProcessed++;
+				$this->itemsChecked = count($all);
 				$this->updateJob(array(
 					'currentItem' => $msg
 				));
