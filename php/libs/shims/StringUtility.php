@@ -253,3 +253,11 @@ function formatByteSize($bytes) {
 	}
 	return "0 bytes";
 }
+
+/**
+ * depending on locale setting we may be a comma separator - lets force the dot
+ */
+function getMicrotimeFloat() {
+	return str_replace(",", ".", microtime(TRUE));
+}
+

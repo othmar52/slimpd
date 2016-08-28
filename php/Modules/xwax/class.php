@@ -64,7 +64,7 @@ class Xwax {
 			$this->onBeforeGetStatus();
 			if($this->pollcache !== NULL) {
 				$interval = 2;
-				if(microtime(TRUE) - $this->pollcache->getMicrotstamp() < $interval) {
+				if(getMicrotimeFloat() - $this->pollcache->getMicrotstamp() < $interval) {
 					$useCache = TRUE;
 				}
 			}
@@ -120,7 +120,7 @@ class Xwax {
 			$this->pollcache->setPort($this->port);
 		}
 		$this->pollcache->setResponse(serialize($response));
-		$this->pollcache->setMicrotstamp(microtime(TRUE));
+		$this->pollcache->setMicrotstamp(getMicrotimeFloat());
 		$this->pollcache->update();
 	}
 

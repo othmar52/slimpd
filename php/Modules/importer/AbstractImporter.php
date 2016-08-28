@@ -17,7 +17,7 @@ abstract class AbstractImporter {
 	protected function beginJob($data = array(), $function = '') {
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$app = \Slim\Slim::getInstance();
-		$this->jobBegin = microtime(TRUE);
+		$this->jobBegin = getMicrotimeFloat();
 		$this->itemCountChecked = 0;
 		$this->itemCountProcessed = 0;
 		
@@ -45,15 +45,15 @@ abstract class AbstractImporter {
 	}
 
 	public function updateJob($data = array()) {
-		$microtime = microtime(TRUE);
+		$microtime = getMicrotimeFloat();
 		if($microtime - $this->lastJobStatusUpdate < $this->jobStatusInterval) {
 			return;
 		}
-		
+
 		$data['progressPercent'] = 0;
 		$data['microTimestamp'] = $microtime;
 		$this->calculateSpeed($data);
-		
+
 		$query = "UPDATE importer
 			SET jobStatistics='" .serialize($data)."',
 			jobLastUpdate=".$microtime."
@@ -66,11 +66,11 @@ abstract class AbstractImporter {
 
 	protected function finishJob($data = array(), $function = '') {
 		cliLog("FINISHED import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
-		$microtime = microtime(TRUE);
+		$microtime = getMicrotimeFloat();
 		$data['progressPercent'] = 100;
 		$data['microTimestamp'] = $microtime;
 		$this->calculateSpeed($data);
-		
+
 		$query = "UPDATE importer
 			SET jobEnd=".$microtime.",
 			jobLastUpdate=".$microtime.",
@@ -98,7 +98,7 @@ abstract class AbstractImporter {
 			return;
 		}
 
-		$seconds = microtime(TRUE) - $this->jobBegin;
+		$seconds = getMicrotimeFloat() - $this->jobBegin;
 
 		$itemsPerMinute = $this->itemCountChecked/$seconds*60;
 		$data['speedItemsPerMinute'] = floor($itemsPerMinute);
@@ -115,7 +115,7 @@ abstract class AbstractImporter {
 		$data['progressPercent'] = floor($this->itemCountChecked / ($this->itemCountTotal/100));
 		// make sure we don not display 100% in case it is not finished
 		$data['progressPercent'] = ($data['progressPercent']>99) ? 99 : $data['progressPercent'];
-		
+
 		$data['estimatedRemainingSeconds'] = round($minutesRemaining*60);
 		$data['estimatedTotalRuntime'] = round($this->itemCountTotal/$itemsPerMinute*60);
 	}

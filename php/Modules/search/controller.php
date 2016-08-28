@@ -86,7 +86,7 @@ foreach(array_keys($sortfields1) as $className) {
 					$stmt->bindValue(":max", $itemsPerPage, PDO::PARAM_INT);
 					$stmt->bindValue(":type", $sphinxTypeIndex, PDO::PARAM_INT);
 					
-					$vars["search"][$resultType]["time"] = microtime(TRUE);
+					$vars["search"][$resultType]["time"] = getMicrotimeFloat();
 					
 					$stmt->execute();
 					$rows = $stmt->fetchAll();
@@ -103,7 +103,7 @@ foreach(array_keys($sortfields1) as $className) {
 						$vars["itemlist"][] = $obj;
 					}
 					
-					$vars["search"][$resultType]["time"] = number_format(microtime(TRUE) - $vars["search"][$resultType]["time"],3);
+					$vars["search"][$resultType]["time"] = number_format(getMicrotimeFloat() - $vars["search"][$resultType]["time"],3);
 					
 					$vars["paginator"] = new JasonGrimes\Paginator(
 						$vars["search"][$resultType]["total"],
@@ -226,7 +226,7 @@ foreach(array_keys($sortfields) as $currentType) {
 				
 				$sortQuery = ($sortfield !== "relevance")?  " ORDER BY " . $sortfield . " " . $direction : "";
 				
-				$vars["search"][$type]["time"] = microtime(TRUE);
+				$vars["search"][$type]["time"] = getMicrotimeFloat();
 				
 				$stmt = $sphinxPdo->prepare("
 					SELECT id,type,itemid,display FROM ". $app->config["sphinx"]["mainindex"]."
@@ -313,7 +313,7 @@ foreach(array_keys($sortfields) as $currentType) {
 						$vars["itemlist"][] = $obj;
 					}
 				}
-				$vars["search"][$type]["time"] = number_format(microtime(TRUE) - $vars["search"][$type]["time"],3);
+				$vars["search"][$type]["time"] = number_format(getMicrotimeFloat() - $vars["search"][$type]["time"],3);
 				$vars["timelog"][$type]->End();
 			}
 		}
@@ -377,13 +377,13 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 	ignore_user_abort(FALSE);
 	ob_implicit_flush();
 
-	$timeLogBegin = microtime(TRUE);
+	$timeLogBegin = getMicrotimeFloat();
 	$stmt->execute();
-	$timLogData[] = " execute() " . (microtime(TRUE) - $timeLogBegin);
+	$timLogData[] = " execute() " . (getMicrotimeFloat() - $timeLogBegin);
 	$rows = $stmt->fetchAll();
-	$timLogData[] = " fetchAll() " . (microtime(TRUE) - $timeLogBegin);
+	$timLogData[] = " fetchAll() " . (getMicrotimeFloat() - $timeLogBegin);
 	$meta = $sphinxPdo->query("SHOW META")->fetchAll();
-	$timLogData[] = " metaFetch() " . (microtime(TRUE) - $timeLogBegin);
+	$timLogData[] = " metaFetch() " . (getMicrotimeFloat() - $timeLogBegin);
 	foreach($meta as $m) {
 	    $meta_map[$m["Variable_name"]] = $m["Value"];
 	}
@@ -398,7 +398,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 			}
 		}
 		$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
-		$timLogData[] = " MakePhaseSuggestion() " . (microtime(TRUE) - $timeLogBegin);
+		$timLogData[] = " MakePhaseSuggestion() " . (getMicrotimeFloat() - $timeLogBegin);
 		if($suggest !== FALSE) {
 			$app->response->redirect(
 				$app->urlFor(
@@ -455,7 +455,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 			}
 			$result[] = $entry;
 		}
-		$timLogData[] = " BuildExcerptsAndJson() " . (microtime(TRUE) - $timeLogBegin);
+		$timLogData[] = " BuildExcerptsAndJson() " . (getMicrotimeFloat() - $timeLogBegin);
 	}
 	if(count($result) === 0) {
 		$result[] = [
@@ -465,7 +465,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 			"img" => $app->config["root"] . "imagefallback-50/noresults"
 		];
 	}
-	$timLogData[] = " json_encode() " . (microtime(TRUE) - $timeLogBegin);
+	$timLogData[] = " json_encode() " . (getMicrotimeFloat() - $timeLogBegin);
 
 	// TODO: read usage of file-logging from config
 	#fileLog($timLogData);
