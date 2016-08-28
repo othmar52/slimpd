@@ -127,9 +127,6 @@ class Svggenerator {
 			$avgPeak = $avgPeak/($strokeBorder + $strokeLine+1);
 
 			$percent = $avgPeak/($max/100);
-
-			// increase difference between low peak and high peak
-			$percent = $percent*0.01*$percent;
 			$diffPercent = 100 - $percent;
 
 			$stroke = array(
