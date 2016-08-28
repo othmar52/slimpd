@@ -16,7 +16,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		# TODO: handle orphaned records
 		# TODO: displaying itemsChecked / itemsProcessed is incorrect
 		# TODO: which speed-calculation makes sense? itemsChecked/minutute or itemsProcessed/minute or both?
-		$this->jobPhase = 2;
+		$this->jobPhase = 3;
 		$this->beginJob(array('msg' => 'collecting tracks to scan from mysql database' ), __FUNCTION__);
 		
 		$app = \Slim\Slim::getInstance();

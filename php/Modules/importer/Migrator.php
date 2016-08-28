@@ -51,7 +51,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->tempResetMigrationPhase();
 		}
 		
-		$this->jobPhase = 3;
+		$this->jobPhase = 4;
 		$this->beginJob(array(
 			'msg' => "migrateRawtagdataTable"
 		), __FUNCTION__);

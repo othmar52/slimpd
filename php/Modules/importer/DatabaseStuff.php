@@ -12,7 +12,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 	 */
 	public function updateCounterCache() {
 		$app = \Slim\Slim::getInstance();
-		$this->jobPhase = 9;
+		$this->jobPhase = 7;
 		$this->beginJob(array(
 			'currentItem' => "counting items to process for displaying progressbar ..."
 		), __FUNCTION__);
