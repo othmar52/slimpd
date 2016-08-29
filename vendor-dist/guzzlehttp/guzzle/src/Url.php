@@ -331,22 +331,22 @@ class Url
     /**
      * Add a relative path to the currently set path.
      *
-     * @param string $relPath Relative path to add
+     * @param string $relativePath Relative path to add
      */
-    public function addPath($relPath)
+    public function addPath($relativePath)
     {
-        if ($relPath != '/' &&
-            is_string($relPath) &&
-            strlen($relPath) > 0
+        if ($relativePath != '/' &&
+            is_string($relativePath) &&
+            strlen($relativePath) > 0
         ) {
             // Add a leading slash if needed
-            if ($relPath[0] !== '/' &&
+            if ($relativePath[0] !== '/' &&
                 substr($this->path, -1, 1) !== '/'
             ) {
-                $relPath = '/' . $relPath;
+                $relativePath = '/' . $relativePath;
             }
 
-            $this->setPath($this->path . $relPath);
+            $this->setPath($this->path . $relativePath);
         }
     }
 

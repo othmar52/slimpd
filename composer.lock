@@ -1523,12 +1523,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "21039777d8519dacf81e070489c953e92164842d"
+                "reference": "ffa2b812b07cceb163b30091aa54048b856d087b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/21039777d8519dacf81e070489c953e92164842d",
-                "reference": "21039777d8519dacf81e070489c953e92164842d",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ffa2b812b07cceb163b30091aa54048b856d087b",
+                "reference": "ffa2b812b07cceb163b30091aa54048b856d087b",
                 "shasum": ""
             },
             "require": {
@@ -1576,7 +1576,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-08-15 17:25:09"
+            "time": "2016-08-18 00:09:08"
         },
         {
             "name": "webfontkit/open-sans",
