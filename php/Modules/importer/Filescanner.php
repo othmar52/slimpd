@@ -423,6 +423,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 	public static function getDominantColor($absolutePath, $width, $height) {
 		$quality = $width*$height/10;
 		$quality = ($quality < 10) ? 10 : $quality;
-		return rgb2hex(\ColorThief\ColorThief::getColor($absolutePath, $quality));
+		try {
+			return rgb2hex(\ColorThief\ColorThief::getColor($absolutePath, $quality));
+		} catch(\Exception $e) {
+			return "#000000";
+		}
 	}
 }
