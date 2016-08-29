@@ -6,6 +6,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 	protected $mimeType;
 	protected $width;
 	protected $height;
+	protected $bghex;
 	
 	protected $albumId;
 	protected $trackId;
@@ -147,6 +148,9 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 	public function setHeight($value) {
 		$this->height = $value;
 	}
+	public function setBghex($value) {
+		$this->bghex = $value;
+	}
 	public function setAlbumId($value) {
 		$this->albumId = $value;
 	}
@@ -185,6 +189,9 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 	}
 	public function getHeight() {
 		return $this->height;
+	}
+	public function getBghex() {
+		return $this->bghex;
 	}
 	public function getAlbumId() {
 		return $this->albumId;

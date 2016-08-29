@@ -75,6 +75,7 @@ class Schema extends AbstractSchema
       . "  `mimeType` varchar(64) NOT NULL DEFAULT '',\r"
       . "  `width` int(7) unsigned DEFAULT NULL,\r"
       . "  `height` int(7) unsigned DEFAULT NULL,\r"
+      . "  `bghex` varchar(7) NOT NULL DEFAULT '',\r"
       . "  `albumId` int(11) unsigned DEFAULT NULL,\r"
       . "  `trackId` int(11) unsigned DEFAULT NULL,\r"
       . "  `rawTagDataId` int(11) unsigned DEFAULT NULL,\r"

@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   `mimeType` varchar(64) NOT NULL DEFAULT '',
   `width` int(7) unsigned DEFAULT NULL,
   `height` int(7) unsigned DEFAULT NULL,
+  `bghex` varchar(7) NOT NULL DEFAULT '',
   `albumId` int(11) unsigned DEFAULT NULL,
   `trackId` int(11) unsigned DEFAULT NULL,
   `rawTagDataId` int(11) unsigned DEFAULT NULL,
