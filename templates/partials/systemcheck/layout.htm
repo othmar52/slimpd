@@ -1,6 +1,6 @@
 <h1>{{'syscheck.fs'|ll}}</h1>
 <ul class="list-group">
-	{% for test in ['fsMusicdirconf', 'fsMusicdirslash', 'fsMusicdir', 'fsCache', 'fsEmbedded', 'fsPeakfiles'] %}
+	{% for test in ['fsConfiglocal', 'fsMusicdirconf', 'fsMusicdirslash', 'fsMusicdir', 'fsCache', 'fsEmbedded', 'fsPeakfiles'] %}
 	{% if not sys[test].hide %}
 	<li class="list-group-item list-group-item-{{sys[test].status}}">
 		<h4 class="uc">

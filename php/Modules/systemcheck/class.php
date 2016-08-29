@@ -18,6 +18,7 @@ class Systemcheck {
 		$app = \Slim\Slim::getInstance();
 		$check = array(
 			// filesystem
+			'fsConfiglocal'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirconf'=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirslash'=> array('status' => 'warning','hide' => FALSE, 'skip' => TRUE),
 			'fsMusicdir'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
@@ -45,7 +46,7 @@ class Systemcheck {
 			'skipAudioTests'=> FALSE
 		);
 
-		
+		$this->runConfigLocalCheck($check);
 
 		
 		$this->runMusicdirChecks($check);
@@ -68,6 +69,14 @@ class Systemcheck {
 		$this->buildAudioCheckConf($check);
 		$this->runAudioChecks($check);
 		return $check;
+	}
+
+	private function runConfigLocalCheck(&$check) {
+		if(is_file(APP_ROOT . 'config/config_local.ini') === FALSE) {
+			return;
+		}
+		$check['fsConfiglocal']['hide'] = TRUE;
+		$check['fsConfiglocal']['status'] = 'success';
 	}
 
 	private function runMusicdirChecks(&$check) {

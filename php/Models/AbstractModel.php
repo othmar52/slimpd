@@ -190,6 +190,9 @@ abstract class AbstractModel {
 		}
 		$query .= ' LIMIT 1';
 		$result = $database->query($query);
+		if($result === FALSE) {
+			return NULL;
+		}
 		if($result->num_rows == 0) {
 			return $instance;
 		}
