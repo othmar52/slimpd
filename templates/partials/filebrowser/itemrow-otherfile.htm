@@ -1,0 +1,24 @@
+{# TODO: what to do with those files? maybe provide a download link? #}
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
+	<div class="row item-row">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				
+				<a href="{{root}}deliver/{{item.relPath|path2url}}" target="_blank" download="download" title="Download file">
+					<i class="fa fa-download fa-lg fa-fw"></i>
+				</a>
+				
+				<button role="control" title="TODO: delete" class="btn btn-trnsp" >
+					<i class="fa fa-trash fa-lg fa-fw"></i>
+				</button>
+				
+				<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+				
+				<a href="{{root}}deliver/{{item.relPath|path2url}}" target="_blank" download="download" title="Download file">
+					<i class="fa fa-file fa-lg"></i> {{ item.title }}
+				</a>
+				
+			</div>
+		</div>
+	</div>
+</div>
