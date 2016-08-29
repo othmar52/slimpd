@@ -115,7 +115,7 @@ class AlbumMigrator {
 		$this->setHandleAsAlbum();
 		#print_r($this->r);
 
-		cliLog("handleAsAlbumScore " . $this->handleAsAlbumScore , 3, 'purple'); #die();
+		cliLog("handleAsAlbum " . (($this->handleAsAlbum)?"yes":"no") . " (SCORE: ".$this->handleAsAlbumScore.")", 3, 'purple');
 
 		
 		#if($this->tracks[0]['relPath'] == 'newroot/crse002cd--Calibre-Musique_Concrete-2CD-CRSE002CD-2001-sour/101-calibre-deep_everytime.mp3') {
@@ -157,7 +157,7 @@ class AlbumMigrator {
 		$album->setTitle($this->mostScored['album']['title']);
 		$album->setYear($this->mostScored['album']['year']);
 
-		$album->setIsJumble(($this->handleAsAlbum === TRUE) ? 0:1);
+		$album->setIsJumble(($this->handleAsAlbum === 1) ? 0:1);
 
 		$album->setTrackCount(count($this->tracks));
 
@@ -470,7 +470,8 @@ class AlbumMigrator {
 			'numberSchemes' => 2,
 		);
 
-		$decisionBoundry = 11;
+		#$decisionBoundry = 11;
+		$decisionBoundry = 20;
 
 		foreach(array_keys($scoreTable) as $property) {
 			$bestMatch = uniqueArrayOrderedByRelevance($this->$property);
@@ -505,7 +506,7 @@ class AlbumMigrator {
 
 		$this->addChronologyScore();
 		$this->handleAsAlbumScore /= $trackCount;
-		$this->handleAsAlbum = ($this->handleAsAlbumScore>$decisionBoundry) ? TRUE : FALSE;
+		$this->handleAsAlbum = ($this->handleAsAlbumScore>$decisionBoundry) ? 1 : 0;
 		return;
 	}
 
