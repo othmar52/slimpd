@@ -32,8 +32,16 @@
 	{% if item.relPath %}
 		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 		<br />
-		<div class="darker-links">
-			<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+		<div class="ffn-hidden">
+			<div class="darker-links">
+				<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
+			</div>
+		</div>
+		<div class="ffn-show">
+			<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+				hiderootlink: 1,
+				breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
+				skiplast: 1 } %}</span>
 		</div>
 		{% include 'partials/track/not-imported-badge.htm' %}
 	{% else %}
