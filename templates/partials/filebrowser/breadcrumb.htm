@@ -1,6 +1,6 @@
 {# html comments to be able to copy valid filepaths without spaces #}
 <ol class="breadcrumb"><!--
-	-->{% if not hiderootlink %}<!--
+	-->{% if (not hiderootlink) or (item.relDirPathHash == '00000000000') %}{# files in mpd root directory #}<!--
 	--><li><!--
 		--><a href="{{root}}filebrowser" class="ajax-link uc" title="{{ 'filebrowser.showroot'|ll }}"><i class="fa fa-folder-o fa-lg"></i></a><!--
 		--><span class="dir-separator"> </span><!--
