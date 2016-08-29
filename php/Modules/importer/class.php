@@ -184,6 +184,9 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				}
 				$bitmap->setWidth($imageSize[0]);
 				$bitmap->setHeight($imageSize[1]);
+				$bitmap->setBghex(
+					\Slimpd\Modules\importer\FileScanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
+				);
 				$bitmap->setMimeType($imageSize['mime']);
 
 				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelPath()));

@@ -298,3 +298,18 @@ function timeElapsedString($datetime, $full = false) {
 		? implode(', ', $string) . ' ago'
 		: 'just now';
 }
+
+/**
+ * Thanks to https://gist.github.com/Pushplaybang/5432844
+ */
+function rgb2hex($rgb) {
+	return join(
+		"",
+		[
+			"#",
+			str_pad(dechex($rgb[0]), 2, "0", STR_PAD_LEFT),
+			str_pad(dechex($rgb[1]), 2, "0", STR_PAD_LEFT),
+			str_pad(dechex($rgb[2]), 2, "0", STR_PAD_LEFT)
+		]
+	);
+}

@@ -190,6 +190,9 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 
 			$bitmap->setWidth($imageSize[0]);
 			$bitmap->setHeight($imageSize[1]);
+			$bitmap->setBghex(
+				self::getDominantColor($phpThumb->cache_filename, $imageSize[0], $imageSize[1])
+			);
 			$bitmap->setMimeType($imageSize['mime']);
 
 			# TODO: can we call insert() immediatly instead of letting check the update() function itself?
@@ -417,4 +420,9 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		return FALSE;
 	}
 
+	public static function getDominantColor($absolutePath, $width, $height) {
+		$quality = $width*$height/10;
+		$quality = ($quality < 10) ? 10 : $quality;
+		return rgb2hex(\ColorThief\ColorThief::getColor($absolutePath, $quality));
+	}
 }

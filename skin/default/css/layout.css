@@ -367,3 +367,19 @@ body.standalone {
 		padding: 3px 6px;
 	}
 }
+
+
+.carousel-thumb {
+	display: block;
+	float: left;
+	width: 49px;
+	height: 49px;
+	margin: 0 3px 3px 0;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+.carousel-booklet {
+	text-align: center;
+}
