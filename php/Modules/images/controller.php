@@ -1,6 +1,6 @@
 <?php
 $weightConf = trimExplode("\n", $app->config['images']['weightening'], TRUE);
-$imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), filesize DESC";
+$imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC";
 
 #echo $imageWeightOrderBy; die();
 // predefined album-image sizes
