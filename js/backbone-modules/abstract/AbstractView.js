@@ -159,7 +159,7 @@
 			$(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener);
 			$(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener);
 
-			$( "#bb-bookblock", this.$el ).bookblock('destroy');
+			$( "#bb-bookblock", this.$el ).bookblock("destroy");
 
 			window.Backbone.View.prototype.remove.call(this);
 		},
@@ -332,12 +332,12 @@
 
 		bookblockNextClickListener(e) {
 			e.preventDefault();
-			$("#bb-bookblock").bookblock('next');
+			$("#bb-bookblock").bookblock("next");
 		},
 
 		bookblockPrevClickListener(e) {
 			e.preventDefault();
-			$("#bb-bookblock").bookblock('prev');
+			$("#bb-bookblock").bookblock("prev");
 		}
 	});
 }());
