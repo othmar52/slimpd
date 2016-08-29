@@ -313,3 +313,10 @@ function rgb2hex($rgb) {
 		]
 	);
 }
+
+function isHash($input) {
+	if(preg_match("/^hash0x([a-f0-9]{7})$/", az09($input))) {
+		return TRUE;
+	}
+	return FALSE;
+}

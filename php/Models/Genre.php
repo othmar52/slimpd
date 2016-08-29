@@ -116,7 +116,7 @@ class Genre extends \Slimpd\Models\AbstractModel
 			cliLog("  nothing to do with an emtpy string.", 7);
 			return;
 		}
-		if(preg_match("/^hash0x([a-f0-9]{7})$/", az09($itemString))) {
+		if(isHash($itemString) === TRUE) {
 			// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
 			// TODO: read from config: "importer.unknowngenre"
 			$finalGenres['unknown'] = "Unknown";

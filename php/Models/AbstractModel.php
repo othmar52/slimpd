@@ -375,7 +375,7 @@ abstract class AbstractModel {
 		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
 			$az09 = az09($itemPart);
 			
-			if($az09 === '' || preg_match("/^hash0x([a-f0-9]{7})$/", $az09)) {
+			if($az09 === '' || isHash($az09) === TRUE) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
 				$itemIds[$idForUnknown] = $idForUnknown;
 				continue;
