@@ -86,7 +86,6 @@
 			// TODO: add proper loading animation
 			this.$body.addClass("is-loading");
 			window.NProgress.start();
-			//$("<div class='modal-backdrop in' id='loading-backdrop'></div>").appendTo(this.$body);
 			this.ajaxLoading = true;
 			$.ajax({
 				url: window.sliMpd.router.setGetParameter(url, "nosurrounding", "1")
@@ -102,13 +101,12 @@
 				this.$content.html(this.currentView.$el);
 				this.$body.removeClass("is-loading");
 				window.NProgress.done();
-				//$("#loading-backdrop").remove();
+
 				this.ajaxLoading = false;
 			}.bind(this))
 			.fail(function() {
 				this.$body.removeClass("is-loading");
 				window.NProgress.done();
-				//$("#loading-backdrop").remove();
 				this.ajaxLoading = false;
 				window.sliMpd.notifyError(url);
 				return;
