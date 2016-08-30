@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Bitmap;
+namespace Slimpd\Models\Bitmap;
 
 // from http://compareimages.nikhazy-dizajn.hu/
 class compareImages

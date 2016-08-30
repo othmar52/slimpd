@@ -1,5 +1,5 @@
 {# this markup is not displayed but only fetched by javascript to have a string representation of current track #}
-<div class="now-playing-string hidden" data-hash="{{ item.relativePathHash }}">{%
+<div class="now-playing-string hidden" data-hash="{{ item.relPathHash }}">{%
 	include 'partials/track/title.htm' with {
 		'titlestring': item.title } 
 	%} by {% include 'partials/artist/string.htm'

@@ -118,6 +118,10 @@ class ComposerStaticInitaa89b2612061a5392fcf5ea3c98e89ec
             array (
                 0 => __DIR__ . '/..' . '/robloach/component-installer/src',
             ),
+            'ColorThief' => 
+            array (
+                0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/lib',
+            ),
         ),
         'A' => 
         array (

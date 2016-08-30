@@ -21,7 +21,6 @@ function classAutoLoader($class) {
                 . DS
                 . $filename[0] 
                 . '.php';
-    
     if (is_file($classFile) === true && class_exists($class) === false) {
         require_once $classFile;
     }

@@ -27,7 +27,7 @@ class RegexHelper {
 	
 	public $mayBracket = "(?:([\(\)\[\]]{0,1}))?"; 
 	
-	public $va = "(v\.a\.|various|various\ artists|various\ artist)";
+	public $various = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	
 	
 	public function seemsYeary($input) {

@@ -1,0 +1,17 @@
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
+	<div class="row item-row" id="image{{ loop.index }}">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				<a data-toggle="lightbox" href="{{root}}image-1000/path/{{ item.relPath|path2url }}" data-type="image" data-gallery="galname" title="{{ item.title }}">
+					<img src="{{root}}image-35/path/{{ item.relPath|path2url }}" title="{{ item.title }}" alt="{{ item.title }}" />
+				</a>
+				
+				<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+				<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+				<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
+
+				<i class="fa fa-image fa-lg"></i> {{ item.title }}
+			</div>
+		</div>
+	</div>
+</div>

@@ -6,11 +6,11 @@
 			<a href="{{ albumHref }}" class="ajax-link toggle-tooltip" title="show album">
 				<img src="{{root}}image-100/album/{{ item.albumId }}" alt="" class="icon-50">
 			</a>
-			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relativePathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
+			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
 			</button>
 			{% include 'partials/button/showtrackwidget.htm' %}
-			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relativePathHash~'-'~mpdidx } %}
+			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relPathHash~'-'~mpdidx } %}
 			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"{{root}}mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-trash"></i>
 			</button>
@@ -21,7 +21,7 @@
 	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter darker-links">
 			<div class="vcinner">
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				<br />
 				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
 			</div>
@@ -43,13 +43,21 @@
 		</div>
 	</div>
 	<div class="ffn-show">
-		<div class="col-md-9 vcenter">
+		<div class="col-md-8 vcenter">
 			<div class="vcinner">
-				{{ item.relativePath|split('/')|last }}<br>
+				{{ item.relPath|split('/')|last }}
+				<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
 					hiderootlink: 1,
-					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 					skiplast: 1 } %}</span>
+			</div>
+		</div>
+		<div class="col-md-1 vcenter">
+			<div class="vcinner">
+				{% if item.fingerprint %}
+				<span class="dark" title="fingerprint: {{ item.fingerprint }}">{{ item|fingerprintshorty }}</span>
+				{% endif %}
 			</div>
 		</div>
 	</div>
@@ -64,7 +72,7 @@
 		{# item is not imported in sliMpd so we do not have any meta-infos #}
 		<div class="col-md-8 vcenter">
 			<div class="vcinner">
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				<br />
 				<div class="darker-links">
 					<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>
@@ -77,6 +85,6 @@
 			</div>
 		</div>
 	{% endif %}
-	<div class="ajax-xwax-{{ item.relativePathHash }}-{{ mpdidx }} col-md-12"></div>
+	<div class="ajax-xwax-{{ item.relPathHash }}-{{ mpdidx }} col-md-12"></div>
 </div>
 {% endblock %}

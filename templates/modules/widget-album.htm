@@ -13,25 +13,25 @@
 	<div class="row">
 		<div class="col-md-4">
 			<h3>{{'playbackcontrol'|ll}}</h3>
-			<button role="control" title="{{'pbctrl.append.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"{{root}}mpdctrl/appendDir/{{ album.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.append.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDir", "mpdurl":"{{root}}mpdctrl/appendDir/{{ album.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
 				{{'pbctrl.append'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ album.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendDirAndPlay", "mpdurl":"{{root}}mpdctrl/appendDirAndPlay/{{ album.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.appendandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.clearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"{{root}}mpdctrl/replaceDir/{{ album.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.clearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"replaceDir", "mpdurl":"{{root}}mpdctrl/replaceDir/{{ album.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.clearandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="{{'pbctrl.softclearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"{{root}}mpdctrl/softreplaceDir/{{ album.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.softclearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"softreplaceDir", "mpdurl":"{{root}}mpdctrl/softreplaceDir/{{ album.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				{{'pbctrl.softclearandplay'|ll}}
 			</button>
@@ -44,7 +44,7 @@
 
 		<div class="col-md-4">
 			<h3>{{'view'|ll}}</h3>
-			<a class="ajax-link btn btn-default" href="{{root}}filebrowser/{{ album.relativePath|path2url }}" title="{{'filebrowser'|ll}}" data-dismiss="modal">
+			<a class="ajax-link btn btn-default" href="{{root}}filebrowser/{{ album.relPath|path2url }}" title="{{'filebrowser'|ll}}" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> {{'filebrowser'|ll}}
 			</a>
 		</div>

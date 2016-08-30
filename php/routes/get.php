@@ -1,34 +1,32 @@
 <?php
 
 $app->get('/', function() use ($app, $vars){
-	$vars['action'] = "landing";
-	// TODO: $app->auth->check('library');
-    $app->render('surrounding.htm', $vars);
+	$app->response->redirect($app->config['root'] . 'library', 303);
 });
 
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
-	$vars['itemlist'] = \Slimpd\Album::getAll(12, 0, "added desc");
-	$vars['totalresults'] = \Slimpd\Album::getCountAll();
+	$vars['itemlist'] = \Slimpd\Models\Album::getAll(11, 0, "added desc");
+	$vars['totalresults'] = \Slimpd\Models\Album::getCountAll();
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/djscreen', function() use ($app, $vars){
 	$vars['action'] = "djscreen";
-    $app->render('djscreen.htm', $vars);
+	$app->render('djscreen.htm', $vars);
 });
 
-foreach(array('artist', 'label', 'genre', 'album') as $className) {
+foreach(array('artist', 'label', 'genre') as $className) {
 	// stringlist of artist|label|genre
 	$app->get('/'.$className.'s/:itemParams+', function($itemParams) use ($app, $vars, $className){
-		$classPath = "\\Slimpd\\" . ucfirst($className);
+		$classPath = "\\Slimpd\\Models\\" . ucfirst($className);
 		$vars['action'] = 'library.'. $className .'s';
 		$currentPage = 1;
 		$itemsPerPage = 100;
 		$searchterm = FALSE;
 		$orderBy = FALSE;
-		
+
 		foreach($itemParams as $i => $urlSegment) {
 			switch($urlSegment) {
 				case 'page':
@@ -80,14 +78,14 @@ foreach(array('artist', 'label', 'genre', 'album') as $className) {
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 	$vars['action'] = 'library.year';
-	
-	$vars['albumlist'] = \Slimpd\Album::getInstancesByAttributes(
+
+	$vars['albumlist'] = \Slimpd\Models\Album::getInstancesByAttributes(
 		array('year' => $itemString)
 	);
-	
+
 	// get all relational items we need for rendering
 	$vars['renderitems'] = getRenderItems($vars['albumlist']);
-    $app->render('surrounding.htm', $vars);
+	$app->render('surrounding.htm', $vars);
 });
 
 $app->get('/css/spotcolors.css', function() use ($app, $vars){
@@ -97,35 +95,35 @@ $app->get('/css/spotcolors.css', function() use ($app, $vars){
 
 $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = "showplaintext";
-	$relativePath = join(DS, $itemParams);
+	$relPath = join(DS, $itemParams);
 	$validPath = '';
 	foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
-		if(is_file($path . $relativePath) === TRUE) {
-			$validPath = realpath($path . $relativePath);
+		if(is_file($path . $relPath) === TRUE) {
+			$validPath = realpath($path . $relPath);
 			if(strpos($validPath, $path) !== 0) {
 				$validPath = '';
 			}
 		}
 	}
 	if($validPath === '') {
-		$app->flashNow('error', 'invalid path ' . $relativePath);
+		$app->flashNow('error', 'invalid path ' . $relPath);
 	} else {
 		$vars['plaintext'] = nfostring2html(file_get_contents($validPath));
 	}
-	$vars['filepath'] = $relativePath;
+	$vars['filepath'] = $relPath;
 	$app->render('modules/widget-plaintext.htm', $vars);
 });
 
 $app->get('/deliver/:item+', function($item) use ($app, $vars){
 	$path = join(DS, $item);
 	if(is_numeric($path)) {
-		$track = \Slimpd\Track::getInstanceByAttributes(array('id' => (int)$path));
-		$path = ($track === NULL) ? '' : $track->getRelativePath();
+		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$path));
+		$path = ($track === NULL) ? '' : $track->getRelPath();
 	}
 	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['musicdir'] . $path, $app);
 	}
-	
+
 	if(is_file($app->config['mpd']['alternative_musicdir'] . $path) === TRUE) {
 		deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
 	}
@@ -153,23 +151,23 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 		$app->notFound();
 		return;
 	}
-	
+
 	$fileBrowser = new \Slimpd\filebrowser();
 	$fileBrowser->getDirectoryContent(join(DS, $itemParams));
-	
+
 	// do not block other requests of this client
 	session_write_close();
-	
+
 	// IMPORTANT TODO: move this to an exec-wrapper
 	$cmd = APP_ROOT . 'vendor-dist/othmar52/clean-rename/clean-rename '
 		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
 	exec($cmd, $result);
-	
+
 	$vars['result'] = join("\n", $result);
 	$vars['directory'] = $fileBrowser;
 	$vars['cmd'] = $cmd;
 	$vars['action'] = 'clean-rename';
-	
+
 	$app->render('modules/widget-cleanrename.htm', $vars);
 });
 

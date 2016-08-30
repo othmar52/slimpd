@@ -15,13 +15,14 @@
 	{% endfor %}
 {% else %}
 	<div class="row">
+		{{dump(directory)}}
 		<div class="col-md-12">
 			{% if hideQuicknav != '1' %}
 			{% include 'partials/filebrowser/directory-quicknav.htm' with {breadcrumb:item} %}
 			
 			<span class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
 			
-			<button role="control" data-href="{{root}}markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+			<button role="control" data-href="{{root}}markup/widget-directory/{{ directory|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
 				<span class="fa-stack">
 					<i class="fa fa-circle-thin fa-stack-2x col2"></i>
 					<i class="fa fa-plus fa-stack-1x fa-inverse col2"></i>
@@ -32,17 +33,17 @@
 			<span class="filebrowser-filter pull-right darker-links">
 				<ul class="nav nav-pills type-nav">
 					<li class="{{ (filter == '') ? 'active' : '' }}"> 
-						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.all.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ directory|path2url }}" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.all.t'|ll }}">
 							{{ 'filebrowser.all'|ll }}
 						</a>
 					</li>
 					<li class="{{ (filter == 'dirs') ? 'active' : '' }} {{ (subDirectories.total == 0) ? 'disabled' : '' }}"> 
-						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
 							{{ 'filebrowser.dirs'|ll }} <span class="badge">{{subDirectories.total}}</span>
 						</a>
 					</li>
 					<li class="{{ (filter == 'files') ? 'active' : '' }} {{ (files.total == 0) ? 'disabled' : '' }}"> 
-						<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
+						<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
 							{{ 'filebrowser.files'|ll }} <span class="badge">{{files.total}}</span>
 						</a>
 					</li>
@@ -60,7 +61,7 @@
 	<div class="row bg-col1 affix-container" data-affix="" data-spy="affix" data-offset-top="50">
 		<div class="col-md-12">
 			<div class="dark tinyfont darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</div>
-			<h2 class="nomargin">{{ breadcrumb|last.name }}
+			<h2 class="nomargin">{{ breadcrumb|last.title }}
 				<span class="show-affixed">{% include 'partials/filebrowser/directory-quicknav.htm' with {breadcrumb:item} %}</span>
 				</h2>
 			
@@ -89,31 +90,11 @@
 		</div>
 	</div>
 	{% for item in subDirectories.dirs %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover" id="d{{ item.hash }}">
-		<div class="row item-row" id="track{{ loop.index }}">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					<button role="control" title="append this directory to current playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"appendDir","mpdurl":"{{root}}mpdctrl/appendDir/{{ [directory,item.name]|path2url }}"}'>
-						<i class="fa fa-plus fa-lg fa-fw"></i>
-					</button>
-					
-					<button role="control" data-href="{{root}}markup/widget-directory/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
-						<i class="fa fa-align-justify fa-lg fa-fw"></i>
-					</button>
-					
-					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
-
-					<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}" class="ajax-link">
-						<i class="fa fa-folder-o fa-lg fa-fw"></i> {{ item.name }}
-					</a>
-				</div>
-			</div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-directory.htm' %}
 	{% endfor %}
 	{% if showDirFilterBadge %}
 	<div class="row darker-links">
-		<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=2" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=dirs&page=2" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.moredirs'|ll(subDirectories.total - subDirectories.count) }}
 		</a>
 	</div>
@@ -125,7 +106,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nodirs'|ll }}</div>
 			{% if files.total > 0 %}
 			<div class="row">
-				<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
 					{{ 'filebrowser.nodirsshowfiles'|ll(files.total) }}
 				</a>
 			</div>
@@ -145,31 +126,7 @@
 	{# music files #}
 	{% if files.music|length %}
 	{% for item in files.music %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
-		<div class="row">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					{% include 'partials/button/playtrack.htm' with {
-						'trackpath': [directory,item.name],
-						'trackext': item.ext ,
-						'additionalClass': 'fa-fw'
-					} %}
-					{% include 'partials/button/showtrackwidget.htm' with { 'trackpath': [directory,item.name] } %}
-					{% include 'partials/button/showdeckselector.htm' with { 'trackpath': [directory,item.name] } %}
-
-					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
-
-					{% include 'partials/button/playtrack.htm' with {
-						'trackpath': [directory,item.name],
-						'trackext': item.ext,
-						'linkedmarkup': "<i class=\"fa fa-music fa-lg fa-fw\"></i>"~item.name
-					} %}
-				</div>
-			</div>
-			{# ajax load target for xwax-control #}
-			<div class="ajax-xwax-{{ item.relativePathHash }} col-md-12"></div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-musicfile.htm' %}
 	{% endfor %}
 	{% endif %}
 
@@ -182,28 +139,7 @@
 		</div>
 	</div>
 	{% for item in files.playlist %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover ">
-		<div class="row item-row">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					<a href="{{root}}showplaylist/{{ [directory,item.name]|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist">
-						<i class="fa fa-eye fa-lg"></i>
-					</a>
-					
-					<button role="control" data-href="{{root}}markup/widget-playlist/{{ [directory,item.name]|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
-						<i class="fa fa-align-justify fa-lg fa-fw"></i>
-					</button>
-					
-					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
-					
-
-					<a href="{{root}}showplaylist/{{ [directory,item.name]|path2url }}" class="ajax-link">
-					<i class="fa fa-list fa-lg"></i>
-					{{ item.name }}</a>
-				</div>
-			</div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-playlistfile.htm' %}
 	{% endfor %}
 	{% endif %}
 
@@ -216,26 +152,7 @@
 		</div>
 	</div>
 	{% for item in files.info %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
-		<div class="row item-row">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					<button role="control" data-href="{{root}}showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="btn btn-trnsp trigger-modal">
-						<i class="fa fa-eye fa-lg fa-fw"></i>
-					</button>
-					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
-						<i class="fa fa-download fa-lg fa-fw"></i>
-					</a>
-					
-					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
-
-					<a role="control" href="#" data-href="{{root}}showplaintext/{{ [directory,item.name]|path2url }}" title="show filecontent" class="trigger-modal">
-					<i class="fa fa-info fa-lg fa-fw"></i>
-					{{ item.name }}</a>
-				</div>
-			</div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-infofile.htm' %}
 	{% endfor %}
 	{% endif %}
 
@@ -249,23 +166,7 @@
 		</div>
 	</div>
 	{% for item in files.image %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
-		<div class="row item-row" id="image{{ loop.index }}">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					<a data-toggle="lightbox" href="{{root}}image-1000/path/{{ [directory,item.name]|path2url }}" data-type="image" data-gallery="galname" title="{{ item.name }}">
-						<img src="{{root}}image-35/path/{{ [directory,item.name]|path2url }}" title="{{ item.name }}" alt="{{ item.name }}" />
-					</a>
-					
-					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
-					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
-					<i class="fa fa-fw fa-lg replace-me-with-proper-css">&nbsp;{# spacer #}</i>
-
-					<i class="fa fa-image fa-lg"></i> {{ item.name }}
-				</div>
-			</div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-imagefile.htm' %}
 	{% endfor %}
 	{% endif %}
 	
@@ -277,35 +178,13 @@
 		</div>
 	</div>
 	{% for item in files.other %}
-	{# TODO: what to do with those files? maybe provide a download link? #}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
-		<div class="row item-row">
-			<div class="col-md-12 vcenter">
-				<div class="vcinner">
-					
-					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
-						<i class="fa fa-download fa-lg fa-fw"></i>
-					</a>
-					
-					<button role="control" title="TODO: delete" class="btn btn-trnsp" >
-						<i class="fa fa-trash fa-lg fa-fw"></i>
-					</button>
-					
-					<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
-					
-					<a href="{{root}}deliver/{{[directory,item.name]|path2url}}" target="_blank" download="download" title="Download file">
-						<i class="fa fa-file fa-lg"></i> {{ item.name }}
-					</a>
-					
-				</div>
-			</div>
-		</div>
-	</div>
+		{% include 'partials/filebrowser/itemrow-otherfile.htm' %}
 	{% endfor %}
 	{% endif %}
+	
 	{% if showFileFilterBadge %}
 	<div class="row darker-links">
-		<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=files&page=2" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=files&page=2" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.morefiles'|ll(files.total - files.count) }}
 		</a>
 	</div>
@@ -317,7 +196,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nofiles'|ll }}</div>
 			{% if subDirectories.total > 0 %}
 			<div class="row">
-				<a href="{{root}}filebrowser/{{ [directory,item.name]|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
 					{{ 'filebrowser.nofilesshowdirs'|ll(subDirectories.total) }}
 				</a>
 			</div>

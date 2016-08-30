@@ -2,7 +2,7 @@
 <div class="modal-body">	
     {% include 'partials/modal/close-button-top.htm' %}
     <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' with { skiplast: 1} %}</div>
-	<h2 class="nomargin">{{ breadcrumb|last.name }}</h2>
+	<h2 class="nomargin">{{ breadcrumb|last.title }}</h2>
 	<div class="row">
 		<div class="col-md-12">
 			<h3>Abspielen</h3>
@@ -10,13 +10,13 @@
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylist", "mpdurl":"{{root}}mpdctrl/appendPlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylist", "mpdurl":"{{root}}mpdctrl/appendPlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
 				Hinten anfügen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylistAndPlay", "mpdurl":"{{root}}mpdctrl/appendPlaylistAndPlay/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylistAndPlay", "mpdurl":"{{root}}mpdctrl/appendPlaylistAndPlay/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Hinten anfügen &amp; sofort abspielen
 			</button>
@@ -24,13 +24,13 @@
 			<br class="row replace-me-with-proper-css" />
 		</div>
 		<div class="col-md-6">
-			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replacePlaylist", "mpdurl":"{{root}}mpdctrl/replacePlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replacePlaylist", "mpdurl":"{{root}}mpdctrl/replacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Liste leeren &amp; sofort abspielen
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplacePlaylist", "mpdurl":"{{root}}mpdctrl/softreplacePlaylist/{{ playlist.relativePath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplacePlaylist", "mpdurl":"{{root}}mpdctrl/softreplacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
 				Liste leeren* &amp; als nächstes abspielen
 			</button>
@@ -44,7 +44,7 @@
 				<div class="{{ cycle(['',''],loop.index) }} mouseover">
 					{% include 'partials/itemrow-track-notfound.htm' with { hidethumb: 1 }%}
 				{% else %}
-				<div class="{{ cycle(['',''],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+				<div class="{{ cycle(['',''],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 					{% if item.id %}
 						{% include 'partials/trackrow-widget.htm' with {'num': i } %}
 					{% else %}
@@ -57,7 +57,7 @@
 		<div class="col-md-12">
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<a href="{{root}}showplaylist/{{ playlist.relativePath|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist" data-dismiss="modal">
+			<a href="{{root}}showplaylist/{{ playlist.relPath|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist" data-dismiss="modal">
 				View all <span class="badge">{{ playlist.length }}</span> Playlist Entries...
 			</a>
 		</div>

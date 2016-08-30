@@ -3,8 +3,8 @@
 
 <h3>Album editor<br>
 <span class="small">
-	{% set dirs = album.relativePath|split('/') %}
-	<a href="{{root}}filebrowser/{{ album.relativePath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	{% set dirs = album.relPath|split('/') %}
+	<a href="{{root}}filebrowser/{{ album.relPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{{dir}}
@@ -110,7 +110,7 @@
 			
 			<div class="col-md-6">
 				{% for idx,item in itemlist %}	
-					{% set dirs = item.relativePath|split('/') %}
+					{% set dirs = item.relPath|split('/') %}
 		  			{% for dir in dirs %}
 						{% if loop.last == true %}<div class="well well-sm">{{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
 					{% endfor %}
@@ -161,7 +161,7 @@
 			
 		<div class="row">
 			<div class="col-md-1">
-				<input name="number[{{item.fingerprint}}]" type="text" value="{{ item.number}}" class="form-control" />
+				<input name="trackNumber[{{item.fingerprint}}]" type="text" value="{{ item.trackNumber}}" class="form-control" />
 			</div>
 			<div class="col-md-2">
 				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' %}" class="form-control" />

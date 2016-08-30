@@ -1,8 +1,8 @@
 {% set randomtrack = getRandomInstance('Track') %}
-<button role="control" title="play random track" class="btn btn-trnsp player-ctrl trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ randomtrack.id }},"ext":"{{randomtrack.audioDataformat }}","hash":"{{ randomtrack.relativePathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ randomtrack.id }}"}'>
+<button role="control" title="play random track" class="btn btn-trnsp player-ctrl trigger-hide-modal" data-player='{"action":"appendTrackAndPlay","item":{{ randomtrack.id }},"ext":"{{randomtrack.audioDataformat }}","hash":"{{ randomtrack.relPathHash }}", "mpdurl":"{{root}}mpdctrl/appendTrackAndPlay/{{ randomtrack.id }}"}'>
 	<!--span class="fa-stack">
 		<i class="fa fa-refresh fa-stack-2x"></i>
 		<i class="fa fa-play fa-stack-1x"></i>
 	</span-->
-	R
+	<i class="fa-clown"></i>
 </button>

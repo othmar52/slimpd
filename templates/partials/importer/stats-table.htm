@@ -1,0 +1,121 @@
+	
+<table class="importer-stats">
+	<tr class="header">
+		<th>Phase</th>
+		<th>Progress</th>
+		<th>Total Duration</th>
+		<th>Items/min</th>
+		<th>Items/hr</th>
+		<th>Total</th>
+		<th>Checked</th>
+		<th>Processed</th>
+		<th>Additional Info</th>
+	</tr>
+	
+	{% set statusWording = 'dead' %}
+	{% set statusImage = '' %}
+
+	{% for item in itemlist %}
+	<tr class="{{ cycle(['bg-col2','bg-col3'],loop.index) }}">
+		{% if loop.first == true %}
+			{% if (servertime - item.jobLastUpdate) < 6 %}
+				{% set statusWording = 'running' %}
+				{% set statusImage = '<img src="'~config.absRefPrefix~'skin/default/img/playing.gif" />' %}
+			{% endif %}
+		{% else %}
+			{% set statusWording = 'dead' %}
+			{% set statusImage = '' %}
+		{% endif %}
+		<td title="{{ item.id }}" style="text-align: left;">
+			<span class="badge">{{ item.jobPhase }}</span> {{ ['importer.ph',item.jobPhase]|join|ll }}
+		</td>
+		{% if item.jobStatistics.progressPercent == 100 %}
+		<td>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+					100% <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+				</div>
+			</div>
+		</td>
+		<td>{{ item.jobStatistics.runtimeSeconds|formatSeconds }}</td>
+		{% else %}
+		{# TODO: animate progressbar with "item.jobStatistics.progressPercent" and "item.jobStatistics.speedPercentPerSecond" #}
+		<td>
+			<div class="progress">
+			{% if item.jobStatistics.progressPercent > 0 %}
+				<div class="progress-bar" role="progressbar" aria-valuenow="{{ item.jobStatistics.progressPercent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ item.jobStatistics.progressPercent }}%;">
+					~{{ item.jobStatistics.estimatedRemainingSeconds|formatSeconds }} left
+				</div>
+			{% else %}
+				<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+					??? sec left
+				</div>
+			{% endif %}
+			</div>
+		</td>
+		<td>
+			{% if item.jobStatistics.estimatedTotalRuntime > 0 %}
+				{{ item.jobStatistics.estimatedTotalRuntime|formatSeconds }}
+			{% else %}
+				?
+			{% endif %}
+			</td>
+		{% endif %}
+		
+		<td class="ar" title="{{ item.jobStatistics.speedItemsPerMinute }}">{{ item.jobStatistics.speedItemsPerMinute|shorty }}
+		<td class="ar" title="{{ item.jobStatistics.speedItemsPerHour }}">{{ item.jobStatistics.speedItemsPerHour|shorty }}</td>
+		</td>
+		<td>{{ item.jobStatistics.itemsTotal|shorty }}</td>
+		<td>{{ item.jobStatistics.itemsChecked|shorty }}</td>
+		<td>{{ item.jobStatistics.itemsProcessed|shorty }}</td>
+		<td>
+			{% if item.jobStatistics.extractedImages %}
+				<strong>Extracted Images:</strong> {{ item.jobStatistics.extractedImages|shorty }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.insertedImages %}
+				<strong>Inserted Images:</strong> {{ item.jobStatistics.insertedImages|shorty }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.deletedFileSize %}
+				<strong>Deleted Files Size:</strong> {{ item.jobStatistics.deletedFileSize }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.insertedAlbums %}
+				<strong>Inserted Albums:</strong> <a href="{{root}}album/{{ item.jobStatistics.insertedAlbums }}">{{ item.jobStatistics.insertedAlbums|shorty }}</a><br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.updatedAlbums %}
+				<strong>Updated Albums:</strong> {{ item.jobStatistics.updatedAlbums|shorty }}<br /> 
+			{% endif %}
+			
+			{% if item.jobStatistics.deadfiles %}
+				<strong>Dead Files:</strong> {{ item.jobStatistics.deadfiles|shorty }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.unmodified_files %}
+				<strong>Unmodified Files:</strong> {{ item.jobStatistics.unmodified_files|shorty }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.directorycount %}
+				<strong>Directory Count:</strong> {{ item.jobStatistics.directorycount|shorty }}<br/> 
+			{% endif %}
+			
+			{% if item.jobStatistics.deletedRecords %}
+				<strong>Deleted Records:</strong> {{ item.jobStatistics.deletedRecords|shorty }}<br/> 
+			{% endif %}
+			
+			
+		</td>
+	
+	</tr>
+	{% if item.jobStatistics.currentItem %}
+	<tr class="headerX">
+		<td colspan="10" class="dark tinyfont">
+			<strong>Current Item:</strong> {{ item.jobStatistics.currentItem }}<br/>
+		</td> 
+	{% endif %}
+	
+	<tr class="line"><td colspan="10"></td></tr>
+	{% endfor %}
+</table>

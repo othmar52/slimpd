@@ -40,7 +40,7 @@ var FavIconX = (function() {
 	var titleRenderer;
 
 	function setDefaults(){
-		shape = "circle";
+		shape = "doughnut";
 		doughnutRadius = 6;
 		overlay = false;
 		overlayColor = "#000";
@@ -105,7 +105,6 @@ var FavIconX = (function() {
 	}
 
 	// Generates the overlay shape
-	// TODO: support overlay functionality for square-shape
 	function generateOverlay(ctx, w, h){
 		ctx.strokeStyle = overlayColor;
 		ctx.fillStyle = overlayColor;
@@ -131,39 +130,6 @@ var FavIconX = (function() {
 			ctx.closePath();
 			ctx.stroke();
 		}
-	}
-
-	// let"s get a boring circle first
-	function generateCircle(v){
-		var graphValue = v || value;
-		var centerX = canvas.width / 2;
-		var centerY = canvas.height / 2;
-		var radius = 7 - borderWidth / 2;
-		var deg = graphValue * 3.6 - 90;
-
-		canvas.width = canvas.width;
-
-		generateBackground(context, canvas.width, canvas.height);
-
-		context.lineWidth = borderWidth;
-		context.strokeStyle = borderColor2 ? getMidColor(borderColor, borderColor2) : borderColor;
-		context.beginPath();
-		context.arc(centerX, centerY, radius, 0, toRad(360), false);
-		context.closePath();
-		context.fillStyle = shadowColor;
-		context.fill();
-		context.stroke();
-		if(graphValue < 1){
-			generateOverlay(context, canvas.width, canvas.height);
-			return;
-		}
-		context.fillStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
-		context.beginPath();
-		context.moveTo(8,8);
-		context.arc(centerX, centerY, radius, toRad(-90), toRad(deg), false);
-		context.closePath();
-		context.fill();
-		generateOverlay(context, canvas.width, canvas.height);
 	}
 
 	// spelling doughnut just feels wrong
@@ -198,72 +164,11 @@ var FavIconX = (function() {
 		generateOverlay(context, canvas.width, canvas.height);
 	}
 
-	// something a bit more fancy
-	function generateSquare(v){
-		var graphValue = v || value;
-		var centerX = canvas.width / 2;
-		var centerY = canvas.height / 2;
-		var borderRadius = 2;
-		var x = 1;
-		var y = 1;
-		var width = 14;
-		var height = 14;
-		var deg = graphValue * 3.6 - 90;
-
-		generateBackground(context, canvas.width, canvas.height);
-
-		canvas.width = canvas.width;
-		context.beginPath();
-		context.strokeStyle = borderColor2 ? getMidColor(borderColor, borderColor2) : borderColor;
-		context.lineWidth = borderWidth;
-		context.fillStyle = shadowColor;
-		context.moveTo(x + borderRadius, y);
-		context.lineTo(x + width - borderRadius, y);
-		context.quadraticCurveTo(x + width, y, x + width, y + borderRadius);
-		context.lineTo(x + width, y + height - borderRadius);
-		context.quadraticCurveTo(x + width, y + height, x + width - borderRadius, y + height);
-		context.lineTo(x + borderRadius, y + height);
-		context.quadraticCurveTo(x, y + height, x, y + height - borderRadius);
-		context.lineTo(x, y + borderRadius);
-		context.quadraticCurveTo(x, y, x + borderRadius, y);
-		context.closePath();
-		context.stroke();
-		if(graphValue < 1){
-			generateOverlay(context, canvas.width, canvas.height);
-			return;
-		}
-		context.clip();
-		context.beginPath();
-		context.moveTo(8,8);
-		context.fillStyle = "rgba(255, 0, 0, 0)";
-		context.arc(centerX, centerY, 12, toRad(-90), toRad(deg), false); // we clip the rest
-		context.closePath();
-		context.fill();
-		context.clip();
-		context.beginPath();
-		context.fillStyle = fillColor2 ? getMidColor(fillColor, fillColor2) : fillColor;
-		context.moveTo(x + borderRadius, y);
-		context.lineTo(x + width - borderRadius, y);
-		context.quadraticCurveTo(x + width, y, x + width, y + borderRadius);
-		context.lineTo(x + width, y + height - borderRadius);
-		context.quadraticCurveTo(x + width, y + height, x + width - borderRadius, y + height);
-		context.lineTo(x + borderRadius, y + height);
-		context.quadraticCurveTo(x, y + height, x, y + height - borderRadius);
-		context.lineTo(x, y + borderRadius);
-		context.quadraticCurveTo(x, y, x + borderRadius, y);
-		context.closePath();
-		context.fill();
-		generateOverlay(context, canvas.width, canvas.height);
-	}
 
 	// Generates the wanted shape
 	function generateBitmap(v){
-		if(shape === "circle"){
-			generateCircle(v);
-		} else if(shape === "doughnut"){
+		if(shape === "doughnut"){
 			generateDoughnut(v);
-		} else if(shape === "square"){
-			generateSquare(v);
 		}
 	}
 
@@ -342,40 +247,42 @@ var FavIconX = (function() {
 
 	// starting point to the app... couldn"t hide it in the code better
 	function init(){
-		if(canvas && canvas.getContext){
-			icon = getIconRef();
-			oldTitle = document.title;
-			canvas.height = canvas.width = 16;
-			context = canvas.getContext("2d");
-		} else {
+		if(!canvas || !canvas.getContext){
 			throw "No support for Canvas, no chocolate for you! =(";
 		}
+		icon = getIconRef();
+		oldTitle = document.title;
+		canvas.height = canvas.width = 16;
+		context = canvas.getContext("2d");
 	}
 
 	// this, as the method name suggests, is called once the anim has stopped.
 	function stopAnim(){
-		if(animCallback){
-			animCallback.call(this, value);
-			animCallback = null;
+		if(!animCallback){
+			return;
 		}
+		animCallback.call(this, value);
+		animCallback = null;
 	}
 
 	// animation: called again and again until we get to the right value
 	function incValue(inc){
 		animValue += inc;
-		if(isReset !== true){
-			generateBitmap(animValue);
-			refreshFavIcon();
-			if(animValue !== null && animated){
-				if(animValue === value){
-					stopAnim();
-				} else {
-					setTimeout(function(){
-						incValue(animValue > value ? -1 : 1);
-					}, animInterval);
-				}
-			}
+		if(isReset === true){
+			return;
 		}
+		generateBitmap(animValue);
+		refreshFavIcon();
+		if(animValue === null || !animated){
+			return;
+		}
+		if(animValue === value){
+			stopAnim();
+			return;
+		}
+		setTimeout(function(){
+			incValue(animValue > value ? -1 : 1);
+		}, animInterval);
 	}
 
 	// let"s get things started.
@@ -427,13 +334,13 @@ var FavIconX = (function() {
 					animInterval = Math.abs(Math.ceil((typeof animSpeed !== "undefined" ? animSpeed : animationSpeed) / steps));
 					incValue(animValue > value ? -1 : 1);
 				}
-			} else {
-				animValue = null;
-				generateBitmap();
-				refreshFavIcon();
-				if(animCallback){
-					animCallback.call(this, v);
-				}
+				return FavIconX;
+			}
+			animValue = null;
+			generateBitmap();
+			refreshFavIcon();
+			if(animCallback){
+				animCallback.call(this, v);
 			}
 			return FavIconX;
 		},

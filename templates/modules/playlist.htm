@@ -4,7 +4,7 @@
 	</div>
 	<div class="col-md-12">
 		<h2 class="nomargin">
-				{{playlist.filename}} <span class="badge">{{playlist.length}}</span>
+			{{playlist.title}} <span class="badge">{{playlist.length}}</span>
 		</h2>
 	</div>
 </div>
@@ -31,7 +31,7 @@
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover">
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
-		<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+		<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 		{% if item.id %}
 			{% include 'partials/trackrow-1.htm' %}
 		{% else %}

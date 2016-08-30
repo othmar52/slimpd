@@ -1,6 +1,6 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-{% if item.relativePath %}
+{% if item.relPath %}
 	{% if player == 'local' %}
 <div class="jp-audio jp-gui" id="jp_container_1" role="application" aria-label="media player">
 	<div class="jp-gui jp-interface">
@@ -99,7 +99,7 @@
 	{% if player == 'mpd' %}
  	{# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
     <style type="text/css">{% include 'css/nowplaying.css' with {
-    		relativePathHash: item.relativePathHash,
+    		relPathHash: item.relPathHash,
     		color: colors[ spotcolor.mpd ]['1st'] } %}</style>
 	{% endif %}
 {% else %}

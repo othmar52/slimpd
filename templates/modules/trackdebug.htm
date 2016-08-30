@@ -4,8 +4,8 @@
 
 <h3>Track-debug<br>
 <span class="small">
-	{% set dirs = item.relativePath|split('/') %}
-	<a href="{{root}}filebrowser/{{ itemraw.relativeDirectoryPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
+	{% set dirs = item.relPath|split('/') %}
+	<a href="{{root}}filebrowser/{{ itemraw.relDirPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
 	
 	{% for dir in dirs %}
 		{% if loop.last == true %}
@@ -112,8 +112,8 @@
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-3">{{ itemraw.textCatalogNumber }}</div>
-	<div class="col-md-4"><input name="catalogNumber" type="text" value="{{ item.catalogNr }}" class="form-control" /></div>
+	<div class="col-md-3">{{ itemraw.catalogNr }}</div>
+	<div class="col-md-4"><input name="catalogNr" type="text" value="{{ item.catalogNr }}" class="form-control" /></div>
 	<div class="col-md-3">
 		{{ item.catalogNr }}
 	</div>
@@ -121,9 +121,9 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'number'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.trackNumber }}</div>
-	<div class="col-md-4"><input name="number" type="text" value="{{ item.number }}" class="form-control" /></div>
+	<div class="col-md-4"><input name="number" type="text" value="{{ item.trackNumber }}" class="form-control" /></div>
 	<div class="col-md-3">
-		{{ item.number }}
+		{{ item.trackNumber }}
 	</div>
 </div>
 <br />

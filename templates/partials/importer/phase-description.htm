@@ -1,0 +1,34 @@
+
+<h2><br><br>More info on importer phases...</h2>
+<h4 class="dark"><span class="badge">Phase 1</span> MPD-Database Update</h4>
+<p>This is completely handeled by MPD itself and has nothing to do with sliMpd. The starting point for sliMpd is the MPD database file.</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 2</span> Process MPD Database File</h4>
+<p>All information (filepath, artist, title, duration, file-time,...) stored by MPD gets collected and inserted in table:rawtagdata.<br />
+In case file-time has not changed, there will be no update to the correspondending rawtagdata-record.</p>
+<hr />
+
+<h4 class="dark"><span class="badge">Phase 3</span> Scan Music File Tags</h4>
+<p>All tracks of rawtagdata-table whos last scantimes are older than file-time will be scanned by getid3.php<br />
+The information fetched will be stored in the rawtagdata-table without modifying anything (like setting default values).<br />
+If "/config.ini" section:"[images]" option:"read_embedded" is set to "1", the extracted image data will be stored to a file in the folder "/embedded/" and a correspondendig database-record in table:bitmap will be created.</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 4</span> Migrate Raw Tag Data</h4>
+<p>The table:tracks is very similar to table:rawtagdata.
+With the rawtag-information as a basis, the track-records are given default values and some modifications, ie: title="My Super Song (%s & %s VIP Mix)" remixerId="123,456".<br />
+Artist+Label+Genre information is stored within separate tables.<br />
+Bitmap-records are completed with an album Id.
+</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 5</span> Delete Extracted Image Duplicates</h4>
+<p>In many cases all tracks of an album have identical album images embeded within their id3v2-tags. There is no need to store these duplicate images.<br />
+sliMpd makes a "fuzzy" comparison, and deletes the duplicate images in the table:bitmap, and the filesystem (application directory "embedded").</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 6</span> Search images in filesystem</h4>
+<p>Based on your <a class="item-link col2" href="https://github.com/othmar52/slimpd/wiki/Configuration#images" target="_blank">configuration</a>, several directories will be scanned for album images. For each found image a record in table:bitmap will be created.</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 7</span> Update counter cache</h4>
+<p>Each database record of tables:artist,genre,label gets completed with trackCount and albumCount.</p>
+<hr />
+<h4 class="dark"><span class="badge">Phase 8</span> Extract fingerprints</h4>
+<p>A fingerprint of each mp3 file gets extracted and records of tables:rawtagdata,track gets completed. The fingerprint method skips id3-tags and uses only the audio part of the mp3-file.</p>

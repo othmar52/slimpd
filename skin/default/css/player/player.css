@@ -252,6 +252,15 @@
 	padding-top: 5px;
 }
 
+/* clown icon for playing a random track */
+.fa-clown {
+	background: url(../../img/clown.svg) center center no-repeat;
+	background-size: cover;
+	width: 1em;
+	height: 1em;
+	display: inline-block;
+}
+
 /* different player height for mobile view */
 @media(max-width:991px){
 	.permaplayer {

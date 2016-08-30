@@ -58,8 +58,8 @@
 	    		
 			</div>
 			{% else %}
-				{% if item.relativePath %}
-				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+				{% if item.relPath %}
+				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				<br />
 				<div class="darker-links">
 					<a href="{{ albumHref }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i>{{parentDir}}</a>

@@ -29,7 +29,8 @@
         "rstacruz/nprogress": "master",
 	"mmp/mmp": "dev-master",
         "codrops/BookBlock": "master",
-        "greensock/GreenSock-JS": "master"
+        "greensock/GreenSock-JS": "master",
+        "ksubileau/color-thief-php": "^1.3"
     },
     "repositories": [
         {
@@ -159,6 +160,10 @@
                     "reference": "origin/master"
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ksubileau/color-thief-php"
         }
     ],
     "config" : {

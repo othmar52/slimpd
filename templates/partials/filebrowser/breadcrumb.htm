@@ -1,6 +1,6 @@
 {# html comments to be able to copy valid filepaths without spaces #}
 <ol class="breadcrumb"><!--
-	-->{% if not hiderootlink %}<!--
+	-->{% if (not hiderootlink) or (item.relDirPathHash == '00000000000') %}{# files in mpd root directory #}<!--
 	--><li><!--
 		--><a href="{{root}}filebrowser" class="ajax-link uc" title="{{ 'filebrowser.showroot'|ll }}"><i class="fa fa-folder-o fa-lg"></i></a><!--
 		--><span class="dir-separator"> </span><!--
@@ -14,10 +14,10 @@
 		-->{% if not break %}<!--
 			{# add hash of the next item and add a scroll link #}
 			{# TODO: correction of scrollposition due to sticky header #}
-			-->{% set deeplink = (breadcrumb[idx+1].hash) ? '#d'~breadcrumb[idx+1].hash : '' %}<!--
+			-->{% set deeplink = (breadcrumb[idx+1].relPathHash) ? '#d'~breadcrumb[idx+1].relPathHash : '' %}<!--
 			{# TODO append deeplink-hash to href as soon as javascript:setGetParameter() is able to handle hashes #}
-		--><li class="" title="{{ item.name }}"><!--
-		--><a href="{{root}}filebrowser{{ item.fullpath|path2url }}" title="{{'filebrowser.showdircontent'|ll(item.name) }}" class="ajax-link toggle-tooltip trigger-hide-modal">{{ item.name }}</a><!--
+		--><li class="" title="{{ item.title }}"><!--
+		--><a href="{{root}}filebrowser{{ item.relPath|path2url }}" title="{{'filebrowser.showdircontent'|ll(item.title) }}" class="ajax-link toggle-tooltip trigger-hide-modal">{{ item.title }}</a><!--
 		--><span class="dir-separator">/</span><!--
 		--></li><!--
 		-->{% endif %}<!--

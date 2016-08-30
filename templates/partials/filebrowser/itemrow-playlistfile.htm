@@ -1,0 +1,22 @@
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover ">
+	<div class="row item-row">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				<a href="{{root}}showplaylist/{{ item.relPath|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist">
+					<i class="fa fa-eye fa-lg"></i>
+				</a>
+				
+				<button role="control" data-href="{{root}}markup/widget-playlist/{{ item.relPath|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+					<i class="fa fa-align-justify fa-lg fa-fw"></i>
+				</button>
+				
+				<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+				
+
+				<a href="{{root}}showplaylist/{{ item.relPath|path2url }}" class="ajax-link">
+				<i class="fa fa-list fa-lg"></i>
+				{{ item.title }}</a>
+			</div>
+		</div>
+	</div>
+</div>

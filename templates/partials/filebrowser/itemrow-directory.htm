@@ -1,0 +1,21 @@
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover" id="d{{ item.relPathHash }}">
+	<div class="row item-row" id="track{{ loop.index }}">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				<button role="control" title="append this directory to current playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"appendDir","mpdurl":"{{root}}mpdctrl/appendDir/{{ item.relPath|path2url }}"}'>
+					<i class="fa fa-plus fa-lg fa-fw"></i>
+				</button>
+				
+				<button role="control" data-href="{{root}}markup/widget-directory/{{ item.relPath|path2url }}" title="{{ 'filebrowser.diroptions'|ll }}" class="btn btn-trnsp trigger-modal">
+					<i class="fa fa-align-justify fa-lg fa-fw"></i>
+				</button>
+				
+				<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+
+				<a href="{{root}}filebrowser/{{ item.relPath|path2url }}" class="ajax-link">
+					<i class="fa fa-folder-o fa-lg fa-fw"></i> {{ item.title }}
+				</a>
+			</div>
+		</div>
+	</div>
+</div>

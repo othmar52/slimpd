@@ -1,4 +1,4 @@
-{% if not item.relativePath %}
+{% if not item.relPath %}
 	{% include 'partials/track/no-track-selected-badge.htm' %}
 {% else %}
 	<div class="ffn-hidden">
@@ -8,7 +8,7 @@
 		{% include 'partials/artist/link.htm' %}
 		<span class="dark">({{item.year}})</span>
 	{% else %}
-		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relativePath  } %}
+		{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 		<span class="pull-right">{% include 'partials/track/not-imported-badge.htm' %}</span>
 		<br />
 		<span class="darker-links">
@@ -17,10 +17,10 @@
 	{% endif %}
 	</div>
 	<div class="ffn-show">
-		{{ item.relativePath|split('/')|last }}<br>
+		{{ item.relPath|split('/')|last }}<br>
 		<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
 			hiderootlink: 1,
-			breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+			breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 			skiplast: 1 }
 		%}</span>
 	</div>

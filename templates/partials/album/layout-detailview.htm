@@ -134,7 +134,7 @@
 {% include 'partials/trackrow-albumview-header.htm' %}
 {% set totalTime = 0 %}
 {% for item in itemlist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 {% include 'partials/trackrow-albumview.htm' %}
 </div>
 {% set totalTime = totalTime+item.miliseconds %}

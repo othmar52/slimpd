@@ -15,8 +15,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE IF NOT EXISTS `album` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` text,
-  `relativePath` text,
-  `relativePathHash` varchar(11) NOT NULL DEFAULT '',
+  `relPath` text,
+  `relPathHash` varchar(11) NOT NULL DEFAULT '',
   `year` smallint(4) unsigned DEFAULT NULL,
   `month` tinyint(2) unsigned DEFAULT NULL,
   `artistId` varchar(255) NOT NULL DEFAULT '',
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `album` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `album`
-  ADD FULLTEXT KEY `relativePath` (`relativePath`),
+  ADD FULLTEXT KEY `relPath` (`relPath`),
   ADD FULLTEXT KEY `title` (`title`);
 -- --------------------------------------------------------
 
@@ -58,13 +58,14 @@ ALTER TABLE `album`
 	
 CREATE TABLE IF NOT EXISTS `bitmap` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `relativePath` text,
-  `relativePathHash` varchar(11) NOT NULL DEFAULT '',
+  `relPath` text,
+  `relPathHash` varchar(11) NOT NULL DEFAULT '',
   `filemtime` int(11) unsigned NOT NULL DEFAULT '0',
   `filesize` int(11) unsigned NOT NULL DEFAULT '0',
   `mimeType` varchar(64) NOT NULL DEFAULT '',
   `width` int(7) unsigned DEFAULT NULL,
   `height` int(7) unsigned DEFAULT NULL,
+  `bghex` varchar(7) NOT NULL DEFAULT '',
   `albumId` int(11) unsigned DEFAULT NULL,
   `trackId` int(11) unsigned DEFAULT NULL,
   `rawTagDataId` int(11) unsigned DEFAULT NULL,
@@ -75,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `error` tinyint(1) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `relativePathHash` (`relativePathHash`),
+  KEY `relPathHash` (`relPathHash`),
   KEY `albumId` (`albumId`),
   KEY `trackId` (`trackId`),
   KEY `rawTagDataId` (`rawTagDataId`),
@@ -87,7 +88,7 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `bitmap`
-  ADD FULLTEXT KEY `relativePath` (`relativePath`);
+  ADD FULLTEXT KEY `relPath` (`relPath`);
 
 -- --------------------------------------------------------
 
@@ -174,9 +175,9 @@ CREATE TABLE IF NOT EXISTS `track` (
   `featuringId` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
   `remixerId` varchar(255) NOT NULL DEFAULT '',
-  `relativePath` text NOT NULL,
-  `relativePathHash` varchar(11) NOT NULL,
-  `directoryPathHash` varchar(11) NOT NULL,
+  `relPath` text NOT NULL,
+  `relPathHash` varchar(11) NOT NULL,
+  `relDirPathHash` varchar(11) NOT NULL,
   
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `mimeType` varchar(64) NOT NULL DEFAULT '',
@@ -189,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `audioSampleRate` int(10) unsigned NOT NULL DEFAULT '0',
   `audioChannels` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `audioLossless` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `audioCompressionRatio` double unsigned NOT NULL DEFAULT '0',
+  `audioComprRatio` double unsigned NOT NULL DEFAULT '0',
   `audioDataformat` varchar(64) NOT NULL DEFAULT '',
   `audioEncoder` varchar(64) NOT NULL DEFAULT '',
   `audioProfile` varchar(64) NOT NULL DEFAULT '',
@@ -201,7 +202,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `videoFramerate` int(10) unsigned NOT NULL DEFAULT '0',
   
   `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `number` varchar(8) DEFAULT NULL,
+  `trackNumber` varchar(8) DEFAULT NULL,
   `error` varchar(255) NOT NULL DEFAULT '',
   `albumId` varchar(11) NOT NULL DEFAULT '',
   `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',
@@ -225,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   KEY `featuringId` (`featuringId`),
   KEY `title` (`title`),
   KEY `remixerId` (`remixerId`),
-  KEY `relativePathHash` (`relativePathHash`),
+  KEY `relPathHash` (`relPathHash`),
   KEY `fingerprint` (`fingerprint`),
   KEY `audioDataformat` (`audioDataformat`),
   KEY `videoDataformat` (`videoDataformat`),
@@ -238,7 +239,7 @@ CREATE TABLE IF NOT EXISTS `track` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `track`
-  ADD FULLTEXT KEY `relativePath` (`relativePath`);
+  ADD FULLTEXT KEY `relPath` (`relPath`);
   
   
 -- --------------------------------------------------------
@@ -323,10 +324,10 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `language` varchar(255) NOT NULL DEFAULT '',
   `country` varchar(255) NOT NULL DEFAULT '',
   
-  `relativePath` text NOT NULL,
-  `relativePathHash` varchar(11) NOT NULL,
-  `relativeDirectoryPath` text NOT NULL,
-  `relativeDirectoryPathHash` varchar(11) NOT NULL,
+  `relPath` text NOT NULL,
+  `relPathHash` varchar(11) NOT NULL,
+  `relDirPath` text NOT NULL,
+  `relDirPathHash` varchar(11) NOT NULL,
   `directoryMtime` int(10) unsigned NOT NULL DEFAULT '0',
   
   `initialKey` varchar(255) NOT NULL DEFAULT '',
@@ -335,7 +336,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `textPeakDb` varchar(255) NOT NULL DEFAULT '',
   `textPerceivedDb` varchar(255) NOT NULL DEFAULT '',
   `textRating` varchar(255) NOT NULL DEFAULT '',
-  `textCatalogNumber` varchar(255) NOT NULL DEFAULT '',
+  `catalogNr` varchar(255) NOT NULL DEFAULT '',
   `textDiscogsReleaseId` varchar(255) NOT NULL DEFAULT '',
   `textUrlUser` varchar(255) NOT NULL DEFAULT '',
   `textSource` varchar(255) NOT NULL DEFAULT '',
@@ -353,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `audioSampleRate` varchar(24) NOT NULL DEFAULT '0',
   `audioChannels` varchar(24) NOT NULL DEFAULT '0',
   `audioLossless` varchar(24) NOT NULL DEFAULT '0',
-  `audioCompressionRatio` varchar(24) NOT NULL DEFAULT '0',
+  `audioComprRatio` varchar(24) NOT NULL DEFAULT '0',
   `audioDataformat` varchar(64) NOT NULL DEFAULT '',
   `audioEncoder` varchar(64) NOT NULL DEFAULT '',
   `audioProfile` varchar(64) NOT NULL DEFAULT '',
@@ -370,8 +371,8 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `added` int(11) unsigned NOT NULL DEFAULT '0',
 
   PRIMARY KEY (`id`),
-  KEY `relativePathHash` (`relativePathHash`),
-  KEY `relativeDirectoryPathHash` (`relativeDirectoryPathHash`),
+  KEY `relPathHash` (`relPathHash`),
+  KEY `relDirPathHash` (`relDirPathHash`),
   KEY `fingerprint` (`fingerprint`),
   KEY `filemtime` (`filemtime`),
   KEY `directoryMtime` (`directoryMtime`),
@@ -394,8 +395,8 @@ CREATE TABLE IF NOT EXISTS `playnext` (
   `prio` int(11) unsigned NOT NULL DEFAULT 0,
   `userId` int(11) unsigned NOT NULL DEFAULT 0,
   `trackId` varchar(255) NOT NULL DEFAULT '',
-  `relativePath` text NOT NULL,
-  `relativePathHash` varchar(11) NOT NULL,
+  `relPath` text NOT NULL,
+  `relPathHash` varchar(11) NOT NULL,
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `prio` (`prio`)
@@ -414,14 +415,14 @@ CREATE TABLE IF NOT EXISTS `editorial` (
   `tstamp` int(11) unsigned NOT NULL DEFAULT '0',
   `itemType` varchar(20) NOT NULL DEFAULT '',
   `itemId` int(11) NOT NULL DEFAULT '0',
-  `relativePath` text NOT NULL,
-  `relativePathHash` varchar(11) NOT NULL,
+  `relPath` text NOT NULL,
+  `relPathHash` varchar(11) NOT NULL,
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `column` varchar(32) NOT NULL DEFAULT '',
   `value` text,
   PRIMARY KEY (`id`),
   KEY `itemId` (`itemId`),
-  KEY `relativePathHash` (`relativePathHash`),
+  KEY `relPathHash` (`relPathHash`),
   KEY `fingerprint` (`fingerprint`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
@@ -433,12 +434,13 @@ CREATE TABLE IF NOT EXISTS `editorial` (
 
 CREATE TABLE IF NOT EXISTS `importer` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `batchId` int(11) unsigned NOT NULL DEFAULT '0',
   `jobPhase` int(11) NOT NULL DEFAULT '0',
   `jobStart` DOUBLE NOT NULL,
   `jobLastUpdate` DOUBLE NOT NULL,
   `jobEnd` DOUBLE NOT NULL,
   `jobStatistics` longtext NOT NULL,
-  `relativePath` text NOT NULL,
+  `relPath` text NOT NULL,
   PRIMARY KEY (`id`),
   KEY `jobStart` (`jobStart`),
   KEY `jobEnd` (`jobEnd`)

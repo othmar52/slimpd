@@ -1,20 +1,8 @@
-{% set startnum = paginator.currentPage*paginator_params.itemsPerPage+1-paginator_params.itemsPerPage %}
-
-{% if paginator.currentPage == paginator_params.numPages %}
-	{% set endnum = paginator.totalItems %}
-{% else %}
-	{% set endnum = paginator.currentPage*paginator_params.itemsPerPage %}
-{% endif %}
-{% if paginator.totalItems == 0 %}
-	{% set resultsetstring = 0 %}
-{% else %}
-	{% set resultsetstring = startnum~' - '~endnum~' of '~search[searchcurrent].total %}
-{% endif %}
 <div class="row">
 	<div class="col-md-12">
 		<span class="dark uc tinyfont darker">{{'searchresults'|ll}}</span>
 		<h2 class="inline-heading nomargin">&quot;{{ search.all.term }}&quot;</h2>
-		<span class="dark uc tinyfont darker">{{ resultsetstring }} {{'results'|ll}} in {{ search[searchcurrent].time }}s</span>
+		<span class="dark uc tinyfont darker">{{ statsstring }}</span>
 	</div>
 </div>
 <div class="row">

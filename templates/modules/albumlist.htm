@@ -13,6 +13,20 @@
 		</div>
 	</div>
 	{% endfor %}
+
+	{% if showalltile == 1 %}
+	 <div class="col-sm-4 col-md-2">
+		<div class="thumbnail bg-col1 darker-links">
+			<a href="{{root}}albums/page/1/sort/added/desc" class=" bg-col4 ajax-link">
+				<div class="img-placeXholder centered-text">
+					<div class="replace-me-with-proper-css">
+						<h3><br><br><br>Show all {{totalresults|shorty}} albums<br><br><br></h3>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+	{% endif %}
 </div>
 {% else %}
 	<div>

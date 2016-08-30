@@ -87,21 +87,6 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
 		},
 
-		formatTime(seconds) {
-			if(typeof seconds === "undefined") {
-				return "-- : --";
-			}
-			seconds 	= Math.round(seconds);
-			var hour 	= Math.floor(seconds / 3600);
-			var minutes = Math.floor(seconds / 60) % 60;
-			seconds 	= seconds % 60;
-
-			if (hour > 0) {
-				return hour + ":" + this.zeroPad(minutes, 2) + ":" + this.zeroPad(seconds, 2);
-			}
-			return minutes + ":" + this.zeroPad(seconds, 2);
-		},
-
 		zeroPad(number, n) {
 			var zeroPad = "" + number;
 			while(zeroPad.length < n) {

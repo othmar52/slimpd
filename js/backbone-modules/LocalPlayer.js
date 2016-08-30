@@ -163,7 +163,8 @@
 
 		toggleRepeat(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
-			window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
+			// deactivating repeat is currently not possible - so dont call AbstractPlayer::toggleRepeat()
+			//window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
 		},
 
 		toggleRandom(item) {
@@ -172,7 +173,8 @@
 
 		toggleConsume(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
-			window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
+			// consume mode is currently not possible - so dont call AbstractPlayer::toggleConsume()
+			//window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
 		},
 
 		soundEnded(item) {
@@ -182,27 +184,31 @@
 			//console.log("local soundEnded()");
 			if(this.state.random === "1") {
 				//console.log("local random is active");
-				$("#main .track-row:not(.track-"+ this.nowPlayingItem+")").random().find(".is-playbtn").click();
-			} else {
-				//console.log("local random is NOT active");
-				// check if current track is rendered
-				var current = $(".track-" + this.nowPlayingItem);
-				if(current.length) {
-					//console.log("current track is rendered");
-					var next = current.nextAll(".track-row").find(".is-playbtn");
-					if(next.length) {
-						//console.log("found next track");
-						next[0].click();
-					} else {
-						//console.log("we have no next track. fallback to first rendered track...");
-						$("#main .is-playbtn")[0].click();
-					}
-
-				} else {
-					//console.log("current track is not rendered. fallback to first rendered track...");
-					$("#main .is-playbtn")[0].click();
+				var playableItems = $("#main .track-row:not(.track-"+ this.nowPlayingItem+")");
+				if(playableItems.length < 1) {
+					return;
 				}
+				var randomIndex = Math.floor(Math.random() * playableItems.length);
+				playableItems.eq(randomIndex).find(".is-playbtn").click();
+				return;
 			}
+			//console.log("local random is NOT active");
+			// check if current track is rendered
+			var current = $(".track-" + this.nowPlayingItem);
+			if(!current.length) {
+				//console.log("current track is not rendered. fallback to first rendered track...");
+				$("#main .is-playbtn")[0].click();
+				return;
+			}
+			//console.log("current track is rendered");
+			var next = current.nextAll(".track-row").find(".is-playbtn");
+			if(next.length) {
+				//console.log("found next track");
+				next[0].click();
+				return;
+			}
+			//console.log("we have no next track. fallback to first rendered track...");
+			$("#main .is-playbtn")[0].click();
 		},
 
 		removeDupes(item) {

@@ -1,0 +1,25 @@
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
+	<div class="row">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				{% include 'partials/button/playtrack.htm' with {
+					'trackpath': [directory,item.title],
+					'trackext': item.ext ,
+					'additionalClass': 'fa-fw'
+				} %}
+				{% include 'partials/button/showtrackwidget.htm' with { 'trackpath': item.relPath } %}
+				{% include 'partials/button/showdeckselector.htm' with { 'trackpath': item.relPath } %}
+
+				<i class="fa fa-fw fa-lg visible-lg-inline-block">&nbsp;{# spacer for large screens #}</i>
+
+				{% include 'partials/button/playtrack.htm' with {
+					'trackpath': item.relPath,
+					'trackext': item.ext,
+					'linkedmarkup': "<i class=\"fa fa-music fa-lg fa-fw\"></i>"~item.title
+				} %}
+			</div>
+		</div>
+		{# ajax load target for xwax-control #}
+		<div class="ajax-xwax-{{ item.relPathHash }} col-md-12"></div>
+	</div>
+</div>

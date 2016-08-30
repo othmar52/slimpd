@@ -31,7 +31,7 @@
 		{% include 'partials/itemrow-album.htm' %}
 	{% endif %}
 	{% if item is instanceofTrack %}
-	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 		{% include 'partials/trackrow-1.htm' %}
 	{% endif %}
 	

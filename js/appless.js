@@ -1,7 +1,3 @@
-$.fn.random = function() {
-	return this.eq(Math.floor(Math.random() * this.length));
-};
-
 $(document).ready(function() {
 	"use strict";
 	var $ = window.jQuery;

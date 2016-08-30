@@ -40,6 +40,9 @@
 			$(".toggle-player", this.$el).off("click", this.playerModeToggleTriggerListener).on("click", this.playerModeToggleTriggerListener);
 			$(".toggle-player-size", this.$el).off("click", this.playerSizeToggleTriggerListener).on("click", this.playerSizeToggleTriggerListener);
 			$(".xwax-gui-toggler", this.$el).off("click", this.xwaxGuiToggleTriggerListener).on("click", this.xwaxGuiToggleTriggerListener);
+			// TODO: do we really have to add BookBlock EventListeners manually???
+			$(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener).on("click", this.bookblockNextClickListener);
+			$(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener).on("click", this.bookblockPrevClickListener);
 
 
 			/* display selected value in dropdown instead of dropdown-label */
@@ -129,9 +132,9 @@
 				speed : 800,
 				shadowSides : 0.8,
 				shadowFlip : 0.7,
-				circular : true,
-				nextEl : "#bb-nav-next",
-				prevEl : "#bb-nav-prev"
+				circular : false,
+				nextEl : ".bb-nav-next",
+				prevEl : ".bb-nav-prev"
 			});
 
 			window.Backbone.View.prototype.render.call(this);
@@ -153,6 +156,10 @@
 			$(".force-xwax-poll", this.$el).off("click", this.forceXwaxPoll);
 			$(".toggle-player-size", this.$el).off("click", this.playerSizeToggleTriggerListener);
 			$(".xwax-gui-toggler", this.$el).off("click", this.xwaxGuiToggleTriggerListener);
+			$(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener);
+			$(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener);
+
+			$( "#bb-bookblock", this.$el ).bookblock("destroy");
 
 			window.Backbone.View.prototype.remove.call(this);
 		},
@@ -201,7 +208,7 @@
 			var that = this;
 			window.NProgress.start();
 			$.ajax({
-				url: window.sliMpd.setGetParameter($el.attr("href"), "nosurrounding", "1")
+				url: window.sliMpd.router.setGetParameter($el.attr("href"), "nosurrounding", "1")
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
 				$($el.attr("data-ajaxtarget")).html(response);
@@ -219,7 +226,7 @@
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			$.ajax({
-				url: window.sliMpd.setGetParameter($el.attr("data-href"), "nosurrounding", "1")
+				url: window.sliMpd.router.setGetParameter($el.attr("data-href"), "nosurrounding", "1")
 			}).done(function(response) {
 				window.sliMpd.checkNotify(response);
 				if($el.hasClass("trigger-hide-modal")) {
@@ -321,6 +328,16 @@
 		xwaxGuiToggleTriggerListener(e) {
 			e.preventDefault();
 			window.sliMpd.xwax.toggleXwaxGui();
+		},
+
+		bookblockNextClickListener(e) {
+			e.preventDefault();
+			$("#bb-bookblock").bookblock("next");
+		},
+
+		bookblockPrevClickListener(e) {
+			e.preventDefault();
+			$("#bb-bookblock").bookblock("prev");
 		}
 	});
 }());

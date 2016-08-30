@@ -32,9 +32,9 @@ body {
 	color: #EEE;
 }
 
-.col2 {
-	/* @see: templates/css/spotcolors.css for overrides */
-}
+/* @see: templates/css/spotcolors.css for overrides
+.col2 { }
+*/
 
 .col3 {
 	color: #CCC;
@@ -172,10 +172,6 @@ a .article {
 
 .no-padding-right {
 	padding-right: 0;
-}
-
-.item-row {
-
 }
 
 .centered-icon {
@@ -329,7 +325,6 @@ body.standalone {
 .waveform.waveform-tiny {
 	width: 62px;
     height: 38px;
-    display: inline;
     position: absolute;
     right: 200px;
 }
@@ -371,4 +366,20 @@ body.standalone {
 	.btn {
 		padding: 3px 6px;
 	}
+}
+
+
+.carousel-thumb {
+	display: block;
+	float: left;
+	width: 49px;
+	height: 49px;
+	margin: 0 3px 3px 0;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+.carousel-booklet {
+	text-align: center;
 }

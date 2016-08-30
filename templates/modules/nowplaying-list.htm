@@ -22,10 +22,16 @@
 	<div class="col-md-2">
 
 	</div>
-	<div class="col-md-3"><span class="dark uc small">{{'title'|ll}} &amp; {{'album'|ll}}</span></div>
-	<div class="col-md-3"><span class="dark uc small">{{'artist'|ll}}</span></div>
-	<div class="col-md-2"><span class="dark uc small">{{'genre'|ll}}</span></div>
-	<div class="col-md-1"><span class="dark uc small">{{'year'|ll}}</span></div>
+	<div class="ffn-hidden">
+		<div class="col-md-3"><span class="dark uc small">{{'title'|ll}} &amp; {{'album'|ll}}</span></div>
+		<div class="col-md-3"><span class="dark uc small">{{'artist'|ll}}</span></div>
+		<div class="col-md-2"><span class="dark uc small">{{'genre'|ll}}</span></div>
+		<div class="col-md-1"><span class="dark uc small">{{'year'|ll}}</span></div>
+	</div>
+	<div class="ffn-show">
+		<div class="col-md-8"><span class="dark uc small">{{'filename'|ll}} + {{'dirname'|ll}}</span></div>
+		<div class="col-md-1"><span class="dark uc small">{{'fingerprint'|ll}}</span></div>
+	</div>
 	<div class="col-md-1"><span class="dark uc small">{{'duration'|ll}}</span></div>
 </div>
 <hr />
@@ -33,7 +39,7 @@
 
 {% set totalTime = 0 %}
 {% for mpdidx,item in currentplaylist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relativePathHash }} track-row">
+<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 {% set totalTime = totalTime+item.miliseconds %}
 {% include 'partials/trackrow-currentplaylist.htm' %}
 </div>

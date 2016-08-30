@@ -1,0 +1,23 @@
+<div class="dropdown dropdown-label" data-activesorting="{{activesorting}}">
+	<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" >
+		Sorting
+		<span class="caret"></span>
+	</button>
+	<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+		<li><a href="{{root}}albums/page/1/sort/year/desc" class="ajax-link" data-sortkey="year-desc">Year <i class="fa fa-arrow-down"></i> </a></li>
+		<li><a href="{{root}}albums/page/1/sort/year/asc" class="ajax-link" data-sortkey="year-asc">Year <i class="fa fa-arrow-up"></i> </a></li>
+		<li role="separator" class="divider"></li>
+
+		<li><a href="{{root}}albums/page/1/sort/title/asc" class="ajax-link" data-sortkey="title-asc">Title, A-Z</a></li>
+		<li><a href="{{root}}albums/page/1/sort/title/desc" class="ajax-link" data-sortkey="title-desc">Title, Z-A</a></li>
+		<li role="separator" class="divider"></li>
+
+		<li><a href="{{root}}albums/page/1/sort/added/desc" class="ajax-link" data-sortkey="added-desc">Added <i class="fa fa-arrow-down"></i></a></li>
+		<li><a href="{{root}}albums/page/1/sort/added/asc" class="ajax-link" data-sortkey="added-asc">Added <i class="fa fa-arrow-up"></i></a></li>
+		<li role="separator" class="divider"></li>
+
+		<li><a href="{{root}}albums/page/1/sort/trackCount/desc" class="ajax-link" data-sortkey="trackCount-desc">Trackcount <i class="fa fa-arrow-down"></i></a></li>
+		<li><a href="{{root}}albums/page/1/sort/trackCount/asc" class="ajax-link" data-sortkey="trackCount-asc">Trackcount <i class="fa fa-arrow-up"></i></a></li>
+		<li role="separator" class="divider"></li>
+	</ul>
+</div>

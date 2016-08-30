@@ -66,16 +66,16 @@
 			item = item || { item : 0};
 			var url =  window.sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
 			if(this.mode === "xwax") {
-				url = window.sliMpd.setGetParameter(url, "deck", this.deckIndex);
+				url = window.sliMpd.router.setGetParameter(url, "deck", this.deckIndex);
 				if(this.showWaveform === false) {
-					url = window.sliMpd.setGetParameter(url, "type", "djscreen");
+					url = window.sliMpd.router.setGetParameter(url, "type", "djscreen");
 				} 
 			} else {
-				url = window.sliMpd.setGetParameter(url, "item", item.item);
+				url = window.sliMpd.router.setGetParameter(url, "item", item.item);
 			}
 
 			$.ajax({
-				url: url
+				url
 			}).done(function(response){
 				// place markup in DOM
 				this._template = _.template(response);
@@ -91,7 +91,7 @@
 		updateStateIcons() {
 			var that = this;
 			["repeat", "random", "consume"].forEach(function(prop) {
-				if(that.state[prop] === "1") {
+				if(that.state[prop] === 1) {
 					$(".status-"+prop, that.$el).addClass("active");
 				} else {
 					$(".status-"+prop, that.$el).removeClass("active");
@@ -100,7 +100,7 @@
 		},
 
 		process(item) {
-			if(typeof this[item.action] === 'function') {
+			if(typeof this[item.action] === "function") {
 				this[item.action](item);
 				return;
 			}
@@ -113,15 +113,15 @@
 		pause(item) { return; },
 		togglePause(item) { return; },
 		toggleRepeat(item) {
-			this.state.repeat = (this.state.repeat == 1) ? 0 : 1;
+			this.state.repeat = (this.state.repeat === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		toggleRandom(item) {
-			this.state.random = (this.state.random == 1) ? 0 : 1;
+			this.state.random = (this.state.random === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		toggleConsume(item) {
-			this.state.consume = (this.state.consume == 1) ? 0 : 1;
+			this.state.consume = (this.state.consume === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
 		setPlayPauseIcon() { return; },
@@ -173,7 +173,7 @@
 		},
 
 		drawFavicon() {
-			FavIconX.config({
+			window.FavIconX.config({
 				updateTitle: false,
 				shape: "doughnut",
 				doughnutRadius: 7,
@@ -183,7 +183,7 @@
 				fillColor: this.faviconDoghnutColor,
 				borderWidth : 1.2,
 				backgroundColor : this.faviconBackgroundColor,
-				titleRenderer: function(v, t){
+				titleRenderer(v, t){
 					return $(".player-"+ this.mode +" .now-playing-string").text();
 				}
 			}).setValue(this.nowPlayingPercent);
@@ -258,10 +258,10 @@
 
 			$.ajax({
 				url: $waveFormWrapper.attr("data-jsonurl"),
-				dataType: 'json',
-				success: function( vals ) {
+				dataType: "json",
+				success(vals) {
 					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
-					var maxVal = vals.max();
+					var maxVal = that.getMaxVal(vals);
 					for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
 						that.drawBar(
 							j,
@@ -275,7 +275,7 @@
 					$waveFormWrapper.html("");
 					$(that.waveformSettings.canvas).appendTo($waveFormWrapper);
 				},
-				error: function( response ) {
+				error(response) {
 					$waveFormWrapper.html(
 						$("<p />").html("error generating waveform...")
 					);
@@ -305,6 +305,29 @@
 			}
 
 			this.waveformSettings.context.fillRect(x, y, w, h);
+		},
+
+		getMaxVal(inputArray) {
+			var max = 0;
+			for(var i=0; i<inputArray.length; i++) {
+				max = (inputArray[i] > max) ? inputArray[i] : max;
+			}
+			return max;
+		},
+
+		formatTime(seconds) {
+			if(typeof seconds === "undefined") {
+				return "-- : --";
+			}
+			seconds 	= Math.round(seconds);
+			var hour 	= Math.floor(seconds / 3600);
+			var minutes = Math.floor(seconds / 60) % 60;
+			seconds 	= seconds % 60;
+
+			if (hour > 0) {
+				return hour + ":" + this.zeroPad(minutes, 2) + ":" + this.zeroPad(seconds, 2);
+			}
+			return minutes + ":" + this.zeroPad(seconds, 2);
 		},
 
 		/* only for polled mpd player implementation - begin */

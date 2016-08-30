@@ -4,7 +4,7 @@
 			<a href="{{root}}album/{{ item.id }}" class="ajax-link" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.id}}">
 				<img src="{{root}}image-50/album/{{item.id}}">
 			</a>
-			<a href="{{root}}markup/albumtracks/{{item.id}}" class="ajax-partial" data-ajaxtarget=".ajax-alb-{{ item.relativePathHash }}">
+			<a href="{{root}}markup/albumtracks/{{item.id}}" class="ajax-partial" data-ajaxtarget=".ajax-alb-{{ item.relPathHash }}">
 				<strong>&nbsp;&nbsp;&nbsp;&nbsp;ALBUM</strong>
 			</a>
 		</div>
@@ -36,11 +36,11 @@
 	<div class="ffn-show">
 		<div class="col-md-9 vcenter">
 			<div class="vcinner">
-				{{ renderitems.itembreadcrumbs[item.relativePathHash]|last.name }}
+				{{ renderitems.itembreadcrumbs[item.relPathHash]|last.title }}
 				<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
 					hiderootlink: 1,
-					breadcrumb: renderitems.itembreadcrumbs[item.relativePathHash],
+					breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 					skiplast: 1 } %}</span>
 			</div>
 		</div>
@@ -51,4 +51,4 @@
 		</div>
 	</div>
 </div>
-<div class="ajax-alb-{{ item.relativePathHash }}"></div>
+<div class="ajax-alb-{{ item.relPathHash }}"></div>
