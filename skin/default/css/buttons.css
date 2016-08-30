@@ -1,5 +1,7 @@
 
-
+.btn-default {
+	transition: all .25s ease-out;
+}
 
 
 .btn-default {
