@@ -320,6 +320,27 @@ foreach(array_keys($sortfields) as $currentType) {
 		$vars["action"] = "searchresult." . $currentType;
 		$vars["searchcurrent"] = $currentType;
 		$vars["renderitems"] = getRenderItems($vars["itemlist"]);
+		$vars["statsstring"] = $app->ll->str( // "x results in x seconds";
+			'searchstats.singlepage',
+			[
+				$vars["search"][$currentType]["total"],
+				$vars["search"][$currentType]["time"]
+			]
+		);
+		if($vars["paginator"]->getNumPages() > 1){
+			#$vars["statsstring"] = ;
+			$vars["statsstring"] = $app->ll->str( // "x - x of x results in x seconds"
+				'searchstats.multipage',
+				[
+					$currentPage*$itemsPerPage+1-$itemsPerPage,
+					(($currentPage == $vars["paginator"]->getNumPages())
+						? $vars["search"][$currentType]["total"]
+						: $currentPage*$itemsPerPage),
+					$vars["search"][$currentType]["total"],
+					$vars["search"][$currentType]["time"]
+				]
+			);
+		}
 		$app->render("surrounding.htm", $vars);
 			
 	})->name("search".$currentType);
