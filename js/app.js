@@ -314,9 +314,10 @@ $(document).ready(function() {
 			window.sliMpd.modal.$modal.modal("hide");
 	});
 	window.sliMpd.modal.$modal.on('show.bs.modal', function () {
-			TweenMax.to($('.overlay-backdrop'),0.25,{ display: 'block', opacity: 1 });
-			TweenMax.from($('.modal-content'),0.5,{ scaleY:0, ease: Cubic.easeOut, delay:0.25 });
-			TweenMax.staggerFrom($('.modal-content .row'), 0.5,{ y:40, opacity: 0, ease: Cubic.easeOut, delay:0.5 }, 0.05);
+			TweenMax.to($('.overlay-backdrop'),0.5,{ display: 'block', opacity: 1 });
+			TweenMax.from($('.modal-content'),0.5,{ scaleY:0, ease: Cubic.easeInOut, delay:0.5 });
+			TweenMax.from($('.modal-content h2'),0.25,{ alpha:0, ease: Cubic.easeInOut, delay:0.75 });
+			TweenMax.staggerFrom($('.modal-content .row'), 0.5,{ y:40, opacity: 0, ease: Cubic.easeOut, delay: 0.75 }, 0.05);
 			//TweenMax.to(blurElement, 0, {a:10, onUpdate: applyBlur, ease: Expo.easeOut});
 			//TweenMax.set([$('.container'), $('.permaplayer')], { webkitFilter:"blur(" + 4 + "px)", filter:"blur(" + 4 + "px)"});
 	});

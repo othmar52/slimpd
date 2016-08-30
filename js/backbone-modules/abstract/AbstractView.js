@@ -241,6 +241,7 @@
 		triggerModalClickListener(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
+
 			$.ajax({
 				url: $el.attr("data-href")
 			}).done(function(response){
@@ -256,6 +257,7 @@
 				}
 
 				window.sliMpd.modal.renderModalContent(response);
+
 			}).fail(function() {
 				window.sliMpd.notifyError($el.attr("data-href"));
 				return;

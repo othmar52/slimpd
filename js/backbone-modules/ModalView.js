@@ -26,11 +26,14 @@
 		},
 
 		renderModalContent(markup) {
-			$(".modal-content", this.$modal).html(markup);
+			this.$modal.find(".modal-content").html(markup);
 			this.rendered = false;
 			this.render();
-			//this.$modal.data('bs.modal').options.backdrop = false;
 			this.$modal.modal("show");
+		},
+
+		addMarkupToModal(markup) {
+
 		}
 	});
 
