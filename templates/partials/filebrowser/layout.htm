@@ -94,7 +94,7 @@
 	{% endfor %}
 	{% if showDirFilterBadge %}
 	<div class="row darker-links">
-		<a href="{{root}}filebrowser/{{ item.relPath|path2url }}?filter=dirs&page=2" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=dirs&page=2" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.moredirs'|ll(subDirectories.total - subDirectories.count) }}
 		</a>
 	</div>
@@ -106,7 +106,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nodirs'|ll }}</div>
 			{% if files.total > 0 %}
 			<div class="row">
-				<a href="{{root}}filebrowser/{{ item.relPath|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=files&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.files.t'|ll }}">
 					{{ 'filebrowser.nodirsshowfiles'|ll(files.total) }}
 				</a>
 			</div>
@@ -184,7 +184,7 @@
 	
 	{% if showFileFilterBadge %}
 	<div class="row darker-links">
-		<a href="{{root}}filebrowser/{{ item.relPath|path2url }}?filter=files&page=2" class="ajax-link btn btn-trnsp">
+		<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=files&page=2" class="ajax-link btn btn-trnsp">
 			{{ 'filebrowser.morefiles'|ll(files.total - files.count) }}
 		</a>
 	</div>
@@ -196,7 +196,7 @@
 			<div class="alert alert-info" role="alert">{{ 'filebrowser.nofiles'|ll }}</div>
 			{% if subDirectories.total > 0 %}
 			<div class="row">
-				<a href="{{root}}filebrowser/{{ item.relPath|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
+				<a href="{{root}}filebrowser/{{ directory|path2url }}?filter=dirs&page=1" class="ajax-link btn btn-trnsp" title="{{ 'filebrowser.dirs.t'|ll }}">
 					{{ 'filebrowser.nofilesshowdirs'|ll(subDirectories.total) }}
 				</a>
 			</div>
