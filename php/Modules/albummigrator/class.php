@@ -1050,12 +1050,7 @@ class AlbumMigrator {
 			#cliLog($pattern);
 			if(preg_match($pattern, $value, $matches)) {
 				if($result !== 'nonumber' && $result !== 'nonumber-noartist') {
-					if(is_numeric($matches[1])) {
-						$this->extractedTrackNumbers[$idx] = intval($matches[1]);
-					} else {
-						// vinyl schemed tracknumer
-						$this->extractedTrackNumbers[$idx] = strtoupper($matches[1]);
-					}
+					$this->addTrackNumber($idx, $matches[1]);
 				}
 
 				switch($result) {
@@ -1131,18 +1126,18 @@ class AlbumMigrator {
 			return 'missing';
 		}
 		if(intval($value) == strval($value) && is_numeric($value) === TRUE) {
-			$this->extractedTrackNumbers[$idx] = $value;
+			$this->addTrackNumber($idx, $value);
 			$this->recommend($idx, array('trackNumber' => $value));
 			return 'simple'; // 1, 2, 3
 		}
 
 		if(ltrim($value,'0') != strval($value)) {
-			$this->extractedTrackNumbers[$idx] = intval($value);
+			$this->addTrackNumber($idx, $value);
 			$this->recommend($idx, array('trackNumber' => intval($value)));
 			return 'leadingzero';	// 01, 02
 		}
 		if(preg_match("/^(\d*)\/(\d*)$/", $value, $matches)) {
-			$this->extractedTrackNumbers[$idx] = intval($matches[1]);
+			$this->addTrackNumber($idx, $matches[1]);
 			$this->extractedTotalTracks[$idx] = intval($matches[2]);
 			$this->recommend($idx, array('trackNumber' => intval($matches[1])));
 			$this->recommend('album', array('totalTracks' => intval($matches[2])));
@@ -1150,7 +1145,7 @@ class AlbumMigrator {
 		}
 		if(preg_match("/^([a-zA-Z]{1,2})(?:[\/-]{1})(\d*)$/", $value)) {
 			if($idx !== NULL) { 
-				$this->extractedTrackNumbers[$idx] = $value;
+				$this->addTrackNumber($idx, $value);
 				$this->recommend($idx, array('trackNumber' => $value, 'source' => 'Vinyl'));
 				$this->recommend('album', array('source' => 'Vinyl'));
 			}
@@ -1220,6 +1215,8 @@ class AlbumMigrator {
 	 * 
 	 */
 	private function extractNumericRangeness($numbers) {
+		#cliLog("COUNT: " . count($numbers), 1, 'cyan');
+		#cliLog(join(" x ", $numbers), 1, 'cyan');
 		$noGaps = range(1,max($numbers));
 		return array_diff($noGaps,$numbers);
 	}
@@ -1263,6 +1260,20 @@ class AlbumMigrator {
 		return $rangeArray;
 	}
 	*/
+
+	public function addTrackNumber($idx, $input) {
+		if(is_numeric($input) === FALSE) {
+			// vinyl schemed tracknumer
+			$this->extractedTrackNumbers[$idx] = strtoupper($input);
+			return;
+		}
+		if($input > 1000) {
+			// later called max($array) with really huge numbers causes memory_limit issues
+			// lets add a limit here...
+			$input = 1000;
+		}
+		$this->extractedTrackNumbers[$idx] = intval($input);
+	}
 
 	
 	// setter
