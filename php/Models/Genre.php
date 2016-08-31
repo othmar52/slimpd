@@ -221,15 +221,15 @@ class Genre extends \Slimpd\Models\AbstractModel
 		}
 		$joinedChunkRest = strtolower(join(".", $chunks));
 		
-		if(isset($app->importerCache[$classPath]["preserved"][$joinedChunkRest]) === TRUE) {
-			$finalGenres[az09($joinedChunkRest)] = $app->importerCache[$classPath]["preserved"][$joinedChunkRest];
-			cliLog("  found genre based on full preserved pattern: $joinedChunkRest = ".$app->importerCache[$classPath]["preserved"][$joinedChunkRest], 7);
+		if(isset($app->importerCache[$classPath]["preserve"][$joinedChunkRest]) === TRUE) {
+			$finalGenres[az09($joinedChunkRest)] = $app->importerCache[$classPath]["preserve"][$joinedChunkRest];
+			cliLog("  found genre based on full preserved pattern: $joinedChunkRest = ".$app->importerCache[$classPath]["preserve"][$joinedChunkRest], 7);
 			return $finalGenres;
 		}
 
 		cliLog("  REMAINING CHUNKS:" . $joinedChunkRest, 7);
 		$foundPreservedMatch = FALSE;
-		foreach($app->importerCache[$classPath]["preserved"] as $preserve => $genreString) {
+		foreach($app->importerCache[$classPath]["preserve"] as $preserve => $genreString) {
 			if(preg_match("/".str_replace(".", "\.", $preserve) . "/", $joinedChunkRest)) {
 				$finalGenres[az09($preserve)] = $genreString;
 				$foundPreservedMatch = TRUE;
