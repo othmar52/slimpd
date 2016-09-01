@@ -217,7 +217,7 @@ class MpdDatabaseParser {
 			// file is alive - remove it from dead items
 			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 		}
-
+		$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime());
 		$this->rawTagItem->setlastScan(0);
 		$this->rawTagItem->setImportStatus(1);
 		$this->rawTagItem->update();
