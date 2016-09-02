@@ -158,10 +158,15 @@ class AlbumMigrator {
 		$album->setYear($this->mostScored['album']['year']);
 
 		$album->setIsJumble(($this->handleAsAlbum === 1) ? 0:1);
+		$album->setLabelId(
+			join(",", \Slimpd\Models\Label::getIdsByString(
+				($album->getIsJumble() === 1)
+					? $mergedFromTracks['label']			// all labels
+					: $this->mostScored['album']['label']	// only 1 label
+			))
+		);
 
 		$album->setTrackCount(count($this->tracks));
-
-		#print_r($album); die();
 		$album->update();
 
 		$albumId = $album->getId();
@@ -332,6 +337,9 @@ class AlbumMigrator {
 			$this->mostScored['album'][$attrName] = $this->getMostScored('album', $attrName);
 
 		}
+		if($this->mostScored['album']['label'] === "") {
+			$this->mostScored['album']['label'] = \Slim\Slim::getInstance()->ll->str("importer.unknownlabel");
+		}
 		$rgx = new \Slimpd\RegexHelper();
 		
 		// last fixes :)                                   hopefully...
@@ -416,6 +424,7 @@ class AlbumMigrator {
 			$this->scoreAttribute('album', 'title',  $track['album'], $this->scoreForRealTags);
 			$this->scoreAttribute('album', 'artist', $track['albumArtist'], $this->scoreForRealTags);
 			$this->scoreAttribute('album', 'artist', $track['artist'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'label',  $track['publisher'], $this->scoreForRealTags);
 		}
 		$this->guessAttributesByDirectoryName($track['relDirPath']);
 

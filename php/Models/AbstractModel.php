@@ -358,7 +358,7 @@ abstract class AbstractModel {
 	public static function getIdsByString($itemString) {
 		$idForUnknown = 10;
 		if(trim($itemString) === '') {
-			return array($idForUnknown); // Unknown
+			return array($idForUnknown => $idForUnknown); // Unknown
 		}
 		
 		$app = \Slim\Slim::getInstance();
@@ -416,7 +416,6 @@ abstract class AbstractModel {
 			self::cacheWrite($app, $classPath, $az09, $itemId);
 		}
 		return $itemIds;
-		
 	}
 
 	public static function cacheRead($app, $classPath, $az09) {
