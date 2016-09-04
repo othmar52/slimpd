@@ -3,7 +3,7 @@
 
 $app->get('/importer(/)', function() use ($app, $vars){
 	$vars['action'] = 'importer';
-	$vars['servertime'] = time();;
+	$vars['servertime'] = time();
 	
 	$query = "SELECT * FROM importer ORDER BY batchId DESC, jobPhase ASC LIMIT 200;";
 	$result = $app->db->query($query);
@@ -25,7 +25,7 @@ $app->get('/importer(/)', function() use ($app, $vars){
 			continue;
 		}
 		$vars['itemlist'][$batchId]["interruptedAfter"] = $record["jobLastUpdate"] - $batchBegin;
-		$vars['itemlist'][$batchId]["phases"][] = $record;
+		$vars['itemlist'][$batchId]["phases"][ $record["jobPhase"] ] = $record;
 	}
 	$app->render('surrounding.htm', $vars);
 });

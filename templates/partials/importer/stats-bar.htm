@@ -1,0 +1,34 @@
+{% set phaseCount = 8 %}
+{% set phasePercent = 100/phaseCount - 0.3%}
+
+
+{% for p in 1..phaseCount %}
+	{% if itemlist[p] %}
+		{% for item in itemlist %}
+			{% if p == item.jobPhase %}
+				{% set phaseProgress = item.jobStatistics.progressPercent %}
+		
+		
+				{% if item.jobStatistics.progressPercent == 100 %}
+					{% set timeString = item.jobStatistics.runtimeSeconds|formatSeconds %}
+				{% else %}
+					{% set timeString = '??? sec left' %}
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+	{% else %}
+		{% set phaseProgress = 0 %}
+		{% set timeString = 'skipped' %}
+	{% endif %}
+
+	<div class="progress" style="height: 4em; display: inline-block; width: {{phasePercent}}%">
+		<span style="color: black; position: absolute;">Phase {{p}}<br />{{timeString}}</span>
+		<div class="progress-bar progress-bar-{{ cycle(['warning','success'],loop.index) }} border-right"
+			style="width: {{ phaseProgress }}%;"
+			aria-valuenow="{{ item.jobStatistics.progressPercent }}"
+			aria-valuemin="0"
+			aria-valuemax="100" >
+		</div>
+	</div>
+{% endfor %}
+

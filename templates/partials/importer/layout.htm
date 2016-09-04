@@ -5,7 +5,7 @@
 
 <div class="row">
 	<div class="col-md-10">
-		<h2>Recent Importer Jobs <span class="small uc">TODO: auto refresh</span></h2>
+		<h2>Recent Importer Jobs <span class="small uc">TODO: auto <a href="{{root}}importer" class="ajax-link">refresh</a></span></h2>
 	</div>
 	<div class="col-md-2">
 		<button role="control" data-href="{{root}}importer/triggerUpdate" title="update sliMpd-db based on MPD-db" class="ajax-rqst btn btn-default">
@@ -23,6 +23,41 @@ td.ar {
 	te_xt-align: right;
 }
 </style>
+{#
+	{% set phaseCount = 8 %}
+	{% set phasePercent = 100/phaseCount %}
+	{% for item in itemlist %}
+		<div class="row">
+			<div class="col-md-3">
+			{{item.jobStart|timeElapsedString}}
+			</div>
+			<div class="col-md-2">
+			{% if item.status == 'finished' %}
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+					100% in {{ item.jobStatistics.runtimeSeconds|formatSeconds }}
+					</div>
+				</div>
+			{% endif %}
+			{% if item.status == 'running' %}
+				<i class="fa fa-refresh fa-spin fa-fw"></i> running...
+			{% endif %}
+			{% if item.status == 'interrupted' %}
+			<span class="label label-warning">
+				interrupted after {{item.interruptedAfter|formatSeconds }}
+			</span>
+			{% endif %}
+			</div>
+			<div class="col-md-7">
+
+			</div>
+		</div>
+		<div class="row">
+			{% include 'partials/importer/stats-bar.htm' with {'itemlist': item.phases} %}
+		</div>
+		<hr />
+	{% endfor %}
+#}
 	{% for item in itemlist %}
 		<div class="row">
 			<div class="col-md-3">
