@@ -11,18 +11,7 @@
 			</div>
 			<div class="col-md-10 xwax-decks">
 				<div class="row xwax-gui">
-					{% set colidx = (xwax.decks > 3) ? 3 : 12/xwax.decks %}
-					{% for i in 1..xwax.decks %}
-					<div class="col-md-{{colidx}}">
-						<div class="row xwax-row xwax-deck-{{i-1}} bg-col4">
-							<div class="show-no-connection">
-								xwax connection failed
-								
-			
-							</div>
-						</div>
-					</div>
-					{% endfor%}
+					{% include 'partials/xwax/deck-wrapper-loop.htm' %}
 				</div>
 			</div>
 			<div class="col-md-1">

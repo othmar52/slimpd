@@ -118,15 +118,9 @@
 				});
 			});
 
-			// TODO: how to reinit affixes?
-			//$("[data-spy=affix]").affix({ offset: { top: 40}, spy :"affix"});
-			/*$("[data-spy=affix]").each(function () {
-				try {
-					$(this).data("affix").checkPosition();
-				} catch (error) {
-					console.log("reinit affix error");
-				}
-			});*/
+			requestAnimationFrame(function(){
+				$("[data-spy=affix]", that.$el).affix("checkPosition");
+			});
 
 			$( "#bb-bookblock", that.$el ).bookblock( {
 				speed : 800,

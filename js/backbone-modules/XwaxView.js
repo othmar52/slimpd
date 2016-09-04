@@ -62,8 +62,9 @@
 
 		showXwaxGui() {
 			for(var i=0; i< this.totalDecks; i++) {
+				$(".xwax-deck-"+i).html('<div></div>');
 				var deckView = new window.sliMpd.modules.XwaxPlayer({
-					el : ".xwax-deck-"+i,
+					el : ".xwax-deck-"+i+">div",
 					deckIndex : i,
 					showWaveform : this.showWaveform
 				});
@@ -109,7 +110,7 @@
 			//console.log("hideXwaxGui()");
 			this.deckViews.forEach(function (view){
 				//console.log("destroying view " + view.deckIndex);
-				view.close();
+				view.remove();
 			});
 			$("body").removeClass("slimplayer xwax-enabled");
 			this.toggler.removeClass("btn-success").removeClass("btn-danger").addClass("btn-default");
