@@ -129,7 +129,9 @@
 		prev(item) { return; },
 		seek(item) { return; },
 		seekzero(item) { return; },
-		remove(item) { return; },
+		remove() {
+			window.sliMpd.modules.AbstractView.prototype.remove.call(this);
+		},
 
 		softclearPlaylist(item) { return; },
 

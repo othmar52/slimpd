@@ -48,6 +48,8 @@ $(document).ready(function() {
 		}
 	});
 
+	window.sliMpd.router = new window.sliMpd.modules.Router();
+
 	window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({
 		el : ".player-xwax",
 		showWaveform : false

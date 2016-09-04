@@ -37,19 +37,11 @@
 				this.timeLineLight = new window.TimelineLite();
 			}
 
-			//console.log("XwaxPlayer::init() " + this.deckIndex);
-			//this.listenTo(this.parent, "hideXwaxGui", this.close);
-
 			window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
-		},
 
-		close(){
-			//console.log("XwaxPlayer::close()");
-			this.remove();
-			// IMPORTANT TODO: shouldnt remove() removing the DOM element???
-			this.$el.html("<div class='show-no-connection'>xwax connection failed</div>");
-			this.unbind();
-			//window.sliMpd.modules.AbstractPlayer.prototype.close.call(this, options);
+			this._template = _.template("<div class='show-no-connection'>xwax connection failed</div>");
+			this.rendered = false;
+			this.render(true);
 		},
 
 		render(options) {
