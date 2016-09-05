@@ -452,14 +452,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$query = "
 			SELECT count(id) AS itemsTotal
 			FROM rawtagdata
-			WHERE audioDataFormat='mp3' AND fingerprint=''";
+			WHERE audioDataFormat='mp3' AND fingerprint='';";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		
 		$query = "
 			SELECT id, relPath
 			FROM rawtagdata
-			WHERE audioDataFormat='mp3' AND fingerprint=''";
+			WHERE audioDataFormat='mp3' AND fingerprint='';";
 
 		$result = $app->db->query($query);
 
@@ -478,21 +478,25 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 
-			if($fingerPrint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath)) {
-				$rawTagData = new Rawtagdata();
-				$rawTagData->setId($record['id']);
-				$rawTagData->setFingerprint($fingerPrint);
-				$rawTagData->update();
-
-				$track = new Track();
-				$track->setId($record['id']);
-				$track->setFingerprint($fingerPrint);
-				$track->update();
-
-				cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
+			$fingerPrint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath);
+			if($fingerPrint === FALSE) {
+				cliLog("ERROR: regex fingerprint result " . $record['relPath'], 1, 'red');
 				continue;
 			}
-			cliLog("ERROR: regex fingerprint result " . $record['relPath'], 1, 'red');
+
+			// complete rawtagdata record
+			$rawTagData = new Rawtagdata();
+			$rawTagData->setId($record['id']);
+			$rawTagData->setFingerprint($fingerPrint);
+			$rawTagData->update();
+
+			// complete track record
+			$track = new Track();
+			$track->setId($record['id']);
+			$track->setFingerprint($fingerPrint);
+			$track->update();
+
+			cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 		}
 		$this->finishJob(array(), __FUNCTION__);
 		return;
