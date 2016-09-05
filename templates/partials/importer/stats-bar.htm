@@ -4,21 +4,19 @@
 
 {% for p in 1..phaseCount %}
 	{% if itemlist[p] %}
-		{% for item in itemlist %}
-			{% if p == item.jobPhase %}
-				{% set phaseProgress = item.jobStatistics.progressPercent %}
-		
-		
-				{% if item.jobStatistics.progressPercent == 100 %}
-					{% set timeString = item.jobStatistics.runtimeSeconds|formatSeconds %}
-				{% else %}
-					{% set timeString = '??? sec left' %}
-				{% endif %}
-			{% endif %}
-		{% endfor %}
+
+		{% set phaseProgress = itemlist[p].jobStatistics.progressPercent %}
+
+
+		{% if itemlist[p].jobStatistics.progressPercent == 100 %}
+			{% set timeString = itemlist[p].jobStatistics.runtimeSeconds|formatSeconds %}
+		{% else %}
+			{% set timeString = '??? sec left' %}
+		{% endif %}
+
 	{% else %}
 		{% set phaseProgress = 0 %}
-		{% set timeString = 'skipped' %}
+		{% set timeString = '???' %}
 	{% endif %}
 
 	<div class="progress" style="height: 4em; display: inline-block; width: {{phasePercent}}%">

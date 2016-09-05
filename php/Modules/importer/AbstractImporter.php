@@ -2,7 +2,8 @@
 namespace Slimpd\Modules\importer;
 
 abstract class AbstractImporter {
-	protected $jobBatchId;				// mysql batch record id
+	protected $batchId;					// mysql batch record id
+	protected $batchBegin;
 	protected $jobId;					// mysql record id
 	protected $jobPhase;				// numeric index
 	protected $jobBegin;				// tstamp

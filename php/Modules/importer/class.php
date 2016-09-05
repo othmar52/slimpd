@@ -25,8 +25,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		// create a wrapper entry for all import phases
 		$this->jobPhase = 0;
 		$this->beginJob(array('msg' => 'starting sliMpd import/update process'), __FUNCTION__);
-		$batchJobId = $this->jobId;
-		$batchJobBegin = $this->jobBegin;
+		$this->batchId = $this->jobId;
+		$this->batchBegin = $this->jobBegin;
 
 		if($remigrate === FALSE) {
 			// phase 1: check if mpd database update is running and simply wait if required
@@ -58,14 +58,19 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->extractAllMp3FingerPrints();		
 
 		// update the wrapper entry for all import phases
+		$this->finishBatch();
+	}
+
+	public function finishBatch() {
 		$this->jobPhase = 0;
-		$this->jobId = $batchJobId;
-		$this->jobBegin = $batchJobBegin;
+		$this->jobId = $this->batchId;
+		$this->jobBegin = $this->batchBegin;
 		$this->itemsChecked = Track::getCountAll();
 		$this->itemsProcessed = $this->itemsChecked;
 		$this->itemsTotal = $this->itemsChecked;
 		$this->finishJob(array('msg' => 'finished sliMpd import/update process'), __FUNCTION__);
 	}
+
 	public function scanMusicFileTags() {
 		$fileScanner = new \Slimpd\Modules\importer\Filescanner();
 		$fileScanner->run();
@@ -496,18 +501,19 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	public function waitForMpd() {
 		$this->jobPhase = 1;
 		$recursionInterval = 3; // seconds
+		if($this->waitingLoop === 0) {
+			$this->waitingLoop = time();
+			// fake total items with total seconds
+			$this->itemsTotal = (int)$this->maxWaitingTime;
+			$this->beginJob(array(), __FUNCTION__);
+		}
 		$mpd = new \Slimpd\Modules\mpd\mpd();
 		$status = $mpd->cmd('status');
 		if(isset($status['updating_db'])) {
-			if($this->waitingLoop === 0) {
-				$this->waitingLoop = time();
-				// fake total items with total seconds
-				$this->itemsTotal = (int)$this->maxWaitingTime;
-				$this->beginJob(array(), __FUNCTION__);
-			}
 			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
 				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);
 				$this->finishJob(NULL, __FUNCTION__);
+				$this->finishBatch();
 				\Slim\Slim::getInstance()->stop();
 			}
 			$this->itemsProcessed = time()-$this->waitingLoop;
