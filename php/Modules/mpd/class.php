@@ -302,7 +302,7 @@ class mpd
 					return FALSE;
 				}
 
-				\Slimpd\importer::queDirectoryUpdate($closestMpdItem);
+				\Slimpd\Modules\Importer::queDirectoryUpdate($closestMpdItem);
 
 				// trailing slash on directories does not work - lets remove it
 				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestMpdItem, DS)) . '"');
