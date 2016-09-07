@@ -146,13 +146,31 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	switch($color) {
 		case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
 		case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
-		case "red":    $prefix = "\033[1;31m"; $suffix = "\033[37m"; break;
+		case "red":    $prefix = "\033[1;31m"; $suffix = "\033[0m"; break;
 		case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
 		case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
 		default:       $prefix = "";         $suffix = "";         break;
 	}
 	echo $prefix . $msg . $suffix . "\n";
 	ob_flush();
+}
+
+function getDatabaseDropConfirm() {
+	$app = \Slim\Slim::getInstance();
+	$c = '';
+	do {
+		if ($c != "\n") {
+			cliLog($app->ll->str("cli.dropdbconfirm", [$app->config['database']['dbdatabase']]), 1 , "red");
+		}
+		$c = fread(STDIN, 1);
+		if (strtolower($c) === 'y') {
+			return;
+		}
+		if (strtolower($c) === 'n') {
+			cliLog($app->ll->str("cli.dropdbconfirm.abort"));
+			$app->stop();
+		}
+	} while (TRUE);
 }
 
 function fileLog($mixed) {
@@ -176,7 +194,8 @@ function getDatabaseDiffConf($app) {
 		"verbose"      => "On",
 		"versiontable" => "db_revisions",
 		"aliastable"   => "db_alias",
-		"aliasprefix"  => "slimpd_v"
+		"aliasprefix"  => "slimpd_v",
+		"forceyes"     => TRUE
 	);
 }
 

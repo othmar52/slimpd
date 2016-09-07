@@ -95,6 +95,33 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
  * start from scratch by dropping and recreating database
  */
 $app->get('/hard-reset', function () use ($app, $argv, $importer) {
+	getDatabaseDropConfirm();
+	// we cant use $app->db for dropping and creating
+	$db = new \mysqli(
+		$app->config['database']['dbhost'],
+		$app->config['database']['dbusername'],
+		$app->config['database']['dbpassword']
+	);
+	cliLog("Dropping database");
+
+	$result = $db->query("DROP DATABASE IF EXISTS " . $app->config['database']['dbdatabase'].";");
+	cliLog("Recreating database");
+	$result = $db->query("CREATE DATABASE " . $app->config['database']['dbdatabase'].";");
+	$action = 'init';
+
+	Helper::setConfig( getDatabaseDiffConf($app) );
+	if (!Helper::checkConfigEnough()) {
+		cliLog("mmp: invalid configuration");
+		$app->stop();
+	}
+	$controller = Helper::getController($action, NULL);
+	$controller->runStrategy();
+
+	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
+		$app->db->query($query);
+	}
+
+	// delete files created by sliMpd
 	foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
 		$fileBrowser = new \Slimpd\filebrowser();
 		$fileBrowser->getDirectoryContent($sysDir, TRUE, TRUE);
@@ -117,37 +144,6 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 			}
 			rrmdir($delete);
 		}
-	}
-
-	// we cant use $app->db for dropping and creating
-	$db = new \mysqli(
-		$app->config['database']['dbhost'],
-		$app->config['database']['dbusername'],
-		$app->config['database']['dbpassword']
-	);
-	cliLog("Dropping database");
-
-	$result = $db->query("DROP DATABASE IF EXISTS " . $app->config['database']['dbdatabase'].";");
-	cliLog("Recreating database");
-	$result = $db->query("CREATE DATABASE " . $app->config['database']['dbdatabase'].";");
-	$action = 'init';
-
-	Helper::setConfig( getDatabaseDiffConf($app) );
-	if (!Helper::checkConfigEnough()) {
-	    Output::error('mmp: please check configuration');
-	    die(1);
-	}
-	$controller = Helper::getController($action, NULL);
-	if ($controller !== false) {
-	    $controller->runStrategy();
-	} else {
-	    Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
-	    Helper::getController('help')->runStrategy();
-	    die(1);
-	}
-
-	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
-		$app->db->query($query);
 	}
 	$importer->triggerImport();
 });
