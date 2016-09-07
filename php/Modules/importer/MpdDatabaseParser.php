@@ -151,6 +151,11 @@ class MpdDatabaseParser {
 					break;
 
 				case "mtime" :
+					if(isFutureTimestamp($attr[1]) === TRUE) {
+						// TODO: does it make sense to store those items for echoing on finish?
+						cliLog("WARNING : mtime is in future. consider to touch " . $this->currentDir . DS . $this->currentSong, 1, "red");
+						$attr[1] = time();
+					}
 					$setter = ($this->currentSection == "directory")
 						? "setDirectoryMtime"
 						: "setFilemtime";

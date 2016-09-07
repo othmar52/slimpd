@@ -14,6 +14,10 @@ function cleanSearchterm($searchterm) {
 	);
 }
 
+function isFutureTimestamp($inputTstamp) {
+	return ($inputTstamp > time()) ? TRUE : FALSE;
+}
+
 function addStars($searchterm) {
 	$str = "*" . str_replace(["_", "-", "/", " ", "(", ")"], "* *", $searchterm) . "*";
 	// single letters like "o" in "typo o negative" must not get a star appended because the lack of results 
