@@ -505,7 +505,12 @@ class mpd
 				fclose($socket);
 				return $array;
 			}
-			list($key, $value) = explode(': ', $line, 2);
+			try {
+				list($key, $value) = explode(': ', $line, 2);
+			} catch(\Exception $e) {
+				continue;
+			}
+
 			if ($command == 'playlist' || $command == 'playlistinfo') {
 				$array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
 				continue;
