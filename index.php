@@ -1,12 +1,13 @@
 <?php
 namespace Slimpd;
-
+/* Copyright
+ *
+ */
 
 $debug = isset($_REQUEST['debug']) ? true : false;
-//$debug = true;
 if($debug){
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 }
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -20,9 +21,9 @@ date_default_timezone_set('Europe/Vienna');
 session_start();
 
 $app = new \Slim\Slim(array(
-    'debug' => $debug,
-    'view' => new \Slim\Views\Twig(),
-    'templates.path' => 'templates'
+	'debug' => $debug,
+	'view' => new \Slim\Views\Twig(),
+	'templates.path' => 'templates'
 ));
 
 require_once APP_ROOT . 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
@@ -41,11 +42,11 @@ $twig->addExtension(new \Slimpd_Twig_Extension());
 
 // LOAD MODULES
 call_user_func(function() use ($app) {
-    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
-    foreach (scandir($path) as $dir) {
-    	// suppress warning with "@" and avoid tons of is_file()-checks 
+	$path = APP_ROOT . 'php' . DS . 'Modules' . DS;
+	foreach (scandir($path) as $dir) {
+		// suppress warning with "@" and avoid tons of is_file()-checks
 		@include_once($path . $dir . DS . 'class.php');
-    }
+	}
 });
 
 
@@ -90,16 +91,16 @@ $app->error(function(\Exception $e) use ($app, $vars){
 	$vars['url'] = $app->request->getResourceUri();
 	$vars['file'] = $e->getFile();
 	$vars['line'] = $e->getLine();
-    $app->render('appless.htm', $vars);
+	$app->render('appless.htm', $vars);
 });
 
 // LOAD CONTROLLERS
 call_user_func(function() use ($app, $vars) {
-    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
-    foreach (scandir($path) as $dir) {
-    	// suppress warning with "@" and avoid tons of is_file()-checks 
+	$path = APP_ROOT . 'php' . DS . 'Modules' . DS;
+	foreach (scandir($path) as $dir) {
+		// suppress warning with "@" and avoid tons of is_file()-checks
 		@include_once($path . $dir . DS . 'controller.php');
-    }
+	}
 });
 
 // DEFINE GET/POST routes (also check for .gitignored local-routes)
