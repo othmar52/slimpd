@@ -31,6 +31,6 @@ $app->get('/importer(/)', function() use ($app, $vars){
 });
 
 $app->get('/importer/triggerUpdate', function() use ($app, $vars){
-	\Slimpd\importer::queStandardUpdate();
+	\Slimpd\Modules\Importer::queStandardUpdate();
 });
 
