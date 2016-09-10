@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /* https://gist.github.com/daz/2168334 begin */
 .ui-autocomplete {
 	position: absolute;
@@ -73,18 +76,18 @@
 }
 
 .ui-autocomplete .ui-menu-item {
-    border-bottom: 1px solid #444;
+	border-bottom: 1px solid #444;
 }
 
 
 
 .ac-nav button {
-    color: #fff;
-    background-color: inherit;
-    border-radius: 0;
-    border: 3px solid transparent;
-    border-width:0 0 3px 0;
-    outline: none;
+	color: #fff;
+	background-color: inherit;
+	border-radius: 0;
+	border: 3px solid transparent;
+	border-width:0 0 3px 0;
+	outline: none;
 }
 
 .ui-helper-hidden-accessible {

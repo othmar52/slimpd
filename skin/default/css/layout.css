@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 body {
 	padding-top: 60px;
 	padding-bottom: 120px;
@@ -119,7 +122,7 @@ a {
 
 
 .centered-text {
-    text-align: center;
+	text-align: center;
 }
 
 
@@ -157,20 +160,20 @@ a .article {
 
 .rotate2 {
   -webkit-transform: rotate(-2deg);
-    -moz-transform: rotate(-2deg);
-    -o-transform: rotate(-2deg);
-    -ms-transform: rotate(-2deg);
-    transform: rotate(-2deg);
+	-moz-transform: rotate(-2deg);
+	-o-transform: rotate(-2deg);
+	-ms-transform: rotate(-2deg);
+	transform: rotate(-2deg);
 }
 
 /* mpd player shorten text begin */
 .shorten {
-    -o-text-overflow: ellipsis;   /* Opera */
-    text-overflow:    ellipsis;   /* IE, Safari (WebKit) */
-    overflow:hidden;              /* don't show excess chars */
-    white-space:nowrap;           /* force single line */
-    width:100%;                 /* fixed width */
-    display:block;
+	-o-text-overflow: ellipsis;   /* Opera */
+	text-overflow:	ellipsis;   /* IE, Safari (WebKit) */
+	overflow:hidden;			  /* don't show excess chars */
+	white-space:nowrap;		   /* force single line */
+	width:100%;				 /* fixed width */
+	display:block;
 }
 
 /* track widget*/
@@ -289,11 +292,11 @@ body.standalone {
 
 /* randomizer for development */
 .randomizer {
-    position: fixed;
-    top: 61px;
-    right: 10px;
-    font-size: 1.5em;
-    z-index: 1;
+	position: fixed;
+	top: 61px;
+	right: 10px;
+	font-size: 1.5em;
+	z-index: 1;
 }
 
 /* mpd branding of notification widget */
@@ -339,9 +342,9 @@ body.standalone {
 /* systemcheck */
 .waveform.waveform-tiny {
 	width: 62px;
-    height: 38px;
-    position: absolute;
-    right: 200px;
+	height: 38px;
+	position: absolute;
+	right: 200px;
 }
 
 

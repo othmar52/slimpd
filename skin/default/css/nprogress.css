@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 #nprog-container {
 	display: block;
 	overflow: visible;
@@ -7,14 +10,14 @@
 
 /* remove Fancy blur effect */
 #nprogress .peg {
-  display: none;
+	display: none;
 }
 
 /* @see: templates/css/spotcolors.css for overrides */
 #nprogress .bar {
-  background: #FFF;
-  z-index: 1000031;
-  bottom: 0;
-  left: 0;
-  height: 1px;
+	background: #FFF;
+	z-index: 1000031;
+	bottom: 0;
+	left: 0;
+	height: 1px;
 }

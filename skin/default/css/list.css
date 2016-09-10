@@ -1,74 +1,68 @@
-/*  bootstrap vertically centering of row content - begin */
+/* Copyright
+ *
+ */
+/*	bootstrap vertically centering of row content - begin */
 .vcenter {
-  min-height: 4em;
-  display: flex;
-  align-items: center;
+	min-height: 4em;
+	display: flex;
+	align-items: center;
 }
 
 .filebrowser .vcenter,
 .vcenter3 {
-  min-height: 3em;
+	min-height: 3em;
 }
 
 .vcinner {
-  display: inline-table;
+	display: inline-table;
 }
-/*  bootstrap vertically centering of row content - end */
+/*	bootstrap vertically centering of row content - end */
 
 
 
-
-
-
-
-
-
-/*  bootstrap full width row background - begin */
-
+/*	bootstrap full width row background - begin */
 html, body {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
 .container {
-  margin: 0  auto;
+	margin: 0 auto;
 }
 .level {
-  height:100px;
-  background: #bada55;
+	height:100px;
+	background: #bada55;
 }
 
 .fw-bg {
-  position: relative;
-  background: #252525;
+	position: relative;
+	background: #252525;
 }
 
 .fw-bg:before, 
 .fw-bg:after {
-  content: "";
-  position: absolute;
-  background: #252525;  /* Match the background */
-  top: 0;
-  bottom: 0;
-  width: 9999px;   /* some huge width */
-  z-index:-1; /* dont hide border of row which indicates current playing */
+	content: "";
+	position: absolute;
+	background: #252525;	/* Match the background */
+	top: 0;
+	bottom: 0;
+	width: 9999px;	 /* some huge width */
+	z-index:-1; /* dont hide border of row which indicates current playing */
 } 
 .fw-bg:before {
-  right: 100%; 
+	right: 100%;
 }
 .fw-bg:after {
-  left: 100%;
+	left: 100%;
 }
 
-
-
 .fw-bg.bg-col5 {
-  background: #373737;
+	background: #373737;
 }
 
 .fw-bg.bg-col5:before, 
 .fw-bg.bg-col5:after {
-  background: #373737;  /* Match the background */
+	background: #373737;	/* Match the background */
 } 
-/*  bootstrap full width row background - end */
+/*	bootstrap full width row background - end */
 
 
 
@@ -91,4 +85,3 @@ html, body {
 	width: 100%;
 	padding-bottom: 100%;
 }
-

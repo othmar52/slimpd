@@ -1,10 +1,9 @@
+/* Copyright
+ *
+ */
 
 .btn-default {
 	transition: all .25s ease-out;
-}
-
-
-.btn-default {
 	background-color: #353535;
 	border: none;
 	border-radius: 0;
@@ -20,11 +19,11 @@
 .bg-col2 .btn-trnsp,
 .bg-col2 .btn-trnsp {
 	background-color: transparent;
-    background-repeat:no-repeat;
-    border: none;
-    cursor:pointer;
-    overflow: hidden;
-    outline:none;
+	background-repeat:no-repeat;
+	border: none;
+	cursor:pointer;
+	overflow: hidden;
+	outline:none;
 }
 
 
@@ -37,16 +36,15 @@
 }
 
 /* to-top link */
-
 #top-link-block.affix-top {
-    position: absolute; /* allows it to "slide" up into view */
-    bottom: -82px; /* negative of the offset - height of link element */
-    left: 10px; /* padding from the left side of the window */
+	position: absolute; /* allows it to "slide" up into view */
+	bottom: -82px; /* negative of the offset - height of link element */
+	left: 10px; /* padding from the left side of the window */
 }
 #top-link-block.affix {
-    position: fixed; /* keeps it on the bottom once in view */
-    bottom: 130px; /* height of link element */
-    left: 10px; /* padding from the left side of the window */
+	position: fixed; /* keeps it on the bottom once in view */
+	bottom: 130px; /* height of link element */
+	left: 10px; /* padding from the left side of the window */
 }
 
 .discogs-link {
@@ -58,4 +56,6 @@
 	opacity: 0.2;
 }
 
-button:focus { outline:0 !important; }
+button:focus {
+	outline:0 !important;
+}

@@ -1,3 +1,7 @@
+/* Copyright
+ *
+ */
+
 /* player mode toggler */
 /* @see: templates/css/spotcolors.css for overrides */
 
@@ -6,8 +10,8 @@
 }
 
 .permaplayer {
-    box-shadow: 0 -3px 30px 0 rgba(0, 0, 0, 0.6);
-	backface-visibility: hidden;	    
+	box-shadow: 0 -3px 30px 0 rgba(0, 0, 0, 0.6);
+	backface-visibility: hidden;
 }
 
 
@@ -133,31 +137,31 @@
 }
 
 .media-body-container {
-    width: 2em;
-    padding-right: 1.6em;
-    padding-left: 1em;
-    height: 100px;
-    display: table-cell;
+	width: 2em;
+	padding-right: 1.6em;
+	padding-left: 1em;
+	height: 100px;
+	display: table-cell;
 }
 
 .slimplayer .media-body-container {
-    height: 40px;
+	height: 40px;
 }
 
 .media-body-inner-table {
 	
-    height: 100%;
-    display: table;
-    text-align: center;
-    margin-top: 5px;	
+	height: 100%;
+	display: table;
+	text-align: center;
+	margin-top: 5px;
 	
 }
 .media-body-inner-row {
 	
 	height: 33%;
-    vertical-align: middle;
-    display: table-row;
-    width: 2em;
+	vertical-align: middle;
+	display: table-row;
+	width: 2em;
 	
 }
 

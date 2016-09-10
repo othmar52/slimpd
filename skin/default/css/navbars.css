@@ -1,6 +1,6 @@
-
-
-
+/* Copyright
+ *
+ */
 .main-nav {
 	border-bottom: 3px solid #1A1A1A;
 	background-color: #353535;
@@ -18,19 +18,19 @@
 }
 
 .navbar-toggle .icon-bar {
-  display: block;
-  width: 22px;
-  height: 2px;
-  background-color: #cccccc;
-  border-radius: 1px;
+	display: block;
+	width: 22px;
+	height: 2px;
+	background-color: #cccccc;
+	border-radius: 1px;
 }
 
 .main-nav .row{
-    overflow: hidden; 
+	overflow: hidden;
 }
 .main-nav [class*="col-"]{
-    margin-bottom: -99999px;
-    padding-bottom: 99999px;
+	margin-bottom: -99999px;
+	padding-bottom: 99999px;
 }
 
 
@@ -64,9 +64,9 @@
 .pagination>.disabled>span,
 .pagination>.disabled>span:focus,
 .pagination>.disabled>span:hover{
-    color: #fff;
-    background-color: inherit;
-    border-radius: 0;
+	color: #fff;
+	background-color: inherit;
+	border-radius: 0;
 }
 
 
@@ -80,10 +80,8 @@
 .nav-pills>li.active>a,
 .nav-pills>li.active>a:focus,
 .nav-pills>li.active>a:hover {
-    color: #fff;
-    background-color: inherit;
-    border-bottom: 3px solid #FFF;
-    border-radius: 0;
+	color: #fff;
+	background-color: inherit;
+	border-bottom: 3px solid #FFF;
+	border-radius: 0;
 }
-
-
