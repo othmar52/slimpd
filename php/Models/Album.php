@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Album extends \Slimpd\Models\AbstractFilesystemItem
 {
 	protected $artistId;
@@ -10,27 +12,26 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	protected $genreId;
 	protected $labelId;
 	protected $catalogNr;
-	
+
 	protected $added;
 	protected $discs;
-	
+
 	protected $importStatus;
 	protected $lastScan;
 	protected $albumDr;
 	protected $trackCount;
-	
+
 	protected $isMixed;
 	protected $isJumble;
 	protected $isLive;
-	
+
 	protected $discogsId;
 	protected $rolldabeatsId;
 	protected $beatportId;
 	protected $junoId;
-	
+
 	public static $tableName = 'album';
-	
-	
+
 	public function getAlbumByRelPath($relPath) {
 		
 		$app = \Slim\Slim::getInstance();
@@ -45,9 +46,7 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 		}
 		$this->mapArrayToInstance($record);
 	}
-	
-	
-	
+
 	//setter
 	public function setArtistId($value) {
 		$this->artistId = $value;
@@ -88,8 +87,8 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function setTrackCount($value) {
 		$this->trackCount = $value;
 	}
-	
-	
+
+
 	public function setIsMixed($value) {
 		$this->isMixed = $value;
 	}
@@ -99,8 +98,8 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function setIsLive($value) {
 		$this->isLive = $value;
 	}
-	
-	
+
+
 	public function setDiscogsId($value) {
 		$this->discogsId = $value;
 	}
@@ -113,9 +112,9 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function setJunoId($value) {
 		$this->junoId = $value;
 	}
-	
-	
-	
+
+
+
 	// getter
 	public function getArtistId() {
 		return $this->artistId;
@@ -156,7 +155,7 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function getTrackCount() {
 		return $this->trackCount;
 	}
-	
+
 	public function getIsMixed() {
 		return $this->isMixed;
 	}
@@ -166,7 +165,7 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function getIsLive() {
 		return $this->isLive;
 	}
-	
+
 	public function getDiscogsId() {
 		return $this->discogsId;
 	}
@@ -179,5 +178,4 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public function getJunoId() {
 		return $this->junoId;
 	}
-	
 }

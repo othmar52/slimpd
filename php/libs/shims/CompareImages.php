@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models\Bitmap;
-
+/* Copyright
+ *
+ */
 // from http://compareimages.nikhazy-dizajn.hu/
 class compareImages
 {

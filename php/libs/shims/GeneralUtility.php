@@ -1,7 +1,7 @@
 <?php
-
-
-
+/* Copyright
+ *
+ */
 function sortHelper($string1,$string2){
 	return strlen($string2) - strlen($string1);
 }

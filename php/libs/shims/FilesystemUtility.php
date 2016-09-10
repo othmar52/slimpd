@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 function getFileExt($filePath, $toLower = TRUE) {
 	//$ext = preg_replace('/^.*\./', '', $filePath);
 	$ext = pathinfo($filePath, PATHINFO_EXTENSION);

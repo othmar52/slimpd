@@ -1,7 +1,10 @@
 <?php
 namespace Slimpd;
+/* Copyright
+ *
+ */
+
 /**
- * 
  * TODO: refacture with a new Check model
  */
 class Systemcheck {

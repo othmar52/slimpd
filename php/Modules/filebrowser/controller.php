@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 $app->get('/filebrowser', function() use ($app, $vars){
 	$vars['action'] = 'filebrowser';
 	$fileBrowser = new \Slimpd\filebrowser();

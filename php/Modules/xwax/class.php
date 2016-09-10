@@ -1,8 +1,9 @@
 <?php
 namespace Slimpd;
-
+/* Copyright
+ *
+ */
 class Xwax {
-	
 	protected $ip;
 	protected $port = 0;
 	protected $deckIndex;

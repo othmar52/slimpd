@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 
 	protected $relPath;
@@ -48,4 +50,3 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 		$this->filemtime = $value;
 	}
 }
-

@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 $app->get('/mpdctrl(/:cmd(/:item))', function($cmd, $item='') use ($app, $vars){
 	$vars['action'] = 'mpdctrl.' . $cmd;
 	$mpd = new \Slimpd\Modules\mpd\mpd();
@@ -92,5 +94,5 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $vars){
 		$app->config['root'] . 'playlist/page/(:num)'
 	);
 	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-    $app->render('surrounding.htm', $vars);
+	$app->render('surrounding.htm', $vars);
 });

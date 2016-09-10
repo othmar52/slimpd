@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules;
-
+/* Copyright
+ *
+ */
 /**
  * idea behind this freaky code construct:
  * 
@@ -1316,4 +1318,3 @@ class AlbumMigrator {
 		return $this->directoryMtime;
 	}
 }
-	

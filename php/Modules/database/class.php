@@ -1,9 +1,12 @@
 <?php
 namespace Slimpd\Modules\database;
+/* Copyright
+ *
+ */
 try {
-    $app->container->singleton('db', function($app) {
-    	try {
-    		mysqli_report(MYSQLI_REPORT_STRICT);
+	$app->container->singleton('db', function($app) {
+		try {
+			mysqli_report(MYSQLI_REPORT_STRICT);
 			$dbh = new \mysqli(
 				$app->config['database']['dbhost'],
 				$app->config['database']['dbusername'],
@@ -28,14 +31,14 @@ try {
 			";dbname=".$app->config['database']['dbdatabase'],
 			$app->config['database']['dbusername'],
 			$app->config['database']['dbpassword']
-		);  
+		);
 		$dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 		*/
 		return $dbh;
-    });
+	});
 } catch(\Exception $e) {
-    if ($debug) {
-        echo '<pre><br><br>' . $e->getMessage() . '<br><br></pre>';
-    }
+	if ($debug) {
+		echo '<pre><br><br>' . $e->getMessage() . '<br><br></pre>';
+	}
 	#$app->flashNow('error', $app->ll->str('database.connect'));
 };

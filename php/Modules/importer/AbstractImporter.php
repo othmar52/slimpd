@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
-
+/* Copyright
+ *
+ */
 abstract class AbstractImporter {
 	protected $batchId;					// mysql batch record id
 	protected $batchBegin;

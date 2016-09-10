@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 $app->get('/systemcheck', function() use ($app, $vars){
 	$systemCheck = new \Slimpd\Systemcheck();
 	$vars['sys'] = $systemCheck->runChecks();

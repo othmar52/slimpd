@@ -1,5 +1,8 @@
 <?php
 namespace Slimpd\Modules\localization;
+/* Copyright
+ *
+ */
 class Localization
 {
 	public static $lang = array();

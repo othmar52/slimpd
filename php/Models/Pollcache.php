@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Pollcache extends \Slimpd\Models\AbstractModel
 {
 	protected $microtstamp;
@@ -56,8 +58,8 @@ class Pollcache extends \Slimpd\Models\AbstractModel
 	public function getIp() {
 		return $this->ip;
 	}
-	
-	
+
+
 	public function setPort($value) {
 		$this->port = $value;
 	}

@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
-
+/* Copyright
+ *
+ */
 /**
  * pretty global database operations
  * TODO: find a better name for this class

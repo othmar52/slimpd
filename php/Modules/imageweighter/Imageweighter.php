@@ -1,5 +1,8 @@
 <?php
 namespace Slimpd\Modules\imageweighter;
+/* Copyright
+ *
+ */
 class Imageweighter
 {
 	public static $types = array();

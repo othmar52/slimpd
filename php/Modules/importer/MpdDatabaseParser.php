@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
-
+/* Copyright
+ *
+ */
 class MpdDatabaseParser {
 	protected $dbFile;
 	public $error = FALSE;

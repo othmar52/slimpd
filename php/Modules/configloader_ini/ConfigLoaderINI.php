@@ -1,7 +1,8 @@
 <?php
 namespace Slimpd\Modules\configloader_ini;
-
-
+/* Copyright
+ *
+ */
 class ConfigLoaderINI {
 
 	private $configPath;

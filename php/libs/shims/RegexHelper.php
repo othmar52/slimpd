@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd;
-
+/* Copyright
+ *
+ */
 class RegexHelper {
 	
 	public $dStart  = "/^";

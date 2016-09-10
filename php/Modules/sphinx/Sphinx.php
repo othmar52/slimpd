@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\sphinx;
-
+/* Copyright
+ *
+ */
 class Sphinx {
 	public static function getPdo() {
 		$sphinxConf = \Slim\Slim::getInstance()->config["sphinx"];

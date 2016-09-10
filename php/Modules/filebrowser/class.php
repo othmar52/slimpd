@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd;
-
+/* Copyright
+ *
+ */
 class filebrowser {
 	
 	public $directory;
@@ -24,8 +26,7 @@ class filebrowser {
 	public $currentPage = 1;
 	public $itemsPerPage = 20;
 	public $filter = "";
-	
-	
+
 	public function getDirectoryContent($path, $ignoreLimit = FALSE, $systemdir = FALSE) {
 		$path = $this->checkDirectoryAccess($path, $systemdir);
 

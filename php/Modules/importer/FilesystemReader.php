@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
-
+/* Copyright
+ *
+ */
 class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	
 	// a whitelist with common directory names like "cover", "artwork" 
@@ -52,7 +54,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// makes sure we have pluralized common directory names
 		$this->pluralizeArtworkDirNames();
-		
+
 		$directory = dirname($musicFilePath) . DS;
 
 		$app = \Slim\Slim::getInstance();
@@ -97,7 +99,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 
 		// create new cache entry
 		$this->artworkDirCache[$dirHash] = [];
-		
+
 		// scan filesystem
 		$handle = opendir($app->config['mpd']['musicdir'] . $parentPath);
 		while($dirname = readdir ($handle)) {
@@ -109,7 +111,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 			if(in_array(az09($dirname), $this->artworkDirNames) === FALSE) {
 				continue;
 			}
-			
+
 			// add matches to cache result set
 			$this->artworkDirCache[$dirHash] = [$dirname];
 		}
@@ -142,9 +144,9 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	public function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeType = TRUE) {
 		$foundFiles = array();
 		if(is_dir($dir) == FALSE) {
-		  return $foundFiles;
+			return $foundFiles;
 		}
-		
+
 		$app = \Slim\Slim::getInstance();
 		$validExtensions = array(strtolower($ext));
 		if(array_key_exists($ext, $app->config["mimetypes"])) {
@@ -181,4 +183,3 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		return $foundFiles;
 	}
 }
-	

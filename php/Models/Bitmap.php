@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 {
 	protected $mimeType;

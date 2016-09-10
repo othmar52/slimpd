@@ -1,4 +1,7 @@
 <?php
+/* Copyright
+ *
+ */
 $weightConf = trimExplode("\n", $app->config['images']['weightening'], TRUE);
 $imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC";
 
@@ -90,5 +93,4 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 	$app->get('/image-'.$imagesize.'/track/', function() use ($app, $vars, $imagesize){
 		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 	});
-	
 }

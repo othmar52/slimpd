@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
-
+/* Copyright
+ *
+ */
 class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	private $dbTstampsTrack = array();
 	private $dbTstampsAlbum = array();

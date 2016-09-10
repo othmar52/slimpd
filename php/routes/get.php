@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 $app->get('/', function() use ($app, $vars){
 	$app->response->redirect($app->config['root'] . 'library', 303);
 });
@@ -170,5 +172,3 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 
 	$app->render('modules/widget-cleanrename.htm', $vars);
 });
-
-

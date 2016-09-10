@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
 	$app->get($what .'/:albumId', function($albumId) use ($app, $vars, $what){
 		$vars['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';

@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 
 // TODO: carefully check which sorting is possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
 //   compare with templates/partials/dropdown-search-sorting.htm

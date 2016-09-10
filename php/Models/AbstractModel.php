@@ -1,12 +1,12 @@
 <?php
 namespace Slimpd\Models;
-
-
+/* Copyright
+ *
+ */
 abstract class AbstractModel {
-		
 	public static $tableName;
 	protected $id;
-	
+
 	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
@@ -15,14 +15,14 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $instances;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
-		
+
 		// important TODO: validate orderBy to avoid SQL injection
 		// for now use an ugly whitelist
 		switch($orderBy) {
@@ -59,7 +59,6 @@ abstract class AbstractModel {
 		return $instances;
 	}
 
-
 	public static function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy=NULL, $sortDirection='desc') {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
@@ -68,7 +67,7 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $instances;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
@@ -76,11 +75,11 @@ abstract class AbstractModel {
 		}
 		$query = substr($query, 0, -5); // remove suffixed ') OR '
 		$query .= ')'; // close bracket
-		
+
 		if($sortBy !== NULL) {
 			$query .= ' ORDER BY ' . az09($sortBy) . ' ' . az09($sortDirection);
 		}
-		
+
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
 		$result = $database->query($query);
@@ -95,9 +94,7 @@ abstract class AbstractModel {
 		}
 		return $instances;
 	}
-	
-	
-	
+
 	public static function getCountByFindInSetAttributes(array $attributeArray) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
@@ -106,7 +103,7 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $instances;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
@@ -116,7 +113,7 @@ abstract class AbstractModel {
 		$query .= ')'; // close bracket
 		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
-	
+
 	public static function getInstancesLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
@@ -125,7 +122,7 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $instances;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
@@ -133,7 +130,7 @@ abstract class AbstractModel {
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
-		
+
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
 		$result = $database->query($query);
@@ -148,7 +145,7 @@ abstract class AbstractModel {
 		}
 		return $instances;
 	}
-	
+
 	public static function getCountLikeAttributes(array $attributeArray) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
@@ -157,7 +154,7 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $instances;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
@@ -167,7 +164,7 @@ abstract class AbstractModel {
 		$query .= '%"'; // close bracket
 		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
-	
+
 	public static function getInstanceByAttributes(array $attributeArray, $orderBy = FALSE) {
 		$instance = NULL;
 		if(is_array($attributeArray) === FALSE) {
@@ -205,7 +202,6 @@ abstract class AbstractModel {
 		return $instance;
 	}
 
-
 	public static function getCountByAttributes(array $attributeArray) {
 		$count = 0;
 		if(is_array($attributeArray) === FALSE) {
@@ -214,20 +210,19 @@ abstract class AbstractModel {
 		if(count($attributeArray) < 1) {
 			return $count;
 		}
-		
+
 		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(*) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
-		
 		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
-	
+
 	private static function getTableName() {
 		$class = get_called_class();
-      	return $class::$tableName;
+		return $class::$tableName;
 	}
 	
 	public function mapArrayToInstance($array) {
@@ -239,8 +234,7 @@ abstract class AbstractModel {
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * @return array  - keys named like databasefields
 	 * 
@@ -264,7 +258,7 @@ abstract class AbstractModel {
 		}
 		return $return;
 	}
-	
+
 	public function insert() {
 		$app = \Slim\Slim::getInstance();
 
@@ -285,7 +279,7 @@ abstract class AbstractModel {
 		$app->db->query($query);
 		$this->setId($app->db->insert_id);
 	}
-	
+
 	public function update() {
 		$this->searchExistingId();
 		// we can't update. lets insert new record
@@ -328,7 +322,7 @@ abstract class AbstractModel {
 		}
 		$this->setId($instance->getId());
 	}
-	
+
 	public function delete() {
 		if($this->getId() > 0) {
 			// we already have an id ...
@@ -536,7 +530,6 @@ abstract class AbstractModel {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
 			$instances[] = $instance;
-			
 		}
 		return $instances;
 	}

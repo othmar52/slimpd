@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd;
-
+/* Copyright
+ *
+ */
 class Svggenerator {
 	protected $svgResolution = 300;
 	protected $absolutePath;

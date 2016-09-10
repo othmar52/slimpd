@@ -1,13 +1,15 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Label extends \Slimpd\Models\AbstractModel
 {
 	protected $title;
 	protected $az09;
 	protected $trackCount;
 	protected $albumCount;
-	
+
 	public static $tableName = 'label';
 
 	//setter
@@ -23,8 +25,8 @@ class Label extends \Slimpd\Models\AbstractModel
 	public function setAlbumCount($value) {
 		$this->albumCount = $value;
 	}
-	
-	
+
+
 	// getter
 	public function getTitle() {
 		return $this->title;
@@ -38,6 +40,4 @@ class Label extends \Slimpd\Models\AbstractModel
 	public function getAlbumCount() {
 		return $this->albumCount;
 	}
-	
-	
 }

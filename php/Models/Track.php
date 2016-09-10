@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Track extends \Slimpd\Models\AbstractTrack
 {
 	protected $artistId;

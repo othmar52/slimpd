@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Discogsitem extends \Slimpd\Models\AbstractModel
 {
 	protected $tstamp;
@@ -180,7 +182,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 		#echo "<pre>" . print_r($rawItem,1); die();
 		
 	}
-	
+
 	private function getMatchStringScore($string1, $string2) {
 		if(strtolower(trim($string1)) == strtolower(trim($string2))) {
 			return 100;
@@ -189,7 +191,6 @@ class Discogsitem extends \Slimpd\Models\AbstractModel
 	}
 
 
-	
 	//setter
 	public function setTstamp($value) {
 		$this->tstamp = $value;

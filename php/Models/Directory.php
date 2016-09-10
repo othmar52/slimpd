@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $exists = FALSE;
 	protected $breadcrumb;

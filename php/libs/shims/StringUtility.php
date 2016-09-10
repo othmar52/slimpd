@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 function getFilePathHash($inputString) {
 	return str_pad(dechex(crc32($inputString)), 8, "0", STR_PAD_LEFT) . str_pad(strlen($inputString), 3, "0", STR_PAD_LEFT);
 }

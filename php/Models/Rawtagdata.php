@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Rawtagdata extends \Slimpd\Models\AbstractTrack
 {
 	protected $artist;
@@ -68,11 +70,11 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	public function setCountry($value) {
 		$this->country = $value;
 	}
-	//...
+
 	public function setDirectoryMtime($value) {
 		$this->directoryMtime = $value;
 	}
-	// ...
+
 	public function setInitialKey($value) {
 		$this->initialKey = $value;
 	}
@@ -188,18 +190,15 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	public function getTextSource() {
 		return $this->textSource;
 	}
-	//...
 
 	public function getDynamicRange() {
 		return $this->dynamicRange;
 	}
-	// ...
 
 	public function getAudioBitrateMode() {
 		return $this->audioBitrateMode;
 	}
 
-	// ...
 	public function getLastScan() {
 		return $this->lastScan;
 	}

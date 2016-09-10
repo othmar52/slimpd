@@ -1,6 +1,7 @@
 <?php
-
-
+/* Copyright
+ *
+ */
 $app->get('/playlists', function() use ($app, $vars){
 	$vars['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');

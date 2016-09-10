@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 
 	protected $title;
@@ -188,4 +190,3 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->error = $value;
 	}
 }
-

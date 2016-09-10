@@ -1,5 +1,8 @@
 <?php
 namespace Slimpd\Modules\importer;
+/* Copyright
+ *
+ */
 use Slimpd\Models\Track;
 use Slimpd\Models\Trackindex;
 use Slimpd\Models\Artist;

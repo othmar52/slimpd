@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 
 $importer = new \Slimpd\Modules\Importer();
 
@@ -147,4 +149,3 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	}
 	$importer->triggerImport();
 });
-

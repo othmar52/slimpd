@@ -1,6 +1,7 @@
 <?php
-
-
+/* Copyright
+ *
+ */
 foreach([
 		'mpdplayer',
 		'localplayer',
@@ -136,7 +137,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 
 $app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = 'trackid3';
-	
+
 	$getID3 = new \getID3;
 	$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . join(DS, $itemParams));
 	\getid3_lib::CopyTagsToComments($tagData);

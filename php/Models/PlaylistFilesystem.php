@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $errorPath = TRUE; // TODO: consider to remove and use $error instead
 	protected $title;

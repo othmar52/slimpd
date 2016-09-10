@@ -1,6 +1,8 @@
 <?php
 namespace Slimpd\Models;
-
+/* Copyright
+ *
+ */
 class Artist extends \Slimpd\Models\AbstractModel
 {
 	protected $title;

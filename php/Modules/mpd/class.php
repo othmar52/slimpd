@@ -1,5 +1,8 @@
 <?php
 namespace Slimpd\Modules\mpd;
+/* Copyright
+ *
+ */
 use Slimpd\Models\Track;
 class mpd
 {
@@ -522,5 +525,4 @@ class mpd
 		$app->flashNow('error', $app->ll->str('error.mpdconnectionclosed', array($line)));
 		return FALSE;
 	}
-
 }

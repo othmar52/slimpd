@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 $app->get('/xwax/:cmd/:params+', function($cmd, $params) use ($app, $vars){
 	$xwax = new \Slimpd\Xwax();
 	$xwax->cmd($cmd, $params, $app);

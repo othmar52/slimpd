@@ -1,5 +1,7 @@
 <?php
-
+/* Copyright
+ *
+ */
 
 $app->get('/importer(/)', function() use ($app, $vars){
 	$vars['action'] = 'importer';
@@ -33,4 +35,3 @@ $app->get('/importer(/)', function() use ($app, $vars){
 $app->get('/importer/triggerUpdate', function() use ($app, $vars){
 	\Slimpd\Modules\Importer::queStandardUpdate();
 });
-
