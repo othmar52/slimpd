@@ -5,6 +5,8 @@ namespace Slimpd\Models;
  */
 class Album extends \Slimpd\Models\AbstractFilesystemItem
 {
+	use \Slimpd\Traits\PropertyLastScan;
+
 	protected $artistId;
 	protected $title;
 	protected $year;
@@ -17,7 +19,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	protected $discs;
 
 	protected $importStatus;
-	protected $lastScan;
 	protected $albumDr;
 	protected $trackCount;
 
@@ -77,9 +78,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	}
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
-	}
-	public function setLastScan($value) {
-		$this->lastScan = $value;
 	}
 	public function setAlbumDr($value) {
 		$this->albumDr = $value;
@@ -145,9 +143,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	}
 	public function getImportStatus() {
 		return $this->importStatus;
-	}
-	public function getLastScan() {
-		return $this->lastScan;
 	}
 	public function getAlbumDr() {
 		return $this->albumDr;

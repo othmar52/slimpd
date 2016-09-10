@@ -14,7 +14,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 
 	protected $disc;
 	protected $transcoded;
-	protected $lastScan;
 	protected $isMixed;
 	protected $dr;
 
@@ -344,9 +343,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 	public function setTranscoded($value) {
 		$this->transcoded = $value;
 	}
-	public function setLastScan($value) {
-		$this->lastScan = $value;
-	}
 	public function setGenreId($value) {
 		$this->genreId = $value;
 	}
@@ -400,9 +396,6 @@ class Track extends \Slimpd\Models\AbstractTrack
 	
 	public function getTranscoded() {
 		return $this->transcoded;
-	}
-	public function getLastScan() {
-		return $this->lastScan;
 	}
 	public function getGenreId() {
 		return $this->genreId;

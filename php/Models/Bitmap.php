@@ -3,9 +3,9 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
-{
-	protected $mimeType;
+class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
+	use \Slimpd\Traits\PropertyMimeType;
+
 	protected $width;
 	protected $height;
 	protected $bghex;
@@ -139,11 +139,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 	}
 
 
-		
 	//setter
-	public function setMimeType($value) {
-		$this->mimeType = $value;
-	}
 	public function setWidth($value) {
 		$this->width = $value;
 	}
@@ -180,12 +176,8 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem
 	public function setError($value) {
 		$this->error = $value;
 	}
-	
-	
+
 	// getter
-	public function getMimeType() {
-		return $this->mimeType;
-	}
 	public function getWidth() {
 		return $this->width;
 	}

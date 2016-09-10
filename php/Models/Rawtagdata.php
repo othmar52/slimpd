@@ -33,7 +33,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 	
 	protected $audioBitrateMode;
 	
-	protected $lastScan;
 	protected $added;
 
 	public static $tableName = 'rawtagdata';
@@ -111,11 +110,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 
 	public function setAudioBitrateMode($value) {
 		$this->audioBitrateMode = $value;
-	}
-
-	// ...
-	public function setLastScan($value) {
-		$this->lastScan = $value;
 	}
 
 	public function setAdded($value) {
@@ -197,10 +191,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack
 
 	public function getAudioBitrateMode() {
 		return $this->audioBitrateMode;
-	}
-
-	public function getLastScan() {
-		return $this->lastScan;
 	}
 
 	public function getAdded() {
