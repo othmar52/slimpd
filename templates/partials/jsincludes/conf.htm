@@ -1,0 +1,26 @@
+<script type="text/javascript">
+	var sliMpd = sliMpd || {};
+	sliMpd.conf = {
+		color: {
+			mpd: {
+				bodyclass: 'spotcol-{{ spotcolor.mpd }}',
+				primary: '{{ colors[ spotcolor.mpd ]['1st'] }}',
+				secondary: '{{ colors[ spotcolor.mpd ]['2nd'] }}',
+				favicon: '{{ colors[ spotcolor.mpd ]['fav'] }}',
+			},
+			local: {
+				bodyclass: 'spotcol-{{ spotcolor.local }}',
+				primary: '{{ colors[ spotcolor.local ]['1st'] }}',
+				secondary: '{{ colors[ spotcolor.local ]['2nd'] }}',
+				favicon: '{{ colors[ spotcolor.local ]['fav'] }}',
+			}
+		},
+		waveform: {
+			barwidth: {{ waveform.barwidth }},
+			gapwidth: {{ waveform.gapwidth }},
+			mirrored: {{ waveform.mirrored }}
+		},
+		absRefPrefix: '{{ config.absRefPrefix }}',
+		absFilePrefix: '{{ config.absFilePrefix }}'
+	};
+</script>
