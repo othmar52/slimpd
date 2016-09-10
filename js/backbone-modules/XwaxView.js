@@ -62,7 +62,7 @@
 
 		showXwaxGui() {
 			for(var i=0; i< this.totalDecks; i++) {
-				$(".xwax-deck-"+i).html('<div></div>');
+				$(".xwax-deck-"+i).html("<div></div>");
 				var deckView = new window.sliMpd.modules.XwaxPlayer({
 					el : ".xwax-deck-"+i+">div",
 					deckIndex : i,
