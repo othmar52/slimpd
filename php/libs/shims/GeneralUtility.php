@@ -162,7 +162,7 @@ function getDatabaseDropConfirm() {
 		if ($userInput != "\n") {
 			cliLog($app->ll->str("cli.dropdbconfirm", [$app->config['database']['dbdatabase']]), 1 , "red");
 		}
-		$c = fread(STDIN, 1);
+		$userInput = fread(STDIN, 1);
 		if (strtolower($userInput) === 'y') {
 			return;
 		}
@@ -377,6 +377,7 @@ function deliveryError( $code = 401, $msg = null ) {
 		500 => "Internal Server Error"
 	);
 	if(!$msg) {
+		// TODO: catch possible invalid array key error
 		$msg = $msgs[$code];
 	}
 
