@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /*
  * dependencies: jquery, backbonejs, window.sliMpd.modules.PageView
  */

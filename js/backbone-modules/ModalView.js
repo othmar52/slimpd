@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /*
  * dependencies: jquery, backbonejs, underscorejs, window.sliMpd.router, window.sliMpd.modules.AbstractView
  */
@@ -36,5 +39,4 @@
 
 		}
 	});
-
 }());

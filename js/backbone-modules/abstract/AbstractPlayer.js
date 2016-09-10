@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /*
  * dependencies: jquery, backbonejs, underscorejs
  */
@@ -349,7 +352,5 @@
 		timelineSetValue(value) { return; },
 		updateSlider() { return; }
 		/* only for polled mpd player implementation/interpolation  - end */
-
-		
 	});
 }());

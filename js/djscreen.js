@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 $(document).ready(function() {
 	"use strict";
 

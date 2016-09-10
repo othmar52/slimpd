@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /*
  * dependencies: jquery, backbonejs, underscorejs
  */
@@ -311,10 +314,5 @@
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
 		}
-
-		
-
-		
 	});
 }());
-

@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 /*
  * dependencies: jquery, backbonejs, underscorejs, window.sliMpd.router
  */

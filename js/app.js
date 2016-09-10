@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 $(document).ready(function() {
 	"use strict";
 	var $ = window.jQuery;
@@ -332,5 +335,4 @@ $(document).ready(function() {
 	{
 			TweenMax.set([$('.container'), $('.permaplayer')], { webkitFilter:"blur(" + blurElement.a + "px)", filter:"blur(" + blurElement.a + "px)"});
 	}
-
 });

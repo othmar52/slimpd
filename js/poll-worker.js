@@ -1,3 +1,6 @@
+/* Copyright
+ *
+ */
 self.pollInterval = 2000;
 self.pollUrl = "/mpdstatus";
 self.addEventListener("message", function(e) {
