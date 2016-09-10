@@ -157,16 +157,16 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 
 function getDatabaseDropConfirm() {
 	$app = \Slim\Slim::getInstance();
-	$c = '';
+	$userInput = '';
 	do {
-		if ($c != "\n") {
+		if ($userInput != "\n") {
 			cliLog($app->ll->str("cli.dropdbconfirm", [$app->config['database']['dbdatabase']]), 1 , "red");
 		}
 		$c = fread(STDIN, 1);
-		if (strtolower($c) === 'y') {
+		if (strtolower($userInput) === 'y') {
 			return;
 		}
-		if (strtolower($c) === 'n') {
+		if (strtolower($userInput) === 'n') {
 			cliLog($app->ll->str("cli.dropdbconfirm.abort"));
 			$app->stop();
 		}
