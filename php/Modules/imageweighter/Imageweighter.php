@@ -3,12 +3,10 @@ namespace Slimpd\Modules\imageweighter;
 /* Copyright
  *
  */
-class Imageweighter
-{
+class Imageweighter {
 	public static $types = array();
 	public static $weights = array();
-	
-	
+
 	public function getWeight($filename) {
 		if (count(self::$weights) === 0) {
 			$this->buildWeightConf();
@@ -21,7 +19,7 @@ class Imageweighter
 		}
 		return 10000;
 	}
-	
+
 	public function getType($filename) {
 		if (count(self::$weights) === 0) {
 			$this->buildWeightConf();
@@ -34,14 +32,14 @@ class Imageweighter
 		}
 		return "other";
 	}
-	
+
 	private function buildWeightConf() {
 		// read config stuff
 		$rawConf = parse_ini_file(APP_ROOT . "config/importer/image-weights.ini", TRUE);
 		$conf = array();
-		
+
 		$keyRange = 50;
-		
+
 		foreach($rawConf['image-weights'] as $rawKey => $valueChunk) {
 			$filenames = trimExplode("\n", $valueChunk, TRUE);
 			#$cleanRawKey = str_replace('%s', '', $rawKey);
@@ -74,9 +72,8 @@ class Imageweighter
 		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\imageweighter\Imageweighter');
 		$reflectedClass->setStaticPropertyValue('types', $typeArray);
 		$reflectedClass->setStaticPropertyValue('weights', $weightArray);
-		
 	}
-	
+
 	/**
 	 * in case we have a placeholder - replace it with padded number [ cd%sfront => cd1front ]
 	 * else - append the number [ cdfront => cdfront1 ]

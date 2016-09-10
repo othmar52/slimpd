@@ -3,8 +3,7 @@ namespace Slimpd\Modules\localization;
 /* Copyright
  *
  */
-class Localization
-{
+class Localization {
 	public static $lang = array();
 	
 	public function __construct() {

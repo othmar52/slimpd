@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Discogsitem extends \Slimpd\Models\AbstractModel
-{
+class Discogsitem extends \Slimpd\Models\AbstractModel {
 	protected $tstamp;
 	protected $type;
 	protected $extid;

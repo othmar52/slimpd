@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Track extends \Slimpd\Models\AbstractTrack
-{
+class Track extends \Slimpd\Models\AbstractTrack {
 	protected $artistId;
 	protected $featuringId;
 	protected $remixerId;

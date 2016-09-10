@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Pollcache extends \Slimpd\Models\AbstractModel
-{
+class Pollcache extends \Slimpd\Models\AbstractModel {
 	protected $microtstamp;
 	protected $type;
 	protected $deckindex;

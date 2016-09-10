@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Label extends \Slimpd\Models\AbstractModel
-{
+class Label extends \Slimpd\Models\AbstractModel {
 	protected $title;
 	protected $az09;
 	protected $trackCount;

@@ -3,8 +3,7 @@ namespace Slimpd;
 /* Copyright
  *
  */
-class ExecutionTime
-{
+class ExecutionTime {
 	private $startTime;
 	private $endTime;
 

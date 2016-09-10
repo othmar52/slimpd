@@ -4,8 +4,7 @@ namespace Slimpd\Modules\mpd;
  *
  */
 use Slimpd\Models\Track;
-class mpd
-{
+class mpd {
 	public function getCurrentlyPlayedTrack() {
 		$status 		= $this->mpd('status');
 		$listpos		= isset($status['song']) ? $status['song'] : 0;

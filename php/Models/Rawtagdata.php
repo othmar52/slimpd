@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Rawtagdata extends \Slimpd\Models\AbstractTrack
-{
+class Rawtagdata extends \Slimpd\Models\AbstractTrack {
 	protected $artist;
 	protected $album;
 	protected $genre;

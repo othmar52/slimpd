@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Artist extends \Slimpd\Models\AbstractModel
-{
+class Artist extends \Slimpd\Models\AbstractModel {
 	protected $title;
 	protected $article;
 	protected $az09;

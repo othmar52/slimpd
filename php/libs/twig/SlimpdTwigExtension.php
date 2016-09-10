@@ -2,8 +2,7 @@
 /* Copyright
  *
  */
-class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInterface
-{
+class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInterface {
 	/**
 	 * Name of this extension.
 	 *

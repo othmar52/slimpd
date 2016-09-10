@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Album extends \Slimpd\Models\AbstractFilesystemItem
-{
+class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	use \Slimpd\Traits\PropertyLastScan;
 
 	protected $artistId;
@@ -34,7 +33,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem
 	public static $tableName = 'album';
 
 	public function getAlbumByRelPath($relPath) {
-		
 		$app = \Slim\Slim::getInstance();
 		$query = "
 			SELECT * 

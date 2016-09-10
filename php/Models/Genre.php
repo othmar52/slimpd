@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Genre extends \Slimpd\Models\AbstractModel
-{
+class Genre extends \Slimpd\Models\AbstractModel {
 	protected $title;
 	protected $parent;
 	protected $az09;

@@ -4,8 +4,7 @@ namespace Slimpd\Models\Bitmap;
  *
  */
 // from http://compareimages.nikhazy-dizajn.hu/
-class compareImages
-{
+class compareImages {
 	private function mimeType($fileName) {
 		/*returns array with mime type and if its jpg or png. Returns false if it isn't jpg or png*/
 		$mime = getimagesize($fileName);

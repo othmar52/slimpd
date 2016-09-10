@@ -3,8 +3,7 @@ namespace Slimpd\Models;
 /* Copyright
  *
  */
-class Trackindex extends \Slimpd\Models\AbstractModel
-{
+class Trackindex extends \Slimpd\Models\AbstractModel {
 	protected $artist;
 	protected $title;
 	protected $allchunks;
