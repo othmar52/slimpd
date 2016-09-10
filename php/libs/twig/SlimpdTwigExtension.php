@@ -8,20 +8,17 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 	 *
 	 * @return string
 	 */
-	public function getName()
-	{
+	public function getName() {
 		return 'Slimpd';
 	}
 
-	public function getFunctions()
-	{
+	public function getFunctions() {
 		return array(
 			new Twig_SimpleFunction('getRandomInstance', array($this, 'getRandomInstance'))
 		);
 	}
 
-	public function getRandomInstance($type)
-	{
+	public function getRandomInstance($type) {
 		try {
 			$classPath = '\\Slimpd\\Models\\' . $type;
 			if(class_exists($classPath) === FALSE) {
@@ -33,8 +30,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 		}
 	}
 
-	public function getFilters()
-	{
+	public function getFilters() {
 		return array(
 			new \Twig_SimpleFilter('formatMiliseconds', function ($miliseconds) {
 				return gmdate(($miliseconds > 3600000) ? "G:i:s" : "i:s", ($miliseconds/1000));
@@ -121,8 +117,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 		);
 	}
 
-	public function getTests()
-	{
+	public function getTests() {
 		return array(
 			new \Twig_SimpleTest('instanceofAlbum', function ($item) {
 				return $item instanceof \Slimpd\Models\Album;
