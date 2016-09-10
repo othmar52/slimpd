@@ -225,7 +225,7 @@ class MpdDatabaseParser {
 			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 		}
 		$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime());
-		$this->rawTagItem->setlastScan(0);
+		$this->rawTagItem->setLastScan(0);
 		$this->rawTagItem->setImportStatus(1);
 		$this->rawTagItem->update();
 		$this->itemsProcessed++;
