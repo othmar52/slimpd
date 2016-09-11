@@ -393,6 +393,13 @@ function deliveryError( $code = 401, $msg = null ) {
 
 function renderCliHelp() {
 	$app = \Slim\Slim::getInstance();
+	cliLog($app->ll->str("cli.copyright.line1"));
+	cliLog("");
+	cliLog(" " . $app->ll->str("cli.copyright.line2"));
+	cliLog(" " . $app->ll->str("cli.copyright.line3"));
+	cliLog(" " . $app->ll->str("cli.copyright.line4"));
+	cliLog(" " . $app->ll->str("cli.copyright.line5"));
+	cliLog("");
 	cliLog($app->ll->str("cli.usage"), 1, "yellow");
 	cliLog("  ./slimpd [ARGUMENT]");
 	cliLog("ARGUMENTS", 1, "yellow");
