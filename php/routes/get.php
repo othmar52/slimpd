@@ -98,16 +98,8 @@ $app->get('/css/spotcolors.css', function() use ($app, $vars){
 $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = "showplaintext";
 	$relPath = join(DS, $itemParams);
-	$validPath = '';
-	foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
-		if(is_file($path . $relPath) === TRUE) {
-			$validPath = realpath($path . $relPath);
-			if(strpos($validPath, $path) !== 0) {
-				$validPath = '';
-			}
-		}
-	}
-	if($validPath === '') {
+	$validPath = getFileRealPath($relPath);
+	if($validPath === FALSE) {
 		$app->flashNow('error', 'invalid path ' . $relPath);
 	} else {
 		$vars['plaintext'] = nfostring2html(file_get_contents($validPath));
@@ -122,14 +114,7 @@ $app->get('/deliver/:item+', function($item) use ($app, $vars){
 		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$path));
 		$path = ($track === NULL) ? '' : $track->getRelPath();
 	}
-	if(is_file($app->config['mpd']['musicdir'] . $path) === TRUE) {
-		deliver($app->config['mpd']['musicdir'] . $path, $app);
-	}
-
-	if(is_file($app->config['mpd']['alternative_musicdir'] . $path) === TRUE) {
-		deliver($app->config['mpd']['alternative_musicdir'] . $path, $app);
-	}
-	deliveryError(404, "Invalid file: " . $path);
+	deliver(trimAltMusicDirPrefix($path, $app), $app);
 });
 
 

@@ -16,19 +16,13 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function validate() {
 		$app = \Slim\Slim::getInstance();
-
-		// avoid path disclosure outside allowed directories
-		$base = $app->config['mpd']['musicdir'];
-		// special handling for root directory
-		$relPath = ($this->relPath === $base) ? '' : $this->relPath;
-		$realpath = realpath(rtrim($base .$relPath, DS));
-		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
-		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
+		$realPath = getFileRealPath($this->getRelPath());
+		if(isInAllowedPath($this->getRelPath()) === FALSE || $realPath === FALSE) {
 			return FALSE;
 		}
 
-		// check existence
-		if(is_dir($realpath) === FALSE) {
+		// check if it is really a directory because getFileRealPath() also works for files
+		if(is_dir($realPath) === FALSE) {
 			return FALSE;
 		}
 		$this->setExists(TRUE);

@@ -8,6 +8,33 @@ function getFileExt($filePath, $toLower = TRUE) {
 	return ($toLower === TRUE) ? strtolower($ext) : $ext;
 }
 
+function getFileRealPath($pathString) {
+	$mpdConf = \Slim\Slim::getInstance()->config['mpd'];
+	foreach(["alternative_musicdir", "musicdir"] as $confName) {
+		if(file_exists($mpdConf[$confName] . $pathString) === TRUE) {
+			return realpath($mpdConf[$confName] . $pathString);
+		}
+	}
+	return FALSE;
+}
+
+/**
+ * checks if file path or directory path is within allowed direcories
+ */
+function isInAllowedPath($itemPath) {
+	$mpdConf = \Slim\Slim::getInstance()->config['mpd'];
+	$realPath = getFileRealPath($itemPath);
+	foreach(["alternative_musicdir", "musicdir"] as $confName) {
+		if(stripos($realPath, $mpdConf[$confName]) === 0) {
+			return TRUE;
+		}
+		if($realPath . DS === $mpdConf[$confName]) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 function getMimeType ($filename) {
 	$mimeExtensionMapping = parse_ini_file(APP_ROOT . "config/mimetypes.ini", TRUE);
 
@@ -71,8 +98,10 @@ function deliver($file, $app) {
 	}
 	@ini_set("zlib.output_compression", "Off");
 
+	// convert to absolute filepath
+
 	// sanitize the file request, keep just the name and extension
-	$filePath  = realpath($file);
+	$filePath  = getFileRealPath($file);
 	$pathParts = pathinfo($filePath);
 	$fileName  = $pathParts["basename"];
 	#$fileExt   = $pathParts["extension"];
@@ -81,8 +110,8 @@ function deliver($file, $app) {
 		deliveryError(404);
 	}
 
-	// IMPORTANT TODO: proper check if file access is allowed
-	if(stripos($filePath, $app->config["mpd"]["musicdir"]) !== 0 && stripos($filePath, $app->config["mpd"]["alternative_musicdir"]) !== 0) {
+	// IMPORTANT TODO: check if a proper check is necessary
+	if(isInAllowedPath($file) === FALSE) {
 		deliveryError(401);
 	}
 

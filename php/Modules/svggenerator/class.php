@@ -28,14 +28,9 @@ class Svggenerator {
 			$this->ext = $track->getAudioDataFormat();
 		}
 
+		// non imported tracks
 		if($this->fingerprint === NULL) {
-			if(ALTDIR && is_file($config['alternative_musicdir'].$arg) === TRUE) {
-				$arg = $config['alternative_musicdir'].$arg;
-			}
-			if(is_file($config['musicdir'].$arg) === TRUE) {
-				$arg = $config['musicdir'].$arg;
-			}
-			if(is_file($arg) === TRUE) {
+			if(isInAllowedPath($arg) === TRUE && getFileRealPath($arg) !== FALSE) {
 				$this->absolutePath = $arg;
 				$this->ext = getFileExt($arg);
 			}

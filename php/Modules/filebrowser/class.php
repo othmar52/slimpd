@@ -138,11 +138,11 @@ class filebrowser {
 
 		$base = $app->config["mpd"]["musicdir"];
 		$path = ($path === $base) ? "" : $path;
-		$realpath = realpath($base.$path) . DS;
 		$return = ["base" => $base, "dir" => $path];
+		$realpath = getFileRealPath($path) . DS;
 
 		// avoid path disclosure outside relevant directories
-		if(!$realpath) {
+		if($realpath === FALSE && $systemdir === FALSE) {
 			$app->flashNow("error", $app->ll->str("filebrowser.realpathempty", [$base.$path]));
 			return FALSE;
 		}
@@ -152,7 +152,9 @@ class filebrowser {
 			$realpath = realpath(APP_ROOT.$path) . DS;
 		}
 
-		if(is_dir($realpath) === FALSE){ //} || $this->checkAccess($path, $baseDirs) === FALSE) {
+		if(isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
+			// TODO: remove this error message "outsiderealpath"! invaliddir should be enough
+			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
 			$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$realpath]));
 			return FALSE;
 		}
@@ -163,17 +165,10 @@ class filebrowser {
 			return FALSE;
 		}
 
-		if($app->config["filebrowser"]["restrict-to-musicdir"] !== "1" || $systemdir === TRUE) {
-			return $return;
-		}
-
-		// and again we do the same musicdir/alternative_musicdir check...
-		// TODO: move this to a proper place
-		if(stripos($realpath, $app->config["mpd"]["musicdir"]) !== 0
-		&& stripos($realpath, $app->config["mpd"]["alternative_musicdir"]) !== 0 ) {
-			$app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
-			return FALSE;
-		}
+		// TODO: remove possibility for non music dir at all
+		//if($app->config["filebrowser"]["restrict-to-musicdir"] !== "1" || $systemdir === TRUE) {
+		//	return $return;
+		//}
 
 		return $return;
 	}

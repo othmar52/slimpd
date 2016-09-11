@@ -25,15 +25,11 @@ class Track extends \Slimpd\Models\AbstractTrack {
 
 	
 	/**
-	 * in case tracks have been added via playlist containing absolute paths that does not mpd-music dir try to fix the path...
+	 * in case tracks have been added via playlist containing absolute paths that
+	 * does not begin with mpd-music dir try to fix the path...
 	 */
 	public static function getInstanceByPath($pathString, $createDummy = FALSE) {
-		$altMusicDir = \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir'];
-		if(strlen($altMusicDir) > 0) {
-			if(stripos($pathString, $altMusicDir) === 0) {
-				$pathString = substr($pathString, strlen($altMusicDir));
-			}
-		}
+		$pathString = trimAltMusicDirPrefix($pathString);
 		$instance = self::getInstanceByAttributes(
 			array('relPathHash' => getFilePathHash($pathString))
 		);

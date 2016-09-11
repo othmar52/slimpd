@@ -63,15 +63,12 @@ foreach([
 			default:
 				if(is_numeric($app->request->get('item')) === TRUE) {
 					$search = array('id' => (int)$app->request->get('item'));
-				} else {
-					// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
-					$itemPath = $app->request->get('item');
-					if(ALTDIR && strpos($itemPath, $app->config['mpd']['alternative_musicdir']) === 0) {
-						$itemPath = substr($itemPath, strlen($app->config['mpd']['alternative_musicdir']));
-					}
-					$search = array('relPathHash' => getFilePathHash($itemPath));
-					$itemRelPath = $itemPath;
+					$vars['item'] = \Slimpd\Models\Track::getInstanceByAttributes($search);
+					break;
 				}
+				$itemPath = trimAltMusicDirPrefix($app->request->get('item'));
+				$search = array('relPathHash' => getFilePathHash($itemPath));
+				$itemRelPath = $itemPath;
 				$vars['item'] = \Slimpd\Models\Track::getInstanceByAttributes($search);
 				// no break
 		}

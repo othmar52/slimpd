@@ -18,18 +18,13 @@ class File extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function validate() {
 		$app = \Slim\Slim::getInstance();
-
-		// avoid path disclosure outside allowed directories
-		$base = $app->config['mpd']['musicdir'];
-		$realpath = realpath($base .$this->getRelPath());
-		// TODO: callable check with alternative_musicdir stuff
-		if(stripos($realpath, $app->config['mpd']['musicdir']) !== 0
-		&& stripos($realpath, $app->config['mpd']['alternative_musicdir']) !== 0 ) {
+		$realPath = getFileRealPath($this->getRelPath());
+		if(isInAllowedPath($this->relPath) === FALSE || $realPath === FALSE) {
 			return FALSE;
 		}
 
-		// check existence
-		if(is_file($realpath) === FALSE) {
+		// check if it is really a file because getFileRealPath() also works for directories
+		if(is_file($realPath) === FALSE) {
 			return FALSE;
 		}
 		$this->setExists(TRUE);

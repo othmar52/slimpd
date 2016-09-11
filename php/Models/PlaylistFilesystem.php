@@ -14,11 +14,9 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function __construct($relPath) {
 		$app = \Slim\Slim::getInstance();
-		foreach([$app->config['mpd']['musicdir'], $app->config['mpd']['alternative_musicdir']] as $path) {
-			if(is_file($path . $relPath) === TRUE) {
-				$this->setRelPath($relPath);
-				$this->setErrorPath(FALSE);
-			}
+		if(isInAllowedPath($relPath) === TRUE) {
+			$this->setRelPath($relPath);
+			$this->setErrorPath(FALSE);
 		}
 
 		if($this->getErrorPath() === TRUE) {
@@ -31,7 +29,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
 		$app = \Slim\Slim::getInstance();
-		$raw = file_get_contents($app->config['mpd']['musicdir'] . $this->relPath);
+		$raw = file_get_contents(getFileRealPath($this->relPath));
 		switch($this->getExt()) {
 			case 'm3u':
 			case 'pls':
@@ -64,16 +62,13 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
 			if($track === NULL) {
 				$track = new \Slimpd\Models\Track();
-				// TODO: pretty sure we have the pathcheck musicdir/alternative_musicdir somewhere else! find & use it...
-				if(ALTDIR && strpos($itemPath, \Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']) === 0) {
-					$itemPath = substr($itemPath, strlen(\Slim\Slim::getInstance()->config['mpd']['alternative_musicdir']));
-				}
+				$itemPath = trimAltMusicDirPrefix($itemPath);
 				$track->setRelPath($itemPath);
 				$track->setRelPathHash(getFilePathHash($itemPath));
 				$track->setAudioDataformat(getFileExt($track->getRelPath()));
 			}
 
-			if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $track->getRelPath()) === FALSE) {
+			if(getFileRealPath($track->getRelPath()) === FALSE) {
 				$track->setError('notfound');
 			}
 			$return[] = $track;

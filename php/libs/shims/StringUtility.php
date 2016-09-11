@@ -2,6 +2,24 @@
 /* Copyright
  *
  */
+
+/**
+ * removes [mpd]alternative_musicdir prefix in case it is configured and present
+ */
+function trimAltMusicDirPrefix($pathString, $app = NULL) {
+	if($app === NULL) {
+		$app = \Slim\Slim::getInstance();
+	}
+	$altMusicDir = $app->config['mpd']['alternative_musicdir'];
+	if(trim($altMusicDir) === "") {
+		return $pathString;
+	}
+	if(stripos($pathString, $altMusicDir) === 0) {
+		return substr($pathString, strlen($altMusicDir));
+	}
+	return $pathString;
+}
+
 function getFilePathHash($inputString) {
 	return str_pad(dechex(crc32($inputString)), 8, "0", STR_PAD_LEFT) . str_pad(strlen($inputString), 3, "0", STR_PAD_LEFT);
 }
