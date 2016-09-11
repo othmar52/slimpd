@@ -1,0 +1,25 @@
+{{'syscheck.fsConfLocalServe.danger'|ll|raw}}<br />
+
+URL: <a class="dark" href="{{fileroot}}config/config_local.ini">{{fileroot}}config/config_local.ini</a><br />
+{{'syscheck.fsConfLocalServe.suggest'|ll|raw}}<br />
+<h4>Apache 2.4</h4>
+<pre><xmp><VirtualHost *:80>
+  ...
+  <Files  ~ "config_local\.ini$">
+    Require all denied
+  </Files>
+  ...
+</VirtualHost></xmp></pre>
+
+<h4>Apache 2.2</h4>
+<pre><xmp><VirtualHost *:80>
+  ...
+  <Files  ~ "config_local\.ini$">
+    Order deny,allow
+    Deny from all
+  </Files>
+  ...
+</VirtualHost></xmp></pre>
+
+<p>TODO: Add example protection for <strong>nginx</strong><br />
+TODO: Add example protection for <strong>lighttpd</strong></p>

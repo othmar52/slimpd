@@ -21,7 +21,8 @@ class Systemcheck {
 		$app = \Slim\Slim::getInstance();
 		$check = array(
 			// filesystem
-			'fsConfiglocal'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
+			'fsConfLocalExists'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
+			'fsConfLocalServe'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirconf'=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirslash'=> array('status' => 'warning','hide' => FALSE, 'skip' => TRUE),
 			'fsMusicdir'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
@@ -49,7 +50,7 @@ class Systemcheck {
 			'skipAudioTests'=> FALSE
 		);
 
-		$this->runConfigLocalCheck($check);
+		$this->runConfigLocalCheck($check, $app);
 
 		
 		$this->runMusicdirChecks($check);
@@ -74,12 +75,32 @@ class Systemcheck {
 		return $check;
 	}
 
-	private function runConfigLocalCheck(&$check) {
-		if(is_file(APP_ROOT . 'config/config_local.ini') === FALSE) {
+	private function runConfigLocalCheck(&$check, $app) {
+		// check if individual config file exists
+		$relConfPath = "config/config_local.ini";
+		if(is_file(APP_ROOT . $relConfPath) === FALSE) {
 			return;
 		}
-		$check['fsConfiglocal']['hide'] = TRUE;
-		$check['fsConfiglocal']['status'] = 'success';
+		$check['fsConfLocalExists']['hide'] = TRUE;
+		$check['fsConfLocalExists']['status'] = 'success';
+
+		// check if individual config file is not served by webserver
+		$env = \Slim\Environment::getInstance();
+		$confHttpUrl = $env->offsetGet("slim.url_scheme") . "://" . $env->offsetGet("HTTP_HOST") .
+			$app->config['config']['absFilePrefix'] . $relConfPath;
+
+		$httpClient = new \GuzzleHttp\Client();
+		try {
+			$response = $httpClient->get($confHttpUrl);
+			$statusCode = $response->getStatusCode();
+		} catch(\GuzzleHttp\Exception\ClientException $exception) {
+			$statusCode = $exception->getResponse()->getStatusCode();
+		}
+		if($statusCode === 200) {
+			$check['fsConfLocalServe']['status'] = 'danger';
+			return;
+		}
+		$check['fsConfLocalServe']['status'] = 'success';
 	}
 
 	private function runMusicdirChecks(&$check) {
