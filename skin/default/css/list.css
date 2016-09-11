@@ -81,7 +81,19 @@ html, body {
 	color: inherit;
 }
 
-.img-placeholder {
+.img-placeholder,
+.album-tiles .ffn-show {
 	width: 100%;
 	padding-bottom: 100%;
+}
+
+/* active force-file-name should keep the boxes in same size */
+.album-tiles .ffn-show {
+	padding-top: 4em;
+	word-break: break-all;
+}
+
+.tile-content {
+	position: absolute;
+	margin: 0 20px 0 10px;
 }
