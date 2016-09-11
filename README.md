@@ -51,7 +51,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 
 * __Tags and Filepaths__ displays can be toggled between.
 
-* __Autocomplete Search-Field Widget__ with filter-support for: all,artist,album,and label.
+* __Autocomplete Search-Field Widget__ with filter-support for: all,artist,album,label and directory.
 
 * __Auto-Correcting Search__, typos in search-field will be corrected whenever possible.
 
