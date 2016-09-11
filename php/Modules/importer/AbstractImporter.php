@@ -134,13 +134,16 @@ abstract class AbstractImporter {
 
 	public function setItemsTotal($value) {
 		$this->itemsTotal = $value;
+		return $this;
 	}
 
 	public function setItemsChecked($value) {
 		$this->itemsChecked = $value;
+		return $this;
 	}
 
 	public function setItemsProcessed($value) {
 		$this->itemsProcessed = $value;
+		return $this;
 	}
 }

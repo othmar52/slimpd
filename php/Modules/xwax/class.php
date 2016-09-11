@@ -115,14 +115,14 @@ class Xwax {
 	private function onAfterGetStatus($response) {
 		if($this->pollcache === NULL) {
 			$this->pollcache = new \Slimpd\Models\Pollcache();
-			$this->pollcache->setType($this->type);
-			$this->pollcache->setDeckindex($this->deckIndex);
-			$this->pollcache->setIp($this->ip);
-			$this->pollcache->setPort($this->port);
+			$this->pollcache->setType($this->type)
+				->setDeckindex($this->deckIndex)
+				->setIp($this->ip)
+				->setPort($this->port);
 		}
-		$this->pollcache->setResponse(serialize($response));
-		$this->pollcache->setMicrotstamp(getMicrotimeFloat());
-		$this->pollcache->update();
+		$this->pollcache->setResponse(serialize($response))
+			->setMicrotstamp(getMicrotimeFloat())
+			->update();
 	}
 
 	public function getCurrentlyPlayedTrack($deckIndex) {

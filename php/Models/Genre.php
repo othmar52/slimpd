@@ -39,18 +39,23 @@ class Genre extends \Slimpd\Models\AbstractModel {
 	//setter
 	public function setTitle($value) {
 		$this->title = $value;
+		return $this;
 	}
 	public function setParent($value) {
 		$this->parent = $value;
+		return $this;
 	}
 	public function setAz09($value) {
 		$this->az09 = $value;
+		return $this;
 	}
 	public function setTrackCount($value) {
 		$this->trackCount = $value;
+		return $this;
 	}
 	public function setAlbumCount($value) {
 		$this->albumCount = $value;
+		return $this;
 	}
 
 	// getter

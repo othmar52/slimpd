@@ -12,5 +12,6 @@ trait PropertyMimeType {
 
 	public function setMimeType($value) {
 		$this->mimeType = $value;
+		return $this;
 	}
 }

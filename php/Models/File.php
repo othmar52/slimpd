@@ -36,6 +36,7 @@ class File extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setExists($value) {
 		$this->exists = $value;
+		return $this;
 	}
 
 	public function getBreadcrumb() {
@@ -44,6 +45,7 @@ class File extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setBreadcrumb($value) {
 		$this->breadcrumb = $value;
+		return $this;
 	}
 
 	public function getExt() {
@@ -52,5 +54,6 @@ class File extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setExt($value) {
 		$this->ext = $value;
+		return $this;
 	}
 }

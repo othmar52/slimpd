@@ -4,12 +4,11 @@ namespace Slimpd\Models;
  *
  */
 class Track extends \Slimpd\Models\AbstractTrack {
-	protected $artistId;
+	use \Slimpd\Traits\PropGroupTypeIds; // artistId, labelId, genreId
+
 	protected $featuringId;
 	protected $remixerId;
 	protected $albumId;
-	protected $genreId;
-	protected $labelId;
 
 	protected $disc;
 	protected $transcoded;
@@ -270,7 +269,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
 			cliLog(" titlePattern: " . $titlePattern);
 			\Slim\Slim::getInstance()->stop();
 		}
-		return;
+		return $this;
 	}
 	
 	
@@ -300,11 +299,12 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	
 
 
-
+	/*
 	# TODO: extract catNr from labelString
 	public function setLabelAndCatalogueNr() {
 		
 	}
+	*/
 	
 	public function jsonSerialize() {
 		return get_object_vars($this);
@@ -313,14 +313,13 @@ class Track extends \Slimpd\Models\AbstractTrack {
 
 	
 	//setter
-	public function setArtistId($value) {
-		$this->artistId = $value;
-	}
 	public function setFeaturingId($value) {
 		$this->featuringId = $value;
+		return $this;
 	}
 	public function setRemixerId($value) {
 		$this->remixerId = $value;
+		return $this;
 	}
 	
 
@@ -328,49 +327,49 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	
 	public function setDisc($value) {
 		$this->disc = $value;
+		return $this;
 	}
 	public function setAlbumId($value) {
 		$this->albumId = $value;
-	}
-	public function setLabelId($value) {
-		$this->labelId = $value;
+		return $this;
 	}
 	public function setTranscoded($value) {
 		$this->transcoded = $value;
+		return $this;
 	}
-	public function setGenreId($value) {
-		$this->genreId = $value;
-	}
-	
-	
+
+
 	public function setIsMixed($value) {
 		$this->isMixed = $value;
+		return $this;
 	}
 	
 	public function setDiscogsId($value) {
 		$this->discogsId = $value;
+		return $this;
 	}
 	public function setRolldabeatsId($value) {
 		$this->rolldabeatsId = $value;
+		return $this;
 	}
 	public function setBeatportId($value) {
 		$this->beatportId = $value;
+		return $this;
 	}
 	public function setJunoId($value) {
 		$this->junoId = $value;
+		return $this;
 	}
 	
 	public function setDr($value) {
 		$this->dr = $value;
+		return $this;
 	}
 	
 	
 	
 	
 	// getter
-	public function getArtistId() {
-		return $this->artistId;
-	}
 	public function getFeaturingId() {
 		return $this->featuringId;
 	}
@@ -385,22 +384,15 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	public function getAlbumId() {
 		return $this->albumId;
 	}
-	public function getLabelId() {
-		return $this->labelId;
-	}
-	
+
 	public function getTranscoded() {
 		return $this->transcoded;
 	}
-	public function getGenreId() {
-		return $this->genreId;
-	}
 
-	
 	public function getIsMixed() {
 		return $this->isMixed;
 	}
-	
+
 	public function getDiscogsId() {
 		return $this->discogsId;
 	}

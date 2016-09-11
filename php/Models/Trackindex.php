@@ -13,12 +13,15 @@ class Trackindex extends \Slimpd\Models\AbstractModel {
 	//setter
 	public function setArtist($value) {
 		$this->artist = $value;
+		return $this;
 	}
 	public function setTitle($value) {
 		$this->title = $value;
+		return $this;
 	}
 	public function setAllchunks($value) {
 		$this->allchunks = $value;
+		return $this;
 	}
 
 

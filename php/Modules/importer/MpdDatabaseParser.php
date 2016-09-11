@@ -108,15 +108,15 @@ class MpdDatabaseParser {
 			array_map("trim", $attr);
 			if(count($attr === 1)) {
 				$this->handleStructuralLine($attr[0]);
-				$importer->setItemsTotal($this->itemsTotal);
-				$importer->setItemsChecked($this->itemsChecked);
-				$importer->setItemsProcessed($this->itemsProcessed);
-				$importer->updateJob(array(
-					"msg" => "processed " . $this->itemsChecked . " files",
-					"currentfile" => $this->currentDir . DS . $this->currentSong,
-					"deadfiles" => count($this->fileOrphans),
-					"unmodified_files" => $this->itemsUnchanged
-				));
+				$importer->setItemsTotal($this->itemsTotal)
+					->setItemsChecked($this->itemsChecked)
+					->setItemsProcessed($this->itemsProcessed)
+					->updateJob([
+						"msg" => "processed " . $this->itemsChecked . " files",
+						"currentfile" => $this->currentDir . DS . $this->currentSong,
+						"deadfiles" => count($this->fileOrphans),
+						"unmodified_files" => $this->itemsUnchanged
+				]);
 			}
 
 			if(isset($attr[1]) === TRUE && in_array($attr[0], ["Time","Artist","Title","Track","Album","Genre","Date"])) {
@@ -190,8 +190,8 @@ class MpdDatabaseParser {
 		$this->itemsChecked++;
 
 		// single music files directly in mpd-musicdir-root must not get a leading slash
-		$this->rawTagItem->setRelDirPath(($this->currentDir === "") ? "" : $this->currentDir . DS);
-		$this->rawTagItem->setRelDirPathHash(getFilePathHash($this->rawTagItem->getRelDirPath()));
+		$this->rawTagItem->setRelDirPath(($this->currentDir === "") ? "" : $this->currentDir . DS)
+			->setRelDirPathHash(getFilePathHash($this->rawTagItem->getRelDirPath()));
 
 		// further we have to read directory-modified-time manually because there is no info
 		// about mpd-root-directory in mpd-database-file
@@ -199,8 +199,8 @@ class MpdDatabaseParser {
 			$this->rawTagItem->setDirectoryMtime(filemtime(\Slim\Slim::getInstance()->config["mpd"]["musicdir"]));
 		}
 
-		$this->rawTagItem->setRelPath($this->rawTagItem->getRelDirPath() . $this->currentSong);
-		$this->rawTagItem->setRelPathHash(getFilePathHash($this->rawTagItem->getRelPath()));
+		$this->rawTagItem->setRelPath($this->rawTagItem->getRelDirPath() . $this->currentSong)
+			->setRelPathHash(getFilePathHash($this->rawTagItem->getRelPath()));
 
 		cliLog("#" . $this->itemsChecked . " " . $this->currentDir . DS . $this->currentSong, 2);
 		$this->currentSong = "";
@@ -224,10 +224,10 @@ class MpdDatabaseParser {
 			// file is alive - remove it from dead items
 			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 		}
-		$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime());
-		$this->rawTagItem->setLastScan(0);
-		$this->rawTagItem->setImportStatus(1);
-		$this->rawTagItem->update();
+		$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime())
+			->setLastScan(0)
+			->setImportStatus(1)
+			->update();
 		$this->itemsProcessed++;
 		// reset song attributes
 		$this->rawTagItem = new \Slimpd\Models\Rawtagdata();

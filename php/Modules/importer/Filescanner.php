@@ -64,10 +64,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				'extractedImages' => $this->extractedImages
 			));
 			$rawTagData = new Rawtagdata();
-			$rawTagData->setId($record['id']);
-			$rawTagData->setRelPath($record['relPath']);
-			$rawTagData->setLastScan(time());
-			$rawTagData->setImportStatus(2);
+			$rawTagData->setId($record['id'])
+				->setRelPath($record['relPath'])
+				->setLastScan(time())
+				->setImportStatus(2);
 			
 			// TODO: handle not found files
 			if(is_file($app->config['mpd']['musicdir'] . $record['relPath']) === FALSE) {
@@ -80,8 +80,8 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			// skip very large files
 			// TODO: how to handle this?
 			if($rawTagData->getFilesize() > 1000000000) {
-				$rawTagData->setError('invalid filesize ' . $rawTagData->getFilesize() . ' bytes');
-				$rawTagData->update();
+				$rawTagData->setError('invalid filesize ' . $rawTagData->getFilesize() . ' bytes')
+					->update();
 				continue;
 			}
 			
@@ -167,40 +167,36 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			$imageSize = GetImageSize($phpThumb->cache_filename);
 			
 			$bitmap = new Bitmap();
-			$bitmap->setRelPath($relPath);
-			$bitmap->setRelPathHash($relPathHash);
-			$bitmap->setFilemtime(filemtime($phpThumb->cache_filename));
-			$bitmap->setFilesize(filesize($phpThumb->cache_filename));
-			$bitmap->setRawTagDataId($record['id']); # TODO: is there any more need for both ID's?
-			$bitmap->setTrackId($record['id']);		 # TODO: is there any more need for both ID's?
-			$bitmap->setEmbedded(1);
-			// setAlbumId() will be applied later because at this time we havn't any albumId's but tons of bitmap-record-dupes
-			
-			$bitmap->setEmbeddedName(
-				(isset($bitmapData['picturetype']) !== FALSE)
-					? $bitmapData['picturetype'] . '.ext'
-					: 'Other.ext'
-			);
-			
-			$bitmap->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()));
-			$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getEmbeddedName()));
+			$bitmap->setRelPath($relPath)
+				->setRelPathHash($relPathHash)
+				->setFilemtime(filemtime($phpThumb->cache_filename))
+				->setFilesize(filesize($phpThumb->cache_filename))
+				->setRawTagDataId($record['id']) # TODO: is there any more need for both ID's?
+				->setTrackId($record['id'])		 # TODO: is there any more need for both ID's?
+				->setEmbedded(1)
+				// setAlbumId() will be applied later because at this time we havn't any albumId's but tons of bitmap-record-dupes
+				->setEmbeddedName(
+					(isset($bitmapData['picturetype']) !== FALSE)
+						? $bitmapData['picturetype'] . '.ext'
+						: 'Other.ext'
+				)
+				->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()))
+				->setSorting($app->imageweighter->getWeight($bitmap->getEmbeddedName()));
 
 			if($imageSize === FALSE) {
-				$bitmap->setError(1);
-				$bitmap->update();
+				$bitmap->setError(1)->update();
 				continue;
 			}
 
-			$bitmap->setWidth($imageSize[0]);
-			$bitmap->setHeight($imageSize[1]);
-			$bitmap->setBghex(
-				self::getDominantColor($phpThumb->cache_filename, $imageSize[0], $imageSize[1])
-			);
-			$bitmap->setMimeType($imageSize['mime']);
-
-			# TODO: can we call insert() immediatly instead of letting check the update() function itself?
-			# this could save performance...
-			$bitmap->update();
+			$bitmap->setWidth($imageSize[0])
+				->setHeight($imageSize[1])
+				->setBghex(
+					self::getDominantColor($phpThumb->cache_filename, $imageSize[0], $imageSize[1])
+				)
+				->setMimeType($imageSize['mime'])
+				# TODO: can we call insert() immediatly instead of letting check the update() function itself?
+				# this could save performance...
+				->update();
 		}
 	}
 

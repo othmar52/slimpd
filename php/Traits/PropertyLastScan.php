@@ -12,5 +12,6 @@ trait PropertyLastScan {
 
 	public function setLastScan($value) {
 		$this->lastScan = $value;
+		return $this;
 	}
 }

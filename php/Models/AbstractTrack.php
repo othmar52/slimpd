@@ -51,28 +51,36 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	// setter
 	public function setTitle($value) {
 		$this->title = $value;
+		return $this;
 	}
 	public function setYear($value) {
 		$this->year = $value;
+		return $this;
 	}
 	public function setComment($value) {
 		$this->comment = $value;
+		return $this;
 	}
 	public function setTrackNumber($value) {
 		$this->trackNumber = $value;
+		return $this;
 	}
 	public function setCatalogNr($value) {
 		$this->catalogNr = $value;
+		return $this;
 	}
 
 	public function setFingerprint($value) {
 		$this->fingerprint = $value;
+		return $this;
 	}
 
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
+		return $this;
 	}
 	public function setError($value) {
 		$this->error = $value;
+		return $this;
 	}
 }

@@ -4,14 +4,14 @@ namespace Slimpd\Models;
  *
  */
 class Album extends \Slimpd\Models\AbstractFilesystemItem {
-	use \Slimpd\Traits\PropertyLastScan;
+	use \Slimpd\Traits\PropertyLastScan; // lastScan
+	use \Slimpd\Traits\PropGroupTypeIds; // artistId, labelId, genreId
 
-	protected $artistId;
+	
 	protected $title;
 	protected $year;
 	protected $month;
-	protected $genreId;
-	protected $labelId;
+	
 	protected $catalogNr;
 
 	protected $added;
@@ -47,74 +47,78 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 
 	//setter
-	public function setArtistId($value) {
-		$this->artistId = $value;
-	}
 	public function setTitle($value) {
 		$this->title = $value;
+		return $this;
 	}
 	public function setYear($value) {
 		$this->year = $value;
+		return $this;
 	}
 	public function setMonth($value) {
 		$this->month = $value;
-	}
-	public function setGenreId($value) {
-		$this->genreId = $value;
-	}
-	public function setLabelId($value) {
-		$this->labelId = $value;
+		return $this;
 	}
 	public function setCatalogNr($value) {
 		$this->catalogNr = $value;
+		return $this;
 	}
 	public function setAdded($value) {
 		$this->added = $value;
+		return $this;
 	}
 	public function setDiscs($value) {
 		$this->discs = $value;
+		return $this;
 	}
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
 	}
 	public function setAlbumDr($value) {
 		$this->albumDr = $value;
+		return $this;
 	}
 	public function setTrackCount($value) {
 		$this->trackCount = $value;
+		return $this;
 	}
 
 
 	public function setIsMixed($value) {
 		$this->isMixed = $value;
+		return $this;
 	}
 	public function setIsJumble($value) {
 		$this->isJumble = $value;
+		return $this;
 	}
 	public function setIsLive($value) {
 		$this->isLive = $value;
+		return $this;
 	}
 
 
 	public function setDiscogsId($value) {
 		$this->discogsId = $value;
+		return $this;
 	}
 	public function setRolldabeatsId($value) {
 		$this->rolldabeatsId = $value;
+		return $this;
 	}
 	public function setBeatportId($value) {
 		$this->beatportId = $value;
+		return $this;
 	}
 	public function setJunoId($value) {
 		$this->junoId = $value;
+		return $this;
 	}
 
 
 
 	// getter
-	public function getArtistId() {
-		return $this->artistId;
-	}
+
 	public function getTitle() {
 		return $this->title;
 	}
@@ -123,12 +127,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getMonth() {
 		return $this->month;
-	}
-	public function getGenreId() {
-		return $this->genreId;
-	}
-	public function getLabelId() {
-		return $this->labelId;
 	}
 	public function getCatalogNr() {
 		return $this->catalogNr;

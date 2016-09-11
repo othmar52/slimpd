@@ -107,6 +107,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setErrorPath($errorPath) {
 		$this->errorPath = $errorPath;
+		return $this;
 	}
 
 	public function getErrorPath() {
@@ -115,6 +116,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setTitle($value) {
 		$this->title = $value;
+		return $this;
 	}
 
 	public function getTitle() {
@@ -123,6 +125,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setExt($ext) {
 		$this->ext = $ext;
+		return $this;
 	}
 
 	public function getExt() {
@@ -131,6 +134,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setLength($length) {
 		$this->length = $length;
+		return $this;
 	}
 
 	public function getLength() {
@@ -145,6 +149,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function appendTrack(\Slimpd\Models\Track $track) {
 		$this->tracks[] = $track;
+		return $this;
 	}
 
 	public function getTracks() {

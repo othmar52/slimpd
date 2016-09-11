@@ -16,6 +16,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setMicrotstamp($value) {
 		$this->microtstamp = $value;
+		return $this;
 	}
 	
 	public function getMicrotstamp() {
@@ -25,6 +26,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setType($value) {
 		$this->type = $value;
+		return $this;
 	}
 	
 	public function getType() {
@@ -34,6 +36,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setDeckindex($value) {
 		$this->deckindex = $value;
+		return $this;
 	}
 	
 	public function getDeckindex() {
@@ -43,6 +46,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setSuccess($value) {
 		$this->success = $value;
+		return $this;
 	}
 	
 	public function getSuccess() {
@@ -52,6 +56,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setIp($value) {
 		$this->ip = $value;
+		return $this;
 	}
 	
 	public function getIp() {
@@ -61,6 +66,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 
 	public function setPort($value) {
 		$this->port = $value;
+		return $this;
 	}
 	
 	public function getPort() {
@@ -70,6 +76,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	
 	public function setResponse($value) {
 		$this->response = $value;
+		return $this;
 	}
 	
 	public function getResponse() {

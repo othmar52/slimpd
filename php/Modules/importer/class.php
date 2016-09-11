@@ -166,9 +166,9 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			));
 
 			$album = new Album();
-			$album->setId($record['id']);
-			$album->setLastScan(time());
-			$album->setImportStatus(2);
+			$album->setId($record['id'])
+				->setLastScan(time())
+				->setImportStatus(2);
 
 			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relPath'].'filename-not-relevant.mp3');
 
@@ -178,11 +178,11 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$imageSize = GetImageSize($imagePath);
 
 				$bitmap = new Bitmap();
-				$bitmap->setRelPath($relPath);
-				$bitmap->setRelPathHash($relPathHash);
-				$bitmap->setFilemtime(filemtime($imagePath));
-				$bitmap->setFilesize(filesize($imagePath));
-				$bitmap->setAlbumId($record['id']);
+				$bitmap->setRelPath($relPath)
+					->setRelPathHash($relPathHash)
+					->setFilemtime(filemtime($imagePath))
+					->setFilesize(filesize($imagePath))
+					->setAlbumId($record['id']);
 
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);
@@ -190,16 +190,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 					cliLog("ERROR getting image size from " . $relPath, 2, 'red');
 					continue;
 				}
-				$bitmap->setWidth($imageSize[0]);
-				$bitmap->setHeight($imageSize[1]);
-				$bitmap->setBghex(
-					\Slimpd\Modules\importer\Filescanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
-				);
-				$bitmap->setMimeType($imageSize['mime']);
-
-				$bitmap->setPictureType($app->imageweighter->getType($bitmap->getRelPath()));
-				$bitmap->setSorting($app->imageweighter->getWeight($bitmap->getRelPath()));
-				$bitmap->update();
+				$bitmap->setWidth($imageSize[0])
+					->setHeight($imageSize[1])
+					->setBghex(
+						\Slimpd\Modules\importer\Filescanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
+					)
+					->setMimeType($imageSize['mime'])
+					->setPictureType($app->imageweighter->getType($bitmap->getRelPath()))
+					->setSorting($app->imageweighter->getWeight($bitmap->getRelPath()))
+					->update();
 				$insertedImages++;
 			}
 			$album->update();
@@ -411,11 +410,11 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			if($record['dupes'] === $previousKey) {
 				$msg = $app->ll->str('importer.image.destroy', array($record['relPath']));
 				$bitmap = new Bitmap();
-				$bitmap->setId($record['id']);
-				$bitmap->setTrackId($record['trackId']);
-				$bitmap->setEmbedded($record['embedded']);
-				$bitmap->setRelPath($record['relPath']);
-				$bitmap->destroy();
+				$bitmap->setId($record['id'])
+					->setTrackId($record['trackId'])
+					->setEmbedded($record['embedded'])
+					->setRelPath($record['relPath'])
+					->destroy();
 
 				$this->itemsProcessed++;
 				$deletedFilesize += $record['filesize'];
@@ -489,15 +488,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 			// complete rawtagdata record
 			$rawTagData = new Rawtagdata();
-			$rawTagData->setId($record['id']);
-			$rawTagData->setFingerprint($fingerPrint);
-			$rawTagData->update();
+			$rawTagData->setId($record['id'])
+				->setFingerprint($fingerPrint)
+				->update();
 
 			// complete track record
 			$track = new Track();
-			$track->setId($record['id']);
-			$track->setFingerprint($fingerPrint);
-			$track->update();
+			$track->setId($record['id'])
+				->setFingerprint($fingerPrint)
+				->update();
 
 			cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 		}

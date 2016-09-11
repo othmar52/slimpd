@@ -40,65 +40,85 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack {
 	//setter
 	public function setArtist($value) {
 		$this->artist = $value;
+		return $this;
 	}
 	public function setAlbum($value) {
 		$this->album = $value;
+		return $this;
 	}
 	public function setGenre($value) {
 		$this->genre = $value;
+		return $this;
 	}
 	public function setDate($value) {
 		$this->date = $value;
+		return $this;
 	}
 	public function setPublisher($value) {
 		$this->publisher = $value;
+		return $this;
 	}
 	public function setTotalTracks($value) {
 		$this->totalTracks = $value;
+		return $this;
 	}
 	public function setAlbumArtist($value) {
 		$this->albumArtist = $value;
+		return $this;
 	}
 	public function setRemixer($value) {
 		$this->remixer = $value;
+		return $this;
 	}
 	public function setLanguage($value) {
 		$this->language = $value;
+		return $this;
 	}
 	public function setCountry($value) {
 		$this->country = $value;
+		return $this;
 	}
 
 	public function setDirectoryMtime($value) {
 		$this->directoryMtime = $value;
+		return $this;
 	}
 
 	public function setInitialKey($value) {
 		$this->initialKey = $value;
+		return $this;
 	}
 	public function setTextBpm($value) {
 		$this->textBpm = $value;
+		return $this;
 	}
 	public function setTextBpmQuality($value) {
 		$this->textBpmQuality = $value;
+		return $this;
 	}
 	public function setTextPeakDb($value) {
 		$this->textPeakDb = $value;
+		return $this;
 	}
 	public function setTextPerceivedDb($value) {
 		$this->textPerceivedDb = $value;
+		return $this;
 	}
 	public function setTextRating($value) {
 		$this->textRating = $value;
+		return $this;
 	}
 	public function setTextDiscogsReleaseId($value) {
 		$this->textDiscogsReleaseId = $value;
+		return $this;
 	}
 	public function setTextUrlUser($value) {
 		$this->textUrlUser = $value;
+		return $this;
 	}
 	public function setTextSource($value) {
 		$this->textSource = $value;
+		return $this;
 	}
 	//...
 
@@ -109,10 +129,12 @@ class Rawtagdata extends \Slimpd\Models\AbstractTrack {
 
 	public function setAudioBitrateMode($value) {
 		$this->audioBitrateMode = $value;
+		return $this;
 	}
 
 	public function setAdded($value) {
 		$this->added = $value;
+		return $this;
 	}
 	
 	

@@ -34,6 +34,7 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setExists($value) {
 		$this->exists = $value;
+		return $this;
 	}
 
 	public function getBreadcrumb() {
@@ -42,5 +43,6 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 
 	public function setBreadcrumb($value) {
 		$this->breadcrumb = $value;
+		return $this;
 	}
 }

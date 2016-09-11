@@ -50,32 +50,42 @@ trait PropGroupAudio {
 	// setter
 	public function setMiliseconds($value) {
 		$this->miliseconds = $value;
+		return $this;
 	}
 	public function setAudioBitrate($value) {
 		$this->audioBitrate = $value;
+		return $this;
 	}
 	public function setAudioBitsPerSample($value) {
 		$this->audioBitsPerSample = $value;
+		return $this;
 	}
 	public function setAudioSampleRate($value) {
 		$this->audioSampleRate = $value;
+		return $this;
 	}
 	public function setAudioChannels($value) {
 		$this->audioChannels = $value;
+		return $this;
 	}
 	public function setAudioLossless($value) {
 		$this->audioLossless = $value;
+		return $this;
 	}
 	public function setAudioComprRatio($value) {
 		$this->audioComprRatio = $value;
+		return $this;
 	}
 	public function setAudioDataformat($value) {
 		$this->audioDataformat = $value;
+		return $this;
 	}
 	public function setAudioEncoder($value) {
 		$this->audioEncoder = $value;
+		return $this;
 	}
 	public function setAudioProfile($value) {
 		$this->audioProfile = $value;
+		return $this;
 	}
 }

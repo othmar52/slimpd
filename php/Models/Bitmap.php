@@ -142,39 +142,51 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	//setter
 	public function setWidth($value) {
 		$this->width = $value;
+		return $this;
 	}
 	public function setHeight($value) {
 		$this->height = $value;
+		return $this;
 	}
 	public function setBghex($value) {
 		$this->bghex = $value;
+		return $this;
 	}
 	public function setAlbumId($value) {
 		$this->albumId = $value;
+		return $this;
 	}
 	public function setTrackId($value) {
 		$this->trackId = $value;
+		return $this;
 	}
 	public function setRawTagDataId($value) {
 		$this->rawTagDataId = $value;
+		return $this;
 	}
 	public function setEmbedded($value) {
 		$this->embedded = $value;
+		return $this;
 	}
 	public function setEmbeddedName($value) {
 		$this->embeddedName = $value;
+		return $this;
 	}
 	public function setPictureType($value) {
 		$this->pictureType = $value;
+		return $this;
 	}
 	public function setSorting($value) {
 		$this->sorting = $value;
+		return $this;
 	}
 	public function setImportStatus($value) {
 		$this->importStatus = $value;
+		return $this;
 	}
 	public function setError($value) {
 		$this->error = $value;
+		return $this;
 	}
 
 	// getter

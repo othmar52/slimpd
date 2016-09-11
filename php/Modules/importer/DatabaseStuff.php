@@ -69,17 +69,17 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				
 				$classPath = "\\Slimpd\\Models\\" . $className;
 				$item = new $classPath();
-				$item->setId($itemId);
-				$item->setTrackCount( count($data['tracks']) );
-				
-				$msg = "updating ".$className.": " . $itemId . " with trackCount:" .  $item->getTrackCount();
-				$item->setAlbumCount( count($data['albums']) );
-				$msg .= ", albumCount:" .  $item->getAlbumCount();
-				$item->update();
+				$item->setId($itemId)
+					->setTrackCount( count($data['tracks']) )
+					->setAlbumCount( count($data['albums']) )
+					->update();
 				$this->itemsProcessed++;
 				$this->itemsChecked++;
+				$msg = "updating ".$className.": " . $itemId .
+					" with trackCount:" .  $item->getTrackCount() .
+					", albumCount:" .  $item->getAlbumCount();
 				$this->updateJob(array(
-					'currentItem' => $msg
+					"currentItem" => $msg
 				));
 				cliLog($msg, 7);
 			}

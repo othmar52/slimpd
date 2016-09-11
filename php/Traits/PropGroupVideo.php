@@ -30,17 +30,22 @@ trait PropGroupVideo {
 	// setter
 	public function setVideoDataformat($value) {
 		$this->videoDataformat = $value;
+		return $this;
 	}
 	public function setVideoCodec($value) {
 		$this->videoCodec = $value;
+		return $this;
 	}
 	public function setVideoResolutionX($value) {
 		$this->videoResolutionX = $value;
+		return $this;
 	}
 	public function setVideoResolutionY($value) {
 		$this->videoResolutionY = $value;
+		return $this;
 	}
 	public function setVideoFramerate($value) {
 		$this->videoFramerate = $value;
+		return $this;
 	}
 }

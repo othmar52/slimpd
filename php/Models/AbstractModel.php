@@ -592,5 +592,6 @@ abstract class AbstractModel {
 	}
 	public function setId($value) {
 		$this->id = $value;
+		return $this;
 	}
 }

@@ -33,20 +33,26 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 	
 	public function setRelPath($value) {
 		$this->relPath = $value;
+		return $this;
 	}
 	public function setRelPathHash($value) {
 		$this->relPathHash = $value;
+		return $this;
 	}
 	public function setRelDirPath($value) {
 		$this->relDirPath = $value;
+		return $this;
 	}
 	public function setRelDirPathHash($value) {
 		$this->relDirPathHash = $value;
+		return $this;
 	}
 	public function setFilesize($value) {
 		$this->filesize = $value;
+		return $this;
 	}
 	public function setFilemtime($value) {
 		$this->filemtime = $value;
+		return $this;
 	}
 }

@@ -193,15 +193,19 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
 	//setter
 	public function setTstamp($value) {
 		$this->tstamp = $value;
+		return $this;
 	}
 	public function setType($value) {
 		$this->type = $value;
+		return $this;
 	}
 	public function setExtid($value) {
 		$this->extid = $value;
+		return $this;
 	}
 	public function setResponse($value) {
 		$this->response = $value;
+		return $this;
 	}
 	
 	

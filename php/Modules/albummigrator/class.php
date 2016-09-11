@@ -146,30 +146,26 @@ class AlbumMigrator {
 
 		$album = new \Slimpd\Models\Album();
 
-		$album->setArtistId(join(",", \Slimpd\Models\Artist::getIdsByString($albumArtists)));
-		$album->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($mergedFromTracks['genre'])));
-		#$album->setLabelId(join(",", Label::getIdsByString($mergedFromTracks['label'])));
-		$album->setCatalogNr($this->mostScored['album']['catalogNr']);
-
-		$album->setRelPath($this->getRelDirPath());
-		$album->setRelPathHash($this->getRelDirPathHash());
-		$album->setFilemtime($this->getDirectoryMtime());
-		$album->setAdded($this->mostRecentAdded);
-
-		$album->setTitle($this->mostScored['album']['title']);
-		$album->setYear($this->mostScored['album']['year']);
-
-		$album->setIsJumble(($this->handleAsAlbum === 1) ? 0:1);
-		$album->setLabelId(
-			join(",", \Slimpd\Models\Label::getIdsByString(
-				($album->getIsJumble() === 1)
-					? $mergedFromTracks['label']			// all labels
-					: $this->mostScored['album']['label']	// only 1 label
-			))
-		);
-
-		$album->setTrackCount(count($this->tracks));
-		$album->update();
+		$album->setArtistId(join(",", \Slimpd\Models\Artist::getIdsByString($albumArtists)))
+			->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($mergedFromTracks['genre'])))
+			#->setLabelId(join(",", Label::getIdsByString($mergedFromTracks['label'])))
+			->setCatalogNr($this->mostScored['album']['catalogNr'])
+			->setRelPath($this->getRelDirPath())
+			->setRelPathHash($this->getRelDirPathHash())
+			->setFilemtime($this->getDirectoryMtime())
+			->setAdded($this->mostRecentAdded)
+			->setTitle($this->mostScored['album']['title'])
+			->setYear($this->mostScored['album']['year'])
+			->setIsJumble(($this->handleAsAlbum === 1) ? 0:1)
+			->setLabelId(
+				join(",", \Slimpd\Models\Label::getIdsByString(
+					($album->getIsJumble() === 1)
+						? $mergedFromTracks['label']			// all labels
+						: $this->mostScored['album']['label']	// only 1 label
+				))
+			)
+			->setTrackCount(count($this->tracks))
+			->update();
 
 		$albumId = $album->getId();
 
@@ -179,23 +175,23 @@ class AlbumMigrator {
 		
 
 		foreach($this->tracks as $idx => $rawTagData) {
-			$track = $this->migrateNonGuessableData($rawTagData);
-			$track->setArtistId($this->mostScored[$idx]['artist']); // currently the string insted of an artistId
-			$track->setTitle($this->mostScored[$idx]['title']);
-			$track->setFeaturedArtistsAndRemixers();
+			$track = $this->migrateNonGuessableData($rawTagData)
+				->setArtistId($this->mostScored[$idx]['artist']) // currently the string insted of an artistId
+				->setTitle($this->mostScored[$idx]['title'])
+				->setFeaturedArtistsAndRemixers()
 				# setFeaturedArtistsAndRemixers() is processing:
 				# $t->setArtistId();
 				# $t->setFeaturingId();
 				# $t->setRemixerId();
 
-			$track->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($this->getMostScored($idx, 'genre'))));
-			$track->setLabelId(join(",", \Slimpd\Models\Label::getIdsByString($this->getMostScored($idx, 'label'))));
-			$track->setCatalogNr($this->mostScored[$idx]['catalogNr']);
-			$track->setDisc($this->mostScored[$idx]['disc']);
-			$track->setTrackNumber($this->mostScored[$idx]['trackNumber']);
-			$track->setComment($this->mostScored[$idx]['comment']);
-			$track->setYear($this->mostScored[$idx]['year']);
-			$track->setAlbumId($albumId);
+				->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($this->getMostScored($idx, 'genre'))))
+				->setLabelId(join(",", \Slimpd\Models\Label::getIdsByString($this->getMostScored($idx, 'label'))))
+				->setCatalogNr($this->mostScored[$idx]['catalogNr'])
+				->setDisc($this->mostScored[$idx]['disc'])
+				->setTrackNumber($this->mostScored[$idx]['trackNumber'])
+				->setComment($this->mostScored[$idx]['comment'])
+				->setYear($this->mostScored[$idx]['year'])
+				->setAlbumId($albumId);
 
 			// make sure to use identical ids in table:rawtagdata and table:track
 			\Slimpd\Models\Track::ensureRecordIdExists($track->getId());
@@ -241,11 +237,11 @@ class AlbumMigrator {
 		// make sure to use identical ids in table:trackindex and table:track
 		\Slimpd\Models\Trackindex::ensureRecordIdExists($trackId);
 		$trackIndex = new \Slimpd\Models\Trackindex();
-		$trackIndex->setId($trackId);
-		$trackIndex->setArtist($this->mostScored[$idx]['artist']);
-		$trackIndex->setTitle($this->mostScored[$idx]['title']);
-		$trackIndex->setAllchunks($indexChunks);
-		$trackIndex->update();
+		$trackIndex->setId($trackId)
+			->setArtist($this->mostScored[$idx]['artist'])
+			->setTitle($this->mostScored[$idx]['title'])
+			->setAllchunks($indexChunks)
+			->update();
 	}
 
 
@@ -265,11 +261,11 @@ class AlbumMigrator {
 		// make sure to use identical ids in table:trackindex and table:track
 		\Slimpd\Models\Albumindex::ensureRecordIdExists($albumId);
 		$albumIndex = new \Slimpd\Models\Albumindex();
-		$albumIndex->setId($albumId);
-		$albumIndex->setArtist($this->mostScored['album']['artist']);
-		$albumIndex->setTitle($this->mostScored['album']['title']);
-		$albumIndex->setAllchunks($indexChunks);
-		$albumIndex->update();
+		$albumIndex->setId($albumId)
+			->setArtist($this->mostScored['album']['artist'])
+			->setTitle($this->mostScored['album']['title'])
+			->setAllchunks($indexChunks)
+			->update();
 	}
 
 	/**
@@ -277,18 +273,31 @@ class AlbumMigrator {
 	 */
 	public function migrateNonGuessableData($rawArray) {
 		$track = new \Slimpd\Models\Track();
-		$track->setId($rawArray['id']);
-		$track->setRelPath($rawArray['relPath']);
-		$track->setRelPathHash($rawArray['relPathHash']);
-		$track->setRelDirPathHash($rawArray['relDirPathHash']);
-		$track->setFingerprint($rawArray['fingerprint']);
-		$track->setMimeType($rawArray['mimeType']);
-		$track->setFilesize($rawArray['filesize']);
-		$track->setFilemtime($rawArray['filemtime']);
-		$track->setMiliseconds(round($rawArray['miliseconds']*1000));
-		$track->setAudioDataformat($rawArray['audioDataformat']);
-		$track->setAudioComprRatio($rawArray['audioComprRatio']);
-		$track->setAudioEncoder(($rawArray['audioEncoder']) ? $rawArray['audioEncoder'] : 'Unknown encoder');
+		$track->setId($rawArray['id'])
+			->setRelPath($rawArray['relPath'])
+			->setRelPathHash($rawArray['relPathHash'])
+			->setRelDirPathHash($rawArray['relDirPathHash'])
+			->setFingerprint($rawArray['fingerprint'])
+			->setMimeType($rawArray['mimeType'])
+			->setFilesize($rawArray['filesize'])
+			->setFilemtime($rawArray['filemtime'])
+			->setMiliseconds(round($rawArray['miliseconds']*1000))
+			->setAudioDataformat($rawArray['audioDataformat'])
+			->setAudioComprRatio($rawArray['audioComprRatio'])
+			->setAudioEncoder(($rawArray['audioEncoder']) ? $rawArray['audioEncoder'] : 'Unknown encoder')
+			->setAudioBitrate(round($rawArray['audioBitrate'])) // integer in database
+			->setAudioBitsPerSample(($rawArray['audioBitsPerSample'] ? $rawArray['audioBitsPerSample'] : 16))
+			->setAudioSampleRate(($rawArray['audioSampleRate'] ? $rawArray['audioSampleRate'] : 44100))
+			->setAudioChannels(($rawArray['audioChannels'] ? $rawArray['audioChannels'] : 2))
+			->setVideoDataformat($rawArray['videoDataformat'])
+			->setVideoCodec($rawArray['videoCodec'])
+			->setVideoResolutionX($rawArray['videoResolutionX'])
+			->setVideoResolutionY($rawArray['videoResolutionY'])
+			->setVideoFramerate($rawArray['videoFramerate'])
+			->setImportStatus($rawArray['importStatus'])
+			->setLastScan($rawArray['lastScan'])
+			->setError($rawArray['error'])
+			->setDr($rawArray['dynamicRange']);
 		if ($rawArray['audioLossless']) {
 			$track->setAudioLossless($rawArray['audioLossless']);
 			$track->setAudioProfile('Lossless compression');
@@ -296,25 +305,9 @@ class AlbumMigrator {
 				$track->setAudioProfile('Lossless');
 			}
 		}
-		$track->setAudioBitrate(round($rawArray['audioBitrate'])); // integer in database
 		if(!$track->getAudioProfile()) {
 			$track->setAudioProfile($rawArray['audioBitrateMode'] . " " . round($track->getAudioBitrate()/ 1000, 1) . " kbps");
 		}
-		$track->setAudioBitsPerSample(($rawArray['audioBitsPerSample'] ? $rawArray['audioBitsPerSample'] : 16));
-		$track->setAudioSampleRate(($rawArray['audioSampleRate'] ? $rawArray['audioSampleRate'] : 44100));
-		$track->setAudioChannels(($rawArray['audioChannels'] ? $rawArray['audioChannels'] : 2));
-
-		$track->setVideoDataformat($rawArray['videoDataformat']);
-		$track->setVideoCodec($rawArray['videoCodec']);
-		$track->setVideoResolutionX($rawArray['videoResolutionX']);
-		$track->setVideoResolutionY($rawArray['videoResolutionY']);
-		$track->setVideoFramerate($rawArray['videoFramerate']);
-
-		$track->setImportStatus($rawArray['importStatus']);
-		$track->setLastScan($rawArray['lastScan']);
-
-		$track->setError($rawArray['error']);
-		$track->setDr($rawArray['dynamicRange']);
 		return $track;
 	}
 
@@ -1290,19 +1283,23 @@ class AlbumMigrator {
 	// setter
 	public function setRelDirPathHash($value) {
 		$this->relDirPathHash = $value;
+		return $this;
 	}
 
 	public function setRelDirPath($value) {
 		$this->relDirPath = $value;
+		return $this;
 	}
 
 	public function setDirectoryMtime($value) {
 		$this->directoryMtime = $value;
+		return $this;
 	}
 
 	
 	public function addTrack(array $rawTagDataArray) {
 		$this->tracks[] = $rawTagDataArray;
+		return $this;
 	}
 
 	// getter
