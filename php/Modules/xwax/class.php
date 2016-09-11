@@ -162,13 +162,17 @@ class Xwax {
 		}
 		foreach($responseArray as $line) {
 			$params = trimExplode(":", $line, TRUE, 2);
-			$out[$params[0]] = (isset($params[1]) === FALSE) ? NULL : $params[1];
+			try {
+				$out[$params[0]] = $params[1];
+			} catch(\Exception $e) {
+				$out[$params[0]] = NULL;
+			}
 		}
-
-		$out['percent'] = ($out['length'] > 0 && $out['position'] > 0)
-			? $out['position'] /($out['length']/100)
-			: 0;
-
+		try {
+			$out['percent'] = $out['position'] /($out['length']/100);
+		} catch(\Exception $e) {
+			$out['percent'] = 0;
+		}
 		$out['state'] = ($out['player_sync_pitch'] != 1) ? 'play' : 'pause';
 		return $out;
 	}
