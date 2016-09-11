@@ -160,9 +160,9 @@ mmp/mmp/phing
 mmp/mmp/init.php
 mmp/mmp/migration.php
 
-codrops/BookBlock/css
-codrops/BookBlock/donts
-codrops/BookBlock/images
-codrops/BookBlock/js
+codrops/BookBlock/css/bookblock.css
+codrops/BookBlock/js/modernizr.custom.js
+codrops/BookBlock/js/jquerypp.custom.js
+codrops/BookBlock/js/jquery.bookblock.min.js
 
 ksubileau/color-thief-php/lib
