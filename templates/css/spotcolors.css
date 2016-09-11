@@ -4,7 +4,8 @@
 
 .spotcol-{{ colname }} .col2,
 .spotcol-{{ colname }} .col2 a,
-.spotcol-{{ colname }} .active .fa {
+.spotcol-{{ colname }} .active .fa,
+.spotcol-{{ colname }}.ffn .fileModeToggle i {
 	color: {{ values["1st"] }};
 	transition: {{trans}};
 }
