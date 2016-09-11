@@ -17,7 +17,6 @@ class File extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 
 	public function validate() {
-		$app = \Slim\Slim::getInstance();
 		$realPath = getFileRealPath($this->getRelPath());
 		if(isInAllowedPath($this->relPath) === FALSE || $realPath === FALSE) {
 			return FALSE;

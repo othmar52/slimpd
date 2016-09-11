@@ -15,7 +15,6 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 
 	public function validate() {
-		$app = \Slim\Slim::getInstance();
 		$realPath = getFileRealPath($this->getRelPath());
 		if(isInAllowedPath($this->getRelPath()) === FALSE || $realPath === FALSE) {
 			return FALSE;
