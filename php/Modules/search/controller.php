@@ -53,7 +53,7 @@ foreach(array_keys($sortfields1) as $className) {
 			$term = str_replace(",", " ", $itemUid);
 			$vars["item"] = $classPath::getInstanceByAttributes(array("uid" => $itemUid));
 			
-			$vars["itemuids"] = $itemUid;
+			$vars["itemUids"] = $itemUid;
 			$itemsPerPage = 20;
 			$maxCount = 1000;
 

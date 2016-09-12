@@ -7,7 +7,7 @@
 		<div class="dark uc tinyfont darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</div>
 		<h2 class="uc nomargin">
 			{% if itemtype == 'artist' %}
-				{% include 'partials/'~itemtype~'/string.htm' with { item: {artistUid: itemids} } %}
+				{% include 'partials/'~itemtype~'/string.htm' with { item: {artistUid: itemUids} } %}
 			{% else %}
 				{{ item.title }}
 			{% endif %}
