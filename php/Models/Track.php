@@ -53,6 +53,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		$track = new \Slimpd\Models\Track();
 		$track->setRelPath($pathString);
 		$track->setRelPathHash(getFilePathHash($pathString));
+		$track->setAudioDataFormat(getFileExt($pathString));
 		return $track;
 	}
 

@@ -29,24 +29,15 @@ class Svggenerator {
 	public function __construct($arg) {
 		$config = \Slim\Slim::getInstance()->config['mpd'];
 		$arg = join(DS, $arg);
-		$track = NULL;
-		if(is_numeric($arg) === TRUE) {
-			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => (int)$arg));
-		}
-		if(is_numeric($arg) === FALSE) {
-			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('relPathHash' => getFilePathHash($arg)));
-		}
-		if(is_object($track) === TRUE) {
-			$this->absolutePath = $config['musicdir'] . $track->getRelPath();
-			$this->fingerprint = $track->getFingerprint();
-			$this->ext = $track->getAudioDataFormat();
-		}
+		$track = \Slimpd\Models\Track::getInstanceByPath($arg, TRUE);
+
+		$this->absolutePath = $config['musicdir'] . $track->getRelPath();
+		$this->fingerprint = $track->getFingerprint();
 
 		// non imported tracks
 		if($this->fingerprint === NULL) {
 			if(isInAllowedPath($arg) === TRUE && getFileRealPath($arg) !== FALSE) {
 				$this->absolutePath = $arg;
-				$this->ext = getFileExt($arg);
 			}
 		}
 
@@ -54,7 +45,6 @@ class Svggenerator {
 		if($this->fingerprint === NULL) {
 			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
 				$this->absolutePath = realpath(DS.$arg);
-				$this->ext = getFileExt(DS.$arg);
 			}
 		}
 
@@ -65,24 +55,25 @@ class Svggenerator {
 
 		if(!preg_match("/^([a-f0-9]){32}$/", $this->fingerprint)) {
 			// extract the fingerprint
-			if($fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($this->absolutePath)) {
-				$this->fingerprint = $fingerprint;
-			} else {
+			$fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($this->absolutePath);
+			if(!$fingerprint) {
 				# TODO: handle missing fingerprint
 				return NULL;
-				#die('invalid fingerprint: ' . $this->absolutePath);
 			}
+			$this->fingerprint = $fingerprint;
 		}
 		$this->setPeakFilePath();
-		if(is_file($this->peakValuesFilePath) === FALSE) {
-			session_write_close(); // do not block other requests during processing
-			$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
-			if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
-				# another request already triggered generateSvg
-				$this->fireRetryHeaderAndExit();
-			}
-			$this->generatePeakFile();
-		} 
+		if(is_file($this->peakValuesFilePath) === TRUE) {
+			return $this;
+		}
+		
+		session_write_close(); // do not block other requests during processing
+		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
+		if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
+			# another request already triggered generateSvg
+			$this->fireRetryHeaderAndExit();
+		}
+		$this->generatePeakFile();
 	}
 
 	public function fireRetryHeaderAndExit() {
