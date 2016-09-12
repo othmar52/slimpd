@@ -72,11 +72,14 @@ $app->get("/albums/page/:currentPage/sort/:sort/:direction", function($currentPa
 
 $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($app, $vars){
 	$vars['action'] = 'maintainance.albumdebug';
-	if(count($itemParams) === 1 && is_numeric($itemParams[0])) {
-		$search = array('id' => (int)$itemParams[0]);
+	$search = array();
+	$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
+		['id' => (int)$itemParams[0] ]
+	);
+	// invalid album id
+	if($vars['album'] === NULL) {
+		$app->notFound();
 	}
-	
-	$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes($search);
 
 	$tmp = \Slimpd\Models\Track::getInstancesByAttributes(array('albumId' => $vars['album']->getId()));
 	$trackInstances = array();
