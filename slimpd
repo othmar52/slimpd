@@ -1,6 +1,24 @@
 #!/usr/bin/env php
 <?php
 
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
+ *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 /* TODO: currently there is no check of any update status
  * TODO: remove dead items after update
  * TODO: instead of heaving multiple update-cli.php scripts merge the together with a procedural logic
@@ -38,40 +56,40 @@ $pathInfo = '/' . implode('/', $argv);
 
 // Create our app instance
 $app = new Slim\Slim([
-    'debug' => false,  // Turn off Slim's own PrettyExceptions
+	'debug' => false,  // Turn off Slim's own PrettyExceptions
 ]);
 
 // Set up the environment so that Slim can route
 $app->environment = Slim\Environment::mock([
-    'PATH_INFO'   => $pathInfo
+	'PATH_INFO'   => $pathInfo
 ]);
 
 
 // CLI-compatible not found error handler
 $app->notFound(function () use ($app) {
-    $url = $app->environment['PATH_INFO'];
-    cliLog($app->ll->str('cli.arg.invalid', [ltrim($url, '/')]));
-    cliLog('');
-    renderCliHelp();
-    $app->stop();
+	$url = $app->environment['PATH_INFO'];
+	cliLog($app->ll->str('cli.arg.invalid', [ltrim($url, '/')]));
+	cliLog('');
+	renderCliHelp();
+	$app->stop();
 });
 
 // Format errors for CLI
 $app->error(function (\Exception $e) use ($app) {
-    echo $e;
-    // delete cached config
-    $app->configLoaderINI->loadConfig('master.ini', NULL, '1');
-    $app->stop();
+	echo $e;
+	// delete cached config
+	$app->configLoaderINI->loadConfig('master.ini', NULL, '1');
+	$app->stop();
 });
 
 
 // LOAD MODULES
 call_user_func(function() use ($app) {
-    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
-    foreach (scandir($path) as $dir) {
-    	// suppress warning with "@" and avoid tons of is_file()-checks 
+	$path = APP_ROOT . 'php' . DS . 'Modules' . DS;
+	foreach (scandir($path) as $dir) {
+		// suppress warning with "@" and avoid tons of is_file()-checks 
 		@include_once($path . $dir . DS . 'class.php');
-    }
+	}
 });
 
 $config = $app->configLoaderINI->loadConfig('master.ini');
@@ -98,11 +116,11 @@ $app->config = $vars;
 
 // LOAD CONTROLLERS
 call_user_func(function() use ($app, $vars) {
-    $path = APP_ROOT . 'php' . DS . 'Modules' . DS;
-    foreach (scandir($path) as $dir) {
-    	// suppress warning with "@" and avoid tons of is_file()-checks 
+	$path = APP_ROOT . 'php' . DS . 'Modules' . DS;
+	foreach (scandir($path) as $dir) {
+		// suppress warning with "@" and avoid tons of is_file()-checks 
 		@include_once($path . $dir . DS . 'controller.php');
-    }
+	}
 });
 
 // DEFINE CLI routes
