@@ -60,21 +60,21 @@ class ConfigLoaderINI {
 		if (!$tmpconfig = parse_ini_file($filename, TRUE)) {
 			throw new \Exception('Can not load configuration from file: ' . $filename, 1);
 		}
-		return $this->recursive_parse($this->parse_ini_advanced($tmpconfig));
+		return $this->parseRecursive($this->parseIniAdvanced($tmpconfig));
 	}
 
 	/**
 	 * parses the master ini file. then parses every default-ini file and (if given) additional custom ini files an merges them
 	 *
-	 * @param $master_config_file - relative path to the master config file from the $configPath
+	 * @param $masterConfigFile - relative path to the master config file from the $configPath
 	 * @param $additionalFiles - dictionary which config files to load from the master.ini file
 	 */
-	public function loadConfig($master_config_file, $additionalConfig = array(), $noCache = FALSE) {
-		if (!is_string($master_config_file) || empty($master_config_file)) {
+	public function loadConfig($masterConfigFile, $additionalConfig = array(), $noCache = FALSE) {
+		if (!is_string($masterConfigFile) || empty($masterConfigFile)) {
 			throw new \Exception('Master Config file not given', 1);
 		}
 
-		$this->absCacheFilePath = APP_ROOT . "cache" . DS . "conf-". getFilePathHash($master_config_file). ".php";
+		$this->absCacheFilePath = APP_ROOT . "cache" . DS . "conf-". getFilePathHash($masterConfigFile). ".php";
 
 		if($noCache === TRUE) {
 			rmfile($this->absCacheFilePath);
@@ -85,7 +85,7 @@ class ConfigLoaderINI {
 		}
 
 		//get masterconfig from given configfile
-		$masterConfig = $this->parseConfigFile($master_config_file);
+		$masterConfig = $this->parseConfigFile($masterConfigFile);
 
 		if (empty($masterConfig)) {
 			throw new INInotFoundException('Can not load configuration files from master config file', 1);
@@ -106,7 +106,7 @@ class ConfigLoaderINI {
 		return str_replace('/', DIRECTORY_SEPARATOR, $path);
 	}
 
-	private function parse_ini_advanced($array) {
+	private function parseIniAdvanced($array) {
 		$returnArray = array();
 		if (is_array($array) === FALSE) {
 			return $returnArray;
@@ -141,7 +141,7 @@ class ConfigLoaderINI {
 		return $returnArray;
 	}
 
-	private function recursive_parse($array) {
+	private function parseRecursive($array) {
 		$returnArray = array();
 		if (is_array($array) === FALSE) {
 			 return $returnArray;
@@ -149,7 +149,7 @@ class ConfigLoaderINI {
 
 		foreach ($array as $key => $value) {
 			if (is_array($value)) {
-				$array[$key] = $this->recursive_parse($value);
+				$array[$key] = $this->parseRecursive($value);
 			}
 			$varName = explode('.', $key);
 			if (empty($varName[1]) === TRUE) {
@@ -207,10 +207,12 @@ class ConfigLoaderINI {
 				$value = $value[$key];
 			}
 
-			if (isset($lookup[$key]) && isset($lookup[$key][$value]) && is_array($lookup[$key][$value])) {
+			try {
 				foreach($lookup[$key][$value] as $additionalConfigFile) {
 					$config = array_replace_recursive($config, $this->parseConfigFile($additionalConfigFile));
 				}
+			} catch(\Exception $e) {
+				continue;
 			}
 		}
 		return $config;
@@ -224,11 +226,13 @@ class ConfigLoaderINI {
 			return $config;
 		}
 
+		if($config['destructiveness']['disable-all'] !== '1') {
+			return $config;
+		}
+
 		// override destructiveness values based on specific config key
-		if($config['destructiveness']['disable-all'] === '1') {
-			foreach(array_keys($config['destructiveness']) as $key) {
-				$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
-			}
+		foreach(array_keys($config['destructiveness']) as $key) {
+			$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
 		}
 		return $config;
 	}
