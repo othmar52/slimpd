@@ -132,7 +132,9 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 					'',
 					'".az09($app->ll->str('importer.' . $llKey))."',
 					0,
-					0
+					0,
+					'',
+					''
 				);";
 		}
 		$queries[] =
@@ -142,7 +144,9 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				'".$app->ll->str('importer.unknownlabel')."',
 				'".az09($app->ll->str('importer.unknownlabel'))."',
 				0,
-				0
+				0,
+				'',
+				''
 			);";
 		return $queries;
 	}

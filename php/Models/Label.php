@@ -5,6 +5,9 @@ namespace Slimpd\Models;
  */
 class Label extends \Slimpd\Models\AbstractModel {
 	use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
+	use \Slimpd\Traits\PropertyTopArtist; // topArtistUids
+	use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
+
 	protected $title;
 	protected $az09;
 

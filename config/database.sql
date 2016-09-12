@@ -103,6 +103,9 @@ CREATE TABLE IF NOT EXISTS `artist` (
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
+  `topGenreUids` varchar(20) NOT NULL  DEFAULT '',
+  `topLabelUids` varchar(20) NOT NULL  DEFAULT '',
+  `albumCount` int(11) unsigned  DEFAULT '0',
   PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
@@ -122,6 +125,8 @@ CREATE TABLE IF NOT EXISTS `genre` (
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
+  `topArtistUids` varchar(20) NOT NULL  DEFAULT '',
+  `topLabelUids` varchar(20) NOT NULL  DEFAULT '',
   PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
@@ -140,6 +145,8 @@ CREATE TABLE IF NOT EXISTS `label` (
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
+  `topArtistUids` varchar(20) NOT NULL  DEFAULT '',
+  `topGenreUids` varchar(20) NOT NULL  DEFAULT '',
   PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
@@ -501,8 +508,8 @@ ALTER TABLE `trackindex` AUTO_INCREMENT = 10;
 -- Default artist
 --
 
-INSERT INTO `artist` VALUES (NULL, 'Unknown Artist', '', 'unknownartist', 0,0);
-INSERT INTO `artist` VALUES (NULL, 'Various Artists', '', 'variousartists', 0,0);
+INSERT INTO `artist` VALUES (NULL, 'Unknown Artist', '', 'unknownartist', 0, 0, '', '');
+INSERT INTO `artist` VALUES (NULL, 'Various Artists', '', 'variousartists', 0, 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -510,7 +517,7 @@ INSERT INTO `artist` VALUES (NULL, 'Various Artists', '', 'variousartists', 0,0)
 -- Default genre
 --
 
-INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown',0,0);
+INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown', 0, 0, '', '');
 
 -- --------------------------------------------------------
 
@@ -518,6 +525,4 @@ INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown',0,0);
 -- Default label
 --
 
-INSERT INTO `label` VALUES (NULL, 'Unknown Label', 'unknownlabel',0,0);
-
-  
+INSERT INTO `label` VALUES (NULL, 'Unknown Label', 'unknownlabel', 0, 0, '', '');
