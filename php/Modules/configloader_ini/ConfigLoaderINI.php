@@ -237,6 +237,7 @@ class ConfigLoaderINI {
 		if(is_file($this->absCacheFilePath) === FALSE) {
 			return FALSE;
 		}
+		$cachedConf = '';
 		include($this->absCacheFilePath);
 		return $cachedConf;
 	}
