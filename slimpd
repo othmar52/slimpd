@@ -59,6 +59,8 @@ $app->notFound(function () use ($app) {
 // Format errors for CLI
 $app->error(function (\Exception $e) use ($app) {
     echo $e;
+    // delete cached config
+    $app->configLoaderINI->loadConfig('master.ini', NULL, '1');
     $app->stop();
 });
 
@@ -72,10 +74,17 @@ call_user_func(function() use ($app) {
     }
 });
 
-$configLoader = $app->configLoaderINI;
-
-$config = $configLoader->loadConfig('master.ini');
 $config = $app->configLoaderINI->loadConfig('master.ini');
+
+$noCache = FALSE;
+$clearCacheFor = [
+	"/update", "/hard-reset", "/remigrate"
+];
+if(in_array(\Slim\Environment::getInstance()->offsetGet("PATH_INFO"), $clearCacheFor) === TRUE) {
+	$noCache = TRUE;
+}
+
+$config = $app->configLoaderINI->loadConfig('master.ini', NULL, $noCache);
 \Slimpd\Modules\localization\Localization::setLocaleByLangKey($config['config']['langkey']);
 
 

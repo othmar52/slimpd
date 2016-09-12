@@ -63,9 +63,15 @@ call_user_func(function() use ($app) {
 	}
 });
 
+$noCache = FALSE;
+if($app->request->get('noCache') !== NULL) {
+	$noCache = TRUE;
+}
+if(\Slim\Environment::getInstance()->offsetGet("PATH_INFO") === "/systemcheck") {
+	$noCache = TRUE;
+}
 
-
-$config = $app->configLoaderINI->loadConfig('master.ini');
+$config = $app->configLoaderINI->loadConfig('master.ini', NULL, $noCache);
 \Slimpd\Modules\localization\Localization::setLocaleByLangKey($config['config']['langkey']);
 
 
@@ -87,6 +93,8 @@ $app->error(function(\Exception $e) use ($app, $vars){
 	$vars['url'] = $app->request->getResourceUri();
 	$vars['file'] = $e->getFile();
 	$vars['line'] = $e->getLine();
+	// delete cached config
+	$app->configLoaderINI->loadConfig('master.ini', NULL, '1');
 	$app->render('appless.htm', $vars);
 });
 

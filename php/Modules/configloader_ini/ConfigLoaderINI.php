@@ -20,6 +20,7 @@ namespace Slimpd\Modules\configloader_ini;
 class ConfigLoaderINI {
 
 	private $configPath;
+	private $absCacheFilePath; // absolute path for cached config
 
 	/**
 	 * create new config loader to parse .ini files in given directory
@@ -68,9 +69,19 @@ class ConfigLoaderINI {
 	 * @param $master_config_file - relative path to the master config file from the $configPath
 	 * @param $additionalFiles - dictionary which config files to load from the master.ini file
 	 */
-	public function loadConfig($master_config_file, $additionalConfig = array()) {
+	public function loadConfig($master_config_file, $additionalConfig = array(), $noCache = FALSE) {
 		if (!is_string($master_config_file) || empty($master_config_file)) {
 			throw new \Exception('Master Config file not given', 1);
+		}
+
+		$this->absCacheFilePath = APP_ROOT . "cache" . DS . "conf-". getFilePathHash($master_config_file). ".php";
+
+		if($noCache === TRUE) {
+			rmfile($this->absCacheFilePath);
+		}
+
+		if($cachedConfig = $this->getCachedConfig()) {
+			return $cachedConfig;
 		}
 
 		//get masterconfig from given configfile
@@ -82,7 +93,13 @@ class ConfigLoaderINI {
 
 		//return config
 		$config = $this->buildConfig($masterConfig, $additionalConfig);
-		return $this->postProcess($config);
+
+		// some post processing
+		$config = $this->postProcess($config);
+
+		// write to cache file
+		$this->writeCacheFile($config);
+		return $config;
 	}
 
 	private function prepareFilePath($path = '') {
@@ -172,6 +189,10 @@ class ConfigLoaderINI {
 			$config = array_replace_recursive($config, $this->parseConfigFile($defaultConfigFile));
 		}
 
+		if(is_array($additionalConfig) === FALSE) {
+			return $config;
+		}
+
 		// add additional config
 		foreach($additionalConfig as $key => $value) {
 			$lookup = $masterConfig;
@@ -210,5 +231,18 @@ class ConfigLoaderINI {
 			}
 		}
 		return $config;
+	}
+
+	private function getCachedConfig() {
+		if(is_file($this->absCacheFilePath) === FALSE) {
+			return FALSE;
+		}
+		include($this->absCacheFilePath);
+		return $cachedConf;
+	}
+
+	private function writeCacheFile($configArray) {
+		$fileContent = "<?php \$cachedConf = " . var_export($configArray,1) . ";";
+		file_put_contents($this->absCacheFilePath, $fileContent);
 	}
 }
