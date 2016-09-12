@@ -80,12 +80,6 @@ switch($config['config']['langkey']) {
 		break;
 }
 
-if($config['mpd']['alternative_musicdir'] === '') {
-	define('ALTDIR', FALSE);
-} else {
-	define('ALTDIR', TRUE);
-}
-
 
 $config['current_url']  = rtrim($app->request->getResourceUri(), '/');
 # TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
