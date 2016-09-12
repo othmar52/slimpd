@@ -23,7 +23,10 @@ $app->get('/', function() use ($app, $vars){
 $app->get('/library(/)', function() use ($app, $vars){
 	$vars['action'] = "landing";
 	$vars['itemlist'] = \Slimpd\Models\Album::getAll(11, 0, "added desc");
-	$vars['totalresults'] = \Slimpd\Models\Album::getCountAll();
+	$vars['totalAlbums'] = \Slimpd\Models\Album::getCountAll();
+	$vars['totalArtists'] = \Slimpd\Models\Artist::getCountAll();
+	$vars['totalGenres'] = \Slimpd\Models\Genre::getCountAll();
+	$vars['totalLabels'] = \Slimpd\Models\Label::getCountAll();
 	$vars['renderitems'] = getRenderItems($vars['itemlist']);
 	$app->render('surrounding.htm', $vars);
 });
