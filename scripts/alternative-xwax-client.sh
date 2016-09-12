@@ -47,6 +47,6 @@ case "$CMD" in
 		echo "insert your exit command for xwax-launch here ${BASH_SOURCE[0]}"
 		;;
 	load_track)
-		echo "calling load_track deck=$DECK, track=$ARG1"
+		echo "calling load_track deck=$DECK, track=$ARG1, artist=$ARG2, title=$ARG3"
 		;;
 esac
