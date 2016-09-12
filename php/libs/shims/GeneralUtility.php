@@ -1,6 +1,5 @@
 <?php
-/* Copyright (C) 2015-2016 ann <ann@mmc-agentur.at>
- *                         othmar52 <othmar52@users.noreply.github.com>
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
  *
