@@ -144,21 +144,11 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 		cliLog("Deleting files and directories inside ". $sysDir ."/");
 		foreach(['music','playlist','info','image','other'] as $key) {
 			foreach($fileBrowser->files[$key] as $file) {
-				// just to make sure we do not delete unwanted stuff :)
-				$delete = realpath(APP_ROOT . $file->getRelPath());
-				if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
-					continue;
-				}
-				unlink($delete);
+				rmfile(APP_ROOT . $file->getRelPath());
 			}
 		}
 		foreach($fileBrowser->subDirectories['dirs'] as $dir) {
-			// just to make sure we do not delete unwanted stuff :)
-			$delete = realpath(APP_ROOT . $dir->getRelPath());
-			if(strpos($delete, APP_ROOT.$sysDir.DS) === FALSE) {
-				continue;
-			}
-			rrmdir($delete);
+			rrmdir(APP_ROOT . $dir->getRelPath());
 		}
 	}
 	$importer->triggerImport();

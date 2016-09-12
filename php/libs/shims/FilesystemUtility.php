@@ -49,6 +49,22 @@ function isInAllowedPath($itemPath) {
 	return FALSE;
 }
 
+/**
+ * checks if file path or directory path is within our application directory
+ */
+function isInAppDirectory($itemPath) {
+	$realPath = realpath($itemPath);
+	if($realPath === FALSE) {
+		return FALSE;
+	}
+	foreach(["cache", "embedded", "peakfiles"] as $appDir) {
+		if(strpos($realPath, APP_ROOT . $appDir) === 0) {
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
 function getMimeType ($filename) {
 	$mimeExtensionMapping = parse_ini_file(APP_ROOT . "config/mimetypes.ini", TRUE);
 
@@ -68,16 +84,43 @@ function getMimeType ($filename) {
  * recursive delete directory
  */
 function rrmdir($dir) {
-	if (is_dir($dir)) {
-		$objects = scandir($dir);
-		foreach ($objects as $object) {
-			if ($object === "." || $object === "..") {
-				continue;
-			}
-			$continueWith = (is_dir($dir."/".$object)) ? "rrmdir" : "unlink";
-			$continueWith($dir."/".$object);
+	if (is_dir($dir) === FALSE || isInAppDirectory($dir) === FALSE) {
+		return;
+	}
+	$objects = scandir($dir);
+	foreach ($objects as $object) {
+		if ($object === "." || $object === "..") {
+			continue;
 		}
-		rmdir($dir);
+		$continueWith = (is_dir($dir."/".$object)) ? "rrmdir" : "unlink";
+		$continueWith($dir."/".$object);
+	}
+	rmdir($dir);
+}
+
+/**
+ * performs check if ifle is within application directory and deletes the file
+ */
+function rmfile($mixed) {
+	if(is_string($mixed) === TRUE && isInAppDirectory($mixed)) {
+		@unlink($mixed);
+		return;
+	}
+	if(is_array($mixed) === FALSE) {
+		return;
+	}
+	foreach($mixed as $itemPath) {
+		if(is_string($itemPath) === TRUE && isInAppDirectory($itemPath)) {
+			@unlink($itemPath);
+		}
+	}
+}
+
+
+function clearPhpThumbTempFiles($phpThumb) {
+	foreach($phpThumb->tempFilesToDelete as $delete) {
+		cliLog("deleting tmpFile " . $delete, 10);
+		rmfile($delete);
 	}
 }
 

@@ -307,16 +307,15 @@ class Svggenerator {
 
 		exec($this->cmdTempwav);
 
-		if(is_file($tmpFileName.'.mp3') === TRUE) {
-			unlink($tmpFileName . ".mp3");
-		}
+		// delete temporary mp3 file
+		rmfile($tmpFileName . ".mp3");
 
 		if(is_file($tmpFileName.'.wav') === FALSE) {
 			return FALSE;
 		}
 		$values = $this->getWavPeaks($tmpFileName.'.wav');
-		// delete temporary files
-		unlink($tmpFileName . ".wav");
+		// delete temporary wav file
+		rmfile($tmpFileName . ".wav");
 		return $values;
 	}
 

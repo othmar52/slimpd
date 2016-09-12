@@ -131,11 +131,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 			// invalid instance 
 			return FALSE;
 		}
-		$bitmapPath = APP_ROOT . $this->getRelPath(); 
-		if(is_file($bitmapPath) === TRUE && is_writeable($bitmapPath) === TRUE) {
-			unlink($bitmapPath);
-		}
-		
+		rmfile(APP_ROOT . $this->getRelPath());
 		$query = 'DELETE FROM '.self::$tableName .' WHERE uid=' . (int)$this->getUid() . ";";
 		\Slim\Slim::getInstance()->db->query($query);
 		return TRUE;

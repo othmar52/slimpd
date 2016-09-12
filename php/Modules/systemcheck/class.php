@@ -367,9 +367,7 @@ class Systemcheck {
 			$tmpWav = APP_ROOT . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.wav';
 
 			// make sure we retrieve nothing cached
-			@unlink($peakfile);
-			@unlink($tmpMp3);
-			@unlink($tmpWav);
+			rmfile([$peakfile, $tmpMp3, $tmpWav]);
 
 			$svgGenerator = new \Slimpd\Svggenerator([$check[$checkWf]['filepath']]);
 
@@ -384,9 +382,7 @@ class Systemcheck {
 			if(is_file($tmpWav) === FALSE) {
 				$check[$checkWf]['status'] = 'danger';
 			}
-			@unlink($peakfile);
-			@unlink($tmpMp3);
-			@unlink($tmpWav);
+			rmfile([$peakfile, $tmpMp3, $tmpWav]);
 		}
 	}
 }
