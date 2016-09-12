@@ -4,11 +4,10 @@ namespace Slimpd\Models;
  *
  */
 class Artist extends \Slimpd\Models\AbstractModel {
+	use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
 	protected $title;
 	protected $article;
 	protected $az09;
-	protected $trackCount;
-	protected $albumCount;
 
 	public static $tableName = "artist";
 
@@ -106,10 +105,10 @@ class Artist extends \Slimpd\Models\AbstractModel {
 			}
 			
 			$instance = new $classPath();
-			$instance->setTitle(ucwords(strtolower($itemPart)));
-			$instance->setAz09($az09);
-			$instance->setArticle($artistArticle);
-			$instance->insert();
+			$instance->setTitle(ucwords(strtolower($itemPart)))
+				->setAz09($az09)
+				->setArticle($artistArticle)
+				->insert();
 			$itemId = $app->db->insert_id;
 			
 			$itemIds[$itemId] = $itemId;
@@ -133,14 +132,6 @@ class Artist extends \Slimpd\Models\AbstractModel {
 		$this->az09 = $value;
 		return $this;
 	}
-	public function setTrackCount($value) {
-		$this->trackCount = $value;
-		return $this;
-	}
-	public function setAlbumCount($value) {
-		$this->albumCount = $value;
-		return $this;
-	}
 
 	// getter
 	public function getTitle() {
@@ -151,11 +142,5 @@ class Artist extends \Slimpd\Models\AbstractModel {
 	}
 	public function getAz09() {
 		return $this->az09;
-	}
-	public function getTrackCount() {
-		return $this->trackCount;
-	}
-	public function getAlbumCount() {
-		return $this->albumCount;
 	}
 }
