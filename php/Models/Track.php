@@ -13,7 +13,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	protected $disc;
 	protected $transcoded;
 	protected $isMixed;
-	protected $dr;
+	protected $dynRange;
 
 	protected $discogsId;
 	protected $rolldabeatsId;
@@ -361,8 +361,8 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		return $this;
 	}
 	
-	public function setDr($value) {
-		$this->dr = $value;
+	public function setDynRange($value) {
+		$this->dynRange = $value;
 		return $this;
 	}
 	
@@ -406,8 +406,8 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		return $this->junoId;
 	}
 	
-	public function getDr() {
-		return $this->dr;
+	public function getDynRange() {
+		return $this->dynRange;
 	}
 	
 	

@@ -4,7 +4,7 @@ namespace Slimpd;
  *
  */
 class Xwax {
-	protected $ip;
+	protected $ipAddress;
 	protected $port = 0;
 	protected $deckIndex;
 	protected $type = 'xwax';
@@ -36,7 +36,7 @@ class Xwax {
 		}
 
 		$loadArgs = '';
-		$this->ip = $xConf['server'];
+		$this->ipAddress = $xConf['server'];
 		$this->deckIndex = $selectedDeck-1;
 
 		if($cmd == "load_track") {
@@ -75,7 +75,7 @@ class Xwax {
 		}
 
 		if($useCache === FALSE) {
-			$execCmd = 'timeout 1 ' . $xConf['clientpath'] . " " . $this->ip . " "  . $cmd . " " . $this->deckIndex . $loadArgs;
+			$execCmd = 'timeout 1 ' . $xConf['clientpath'] . " " . $this->ipAddress . " "  . $cmd . " " . $this->deckIndex . $loadArgs;
 			exec($execCmd, $response);
 
 			if($cmd === "get_status") {
@@ -106,7 +106,7 @@ class Xwax {
 			array(
 				'type' => $this->type,
 				'deckindex' => $this->deckIndex,
-				'ip' => $this->ip,
+				'ipAddress' => $this->ipAddress,
 				'port' => $this->port
 			)
 		);
@@ -117,7 +117,7 @@ class Xwax {
 			$this->pollcache = new \Slimpd\Models\Pollcache();
 			$this->pollcache->setType($this->type)
 				->setDeckindex($this->deckIndex)
-				->setIp($this->ip)
+				->setIpAddress($this->ipAddress)
 				->setPort($this->port);
 		}
 		$this->pollcache->setResponse(serialize($response))

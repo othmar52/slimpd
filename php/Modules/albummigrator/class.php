@@ -297,7 +297,7 @@ class AlbumMigrator {
 			->setImportStatus($rawArray['importStatus'])
 			->setLastScan($rawArray['lastScan'])
 			->setError($rawArray['error'])
-			->setDr($rawArray['dynamicRange']);
+			->setDynRange($rawArray['dynamicRange']);
 		if ($rawArray['audioLossless']) {
 			$track->setAudioLossless($rawArray['audioLossless']);
 			$track->setAudioProfile('Lossless compression');

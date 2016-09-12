@@ -8,7 +8,7 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	protected $type;
 	protected $deckindex;
 	protected $success;
-	protected $ip;
+	protected $ipAddress;
 	protected $port;
 	protected $response;
 	
@@ -54,13 +54,13 @@ class Pollcache extends \Slimpd\Models\AbstractModel {
 	}
 	
 	
-	public function setIp($value) {
-		$this->ip = $value;
+	public function setIpAddress($value) {
+		$this->ipAddress = $value;
 		return $this;
 	}
 	
-	public function getIp() {
-		return $this->ip;
+	public function getIpAddress() {
+		return $this->ipAddress;
 	}
 
 

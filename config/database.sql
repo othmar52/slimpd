@@ -220,7 +220,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `beatportId` varchar(64) NOT NULL DEFAULT '',
   `junoId` varchar(64) NOT NULL DEFAULT '',
   
-  `dr` tinyint(3) unsigned  DEFAULT NULL,
+  `dynRange` tinyint(3) unsigned  DEFAULT NULL,
   PRIMARY KEY (`uid`),
   KEY `artistUid` (`artistUid`),
   KEY `featuringUid` (`featuringUid`),
@@ -473,7 +473,7 @@ CREATE TABLE IF NOT EXISTS `pollcache` (
   `type` varchar(11) NOT NULL,
   `deckindex` tinyint(4) unsigned DEFAULT '0',
   `success` tinyint(2) unsigned DEFAULT '0',
-  `ip` varchar(11) NOT NULL,
+  `ipAddress` varchar(15) NOT NULL,
   `port` tinyint(5) unsigned DEFAULT '0',
   `response` mediumtext NOT NULL,
   PRIMARY KEY (`uid`)
