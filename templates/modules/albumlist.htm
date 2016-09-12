@@ -4,8 +4,8 @@
 	 <div class="col-sm-4 col-md-2">
 		<div class="thumbnail bg-col2">
 			<div class="ffn-hidden">
-				<a href="{{root}}album/{{item.id}}" class=" bg-col4 ajax-link">
-					<div class="img-placeholder" style="background-image:url({{root}}image-300/album/{{item.id}}); background-size: cover; background-position: 50%"></div>
+				<a href="{{root}}album/{{item.uid}}" class=" bg-col4 ajax-link">
+					<div class="img-placeholder" style="background-image:url({{root}}image-300/album/{{item.uid}}); background-size: cover; background-position: 50%"></div>
 					<div class="caption">
 						<div class="shorten col2">{% include 'partials/artist/string.htm' %}</div>
 						<div class="shorten">{{item.title}}</div>
@@ -19,7 +19,7 @@
 						breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
 						skiplast: 1 } %}</span>
 					<br />
-					<a href="{{root}}album/{{item.id}}" class="ajax-link">
+					<a href="{{root}}album/{{item.uid}}" class="ajax-link">
 						{{ renderitems.itembreadcrumbs[item.relPathHash]|last.title }}
 					</a>
 				</div>

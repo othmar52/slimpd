@@ -36,7 +36,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			// TEMP reset database status for testing purposes
 			#$query = "UPDATE rawtagdata SET importStatus=1, lastScan=0;";
 			#$app->db->query($query);
-			#$query = "DELETE FROM bitmap WHERE trackId > 0;";
+			#$query = "DELETE FROM bitmap WHERE trackUid > 0;";
 			#$app->db->query($query);
 			////////////////////////////////////////////////////////////////
 		
@@ -47,7 +47,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			
 		$query = "
-			SELECT id,
+			SELECT uid,
 				relPath, relPathHash, filemtime,
 				relDirPath, relDirPathHash, directoryMtime
 			FROM rawtagdata
@@ -57,14 +57,14 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->extractedImages = 0;
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
-			cliLog($record['id'] . ' ' . $record['relPath'], 2);
+			cliLog($record['uid'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemsChecked . ' files',
 				'currentItem' => $record['relPath'],
 				'extractedImages' => $this->extractedImages
 			));
 			$rawTagData = new Rawtagdata();
-			$rawTagData->setId($record['id'])
+			$rawTagData->setUid($record['uid'])
 				->setRelPath($record['relPath'])
 				->setLastScan(time())
 				->setImportStatus(2);
@@ -171,10 +171,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				->setRelPathHash($relPathHash)
 				->setFilemtime(filemtime($phpThumb->cache_filename))
 				->setFilesize(filesize($phpThumb->cache_filename))
-				->setRawTagDataId($record['id']) # TODO: is there any more need for both ID's?
-				->setTrackId($record['id'])		 # TODO: is there any more need for both ID's?
+				->setRawTagDataUid($record['uid']) # TODO: is there any more need for both ID's?
+				->setTrackUid($record['uid'])		 # TODO: is there any more need for both ID's?
 				->setEmbedded(1)
-				// setAlbumId() will be applied later because at this time we havn't any albumId's but tons of bitmap-record-dupes
+				// setAlbumUid() will be applied later because at this time we havn't any albumUid's but tons of bitmap-record-dupes
 				->setEmbeddedName(
 					(isset($bitmapData['picturetype']) !== FALSE)
 						? $bitmapData['picturetype'] . '.ext'

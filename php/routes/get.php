@@ -111,7 +111,7 @@ $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars)
 $app->get('/deliver/:item+', function($item) use ($app, $vars){
 	$path = join(DS, $item);
 	if(is_numeric($path)) {
-		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$path));
+		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => (int)$path));
 		$path = ($track === NULL) ? '' : $track->getRelPath();
 	}
 	deliver(trimAltMusicDirPrefix($path, $app), $app);

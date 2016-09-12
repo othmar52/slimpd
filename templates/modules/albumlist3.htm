@@ -5,15 +5,15 @@
 	{% for item in itemlist %}
 		<div class="row bg-col3 track-row">
 			<div class="col-md-1">
-				<a href="{{root}}album/{{item.id}}" class="ajax-link">
-					<img src="{{root}}image-50/album/{{item.id}}">
+				<a href="{{root}}album/{{item.uid}}" class="ajax-link">
+					<img src="{{root}}image-50/album/{{item.uid}}">
 				</a>
 			</div>
 			<div class="col-md-1">
 				play bla
 			</div>
 			<div class="col-md-3">
-				<a href="{{root}}album/{{item.id}}" class="ajax-link">
+				<a href="{{root}}album/{{item.uid}}" class="ajax-link">
 				{{item.title}}
 				</a>
 			</div>
@@ -21,7 +21,7 @@
 				{% include 'partials/artist/link.htm' %}
 			</div>
 			<div class="col-md-2">
-				{% include 'partials/genre/link.htm' with {'genreIds': item.genreId, 'limit' : 3} %}
+				{% include 'partials/genre/link.htm' with {'genreUids': item.genreUid, 'limit' : 3} %}
 			</div>
 			<div class="col-md-1">
 				{% include 'partials/year/link.htm' %}

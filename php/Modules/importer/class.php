@@ -19,8 +19,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	protected $waitingLoop = 0;
 	protected $maxWaitingTime = 60; // seconds
 
-	protected $directoryHashes = array(/* dirhash -> albumId */);
-	protected $updatedAlbums = array(/* id -> NULL */); 
+	protected $directoryHashes = array(/* dirhash -> albumUid */);
+	protected $updatedAlbums = array(/* uid -> NULL */); 
 
 	# TODO: unset all big arrays at the end of each method
 
@@ -28,7 +28,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		// create a wrapper entry for all import phases
 		$this->jobPhase = 0;
 		$this->beginJob(array('msg' => 'starting sliMpd import/update process'), __FUNCTION__);
-		$this->batchId = $this->jobId;
+		$this->batchUid = $this->jobUid;
 		$this->batchBegin = $this->jobBegin;
 
 		if($remigrate === FALSE) {
@@ -66,7 +66,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 	public function finishBatch() {
 		$this->jobPhase = 0;
-		$this->jobId = $this->batchId;
+		$this->jobUid = $this->batchUid;
 		$this->jobBegin = $this->batchBegin;
 		$this->itemsChecked = Track::getCountAll();
 		$this->itemsProcessed = $this->itemsChecked;
@@ -101,11 +101,11 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemsTotal FROM bitmap";
+		$query = "SELECT count(uid) AS itemsTotal FROM bitmap";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$deletedRecords = 0;
-		$query = "SELECT id, relPath, embedded FROM bitmap;";
+		$query = "SELECT uid, relPath, embedded FROM bitmap;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -117,7 +117,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			} else {
 				cliLog('deleting database-entry for ' . $record['relPath'], 3);
 				$bitmap = new Bitmap();
-				$bitmap->setId($record['id']);
+				$bitmap->setUid($record['uid']);
 				$bitmap->delete(); 
 				$deletedRecords++;
 			}
@@ -147,10 +147,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemsTotal FROM album WHERE lastScan <= filemtime;";
+		$query = "SELECT count(uid) AS itemsTotal FROM album WHERE lastScan <= filemtime;";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
-		$query = "SELECT id, relPath, relPathHash, filemtime FROM album WHERE lastScan <= filemtime;";
+		$query = "SELECT uid, relPath, relPathHash, filemtime FROM album WHERE lastScan <= filemtime;";
 		$result = $app->db->query($query);
 		$insertedImages = 0;
 
@@ -158,7 +158,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
-			cliLog($record['id'] . ' ' . $record['relPath'], 2);
+			cliLog($record['uid'] . ' ' . $record['relPath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemsChecked . ' files',
 				'currentItem' => $record['relPath'],
@@ -166,7 +166,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			));
 
 			$album = new Album();
-			$album->setId($record['id'])
+			$album->setUid($record['uid'])
 				->setLastScan(time())
 				->setImportStatus(2);
 
@@ -182,7 +182,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 					->setRelPathHash($relPathHash)
 					->setFilemtime(filemtime($imagePath))
 					->setFilesize(filesize($imagePath))
-					->setAlbumId($record['id']);
+					->setAlbumUid($record['uid']);
 
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);
@@ -236,7 +236,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		// check if we really have something to process
 		$runImporter = FALSE;
-		$query = "SELECT id, relPath FROM importer
+		$query = "SELECT uid, relPath FROM importer
 			WHERE jobPhase=0 AND jobEnd=0";
 
 		$result = \Slim\Slim::getInstance()->db->query($query);
@@ -246,14 +246,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			if(strlen($record['relPath']) > 0) {
 				$directories[ $record['relPath'] ] = $record['relPath'];
 			}
-			$this->jobId = $record['id'];
+			$this->jobUid = $record['uid'];
 			$this->finishJob(array(), __FUNCTION__);
 		}
 		// process unified directories
 		foreach($directories as $dir) {
 			$this->modifyDirectoryTimestamps($dir);
 		}
-		$this->jobId = 0;
+		$this->jobUid = 0;
 		return $runImporter;
 	}
 
@@ -330,9 +330,9 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		// delete dead items in table:rawtagdata & table:track & table:trackindex
 		if(count($mpdParser->fileOrphans) > 0) {
-			Rawtagdata::deleteRecordsByIds($mpdParser->fileOrphans);
-			Track::deleteRecordsByIds($mpdParser->fileOrphans);
-			Trackindex::deleteRecordsByIds($mpdParser->fileOrphans);
+			Rawtagdata::deleteRecordsByUids($mpdParser->fileOrphans);
+			Track::deleteRecordsByUids($mpdParser->fileOrphans);
+			Trackindex::deleteRecordsByUids($mpdParser->fileOrphans);
 
 			// TODO: last check if those 3 tables has identical totalCount()
 			// reason: basis is only rawtagdata and not all 3 tables
@@ -341,8 +341,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		// delete dead items in table:album & table:albumindex
 		if(count($mpdParser->dirOrphans) > 0) {
 			print_r($mpdParser->dirOrphans);
-			Album::deleteRecordsByIds($mpdParser->dirOrphans);
-			Albumindex::deleteRecordsByIds($mpdParser->dirOrphans);
+			Album::deleteRecordsByUids($mpdParser->dirOrphans);
+			Albumindex::deleteRecordsByUids($mpdParser->dirOrphans);
 		}
 
 		cliLog("dircount: " . $mpdParser->dirCount);
@@ -374,19 +374,19 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(id) AS itemsTotal FROM  bitmap WHERE error=0 AND trackId > 0";
+		$query = "SELECT count(uid) AS itemsTotal FROM  bitmap WHERE error=0 AND trackUid > 0";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		$query = "
 			SELECT
-				id,
-				trackId,
+				uid,
+				trackUid,
 				embedded,
-				CONCAT(albumId, '.', width, '.', height, '.', filesize) as dupes,
+				CONCAT(albumUid, '.', width, '.', height, '.', filesize) as dupes,
 				relPath,
 				filesize
 			FROM  bitmap
 			WHERE error=0 AND embedded=1
-			ORDER BY albumId;";
+			ORDER BY albumUid;";
 		$result = $app->db->query($query);
 
 		$previousKey = '';
@@ -410,8 +410,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			if($record['dupes'] === $previousKey) {
 				$msg = $app->ll->str('importer.image.destroy', array($record['relPath']));
 				$bitmap = new Bitmap();
-				$bitmap->setId($record['id'])
-					->setTrackId($record['trackId'])
+				$bitmap->setUid($record['uid'])
+					->setTrackUid($record['trackUid'])
 					->setEmbedded($record['embedded'])
 					->setRelPath($record['relPath'])
 					->destroy();
@@ -452,14 +452,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 
 		$query = "
-			SELECT count(id) AS itemsTotal
+			SELECT count(uid) AS itemsTotal
 			FROM rawtagdata
 			WHERE audioDataFormat='mp3' AND fingerprint='';";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		
 		$query = "
-			SELECT id, relPath
+			SELECT uid, relPath
 			FROM rawtagdata
 			WHERE audioDataFormat='mp3' AND fingerprint='';";
 
@@ -469,7 +469,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->itemsChecked++;
 
 			$this->updateJob(array(
-				'currentItem' => 'albumId: ' . $record['relPath']
+				'currentItem' => 'albumUid: ' . $record['relPath']
 			));
 
 			$this->itemsProcessed++;
@@ -488,13 +488,13 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 			// complete rawtagdata record
 			$rawTagData = new Rawtagdata();
-			$rawTagData->setId($record['id'])
+			$rawTagData->setUid($record['uid'])
 				->setFingerprint($fingerPrint)
 				->update();
 
 			// complete track record
 			$track = new Track();
-			$track->setId($record['id'])
+			$track->setUid($record['uid'])
 				->setFingerprint($fingerPrint)
 				->update();
 

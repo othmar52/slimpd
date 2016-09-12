@@ -13,15 +13,15 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 --
 
 CREATE TABLE IF NOT EXISTS `album` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` text,
   `relPath` text,
   `relPathHash` varchar(11) NOT NULL DEFAULT '',
   `year` smallint(4) unsigned DEFAULT NULL,
   `month` tinyint(2) unsigned DEFAULT NULL,
-  `artistId` varchar(255) NOT NULL DEFAULT '',
-  `genreId` varchar(255) NOT NULL DEFAULT '',
-  `labelId` varchar(255) NOT NULL DEFAULT '',
+  `artistUid` varchar(255) NOT NULL DEFAULT '',
+  `genreUid` varchar(255) NOT NULL DEFAULT '',
+  `labelUid` varchar(255) NOT NULL DEFAULT '',
   `added` int(10) unsigned NOT NULL DEFAULT '0',
   `filemtime` int(10) unsigned NOT NULL DEFAULT '0',
   `discs` tinyint(3) unsigned NOT NULL DEFAULT '0',
@@ -37,11 +37,11 @@ CREATE TABLE IF NOT EXISTS `album` (
   `beatportId` varchar(64) NOT NULL DEFAULT '',
   `junoId` varchar(64) NOT NULL DEFAULT '',
   `catalogNr` varchar(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
-  KEY `artistId` (`artistId`),
+  PRIMARY KEY (`uid`),
+  KEY `artistUid` (`artistUid`),
   KEY `year` (`year`,`month`),
-  KEY `labelId` (`labelId`),
-  KEY `genreId` (`genreId`),
+  KEY `labelUid` (`labelUid`),
+  KEY `genreUid` (`genreUid`),
   KEY `added` (`added`),
   KEY `importStatus` (`importStatus`),
   KEY `isMixed` (`isMixed`)
@@ -57,7 +57,7 @@ ALTER TABLE `album`
 --
 	
 CREATE TABLE IF NOT EXISTS `bitmap` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `relPath` text,
   `relPathHash` varchar(11) NOT NULL DEFAULT '',
   `filemtime` int(11) unsigned NOT NULL DEFAULT '0',
@@ -66,20 +66,20 @@ CREATE TABLE IF NOT EXISTS `bitmap` (
   `width` int(7) unsigned DEFAULT NULL,
   `height` int(7) unsigned DEFAULT NULL,
   `bghex` varchar(7) NOT NULL DEFAULT '',
-  `albumId` int(11) unsigned DEFAULT NULL,
-  `trackId` int(11) unsigned DEFAULT NULL,
-  `rawTagDataId` int(11) unsigned DEFAULT NULL,
+  `albumUid` int(11) unsigned DEFAULT NULL,
+  `trackUid` int(11) unsigned DEFAULT NULL,
+  `rawTagDataUid` int(11) unsigned DEFAULT NULL,
   `embedded` tinyint(4) unsigned DEFAULT NULL,
   `embeddedName` varchar(255) NOT NULL DEFAULT '',
   `pictureType` varchar(20) NOT NULL DEFAULT '',
   `sorting` int(6) unsigned DEFAULT NULL,
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `error` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `relPathHash` (`relPathHash`),
-  KEY `albumId` (`albumId`),
-  KEY `trackId` (`trackId`),
-  KEY `rawTagDataId` (`rawTagDataId`),
+  KEY `albumUid` (`albumUid`),
+  KEY `trackUid` (`trackUid`),
+  KEY `rawTagDataUid` (`rawTagDataUid`),
   KEY `importStatus` (`importStatus`),
   KEY `embedded` (`embedded`),
   KEY `pictureType` (`pictureType`),
@@ -97,13 +97,13 @@ ALTER TABLE `bitmap`
 --
 
 CREATE TABLE IF NOT EXISTS `artist` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `article` varchar(24) NOT NULL DEFAULT '',
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
-  PRIMARY KEY `id` (`id`),
+  PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
   KEY `albumCount` (`albumCount`)
@@ -116,13 +116,13 @@ CREATE TABLE IF NOT EXISTS `artist` (
 --
 
 CREATE TABLE IF NOT EXISTS `genre` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `parent` int(4) unsigned NOT NULL DEFAULT '0',
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
-  PRIMARY KEY `id` (`id`),
+  PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
   KEY `albumCount` (`albumCount`)
@@ -135,12 +135,12 @@ CREATE TABLE IF NOT EXISTS `genre` (
 --
 
 CREATE TABLE IF NOT EXISTS `label` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '',
   `az09` varchar(255) NOT NULL DEFAULT '0',
   `trackCount` int(11) unsigned  DEFAULT '0',
   `albumCount` int(11) unsigned  DEFAULT '0',
-  PRIMARY KEY `id` (`id`),
+  PRIMARY KEY `uid` (`uid`),
   KEY `az09` (`az09`),
   KEY `trackCount` (`trackCount`),
   KEY `albumCount` (`albumCount`)
@@ -170,11 +170,11 @@ CREATE TABLE IF NOT EXISTS `random` (
 --
 
 CREATE TABLE IF NOT EXISTS `track` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `artistId` varchar(255) NOT NULL DEFAULT '',
-  `featuringId` varchar(255) NOT NULL DEFAULT '',
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `artistUid` varchar(255) NOT NULL DEFAULT '',
+  `featuringUid` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
-  `remixerId` varchar(255) NOT NULL DEFAULT '',
+  `remixerUid` varchar(255) NOT NULL DEFAULT '',
   `relPath` text NOT NULL,
   `relPathHash` varchar(11) NOT NULL,
   `relDirPathHash` varchar(11) NOT NULL,
@@ -204,12 +204,12 @@ CREATE TABLE IF NOT EXISTS `track` (
   `disc` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `trackNumber` varchar(8) DEFAULT NULL,
   `error` varchar(255) NOT NULL DEFAULT '',
-  `albumId` varchar(11) NOT NULL DEFAULT '',
+  `albumUid` varchar(11) NOT NULL DEFAULT '',
   `transcoded` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
-  `genreId` varchar(255) NOT NULL DEFAULT '',
-  `labelId` varchar(255) NOT NULL DEFAULT '',
+  `genreUid` varchar(255) NOT NULL DEFAULT '',
+  `labelUid` varchar(255) NOT NULL DEFAULT '',
   `catalogNr` varchar(64) NOT NULL DEFAULT '',
   `comment` text NOT NULL,
   `year` smallint(4) unsigned DEFAULT NULL,
@@ -221,19 +221,19 @@ CREATE TABLE IF NOT EXISTS `track` (
   `junoId` varchar(64) NOT NULL DEFAULT '',
   
   `dr` tinyint(3) unsigned  DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `artistId` (`artistId`),
-  KEY `featuringId` (`featuringId`),
+  PRIMARY KEY (`uid`),
+  KEY `artistUid` (`artistUid`),
+  KEY `featuringUid` (`featuringUid`),
   KEY `title` (`title`),
-  KEY `remixerId` (`remixerId`),
+  KEY `remixerUid` (`remixerUid`),
   KEY `relPathHash` (`relPathHash`),
   KEY `fingerprint` (`fingerprint`),
   KEY `audioDataformat` (`audioDataformat`),
   KEY `videoDataformat` (`videoDataformat`),
-  KEY `albumId` (`albumId`,`disc`),
+  KEY `albumUid` (`albumUid`,`disc`),
   KEY `importStatus` (`importStatus`),
-  KEY `genreId` (`genreId`),
-  KEY `labelId` (`labelId`),
+  KEY `genreUid` (`genreUid`),
+  KEY `labelUid` (`labelUid`),
   KEY `error` (`error`),
   KEY `transcoded` (`transcoded`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -249,11 +249,11 @@ ALTER TABLE `track`
 --
 
 CREATE TABLE IF NOT EXISTS `trackindex` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `artist` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
   `allchunks` mediumtext NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `artist` (`artist`),
   KEY `title` (`title`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -269,11 +269,11 @@ ALTER TABLE `trackindex`
 --
 
 CREATE TABLE IF NOT EXISTS `albumindex` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `artist` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
   `allchunks` mediumtext NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `artist` (`artist`),
   KEY `title` (`title`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -290,12 +290,12 @@ ALTER TABLE `albumindex`
 --
 
 CREATE TABLE IF NOT EXISTS `discogsapicache` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tstamp` int(11) unsigned NOT NULL,
   `type` varchar(255) NOT NULL DEFAULT '',
   `extid` int(11) unsigned NOT NULL,
   `response` mediumtext NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `type` (`type`),
   KEY `extid` (`extid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS `discogsapicache` (
 --
 
 CREATE TABLE IF NOT EXISTS `rawtagdata` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `artist` varchar(255) NOT NULL DEFAULT '',
   `title` varchar(255) NOT NULL DEFAULT '',
   `album` varchar(255) NOT NULL DEFAULT '',
@@ -370,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `error` text,
   `added` int(11) unsigned NOT NULL DEFAULT '0',
 
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `relPathHash` (`relPathHash`),
   KEY `relDirPathHash` (`relDirPathHash`),
   KEY `fingerprint` (`fingerprint`),
@@ -390,15 +390,15 @@ ALTER TABLE `rawtagdata`
 --
 
 CREATE TABLE IF NOT EXISTS `playnext` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `tstamp` int(11) unsigned NOT NULL DEFAULT 0,
   `prio` int(11) unsigned NOT NULL DEFAULT 0,
   `userId` int(11) unsigned NOT NULL DEFAULT 0,
-  `trackId` varchar(255) NOT NULL DEFAULT '',
+  `trackUid` varchar(255) NOT NULL DEFAULT '',
   `relPath` text NOT NULL,
   `relPathHash` varchar(11) NOT NULL,
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `prio` (`prio`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -410,18 +410,18 @@ CREATE TABLE IF NOT EXISTS `playnext` (
 --
 
 CREATE TABLE IF NOT EXISTS `editorial` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `crdate` int(11) unsigned NOT NULL DEFAULT '0',
   `tstamp` int(11) unsigned NOT NULL DEFAULT '0',
   `itemType` varchar(20) NOT NULL DEFAULT '',
-  `itemId` int(11) NOT NULL DEFAULT '0',
+  `itemUid` int(11) NOT NULL DEFAULT '0',
   `relPath` text NOT NULL,
   `relPathHash` varchar(11) NOT NULL,
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
   `column` varchar(32) NOT NULL DEFAULT '',
   `value` text,
-  PRIMARY KEY (`id`),
-  KEY `itemId` (`itemId`),
+  PRIMARY KEY (`uid`),
+  KEY `itemUid` (`itemUid`),
   KEY `relPathHash` (`relPathHash`),
   KEY `fingerprint` (`fingerprint`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
@@ -433,15 +433,15 @@ CREATE TABLE IF NOT EXISTS `editorial` (
 --
 
 CREATE TABLE IF NOT EXISTS `importer` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `batchId` int(11) unsigned NOT NULL DEFAULT '0',
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `batchUid` int(11) unsigned NOT NULL DEFAULT '0',
   `jobPhase` int(11) NOT NULL DEFAULT '0',
   `jobStart` DOUBLE NOT NULL,
   `jobLastUpdate` DOUBLE NOT NULL,
   `jobEnd` DOUBLE NOT NULL,
   `jobStatistics` longtext NOT NULL,
   `relPath` text NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`uid`),
   KEY `jobStart` (`jobStart`),
   KEY `jobEnd` (`jobEnd`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -454,11 +454,11 @@ CREATE TABLE IF NOT EXISTS `importer` (
 --
 
 CREATE TABLE IF NOT EXISTS `suggest` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `keyword` varchar(255) NOT NULL,
   `trigrams` varchar(255) NOT NULL,
   `freq` int(11) unsigned NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -468,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `suggest` (
 --
 
 CREATE TABLE IF NOT EXISTS `pollcache` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `microtstamp` varchar(255) NOT NULL,
   `type` varchar(11) NOT NULL,
   `deckindex` tinyint(4) unsigned DEFAULT '0',
@@ -476,7 +476,7 @@ CREATE TABLE IF NOT EXISTS `pollcache` (
   `ip` varchar(11) NOT NULL,
   `port` tinyint(5) unsigned DEFAULT '0',
   `response` mediumtext NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`uid`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 

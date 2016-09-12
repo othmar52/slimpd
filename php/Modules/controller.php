@@ -7,27 +7,27 @@ $app->get('/importer(/)', function() use ($app, $vars){
 	$vars['action'] = 'importer';
 	$vars['servertime'] = time();
 	
-	$query = "SELECT * FROM importer ORDER BY batchId DESC, jobPhase ASC LIMIT 200;";
+	$query = "SELECT * FROM importer ORDER BY batchUid DESC, jobPhase ASC LIMIT 200;";
 	$result = $app->db->query($query);
 	$showDetail = TRUE;
 	$running = TRUE;
 	$batchBegin = 0;
 	while($record = $result->fetch_assoc() ) {
 		$record['jobStatistics'] = unserialize($record['jobStatistics']);
-		$batchId = $record["batchId"];
+		$batchUid = $record["batchUid"];
 		if($record["jobPhase"] === "0") {
-			$vars['itemlist'][$batchId] = $record;
-			$vars['itemlist'][$batchId]["showDetails"] = $showDetail;
-			$vars['itemlist'][$batchId]["lastUpdate"] = $record["jobLastUpdate"];
+			$vars['itemlist'][$batchUid] = $record;
+			$vars['itemlist'][$batchUid]["showDetails"] = $showDetail;
+			$vars['itemlist'][$batchUid]["lastUpdate"] = $record["jobLastUpdate"];
 			$batchBegin = $record['jobStart'];
-			$vars['itemlist'][$batchId]['status'] = ($record['jobEnd'] < 1)
+			$vars['itemlist'][$batchUid]['status'] = ($record['jobEnd'] < 1)
 				? ($showDetail === TRUE) ? 'running' : 'interrupted'
 				: 'finished';
 			$showDetail = FALSE;
 			continue;
 		}
-		$vars['itemlist'][$batchId]["interruptedAfter"] = $record["jobLastUpdate"] - $batchBegin;
-		$vars['itemlist'][$batchId]["phases"][ $record["jobPhase"] ] = $record;
+		$vars['itemlist'][$batchUid]["interruptedAfter"] = $record["jobLastUpdate"] - $batchBegin;
+		$vars['itemlist'][$batchUid]["phases"][ $record["jobPhase"] ] = $record;
 	}
 	$app->render('surrounding.htm', $vars);
 });

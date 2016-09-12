@@ -66,7 +66,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->migratedAlbums = 0;
 		
 		
-		$query = "SELECT count(id) AS itemsTotal FROM rawtagdata";
+		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		
 		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash ";

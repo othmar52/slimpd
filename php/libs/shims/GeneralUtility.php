@@ -296,15 +296,15 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 function addRenderItem($instance, &$return) {
 	$class = get_class($instance);
 	if($class === "Slimpd\Models\Artist") {
-		$return["artists"][$instance->getId()] = $instance;
+		$return["artists"][$instance->getUid()] = $instance;
 		return;
 	}
 	if($class === "Slimpd\Models\Label") {
-		$return["labels"][$instance->getId()] = $instance;
+		$return["labels"][$instance->getUid()] = $instance;
 		return;
 	}
 	if($class === "Slimpd\Models\Genre") {
-		$return["genres"][$instance->getId()] = $instance;
+		$return["genres"][$instance->getUid()] = $instance;
 		return;
 	}
 	if($class === "Slimpd\Models\Track") {
@@ -314,7 +314,7 @@ function addRenderItem($instance, &$return) {
 		return;
 	}
 	if($class === "Slimpd\Models\Album") {
-		$return["albums"][$instance->getId()] = $instance;
+		$return["albums"][$instance->getUid()] = $instance;
 		if(isset($return["itembreadcrumbs"][$instance->getRelPathHash()]) === FALSE) {
 			$return["itembreadcrumbs"][$instance->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelPath());
 		}

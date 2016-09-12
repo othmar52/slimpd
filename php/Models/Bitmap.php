@@ -10,9 +10,9 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $height;
 	protected $bghex;
 	
-	protected $albumId;
-	protected $trackId;
-	protected $rawTagDataId;
+	protected $albumUid;
+	protected $trackUid;
+	protected $rawTagDataUid;
 	protected $embedded;
 	protected $embeddedName;
 	protected $pictureType;
@@ -23,7 +23,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	public static $tableName = 'bitmap';
 	
 	public function dump($preConf, $app) {
-		$imgDirecoryPrefix = ($this->getTrackId())
+		$imgDirecoryPrefix = ($this->getTrackUid())
 			? APP_ROOT
 			: $app->config['mpd']['musicdir'];
 			
@@ -72,8 +72,8 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	
 	public function update() {
-		if($this->getId() > 0) {
-			// we already have an id ...
+		if($this->getUid() > 0) {
+			// we already have an uid ...
 		} else {
 			// check if we have a record with this path
 			$searchParams = array(
@@ -81,15 +81,15 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 			);
 			
 			// multiple usage of same image files are possible...
-			if($this->getAlbumId() > 0) {
-				$searchParams['albumId'] = $this->getAlbumId();
+			if($this->getAlbumUid() > 0) {
+				$searchParams['albumUid'] = $this->getAlbumUid();
 			}			
 			$bitmap2 = Bitmap::getInstanceByAttributes($searchParams);
 
 			if($bitmap2 === NULL) {
 				return $this->insert();
 			}
-			$this->setId($bitmap2->getId());
+			$this->setUid($bitmap2->getUid());
 		}
 			
 		$app = \Slim\Slim::getInstance();
@@ -98,12 +98,12 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		foreach($this->mapInstancePropertiesToDatabaseKeys() as $dbfield => $value) {
 			$query .= $dbfield . '="' . $app->db->real_escape_string($value) . '",';
 		}
-		$query = substr($query,0,-1) . ' WHERE id=' . (int)$this->getId() . ";";
+		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$this->getUid() . ";";
 		$app->db->query($query);
 	}
 	
 	public function destroy() {
-		if($this->getId() < 1) {
+		if($this->getUid() < 1) {
 			// invalid instance
 			return FALSE;
 		}
@@ -122,18 +122,18 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 			unlink($bitmapPath);
 		}
 		
-		$query = 'DELETE FROM '.self::$tableName .' WHERE id=' . (int)$this->getId() . ";";
+		$query = 'DELETE FROM '.self::$tableName .' WHERE uid=' . (int)$this->getUid() . ";";
 		\Slim\Slim::getInstance()->db->query($query);
 		return TRUE;
 	}
 	
-	public static function addAlbumIdToTrackId($trackId, $albumId) {
-		# blind adding albumId - no matter if it a record is affected or not..
+	public static function addAlbumUidToTrackUid($trackUid, $albumUid) {
+		# blind adding albumUid - no matter if it a record is affected or not..
 		# TODO: does it matter or not?
 		\Slim\Slim::getInstance()->db->query(
 			'UPDATE '.self::$tableName .
-			' SET albumId='. (int)$albumId .
-			' WHERE trackId='. (int)$trackId
+			' SET albumUid='. (int)$albumUid .
+			' WHERE trackUid='. (int)$trackUid
 		);
 		return;
 	}
@@ -152,16 +152,16 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->bghex = $value;
 		return $this;
 	}
-	public function setAlbumId($value) {
-		$this->albumId = $value;
+	public function setAlbumUid($value) {
+		$this->albumUid = $value;
 		return $this;
 	}
-	public function setTrackId($value) {
-		$this->trackId = $value;
+	public function setTrackUid($value) {
+		$this->trackUid = $value;
 		return $this;
 	}
-	public function setRawTagDataId($value) {
-		$this->rawTagDataId = $value;
+	public function setRawTagDataUid($value) {
+		$this->rawTagDataUid = $value;
 		return $this;
 	}
 	public function setEmbedded($value) {
@@ -199,14 +199,14 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	public function getBghex() {
 		return $this->bghex;
 	}
-	public function getAlbumId() {
-		return $this->albumId;
+	public function getAlbumUid() {
+		return $this->albumUid;
 	}
-	public function getTrackId() {
-		return $this->trackId;
+	public function getTrackUid() {
+		return $this->trackUid;
 	}
-	public function getRawTagDataId() {
-		return $this->rawTagDataId;
+	public function getRawTagDataUid() {
+		return $this->rawTagDataUid;
 	}
 	public function getEmbedded() {
 		return $this->embedded;

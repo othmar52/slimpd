@@ -143,8 +143,8 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
 					$extArtistString .= $a['name'] . ' ';
 				}
 
-				if(isset($matchScore[$rawItem->getId()][$extIndex]) === FALSE) {
-					$matchScore[$rawItem->getId()][$extIndex] = 0;
+				if(isset($matchScore[$rawItem->getUid()][$extIndex]) === FALSE) {
+					$matchScore[$rawItem->getUid()][$extIndex] = 0;
 				}
 				$discogsStrings = [
 					$extArtistString,
@@ -154,7 +154,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
 				
 				foreach($discogsStrings as $discogsString) {
 					foreach($localStrings as $localString) {
-						$matchScore[$rawItem->getId()][$extIndex] += $this->getMatchStringScore($discogsString, $localString);
+						$matchScore[$rawItem->getUid()][$extIndex] += $this->getMatchStringScore($discogsString, $localString);
 					}
 				}
 				
@@ -167,7 +167,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
 						$higher = $rawItem->getMiliseconds();
 						$lower =  $extSeconds;
 					}
-					$matchScore[$rawItem->getId()][$extIndex] += floor($lower/($higher/100));
+					$matchScore[$rawItem->getUid()][$extIndex] += floor($lower/($higher/100));
 				}
 			}
 		}

@@ -17,7 +17,7 @@ class Svggenerator {
 		$arg = join(DS, $arg);
 		$track = NULL;
 		if(is_numeric($arg) === TRUE) {
-			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => (int)$arg));
+			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => (int)$arg));
 		}
 		if(is_numeric($arg) === FALSE) {
 			$track = \Slimpd\Models\Track::getInstanceByAttributes(array('relPathHash' => getFilePathHash($arg)));

@@ -2,7 +2,7 @@
 	{% include 'partials/track/no-track-selected-badge.htm' %}
 {% else %}
 	<div class="ffn-hidden">
-	{% if item.id %}
+	{% if item.uid %}
 		{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}<br />
 		<span class="dark">by</span>
 		{% include 'partials/artist/link.htm' %}

@@ -62,7 +62,7 @@ foreach([
 				// no break
 			default:
 				if(is_numeric($app->request->get('item')) === TRUE) {
-					$search = array('id' => (int)$app->request->get('item'));
+					$search = array('uid' => (int)$app->request->get('item'));
 					$vars['item'] = \Slimpd\Models\Track::getInstanceByAttributes($search);
 					break;
 				}
@@ -76,7 +76,7 @@ foreach([
 		$itemsToRender[] = $vars['item'];
 		$vars['renderitems'] = getRenderItems($itemsToRender);
 		
-		if(is_null($vars['item']) === FALSE && $vars['item']->getId() > 0) {
+		if(is_null($vars['item']) === FALSE && $vars['item']->getUid() > 0) {
 			$itemRelPath = $vars['item']->getRelPath();
 		} else {
 			// playing track has not been imported in slimpd database yet...
@@ -121,7 +121,7 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 	$itemRelPath = '';
 	$itemRelPathHash = '';
 	$vars['item'] = (count($itemParams) === 1 && is_numeric($itemParams[0]))
-		? \Slimpd\Models\Track::getInstanceByAttributes(['id' => (int)$itemParams[0]])
+		? \Slimpd\Models\Track::getInstanceByAttributes(['uid' => (int)$itemParams[0]])
 		: \Slimpd\Models\Track::getInstanceByPath(join(DS, $itemParams), TRUE);
 
 	$vars['itemraw'] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(

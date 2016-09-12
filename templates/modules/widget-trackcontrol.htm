@@ -16,11 +16,11 @@
 		</div>
 		
 		<div class="col-md-2">
-	    	<img src="{{root}}image-100/album/{{ item.albumId }}" />
+	    	<img src="{{root}}image-100/album/{{ item.albumUid }}" />
 	    </div>
 	</div>
 	<div class="row">
-		{% if item.id %}
+		{% if item.uid %}
 	    <div class="col-md-2">
 	    	<span class="dark uc small">{{'duration'|ll}}</span><br />
 	    	<strong>{{ item.miliseconds|formatMiliseconds }}</strong>
@@ -31,15 +31,15 @@
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'genre'|ll}}</span><br />
-	    	<strong>{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}</strong>
+	    	<strong>{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid } %}</strong>
 	    </div>
 	    <div class="col-md-2 border-left">
 	    	<span class="dark uc small">{{'label'|ll}}</span><br />
-	    	<strong>{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}</strong>
+	    	<strong>{% include 'partials/label/link.htm' with { 'labelUids': item.labelUid } %}</strong>
 	    </div>
 	    <div class="col-md-4 border-left">
 	    	<span class="dark uc small">{{'album'|ll}}</span><br />
-	    	<strong>{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</strong>
+	    	<strong>{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}</strong>
 	    </div>
 	    {% else %}
 	    	<div class="col-md-12">
@@ -60,7 +60,7 @@
   	</div>
   	<div id="trackwidget-techspecs" style="display:none;">
   		<div class="nfo">{{item.relPath}}</div>
-	  	{% if item.id %}
+	  	{% if item.uid %}
 	    <div class="row">
 			<div class="col-md-3">
 				<div>Format: {{item.audioDataFormat}}</div>
@@ -234,7 +234,7 @@
 				<a href="{{root}}maintainance/trackdebug/{{ playerCtrlItem|path2url }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Track</a>
 	  		</div>
 	  		<div class="col-md-12">
-	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumId }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
+	  			<a href="{{root}}maintainance/albumdebug/{{ item.albumUid }}" class="ajax-link trigger-hide-modal"><i class="fa fa-pencil"></i> Album</a>
 	  		</div>
 	  		<div class="col-md-12">
 	  			<a href="{{root}}filebrowser/{{fullpath|path2url}}" title="{{fullpath}}/" class="ajax-link trigger-hide-modal"><i class="fa fa-folder-open"></i>

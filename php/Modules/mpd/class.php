@@ -139,7 +139,7 @@ class mpd {
 
 	private function getItemPath($item) {
 		if(is_numeric($item) === TRUE) {
-			$instance = \Slimpd\Models\Track::getInstanceByAttributes(array('id' => $item));
+			$instance = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => $item));
 			if($instance === NULL) {
 				return FALSE;
 			}

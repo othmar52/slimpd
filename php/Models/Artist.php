@@ -36,7 +36,7 @@ class Artist extends \Slimpd\Models\AbstractModel {
 		return $GLOBALS["artist-blacklist"];
 	}
 
-	public static function getIdsByString($itemString) {
+	public static function getUidsByString($itemString) {
 		if(trim($itemString) === "") {
 			return array("10"); // Unknown
 		}
@@ -50,14 +50,14 @@ class Artist extends \Slimpd\Models\AbstractModel {
 
 		self::cacheUnifier($app, $classPath);
 
-		$itemIds = array();
+		$itemUids = array();
 		$tmpGlue = "tmpGlu3";
 		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . "-glue"], $tmpGlue, $itemString), TRUE) as $itemPart) {
 			$az09 = az09($itemPart);
 
 			if($az09 === "" || isHash($az09) === TRUE) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
-				$itemIds[10] = 10; // Unknown Genre
+				$itemUids[10] = 10; // Unknown Genre
 				continue;
 			}
 
@@ -88,19 +88,19 @@ class Artist extends \Slimpd\Models\AbstractModel {
 
 			// check if we alread have an id
 			// permformance improvement ~8%
-			$itemId = self::cacheRead($app, $classPath, $az09);
-			if($itemId !== FALSE) {
-				$itemIds[$itemId] = $itemId;
+			$itemUid = self::cacheRead($app, $classPath, $az09);
+			if($itemUid !== FALSE) {
+				$itemUids[$itemUid] = $itemUid;
 				continue;
 			}
 
-			$query = "SELECT id FROM " . self::$tableName ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$query = "SELECT uid FROM " . self::$tableName ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
 			if($record) {
-				$itemId = $record["id"];
-				$itemIds[$record["id"]] = $record["id"];
-				self::cacheWrite($app, $classPath, $az09, $record["id"]);
+				$itemUid = $record["uid"];
+				$itemUids[$record["uid"]] = $record["uid"];
+				self::cacheWrite($app, $classPath, $az09, $record["uid"]);
 				continue;
 			}
 			
@@ -109,12 +109,12 @@ class Artist extends \Slimpd\Models\AbstractModel {
 				->setAz09($az09)
 				->setArticle($artistArticle)
 				->insert();
-			$itemId = $app->db->insert_id;
+			$itemUid = $app->db->insert_id;
 			
-			$itemIds[$itemId] = $itemId;
-			self::cacheWrite($app, $classPath, $az09, $itemId);
+			$itemUids[$itemUid] = $itemUid;
+			self::cacheWrite($app, $classPath, $az09, $itemUid);
 		}
-		return $itemIds;
+		return $itemUids;
 
 	}
 

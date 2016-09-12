@@ -1,18 +1,18 @@
-{% if item.artistId %}
+{% if item.artistUid %}
 <span class="glue-hover-wrap">
-	{% set itemIds = item.artistId|split(',') %}
-	{% for itemId in itemIds %}
+	{% set itemUids = item.artistUid|split(',') %}
+	{% for itemUid in itemUids %}
 		{% include 'partials/artist/single-link.htm' %}
 		{% if loop.last == false %}
-		<a class="artist-link col2 item-link ajax-link toggle-tooltip trigger-hide-modal" href="{{root}}artist/{{item.artistId}}/tracks/page/1/sort/added/desc" title="view artists tracks">
+		<a class="artist-link col2 item-link ajax-link toggle-tooltip trigger-hide-modal" href="{{root}}artist/{{item.artistUid}}/tracks/page/1/sort/added/desc" title="view artists tracks">
 			<span class="glue-hover-trigger">&amp;</span></a>
 		{% endif %}
 	{% endfor%}
 </span>
 {% endif %}
-{% if item.featuringId %}
+{% if item.featuringUid %}
 	(ft.
-	{% set itemIds = item.featuringId|split(',') %}
-	{% for itemId in itemIds %}
+	{% set itemUids = item.featuringUid|split(',') %}
+	{% for itemUid in itemUids %}
 		{% include 'partials/artist/single-link.htm' %}{% if loop.last == false %}, {% endif %}{% endfor %})
 {% endif %}

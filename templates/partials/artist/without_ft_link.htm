@@ -1,9 +1,9 @@
-{% if item.artistId %}
-{% set itemIds = item.artistId|split(',') %}
-{% for itemId in itemIds %}
+{% if item.artistUid %}
+{% set itemUids = item.artistUid|split(',') %}
+{% for itemUid in itemUids %}
 	{% include 'partials/artist/single-link.htm' %}
 	{% if loop.last == false %}
-	<a class="artist-link col2 item-link ajax-link trigger-hide-modal" href="{{root}}artist/{{item.artistId}}/tracks/page/1/sort/added/desc">
+	<a class="artist-link col2 item-link ajax-link trigger-hide-modal" href="{{root}}artist/{{item.artistUid}}/tracks/page/1/sort/added/desc">
 		<span class="artist_all">&amp;</span></a>
 	{% endif %}
 {% endfor %}

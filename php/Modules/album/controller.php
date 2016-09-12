@@ -3,21 +3,21 @@
  *
  */
 foreach(['/album', '/markup/albumtracks', '/markup/widget-album'] as $what) {
-	$app->get($what .'/:albumId', function($albumId) use ($app, $vars, $what){
+	$app->get($what .'/:albumUid', function($albumUid) use ($app, $vars, $what){
 		$vars['action'] = ($what == '/album') ? 'album.detail' : 'albumtracks';
-		$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes(array('id' => $albumId));
+		$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes(array('uid' => $albumUid));
 		if($vars['album'] === NULL) {
 			$app->notFound();
 			return;
 		}
 		$vars['itemlist'] = \Slimpd\Models\Track::getInstancesByAttributes(
-			['albumId' => $albumId], FALSE, 200, 1, 'trackNumber ASC'
+			['albumUid' => $albumUid], FALSE, 200, 1, 'trackNumber ASC'
 		);
 		$vars['renderitems'] = getRenderItems($vars['album'], $vars['itemlist']);
 		$vars['albumimages'] = [];
 		$vars['bookletimages'] = [];
 		$bitmaps = \Slimpd\Models\Bitmap::getInstancesByAttributes(
-			['albumId' => $albumId], FALSE, 200, 1, 'imageweight'
+			['albumUid' => $albumUid], FALSE, 200, 1, 'imageweight'
 		);
 		$foundFront = FALSE;
 		foreach($bitmaps as $bitmap) {
@@ -74,19 +74,19 @@ $app->get('/maintainance/albumdebug/:itemParams+', function($itemParams) use ($a
 	$vars['action'] = 'maintainance.albumdebug';
 	$search = array();
 	$vars['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
-		['id' => (int)$itemParams[0] ]
+		['uid' => (int)$itemParams[0] ]
 	);
 	// invalid album id
 	if($vars['album'] === NULL) {
 		$app->notFound();
 	}
 
-	$tmp = \Slimpd\Models\Track::getInstancesByAttributes(array('albumId' => $vars['album']->getId()));
+	$tmp = \Slimpd\Models\Track::getInstancesByAttributes(array('albumUid' => $vars['album']->getUid()));
 	$trackInstances = array();
 	$rawTagDataInstances = array();
 	foreach($tmp as $t) {
-		$vars['itemlist'][$t->getId()] = $t;
-		$vars['itemlistraw'][$t->getId()] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(array('id' => (int)$t->getId()));
+		$vars['itemlist'][$t->getUid()] = $t;
+		$vars['itemlistraw'][$t->getUid()] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(array('uid' => (int)$t->getUid()));
 	}
 	#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
 	unset($tmp);

@@ -1,5 +1,5 @@
 {# no indentation because it will be insertet in input fields #}
-{% set gs = genreIds|split(',') %}
+{% set gs = genreUids|split(',') %}
 {% for g in gs %}
 {{renderitems.genres[g].title}}{% if loop.last == false %},{% endif %}
 {% endfor%}

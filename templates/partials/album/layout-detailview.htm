@@ -3,19 +3,19 @@
 <div class="row">
 	<div class="col-md-3">
 		{% if albumimages|length > 0 %}
-		<a data-toggle="lightbox" href="{{root}}image-1000/album/{{ album.id }}" data-type="image" data-gallery="galname">
-			<img class="main-image" src="{{root}}image-300/album/{{ album.id }}" alt="">
+		<a data-toggle="lightbox" href="{{root}}image-1000/album/{{ album.uid }}" data-type="image" data-gallery="galname">
+			<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
 		</a>
 		{% include 'modules/imagecarousel.htm' with { 'itemlist': albumimages } %}
 		{% else %}
-			<img class="main-image" src="{{root}}image-300/album/{{ album.id }}" alt="">
+			<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
 		{% endif %}
 	</div>
 	<div class="col-md-9">
 		<h3 class="nomargin">
 			<button
 			  role="control"
-			  data-href="{{root}}markup/widget-album/{{ album.id }}"
+			  data-href="{{root}}markup/widget-album/{{ album.uid }}"
 			  title="show album widget TRNSL"
 			  class="btn btn-default trigger-modal">
 				<i class="fa fa-plus fa-lg"></i>
@@ -35,13 +35,13 @@
 		<div class="row">
 		
 			<div class="col-md-6">
-				{% if album.genreId %}
+				{% if album.genreUid %}
 				<div class="col-md12">
 					<div class="col-md-2">
 						<span class="dark uc small darker-links">{% include 'partials/genre/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/genre/link.htm' with { 'genreIds': album.genreId } %}
+						{% include 'partials/genre/link.htm' with { 'genreUids': album.genreUid } %}
 					</div>
 				</div>
 				{% endif %}
@@ -57,13 +57,13 @@
 				</div>
 				{% endif %}
 				
-				{% if album.labelId %}
+				{% if album.labelUid %}
 				<div class="col-md12">
 					<div class="col-md-2">
 						<span class="dark uc small darker-links">{% include 'partials/label/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/label/link.htm' with { 'labelIds': album.labelId } %}
+						{% include 'partials/label/link.htm' with { 'labelUids': album.labelUid } %}
 					</div>
 				</div>
 				{% endif %}
@@ -109,7 +109,7 @@
 				<div class="col-md12">
 					<div class="col-md-2">
 						{% include 'partials/extlink-discogs.htm' %}
-						<a href="{{root}}maintainance/albumdebug/{{album.id}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
+						<a href="{{root}}maintainance/albumdebug/{{album.uid}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
 					</div>
 				</div>
 			

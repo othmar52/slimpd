@@ -146,9 +146,9 @@ class AlbumMigrator {
 
 		$album = new \Slimpd\Models\Album();
 
-		$album->setArtistId(join(",", \Slimpd\Models\Artist::getIdsByString($albumArtists)))
-			->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($mergedFromTracks['genre'])))
-			#->setLabelId(join(",", Label::getIdsByString($mergedFromTracks['label'])))
+		$album->setArtistUid(join(",", \Slimpd\Models\Artist::getUidsByString($albumArtists)))
+			->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($mergedFromTracks['genre'])))
+			#->setLabelUid(join(",", Label::getUidsByString($mergedFromTracks['label'])))
 			->setCatalogNr($this->mostScored['album']['catalogNr'])
 			->setRelPath($this->getRelDirPath())
 			->setRelPathHash($this->getRelDirPathHash())
@@ -157,8 +157,8 @@ class AlbumMigrator {
 			->setTitle($this->mostScored['album']['title'])
 			->setYear($this->mostScored['album']['year'])
 			->setIsJumble(($this->handleAsAlbum === 1) ? 0:1)
-			->setLabelId(
-				join(",", \Slimpd\Models\Label::getIdsByString(
+			->setLabelUid(
+				join(",", \Slimpd\Models\Label::getUidsByString(
 					($album->getIsJumble() === 1)
 						? $mergedFromTracks['label']			// all labels
 						: $this->mostScored['album']['label']	// only 1 label
@@ -167,41 +167,41 @@ class AlbumMigrator {
 			->setTrackCount(count($this->tracks))
 			->update();
 
-		$albumId = $album->getId();
+		$albumUid = $album->getUid();
 
 		// add the whole bunch of valid and invalid attributes to albumindex table
-		$this->updateAlbumIndex($albumId);
+		$this->updateAlbumIndex($albumUid);
 
 		
 
 		foreach($this->tracks as $idx => $rawTagData) {
 			$track = $this->migrateNonGuessableData($rawTagData)
-				->setArtistId($this->mostScored[$idx]['artist']) // currently the string insted of an artistId
+				->setArtistUid($this->mostScored[$idx]['artist']) // currently the string insted of an artistUid
 				->setTitle($this->mostScored[$idx]['title'])
 				->setFeaturedArtistsAndRemixers()
 				# setFeaturedArtistsAndRemixers() is processing:
-				# $t->setArtistId();
-				# $t->setFeaturingId();
-				# $t->setRemixerId();
+				# $t->setArtistUid();
+				# $t->setFeaturingUid();
+				# $t->setRemixerUid();
 
-				->setGenreId(join(",", \Slimpd\Models\Genre::getIdsByString($this->getMostScored($idx, 'genre'))))
-				->setLabelId(join(",", \Slimpd\Models\Label::getIdsByString($this->getMostScored($idx, 'label'))))
+				->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($this->getMostScored($idx, 'genre'))))
+				->setLabelUid(join(",", \Slimpd\Models\Label::getUidsByString($this->getMostScored($idx, 'label'))))
 				->setCatalogNr($this->mostScored[$idx]['catalogNr'])
 				->setDisc($this->mostScored[$idx]['disc'])
 				->setTrackNumber($this->mostScored[$idx]['trackNumber'])
 				->setComment($this->mostScored[$idx]['comment'])
 				->setYear($this->mostScored[$idx]['year'])
-				->setAlbumId($albumId);
+				->setAlbumUid($albumUid);
 
-			// make sure to use identical ids in table:rawtagdata and table:track
-			\Slimpd\Models\Track::ensureRecordIdExists($track->getId());
+			// make sure to use identical uids in table:rawtagdata and table:track
+			\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
 			$track->update();
 
 			// make sure extracted images will be referenced to an album
-			\Slimpd\Models\Bitmap::addAlbumIdToTrackId($track->getId(), $albumId);#
+			\Slimpd\Models\Bitmap::addAlbumUidToTrackUid($track->getUid(), $albumUid);#
 			
 			// add the whole bunch of valid and indvalid attributes to trackindex table
-			$this->updateTrackIndex($track->getId(), $idx);
+			$this->updateTrackIndex($track->getUid(), $idx);
 		}
 
 		unset($this->r['album']);
@@ -214,7 +214,7 @@ class AlbumMigrator {
 		#print_r($this->r); die();
 	}
 
-	private function updateTrackIndex($trackId, $idx) {
+	private function updateTrackIndex($trackUid, $idx) {
 		$indexChunks = $this->tracks[$idx]['relPath'] . " ";
 
 		if(isset($this->r[$idx]) === TRUE) {
@@ -234,10 +234,10 @@ class AlbumMigrator {
 			' ',
 			$this->tracks[$idx]['relPath']
 		);
-		// make sure to use identical ids in table:trackindex and table:track
-		\Slimpd\Models\Trackindex::ensureRecordIdExists($trackId);
+		// make sure to use identical uids in table:trackindex and table:track
+		\Slimpd\Models\Trackindex::ensureRecordUidExists($trackUid);
 		$trackIndex = new \Slimpd\Models\Trackindex();
-		$trackIndex->setId($trackId)
+		$trackIndex->setUid($trackUid)
 			->setArtist($this->mostScored[$idx]['artist'])
 			->setTitle($this->mostScored[$idx]['title'])
 			->setAllchunks($indexChunks)
@@ -245,7 +245,7 @@ class AlbumMigrator {
 	}
 
 
-	private function updateAlbumIndex($albumId) {
+	private function updateAlbumIndex($albumUid) {
 		$indexChunks = $this->tracks[0]['relDirPath'] . " ";
 		if(isset($this->r['album']) === TRUE) {
 			foreach($this->r['album'] as $scoreCombo) {
@@ -258,10 +258,10 @@ class AlbumMigrator {
 			' ',
 			$this->tracks[0]['relDirPath']
 		);
-		// make sure to use identical ids in table:trackindex and table:track
-		\Slimpd\Models\Albumindex::ensureRecordIdExists($albumId);
+		// make sure to use identical uids in table:trackindex and table:track
+		\Slimpd\Models\Albumindex::ensureRecordUidExists($albumUid);
 		$albumIndex = new \Slimpd\Models\Albumindex();
-		$albumIndex->setId($albumId)
+		$albumIndex->setUid($albumUid)
 			->setArtist($this->mostScored['album']['artist'])
 			->setTitle($this->mostScored['album']['title'])
 			->setAllchunks($indexChunks)
@@ -273,7 +273,7 @@ class AlbumMigrator {
 	 */
 	public function migrateNonGuessableData($rawArray) {
 		$track = new \Slimpd\Models\Track();
-		$track->setId($rawArray['id'])
+		$track->setUid($rawArray['uid'])
 			->setRelPath($rawArray['relPath'])
 			->setRelPathHash($rawArray['relPathHash'])
 			->setRelDirPathHash($rawArray['relDirPathHash'])

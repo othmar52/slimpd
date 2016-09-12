@@ -4,9 +4,9 @@ namespace Slimpd\Modules\importer;
  *
  */
 abstract class AbstractImporter {
-	protected $batchId;					// mysql batch record id
+	protected $batchUid;					// mysql batch record id
 	protected $batchBegin;
-	protected $jobId;					// mysql record id
+	protected $jobUid;					// mysql record id
 	protected $jobPhase;				// numeric index
 	protected $jobBegin;				// tstamp
 	protected $jobStatusInterval = 5; 	// seconds
@@ -29,21 +29,21 @@ abstract class AbstractImporter {
 			: '';
 		//$this->itemsTotal = 0;
 		$query = "INSERT INTO importer
-			(batchId, jobPhase, jobStart, jobLastUpdate, jobStatistics, relPath)
+			(batchUid, jobPhase, jobStart, jobLastUpdate, jobStatistics, relPath)
 			VALUES (
-				". $this->getLastBatchId().",
+				". $this->getLastBatchUid().",
 				".(int)$this->jobPhase.",
 				". $this->jobBegin.",
 				". $this->jobBegin. ",
 				'" .serialize($data)."',
 				'". $relPath ."')";
 		$app->db->query($query);
-		$this->jobId = $app->db->insert_id;
+		$this->jobUid = $app->db->insert_id;
 		$this->lastJobStatusUpdate = $this->jobBegin;
 		if($this->jobPhase !== 0) {
 			return;
 		}
-		$query = "UPDATE importer SET batchId='" .$this->jobId."' WHERE id=" . $this->jobId;
+		$query = "UPDATE importer SET batchUid='" .$this->jobUid."' WHERE uid=" . $this->jobUid;
 		$app->db->query($query);
 	}
 
@@ -60,7 +60,7 @@ abstract class AbstractImporter {
 		$query = "UPDATE importer
 			SET jobStatistics='" .serialize($data)."',
 			jobLastUpdate=".$microtime."
-			WHERE id=" . $this->jobId;
+			WHERE uid=" . $this->jobUid;
 		\Slim\Slim::getInstance()->db->query($query);
 		cliLog('progress:' . $data['progressPercent'] . '%', 1);
 		$this->lastJobStatusUpdate = $microtime;
@@ -77,10 +77,10 @@ abstract class AbstractImporter {
 		$query = "UPDATE importer
 			SET jobEnd=".$microtime.",
 			jobLastUpdate=".$microtime.",
-			jobStatistics='" .serialize($data)."' WHERE id=" . $this->jobId;
+			jobStatistics='" .serialize($data)."' WHERE uid=" . $this->jobUid;
 		
 		\Slim\Slim::getInstance()->db->query($query);
-		$this->jobId = 0;
+		$this->jobUid = 0;
 		$this->itemsChecked = 0;
 		$this->itemsProcessed = 0;
 		$this->itemsTotal = 0;
@@ -123,11 +123,11 @@ abstract class AbstractImporter {
 		$data['estimatedTotalRuntime'] = round($this->itemsTotal/$itemsPerMinute*60);
 	}
 
-	protected function getLastBatchId() {
-		$query = "SELECT id FROM importer WHERE jobPhase = 0 ORDER BY id DESC LIMIT 1;";
-		$batchId = \Slim\Slim::getInstance()->db->query($query)->fetch_assoc()['id'];
-		if($batchId !== NULL) {
-			return $batchId;
+	protected function getLastBatchUid() {
+		$query = "SELECT uid FROM importer WHERE jobPhase = 0 ORDER BY uid DESC LIMIT 1;";
+		$batchUid = \Slim\Slim::getInstance()->db->query($query)->fetch_assoc()['uid'];
+		if($batchUid !== NULL) {
+			return $batchUid;
 		}
 		return 0;
 	}

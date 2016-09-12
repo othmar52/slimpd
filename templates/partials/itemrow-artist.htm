@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}artist/{{ item.id  }}/tracks/page/1/sort/added/desc" class="ajax-link toggle-tooltip" title="show artist">
+			<a href="{{root}}artist/{{ item.uid  }}/tracks/page/1/sort/added/desc" class="ajax-link toggle-tooltip" title="show artist">
 				<img src="{{root}}imagefallback-50/artist" alt="" class="icon-50">
 			</a>
 			<strong class="replace-me-with-proper-css">&nbsp;&nbsp;&nbsp;&nbsp;ARTIST</strong>
@@ -9,7 +9,7 @@
 	</div>
 	<div class="col-md-3 vcenter">
 		<div class="vcinner">
-			{% include 'partials/artist/single-link.htm' with { itemId: item.id } %}
+			{% include 'partials/artist/single-link.htm' with { itemUid: item.uid } %}
 		</div>
 	</div>
 	<div class="col-md-3 vcenter">

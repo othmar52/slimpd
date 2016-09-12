@@ -28,13 +28,13 @@
 		{% for item in itemlist %}
 			{% if itemsPerColumn == 1 or loop.index % itemsPerColumn == 1 -%}<div class="col-md-3">{% endif %}
 				{% if item is instanceofArtist %}
-					{% include 'partials/artist/single-link.htm' with { itemId: item.id } %}
+					{% include 'partials/artist/single-link.htm' with { itemUid: item.uid } %}
 				{% endif %}
 				{% if item is instanceofGenre %}
-					{% include 'partials/genre/link.htm' with { genreIds: item.id } %}
+					{% include 'partials/genre/link.htm' with { genreUids: item.uid } %}
 				{% endif %}
 				{% if item is instanceofLabel %}
-					{% include 'partials/label/link.htm' with { labelIds: item.id } %}
+					{% include 'partials/label/link.htm' with { labelUids: item.uid } %}
 				{% endif %}
 				<span class="dark small" title="trackcount">({{ item.trackCount }})</span>
 			<br />

@@ -32,7 +32,7 @@
 		{% include 'partials/itemrow-track-notfound.htm' %}
 	{% else %}
 		<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
-		{% if item.id %}
+		{% if item.uid %}
 			{% include 'partials/trackrow-1.htm' %}
 		{% else %}
 			{% include 'partials/itemrow-track-notimported.htm' %}

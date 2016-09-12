@@ -4,32 +4,32 @@ namespace Slimpd\Traits;
  * 
  */
 trait PropGroupTypeIds {
-	protected $artistId;
-	protected $genreId;
-	protected $labelId;
+	protected $artistUid;
+	protected $genreUid;
+	protected $labelUid;
 
 	// getter
-	public function getArtistId() {
-		return $this->artistId;
+	public function getArtistUid() {
+		return $this->artistUid;
 	}
-	public function getGenreId() {
-		return $this->genreId;
+	public function getGenreUid() {
+		return $this->genreUid;
 	}
-	public function getLabelId() {
-		return $this->labelId;
+	public function getLabelUid() {
+		return $this->labelUid;
 	}
 
 	// setter
-	public function setArtistId($value) {
-		$this->artistId = $value;
+	public function setArtistUid($value) {
+		$this->artistUid = $value;
 		return $this;
 	}
-	public function setGenreId($value) {
-		$this->genreId = $value;
+	public function setGenreUid($value) {
+		$this->genreUid = $value;
 		return $this;
 	}
-	public function setLabelId($value) {
-		$this->labelId = $value;
+	public function setLabelUid($value) {
+		$this->labelUid = $value;
 		return $this;
 	}
 }

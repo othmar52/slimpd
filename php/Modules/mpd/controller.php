@@ -63,7 +63,7 @@ $app->get('/playlist/page/:pagenum', function($pagenum) use ($app, $vars){
 	$vars['item'] = $mpd->getCurrentlyPlayedTrack();
 	if($vars['item'] !== NULL) {
 		$vars['nowplaying_album'] = \Slimpd\Models\Album::getInstanceByAttributes(
-			array('id' => $vars['item']->getAlbumId())
+			array('uid' => $vars['item']->getAlbumUid())
 		);
 	} else {
 		// TODO: how to handle mpd played tracks we cant find in database

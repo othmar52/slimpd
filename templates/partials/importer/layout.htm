@@ -81,12 +81,12 @@ td.ar {
 			{% endif %}
 			</div>
 			<div class="col-md-7">
-				<button class="btn btn-trnsp toggle-content pull-right" data-toggle="#importer-batch-{{item.batchId}}" data-text1="Details" data-text2="Hide Details">
+				<button class="btn btn-trnsp toggle-content pull-right" data-toggle="#importer-batch-{{item.batchUid}}" data-text1="Details" data-text2="Hide Details">
 					Details
 				</button>
 			</div>
 		</div>
-		<div class="row" id="importer-batch-{{item.batchId}}" {{ (item.showDetails) ? '' : 'style="display:none;"' }}>
+		<div class="row" id="importer-batch-{{item.batchUid}}" {{ (item.showDetails) ? '' : 'style="display:none;"' }}>
 			{% include 'partials/importer/stats-table.htm' with {'itemlist': item.phases} %}
 		</div>
 		<hr />

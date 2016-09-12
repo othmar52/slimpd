@@ -1,12 +1,12 @@
 {# no indentation because it will be insertet in input fields #}
-{% if labelIds %}
-{% set itemIds = labelIds|split(',') %}
-{% if itemIds|length > 1 %}
-{% for itemId in itemIds %}
-{{renderitems.labels[itemId].title}}
+{% if labelUids %}
+{% set itemUids = labelUids|split(',') %}
+{% if itemUids|length > 1 %}
+{% for itemUid in itemUids %}
+{{renderitems.labels[itemUid].title}}
 {% if loop.last == false %},{% endif %}
 {% endfor%}
 {% else %}
-{{renderitems.labels[labelIds].title}}
+{{renderitems.labels[labelUids].title}}
 {% endif %}
 {% endif %}

@@ -26,7 +26,7 @@
 			{% set statusWording = 'dead' %}
 			{% set statusImage = '' %}
 		{% endif %}
-		<td title="id={{ item.id }}" style="text-align: left;">
+		<td title="id={{ item.uid }}" style="text-align: left;">
 			<span class="badge">{{ item.jobPhase }}</span> {{ ['importer.ph',item.jobPhase]|join|ll }}
 		</td>
 		{% if item.jobStatistics.progressPercent == 100 %}

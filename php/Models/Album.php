@@ -5,7 +5,7 @@ namespace Slimpd\Models;
  */
 class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	use \Slimpd\Traits\PropertyLastScan; // lastScan
-	use \Slimpd\Traits\PropGroupTypeIds; // artistId, labelId, genreId
+	use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
 
 	
 	protected $title;

@@ -4,7 +4,7 @@
 	<div class="col-md-2 no-padding-right vcenter">
 		<div class="vcinner">
 			<a href="{{ albumHref }}" class="ajax-link toggle-tooltip" title="show album">
-				<img src="{{root}}image-100/album/{{ item.albumId }}" alt="" class="icon-50">
+				<img src="{{root}}image-100/album/{{ item.albumUid }}" alt="" class="icon-50">
 			</a>
 			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
@@ -17,13 +17,13 @@
 		</div>
 	</div>
 	
-	{% if item.id %}
+	{% if item.uid %}
 	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter darker-links">
 			<div class="vcinner">
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				<br />
-				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
+				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}
 			</div>
 		</div>
 		<div class="col-md-3 vcenter">
@@ -33,7 +33,7 @@
 		</div>
 		<div class="col-md-2 vcenter">
 			<div class="vcinner">
-				{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit': 3 } %}
+				{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid, 'genres': renderitems.genres, 'limit': 3 } %}
 			</div>
 		</div>
 		<div class="col-md-1 vcenter">

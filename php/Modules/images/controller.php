@@ -8,9 +8,9 @@ $imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), s
 #echo $imageWeightOrderBy; die();
 // predefined album-image sizes
 foreach (array(35, 50,100,300,1000) as $imagesize) {
-	$app->get('/image-'.$imagesize.'/album/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+	$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('albumId' => $itemId), $imageWeightOrderBy
+			array('albumUid' => $itemUid), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
@@ -20,23 +20,23 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$image->dump($imagesize, $app);
 	});
 	
-	$app->get('/image-'.$imagesize.'/track/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+	$app->get('/image-'.$imagesize.'/track/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('trackId' => $itemId), $imageWeightOrderBy
+			array('trackUid' => $itemUid), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$track = \Slimpd\Models\Track::getInstanceByAttributes(
-				array('id' => $itemId)
+				array('uid' => $itemUid)
 			);  
-			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumId());
+			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumUid());
 			return;
 		}
 		$image->dump($imagesize, $app);
 	});
 	
-	$app->get('/image-'.$imagesize.'/id/:itemId', function($itemId) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+	$app->get('/image-'.$imagesize.'/id/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('id' => $itemId), $imageWeightOrderBy
+			array('uid' => $itemUid), $imageWeightOrderBy
 		);
 		if($image === NULL) {
 			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));

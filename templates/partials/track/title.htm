@@ -1,15 +1,15 @@
 {# no indentation to avoid unwanted whitespace in frontend #}
 {% if titlestring %}
-{% if item.remixerId %}
+{% if item.remixerUid %}
 <span class="glue-hover-wrap">
 {% set titleparts = titlestring|split('%s') %}
-{% set remixerIds = item.remixerId|split(',') %}
+{% set remixerUids = item.remixerUid|split(',') %}
 {% for index,titlepart in titleparts %}
 {% if not loop.first and not loop.last %}
-<a class="item-link artist-link col2 ajax-link toggle-tooltip" href="{{root}}artist/{{ item.remixerId }}/tracks/page/1/sort/added/desc" title="view artists tracks">
+<a class="item-link artist-link col2 ajax-link toggle-tooltip" href="{{root}}artist/{{ item.remixerUid }}/tracks/page/1/sort/added/desc" title="view artists tracks">
 <span class="glue-hover-trigger">
 {% endif %}{{ titlepart }}{% if not loop.first and not loop.last %}</span></a>{% endif %}
-{% if loop.last == false %}{% include 'partials/artist/single-link.htm' with { 'itemId': remixerIds[index] }  %}{% endif %}
+{% if loop.last == false %}{% include 'partials/artist/single-link.htm' with { 'itemUid': remixerUids[index] }  %}{% endif %}
 {% endfor %}
 </span>
 {% else %}

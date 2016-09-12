@@ -22,11 +22,11 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			// reset all counters
 			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0");
 			
-			$query = "SELECT count(id) AS itemsTotal FROM " . $table;
+			$query = "SELECT count(uid) AS itemsTotal FROM " . $table;
 			$this->itemsTotal += $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		}
 		
-		// collect all genreIds, labelIds, artistIds, remixerIds, featuringIds, albumId provided by tracks
+		// collect all genreUids, labelUids, artistUids, remixerUids, featuringUids, albumUid provided by tracks
 		$tables = array(
 			'Artist' => array(),
 			'Genre' => array(),
@@ -35,47 +35,47 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// to be able to display a progress status
 		$all = array();
-		$result = $app->db->query("SELECT id,albumId,artistId,remixerId,featuringId,genreId,labelId FROM track");
+		$result = $app->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid FROM track");
 		
 		while($record = $result->fetch_assoc()) {
-			$all['al' . $record['albumId']] = NULL;
+			$all['al' . $record['albumUid']] = NULL;
 			$this->updateJob(array(
-				'currentItem' => 'trackId: ' . $record['id']
+				'currentItem' => 'trackUid: ' . $record['uid']
 			));
 			
-			$itemIds = trimExplode(",", join(",", [$record["artistId"],$record["remixerId"],$record["featuringId"]]), TRUE);
-			foreach($itemIds as $itemId) {
-				$tables['Artist'][$itemId]['tracks'][ $record['id'] ] = NULL;
-				$tables['Artist'][$itemId]['albums'][ $record['albumId'] ] = NULL;
-				$all['ar' . $itemId] = NULL;
+			$itemUids = trimExplode(",", join(",", [$record["artistUid"],$record["remixerUid"],$record["featuringUid"]]), TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Artist'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
+				$tables['Artist'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
+				$all['ar' . $itemUid] = NULL;
 			}
-			$itemIds = trimExplode(",", $record['genreId'], TRUE);
-			foreach($itemIds as $itemId) {
-				$tables['Genre'][$itemId]['tracks'][ $record['id'] ] = NULL;
-				$tables['Genre'][$itemId]['albums'][ $record['albumId'] ] = NULL;
-				$all['ge' . $itemId] = NULL;
+			$itemUids = trimExplode(",", $record['genreUid'], TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Genre'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
+				$tables['Genre'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
+				$all['ge' . $itemUid] = NULL;
 			}
-			$itemIds = trimExplode(",", $record['labelId'], TRUE);
-			foreach($itemIds as $itemId) {
-				$tables['Label'][$itemId]['tracks'][ $record['id'] ] = NULL;
-				$tables['Label'][$itemId]['albums'][ $record['albumId'] ] = NULL;
-				$all['la' . $itemId] = NULL;
+			$itemUids = trimExplode(",", $record['labelUid'], TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Label'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
+				$tables['Label'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
+				$all['la' . $itemUid] = NULL;
 			}
 		}
 		
 		foreach($tables as $className => $tableData) {
 			cliLog("updating table:".$className." with trackCount and albumCount", 3);
-			foreach($tableData as $itemId => $data) {
+			foreach($tableData as $itemUid => $data) {
 				
 				$classPath = "\\Slimpd\\Models\\" . $className;
 				$item = new $classPath();
-				$item->setId($itemId)
+				$item->setUid($itemUid)
 					->setTrackCount( count($data['tracks']) )
 					->setAlbumCount( count($data['albums']) )
 					->update();
 				$this->itemsProcessed++;
 				$this->itemsChecked++;
-				$msg = "updating ".$className.": " . $itemId .
+				$msg = "updating ".$className.": " . $itemUid .
 					" with trackCount:" .  $item->getTrackCount() .
 					", albumCount:" .  $item->getAlbumCount();
 				$this->updateJob(array(
@@ -90,7 +90,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				DELETE FROM " . strtolower($className) . "
 				WHERE trackCount=0
 				AND albumCount=0
-				AND id>" . (($className === 'Artist') ? 11 : 10); // unknown artist, various artists,...
+				AND uid>" . (($className === 'Artist') ? 11 : 10); // unknown artist, various artists,...
 			cliLog("deleting ".$className."s  with trackCount=0 AND albumCount=0", 3);
 			$app->db->query($query);
 		}

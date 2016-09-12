@@ -122,8 +122,8 @@ class Genre extends \Slimpd\Models\AbstractModel {
 		cliLog(" Phase 2: check if we do have a single cached genre", 6);
 		$itemString = str_replace(array("(",")","[","]", "{","}", "<", ">"), " ", $itemString);
 		$az09 = az09($itemString);
-		$itemId = self::cacheRead($app, get_called_class(), $az09);
-		if($itemId !== FALSE) {
+		$itemUid = self::cacheRead($app, get_called_class(), $az09);
+		if($itemUid !== FALSE) {
 			$finalGenres[$az09] = $itemString;
 			return;
 		}
@@ -283,7 +283,7 @@ class Genre extends \Slimpd\Models\AbstractModel {
 		return $output;
 	}
 	
-	public static function getIdsByString($itemString) {
+	public static function getUidsByString($itemString) {
 		$app = \Slim\Slim::getInstance();
 		self::cacheUnifier($app, get_called_class());
 		self::buildPreserveCache($app, get_called_class());
@@ -303,24 +303,24 @@ class Genre extends \Slimpd\Models\AbstractModel {
 		#ob_flush();
 
 		
-		$itemIds = array();
+		$itemUids = array();
 		foreach($genreStringArray as $az09 => $genreString) {
 
 			// check if we alread have an id
 			// permformance improvement ~8%
-			$itemId = self::cacheRead($app, get_called_class(), $az09);
-			if($itemId !== FALSE) {
-				$itemIds[$itemId] = $itemId;
+			$itemUid = self::cacheRead($app, get_called_class(), $az09);
+			if($itemUid !== FALSE) {
+				$itemUids[$itemUid] = $itemUid;
 				continue;
 			}
 			
-			$query = "SELECT id FROM genre WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$query = "SELECT uid FROM genre WHERE az09=\"" . $az09 . "\" LIMIT 1;";
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
 			if($record) {
-				$itemId = $record["id"];
-				$itemIds[$record["id"]] = $record["id"];
-				self::cacheWrite($app, get_called_class(), $az09, $record["id"]);
+				$itemUid = $record["uid"];
+				$itemUids[$record["uid"]] = $record["uid"];
+				self::cacheWrite($app, get_called_class(), $az09, $record["uid"]);
 				continue;
 			}
 
@@ -328,13 +328,13 @@ class Genre extends \Slimpd\Models\AbstractModel {
 			$instance->setTitle($genreString);
 			$instance->setAz09($az09);
 			$instance->insert();
-			$itemId = $app->db->insert_id;
+			$itemUid = $app->db->insert_id;
 
-			$itemIds[$itemId] = $itemId;
-			self::cacheWrite($app, get_called_class(), $az09, $itemId);
+			$itemUids[$itemUid] = $itemUid;
+			self::cacheWrite($app, get_called_class(), $az09, $itemUid);
 		}
 		
-		return $itemIds;
+		return $itemUids;
 
 	}
 

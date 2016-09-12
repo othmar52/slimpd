@@ -2,12 +2,12 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-3">
-		<a href="{{root}}album/{{ item.albumId }}" class="ajax-link">
-			<img class="main-image" src="{{root}}image-300/album/{{ item.albumId }}" alt="">
+		<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link">
+			<img class="main-image" src="{{root}}image-300/album/{{ item.albumUid }}" alt="">
 		</a>
 	</div>
 	<div class="col-md-9">
-		{% if item.id %}
+		{% if item.uid %}
 		<div class="row">
 			<div class="col-md-12 ffn-hidden">
 				<div class="dark uc tinyfont darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'title'|ll}}</div>
@@ -38,13 +38,13 @@
 			
 			{# TODO: following markup is very similar to album.htm - can we use a partial for both? #}
 			<div class="col-md-6">
-				{% if item.genreId %}
+				{% if item.genreUid %}
 				<div class="row">
 					<div class="col-md-2">
 						<span class="dark uc small darker-links">{% include 'partials/genre/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}
+						{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid } %}
 					</div>
 				</div>
 				{% endif %}
@@ -60,13 +60,13 @@
 				</div>
 				{% endif %}
 
-				{% if item.labelId %}
+				{% if item.labelUid %}
 				<div class="row">
 					<div class="col-md-2">
 						<span class="dark uc small darker-links">{% include 'partials/label/linked-label.htm' %}:</span>
 					</div>
 					<div class="col-md-10">
-						{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}
+						{% include 'partials/label/link.htm' with { 'labelUids': item.labelUid } %}
 					</div>
 				</div>
 				{% endif %}
@@ -110,7 +110,7 @@
 				<div class="row">
 					<div class="col-md-2">
 						{% include 'partials/extlink-discogs.htm' with { album: nowplaying_album } %}
-						<a href="{{root}}maintainance/albumdebug/{{nowplaying_album.id}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
+						<a href="{{root}}maintainance/albumdebug/{{nowplaying_album.uid}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
 					</div>
 				</div>
 			</div>

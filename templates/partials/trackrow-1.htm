@@ -3,11 +3,11 @@
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}album/{{ item.albumId }}" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.albumId}}">
+			<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.albumUid}}">
 				{% include 'partials/image.htm' with {
 					'width': 50,
 					'type': 'album',
-					'itemId': item.albumId,
+					'itemUid': item.albumUid,
 					'attrs': 'class="icon-50"'
 				} %}
 			</a>
@@ -20,7 +20,7 @@
 		<div class="col-md-3 vcenter">
 			<div class="vcinner">
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}<br />
-				<span class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumId] } %}</span>
+				<span class="darker-links">{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}</span>
 			</div>
 		</div>
 		<div class="col-md-3 vcenter">
@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-md-2 vcenter">
 			<div class="vcinner">
-			{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId, 'genres': renderitems.genres, 'limit':3 } %}
+			{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid, 'genres': renderitems.genres, 'limit':3 } %}
 			</div>
 		</div>
 		<div class="col-md-1 vcenter">

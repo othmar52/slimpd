@@ -15,9 +15,9 @@
 		{% endif %}
 	{% endfor%}
 	<br />
-	<a href="{{root}}maintainance/albumdebug/{{item.albumId}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
+	<a href="{{root}}maintainance/albumdebug/{{item.albumUid}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
 </span>
-{% if not item.id %}
+{% if not item.uid %}
 {% include 'partials/track/not-imported-badge.htm' %}
 {% endif %}
 </h3>
@@ -49,7 +49,7 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'featured.artist'|ll}}</strong></div>
 	<div class="col-md-3"></div>
-	{% set ftItem = { 'artistId' : item.featuringId }%}
+	{% set ftItem = { 'artistUid' : item.featuringUid }%}
 	<div class="col-md-4"><input name="featuring" type="text" value="{% include 'partials/artist/string.htm' with { 'item': ftItem } %}" class="form-control" /></div>
 	<div class="col-md-3">
 		{% include 'partials/artist/link.htm' with { 'item': ftItem } %}
@@ -59,7 +59,7 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'remix.artist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.remixer }}</div>
-	{% set rmxItem = { 'artistId' : item.remixerId }%}
+	{% set rmxItem = { 'artistUid' : item.remixerUid }%}
 	<div class="col-md-4"><input name="remixer" type="text" value="{% include 'partials/artist/string.htm' with { 'item': rmxItem } %}" class="form-control" /></div>
 	<div class="col-md-3">
 		{% include 'partials/artist/link.htm' with { 'item': rmxItem } %}
@@ -70,9 +70,9 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.albumArtist }}</div>
-	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.htm' with { 'item': renderitems.albums[item.albumId] } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="album" type="text" value="{% include 'partials/artist/string.htm' with { 'item': renderitems.albums[item.albumUid] } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/artist/link.htm' with { 'item': renderitems.albums[item.albumId] } %}
+		{% include 'partials/artist/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}
 	</div>
 </div>
 
@@ -80,8 +80,8 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.album }}</div>
-	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumId].title }}" class="form-control" /></div>
-	<div class="col-md-3">{% include 'partials/album/link.htm' with {'item': renderitems.albums[item.albumId]} %}</div>
+	<div class="col-md-4"><input name="album" type="text" value="{{ renderitems.albums[item.albumUid].title }}" class="form-control" /></div>
+	<div class="col-md-3">{% include 'partials/album/link.htm' with {'item': renderitems.albums[item.albumUid]} %}</div>
 </div>
 
 
@@ -95,18 +95,18 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.genre }}</div>
-	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreIds': item.genreId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="genre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': item.genreUid } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/genre/link.htm' with { 'genreIds': item.genreId } %}
+		{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid } %}
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	<div class="col-md-3">{{ itemraw.publisher }}</div>
-	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/label/string.htm' with { 'labelIds': item.labelId } %}" class="form-control" /></div>
+	<div class="col-md-4"><input name="label" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': item.labelUid } %}" class="form-control" /></div>
 	<div class="col-md-3">
-		{% include 'partials/label/link.htm' with { 'labelIds': item.labelId } %}
+		{% include 'partials/label/link.htm' with { 'labelUids': item.labelUid } %}
 	</div>
 </div>
 

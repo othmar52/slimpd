@@ -1,7 +1,7 @@
 {# no indentation because compiled string will be insertet into input fields #}
-{% if item.artistId %}
-{% set itemIds = item.artistId|split(',') %}
-{% for itemId in itemIds %}
+{% if item.artistUid %}
+{% set itemUids = item.artistUid|split(',') %}
+{% for itemUid in itemUids %}
 {% include 'partials/artist/single-string.htm' %}
 {% if loop.last == false %} & {% endif %}
 {% endfor %}

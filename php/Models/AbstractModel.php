@@ -5,7 +5,7 @@ namespace Slimpd\Models;
  */
 abstract class AbstractModel {
 	public static $tableName;
-	protected $id;
+	protected $uid;
 
 	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
@@ -105,7 +105,7 @@ abstract class AbstractModel {
 		}
 
 		$database = \Slim\Slim::getInstance()->db;
-		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= ' FIND_IN_SET('. (int)$value .',' .$database->real_escape_string($key) . ') OR ';
 		}
@@ -156,7 +156,7 @@ abstract class AbstractModel {
 		}
 
 		$database = \Slim\Slim::getInstance()->db;
-		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . ' LIKE "%'. $database->real_escape_string($value) .'%" OR ';
 		}
@@ -277,13 +277,13 @@ abstract class AbstractModel {
 		}
 		$query = substr($query,0,-1) . ");";
 		$app->db->query($query);
-		$this->setId($app->db->insert_id);
+		$this->setUid($app->db->insert_id);
 	}
 
 	public function update() {
-		$this->searchExistingId();
+		$this->searchExistingUid();
 		// we can't update. lets insert new record
-		if($this->getId() < 1) {
+		if($this->getUid() < 1) {
 			return $this->insert();
 		}
 			
@@ -293,12 +293,12 @@ abstract class AbstractModel {
 		foreach($this->mapInstancePropertiesToDatabaseKeys() as $dbField => $value) {
 			$query .= $dbField . '="' . $app->db->real_escape_string($value) . '",';
 		}
-		$query = substr($query,0,-1) . ' WHERE id=' . (int)$this->getId() . ";";
+		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$this->getUid() . ";";
 		$app->db->query($query);
 	}
 
-	private function searchExistingId() {
-		if($this->getId() > 0) {
+	private function searchExistingUid() {
+		if($this->getUid() > 0) {
 			return;
 		}
 		// check if we have a record with this path
@@ -317,15 +317,15 @@ abstract class AbstractModel {
 		if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
 			$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
 		}
-		if($instance === NULL || $instance->getId() < 1) {
+		if($instance === NULL || $instance->getUid() < 1) {
 			return;
 		}
-		$this->setId($instance->getId());
+		$this->setUid($instance->getUid());
 	}
 
 	public function delete() {
-		if($this->getId() > 0) {
-			// we already have an id ...
+		if($this->getUid() > 0) {
+			// we already have an uid ...
 		} else {
 			// check if we have a record with this path
 			$classPath = get_called_class();
@@ -337,22 +337,22 @@ abstract class AbstractModel {
 			if(method_exists($classPath, 'getAz09') === TRUE) {
 				$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
 			}
-			if($instance !== NULL && $instance->getId() > 0) {
-				$this->setId($instance->getId());
+			if($instance !== NULL && $instance->getUid() > 0) {
+				$this->setUid($instance->getUid());
 			} else {
 				// no idea which database item should be deleted...
 				return FALSE;
 			}
 		}
 		\Slim\Slim::getInstance()->db->query(
-			'DELETE FROM '. self::getTableName() . ' WHERE id=' . (int)$this->getId()
+			'DELETE FROM '. self::getTableName() . ' WHERE uid=' . (int)$this->getUid()
 		);
 	}
 
-	public static function getIdsByString($itemString) {
-		$idForUnknown = 10;
+	public static function getUidsByString($itemString) {
+		$uidForUnknown = 10;
 		if(trim($itemString) === '') {
-			return array($idForUnknown => $idForUnknown); // Unknown
+			return array($uidForUnknown => $uidForUnknown); // Unknown
 		}
 		
 		$app = \Slim\Slim::getInstance();
@@ -364,14 +364,14 @@ abstract class AbstractModel {
 
 		self::cacheUnifier($app, $classPath);
 
-		$itemIds = array();
+		$itemUids = array();
 		$tmpGlue = "tmpGlu3";
 		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
 			$az09 = az09($itemPart);
 			
 			if($az09 === '' || isHash($az09) === TRUE) {
 				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
-				$itemIds[$idForUnknown] = $idForUnknown;
+				$itemUids[$uidForUnknown] = $uidForUnknown;
 				continue;
 			}
 
@@ -383,20 +383,20 @@ abstract class AbstractModel {
 			
 			// check if we alread have an id
 			// permformance improvement ~8%
-			$itemId = self::cacheRead($app, $classPath, $az09);
-			if($itemId !== FALSE) {
-				$itemIds[$itemId] = $itemId;
+			$itemUid = self::cacheRead($app, $classPath, $az09);
+			if($itemUid !== FALSE) {
+				$itemUids[$itemUid] = $itemUid;
 				continue;
 			}
 
-			$query = "SELECT id FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$query = "SELECT uid FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
 			$result = $app->db->query($query);
 			$record = $result->fetch_assoc();
 
 			if($record) {
-				$itemId = $record["id"];
-				$itemIds[$record["id"]] = $record["id"];
-				self::cacheWrite($app, $classPath, $az09, $record["id"]);
+				$itemUid = $record["uid"];
+				$itemUids[$record["uid"]] = $record["uid"];
+				self::cacheWrite($app, $classPath, $az09, $record["uid"]);
 				continue;
 			}
 
@@ -404,12 +404,12 @@ abstract class AbstractModel {
 			$instance->setTitle($itemPart);
 			$instance->setAz09($az09);
 			$instance->insert();
-			$itemId = $app->db->insert_id;
+			$itemUid = $app->db->insert_id;
 
-			$itemIds[$itemId] = $itemId;
-			self::cacheWrite($app, $classPath, $az09, $itemId);
+			$itemUids[$itemUid] = $itemUid;
+			self::cacheWrite($app, $classPath, $az09, $itemUid);
 		}
-		return $itemIds;
+		return $itemUids;
 	}
 
 	public static function cacheRead($app, $classPath, $az09) {
@@ -420,11 +420,11 @@ abstract class AbstractModel {
 		return FALSE;
 	}
 
-	public static function cacheWrite($app, $classPath, $az09, $itemId) {
+	public static function cacheWrite($app, $classPath, $az09, $itemUid) {
 		self::cacheUnifier($app, $classPath);
 		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
 		$tmpArray = $app->importerCache;
-		$tmpArray[$classPath]["cache"][$az09] = $itemId;
+		$tmpArray[$classPath]["cache"][$az09] = $itemUid;
 		$app->importerCache = $tmpArray;
 	}
 
@@ -458,7 +458,7 @@ abstract class AbstractModel {
 	}
 
 	public static function getInstancesForRendering() {
-		$idString = '';
+		$uidString = '';
 		$return = array();
 		$classPath = get_called_class();
 		for($i=0; $i < func_num_args();$i++) {
@@ -468,38 +468,38 @@ abstract class AbstractModel {
 					if(is_object($item) === FALSE) {
 						continue;
 					}
-					$idString .= self::getIdCommaString($classPath, $item);
+					$uidString .= self::getUidCommaString($classPath, $item);
 				}
 			}
 			if(is_object($argument) === TRUE) {
-				$idString .= self::getIdCommaString($classPath, $argument);
+				$uidString .= self::getUidCommaString($classPath, $argument);
 			}
 		}
 	
-		$itemIds = array_unique(trimExplode(",", $idString, TRUE));
-		foreach($itemIds as $itemId) {
-			$return[$itemId] = $classPath::getInstanceByAttributes(array('id' => $itemId));
+		$itemUids = array_unique(trimExplode(",", $uidString, TRUE));
+		foreach($itemUids as $itemUid) {
+			$return[$itemUid] = $classPath::getInstanceByAttributes(array('uid' => $itemUid));
 		}
 		return $return;
 	}
 
-	private static function getIdCommaString($classPath, $instance) {
-		$idString = "";
-		$getter = 'get' . $classPath . 'Id';
+	private static function getUidCommaString($classPath, $instance) {
+		$uidString = "";
+		$getter = 'get' . $classPath . 'Uid';
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
-			$getter = 'get' . $matches[1] . 'Id';
+			$getter = 'get' . $matches[1] . 'Uid';
 		}
 		if(method_exists($instance, $getter) === TRUE) {
-			$idString .= $instance->$getter() . ',';
+			$uidString .= $instance->$getter() . ',';
 		}
-		#$itemIds .= $item->$getter() . ',';
-		if(method_exists($instance, 'getRemixerId') === TRUE) {
-			$idString .= $instance->getRemixerId() . ',';
+		#$itemUids .= $item->$getter() . ',';
+		if(method_exists($instance, 'getRemixerUid') === TRUE) {
+			$uidString .= $instance->getRemixerUid() . ',';
 		}
-		if(method_exists($instance, 'getFeaturingId') === TRUE) {
-			$idString .= $instance->getFeaturingId() . ',';
+		if(method_exists($instance, 'getFeaturingUid') === TRUE) {
+			$uidString .= $instance->getFeaturingUid() . ',';
 		}
-		return $idString;
+		return $uidString;
 	}
 
 	public static function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
@@ -535,7 +535,7 @@ abstract class AbstractModel {
 	}
 	
 	public static function getCountAll() {
-		$query = "SELECT count(id) AS itemsTotal FROM ". self::getTableName();
+		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName();
 		$result = \Slim\Slim::getInstance()->db->query($query);
 		if($result === FALSE) {
 			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
@@ -549,17 +549,17 @@ abstract class AbstractModel {
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
-		$higestId = $database->query("SELECT id FROM ". self::getTableName() ." ORDER BY id DESC LIMIT 0, 1")->fetch_assoc()['id'];
+		$highestUid = $database->query("SELECT uid FROM ". self::getTableName() ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
 
 		$maxAttempts = 1000;
 		$counter = 0;
 		try {
 			while (TRUE) {
 				$try = $database->query(
-					"SELECT id FROM ". self::getTableName() ." WHERE id = " . mt_rand(1, $higestId)
-				)->fetch_assoc()['id'];
+					"SELECT uid FROM ". self::getTableName() ." WHERE uid = " . mt_rand(1, $highestUid)
+				)->fetch_assoc()['uid'];
 				if($try !== NULL) {
-					return self::getInstanceByAttributes( ['id' => $try] );
+					return self::getInstanceByAttributes( ['uid' => $try] );
 				}
 				if($counter > $maxAttempts) {
 					throw new \Exception("OOPZ! couldn't fetch random instance of " . self::getTableName(), 1);
@@ -571,27 +571,27 @@ abstract class AbstractModel {
 		}
 	}
 
-	public static function deleteRecordsByIds(array $idArray) {
-		if(count($idArray) === 0) {
+	public static function deleteRecordsByUids(array $uidArray) {
+		if(count($uidArray) === 0) {
 			return;
 		}
-		$query = "DELETE FROM " . self::getTableName() . " WHERE id IN (" . join(',', $idArray) . ");";
+		$query = "DELETE FROM " . self::getTableName() . " WHERE uid IN (" . join(',', $uidArray) . ");";
 		\Slim\Slim::getInstance()->db->query($query);
 	}
 
-	public static function ensureRecordIdExists($itemId) {
-		if(\Slim\Slim::getInstance()->db->query("SELECT id FROM " . self::getTableName() . " WHERE id=" . (int)$itemId)->num_rows == $itemId) {
+	public static function ensureRecordUidExists($itemUid) {
+		if(\Slim\Slim::getInstance()->db->query("SELECT uid FROM " . self::getTableName() . " WHERE uid=" . (int)$itemUid)->num_rows == $itemUid) {
 			return;
 		}
-		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::getTableName() . " (id) VALUES (".(int)$itemId.")");
+		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::getTableName() . " (uid) VALUES (".(int)$itemUid.")");
 		return;
 	}
 
-	public function getId() {
-		return $this->id;
+	public function getUid() {
+		return $this->uid;
 	}
-	public function setId($value) {
-		$this->id = $value;
+	public function setUid($value) {
+		$this->uid = $value;
 		return $this;
 	}
 }

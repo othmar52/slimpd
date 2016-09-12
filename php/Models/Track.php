@@ -4,11 +4,11 @@ namespace Slimpd\Models;
  *
  */
 class Track extends \Slimpd\Models\AbstractTrack {
-	use \Slimpd\Traits\PropGroupTypeIds; // artistId, labelId, genreId
+	use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
 
-	protected $featuringId;
-	protected $remixerId;
-	protected $albumId;
+	protected $featuringUid;
+	protected $remixerUid;
+	protected $albumUid;
 
 	protected $disc;
 	protected $transcoded;
@@ -46,7 +46,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	public function setFeaturedArtistsAndRemixers() {
 		$artistBlacklist = \Slimpd\Models\Artist::getArtistBlacklist();
 
-		$artistStringVanilla = $this->getArtistId();
+		$artistStringVanilla = $this->getArtistUid();
 		$titleStringVanilla = $this->getTitle();
 		
 		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
@@ -239,18 +239,18 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		// clean up artist names
 		// unfortunately there are artist names like "45 Thieves"
 		$regularArtists = $this->removeLeadingNumbers($regularArtists);
-		$this->setArtistId(join(",", Artist::getIdsByString(join(" & ", $regularArtists))));
+		$this->setArtistUid(join(",", Artist::getUidsByString(join(" & ", $regularArtists))));
 
-		$this->setFeaturingId('');
+		$this->setFeaturingUid('');
 		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
 		if(count($featuredArtists) > 0) { 
-			$this->setFeaturingId(join(",", Artist::getIdsByString(join(" & ", $featuredArtists))));
+			$this->setFeaturingUid(join(",", Artist::getUidsByString(join(" & ", $featuredArtists))));
 		}
 
-		$this->setRemixerId('');
+		$this->setRemixerUid('');
 		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
 		if(count($remixerArtists) > 0) {
-			$this->setRemixerId(join(",", Artist::getIdsByString(join(" & ", $remixerArtists))));
+			$this->setRemixerUid(join(",", Artist::getUidsByString(join(" & ", $remixerArtists))));
 		}
 		
 		// replace multiple whitespace with a single whitespace
@@ -313,12 +313,12 @@ class Track extends \Slimpd\Models\AbstractTrack {
 
 	
 	//setter
-	public function setFeaturingId($value) {
-		$this->featuringId = $value;
+	public function setFeaturingUid($value) {
+		$this->featuringUid = $value;
 		return $this;
 	}
-	public function setRemixerId($value) {
-		$this->remixerId = $value;
+	public function setRemixerUid($value) {
+		$this->remixerUid = $value;
 		return $this;
 	}
 	
@@ -329,8 +329,8 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		$this->disc = $value;
 		return $this;
 	}
-	public function setAlbumId($value) {
-		$this->albumId = $value;
+	public function setAlbumUid($value) {
+		$this->albumUid = $value;
 		return $this;
 	}
 	public function setTranscoded($value) {
@@ -370,19 +370,19 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	
 	
 	// getter
-	public function getFeaturingId() {
-		return $this->featuringId;
+	public function getFeaturingUid() {
+		return $this->featuringUid;
 	}
-	public function getRemixerId() {
-		return $this->remixerId;
+	public function getRemixerUid() {
+		return $this->remixerUid;
 	}
 
 	// ...
 	public function getDisc() {
 		return $this->disc;
 	}
-	public function getAlbumId() {
-		return $this->albumId;
+	public function getAlbumUid() {
+		return $this->albumUid;
 	}
 
 	public function getTranscoded() {

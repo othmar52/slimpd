@@ -70,12 +70,12 @@ class MpdDatabaseParser {
 	public function readMysqlTstamps() {
 		$app = \Slim\Slim::getInstance();
 		// get timestamps of all tracks and directories from mysql database
-		// get all existing track-ids to determine orphans		
-		$query = "SELECT id, relPathHash, relDirPathHash, filemtime, directoryMtime FROM rawtagdata;";
+		// get all existing track-uids to determine orphans		
+		$query = "SELECT uid, relPathHash, relDirPathHash, filemtime, directoryMtime FROM rawtagdata;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemsTotal++;
-			$this->fileOrphans[ $record["relPathHash"] ] = $record["id"];
+			$this->fileOrphans[ $record["relPathHash"] ] = $record["uid"];
 			$this->fileTstamps[ $record["relPathHash"] ] = $record["filemtime"];
 
 			// get the oldest directory timestamp stored in rawtagdata
@@ -87,12 +87,12 @@ class MpdDatabaseParser {
 			}
 		}
 
-		// get all existing album-ids to determine orphans
+		// get all existing album-uids to determine orphans
 		$this->dirOrphans = array();
-		$query = "SELECT id, relPathHash FROM album;";
+		$query = "SELECT uid, relPathHash FROM album;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->dirOrphans[ $record["relPathHash"] ] = $record["id"];
+			$this->dirOrphans[ $record["relPathHash"] ] = $record["uid"];
 		}
 	}
 
@@ -220,7 +220,7 @@ class MpdDatabaseParser {
 		}
 
 		if(isset($this->fileOrphans[$this->rawTagItem->getRelPathHash()])) {
-			$this->rawTagItem->setId($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
+			$this->rawTagItem->setUid($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 			// file is alive - remove it from dead items
 			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 		}

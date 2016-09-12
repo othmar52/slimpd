@@ -24,8 +24,8 @@ foreach(array_keys($sortfields1) as $className) {
 		
 		// albumlist+tracklist of artist|genre|label
 		$app->get(
-		"/".$className."/:itemId/".$show."s/page/:currentPage/sort/:sort/:direction",
-		function($itemId, $currentPage, $sort, $direction) use ($app, $vars, $className, $show, $sortfields1) {
+		"/".$className."/:itemUid/".$show."s/page/:currentPage/sort/:sort/:direction",
+		function($itemUid, $currentPage, $sort, $direction) use ($app, $vars, $className, $show, $sortfields1) {
 			$vars["action"] = $className."." . $show."s";
 			$vars["itemtype"] = $className;
 			$vars["listcurrent"] = $show;
@@ -33,13 +33,13 @@ foreach(array_keys($sortfields1) as $className) {
 			
 			$classPath = "\\Slimpd\\Models\\" . ucfirst($className);
 			
-			// TODO: check where %20 on multiple artist-ids come from
-			$itemId = str_replace("%20", ",", $itemId);
+			// TODO: check where %20 on multiple artist-uids come from
+			$itemUid = str_replace("%20", ",", $itemUid);
 			
-			$term = str_replace(",", " ", $itemId);
-			$vars["item"] = $classPath::getInstanceByAttributes(array("id" => $itemId));
+			$term = str_replace(",", " ", $itemUid);
+			$vars["item"] = $classPath::getInstanceByAttributes(array("uid" => $itemUid));
 			
-			$vars["itemids"] = $itemId;
+			$vars["itemuids"] = $itemUid;
 			$itemsPerPage = 20;
 			$maxCount = 1000;
 
@@ -51,9 +51,9 @@ foreach(array_keys($sortfields1) as $className) {
 				$sphinxTypeIndex = ($resultType === "album") ? 2 : 4;
 				$stmt = $sphinxPdo->prepare("
 					SELECT id FROM ". $app->config["sphinx"]["mainindex"]."
-					WHERE MATCH('@".$className."Ids \"". $term ."\"')
+					WHERE MATCH('@".$className."Uids \"". $term ."\"')
 					AND type=:type
-					GROUP BY itemid,type
+					GROUP BY itemuid,type
 					LIMIT 1;
 				");
 				$stmt->bindValue(":type", $sphinxTypeIndex, PDO::PARAM_INT);
@@ -66,7 +66,7 @@ foreach(array_keys($sortfields1) as $className) {
 					}
 				}
 				$vars["search"][$resultType]["time"] = 0;
-				$vars["search"][$resultType]["term"] = $itemId;
+				$vars["search"][$resultType]["term"] = $itemUid;
 				$vars["search"][$resultType]["matches"] = [];
 				
 				if($resultType === $show) {
@@ -75,11 +75,11 @@ foreach(array_keys($sortfields1) as $className) {
 					$vars["search"]["activesorting"] = $sort . "-" . $direction;
 					
 					$stmt = $sphinxPdo->prepare("
-						SELECT id,type,itemid,artistIds,display
+						SELECT id,type,itemuid,artistUids,display
 						FROM ". $app->config["sphinx"]["mainindex"]."
-						WHERE MATCH('@".$className."Ids \"". $term ."\"')
+						WHERE MATCH('@".$className."Uids \"". $term ."\"')
 						AND type=:type
-						GROUP BY itemid,type
+						GROUP BY itemuid,type
 							".$sortQuery."
 							LIMIT :offset,:max
 						OPTION ranker=proximity, max_matches=".$vars["search"][$resultType]["total"].";
@@ -96,10 +96,10 @@ foreach(array_keys($sortfields1) as $className) {
 					foreach($rows as $row) {
 						switch($row["type"]) {
 							case "2":
-								$obj = \Slimpd\Models\Album::getInstanceByAttributes(array("id" => $row["itemid"]));
+								$obj = \Slimpd\Models\Album::getInstanceByAttributes(array("uid" => $row["itemuid"]));
 								break; 
 							case "4":
-								$obj = \Slimpd\Models\Track::getInstanceByAttributes(array("id" => $row["itemid"]));
+								$obj = \Slimpd\Models\Track::getInstanceByAttributes(array("uid" => $row["itemuid"]));
 								break;
 						}
 						$vars["itemlist"][] = $obj;
@@ -111,7 +111,7 @@ foreach(array_keys($sortfields1) as $className) {
 						$vars["search"][$resultType]["total"],
 						$itemsPerPage,
 						$currentPage,
-						$app->config["root"] .$className."/".$itemId."/".$show."s/page/(:num)/sort/".$sort."/".$direction
+						$app->config["root"] .$className."/".$itemUid."/".$show."s/page/(:num)/sort/".$sort."/".$direction
 					);
 					$vars["paginator"]->setMaxPagesToShow(paginatorPages($currentPage));
 				}
@@ -121,7 +121,7 @@ foreach(array_keys($sortfields1) as $className) {
 				$app->response->redirect(
 					$app->urlFor(
 						$className . "-show-track",
-						["itemId" => $itemId, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
+						["itemUid" => $itemUid, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
 					) . getNoSurSuffix(), 301
 				);
 			}
@@ -130,7 +130,7 @@ foreach(array_keys($sortfields1) as $className) {
 				$app->response->redirect(
 					$app->urlFor(
 						$className . "-show-album",
-						["itemId" => $itemId, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
+						["itemUid" => $itemUid, "currentPage" => $currentPage, "sort" => $sort, "direction" => $direction]
 					) . getNoSurSuffix(), 301
 				);
 			}
@@ -193,10 +193,10 @@ foreach(array_keys($sortfields) as $currentType) {
 			$vars["timelog"][$type."-total"]->Start();
 			// get result count for each resulttype 
 			$stmt = $sphinxPdo->prepare("
-				SELECT itemid,type FROM ". $app->config["sphinx"]["mainindex"]."
+				SELECT itemuid,type FROM ". $app->config["sphinx"]["mainindex"]."
 				WHERE MATCH(:match)
 				" . (($type !== "all") ? " AND type=:type " : "") . "
-				GROUP BY itemid,type
+				GROUP BY itemuid,type
 				LIMIT 1;
 			");
 			$stmt->bindValue(":match", getSphinxMatchSyntax([$term]), PDO::PARAM_STR);
@@ -231,10 +231,10 @@ foreach(array_keys($sortfields) as $currentType) {
 				$vars["search"][$type]["time"] = getMicrotimeFloat();
 				
 				$stmt = $sphinxPdo->prepare("
-					SELECT id,type,itemid,display FROM ". $app->config["sphinx"]["mainindex"]."
+					SELECT id,type,itemuid,display FROM ". $app->config["sphinx"]["mainindex"]."
 					WHERE MATCH(:match)
 					" . (($currentType !== "all") ? " AND type=:type " : "") . "
-					GROUP BY itemid,type
+					GROUP BY itemuid,type
 					".$sortQuery."
 					LIMIT :offset,:max
 					OPTION ranker=".$ranker.",max_matches=".$vars["search"][$type]["total"].";");
@@ -304,10 +304,10 @@ foreach(array_keys($sortfields) as $currentType) {
 							case "track":
 							case "genre":
 								$classPath = "\\Slimpd\\Models\\" . ucfirst($filterTypeMappingF[$row["type"]]);
-								$obj = $classPath::getInstanceByAttributes(array("id" => $row["itemid"]));
+								$obj = $classPath::getInstanceByAttributes(array("uid" => $row["itemuid"]));
 								break;
 							case "dirname":
-								$tmp = \Slimpd\Models\Album::getInstanceByAttributes(array("id" => $row["itemid"]));
+								$tmp = \Slimpd\Models\Album::getInstanceByAttributes(array("uid" => $row["itemuid"]));
 								$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
 								$obj->setBreadcrumb(\Slimpd\filebrowser::fetchBreadcrumb($obj->getRelPath()));
 								break;
@@ -376,10 +376,10 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 	);
 	
 	$stmt = $sphinxPdo->prepare("
-		SELECT id,type,itemid,display,trackCount,albumCount FROM ". $app->config["sphinx"]["mainindex"]."
+		SELECT id,type,itemuid,display,trackCount,albumCount FROM ". $app->config["sphinx"]["mainindex"]."
 		WHERE MATCH(:match)
 		" . (($type !== "all") ? " AND type=:type " : "") . "
-		GROUP BY itemid,type
+		GROUP BY itemuid,type
 		LIMIT $start,$offset;");
 	
 	if(($type !== "all")) {
@@ -446,10 +446,10 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 					break;
 				case "album":
 				case "dirname":
-					$url = "album/" . $row["itemid"];
+					$url = "album/" . $row["itemuid"];
 					break;
 				default:
-					$url = $filterType . "/" . $row["itemid"] . "/tracks/page/1/sort/added/desc";
+					$url = $filterType . "/" . $row["itemuid"] . "/tracks/page/1/sort/added/desc";
 					break;
 			}
 
@@ -458,7 +458,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 				"url" => $app->config["root"] . $url,
 				"type" => $filterType,
 				"typelabel" => $app->ll->str($filterType),
-				"itemid" => $row["itemid"],
+				"itemuid" => $row["itemuid"],
 				"trackcount" => $row["trackcount"],
 				"albumcount" => $row["albumcount"]
 			];
@@ -473,7 +473,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 					break;
 				case "album":
 				case "track":
-					$entry["img"] = $app->config["root"] . "image-50/". $filterType ."/" . $row["itemid"];
+					$entry["img"] = $app->config["root"] . "image-50/". $filterType ."/" . $row["itemuid"];
 					break;
 			}
 			$result[] = $entry;
@@ -529,13 +529,13 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 		}
 	}
 
-	// get requestet portion of track-ids from sphinx
+	// get requestet portion of track-uids from sphinx
 	$itemsPerPage = 20;
 	$currentPage = intval($app->request->get("page"));
 	$currentPage = ($currentPage === 0) ? 1 : $currentPage;
 	$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
 	$stmt = $sphinxPdo->prepare("
-		SELECT itemid
+		SELECT itemuid
 		FROM ". $app->config["sphinx"]["mainindex"]."
 		WHERE MATCH('@allchunks \"". $directory->getRelPath(). "\"')
 		AND type=:type
@@ -550,7 +550,7 @@ $app->get("/directory/:itemParams+", function($itemParams) use ($app, $vars){
 	$rows = $stmt->fetchAll();
 	$vars["itemlist"] = [];
 	foreach($rows as $row) {
-		$vars["itemlist"][] = \Slimpd\Models\Track::getInstanceByAttributes(array("id" => $row["itemid"]));
+		$vars["itemlist"][] = \Slimpd\Models\Track::getInstanceByAttributes(array("uid" => $row["itemuid"]));
 	}
 
 	// get additional stuff we need for rendering the view

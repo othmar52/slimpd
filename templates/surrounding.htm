@@ -141,7 +141,7 @@
 					{% endif %}
 
 					{% if action == 'library.year' %}
-						<h2 title="id:{{ item.id }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
+						<h2 title="id:{{ item.uid }} az09:{{ item.az09 }}">YEAR: {{ item.title }}</h2>
 						{% include 'modules/albumlist.htm' with { 'itemlist': albumlist } %}
 					{% endif %}
 

@@ -3,14 +3,14 @@
     <div class="col-sm-12 col-md-12 xwaxplayer">
     	<div class="row">
     		<div class="col-md-2">
-		    	<a href="{{root}}album/{{ item.albumId }}" class="ajax-link">
-		    		<img src="{{root}}image-100/album/{{ item.albumId }}" class="icon-50" />
+		    	<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link">
+		    		<img src="{{root}}image-100/album/{{ item.albumUid }}" class="icon-50" />
 		    	</a>
     		</div>
     		<div class="col-md-10">
     			<div class="row">
     				<div class="row-md-12">
-    					{% if item.id %}
+    					{% if item.uid %}
 				    		<span class="shortenXX">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span> -
 							<span class="shortenXX">{% include 'partials/artist/link.htm' %}</span>
 							
