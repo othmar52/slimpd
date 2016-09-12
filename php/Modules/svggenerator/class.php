@@ -353,40 +353,37 @@ class Svggenerator {
 
 		$ratio = ($channel == 2) ? 40 : 80;
 
-		while(!feof($handle)){
-		$bytes = array();
-		//get number of bytes depending on bitrate
-		for ($i = 0; $i < $byte; $i++){
-			$bytes[$i] = fgetc($handle);
-		}
-
-		switch($byte){
-
-			//get value for 8-bit wav
-			case 1:
-			$newVal = $this->findValues($bytes[0], $bytes[1]) - 128;
-			$data[]= ($newVal < 0) ? 0 : $newVal;
-				break;
-
-			//get value for 16-bit wav
-			case 2:
-			$temp = (ord($bytes[1]) & 128) ? 0 : 128;
-			$temp = chr((ord($bytes[1]) & 127) + $temp);
-			$newVal = floor($this->findValues($bytes[0], $temp) / 256) - 128;
-			$data[]= ($newVal < 0) ? 0 : $newVal;
-			break;
-		}
-
-		//skip bytes for memory optimization
-		fread ($handle, $ratio);
+		while(!feof($handle)) {
+			$bytes = array();
+			//get number of bytes depending on bitrate
+			for ($i = 0; $i < $byte; $i++) {
+				$bytes[$i] = fgetc($handle);
+			}
+			if($byte === 1) {
+				$this->getValue8BitWav($data, $bytes);
+			}
+			if($byte === 2) {
+				$this->getValue16BitWav($data, $bytes);
+			}
+			//skip bytes for memory optimization
+			fread ($handle, $ratio);
 		}
 
 		// close and cleanup
 		fclose ($handle);
-		#return $data;
-
 		return $data;
+	}
 
+	private function getValue8BitWav(&$data, $bytes) {
+		$value = $this->findValues($bytes[0], $bytes[1]) - 128;
+		$data[]= ($value < 0) ? 0 : $value;
+	}
+
+	private function getValue16BitWav(&$data, $bytes) {
+		$temp = (ord($bytes[1]) & 128) ? 0 : 128;
+		$temp = chr((ord($bytes[1]) & 127) + $temp);
+		$value = floor($this->findValues($bytes[0], $temp) / 256) - 128;
+		$data[]= ($value < 0) ? 0 : $value;
 	}
 
 	private function limitArray($input, $max = 22000) {
