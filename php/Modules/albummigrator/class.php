@@ -688,7 +688,7 @@ class AlbumMigrator {
 		}
 
 		foreach($app->config['label-parent-directories'] as $labelDir) {
-			$labelDir = rtrim($labelDir, DS) . DS; // append trailingSlash
+			$labelDir = appendTrailingSlash($labelDir);
 			cliLog("  configured label dir: " . $labelDir, 10);
 			if(stripos($albumPath, $labelDir) !== 0) {
 				cliLog("  no match: " . $labelDir, 8);

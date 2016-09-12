@@ -147,8 +147,7 @@ class filebrowser {
 			return FALSE;
 		}
 
-		// append trailing slash if missing
-		$path = rtrim($path, DS) . DS;
+		$path = appendTrailingSlash($path);
 
 		$base = $app->config["mpd"]["musicdir"];
 		$path = ($path === $base) ? "" : $path;

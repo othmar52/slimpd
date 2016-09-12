@@ -171,9 +171,8 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 				$checkMimeType = FALSE;
 			}
 		}
-		// make sure we have a trailing slash
-		$dir = rtrim($dir, DS) . DS;
-		
+
+		$dir = appendTrailingSlash($dir);
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$handle = opendir ($dir);
 		while ($file = readdir ($handle)) {

@@ -222,23 +222,22 @@ class ConfigLoaderINI {
 	 * override some config values based on other config values
 	 */
 	private function postProcess($config) {
-		// append trailing slash if mussing
-		$config["mpd"]["musicdir"] = appendSlashToPathString($config["mpd"]["musicdir"]);
-		if($config["mpd"]["alternative_musicdir"] !== "") {
-			$config["mpd"]["alternative_musicdir"] = appendSlashToPathString($config["mpd"]["alternative_musicdir"]);
-		}
-		if(array_key_exists('destructiveness', $config) === FALSE) {
-			return $config;
-		}
-
-		if($config['destructiveness']['disable-all'] !== '1') {
-			return $config;
-		}
-
-		// override destructiveness values based on specific config key
-		foreach(array_keys($config['destructiveness']) as $key) {
-			$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
-		}
+		try {
+			// append trailing slash if missing
+			$config["mpd"]["musicdir"] = appendTrailingSlash($config["mpd"]["musicdir"]);
+			if($config["mpd"]["alternative_musicdir"] !== "") {
+				$config["mpd"]["alternative_musicdir"] = appendTrailingSlash($config["mpd"]["alternative_musicdir"]);
+			}
+		} catch(\Exception $e) { }
+		try {
+			if($config['destructiveness']['disable-all'] !== '1') {
+				return $config;
+			}
+			// override destructiveness values based on specific config key
+			foreach(array_keys($config['destructiveness']) as $key) {
+				$config['destructiveness'][$key] = ($key === 'disable-all') ? '1' : '0';
+			}
+		} catch(\Exception $e) { }
 		return $config;
 	}
 

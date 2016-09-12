@@ -261,7 +261,7 @@ class mpd {
 			case 'softreplaceDir':
 				// check if item exists in MPD database
 				$closest = $this->findClosestExistingItem($itemPath);
-				if(rtrim($itemPath, DS) !== $closest) {
+				if(removeTrailingSlash($itemPath) !== $closest) {
 					$this->mpd('update "' . str_replace("\"", "\\\"", $closest) . '"');
 					notifyJson(
 						"OH Snap!<br>
@@ -273,7 +273,7 @@ class mpd {
 				}
 
 				// trailing slash on directories does not work - lets remove it
-				$this->mpd('add "' . str_replace("\"", "\\\"", rtrim($itemPath, DS) ) . '"');
+				$this->mpd('add "' . str_replace("\"", "\\\"", removeTrailingSlash($itemPath) ) . '"');
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
@@ -321,7 +321,7 @@ class mpd {
 				\Slimpd\Modules\Importer::queDirectoryUpdate($closestMpdItem);
 
 				// trailing slash on directories does not work - lets remove it
-				$this->mpd('update "' . str_replace("\"", "\\\"", rtrim($closestMpdItem, DS)) . '"');
+				$this->mpd('update "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"');
 				notifyJson("MPD: updating directory " . $closestMpdItem, 'mpd');
 				return;
 			case 'seekPercent':
@@ -410,7 +410,7 @@ class mpd {
 			$item = dirname($item);
 		}
 
-		$item = explode(DS, rtrim($item, DS));
+		$item = explode(DS, removeTrailingSlash($item));
 
 		// single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
 		if(count($item) === 1 && is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $item[0])) {
