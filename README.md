@@ -61,6 +61,8 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 
 * __Designed to be Highly Configurable__; in many ways your very own personal player.
 
+* __No social media integration__; for protecting your privacy.
+
 * __Mobile Friendly__ (not implemented yet).
 
 <p align="right"><a href="#top"><strong>Return To Top</strong></a></p>
