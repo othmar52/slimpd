@@ -38,7 +38,6 @@ class Systemcheck {
 			'fsConfLocalExists'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 			'fsConfLocalServe'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 			'fsMusicdirconf'=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
-			'fsMusicdirslash'=> array('status' => 'warning','hide' => FALSE, 'skip' => TRUE),
 			'fsMusicdir'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
 			'fsCache'		=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 			'fsEmbedded'	=> array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
@@ -121,23 +120,11 @@ class Systemcheck {
 		// check if we have a configured value for MPD-musicdirectory
 		if(trim($this->config['mpd']['musicdir']) === '') {
 			$check['fsMusicdirconf']['status'] = 'danger';
-			$check['fsMusicdirslash']['hide'] = TRUE;
 			$check['fsMusicdir']['hide'] = TRUE;
-			$check['fsMusicdirslash']['skip'] = TRUE;
 			$check['fsMusicdir']['skip'] = TRUE;
 		} else {
 			$check['fsMusicdirconf']['hide'] = TRUE;
-			$check['fsMusicdirslash']['skip'] = FALSE;
 			$check['fsMusicdir']['skip'] = FALSE;
-		}
-
-		// check if we have a trailing slash on [mpd].musicdir
-		if($check['fsMusicdirslash']['skip'] === FALSE) {
-			if(substr($this->config['mpd']['musicdir'],-1) !== DS) {
-				$check['fsMusicdirslash']['status'] = 'danger';
-			} else {
-				$check['fsMusicdirslash']['hide'] = TRUE;
-			}
 		}
 
 		// check if we can access [mpd]-musicdir

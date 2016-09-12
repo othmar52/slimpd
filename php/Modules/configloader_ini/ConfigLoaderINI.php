@@ -222,6 +222,11 @@ class ConfigLoaderINI {
 	 * override some config values based on other config values
 	 */
 	private function postProcess($config) {
+		// append trailing slash if mussing
+		$config["mpd"]["musicdir"] = appendSlashToPathString($config["mpd"]["musicdir"]);
+		if($config["mpd"]["alternative_musicdir"] !== "") {
+			$config["mpd"]["alternative_musicdir"] = appendSlashToPathString($config["mpd"]["alternative_musicdir"]);
+		}
 		if(array_key_exists('destructiveness', $config) === FALSE) {
 			return $config;
 		}
