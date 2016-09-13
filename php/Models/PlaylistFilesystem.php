@@ -71,7 +71,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 		foreach($pathStringArray as $itemPath) {
 			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
 			$track = ($noDatabaseQueries === FALSE)
-				? \Slimpd\Models\Track::getInstanceByPath($itemPath)
+				? \Slimpd\Models\Track::getInstanceByPath($itemPath, TRUE)
 				: \Slimpd\Models\Track::getNewInstanceWithoutDbQueries(trimAltMusicDirPrefix($itemPath));
 
 			if(getFileRealPath($track->getRelPath()) === FALSE) {
