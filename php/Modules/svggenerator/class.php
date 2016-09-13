@@ -34,17 +34,11 @@ class Svggenerator {
 		$this->absolutePath = $config['musicdir'] . $track->getRelPath();
 		$this->fingerprint = $track->getFingerprint();
 
-		// non imported tracks
-		if($this->fingerprint === NULL) {
-			if(isInAllowedPath($arg) === TRUE && getFileRealPath($arg) !== FALSE) {
-				$this->absolutePath = $arg;
-			}
-		}
-
 		// systemcheck testfiles are not within our music_dirs nor in our database
 		if($this->fingerprint === NULL) {
 			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
 				$this->absolutePath = realpath(DS.$arg);
+				$this->ext = getFileExt($arg);
 			}
 		}
 
