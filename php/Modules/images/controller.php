@@ -26,44 +26,39 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
 			array('albumUid' => $itemUid), $imageWeightOrderBy
 		);
-		if($image === NULL) {
-			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
+		if($image !== NULL) {
+			$image->dump($imagesize, $app);
 			return;
 		}
-		
-		$image->dump($imagesize, $app);
+		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
 	});
-	
+
 	$app->get('/image-'.$imagesize.'/track/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
 			array('trackUid' => $itemUid), $imageWeightOrderBy
 		);
-		if($image === NULL) {
-			$track = \Slimpd\Models\Track::getInstanceByAttributes(
-				array('uid' => $itemUid)
-			);  
-			$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumUid());
+		if($image !== NULL) {
+			$image->dump($imagesize, $app);
 			return;
 		}
-		$image->dump($imagesize, $app);
+		$track = \Slimpd\Models\Track::getInstanceByAttributes(['uid' => $itemUid]);
+		$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumUid());
 	});
-	
+
 	$app->get('/image-'.$imagesize.'/id/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
 			array('uid' => $itemUid), $imageWeightOrderBy
 		);
-		if($image === NULL) {
-			$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
+		if($image !== NULL) {
+			$image->dump($imagesize, $app);
 			return;
 		}
-		$image->dump($imagesize, $app);
+		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
 	});
-	
+
 	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$image = new \Slimpd\Models\Bitmap();
-		
-		$image->setRelPath(join(DS, $itemParams));
-		$image->dump($imagesize, $app);
+		$image->setRelPath(join(DS, $itemParams))->dump($imagesize, $app);
 	})->name('imagepath-' .$imagesize);
 	
 	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
@@ -79,7 +74,6 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		$path = array_shift($images);
 		
 		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => path2url($path)]));
-
 	});
 	
 	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $vars, $imagesize){
@@ -94,7 +88,6 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 			default: $template = 'svg/icon-album.svg';
 		}
 		$app->response->headers->set('Content-Type', 'image/svg+xml');
-		
 		header("Content-Type: image/svg+xml");
 		$app->render($template, $vars);
 	})->name('imagefallback-' .$imagesize);

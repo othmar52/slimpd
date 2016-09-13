@@ -5,7 +5,7 @@
 {% set waveformSvgUrl = [root,"audiosvg/width/550/",item.relPath]|path2url %}
 {% set waveformJsonUrl = [root,"audiojson/resolution/2500/",item.relPath]|path2url %}
 {% set placeholderSvgUrl = fileroot~"skin/default/img/loading-waveform.svg" %}
-{% set artworkUrl = root~"image-100/album/"~item.albumUid %}
+{% set artworkUrl = root~"image-100/track/"~item.uid %}
 	    	
 {% if not item.uid %}
 	{% set playerCtrlItem = item.relPath %}
