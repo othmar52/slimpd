@@ -95,10 +95,7 @@ foreach([
 		} else {
 			// playing track has not been imported in slimpd database yet...
 			// so we are not able to get any renderitems
-			$item = new \Slimpd\Models\Track();
-			$item->setRelPath($itemRelPath);
-			$item->setRelPathHash(getFilePathHash($itemRelPath));
-			$vars['item'] = $item;
+			$vars['item'] = \Slimpd\Models\Track::getNewInstanceWithoutDbQueries($itemRelPath);
 		}
 		
 		// TODO: remove external liking as soon we have implemented a proper functionality

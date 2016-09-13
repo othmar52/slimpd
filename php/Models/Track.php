@@ -50,6 +50,10 @@ class Track extends \Slimpd\Models\AbstractTrack {
 			return $instance;
 		}
 		// track is not imported in sliMpd database
+		return self::getNewInstanceWithoutDbQueries($pathString);
+	}
+
+	public static function getNewInstanceWithoutDbQueries($pathString) {
 		$track = new \Slimpd\Models\Track();
 		$track->setRelPath($pathString);
 		$track->setRelPathHash(getFilePathHash($pathString));

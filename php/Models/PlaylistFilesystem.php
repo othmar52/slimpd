@@ -69,18 +69,10 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 	public static function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
 		$return = array();
 		foreach($pathStringArray as $itemPath) {
+			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
 			$track = ($noDatabaseQueries === FALSE)
 				? \Slimpd\Models\Track::getInstanceByPath($itemPath)
-				: NULL;
-
-			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
-			if($track === NULL) {
-				$track = new \Slimpd\Models\Track();
-				$itemPath = trimAltMusicDirPrefix($itemPath);
-				$track->setRelPath($itemPath);
-				$track->setRelPathHash(getFilePathHash($itemPath));
-				$track->setAudioDataformat(getFileExt($track->getRelPath()));
-			}
+				: \Slimpd\Models\Track::getNewInstanceWithoutDbQueries(trimAltMusicDirPrefix($itemPath));
 
 			if(getFileRealPath($track->getRelPath()) === FALSE) {
 				$track->setError('notfound');
