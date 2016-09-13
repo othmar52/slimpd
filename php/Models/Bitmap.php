@@ -28,9 +28,10 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $trackUid;
 	protected $rawTagDataUid;
 	protected $embedded;
-	protected $embeddedName;
+	protected $fileName;
 	protected $pictureType;
 	protected $sorting;
+	protected $hidden;
 	protected $importStatus;
 	protected $error;
 	
@@ -178,8 +179,8 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->embedded = $value;
 		return $this;
 	}
-	public function setEmbeddedName($value) {
-		$this->embeddedName = $value;
+	public function setFileName($value) {
+		$this->fileName = $value;
 		return $this;
 	}
 	public function setPictureType($value) {
@@ -188,6 +189,10 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function setSorting($value) {
 		$this->sorting = $value;
+		return $this;
+	}
+	public function setHidden($value) {
+		$this->hidden = $value;
 		return $this;
 	}
 	public function setImportStatus($value) {
@@ -221,14 +226,17 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	public function getEmbedded() {
 		return $this->embedded;
 	}
-	public function getEmbeddedName() {
-		return $this->embeddedName;
+	public function getFileName() {
+		return $this->fileName;
 	}
 	public function getPictureType() {
 		return $this->pictureType;
 	}
 	public function getSorting() {
 		return $this->sorting;
+	}
+	public function getHidden() {
+		return $this->hidden;
 	}
 	public function getImportStatus() {
 		return $this->importStatus;

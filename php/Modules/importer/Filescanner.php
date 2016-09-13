@@ -189,13 +189,13 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				->setTrackUid($record['uid'])		 # TODO: is there any more need for both ID's?
 				->setEmbedded(1)
 				// setAlbumUid() will be applied later because at this time we havn't any albumUid's but tons of bitmap-record-dupes
-				->setEmbeddedName(
+				->setFileName(
 					(isset($bitmapData['picturetype']) !== FALSE)
 						? $bitmapData['picturetype'] . '.ext'
 						: 'Other.ext'
 				)
-				->setPictureType($app->imageweighter->getType($bitmap->getEmbeddedName()))
-				->setSorting($app->imageweighter->getWeight($bitmap->getEmbeddedName()));
+				->setPictureType($app->imageweighter->getType($bitmap->getFileName()))
+				->setSorting($app->imageweighter->getWeight($bitmap->getFileName()));
 
 			if($imageSize === FALSE) {
 				$bitmap->setError(1)->update();
