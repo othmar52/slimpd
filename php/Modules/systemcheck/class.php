@@ -180,6 +180,7 @@ class Systemcheck {
 			$check['dbContent']['skip'] = FALSE;
 		} else {
 			$check['dbSchema']['status'] = 'danger';
+			$check['dbSchema']['queries'] = $difference['down'];
 			$check['skipAudioTests'] = TRUE;
 		}
 	}

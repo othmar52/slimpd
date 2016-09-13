@@ -1,2 +1,8 @@
 {{'syscheck.dbSchema.danger'|ll|raw}}
 <pre>{{appRoot}}slimpd update-db-scheme</pre>
+<button class="btn btn-default toggle-content" data-toggle="#dbchanges" data-text1="show queries" data-text2="hide queries">
+	show queries
+</button>
+<pre id="dbchanges" style="display:none;">
+{{sys.dbSchema.queries|join(";\n")}};
+</pre>
