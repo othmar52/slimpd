@@ -122,17 +122,14 @@ class Systemcheck {
 			$check['fsMusicdirconf']['status'] = 'danger';
 			$check['fsMusicdir']['hide'] = TRUE;
 			$check['fsMusicdir']['skip'] = TRUE;
-		} else {
-			$check['fsMusicdirconf']['hide'] = TRUE;
-			$check['fsMusicdir']['skip'] = FALSE;
+			return;
 		}
+		$check['fsMusicdirconf']['hide'] = TRUE;
+		$check['fsMusicdir']['skip'] = FALSE;
 
 		// check if we can access [mpd]-musicdir
 		// TODO: check if there is any content inside
 		// TODO: is it possible to read this from mpd API instead of configuring it manually?
-		if($check['fsMusicdir']['skip'] === TRUE) {
-			return;
-		}
 		if(is_dir($this->config['mpd']['musicdir']) === FALSE || is_readable($this->config['mpd']['musicdir']) === FALSE) {
 			$check['fsMusicdir']['status'] = 'danger';
 			return;
