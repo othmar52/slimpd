@@ -220,7 +220,7 @@ class Svggenerator {
 		switch($this->ext) {
 			case 'flac':
 				$this->cmdTempwav = sprintf(
-					"%s -d --stdout %s | %s -m m -S -f -b 16 --resample 8 - %s",
+					"%s -d --stdout --totally-silent %s | %s -m m -S -f -b 16 --resample 8 --quiet - %s",
 					$binConf['bin_flac'],
 					$inFile,
 					$binConf['bin_lame'],
@@ -230,7 +230,7 @@ class Svggenerator {
 			case 'm4a':
 			case 'aac':
 				$this->cmdTempwav = sprintf(
-					"%s -q -o %s %s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					"%s -q -o %s %s && %s -m m -S -f -b 16 --resample 8 --quiet %s %s",
 					$binConf['bin_faad'],
 					$tmpWav,
 					$inFile,
@@ -241,7 +241,7 @@ class Svggenerator {
 				break;
 			case 'ogg':
 				$this->cmdTempwav = sprintf(
-					"%s -Q	%s -o	%s &&	%s -m m -S -f -b 16 --resample 8 %s %s",
+					"%s -Q	%s -o	%s &&	%s -m m -S -f -b 16 --resample 8 --quiet %s %s",
 					$binConf['bin_oggdec'],
 					$inFile,
 					$tmpWav,
@@ -253,7 +253,7 @@ class Svggenerator {
 			case 'ac3':
 				$this->cmdTempwav = sprintf(
 					"%s -really-quiet -channels 5 -af pan=2:'1:0':'0:1':'0.7:0':'0:0.7':'0.5:0.5' %s".
-					" -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					" -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 --quiet %s %s",
 					$binConf['bin_mplayer'],
 					$inFile,
 					$tmpWav,
@@ -264,7 +264,7 @@ class Svggenerator {
 				break;
 			case 'wma':
 				$this->cmdTempwav = sprintf(
-					"%s -really-quiet %s -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 %s %s",
+					"%s -really-quiet %s -ao pcm:file=%s && %s -m m -S -f -b 16 --resample 8 --quiet %s %s",
 					$binConf['bin_mplayer'],
 					$inFile,
 					$tmpWav,
@@ -275,7 +275,7 @@ class Svggenerator {
 				break;
 			default:
 				$this->cmdTempwav = sprintf(
-					"%s %s -m m -S -f -b 16 --resample 8 %s",
+					"%s %s -m m -S -f -b 16 --resample 8 --quiet %s",
 					$binConf['bin_lame'],
 					$inFile,
 					$tmpMp3
@@ -284,7 +284,7 @@ class Svggenerator {
 		}
 
 		$this->cmdTempwav .= sprintf(
-			" && %s -S --decode %s %s",
+			" && %s -S --quiet --decode %s %s",
 			$binConf['bin_lame'],
 			$tmpMp3,
 			$tmpWav
