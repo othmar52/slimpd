@@ -384,7 +384,6 @@ class AlbumMigrator {
 
 		// collect specific data for comparison
 		foreach($this->tracks as $idx => $track) {
-
 			$this->artists[$idx] = $track['artist'];
 			$this->albums[$idx] = $track['album'];
 			$this->albumArtists[$idx] = $track['albumArtist'];
@@ -426,14 +425,19 @@ class AlbumMigrator {
 			$this->scoreAttribute($idx, 'comment',   $track['comment'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'year',      $track['year'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'label',     $track['publisher'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'label',     $track['copyright'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'catalogNr', $track['catalogNr'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'discogsId', $track['textDiscogsReleaseId'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'source',    $track['textSource'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'urlUser',   $track['textUrlUser'], $this->scoreForRealTags);
+			// TODO: does it make sense to divide by trackcount?
+			//score:  $this->scoreForRealTags/trackcount
 			$this->scoreAttribute('album', 'title',  $track['album'], $this->scoreForRealTags);
 			$this->scoreAttribute('album', 'artist', $track['albumArtist'], $this->scoreForRealTags);
 			$this->scoreAttribute('album', 'artist', $track['artist'], $this->scoreForRealTags);
 			$this->scoreAttribute('album', 'label',  $track['publisher'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'label',  $track['copyright'], $this->scoreForRealTags);
+			$this->scoreAttribute('album', 'catalogNr',$track['catalogNr'], $this->scoreForRealTags);
 		}
 		$this->guessAttributesByDirectoryName($track['relDirPath']);
 

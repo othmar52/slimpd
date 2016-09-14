@@ -325,6 +325,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `year` varchar(255) NOT NULL DEFAULT '',
   `date` varchar(255) NOT NULL DEFAULT '',
   `publisher` varchar(255) NOT NULL DEFAULT '',
+  `copyright` varchar(255) NOT NULL DEFAULT '',
   `trackNumber` varchar(255) NOT NULL DEFAULT '',
   `totalTracks` varchar(255) NOT NULL DEFAULT '',
   `albumArtist` varchar(255) NOT NULL DEFAULT '',

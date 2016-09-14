@@ -229,6 +229,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			'artist' => 'setArtist',
 			'genre' => 'setGenre',
 			'publisher' => 'setPublisher',
+			'copyright' => 'setCopyright',
 			'remixer' => 'setRemixer',
 			'remixed by' => 'setRemixer',
 			'title' => 'setTitle',

@@ -229,6 +229,7 @@ class Schema extends AbstractSchema
       . "  `year` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `date` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `publisher` varchar(255) NOT NULL DEFAULT '',\r"
+      . "  `copyright` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `trackNumber` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `totalTracks` varchar(255) NOT NULL DEFAULT '',\r"
       . "  `albumArtist` varchar(255) NOT NULL DEFAULT '',\r"

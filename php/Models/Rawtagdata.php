@@ -18,6 +18,7 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Rawtagdata extends \Slimpd\Models\AbstractTrack {
+	use \Slimpd\Traits\PropertyCopyright; // copyright
 	protected $artist;
 	protected $album;
 	protected $genre;
