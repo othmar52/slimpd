@@ -135,6 +135,10 @@ $app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($a
 		? \Slimpd\Models\Track::getInstanceByAttributes(['uid' => (int)$itemParams[0]])
 		: \Slimpd\Models\Track::getInstanceByPath(join(DS, $itemParams), TRUE);
 
+	if($vars['item'] === NULL) {
+		$app->notFound();
+		return;
+	}
 	$vars['itemraw'] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(
 		['relPathHash' => $vars['item']->getRelPathHash()]
 	);
