@@ -512,6 +512,11 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				->setFingerprint($fingerPrint)
 				->update();
 
+			// complete trackindex record
+			$track = new Trackindex();
+			$trackIndex = \Slimpd\Models\Trackindex::getInstanceByAttributes([ 'uid' => $record['uid'] ]);
+			$trackIndex->setAllchunks($trackIndex->getAllchunks() . " " . $fingerPrint)->update();
+
 			cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 		}
 		$this->finishJob(array(), __FUNCTION__);
