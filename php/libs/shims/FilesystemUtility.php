@@ -36,6 +36,9 @@ function getFileRealPath($pathString) {
  * checks if file path or directory path is within allowed direcories
  */
 function isInAllowedPath($itemPath) {
+	if(\Slim\Slim::getInstance()->config['filebrowser']['restrict-to-musicdir'] === "0") {
+		return TRUE;
+	}
 	$mpdConf = \Slim\Slim::getInstance()->config['mpd'];
 	$realPath = getFileRealPath($itemPath);
 	foreach(["alternative_musicdir", "musicdir"] as $confName) {
