@@ -238,7 +238,6 @@ class Systemcheck {
 			$check['sxContent']['skip'] = TRUE;
 			return;
 		}
-
 		// check if we can query both sphinx indices
 		$schemaError = FALSE;
 		$contentError = FALSE;
@@ -267,6 +266,7 @@ class Systemcheck {
 		$check['sxSchema']['status'] = ($schemaError === TRUE) ? 'danger' : 'success';
 		$check['sxContent']['status'] = ($contentError === TRUE) ? 'danger' : 'success';
 		if($schemaError === TRUE) {
+			$check['sxContent']['skip'] = TRUE;
 			$check['sxContent']['status'] = 'warning';
 		}
 	}
