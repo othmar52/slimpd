@@ -46,6 +46,11 @@ function getFilePathHash($inputString) {
 	return str_pad(dechex(crc32($inputString)), 8, "0", STR_PAD_LEFT) . str_pad(strlen($inputString), 3, "0", STR_PAD_LEFT);
 }
 
+function removeAppRootPrefix($inputString) {
+	return str_replace(APP_ROOT, "", $inputString);
+}
+
+
 function remU($input){
 	return trim(preg_replace("!\s+!", " ", str_replace("_", " ", $input)));
 }

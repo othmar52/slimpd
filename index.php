@@ -89,9 +89,9 @@ $app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
 $app->error(function(\Exception $e) use ($app, $vars){
 	$vars['action'] = 'error';
 	$vars['errormessage'] = $e->getMessage();
-	$vars['tracestring'] = str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($e->getTraceAsString()));
+	$vars['tracestring'] = removeAppRootPrefix(str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($e->getTraceAsString())));
 	$vars['url'] = $app->request->getResourceUri();
-	$vars['file'] = $e->getFile();
+	$vars['file'] = removeAppRootPrefix($e->getFile());
 	$vars['line'] = $e->getLine();
 	// delete cached config
 	$app->configLoaderINI->loadConfig('master.ini', NULL, '1');
