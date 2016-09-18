@@ -1,2 +1,8 @@
-<div><a class="ajax-link btn btn-default" href="{{root}}showplaylist/{{filepath}}">render as playlist</a></div>
-<div class="nfo">{{plaintext|raw}}</div>
+<div class="modal-body">
+	{% include 'partials/modal/close-button-top.htm' %}
+	<div><a class="ajax-link btn btn-default" href="{{root}}showplaylist/{{filepath}}" data-dismiss="modal">render as playlist</a></div>
+	<div class="nfo">{{plaintext|raw}}</div>
+</div>
+<div class="modal-footer">
+	{% include 'partials/modal/close-button-bottom.htm' %}
+</div>
