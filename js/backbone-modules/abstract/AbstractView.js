@@ -137,7 +137,8 @@
 			});
 
 			requestAnimationFrame(function(){
-				$("[data-spy=affix]", that.$el).affix("checkPosition");
+				$("[data-spy=affix]", that.$el).affix({offset: {top: 100 }});
+				//$("[data-spy=affix]", that.$el).affix("checkPosition");
 			});
 
 			$( "#bb-bookblock", that.$el ).bookblock( {

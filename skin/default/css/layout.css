@@ -320,20 +320,27 @@ body.standalone {
 }
 
 /* affixed modifications */
-.show-affixed {
-	display: none;
-}
-
-.affix .show-affixed {
-	display: inline-block;
-}
 
 .affix-container {
 	z-index: 3;
-	top: 50px;
+	top: -50px;
+	position: fixed;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
 }
 
+.affix.affix-container {
+	z-index: 3;
+	top: 50px;
+	width: 100%;
+	border-bottom: 1px solid #373737;
+	-webkit-transition: all .5s ease-in-out;
+	transition: all .5s ease-in-out;
+}
 
+.affix h2{
+	font-size: 1.2em;
+}
 
 .inline-heading {
 	display: inline-block;

@@ -246,10 +246,6 @@ $(document).ready(function() {
 		return false;
 	});
 
-	$(".navbar-upper").affix({
-		offset: {bottom: 200}
-	});
-
 	NProgress.configure({
 		showSpinner: false,
 		parent: "#nprog-container",
