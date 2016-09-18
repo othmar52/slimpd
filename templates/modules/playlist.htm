@@ -1,6 +1,13 @@
 <div class="row">
 	<div class="col-md-12">
 		<span class="dark uc small darker-links">{% include 'partials/playlist/linked-label.htm' %}</span>
+		<button role="control" data-href="{{root}}markup/widget-playlist/{{ playlist.relPath|path2url }}" title="{{ 'filebrowser.playlistoptions'|ll }}" class="btn btn-trnsp trigger-modal col2">
+			<span class="fa-stack">
+				<i class="fa fa-circle-thin fa-stack-2x col2"></i>
+				<i class="fa fa-plus fa-stack-1x fa-inverse col2"></i>
+			</span>
+			{{ 'filebrowser.playlistoptions'|ll }}
+		</button>
 	</div>
 	<div class="col-md-12">
 		<h2 class="nomargin">
@@ -8,8 +15,7 @@
 		</h2>
 	</div>
 </div>
-	
-	
+
 {% if paginator.numPages > 1 %}
 <div class="row">
 	<div class="col-md-3">
