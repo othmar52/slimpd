@@ -5,40 +5,40 @@
 	<h2 class="nomargin">{{ breadcrumb|last.title }}</h2>
 	<div class="row">
 		<div class="col-md-12">
-			<h3>Abspielen</h3>
+			<h3>{{'playbackcontrol'|ll}}</h3>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-6">
-			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylist", "mpdurl":"{{root}}mpdctrl/appendPlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.append.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylist", "mpdurl":"{{root}}mpdctrl/appendPlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i>
-				Hinten anfügen
+				{{'pbctrl.append'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="append this playlist to playlist" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylistAndPlay", "mpdurl":"{{root}}mpdctrl/appendPlaylistAndPlay/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.appendandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"appendPlaylistAndPlay", "mpdurl":"{{root}}mpdctrl/appendPlaylistAndPlay/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Hinten anfügen &amp; sofort abspielen
+				{{'pbctrl.appendandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
 		</div>
 		<div class="col-md-6">
-			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und sofort abspielen" class="btn btn-default player-ctrl" data-player='{"action":"replacePlaylist", "mpdurl":"{{root}}mpdctrl/replacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.clearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"replacePlaylist", "mpdurl":"{{root}}mpdctrl/replacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Liste leeren &amp; sofort abspielen
+				{{'pbctrl.clearandplay'|ll}}
 			</button>
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
-			<button role="control" title="Aktuelle Playlist leeren, diese Playlist hinzufügen und als nächstes abspielen" class="btn btn-default player-ctrl" data-player='{"action":"softreplacePlaylist", "mpdurl":"{{root}}mpdctrl/softreplacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
+			<button role="control" title="{{'pbctrl.softclearandplay.title'|ll}}" class="btn btn-default player-ctrl" data-player='{"action":"softreplacePlaylist", "mpdurl":"{{root}}mpdctrl/softreplacePlaylist/{{ playlist.relPath|path2url }}"}' data-dismiss="modal">
 				<i class="fa fa-trash"></i> <i class="fa fa-plus"></i> <i class="fa fa-play"></i>
-				Liste leeren* &amp; als nächstes abspielen
+				{{'pbctrl.softclearandplay'|ll}}
 			</button>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<h3>Playlist-Einträge <span class="badge">{{ playlist.length }}</span></h3>
+			<h3>{{'playlistentries'|ll}} <span class="badge">{{ playlist.length }}</span></h3>
 			{% for i,item in playlisttracks %}
 				{% if item.error == 'notfound' %}
 				<div class="{{ cycle(['',''],loop.index) }} mouseover">
@@ -58,7 +58,7 @@
 			<br class="row replace-me-with-proper-css" />
 			<br class="row replace-me-with-proper-css" />
 			<a href="{{root}}showplaylist/{{ playlist.relPath|path2url }}" class="ajax-link btn btn-trnsp" title="show playlist" data-dismiss="modal">
-				View all <span class="badge">{{ playlist.length }}</span> Playlist Entries...
+				{{'playlistentries.viewall'|ll(playlist.length)|raw}}
 			</a>
 		</div>
 	</div>
