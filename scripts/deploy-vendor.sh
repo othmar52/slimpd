@@ -17,6 +17,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# This script copies directories and files from the gitignored "vendor" dirctory
+# to "vendor-dist" but skips a lot of stuff like demos and non-minified scripts.
+# All files and directories that are relevant for sliMpd are listed in "deploy-vendor.txt"
+# Some missing licenses of "vendor" packages gets copied as well (from "licenses" directory).
+# Limiting to only used vendor files decreases sliMpd's repo size by ~220 MB
+
+
 # TODO: log all invalid paths end echo it after copying
 
 SCRIPT_PATH=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
