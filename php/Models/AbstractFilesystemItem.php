@@ -25,6 +25,7 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 	protected $relDirPathHash;
 	protected $filesize;
 	protected $filemtime = 0;
+	protected $importStatus;
 
 	public function getRelPath() {
 		return $this->relPath;
@@ -43,6 +44,9 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 	}
 	public function getFilemtime() {
 		return $this->filemtime;
+	}
+	public function getImportStatus() {
+		return $this->importStatus;
 	}
 	
 	public function setRelPath($value) {
@@ -67,6 +71,10 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 	}
 	public function setFilemtime($value) {
 		$this->filemtime = $value;
+		return $this;
+	}
+	public function setImportStatus($value) {
+		$this->importStatus = $value;
 		return $this;
 	}
 }

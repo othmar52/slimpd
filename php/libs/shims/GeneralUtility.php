@@ -214,6 +214,10 @@ function getDatabaseDiffConf($app) {
 }
 
 function uniqueArrayOrderedByRelevance(array $input) {
+	if(is_array($input) === FALSE) {
+		return [];
+	}
+	var_dump($input); ob_flush();
 	$acv = array_count_values($input);
 	arsort($acv); 
 	return array_keys($acv);	

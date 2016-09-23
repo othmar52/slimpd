@@ -44,6 +44,8 @@ class AlbumMigrator {
 	protected $relDirPathHash;
 	protected $relDirPath;
 	public $directoryMtime;
+	
+	public $conf;
 
 	protected $tracks;
 
@@ -123,8 +125,219 @@ class AlbumMigrator {
 		$index = array_search($maxLength, $lengths);
 		return $highestScore[$index];		 
 	}
+	
+	// TODO: instead of setting initial values on instance define default values in mysql-fields
+	// TODO: move this to models/Rawtagdata.php
+	private function mapTagsToRawtagdataInstance(&$track, $data) {
+		
+		$baseTags = array(
+			'mime_type' => 'setMimeType',
+			'playtime_seconds' => 'setMiliseconds',
+			'md5_data_source' => 'setFingerprint'
+		);
+		
+		$commonTags = array(
+			#'album' => 'setAlbum',
+			#'artist' => 'setArtist',
+			#'genre' => 'setGenre',
+			#'publisher' => 'setPublisher',
+			#'copyright' => 'setCopyright',
+			#'remixer' => 'setRemixer',
+			#'remixed by' => 'setRemixer',
+			'title' => 'setTitle',
+			'track_number' => 'setTrackNumber',
+			'track number' => 'setTrackNumber',
+			'track' => 'setTrackNumber',
+			'year' => 'setYear',
+			'comment' => 'setComment',
+			'catalog' => 'setCatalogNr',
+			#'discogs_release_id' => 'setTextDiscogsReleaseId',
+			#'discogs-id' => 'setTextDiscogsReleaseId',
+			'country' => 'setCountry',
+			'dynamic range' => 'setDynamicRange',
+			'album artist' => 'setAlbumArtist',
+			#'date' => 'setDate',
+			'totaltracks' => 'setTotalTracks',
+			'total tracks' => 'setTotalTracks',
+			#'url_user' => 'setTextUrlUser',
+			'source' => 'setTextSource',
+			'initial_key' => 'setInitialKey'
+		);
+		
+		$commentsTags = array(
+			'comment' => 'setComment',
+			'dynamic range' => 'setDynamicRange',
+			'album artist' => 'setAlbumArtist',
+			#'date' => 'setDate',
+			'totaltracks' => 'setTotalTracks',
+		);
+		
+		$textTags = array(
+			'CATALOG' => 'setCatalogNr',
+			'Catalog #' => 'setCatalogNr',
+			#'Source' => 'setTextSource',
+			'COUNTRY' => 'setCountry',
+			#'DISCOGS_RELEASE_ID' => 'setTextDiscogsReleaseId',
+			'Discogs-id' => 'setCatalogNr',
+			'DYNAMIC RANGE' => 'setDynamicRange',
+			#'TraktorPeakDB' => 'setTextPeakDb',
+			#'TraktorPerceivedDB' => 'setTextPerceivedDb',
+			#'TraktorRating' => 'setTextRating',
+			#'fBPM' => 'setTextBpm',
+			#'fBPMQuality' => 'setTextBpmQuality',
+			#'url_user' => 'setTextUrlUser',
+			
+		);
+		
+		$audio = array(
+			'dataformat' => 'setAudioDataformat',
+			'encoder' => 'setAudioEncoder',
+			'lossless' => 'setAudioLossless',
+			'compression_ratio' => 'setAudioComprRatio',
+			'bitrate' => 'setAudioBitrate',
+			#'bitrate_mode' => 'setAudioBitrateMode',
+			'bits_per_sample' => 'setAudioBitsPerSample',
+			'sample_rate' => 'setAudioSamplerate',
+		);
+		
+		$video = array(
+			'dataformat' => 'setVideoDataformat',
+			'codec' => 'setVideoCodec',
+			'resolution_x' => 'setVideoResolutionX',
+			'resolution_y' => 'setVideoResolutionY',
+			'frame_rate' => 'setVideoFramerate',
+		);
+		
+		
+		if(isset($data['error'])) {
+			$track->setError($track->getError() . "\n" . join("\n", $data['error']));
+		}
+		
+		// commentsTags
+		foreach($commentsTags as $tagName => $setter) {
+			if(isset($data['comments'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['comments'][$tagName]);
+			if($tagValue !== FALSE) {
+				$track->$setter($tagValue);
+			}
+		}
+		
+		// baseTags
+		foreach($baseTags as $tagName => $setter) {
+			if(isset($data[$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data[$tagName]);
+			if($tagValue !== FALSE) {
+				$track->$setter($tagValue);
+			}
+		}
+		
+		// audio
+		foreach($audio as $tagName => $setter) {
+			if(isset($data['audio'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['audio'][$tagName]);
+			if($tagValue !== FALSE) {
+				$track->$setter($tagValue);
+			}
+		}
+		if (isset($data['mpc']['header']['profile'])) {
+			$tagValue = $this->extractTagString($data['mpc']['header']['profile']);
+			if($tagValue !== FALSE) {
+				$track->setAudioProfile($tagValue);
+			}
+		}
+		if (isset($data['aac']['header']['profile_text'])) {
+			$tagValue = $this->extractTagString($data['aac']['header']['profile_text']);
+			if($tagValue !== FALSE) {
+				$track->setAudioProfile($tagValue);
+			}
+		}
+
+		// video
+		foreach($video as $tagName => $setter) {
+			if(isset($data['video'][$tagName]) === FALSE) {
+				continue;
+			}
+			$tagValue = $this->extractTagString($data['video'][$tagName]);
+			if($tagValue !== FALSE) {
+				$track->$setter($tagValue);
+			}
+		}
+
+		foreach(array('id3v1', 'id3v2', 'ape', 'vorbiscomment') as $tagGroup) {
+			if(isset($data['tags'][$tagGroup]) === FALSE) {
+				continue;
+			}
+			foreach($commonTags as $tagName => $setter) {
+				if(isset($data['tags'][$tagGroup][$tagName]) === FALSE) {
+					continue;
+				}
+				$tagValue = $this->extractTagString($data['tags'][$tagGroup][$tagName]);
+				if($tagValue !== FALSE) {
+					$track->$setter($tagValue);
+				}
+			}
+			if(isset($data['tags'][$tagGroup]['text']) === FALSE) {
+				continue;
+			}
+			foreach($textTags as $tagName => $setter) {
+				if(isset($data['tags'][$tagGroup]['text'][$tagName]) === FALSE) {
+					continue;
+				}
+				$tagValue = $this->extractTagString($data['tags'][$tagGroup]['text'][$tagName]);
+				if($tagValue !== FALSE) {
+					$track->$setter($tagValue);
+				}
+			}
+		}
+
+		// override description of audiocodec
+		// @see: https://github.com/othmar52/slimpd/issues/25
+		// @see: https://github.com/JamesHeinrich/getID3/issues/48
+		if(getFileExt($track->getRelPath()) !== 'm4a') {
+			return;
+		}
+		if(@$data['audio']['codec'] === 'Apple Lossless Audio Codec') {
+			$track->setMimeType('audio/aac');
+			$track->setAudioDataformat('aac');
+		}
+	}
+
+	private function extractTagString($mixed) {
+		$out = '';
+		if(is_string($mixed))	{ $out = trim($mixed); }
+		if(is_array($mixed))	{ $out = join (", ", $mixed); }
+		if(is_bool($mixed))		{ $out = ($mixed === TRUE) ? '1' : '0'; }
+		if(is_int($mixed))		{ $out = $mixed; }
+		if(is_float($mixed))	{ $out = $mixed; }
+		if(trim($out) === '')	{ return FALSE; }
+		return trim($out);
+	}
+	
+	public static function parseConfig() {
+		return parse_ini_file(APP_ROOT . "config/importer/tag-mapper.ini", TRUE);
+	}
 
 	public function run() {
+		
+		#$mapping = 
+		
+		#foreach()
+		
+		var_dump($this->conf);die;
+		$trackInstances = [];
+		foreach($this->tracks as $rawTagData) {
+			#var_dump($track); die;
+			$track = new \Slimpd\Models\Track();
+			$trackInstances[] = $this->mapTagsToRawtagdataInstance($track, unserialize($rawTagData['tagData']));
+		}
+		$this->tracks = $trackInstances;
+		
 		// first of all - try to guess if this dir should be
 		// treated as an album or as a bunch of loose tracks
 		// further this method is adding score to several attributes which will be migrated to production db-table
@@ -496,6 +709,7 @@ class AlbumMigrator {
 		$decisionBoundry = 20;
 
 		foreach(array_keys($scoreTable) as $property) {
+			echo "property\n"; var_dump($property); ob_flush();
 			$bestMatch = uniqueArrayOrderedByRelevance($this->$property);
 			switch($property) {
 				case 'filenameSchemes':

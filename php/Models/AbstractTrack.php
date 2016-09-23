@@ -31,7 +31,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 
 	protected $fingerprint;
 
-	protected $importStatus;
 	protected $error;
 	
 	// getter
@@ -55,9 +54,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 		return $this->fingerprint;
 	}
 
-	public function getImportStatus() {
-		return $this->importStatus;
-	}
 	public function getError() {
 		return $this->error;
 	}
@@ -89,10 +85,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 		return $this;
 	}
 
-	public function setImportStatus($value) {
-		$this->importStatus = $value;
-		return $this;
-	}
 	public function setError($value) {
 		$this->error = $value;
 		return $this;

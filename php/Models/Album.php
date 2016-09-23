@@ -31,7 +31,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $added;
 	protected $discs;
 
-	protected $importStatus;
 	protected $albumDr;
 	protected $trackCount;
 
@@ -84,9 +83,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	public function setDiscs($value) {
 		$this->discs = $value;
 		return $this;
-	}
-	public function setImportStatus($value) {
-		$this->importStatus = $value;
 	}
 	public function setAlbumDr($value) {
 		$this->albumDr = $value;
@@ -150,9 +146,6 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getDiscs() {
 		return $this->discs;
-	}
-	public function getImportStatus() {
-		return $this->importStatus;
 	}
 	public function getAlbumDr() {
 		return $this->albumDr;

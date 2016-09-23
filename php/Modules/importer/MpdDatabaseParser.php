@@ -185,13 +185,8 @@ class MpdDatabaseParser {
 						$this->currentDirTime = $this->rawTagItem->getDirectoryMtime();
 					}
 					break;
-				case "Time"  : $this->rawTagItem->setMiliseconds($attr[1]*1000); break;
-				case "Artist": $this->rawTagItem->setArtist($attr[1]); break;
-				case "Title" : $this->rawTagItem->setTitle($attr[1]); break;
-				case "Track" : $this->rawTagItem->setTrackNumber($attr[1]); break;
-				case "Album" : $this->rawTagItem->setAlbum($attr[1]); break;
-				case "Genre" : $this->rawTagItem->setGenre($attr[1]); break;
-				case "Date"  : $this->rawTagItem->setYear($attr[1]); break;
+				default:
+					break;
 			}
 		}
 	}

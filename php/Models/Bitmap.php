@@ -32,7 +32,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $pictureType;
 	protected $sorting;
 	protected $hidden;
-	protected $importStatus;
 	protected $error;
 	
 	public static $tableName = 'bitmap';
@@ -195,10 +194,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->hidden = $value;
 		return $this;
 	}
-	public function setImportStatus($value) {
-		$this->importStatus = $value;
-		return $this;
-	}
 	public function setError($value) {
 		$this->error = $value;
 		return $this;
@@ -237,9 +232,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getHidden() {
 		return $this->hidden;
-	}
-	public function getImportStatus() {
-		return $this->importStatus;
 	}
 	public function getError() {
 		return $this->error;

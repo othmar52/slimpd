@@ -86,6 +86,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				$rawTagData->update();
 				continue;
 			}
+
 			$rawTagData->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relPath']) );
 			
 			// skip very large files
@@ -98,8 +99,12 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
-			$this->mapTagsToRawtagdataInstance($rawTagData, $tagData);
-			
+			try {
+				$dataCopy = $tagData;
+				unset($dataCopy['comments']['picture']);
+				unset($dataCopy['id3v2']['APIC']);
+				$rawTagData->setTagData(serialize($dataCopy));
+			} catch (\Exception $e) { }
 			$rawTagData->update();
 
 			if(!$app->config['images']['read_embedded']) {
@@ -209,199 +214,6 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				# this could save performance...
 				->update();
 		}
-	}
-
-	// TODO: instead of setting initial values on instance define default values in mysql-fields
-	// TODO: move this to models/Rawtagdata.php
-	private function mapTagsToRawtagdataInstance(&$rawTagData, $data) {
-		
-		$baseTags = array(
-			'mime_type' => 'setMimeType',
-			'playtime_seconds' => 'setMiliseconds',
-			'md5_data_source' => 'setFingerprint'
-		);
-		
-		$commonTags = array(
-			'album' => 'setAlbum',
-			'artist' => 'setArtist',
-			'genre' => 'setGenre',
-			'publisher' => 'setPublisher',
-			'copyright' => 'setCopyright',
-			'remixer' => 'setRemixer',
-			'remixed by' => 'setRemixer',
-			'title' => 'setTitle',
-			'track_number' => 'setTrackNumber',
-			'track number' => 'setTrackNumber',
-			'track' => 'setTrackNumber',
-			'year' => 'setYear',
-			'comment' => 'setComment',
-			'catalog' => 'setCatalogNr',
-			'discogs_release_id' => 'setTextDiscogsReleaseId',
-			'discogs-id' => 'setTextDiscogsReleaseId',
-			'country' => 'setCountry',
-			'dynamic range' => 'setDynamicRange',
-			'album artist' => 'setAlbumArtist',
-			'date' => 'setDate',
-			'totaltracks' => 'setTotalTracks',
-			'total tracks' => 'setTotalTracks',
-			'url_user' => 'setTextUrlUser',
-			'source' => 'setTextSource',
-			'initial_key' => 'setInitialKey'
-		);
-		
-		$commentsTags = array(
-			'comment' => 'setComment',
-			'dynamic range' => 'setDynamicRange',
-			'album artist' => 'setAlbumArtist',
-			'date' => 'setDate',
-			'totaltracks' => 'setTotalTracks',
-		);
-		
-		$textTags = array(
-			'CATALOG' => 'setCatalogNr',
-			'Catalog #' => 'setCatalogNr',
-			'Source' => 'setTextSource',
-			'COUNTRY' => 'setCountry',
-			'DISCOGS_RELEASE_ID' => 'setTextDiscogsReleaseId',
-			'Discogs-id' => 'setCatalogNr',
-			'DYNAMIC RANGE' => 'setDynamicRange',
-			'TraktorPeakDB' => 'setTextPeakDb',
-			'TraktorPerceivedDB' => 'setTextPerceivedDb',
-			'TraktorRating' => 'setTextRating',
-			'fBPM' => 'setTextBpm',
-			'fBPMQuality' => 'setTextBpmQuality',
-			'url_user' => 'setTextUrlUser',
-			
-		);
-		
-		$audio = array(
-			'dataformat' => 'setAudioDataformat',
-			'encoder' => 'setAudioEncoder',
-			'lossless' => 'setAudioLossless',
-			'compression_ratio' => 'setAudioComprRatio',
-			'bitrate' => 'setAudioBitrate',
-			'bitrate_mode' => 'setAudioBitrateMode',
-			'bits_per_sample' => 'setAudioBitsPerSample',
-			'sample_rate' => 'setAudioSamplerate',
-		);
-		
-		$video = array(
-			'dataformat' => 'setVideoDataformat',
-			'codec' => 'setVideoCodec',
-			'resolution_x' => 'setVideoResolutionX',
-			'resolution_y' => 'setVideoResolutionY',
-			'frame_rate' => 'setVideoFramerate',
-		);
-		
-		
-		if(isset($data['error'])) {
-			$rawTagData->setError($rawTagData->getError() . "\n" . join("\n", $data['error']));
-		}
-		
-		// commentsTags
-		foreach($commentsTags as $tagName => $setter) {
-			if(isset($data['comments'][$tagName]) === FALSE) {
-				continue;
-			}
-			$tagValue = $this->extractTagString($data['comments'][$tagName]);
-			if($tagValue !== FALSE) {
-				$rawTagData->$setter($tagValue);
-			}
-		}
-		
-		// baseTags
-		foreach($baseTags as $tagName => $setter) {
-			if(isset($data[$tagName]) === FALSE) {
-				continue;
-			}
-			$tagValue = $this->extractTagString($data[$tagName]);
-			if($tagValue !== FALSE) {
-				$rawTagData->$setter($tagValue);
-			}
-		}
-		
-		// audio
-		foreach($audio as $tagName => $setter) {
-			if(isset($data['audio'][$tagName]) === FALSE) {
-				continue;
-			}
-			$tagValue = $this->extractTagString($data['audio'][$tagName]);
-			if($tagValue !== FALSE) {
-				$rawTagData->$setter($tagValue);
-			}
-		}
-		if (isset($data['mpc']['header']['profile'])) {
-			$tagValue = $this->extractTagString($data['mpc']['header']['profile']);
-			if($tagValue !== FALSE) {
-				$rawTagData->setAudioProfile($tagValue);
-			}
-		}
-		if (isset($data['aac']['header']['profile_text'])) {
-			$tagValue = $this->extractTagString($data['aac']['header']['profile_text']);
-			if($tagValue !== FALSE) {
-				$rawTagData->setAudioProfile($tagValue);
-			}
-		}
-
-		// video
-		foreach($video as $tagName => $setter) {
-			if(isset($data['video'][$tagName]) === FALSE) {
-				continue;
-			}
-			$tagValue = $this->extractTagString($data['video'][$tagName]);
-			if($tagValue !== FALSE) {
-				$rawTagData->$setter($tagValue);
-			}
-		}
-
-		foreach(array('id3v1', 'id3v2', 'ape', 'vorbiscomment') as $tagGroup) {
-			if(isset($data['tags'][$tagGroup]) === FALSE) {
-				continue;
-			}
-			foreach($commonTags as $tagName => $setter) {
-				if(isset($data['tags'][$tagGroup][$tagName]) === FALSE) {
-					continue;
-				}
-				$tagValue = $this->extractTagString($data['tags'][$tagGroup][$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
-			}
-			if(isset($data['tags'][$tagGroup]['text']) === FALSE) {
-				continue;
-			}
-			foreach($textTags as $tagName => $setter) {
-				if(isset($data['tags'][$tagGroup]['text'][$tagName]) === FALSE) {
-					continue;
-				}
-				$tagValue = $this->extractTagString($data['tags'][$tagGroup]['text'][$tagName]);
-				if($tagValue !== FALSE) {
-					$rawTagData->$setter($tagValue);
-				}
-			}
-		}
-
-		// override description of audiocodec
-		// @see: https://github.com/othmar52/slimpd/issues/25
-		// @see: https://github.com/JamesHeinrich/getID3/issues/48
-		if(getFileExt($rawTagData->getRelPath()) !== 'm4a') {
-			return;
-		}
-		if(@$data['audio']['codec'] === 'Apple Lossless Audio Codec') {
-			$rawTagData->setMimeType('audio/aac');
-			$rawTagData->setAudioDataformat('aac');
-		}
-	}
-
-	private function extractTagString($mixed) {
-		$out = '';
-		if(is_string($mixed))	{ $out = trim($mixed); }
-		if(is_array($mixed))	{ $out = join (", ", $mixed); }
-		if(is_bool($mixed))		{ $out = ($mixed === TRUE) ? '1' : '0'; }
-		if(is_int($mixed))		{ $out = $mixed; }
-		if(is_float($mixed))	{ $out = $mixed; }
-		if(trim($out) === '')	{ return FALSE; }
-		return trim($out);
 	}
 
 	// TODO: where to move pythonscript?
