@@ -75,7 +75,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
 		
-		$this->migratorConfig = \Slimpd\Modules\AlbumMigrator::parseConfig();
+		$this->migratorConfig = \Slimpd\Modules\albummigrator\AlbumMigrator::parseConfig();
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
 		$this->skipAlbum = TRUE;
@@ -164,7 +164,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 	
 	private function newPrevAlb($record) {
-		$this->prevAlb = new \Slimpd\Modules\AlbumMigrator();
+		$this->prevAlb = new \Slimpd\Modules\albummigrator\AlbumMigrator();
 		$this->prevAlb->conf = $this->migratorConfig;
 		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
 		$this->prevAlb->setRelDirPath($record['relDirPath']);

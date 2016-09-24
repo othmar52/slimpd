@@ -121,6 +121,28 @@ function deliverJson($data) {
 	return $newResponse;
 }
 
+/**
+ * reads values in multidimensional array
+ * example ["keylevel1", "level2"] returns $inputArray["keylevel1"]["level2"]
+ * @param array $pathChunks : target path for multidimensional array
+ * @param array $inputArray : multidimensional array
+ * @return mixed : found value or FALSE in case array path does not exist
+ */
+function recursiveArrayParser($pathChunks, $inputArray) {
+	$currentChunk = array_shift($pathChunks);
+	if(isset($inputArray[$currentChunk]) === FALSE) {
+		return FALSE;
+	}
+	if(count($pathChunks) === 0) {
+		// reached requested level
+		return $inputArray[$currentChunk];
+	}
+	if(is_array($inputArray[$currentChunk]) === FALSE) {
+		return FALSE;
+	}
+	// recursion 
+	return recursiveArrayParser($pathChunks, $inputArray[$currentChunk]);
+}
 
 function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if($verbosity > \Slim\Slim::getInstance()->config["config"]["cli-verbosity"] && $fatal === FALSE) {

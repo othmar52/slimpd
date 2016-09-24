@@ -40,7 +40,7 @@ namespace Slimpd\Modules;
  * TODO: override label-attribute (based on dirs in config_local.ini) immediatly and remove it from importer phase ?7?
  */
 
-class AlbumMigrator {
+class AlbumMigratorOld {
 	protected $relDirPathHash;
 	protected $relDirPath;
 	public $directoryMtime;
@@ -319,24 +319,8 @@ class AlbumMigrator {
 		return trim($out);
 	}
 	
-	public static function parseConfig() {
-		return parse_ini_file(APP_ROOT . "config/importer/tag-mapper.ini", TRUE);
-	}
 
 	public function run() {
-		
-		#$mapping = 
-		
-		#foreach()
-		
-		var_dump($this->conf);die;
-		$trackInstances = [];
-		foreach($this->tracks as $rawTagData) {
-			#var_dump($track); die;
-			$track = new \Slimpd\Models\Track();
-			$trackInstances[] = $this->mapTagsToRawtagdataInstance($track, unserialize($rawTagData['tagData']));
-		}
-		$this->tracks = $trackInstances;
 		
 		// first of all - try to guess if this dir should be
 		// treated as an album or as a bunch of loose tracks
@@ -632,7 +616,7 @@ class AlbumMigrator {
 
 			// add score for real unmodified attributes
 			$this->scoreAttribute($idx, 'artist',    $track['artist'], $this->scoreForRealTags);
-			$this->scoreAttribute($idx, 'artist',    $track['albumArtist'], $this->scoreForRealTags);
+			$this->scoreAttribute($idx, 'artist',    $track['albumArtist'], $this->scoreForRealTags*0.9);
 			$this->scoreAttribute($idx, 'title',     $track['title'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'genre',     $track['genre'], $this->scoreForRealTags);
 			$this->scoreAttribute($idx, 'comment',   $track['comment'], $this->scoreForRealTags);
