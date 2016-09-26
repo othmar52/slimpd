@@ -37,13 +37,25 @@ class FilenameSchema1 extends \Slimpd\Modules\albummigrator\SchemaTests\Abstract
 	}
 	
 	public function run() {
-		cliLog($this->input, 1, "cyan");
+		#cliLog($this->input, 1, "cyan");
 		
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = 1;
+			$this->result = 'number-artist-title-ext';
 			return;
 		}
 		$this->result = 0;
+	}
+	
+	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+		
+		if(count($this->matches) === 0) {
+			return;
+		}
+		$trackContext->recommend([
+			'setTrackNumber' => $this->matches[1],
+			'setArtist' => $this->matches[2],
+			'setTitle' => $this->matches[3]
+		]);
 	}
 }

@@ -20,10 +20,8 @@ namespace Slimpd\Modules\albummigrator;
  
  /*
   * JumbleJudge collects a lot of characteristics for each "album-track"
-  * based on those differences JumbeJudge decides if track-bunch should
+  * based on those differences JumbleJudge decides if track-bunch should
   * be treated as an album or a bunch of loose tracks(jumble) 
-  * 
-  * JumbleJudge's pattern-discoverer also does some scoring for guessing track/album properties 
   */
 class JumbleJudge {
 	
@@ -48,9 +46,9 @@ class JumbleJudge {
 		$test->run();
 		$this->tests["FilenameCase"][] = $test;
 		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
-		$test->run();
-		$this->tests["FilenameSchema1"][] = $test;
+		#$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
+		#$test->run();
+		#$this->tests["FilenameSchema1"][] = $test;
 	}
 	
 	public function judge() {
@@ -76,13 +74,9 @@ class JumbleJudge {
 			// store result as number in property
 			$this->testResults[$testname] = ($counter*$tests[0]->isAlbumWeight)/count($tests);
 		}
-		
 		// use each single test result to get the final decision;
 		$finalValue = array_sum($this->testResults)/count($this->testResults);
-		$this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? FALSE : TRUE;
+		$this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? 1 : 0;
 		//var_dump($this->handleAsAlbum); die;
 	}
-	
-
 }
-

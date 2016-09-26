@@ -18,9 +18,8 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FilenameCase extends \Slimpd\Modules\albummigrator\SchemaTests\AbstractSchemaTest{
+class FilenameCase extends \Slimpd\Modules\albummigrator\SchemaTests\AbstractSchemaTest {
 	public $isAlbumWeight = 0.8;
-	public $matches;
 	
 	public function run() {
 		if(strtolower($this->input) === $this->input) {

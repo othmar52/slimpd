@@ -20,7 +20,7 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
 
 class AbstractSchemaTest {
 	public $isAlbumWeight = 1;
-	public $matches;
+	public $matches = array();
 	public $pattern;
 	public $result;
 	public $input;
@@ -31,4 +31,6 @@ class AbstractSchemaTest {
 	}
 	
 	public function run() { }
+	
+	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) { }
 }

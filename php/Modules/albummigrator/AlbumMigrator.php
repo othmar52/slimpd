@@ -15,18 +15,32 @@ class AlbumMigrator {
 		
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
-			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $this->conf);
+			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
+			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx]);
 		}
+		// decide if bunch should be treated as album or as loose tracks
 		
 		$this->jumbleJudge->judge();
-		print_r($this->jumbleJudge->testResults);
-		#if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
-		#	$this->init
-		#}
-		$this->albumContextItem->migrate();
-		foreach($this->trackContextItems as $trackContextItems) {
-			$trackContextItems->migrate();
+		
+		
+		if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
+			// do some voting for each attribute
+			$this->runAttributeScoring();
+		}
+		
+		// 
+		// direcory path is the same for all tracks. copy from first rawTagItem
+		$this->albumContextItem->copyBaseProperties($this->rawTagItems[0]);
+		
+		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
+		
+		#print_r($this->trackContextItems[3]->recommendations);
+		#print_r($this->jumbleJudge->testResults);
+		
+		foreach($this->trackContextItems as $trackContextItem) {
+			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
+			$trackContextItem->migrate();
 		}
 		#var_dump($this);
 		#die('blaaaaa');
@@ -41,6 +55,16 @@ class AlbumMigrator {
 		return $this;
 	}
 	
+	private function runAttributeScoring() {
+		foreach($this->trackContextItems as $trackContextItem) {
+			$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
+			$trackContextItem->postProcessProperties();
+		}
+	}
+	
+	public function getMergedFromTracks($setterName) {
+		
+	}
 	
 	
 	

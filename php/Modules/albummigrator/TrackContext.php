@@ -1,5 +1,6 @@
 <?php
 namespace Slimpd\Modules\albummigrator;
+use \Slimpd\Models\Artist;
 
 class TrackContext extends \Slimpd\Models\Track {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
@@ -13,11 +14,15 @@ class TrackContext extends \Slimpd\Models\Track {
 	protected $remixArtists;
 	protected $featuredArtists;
 	
-	protected $recommendations;
+	public $idx;
+	
+	public $mostScored;
+	public $recommendations;
 	protected $totalTracks;
 	
-	public function __construct($rawTagArray, $config) {
+	public function __construct($rawTagArray, $idx, $config) {
 		$this->config = $config;
+		$this->idx = $idx;
 		$this->rawTagRecord = $rawTagArray;
 		$this->process();
 	}
@@ -25,8 +30,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	private function process() {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
-		$this->extractSchemes();
-		print_r($this); #die();
+		#print_r($this); #die();
 	}
 
 	/**
@@ -47,10 +51,84 @@ class TrackContext extends \Slimpd\Models\Track {
 			->setError($this->rawTagRecord['error']);
 	}
 	
-	private function extractSchemes() {
-		
+	public function initScorer(&$albumContext, $jumbleJudge) {
+		foreach($jumbleJudge->tests as $testName => $tests) {
+			$tests[$this->idx]->scoreMatches($this, $albumContext, $jumbleJudge);
+		}
 	}
 	
+	public function postProcessProperties() {
+		$this->setArtist($this->getMostScored('setArtist'));
+		$this->setTitle($this->getMostScored('setTitle'));
+		$this->setAlbum($this->getMostScored('setAlbum'));
+		$this->setGenre($this->getMostScored('setGenre'));
+		$this->setLabel($this->getMostScored('setLabel'));
+	}
+
+	/**
+	 * copy all attributes from TrackContext-instance to new Track->instance
+	 */
+	public function getTrackInstanceByContext() {
+		$track = new \Slimpd\Models\Track();
+		$self = new \ReflectionClass("\Slimpd\Models\Track");
+		foreach($self->getMethods() as $method) {
+			
+			if(preg_match("/^set/", $method->name) === 0) {
+				continue;
+			}
+			
+			// TODO: remove this setter from Track
+			if($method->name === "setRelDirPath") {
+				continue;
+			}
+			$setter = $method->name;
+			$getter = "g" . substr($setter, 1);
+			if(method_exists($this, $getter) === FALSE) {
+				continue;
+			}
+			$track->$setter($this->$getter());
+		}
+		return $track;
+	}
+
+	public function migrate() {
+		$this->setArtistUid( join(",", \Slimpd\Models\Artist::getUidsByString($this->getArtist())))
+			->setFeaturedArtistsAndRemixers()
+			->setLabelUid( join(",", \Slimpd\Models\Label::getUidsByString($this->getLabel())))
+			->setGenreUid( join(",", \Slimpd\Models\Genre::getUidsByString($this->getGenre())));
+			
+		$track = $this->getTrackInstanceByContext();
+		
+
+		\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
+		$track->update();
+		return;
+		
+		$track = new \Slimpd\Models\Track();
+		$track->setUid($this->getUid())
+			->setRelPath($this->getRelPath())
+			->setRelPathHash($this->getRelPathHash())
+			->setRelDirPathHash($this->getRelDirPathHash())
+			#->setAdded($this->getAdded())
+			->setFilesize($this->getFilesize())
+			->setFilemtime($this->getFilemtime())
+			->setLastScan($this->getLastScan())
+			->setImportStatus($this->getImportStatus())
+			->setFingerprint($this->getFingerprint())
+			->setError($this->getError())
+			
+			->setTitle($this->getTitle())
+			#->setFeaturedArtistsAndRemixers()
+			->setAlbumUid($this->getAlbumUid())
+			->setCatalogNr($this->getCatalogNr())
+			->setTrackNumber($this->getTrackNumber())
+			->setArtistUid( join(",", \Slimpd\Models\Artist::getUidsByString($this->getArtist())))
+			->setLabelUid( join(",", \Slimpd\Models\Label::getUidsByString($this->getLabel())));
+					// make sure to use identical uids in table:rawtagdata and table:track
+					
+		\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
+		$track->update();
+	}
 
 	public function setArtist($value) {
 		$this->artist = $value;
@@ -101,5 +179,239 @@ class TrackContext extends \Slimpd\Models\Track {
 	public function getTotalTracks() {
 		return $this->totalTracks;
 	}
+	
+	
+	
+
+	// TODO: refacture!!!
+	public function setFeaturedArtistsAndRemixers() {
+		$artistBlacklist = \Slimpd\Models\Artist::getArtistBlacklist();
+
+		$artistStringVanilla = $this->getArtist();
+		$titleStringVanilla = $this->getTitle();
+		
+		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
+		$regexRemix = "/(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)/i";
+		$regexRemix2 = "/(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)/i";
+		#$regexRemix = "/(.*)\(((.*)(\ remix|\ mix|\ rework|\ rmx))|(remixed\ by\ (.*))/i";
+		
+		$regularArtists = array();
+		$featuredArtists = array();
+		$remixerArtists = array();
+		$titlePattern = '';
+		
+		$performTest = 0;
+		if($performTest>0) {
+			$testData = $this->getTestData($performTest);
+			$artistStringVanilla = $testData[0];
+			$titleStringVanilla = $testData[1];
+		}
+
+		$artistString = $artistStringVanilla;
+		$titleString = $titleStringVanilla;
+		
+		
+		// in case we dont have artist nor title string take the filename as a basis
+		if($artistString == "" && $titleString == "") {
+			if($this->getRelPath() !== "") {
+				$titleString = preg_replace('/\\.[^.\\s]{3,4}$/', '', basename($this->getRelPath()));
+				$titleString = str_replace("_", " ", $titleString);
+			}
+		}
+
+		// in case artist string is missing try to get it from title string
+		if($artistString == "" && $titleString != "") {
+			$tmp = trimExplode(" - ", $titleString, TRUE, 2);
+			if(count($tmp) == 2) {
+				$artistString = $tmp[0];
+				$titleString = $tmp[1];
+			}
+		}
+
+		// in case title string is missing try to get it from artist string
+		if($artistString != "" && $titleString == "") {
+			$tmp = trimExplode(" - ", $artistString, TRUE, 2);
+			if(count($tmp) == 2) {
+				$artistString = $tmp[0];
+				$titleString = $tmp[1];
+			}
+		}
+
+		$artistString = flattenWhitespace(unifyBraces($artistString));
+		$titleString = flattenWhitespace(unifyBraces($titleString));
+
+		// assign all string-parts to category
+		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
+		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
+
+		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
+		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
+
+		if($artistString == "") {
+			$regularArtists[] = "Unknown Artist";
+		}
+		
+		// parse ARTIST string for featured artists REGEX 1
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			$artistString = str_replace(
+				$matches[2] .$matches[3] . ' ' . $matches[4],
+				" ",
+				$artistString
+			);
+			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+		}
+		// parse ARTIST string for featured artists REGEX 2
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			$artistString = str_replace(
+				$matches[2] .$matches[3] . $matches[4],
+				" ",
+				$artistString
+			);
+			$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+		}
+		
+		$regularArtists = array_merge($regularArtists, preg_split($regexArtist, $artistString));
+		
+		// parse TITLE string for featured artists REGEX 1
+		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$matches[2] .$matches[3] . ' ' . $matches[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
+		}
+		
+		// parse TITLE string for featured artists REGEX 2
+		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $matches)) {
+			#print_r($matches); die();
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
+				$titleString = str_replace(
+					$matches[2] .$matches[3] . $matches[4],
+					" ",
+					$titleString
+				);
+				$featuredArtists = array_merge($featuredArtists, preg_split($regexArtist, $sFeat));
+			}
+		}
+
+		// parse title string for remixer regex 1
+		if(preg_match($regexRemix, $titleString, $matches)) {
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[2]));
+		}
+		// parse title string for remixer regex 1
+		if(preg_match($regexRemix2, $titleString, $matches)) {
+			#print_r($matches); die();
+			$remixerArtists = array_merge($remixerArtists, preg_split($regexArtist, $matches[3]));
+		}
+		
+		// clean up extracted remixer-names with common strings
+		$tmp = array();
+		foreach($remixerArtists as $remixerArtist) {
+			if(isset($artistBlacklist[ strtolower($remixerArtist)]) === TRUE) {
+				continue;
+			}
+			$tmp[] = str_ireplace($artistBlacklist, "", $remixerArtist);
+		}
+		$remixerArtists = $tmp;
+		
+		
+		// clean up extracted featuring-names with common strings
+		$tmp = array();
+		foreach($featuredArtists as $featuredArtist) {
+			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
+				continue;
+			}
+			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
+		}
+		$featuredArtists = $tmp;
+		
+		
+		$regularArtists = array_unique(array_filter($regularArtists));
+		$featuredArtists = array_unique($featuredArtists);
+		$remixerArtists = array_unique($remixerArtists);
+		
+		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
+		$allArtists = array_merge($regularArtists, $featuredArtists, $remixerArtists);
+		usort($allArtists,'sortHelper');
+		$titlePattern = str_ireplace($allArtists, "%s", $titleString);
+		
+
+		// remove possible brackets from featuredArtists
+		#$tmp = array();
+		#foreach($featuredArtists as $featuredArtist) {
+		#	$tmp[] = str_replace(array("(", ")"), "", $featuredArtist);
+		#}
+		#$featuredArtists = $tmp;
+		
+		if(substr_count($titlePattern, "%s") !== count($remixerArtists)) {
+			// oh no - we have a problem
+			// reset extracted remixers
+			$titlePattern = $titleString;
+			$remixerArtists = array();
+		}
+		
+		/* TODO: do we need this?
+		// remove " (" from titlepattern in case that are the last 2 chars
+		if(preg_match("/(.*)\ \($/", $titlePattern, $matches)) {
+			$titlePattern = $matches[1];
+		}
+		*/
+		
+		// clean up artist names
+		// unfortunately there are artist names like "45 Thieves"
+		$regularArtists = $this->removeLeadingNumbers($regularArtists);
+		$this->setArtistUid(join(",", Artist::getUidsByString(join(" & ", $regularArtists))));
+
+		$this->setFeaturingUid('');
+		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
+		if(count($featuredArtists) > 0) { 
+			$this->setFeaturingUid(join(",", Artist::getUidsByString(join(" & ", $featuredArtists))));
+		}
+
+		$this->setRemixerUid('');
+		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
+		if(count($remixerArtists) > 0) {
+			$this->setRemixerUid(join(",", Artist::getUidsByString(join(" & ", $remixerArtists))));
+		}
+		
+		// replace multiple whitespace with a single whitespace
+		$titlePattern = preg_replace('!\s+!', ' ', $titlePattern);
+		// remove whitespace before bracket
+		$titlePattern = str_replace(' )', ')', $titlePattern);
+		$this->setTitle($titlePattern);
+		
+		if($performTest > 0) {
+			cliLog("----------ARTIST-PARSER---------", 1, "purple");
+			cliLog(" inputArtist: " . $artistStringVanilla);
+			cliLog(" inputTitle: " . $titleStringVanilla);
+			cliLog(" regular: " . print_r($regularArtists,1));
+			cliLog(" feat: " . print_r($featuredArtists,1));
+			cliLog(" remixer: " . print_r($remixerArtists,1));
+			cliLog(" titlePattern: " . $titlePattern);
+			\Slim\Slim::getInstance()->stop();
+		}
+		return $this;
+	}
+	
 }
 

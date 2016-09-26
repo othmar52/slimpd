@@ -19,6 +19,7 @@ trait MigratorContext {
 			cliLog(" invalid config. setter " . $setterName . " does not exists", 10, "red");
 			return;
 		}
+		// TODO: avoid calling unserialize more than one time
 		$tagArray = unserialize($this->rawTagRecord['tagData']);
 		foreach($rawTagPaths as $rawTagPath) {
 			$foundValue = $this->extractTagString(
@@ -47,8 +48,23 @@ trait MigratorContext {
 	}
 	
 	public function recommend($properties) {
-		foreach($properties as $setterName => $value)
-		$this->recommendations[$setterName][] = $value;
+		foreach($properties as $setterName => $value) {
+			$this->recommendations[$setterName][] = remU($value);
+		}
+	}
+	
+	public function getMostScored($setterName) {
+		#// without recommendations return 
+		if(array_key_exists($setterName, $this->recommendations) === FALSE) {
+			$getterName = "g" . substr($setterName, 1);
+			return $this->$getterName();
+		}
+		// without recommendations return 
+		if(count($this->recommendations[$setterName]) === 1) {
+			return $this->recommendations[$setterName][0];
+		}
+		$mostRelevant = uniqueArrayOrderedByRelevance($this->recommendations[$setterName]);
+		return array_shift($mostRelevant);
 	}
 }
 
