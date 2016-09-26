@@ -468,14 +468,14 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$query = "
 			SELECT count(uid) AS itemsTotal
 			FROM rawtagdata
-			WHERE audioDataFormat='mp3' AND fingerprint='';";
+			WHERE extension='mp3' AND fingerprint='';";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		
 		$query = "
 			SELECT uid, relPath
 			FROM rawtagdata
-			WHERE audioDataFormat='mp3' AND fingerprint='';";
+			WHERE extension='mp3' AND fingerprint='';";
 
 		$result = $app->db->query($query);
 

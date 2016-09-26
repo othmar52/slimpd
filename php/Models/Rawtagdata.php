@@ -19,12 +19,13 @@ namespace Slimpd\Models;
  */
 class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	use \Slimpd\Traits\PropertyLastScan;
-	use \Slimpd\Traits\PropertyMimeType;
+	use \Slimpd\Traits\PropertyFingerprint;
 
 	protected $directoryMtime = 0;
 	protected $added;
 	protected $tagData;
 	protected $extension;
+	protected $lastDirScan;
 
 	public static $tableName = 'rawtagdata';
 
@@ -46,6 +47,10 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->extension = $value;
 		return $this;
 	}
+	public function setLastDirScan($value) {
+		$this->lastDirScan = $value;
+		return $this;
+	}
 
 
 	// getter
@@ -60,5 +65,8 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getExtension() {
 		return $this->extension;
+	}
+	public function getLastDirScan() {
+		return $this->lastDirScan;
 	}
 }

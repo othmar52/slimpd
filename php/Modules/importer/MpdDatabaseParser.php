@@ -256,6 +256,7 @@ class MpdDatabaseParser {
 		}
 		$this->rawTagItem->setLastScan(0)
 			->setImportStatus(1)
+			->setExtension(getFileExt($this->rawTagItem->getRelPath()))
 			->update();
 		$this->itemsProcessed++;
 		// reset song attributes

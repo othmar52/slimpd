@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `directoryMtime` int(10) unsigned NOT NULL DEFAULT '0',
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `mimeType` varchar(64) NOT NULL DEFAULT '',
+  `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `extension` varchar(64) NOT NULL DEFAULT '',
   `error` text,
   `relPathHash` varchar(11) NOT NULL,

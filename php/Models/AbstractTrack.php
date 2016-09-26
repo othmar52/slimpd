@@ -18,9 +18,10 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
-	use \Slimpd\Traits\PropertyLastScan;
-	use \Slimpd\Traits\PropertyMimeType;
-	use \Slimpd\Traits\PropGroupAudio;
+	use \Slimpd\Traits\PropertyLastScan;	// $lastScan
+	use \Slimpd\Traits\PropertyMimeType;	// $mimeType
+	use \Slimpd\Traits\PropertyFingerprint; // $fingerprint
+	use \Slimpd\Traits\PropGroupAudio;		
 	use \Slimpd\Traits\PropGroupVideo;
 
 	protected $title;
@@ -28,8 +29,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $comment;
 	protected $trackNumber;
 	protected $catalogNr;
-
-	protected $fingerprint;
 
 	protected $error;
 	
@@ -48,10 +47,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getCatalogNr() {
 		return $this->catalogNr;
-	}
-
-	public function getFingerprint() {
-		return $this->fingerprint;
 	}
 
 	public function getError() {
@@ -77,11 +72,6 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function setCatalogNr($value) {
 		$this->catalogNr = $value;
-		return $this;
-	}
-
-	public function setFingerprint($value) {
-		$this->fingerprint = $value;
 		return $this;
 	}
 

@@ -413,5 +413,28 @@ class TrackContext extends \Slimpd\Models\Track {
 		return $this;
 	}
 	
-}
+	// fix artists names like
+	// 01.Dread Bass
+	// 01 - Cookie Monsters
+	public function removeLeadingNumbers($inputArray) {
+		$out = array();
+		#TODO: move to customizeable config
+		$whitelist = array(
+			"45 thieves",
+			#"60 minute man"
+		);
+		foreach($inputArray as $string) {
+			if(in_array(strtolower($string), $whitelist) === FALSE) {
+				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $matches)) {
+					if($matches[1] < 21) {
+						#print_r($matches); die();
+						$string = $matches[3].$matches[4];
+					}
+				}
+			}
+			$out[] = $string;
+		}
+		return $out;
+	}
 
+}
