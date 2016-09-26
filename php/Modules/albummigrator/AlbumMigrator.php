@@ -18,7 +18,9 @@ class AlbumMigrator {
 			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $this->conf);
 			$this->jumbleJudge->collect($this->trackContextItems[$idx]);
 		}
-		print_r($this->jumbleJudge);
+		
+		$this->jumbleJudge->judge();
+		print_r($this->jumbleJudge->testResults);
 		#if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
 		#	$this->init
 		#}

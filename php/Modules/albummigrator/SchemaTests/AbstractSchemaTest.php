@@ -19,7 +19,7 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
  */
 
 class AbstractSchemaTest {
-	private $isAlbumWeight = 1;
+	public $isAlbumWeight = 1;
 	public $matches;
 	public $pattern;
 	public $result;

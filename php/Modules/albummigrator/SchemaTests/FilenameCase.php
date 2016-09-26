@@ -19,7 +19,7 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
  */
 
 class FilenameCase extends \Slimpd\Modules\albummigrator\SchemaTests\AbstractSchemaTest{
-	private $isAlbumWeight = 0.8;
+	public $isAlbumWeight = 0.8;
 	public $matches;
 	
 	public function run() {

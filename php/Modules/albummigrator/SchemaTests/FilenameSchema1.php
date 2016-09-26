@@ -19,7 +19,7 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
  */
 
 class FilenameSchema1 extends \Slimpd\Modules\albummigrator\SchemaTests\AbstractSchemaTest{
-	private $isAlbumWeight = 0.8;
+	public $isAlbumWeight = 0.8;
 	
 	public function __construct($input) {
 		$this->input = $input;
@@ -41,9 +41,9 @@ class FilenameSchema1 extends \Slimpd\Modules\albummigrator\SchemaTests\Abstract
 		
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = TRUE;
+			$this->result = 1;
 			return;
 		}
-		$this->result = FALSE;
+		$this->result = 0;
 	}
 }

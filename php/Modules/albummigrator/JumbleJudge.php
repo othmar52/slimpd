@@ -28,15 +28,17 @@ namespace Slimpd\Modules\albummigrator;
 class JumbleJudge {
 	
 	// those attributes are used for "handle all directory tracks as album"
+	/*
 	protected $fileNameCase;
 	protected $filenameSchema;
 	protected $titleSchema;
 	protected $artistSchema;
 	protected $albumSchema;
 	protected $numberSchema;
+	*/
 	
-	
-	
+	private $isAlbumTreshold = 0.8;
+	public $handleAsAlbum; 
 	public $tests;
 	public $testResults;
 	
@@ -49,17 +51,36 @@ class JumbleJudge {
 		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
 		$test->run();
 		$this->tests["FilenameSchema1"][] = $test;
-		
-		
-		#$this->getFilenameSchema1() , $trackContext);
 	}
 	
 	public function judge() {
-		foreach($this->tests as $tests) {
+		// get decisions for each single test
+		foreach($this->tests as $testname => $tests) {
+			$result = array();
 			foreach($tests as $test) {
-				var_dump($zesz->result);
+				$result[] = $test->result;
 			}
+
+			// get the most occuring testresult
+			$relevant = uniqueArrayOrderedByRelevance($result);
+			$mostSimilarity = array_shift($relevant);
+			
+			// count items which has this most occuring result
+			$counter = 0;
+			foreach($tests as $test) {
+				$result[] = $test->result;
+				if($test->result === $mostSimilarity) {
+					$counter++;
+				}
+			}
+			// store result as number in property
+			$this->testResults[$testname] = ($counter*$tests[0]->isAlbumWeight)/count($tests);
 		}
+		
+		// use each single test result to get the final decision;
+		$finalValue = array_sum($this->testResults)/count($this->testResults);
+		$this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? FALSE : TRUE;
+		//var_dump($this->handleAsAlbum); die;
 	}
 	
 
