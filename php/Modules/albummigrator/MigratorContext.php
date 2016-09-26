@@ -45,5 +45,10 @@ trait MigratorContext {
 		if(trim($out) === '')	{ return FALSE; }
 		return trim(strip_tags($out));
 	}
+	
+	public function recommend($properties) {
+		foreach($properties as $setterName => $value)
+		$this->recommendations[$setterName][] = $value;
+	}
 }
 

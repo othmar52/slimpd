@@ -6,17 +6,19 @@ class AlbumMigrator {
 	protected $rawTagItems;
 	protected $trackContextItems;
 	protected $albumContextItem;
+	protected $jumbleJudge;
 	
 	public function run() {
 		// create albumContext
 		$this->albumContextItem = new \Slimpd\Modules\albummigrator\AlbumContext();
+		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge();
 		
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
 			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $this->conf);
-			$this->albumContextItem->getTagsFromTrack($rawTagItem, $this->conf);
+			$this->jumbleJudge->collect($this->trackContextItems[$idx]);
 		}
-		print_r($this->albumContextItem);
+		print_r($this->jumbleJudge);
 		#if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
 		#	$this->init
 		#}

@@ -13,13 +13,6 @@ class TrackContext extends \Slimpd\Models\Track {
 	protected $remixArtists;
 	protected $featuredArtists;
 	
-	// those attributes are used for "handle all directory tracks as album"
-	protected $fileNameCase;
-	protected $filenameSchema;
-	protected $titleSchema;
-	protected $artistSchema;
-	protected $albumSchema;
-	protected $numberSchema;
 	protected $recommendations;
 	protected $totalTracks;
 	
@@ -32,6 +25,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	private function process() {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
+		$this->extractSchemes();
 		print_r($this); #die();
 	}
 
@@ -51,6 +45,10 @@ class TrackContext extends \Slimpd\Models\Track {
 			->setImportStatus($this->rawTagRecord['importStatus'])
 			->setFingerprint($this->rawTagRecord['fingerprint'])
 			->setError($this->rawTagRecord['error']);
+	}
+	
+	private function extractSchemes() {
+		
 	}
 	
 
