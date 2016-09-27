@@ -30,7 +30,6 @@ class TrackContext extends \Slimpd\Models\Track {
 	private function process() {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
-		#print_r($this); #die();
 	}
 
 	/**
@@ -77,7 +76,7 @@ class TrackContext extends \Slimpd\Models\Track {
 				continue;
 			}
 			
-			// TODO: remove this setter from Track
+			// TODO: remove this setter from Track at all
 			if($method->name === "setRelDirPath") {
 				continue;
 			}
@@ -92,8 +91,11 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 
 	public function migrate() {
-		$this->setArtistUid( join(",", \Slimpd\Models\Artist::getUidsByString($this->getArtist())))
-			->setFeaturedArtistsAndRemixers()
+		# setFeaturedArtistsAndRemixers() is processing:
+			# $t->setArtistUid();
+			# $t->setFeaturingUid();
+			# $t->setRemixerUid();
+		$this->setFeaturedArtistsAndRemixers()
 			->setLabelUid( join(",", \Slimpd\Models\Label::getUidsByString($this->getLabel())))
 			->setGenreUid( join(",", \Slimpd\Models\Genre::getUidsByString($this->getGenre())));
 			
@@ -102,32 +104,28 @@ class TrackContext extends \Slimpd\Models\Track {
 
 		\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
 		$track->update();
-		return;
 		
-		$track = new \Slimpd\Models\Track();
-		$track->setUid($this->getUid())
-			->setRelPath($this->getRelPath())
-			->setRelPathHash($this->getRelPathHash())
-			->setRelDirPathHash($this->getRelDirPathHash())
-			#->setAdded($this->getAdded())
-			->setFilesize($this->getFilesize())
-			->setFilemtime($this->getFilemtime())
-			->setLastScan($this->getLastScan())
-			->setImportStatus($this->getImportStatus())
-			->setFingerprint($this->getFingerprint())
-			->setError($this->getError())
-			
-			->setTitle($this->getTitle())
-			#->setFeaturedArtistsAndRemixers()
-			->setAlbumUid($this->getAlbumUid())
-			->setCatalogNr($this->getCatalogNr())
-			->setTrackNumber($this->getTrackNumber())
-			->setArtistUid( join(",", \Slimpd\Models\Artist::getUidsByString($this->getArtist())))
-			->setLabelUid( join(",", \Slimpd\Models\Label::getUidsByString($this->getLabel())));
-					// make sure to use identical uids in table:rawtagdata and table:track
-					
-		\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
-		$track->update();
+		// add the whole bunch of valid and indvalid attributes to trackindex table
+		$this->updateTrackIndex();
+	}
+	
+	private function updateTrackIndex() {
+		$indexChunks = $this->getRelPath() . " " .
+			str_replace(
+				array('/', '_', '-', '.'),
+				' ',
+				$this->getRelPath()
+			);
+		// TODO: add all recomendations and other missing attributes
+
+		// make sure to use identical uids in table:trackindex and table:track
+		\Slimpd\Models\Trackindex::ensureRecordUidExists($this->getUid());
+		$trackIndex = new \Slimpd\Models\Trackindex();
+		$trackIndex->setUid($this->getUid())
+			->setArtist($this->getArtist())
+			->setTitle($this->getTitle()) // TODO: we need vanilla title
+			->setAllchunks($indexChunks)
+			->update();
 	}
 
 	public function setArtist($value) {
@@ -184,6 +182,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	
 
 	// TODO: refacture!!!
+	// TODO: pretty sure getzFeaturedArtist() from id3 tags is currently not used at all
 	public function setFeaturedArtistsAndRemixers() {
 		$artistBlacklist = \Slimpd\Models\Artist::getArtistBlacklist();
 

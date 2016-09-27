@@ -26,7 +26,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	
 	protected $albumUid;
 	protected $trackUid;
-	protected $rawTagDataUid;
 	protected $embedded;
 	protected $fileName;
 	protected $pictureType;
@@ -170,10 +169,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->trackUid = $value;
 		return $this;
 	}
-	public function setRawTagDataUid($value) {
-		$this->rawTagDataUid = $value;
-		return $this;
-	}
 	public function setEmbedded($value) {
 		$this->embedded = $value;
 		return $this;
@@ -214,9 +209,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getTrackUid() {
 		return $this->trackUid;
-	}
-	public function getRawTagDataUid() {
-		return $this->rawTagDataUid;
 	}
 	public function getEmbedded() {
 		return $this->embedded;

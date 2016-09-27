@@ -161,10 +161,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		$app = \Slim\Slim::getInstance();
 
-		$query = "SELECT count(uid) AS itemsTotal FROM album WHERE lastScan <= filemtime;";
+		$query = "SELECT count(DISTINCT relDirPathHash) AS itemsTotal FROM rawtagdata WHERE lastDirScan <= directoryMtime;";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
-		$query = "SELECT uid, relPath, relPathHash, filemtime FROM album WHERE lastScan <= filemtime;";
+		$query = "SELECT uid, relDirPath, relDirPathHash, directoryMtime FROM rawtagdata WHERE lastDirScan <= directoryMtime GROUP BY relDirPathHash;";
 		$result = $app->db->query($query);
 		$insertedImages = 0;
 
@@ -172,10 +172,10 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
-			cliLog($record['uid'] . ' ' . $record['relPath'], 2);
+			cliLog($record['uid'] . ' ' . $record['relDirPath'], 2);
 			$this->updateJob(array(
 				'msg' => 'processed ' . $this->itemsChecked . ' files',
-				'currentItem' => $record['relPath'],
+				'currentItem' => $record['relDirPath'],
 				'insertedImages' => $insertedImages
 			));
 
@@ -184,7 +184,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				->setLastScan(time())
 				->setImportStatus(2);
 
-			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relPath'].'filename-not-relevant.mp3');
+			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relDirPath'].'filename-not-relevant.mp3');
 
 			foreach($foundAlbumImages as $relPath) {
 				$imagePath = $app->config['mpd']['musicdir'] . $relPath;
