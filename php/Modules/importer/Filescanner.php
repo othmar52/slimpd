@@ -110,6 +110,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			try { unset($dataCopy['id3v2']['PRIV']); } catch (\Exception $e) { }
 			try { unset($dataCopy['flac']['PICTURE']); } catch (\Exception $e) { }
 			try { unset($dataCopy['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
+			try { unset($dataCopy['tags']); } catch (\Exception $e) { }
+			try { unset($dataCopy['comments_html']); } catch (\Exception $e) { }
+			try { unset($dataCopy['tags_html']); } catch (\Exception $e) { }
+
 			// TODO: should we complete rawTagData with fingerprint on flac files?
 			$rawTagData->setTagData(serialize($dataCopy));
 			$rawTagData->update();
