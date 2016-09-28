@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `directoryMtime` int(10) unsigned NOT NULL DEFAULT '0',
   `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
   `importStatus` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `lastScan` int(11) unsigned NOT NULL DEFAULT '0',
+  `lastDirScan` int(11) unsigned NOT NULL DEFAULT '0',
   `extension` varchar(64) NOT NULL DEFAULT '',
   `error` text,
   `relPathHash` varchar(11) NOT NULL,
@@ -339,7 +339,9 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   KEY `fingerprint` (`fingerprint`),
   KEY `filemtime` (`filemtime`),
   KEY `directoryMtime` (`directoryMtime`),
-  KEY `importStatus` (`importStatus`)
+  KEY `importStatus` (`importStatus`),
+  KEY `lastScan` (`lastScan`),
+  KEY `lastDirScan` (`lastDirScan`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 ALTER TABLE `rawtagdata`

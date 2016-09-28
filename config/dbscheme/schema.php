@@ -243,6 +243,8 @@ class Schema extends AbstractSchema
       . "  KEY `filemtime` (`filemtime`),\r"
       . "  KEY `directoryMtime` (`directoryMtime`),\r"
       . "  KEY `importStatus` (`importStatus`),\r"
+      . "  KEY `lastScan` (`lastScan`),\r"
+      . "  KEY `lastDirScan` (`lastDirScan`),\r"
       . "  FULLTEXT KEY `error` (`error`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `suggest`",
