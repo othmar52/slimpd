@@ -61,7 +61,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			
 		$query = "
-			SELECT uid, relPath, relPathHash
+			SELECT uid, relPath, relPathHash, relDirPathHash
 			FROM rawtagdata WHERE lastScan=0";
 
 		$result = $app->db->query($query);
@@ -101,8 +101,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			\getid3_lib::CopyTagsToComments($tagData);
 			try {
 				$dataCopy = $tagData;
+				// TODO: move big-tagData-stuff that should be removed to config
 				unset($dataCopy['comments']['picture']);
 				unset($dataCopy['id3v2']['APIC']);
+				// TODO: should we complete rawTagData with fingerprint on flac files?
 				$rawTagData->setTagData(serialize($dataCopy));
 			} catch (\Exception $e) { }
 			$rawTagData->update();
@@ -187,8 +189,8 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				->setRelPathHash($relPathHash)
 				->setFilemtime(filemtime($phpThumb->cache_filename))
 				->setFilesize(filesize($phpThumb->cache_filename))
-				->setRawTagDataUid($record['uid']) # TODO: is there any more need for both ID's?
-				->setTrackUid($record['uid'])		 # TODO: is there any more need for both ID's?
+				->setTrackUid($record['uid'])
+				->setRelDirPathHash($record['relDirPathHash'])
 				->setEmbedded(1)
 				// setAlbumUid() will be applied later because at this time we havn't any albumUid's but tons of bitmap-record-dupes
 				->setFileName(

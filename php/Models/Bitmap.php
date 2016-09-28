@@ -83,26 +83,30 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 			return;
 		}
 	}
-	
-	public function update() {
+
+	public function searchUidBeforeInsert() {
 		if($this->getUid() > 0) {
 			// we already have an uid ...
-		} else {
-			// check if we have a record with this path
-			$searchParams = array(
-				'relPath' => $this->getRelPath()
-			);
-			
-			// multiple usage of same image files are possible...
-			if($this->getAlbumUid() > 0) {
-				$searchParams['albumUid'] = $this->getAlbumUid();
-			}			
-			$bitmap2 = Bitmap::getInstanceByAttributes($searchParams);
+			return;
+		}
 
-			if($bitmap2 === NULL) {
-				return $this->insert();
-			}
+		// check if we have a record with this path
+		// multiple usage of same image files is possible. so albumDirHash has to match
+		$bitmap2 = Bitmap::getInstanceByAttributes(array(
+			'relPathHash' => $this->getRelPathHash(),
+			'relDirPathHash' => $this->getRelDirPathHash(),
+		));
+
+		if($bitmap2 !== NULL) {
 			$this->setUid($bitmap2->getUid());
+		}
+		return;
+	}
+	
+	public function update() {
+		$this->searchUidBeforeInsert();
+		if($this->getUid() < 1) {
+			return $this->insert();
 		}
 			
 		$app = \Slim\Slim::getInstance();

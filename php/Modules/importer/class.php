@@ -178,11 +178,15 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				'currentItem' => $record['relDirPath'],
 				'insertedImages' => $insertedImages
 			));
+			
+			$query = "UPDATE rawtagdata SET lastDirScan = ".time()." WHERE relDirPathHash='". $record['relDirPathHash'] ."';";
+			$app->db->query($query);
 
-			$album = new Album();
-			$album->setUid($record['uid'])
-				->setLastScan(time())
-				->setImportStatus(2);
+			#$album = new RawTagData();
+			#$album->setUid($record['uid'])
+			#	->setLastDirScan(time())
+			#	// TODO: should we update import status here?
+			#	/*->setImportStatus(2)*/;
 
 			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relDirPath'].'filename-not-relevant.mp3');
 
@@ -194,9 +198,12 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$bitmap = new Bitmap();
 				$bitmap->setRelPath($relPath)
 					->setRelPathHash($relPathHash)
+					->setRelDirPathHash($record['relDirPathHash'])
+					->setFileName(basename($relPath))
 					->setFilemtime(filemtime($imagePath))
 					->setFilesize(filesize($imagePath))
-					->setAlbumUid($record['uid']);
+					// TODO: this looks like nonsense...
+					/*->setAlbumUid($record['uid'])*/;
 
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);
@@ -215,7 +222,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 					->update();
 				$insertedImages++;
 			}
-			$album->update();
+			#$album->update();
 		}
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemsChecked . ' directories',
@@ -395,7 +402,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				uid,
 				trackUid,
 				embedded,
-				CONCAT(albumUid, '.', width, '.', height, '.', filesize) as dupes,
+				CONCAT(relDirPathHash, '.', width, '.', height, '.', filesize) as dupes,
 				relPath,
 				filesize
 			FROM  bitmap
