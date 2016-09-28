@@ -26,6 +26,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $tagData;
 	protected $extension;
 	protected $lastDirScan;
+	protected $error;	// TODO: move to Trait
 
 	public static $tableName = 'rawtagdata';
 
@@ -51,6 +52,10 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->lastDirScan = $value;
 		return $this;
 	}
+	public function setError($value) {
+		$this->error = $value;
+		return $this;
+	}
 
 
 	// getter
@@ -68,5 +73,8 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getLastDirScan() {
 		return $this->lastDirScan;
+	}
+	public function getError() {
+		return $this->error;
 	}
 }
