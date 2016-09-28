@@ -99,14 +99,19 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
-			try {
-				$dataCopy = $tagData;
-				// TODO: move big-tagData-stuff that should be removed to config
-				unset($dataCopy['comments']['picture']);
-				unset($dataCopy['id3v2']['APIC']);
-				// TODO: should we complete rawTagData with fingerprint on flac files?
-				$rawTagData->setTagData(serialize($dataCopy));
-			} catch (\Exception $e) { }
+
+			// remove big-tagData-stuff (images, traktor-waveforms) to keep database-size as small as possible
+			// maybe some or all array paths does not not exist...
+			// TODO: move array paths to config
+			$dataCopy = $tagData;
+			try { unset($dataCopy['comments']['picture']); } catch (\Exception $e) { }
+			try { unset($dataCopy['id3v2']['APIC']); } catch (\Exception $e) { }
+			try { unset($dataCopy['id3v2']['PIC']); } catch (\Exception $e) { }
+			try { unset($dataCopy['id3v2']['PRIV']); } catch (\Exception $e) { }
+			try { unset($dataCopy['flac']['PICTURE']); } catch (\Exception $e) { }
+			try { unset($dataCopy['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
+			// TODO: should we complete rawTagData with fingerprint on flac files?
+			$rawTagData->setTagData(serialize($dataCopy));
 			$rawTagData->update();
 
 			if(!$app->config['images']['read_embedded']) {
