@@ -45,6 +45,20 @@ function addStars($searchterm) {
 	return $str;
 }
 
+function recursiveDropLargeData(&$inputArray, $strlenTreshold = 1000) {
+	if(is_array($inputArray) === FALSE) {
+		return;
+	}
+	foreach($inputArray as $key => &$value) {
+		if(is_string($value) === TRUE && strlen($value) > $strlenTreshold) {
+			cliLog("removing large data: " . $key, 10 , "red");
+			unset($inputArray[$key]);
+		}
+		if(is_array($value) === TRUE) {
+			recursiveDropLargeData($value, $strlenTreshold);
+		}
+	}
+}
 
 function parseMetaForTotal($metaArray) {
 	$return = "0";

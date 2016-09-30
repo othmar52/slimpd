@@ -103,7 +103,9 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			// remove big-tagData-stuff (images, traktor-waveforms) to keep database-size as small as possible
 			// maybe some or all array paths does not not exist...
 			// TODO: move array paths to config
+
 			$dataCopy = $tagData;
+			// drop large data by common array paths
 			try { unset($dataCopy['comments']['picture']); } catch (\Exception $e) { }
 			try { unset($dataCopy['id3v2']['APIC']); } catch (\Exception $e) { }
 			try { unset($dataCopy['id3v2']['PIC']); } catch (\Exception $e) { }
@@ -112,9 +114,13 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			try { unset($dataCopy['id3v2']['comments']['picture']); } catch (\Exception $e) { }
 			try { unset($dataCopy['flac']['PICTURE']); } catch (\Exception $e) { }
 			try { unset($dataCopy['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
+			try { unset($dataCopy['comments']['text']['COVERART_UUENCODED']); } catch (\Exception $e) { }
 			try { unset($dataCopy['tags']); } catch (\Exception $e) { }
 			try { unset($dataCopy['comments_html']); } catch (\Exception $e) { }
 			try { unset($dataCopy['tags_html']); } catch (\Exception $e) { }
+
+			// drop the rest of large data under non-common array paths
+			try { recursiveDropLargeData($dataCopy); } catch (\Exception $e) { }
 
 			// TODO: should we complete rawTagData with fingerprint on flac files?
 			$rawTagData->setTagData(serialize($dataCopy));
