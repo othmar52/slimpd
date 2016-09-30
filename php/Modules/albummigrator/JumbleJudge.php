@@ -17,12 +17,13 @@ namespace Slimpd\Modules\albummigrator;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- /*
-  * JumbleJudge collects a lot of characteristics for each "album-track"
-  * based on those differences JumbleJudge decides if track-bunch should
-  * be treated as an album or a bunch of loose tracks(jumble) 
-  */
+
+/*
+ * JumbleJudge collects a lot of characteristics for each "album-track"
+ * based on those differences JumbleJudge decides if track-bunch should
+ * be treated as an album or a bunch of loose tracks(jumble) 
+ */
+
 class JumbleJudge {
 	
 	// those attributes are used for "handle all directory tracks as album"
@@ -46,9 +47,9 @@ class JumbleJudge {
 		$test->run();
 		$this->tests["FilenameCase"][] = $test;
 		
-		#$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
-		#$test->run();
-		#$this->tests["FilenameSchema1"][] = $test;
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
+		$test->run();
+		$this->tests["FilenameSchema1"][] = $test;
 	}
 	
 	public function judge() {
