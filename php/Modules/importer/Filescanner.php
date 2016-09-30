@@ -108,6 +108,8 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			try { unset($dataCopy['id3v2']['APIC']); } catch (\Exception $e) { }
 			try { unset($dataCopy['id3v2']['PIC']); } catch (\Exception $e) { }
 			try { unset($dataCopy['id3v2']['PRIV']); } catch (\Exception $e) { }
+			try { unset($dataCopy['id3v2']['picture']); } catch (\Exception $e) { }
+			try { unset($dataCopy['id3v2']['comments']['picture']); } catch (\Exception $e) { }
 			try { unset($dataCopy['flac']['PICTURE']); } catch (\Exception $e) { }
 			try { unset($dataCopy['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
 			try { unset($dataCopy['tags']); } catch (\Exception $e) { }
