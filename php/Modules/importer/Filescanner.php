@@ -169,6 +169,10 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			$phpThumb->setParameter('config_cache_prefix', $record['relPathHash'].'_' . $bitmapIndex . '_');
 			$phpThumb->SetCacheFilename();
 			$phpThumb->GenerateThumbnail();
+			if($phpThumb->source_height > 65500 || $phpThumb->source_width > 65500) {
+				cliLog("ERROR extracting bitmap! Maximum supported image dimension is 65500 pixels", 1, "red");
+				continue;
+			}
 			\phpthumb_functions::EnsureDirectoryExists(
 				dirname($phpThumb->cache_filename),
 				octdec($app->config['config']['dirCreateMask'])
@@ -176,7 +180,6 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			try {
 				$phpThumb->RenderToFile($phpThumb->cache_filename);
 			} catch(\Exception $e) {
-				// Maximum supported image dimension is 65500 pixels
 				cliLog("ERROR extracting embedded Bitmap! " . $e->getMessage(), 1, "red");
 				continue;
 			}
