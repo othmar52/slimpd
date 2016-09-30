@@ -37,19 +37,23 @@ class JumbleJudge {
 	*/
 	
 	private $isAlbumTreshold = 0.8;
-	public $handleAsAlbum; 
+	public $handleAsAlbum;
 	public $tests;
 	public $testResults;
 	
 	
 	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameCase(basename($trackContext->getRelPath()));
+		$test = new \Slimpd\Modules\albummigrator\CaseSensitivityTests\Filename(basename($trackContext->getRelPath()));
 		$test->run();
 		$this->tests["FilenameCase"][] = $test;
 		
 		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
 		$test->run();
 		$this->tests["FilenameSchema1"][] = $test;
+
+		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Artist($trackContext->getArtist());
+		$test->run();
+		$this->tests["EqualTagArtist"][] = $test;
 	}
 	
 	public function judge() {

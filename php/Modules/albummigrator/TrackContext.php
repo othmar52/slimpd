@@ -1,6 +1,7 @@
 <?php
 namespace Slimpd\Modules\albummigrator;
 use \Slimpd\Models\Artist;
+use \Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -272,10 +273,10 @@ class TrackContext extends \Slimpd\Models\Track {
 		$titleStringVanilla = $this->getTitle();
 		
 		// TODO: move regex patterns to class RegexHelper
-		$regexArtist = "/,|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\//i";
-		$regexRemix = "/(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)/i";
+		$regexArtist = "/".RGX::ARTIST_GLUE."/i";
+		$regexRemix = "/" . RGX::REMIX1 . "/i";
+		$regexRemix2 = "/" . RGX::REMIX2 . "/i";
 		$regexRemix2 = "/(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)/i";
-		#$regexRemix = "/(.*)\(((.*)(\ remix|\ mix|\ rework|\ rmx))|(remixed\ by\ (.*))/i";
 		
 		$regularArtists = array();
 		$featuredArtists = array();

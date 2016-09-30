@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests;
+namespace Slimpd\Modules\albummigrator\AbstractTests;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,18 +18,19 @@ namespace Slimpd\Modules\albummigrator\SchemaTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FilenameCase extends \Slimpd\Modules\albummigrator\SchemaTests\AbstractSchemaTest {
-	public $isAlbumWeight = 0.8;
+class AbstractTest {
+	public $isAlbumWeight = 1;
+	public $matches = array();
+	public $pattern;
+	public $result;
+	public $input;
 	
-	public function run() {
-		if(strtolower($this->input) === $this->input) {
-			$this->result = "lower";
-			return;
-		}
-		if(strtoupper($this->input) === $this->input) {
-			$this->result = "upper";
-			return;
-		}
-		$this->result = "mixed";
+	public function __construct($input) {
+		$this->input = $input;
+		return $this;
 	}
+	
+	public function run() { }
+	
+	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) { }
 }

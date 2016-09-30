@@ -5,52 +5,46 @@ namespace Slimpd;
  * This file is part of sliMpd - a php based mpd web client
  *
  * This program is free software: you can redistribute it and/or modify it
- * under the terms of the GNU Affero General Public License as published by the
+ * under the terms of the GNU Affero General public static License as published by the
  * Free Software Foundation, either version 3 of the License, or (at your
  * option) any later version.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General public static License
  * for more details.
  *
- * You should have received a copy of the GNU Affero General Public License
+ * You should have received a copy of the GNU Affero General public static License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class RegexHelper {
+
+	const NUM    = "([\d]{1,3})";
+	const VINYL  = "([A-M\d]{1,3})"; // a1, AA2,
+	const GLUE   = "(?:[ .\-_\|]{1,4})"; // "_-_", ". ", "-",
+	const GLUE_NO_WHITESPACE   = "(?:[.\-_]{1,4})"; // "_-_", ". ", "-",
+	const EXT    = "\.([a-z\d]{2,4})";
+	const SCENE  = "-([^\s\-]+)";
+	const YEAR  = "((?:[1920]{2})(?:[0-9]{2}))";
+	#const year  = "([0-9]{4})";
+	const CATNR  = "((?:([\(\[]{1})?((?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
+	const SOURCE  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
+	const NO_MINUS= "([^-]+)";
+	const ANYTHING= "(.*)";
+	const MAY_BRACKET = "(?:([\(\)\[\]]{0,1}))?";
 	
-	public $dStart  = "/^";
-	public $dEnd    = "$/";
-	public $dEndInsens= "$/i";
-		
-		
-	public $num    = "([\d]{1,3})";
-	public $vinyl  = "([A-M\d]{1,3})"; // a1, AA2,
-	public $glue   = "(?:[ .\-_\|]{1,4})"; // "_-_", ". ", "-",
-	public $glueNoWhitespace   = "(?:[.\-_]{1,4})"; // "_-_", ". ", "-",
-	public $ext    = "\.([a-z\d]{2,4})";
-	public $scene  = "-([^\s\-]+)";
-	public $year  = "((?:[1920]{2})(?:[0-9]{2}))";
-	#public $year  = "([0-9]{4})";
-	public $catNr  = "((?:([\(\[]{1})?((?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
-	public $source  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
-	public $noMinus= "([^-]+)";
-	public $anything= "(.*)";
+	const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	
+	const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
+	const REMIX1 = "(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)";
+	const REMIX2 = "(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)";
 	
-	
-	
-	
-	public $mayBracket = "(?:([\(\)\[\]]{0,1}))?"; 
-	
-	public $various = "(va|v\.a\.|various|various\ artists|various\ artist)";
-	
-	
-	public function seemsYeary($input) {
+	public static function seemsYeary($input) {
 		return ($input > 1900 && $input < date("Y")+1 )? TRUE : FALSE;
 	}
 	
-	public function seemsCatalogy($input) {
+	public static function seemsCatalogy($input) {
 		$input = preg_replace('/[^A-Z0-9]/', "", strtoupper($input));
 		if(preg_match("/". $this->catNr."/", $input)) {
 			return TRUE;
@@ -58,7 +52,7 @@ class RegexHelper {
 		return FALSE;
 	}
 	
-	public function seemsTitly($input) {
+	public static function seemsTitly($input) {
 		$blacklist = array(
 			'various',
 			'artist',
@@ -71,7 +65,7 @@ class RegexHelper {
 		return TRUE;
 	}
 	
-	public function seemsArtistly($input) {
+	public static function seemsArtistly($input) {
 		$blacklist = array(
 			'various',
 			'artist',
@@ -85,5 +79,4 @@ class RegexHelper {
 		}
 		return TRUE;
 	}
-	
 }
