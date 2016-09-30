@@ -164,16 +164,6 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 
-			// TODO: find a file where we can reproduce this error
-			// for now deactivate the size check
-			//if(strlen($rawImageData) > 40000) {
-			//	// skip huge imagedata
-			//	// got errormessage "Maximum supported image dimension is 65500 pixels" from ???
-			//	continue;
-			//}
-			
-			# TODO: delete tmp files of php thumb (cache/pThumb*) - shouldn't phpThumb handle that itself?
-
 			$phpThumb->resetObject();
 			$phpThumb->setSourceData($rawImageData);
 			$phpThumb->setParameter('config_cache_prefix', $record['relPathHash'].'_' . $bitmapIndex . '_');
@@ -183,7 +173,13 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				dirname($phpThumb->cache_filename),
 				octdec($app->config['config']['dirCreateMask'])
 			);
-			$phpThumb->RenderToFile($phpThumb->cache_filename);
+			try {
+				$phpThumb->RenderToFile($phpThumb->cache_filename);
+			} catch(\Exception $e) {
+				// Maximum supported image dimension is 65500 pixels
+				cliLog("ERROR extracting embedded Bitmap! " . $e->getMessage(), 1, "red");
+				continue;
+			}
 			
 			$this->extractedImages ++;
 			
