@@ -19,17 +19,75 @@ class TrackContext extends \Slimpd\Models\Track {
 	public $mostScored;
 	public $recommendations;
 	protected $totalTracks;
+	protected $audioBitrateMode;
 	
 	public function __construct($rawTagArray, $idx, $config) {
 		$this->config = $config;
 		$this->idx = $idx;
 		$this->rawTagRecord = $rawTagArray;
+		$this->rawTagArray = unserialize($rawTagArray['tagData']);
 		$this->process();
 	}
 	
 	private function process() {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
+		$this->postProcessAudioProperties();
+	}
+
+	private function postProcessAudioProperties() {
+		// convert decimal-seconds to miliseconds
+		$this->setMiliseconds(round($this->getMiliseconds()*1000));
+
+		// default value for audio-encoder
+		if(!$this->getAudioEncoder()) {
+			$this->setAudioEncoder('Unknown encoder');
+		}
+
+		// default value for audio-bits-per-sample
+		if(!$this->getAudioBitsPerSample()) {
+			$this->setAudioBitsPerSample(16);
+		}
+
+		// default value for audio-sample-rate
+		if(!$this->getAudioSampleRate()) {
+			$this->setAudioSampleRate(44100);
+		}
+
+		// default value for audio-channels
+		if(!$this->getAudioChannels()) {
+			$this->setAudioChannels(2);
+		}
+
+		if($this->getAudioLossless()) {
+			$this->setAudioProfile('Lossless compression');
+			if($this->getAudioComprRatio() === "1") {
+				$this->setAudioProfile('Lossless');
+			}
+		}
+
+		if(!$this->getAudioProfile()) {
+			$this->setAudioProfile(
+				$this->getAudioBitrateMode() . " " . round($this->getAudioBitrate()/ 1000, 1) . " kbps"
+			);
+		}
+
+		// integer in database
+		$this->setAudioBitrate(round($this->getAudioBitrate()));
+
+		// override description of audiocodec
+		// @see: https://github.com/othmar52/slimpd/issues/25
+		// @see: https://github.com/JamesHeinrich/getID3/issues/48
+		$audioCodec = $this->extractTagString(
+			recursiveArrayParser(
+				["audio", "codec"],
+				$this->rawTagArray
+			)
+		);
+		if($this->rawTagRecord['extension'] === 'm4a' && $audioCodec === "Apple Lossless Audio Codec") {
+			$this->setMimeType('audio/aac');
+			$this->setAudioDataformat('aac');
+		}
 	}
 
 	/**
@@ -176,6 +234,13 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 	public function getTotalTracks() {
 		return $this->totalTracks;
+	}
+	public function setAudioBitrateMode($value) {
+		$this->audioBitrateMode = $value;
+		return $this;
+	}
+	public function getAudioBitrateMode() {
+		return $this->audioBitrateMode;
 	}
 	
 	

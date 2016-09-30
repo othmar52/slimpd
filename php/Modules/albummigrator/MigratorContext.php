@@ -4,7 +4,8 @@ namespace Slimpd\Modules\albummigrator;
 trait MigratorContext {
 	protected $config;
 	protected $zeroWhitelist;
-	protected $rawTagRecord;
+	protected $rawTagRecord; // database record as array
+	protected $rawTagArray;	// unserialized array of field rawtagdata.tagData
 	
 	private function configBasedSetters() {
 		foreach($this->config as $confSection => $rawTagPaths) {
@@ -19,19 +20,25 @@ trait MigratorContext {
 			cliLog(" invalid config. setter " . $setterName . " does not exists", 10, "red");
 			return;
 		}
-		// TODO: avoid calling unserialize more than one time
-		$tagArray = unserialize($this->rawTagRecord['tagData']);
+
 		foreach($rawTagPaths as $rawTagPath) {
 			$foundValue = $this->extractTagString(
 				recursiveArrayParser(
 					trimExplode(".", $rawTagPath),
-					$tagArray
+					$this->rawTagArray
 				)
 			);
 			if($foundValue === FALSE || $foundValue === "0") {
 				continue;
 			}
-			$this->$setterName($foundValue);
+
+			// preserve priority by config
+			$getterName = "g" . substr($setterName, 1);
+			if(strlen($this->$getterName()) === 0) {
+				$this->$setterName($foundValue);
+			}
+
+			// but add to recommendations in any case
 			$this->recommendations[$setterName][] = $foundValue;
 		}
 	}

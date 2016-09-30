@@ -6,6 +6,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 	
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
+		$this->rawTagArray = unserialize($rawTagArray['tagData']);
 		$this->config = $config;
 		$this->configBasedSetters();
 	}
