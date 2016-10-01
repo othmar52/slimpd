@@ -31,6 +31,10 @@ class MpdDatabaseParser {
 	private $currentDir = "";
 	private $currentPlaylist = "";
 
+	// timestamp attributes (filemtime, directorymtime, added)
+	private $currentDirTime = 0;
+	private $useNowAsAdded = TRUE;
+
 	// needed for comparisons
 	public $fileTstamps = array();
 	public $dirTstamps = array();
@@ -46,6 +50,12 @@ class MpdDatabaseParser {
 	public $itemsProcessed = 0;
 
 	public function __construct($dbFilePath) {
+		// very first import may use filesystem timestamp as attribute:added instead of time()
+		if(\Slimpd\Models\Rawtagdata::getCountAll() < 1
+		&& \Slim\Slim::getInstance()->config["importer"]["use-filemtime-on-initial-import"] === "1") {
+			$this->useNowAsAdded = FALSE;
+		}
+
 		$this->dbFile = $dbFilePath;
 
 		// check if mpd_db_file exists
@@ -167,15 +177,13 @@ class MpdDatabaseParser {
 					break;
 
 				case "mtime" :
-					if(isFutureTimestamp($attr[1]) === TRUE) {
-						// TODO: does it make sense to store those items for echoing on finish?
-						cliLog("WARNING : mtime is in future. consider to touch " . $this->currentDir . DS . $this->currentSong, 1, "red");
-						$attr[1] = time();
-					}
-					$setter = ($this->currentSection == "directory")
+					$setter = ($this->currentSection === "directory")
 						? "setDirectoryMtime"
 						: "setFilemtime";
 					$this->rawTagItem->$setter($attr[1]);
+					if($this->currentSection === "directory") {
+						$this->currentDirTime = $this->rawTagItem->getDirectoryMtime();
+					}
 					break;
 				case "Time"  : $this->rawTagItem->setMiliseconds($attr[1]*1000); break;
 				case "Artist": $this->rawTagItem->setArtist($attr[1]); break;
@@ -202,6 +210,8 @@ class MpdDatabaseParser {
 
 		// process"song_end"
 		$this->itemsChecked++;
+
+		$this->rawTagItem->setDirectoryMtime($this->currentDirTime);
 
 		// single music files directly in mpd-musicdir-root must not get a leading slash
 		$this->rawTagItem->setRelDirPath(($this->currentDir === "") ? "" : $this->currentDir . DS)
@@ -238,8 +248,18 @@ class MpdDatabaseParser {
 			// file is alive - remove it from dead items
 			unset($this->fileOrphans[$this->rawTagItem->getRelPathHash()]);
 		}
-		$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime())
-			->setLastScan(0)
+
+		$this->rawTagItem->setAdded(time());
+		if($this->useNowAsAdded === FALSE) {
+			$this->rawTagItem->setAdded($this->rawTagItem->getFilemtime());
+			// in case we have an invalid filesystem timestamp (future) override it
+			if(isFutureTimestamp($this->rawTagItem->getFilemtime()) === TRUE) {
+				// TODO: does it make sense to store those items for echoing on finish?
+				cliLog("WARNING : mtime is in future. consider to touch " . $this->rawTagItem->getRelPath(), 1, "red");
+				$this->rawTagItem->setAdded(time());
+			}
+		}
+		$this->rawTagItem->setLastScan(0)
 			->setImportStatus(1)
 			->update();
 		$this->itemsProcessed++;

@@ -108,6 +108,10 @@ class Systemcheck {
 			$statusCode = $response->getStatusCode();
 		} catch(\GuzzleHttp\Exception\ClientException $exception) {
 			$statusCode = $exception->getResponse()->getStatusCode();
+		} catch(\GuzzleHttp\Exception\RequestException $exception) {
+			$check['fsConfLocalServe']['skip'] = TRUE;
+			\Slim\Slim::getInstance()->flashNow('error', $exception->getMessage());
+			return;
 		}
 		if($statusCode === 200) {
 			$check['fsConfLocalServe']['status'] = 'danger';

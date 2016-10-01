@@ -56,16 +56,13 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		$query = "
 			SELECT COUNT(*) AS itemsTotal
-			FROM rawtagdata WHERE lastScan < filemtime";
+			FROM rawtagdata WHERE lastScan=0";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 			
 			
 		$query = "
-			SELECT uid,
-				relPath, relPathHash, filemtime,
-				relDirPath, relDirPathHash, directoryMtime
-			FROM rawtagdata
-			WHERE lastScan < filemtime";// LIMIT 200000,1000;";
+			SELECT uid, relPath, relPathHash
+			FROM rawtagdata WHERE lastScan=0";
 
 		$result = $app->db->query($query);
 		$this->extractedImages = 0;
@@ -175,7 +172,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			// remove tempfiles of phpThumb
 			clearPhpThumbTempFiles($phpThumb);
 			
-			$relPath = str_replace(APP_ROOT, '', $phpThumb->cache_filename);
+			$relPath = removeAppRootPrefix($phpThumb->cache_filename);
 			$relPathHash = getFilePathHash($relPath);
 			
 			$imageSize = GetImageSize($phpThumb->cache_filename);
