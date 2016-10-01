@@ -272,11 +272,9 @@ class TrackContext extends \Slimpd\Models\Track {
 		$artistStringVanilla = $this->getArtist();
 		$titleStringVanilla = $this->getTitle();
 		
-		// TODO: move regex patterns to class RegexHelper
 		$regexArtist = "/".RGX::ARTIST_GLUE."/i";
 		$regexRemix = "/" . RGX::REMIX1 . "/i";
 		$regexRemix2 = "/" . RGX::REMIX2 . "/i";
-		$regexRemix2 = "/(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)/i";
 		
 		$regularArtists = array();
 		$featuredArtists = array();

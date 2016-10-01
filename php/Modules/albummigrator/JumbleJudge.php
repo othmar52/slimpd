@@ -43,13 +43,22 @@ class JumbleJudge {
 	
 	
 	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
-		$test = new \Slimpd\Modules\albummigrator\CaseSensitivityTests\Filename(basename($trackContext->getRelPath()));
+		$fileName = basename($trackContext->getRelPath());
+		$test = new \Slimpd\Modules\albummigrator\CaseSensitivityTests\Filename($fileName);
 		$test->run();
 		$this->tests["FilenameCase"][] = $test;
 		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1(basename($trackContext->getRelPath()));
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1($fileName);
 		$test->run();
 		$this->tests["FilenameSchema1"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema2($fileName);
+		$test->run();
+		$this->tests["FilenameSchema2"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameHasYear($fileName);
+		$test->run();
+		$this->tests["FilenameHasYear"][] = $test;
 
 		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Artist($trackContext->getArtist());
 		$test->run();

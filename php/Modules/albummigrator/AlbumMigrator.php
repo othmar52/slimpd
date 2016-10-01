@@ -52,8 +52,8 @@ class AlbumMigrator {
 		
 		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
 		
-		#print_r($this->trackContextItems[3]->recommendations);
-		#print_r($this->jumbleJudge->testResults);
+		#print_r($this->trackContextItems[1]->recommendations);die;
+		#print_r($this->jumbleJudge->testResults); die;
 		
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
