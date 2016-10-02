@@ -92,6 +92,13 @@ function unifyBraces($input) {
 }
 
 /**
+ * removes leading zeroes from input like "01", "001"
+ */
+function removeLeadingZeroes($input) {
+	return ltrim($input, "0");
+}
+
+/**
  * php's escapeshellarg() invalidates pathes with some specialchars
  *	  escapeshellarg("/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3")
  *		  results in "/testdir/pathtest-uselessx/testfile.mp3"

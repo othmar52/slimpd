@@ -36,7 +36,7 @@ class JumbleJudge {
 	protected $numberSchema;
 	*/
 	
-	private $isAlbumTreshold = 0.8;
+	private $isAlbumTreshold = 0.7;
 	public $handleAsAlbum;
 	public $tests;
 	public $testResults;
@@ -82,6 +82,22 @@ class JumbleJudge {
 		$test->run();
 		$this->tests["ArtistNumberArtist"][] = $test;
 		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\Numeric($trackContext->getTrackNumber());
+		$test->run();
+		$this->tests["TrackNumberNumeric"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\Vinyl($trackContext->getTrackNumber());
+		$test->run();
+		$this->tests["TrackNumberVinyl"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\LeadingZero($trackContext->getTrackNumber());
+		$test->run();
+		$this->tests["TrackNumberLeadingZero"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\CombinedWithTotal($trackContext->getTrackNumber());
+		$test->run();
+		$this->tests["TrackNumberCombinedWithTotal"][] = $test;
+		
 	}
 
 	public function judge() {
@@ -109,6 +125,7 @@ class JumbleJudge {
 		}
 		// use each single test result to get the final decision;
 		$finalValue = array_sum($this->testResults)/count($this->testResults);
+		#var_dump($finalValue); die;
 		$this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? 1 : 0;
 		//var_dump($this->handleAsAlbum); die;
 	}

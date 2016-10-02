@@ -70,7 +70,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 					return(round($seconds*1000)) . ' ms';
 				}
 				// remove leading zero
-				return ltrim(gmdate($format, $seconds) . ' ' . $suffix, 0);
+				return removeLeadingZeroes(gmdate($format, $seconds) . ' ' . $suffix);
 			}),
 
 			new \Twig_SimpleFilter('timeElapsedString', function ($seconds) {

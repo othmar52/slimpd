@@ -51,7 +51,7 @@ class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractT
 			return;
 		}
 		$trackContext->recommend([
-			'setTrackNumber' => $this->matches[1],
+			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
 			'setArtist' => $this->matches[2]
 		]);
 		$albumContext->recommend([

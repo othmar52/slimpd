@@ -46,7 +46,7 @@ class VinylArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\Ab
 			return;
 		}
 		$trackContext->recommend([
-			'setTrackNumber' => $this->matches[1],
+			'setTrackNumber' => strtoupper($this->matches[1]),
 			'setArtist' => $this->matches[2],
 			'setTitle' => $this->matches[3]
 		]);

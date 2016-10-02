@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Filename;
+namespace Slimpd\Modules\albummigrator\SchemaTests\TrackNumber;
 use Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
@@ -19,36 +19,27 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.8;
-	
-	public function __construct($input) {
-		$this->input = $input;
-		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
-		return $this;
-	}
-	
+class LeadingZero extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+	// TODO: this test does return misleading result in case we have more than 9 tracks ...09, 10, 11,...
+	// for now keep isAlbumWeight low
+	public $isAlbumWeight = 0.5;
+
 	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'number-artist-title-ext';
+		if(removeLeadingZeroes($this->input) !== strval($this->input)) {
+			$this->result = 'leadingzero';	// 01, 02, 001, 002
+			$this->matches = intval($this->input);
 			return;
 		}
 		$this->result = 0;
 	}
-	
+
 	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
-		
 		if(count($this->matches) === 0) {
 			return;
 		}
+
 		$trackContext->recommend([
-			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
-			'setArtist' => $this->matches[2],
-			'setTitle' => $this->matches[3]
-		]);
-		$albumContext->recommend([
-			'setArtist' => $this->matches[2]
+			'setTrackNumber' => $this->matches[0]
 		]);
 	}
 }

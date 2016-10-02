@@ -135,6 +135,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		$this->setAlbum($this->getMostScored('setAlbum'));
 		$this->setGenre($this->getMostScored('setGenre'));
 		$this->setLabel($this->getMostScored('setLabel'));
+		$this->setTrackNumber($this->getMostScored('setTrackNumber'));
 	}
 
 	/**

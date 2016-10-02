@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Filename;
+namespace Slimpd\Modules\albummigrator\SchemaTests\TrackNumber;
 use Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
@@ -19,36 +19,29 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.8;
-	
-	public function __construct($input) {
-		$this->input = $input;
-		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
-		return $this;
-	}
-	
+class CombinedWithTotal extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+	public $isAlbumWeight = 1;
+
 	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'number-artist-title-ext';
+		$value = str_replace(array("of", " ", ".", ","), "/", $this->input);
+		$matches = trimExplode("/", $value, TRUE);
+		if(count($matches) < 2) {
+			$this->result = 0;
 			return;
 		}
-		$this->result = 0;
+		$matches = array_map("removeLeadingZeroes", $matches);
+		$this->matches = $matches;
+		$this->result = "combined-with-total";
 	}
-	
+
 	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
-		
 		if(count($this->matches) === 0) {
 			return;
 		}
+
 		$trackContext->recommend([
-			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
-			'setArtist' => $this->matches[2],
-			'setTitle' => $this->matches[3]
-		]);
-		$albumContext->recommend([
-			'setArtist' => $this->matches[2]
+			'setTrackNumber' => $this->matches[0],
+			'setTotalTracks' => $this->matches[0],
 		]);
 	}
 }
