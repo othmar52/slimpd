@@ -79,7 +79,13 @@ class AlbumMigrator {
 			$trackContextItem->postProcessProperties();
 		}
 	}
-	
+
+	public function recommendationForAllTracks(array $recommendations) {
+		foreach($this->trackContextItems as $trackContextItem) {
+			$trackContextItem->recommend($recommendations);
+		}
+	}
+
 	public function getMergedFromTracks($setterName) {
 		
 	}

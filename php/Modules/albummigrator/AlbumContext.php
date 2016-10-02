@@ -21,8 +21,6 @@ namespace Slimpd\Modules\albummigrator;
 class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
-	protected $artist;
-	protected $label;
 	public $recommendations;
 
 	public function getTagsFromTrack($rawTagArray, $config) {
@@ -51,10 +49,11 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$test->run();
 		$test->scoreMatches($dirname, $this, $jumbleJudge);
 		
-		$dirname = basename($this->getRelPath());
 		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Dirname\ArtistTitle($dirname);
 		$test->run();
 		$test->scoreMatches($dirname, $this, $jumbleJudge);
+
+		$this->scoreLabelByLabelDirectory($albumMigrator);
 	}
 
 	public function migrate($trackContextItems, $jumbleJudge) {
@@ -87,21 +86,38 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$this->setUid($album->getUid());
 	}
 
+	private function scoreLabelByLabelDirectory(&$albumMigrator) {
+		cliLog("--- add LABEL based on directory ---", 8);
+		cliLog("  album directory: " . $this->getRelPath(), 8);
+		$app = \Slim\Slim::getInstance();
 
-	// TODO: move to trait
-	public function setArtist($value) {
-		$this->artist = $value;
-		return $this;
-	}
-	public function getArtist() {
-		return $this->artist;
-	}
+		// check config
+		if(isset($app->config['label-parent-directories']) === FALSE) {
+			cliLog("  aborting because no label directories configured",8);
+			return;
+		}
 
-	public function setLabel($value) {
-		$this->label = $value;
-		return $this;
-	}
-	public function getLabel() {
-		return $this->label;
+		foreach($app->config['label-parent-directories'] as $labelDir) {
+			$labelDir = appendTrailingSlash($labelDir);
+			cliLog("  configured label dir: " . $labelDir, 10);
+			if(stripos($this->getRelPath(), $labelDir) !== 0) {
+				cliLog("  no match: " . $labelDir, 8);
+				continue;
+			}
+			// use directory name as label name
+			$newLabelString = basename(dirname($this->getRelPath()));
+
+			// do some cleanup
+			$newLabelString = ucwords(remU($newLabelString));
+			cliLog("  match: " . $newLabelString, 8);
+
+			$this->recommend(['setLabel'=> $newLabelString]);
+			#var_dump($newLabelString);die;
+			$albumMigrator->recommendationForAllTracks(
+				['setLabel'=> $newLabelString]
+			);
+			return;
+		}
+		return;
 	}
 }

@@ -26,9 +26,6 @@ class TrackContext extends \Slimpd\Models\Track {
 	
 	// those attributes holds string values (track holds relational Uids)
 	protected $album;
-	protected $artist;
-	protected $genre;
-	protected $label;
 	protected $remixArtists;
 	protected $featuredArtists;
 	
@@ -204,33 +201,12 @@ class TrackContext extends \Slimpd\Models\Track {
 			->update();
 	}
 
-	public function setArtist($value) {
-		$this->artist = $value;
-		return $this;
-	}
-	public function getArtist() {
-		return $this->artist;
-	}
 	public function setAlbum($value) {
 		$this->album = $value;
 		return $this;
 	}
 	public function getAlbum() {
 		return $this->album;
-	}
-	public function setGenre($value) {
-		$this->genre = $value;
-		return $this;
-	}
-	public function getGenre() {
-		return $this->genre;
-	}
-	public function setLabel($value) {
-		$this->label = $value;
-		return $this;
-	}
-	public function getLabel() {
-		return $this->label;
 	}
 	public function setRemixArtists($value) {
 		$this->remixArtists = $value;

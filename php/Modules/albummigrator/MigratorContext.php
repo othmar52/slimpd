@@ -19,6 +19,7 @@ namespace Slimpd\Modules\albummigrator;
  */
 
 trait MigratorContext {
+	use \Slimpd\Traits\PropGroupTypes; // artist, genre, label
 	protected $config;
 	protected $zeroWhitelist;
 	protected $rawTagRecord; // database record as array
