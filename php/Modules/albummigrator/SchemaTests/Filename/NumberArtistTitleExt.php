@@ -22,8 +22,8 @@ use Slimpd\RegexHelper as RGX;
 class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.8;
 	
-	public function __construct($input) {
-		$this->input = $input;
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
 		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
 		return $this;
 	}
@@ -37,17 +37,17 @@ class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\A
 		$this->result = 0;
 	}
 	
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
 			'setArtist' => $this->matches[2],
 			'setTitle' => $this->matches[3]
 		]);
-		$albumContext->recommend([
+		$this->albumContext->recommend([
 			'setArtist' => $this->matches[2]
 		]);
 	}

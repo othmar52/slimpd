@@ -21,8 +21,8 @@ use Slimpd\RegexHelper as RGX;
 
 abstract class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 
-	public function __construct($input) {
-		$this->input = $input;
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
 		$this->pattern = "/" . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . "/";
 		return $this;
 	}
@@ -36,16 +36,16 @@ abstract class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\Abstr
 		$this->result = 0;
 	}
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		if(count($this->matches) === 0) {
 			return;
 		}
 		foreach($this->matches as $group) {
 			foreach($group as $yearMatch) {
-				$trackContext->recommend([
+				$this->trackContext->recommend([
 					'setYear' => $yearMatch
 				]);
-				$albumContext->recommend([
+				$this->albumContext->recommend([
 					'setYear' => $yearMatch
 				]);
 			}

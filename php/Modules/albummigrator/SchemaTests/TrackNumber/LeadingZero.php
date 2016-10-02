@@ -33,12 +33,12 @@ class LeadingZero extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTe
 		$this->result = 0;
 	}
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		if(count($this->matches) === 0) {
 			return;
 		}
 
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => $this->matches[0]
 		]);
 	}

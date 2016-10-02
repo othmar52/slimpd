@@ -21,8 +21,8 @@ use Slimpd\RegexHelper as RGX;
 
 class ArtistTitleYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	
-	public function __construct($input) {
-		$this->input = $input;
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
 		$this->pattern = "/^" . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . "$/";
 		return $this;
 	}
@@ -35,12 +35,12 @@ class ArtistTitleYear extends \Slimpd\Modules\albummigrator\AbstractTests\Abstra
 		}
 	}
 	
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$albumContext->recommend([
+		$this->albumContext->recommend([
 			'setArtist' => $this->matches[1],
 			'setTitle' => $this->matches[2],
 			'setYear' => $this->matches[3]

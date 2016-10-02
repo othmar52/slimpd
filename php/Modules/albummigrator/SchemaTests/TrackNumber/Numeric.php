@@ -31,12 +31,11 @@ class Numeric extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 		$this->result = 0;
 	}
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		if(count($this->matches) === 0) {
 			return;
 		}
-
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => $this->matches[0]
 		]);
 	}

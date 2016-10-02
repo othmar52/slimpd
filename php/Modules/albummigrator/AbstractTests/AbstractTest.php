@@ -24,13 +24,19 @@ abstract class AbstractTest {
 	public $pattern;
 	public $result;
 	public $input;
+	public $trackContext;
+	public $albumContext;
+	public $jumbleJudge;
 	
-	public function __construct($input) {
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		$this->input = $input;
+		$this->trackContext = $trackContext;
+		$this->albumContext = $albumContext;
+		$this->jumbleJudge = $jumbleJudge;
 		return $this;
 	}
 	
 	public function run() { }
 	
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) { }
+	public function scoreMatches() { }
 }

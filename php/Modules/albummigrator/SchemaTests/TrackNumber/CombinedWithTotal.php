@@ -34,12 +34,11 @@ class CombinedWithTotal extends \Slimpd\Modules\albummigrator\AbstractTests\Abst
 		$this->result = "combined-with-total";
 	}
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		if(count($this->matches) === 0) {
 			return;
 		}
-
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => $this->matches[0],
 			'setTotalTracks' => $this->matches[0],
 		]);

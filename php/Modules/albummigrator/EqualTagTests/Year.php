@@ -21,15 +21,15 @@ namespace Slimpd\Modules\albummigrator\EqualTagTests;
 class Year extends \Slimpd\Modules\albummigrator\AbstractTests\EqualValue {
 	public $isAlbumWeight = 0.8;
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setYear' => $this->matches[0]
 		]);
-		$albumContext->recommend([
+		$this->albumContext->recommend([
 			'setYear' => $this->matches[0]
 		]);
 	}

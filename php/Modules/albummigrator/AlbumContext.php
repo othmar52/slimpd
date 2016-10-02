@@ -45,15 +45,22 @@ class AlbumContext extends \Slimpd\Models\Album {
 	public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
 		// guess attributes by directory name
 		$dirname = basename($this->getRelPath());
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Dirname\ArtistTitleYear($dirname);
-		$test->run();
-		$test->scoreMatches($dirname, $this, $jumbleJudge);
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Dirname\ArtistTitle($dirname);
-		$test->run();
-		$test->scoreMatches($dirname, $this, $jumbleJudge);
+		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
+			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname);
 
 		$this->scoreLabelByLabelDirectory($albumMigrator);
+	}
+
+	private function runTest($className, $input) {
+		$classPath = "\\Slimpd\\Modules\\albummigrator\\" . $className;
+		// for now there is no need for those 2 instances within the test
+		// but abstraction requires any kind of variable... 
+		$dummyTrackContext = NULL;
+		$dummyJumbleJudge = NULL;
+		$test = new $classPath($input, $dummyTrackContext, $this, $dummyJumbleJudge);
+		$test->run();
+		$test->scoreMatches();
+		return $this;
 	}
 
 	public function migrate($trackContextItems, $jumbleJudge) {

@@ -21,15 +21,15 @@ namespace Slimpd\Modules\albummigrator\EqualTagTests;
 class Album extends \Slimpd\Modules\albummigrator\AbstractTests\EqualValue {
 	public $isAlbumWeight = 1;
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setAlbum' => $this->matches[0]
 		]);
-		$albumContext->recommend([
+		$this->albumContext->recommend([
 			'setTitle' => $this->matches[0]
 		]);
 	}

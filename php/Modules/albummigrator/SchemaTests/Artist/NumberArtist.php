@@ -27,11 +27,12 @@ use Slimpd\RegexHelper as RGX;
  * pattern: [01] - Juno Reactor
  * pattern: [01]. Juno Reactor
  */
+
 class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.8;
 	
-	public function __construct($input) {
-		$this->input = $input;
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
 		$this->pattern = "/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET. RGX::GLUE . RGX::NO_MINUS . "$/i";
 		return $this;
 	}
@@ -45,16 +46,16 @@ class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractT
 		$this->result = 0;
 	}
 	
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
 			'setArtist' => $this->matches[2]
 		]);
-		$albumContext->recommend([
+		$this->albumContext->recommend([
 			'setArtist' => $this->matches[2]
 		]);
 	}

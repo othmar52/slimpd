@@ -22,8 +22,8 @@ use Slimpd\RegexHelper as RGX;
 class Vinyl extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 1;
 
-	public function __construct($input) {
-		$this->input = $input;
+	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
 		$this->pattern = "/^([a-zA-Z]{1,2})(?:[\/-]{1})(\d*)$/"; // AA1, B2, C34, A-1, A/4
 		return $this;
 	}
@@ -38,12 +38,12 @@ class Vinyl extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 		$this->result = 0;
 	}
 
-	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
+	public function scoreMatches() {
 		if(count($this->matches) === 0) {
 			return;
 		}
 
-		$trackContext->recommend([
+		$this->trackContext->recommend([
 			'setTrackNumber' => $this->matches[0]
 		]);
 		// TODO: consider to recommend setSource => "Vinyl" for track and album

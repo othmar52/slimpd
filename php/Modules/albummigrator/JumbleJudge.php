@@ -40,64 +40,37 @@ class JumbleJudge {
 	public $handleAsAlbum;
 	public $tests;
 	public $testResults;
-	
-	
+	private $trackContext;
+	private $albumContext;
+
+	public function __construct(\Slimpd\Modules\albummigrator\AlbumContext &$albumContextItem) {
+		$this->albumContext = $albumContextItem;
+	}
+
 	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
+		$this->trackContext = $trackContext;
 		$fileName = basename($trackContext->getRelPath());
-		$test = new \Slimpd\Modules\albummigrator\CaseSensitivityTests\Filename($fileName);
-		$test->run();
-		$this->tests["FilenameCase"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\NumberArtistTitleExt($fileName);
-		$test->run();
-		$this->tests["FilenameNumberArtistTitleExt"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\VinylArtistTitleExt($fileName);
-		$test->run();
-		$this->tests["FilenameVinylArtistTitleExt"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\HasYear($fileName);
-		$test->run();
-		$this->tests["FilenameHasYear"][] = $test;
+		$this->runTest("SchemaTests\\Filename\\HasYear", $fileName)
+			->runTest("CaseSensitivityTests\\Filename", $fileName)
+			->runTest("SchemaTests\\Filename\\NumberArtistTitleExt", $fileName)
+			->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
+			->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
+			->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
+			->runTest("EqualTagTests\\Album", $trackContext->getAlbum())
+			->runTest("EqualTagTests\\Year", $trackContext->getYear())
+			->runTest("SchemaTests\\Artist\\NumberArtist", $trackContext->getArtist())
+			->runTest("SchemaTests\\TrackNumber\\Numeric", $trackContext->getTrackNumber())
+			->runTest("SchemaTests\\TrackNumber\\Vinyl", $trackContext->getTrackNumber())
+			->runTest("SchemaTests\\TrackNumber\\LeadingZero", $trackContext->getTrackNumber())
+			->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber());
+	}
 
-		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Artist($trackContext->getArtist());
+	private function runTest($className, $input) {
+		$classPath = "\\Slimpd\\Modules\\albummigrator\\" . $className;
+		$test = new $classPath($input, $this->trackContext, $this->albumContext, $this);
 		$test->run();
-		$this->tests["EqualTagArtist"][] = $test;
-
-		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Genre($trackContext->getGenre());
-		$test->run();
-		$this->tests["EqualTagGenre"][] = $test;
-		
-		
-		
-		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Album($trackContext->getAlbum());
-		$test->run();
-		$this->tests["EqualTagAlbum"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Year($trackContext->getYear());
-		$test->run();
-		$this->tests["EqualTagYear"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Artist\NumberArtist($trackContext->getArtist());
-		$test->run();
-		$this->tests["ArtistNumberArtist"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\Numeric($trackContext->getTrackNumber());
-		$test->run();
-		$this->tests["TrackNumberNumeric"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\Vinyl($trackContext->getTrackNumber());
-		$test->run();
-		$this->tests["TrackNumberVinyl"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\LeadingZero($trackContext->getTrackNumber());
-		$test->run();
-		$this->tests["TrackNumberLeadingZero"][] = $test;
-		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\TrackNumber\CombinedWithTotal($trackContext->getTrackNumber());
-		$test->run();
-		$this->tests["TrackNumberCombinedWithTotal"][] = $test;
-		
+		$this->tests[$className][] = $test;
+		return $this;
 	}
 
 	public function judge() {

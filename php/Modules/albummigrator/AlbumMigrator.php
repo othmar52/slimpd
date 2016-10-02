@@ -30,13 +30,13 @@ class AlbumMigrator {
 	public function run() {
 		// create albumContext
 		$this->albumContextItem = new \Slimpd\Modules\albummigrator\AlbumContext();
-		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge();
-		
+		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge($this->albumContextItem);
+
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
 			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
 			// do some characteristics analysis for each "track"
-			$this->jumbleJudge->collect($this->trackContextItems[$idx]);
+			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
 		}
 		// decide if bunch should be treated as album or as loose tracks
 		$this->jumbleJudge->judge();
