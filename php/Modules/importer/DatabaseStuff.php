@@ -76,7 +76,31 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				$all['la' . $itemUid] = NULL;
 			}
 		}
-		
+
+		// we may have album artists that does not exist as track artists
+		$result = $app->db->query("SELECT uid,artistUid,genreUid,labelUid FROM album");
+		while($record = $result->fetch_assoc()) {
+			$all['al' . $record['uid']] = NULL;
+			$this->updateJob(array(
+				'currentItem' => 'albumUid: ' . $record['uid']
+			));
+			$itemUids = trimExplode(",", $record["artistUid"], TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Artist'][$itemUid]['albums'][ $record['uid'] ] = NULL;
+				$all['ar' . $itemUid] = NULL;
+			}
+			$itemUids = trimExplode(",", $record['genreUid'], TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Genre'][$itemUid]['albums'][ $record['uid'] ] = NULL;
+				$all['ge' . $itemUid] = NULL;
+			}
+			$itemUids = trimExplode(",", $record['labelUid'], TRUE);
+			foreach($itemUids as $itemUid) {
+				$tables['Label'][$itemUid]['albums'][ $record['uid'] ] = NULL;
+				$all['la' . $itemUid] = NULL;
+			}
+		}
+
 		foreach($tables as $className => $tableData) {
 			cliLog("updating table:".$className." with trackCount and albumCount", 3);
 			foreach($tableData as $itemUid => $data) {
@@ -84,8 +108,8 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				$classPath = "\\Slimpd\\Models\\" . $className;
 				$item = new $classPath();
 				$item->setUid($itemUid)
-					->setTrackCount( count($data['tracks']) )
-					->setAlbumCount( count($data['albums']) )
+					->setTrackCount( count(@$data['tracks']) )
+					->setAlbumCount( count(@$data['albums']) )
 					->update();
 				$this->itemsProcessed++;
 				$this->itemsChecked++;

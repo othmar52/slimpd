@@ -50,6 +50,7 @@ class AlbumMigrator {
 		$this->albumContextItem->collectAlbumStuff($this, $this->jumbleJudge);
 		
 		#print_r($this->albumContextItem->recommendations);die;
+		#print_r($this->trackContextItems[0]->recommendations);die;
 		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
 		
 		

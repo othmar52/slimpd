@@ -21,7 +21,8 @@ namespace Slimpd\Modules\albummigrator;
 class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
-
+	protected $artist;
+	protected $label;
 	public $recommendations;
 
 	public function getTagsFromTrack($rawTagArray, $config) {
@@ -58,17 +59,20 @@ class AlbumContext extends \Slimpd\Models\Album {
 
 	public function migrate($trackContextItems, $jumbleJudge) {
 		$album = new \Slimpd\Models\Album();
+		#var_dump($this->getMostScored("setArtist")); die;
 
 		$album->setRelPath($this->getRelPath())
 			->setRelPathHash($this->getRelPathHash())
 			->setFilemtime($this->getFilemtime())
 			->setIsJumble($jumbleJudge->handleAsAlbum)
-			/*->setArtistUid(join(",", \Slimpd\Models\Artist::getUidsByString($albumArtists)))
-			->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($mergedFromTracks['genre'])))
-			->setCatalogNr($this->mostScored['album']['catalogNr'])
-			
+			->setTitle($this->getMostScored("setTitle"))
+			->setYear($this->getMostScored("setYear"))
+			->setCatalogNr($this->getMostScored("setCatalogNr"))
+			->setArtistUid(join(",", \Slimpd\Models\Artist::getUidsByString($this->getMostScored("setArtist"))))
+			->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($this->getMostScored("setGenre"))))
+			->setLabelUid(join(",", \Slimpd\Models\Label::getUidsByString($this->getMostScored("setLabel"))))
+			/*->setCatalogNr($this->mostScored['album']['catalogNr'])
 			->setAdded($this->mostRecentAdded)
-			->setTitle($this->mostScored['album']['title'])
 			->setYear($this->mostScored['album']['year'])
 			->setLabelUid(
 				join(",", \Slimpd\Models\Label::getUidsByString(
@@ -81,5 +85,23 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->update();
 
 		$this->setUid($album->getUid());
+	}
+
+
+	// TODO: move to trait
+	public function setArtist($value) {
+		$this->artist = $value;
+		return $this;
+	}
+	public function getArtist() {
+		return $this->artist;
+	}
+
+	public function setLabel($value) {
+		$this->label = $value;
+		return $this;
+	}
+	public function getLabel() {
+		return $this->label;
 	}
 }

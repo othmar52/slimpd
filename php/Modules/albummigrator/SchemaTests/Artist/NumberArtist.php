@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Filename;
+namespace Slimpd\Modules\albummigrator\SchemaTests\Artist;
 use Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
@@ -19,19 +19,27 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+/*
+ * Number and Artist will be extracted from inputs like
+ * pattern: 01 Juno Reactor
+ * pattern: 01. Juno Reactor
+ * pattern: [01] Juno Reactor
+ * pattern: [01] - Juno Reactor
+ * pattern: [01]. Juno Reactor
+ */
+class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.8;
 	
 	public function __construct($input) {
 		$this->input = $input;
-		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
+		$this->pattern = "/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET. RGX::GLUE . RGX::NO_MINUS . "$/i";
 		return $this;
 	}
 	
 	public function run() {
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = 'number-artist-title-ext';
+			$this->result = 'number-artist';
 			return;
 		}
 		$this->result = 0;
@@ -44,8 +52,7 @@ class NumberArtistTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\A
 		}
 		$trackContext->recommend([
 			'setTrackNumber' => $this->matches[1],
-			'setArtist' => $this->matches[2],
-			'setTitle' => $this->matches[3]
+			'setArtist' => $this->matches[2]
 		]);
 		$albumContext->recommend([
 			'setArtist' => $this->matches[2]

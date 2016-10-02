@@ -63,6 +63,10 @@ class JumbleJudge {
 		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Artist($trackContext->getArtist());
 		$test->run();
 		$this->tests["EqualTagArtist"][] = $test;
+
+		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Genre($trackContext->getGenre());
+		$test->run();
+		$this->tests["EqualTagGenre"][] = $test;
 		
 		
 		
@@ -73,6 +77,11 @@ class JumbleJudge {
 		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Year($trackContext->getYear());
 		$test->run();
 		$this->tests["EqualTagYear"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Artist\NumberArtist($trackContext->getArtist());
+		$test->run();
+		$this->tests["ArtistNumberArtist"][] = $test;
+		
 	}
 
 	public function judge() {

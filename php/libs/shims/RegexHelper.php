@@ -32,7 +32,7 @@ class RegexHelper {
 	const SOURCE  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
 	const NO_MINUS= "([^-]+)";
 	const ANYTHING= "(.*)";
-	const MAY_BRACKET = "(?:([\(\)\[\]]{0,1}))?";
+	const MAY_BRACKET = "(?:(?:[\(\)\[\]]{0,1}))?";
 	
 	const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	
