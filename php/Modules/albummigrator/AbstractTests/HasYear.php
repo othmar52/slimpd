@@ -19,7 +19,7 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+abstract class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 
 	public function __construct($input) {
 		$this->input = $input;

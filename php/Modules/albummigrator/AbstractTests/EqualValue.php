@@ -18,7 +18,7 @@ namespace Slimpd\Modules\albummigrator\AbstractTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class EqualValue extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+abstract class EqualValue extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public function run() {
 		$this->result = (strlen($this->input)) ? $this->input : "";
 		if($this->result !== "") {

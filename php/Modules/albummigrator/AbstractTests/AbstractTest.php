@@ -18,7 +18,7 @@ namespace Slimpd\Modules\albummigrator\AbstractTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class AbstractTest {
+abstract class AbstractTest {
 	public $isAlbumWeight = 1;
 	public $matches = array();
 	public $pattern;

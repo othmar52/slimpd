@@ -18,7 +18,7 @@ namespace Slimpd\Modules\albummigrator\AbstractTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class CaseSensitivity extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+abstract class CaseSensitivity extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public function run() {
 		if(strtolower($this->input) === $this->input) {
 			$this->result = "lower";
