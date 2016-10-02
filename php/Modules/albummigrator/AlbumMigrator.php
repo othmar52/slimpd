@@ -37,9 +37,7 @@ class AlbumMigrator {
 			$this->jumbleJudge->collect($this->trackContextItems[$idx]);
 		}
 		// decide if bunch should be treated as album or as loose tracks
-		
 		$this->jumbleJudge->judge();
-		
 		
 		if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
 			// do some voting for each attribute
@@ -49,10 +47,12 @@ class AlbumMigrator {
 		// 
 		// direcory path is the same for all tracks. copy from first rawTagItem
 		$this->albumContextItem->copyBaseProperties($this->rawTagItems[0]);
+		$this->albumContextItem->collectAlbumStuff($this, $this->jumbleJudge);
 		
+		#print_r($this->albumContextItem->recommendations);die;
 		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
 		
-		#print_r($this->trackContextItems[1]->recommendations);die;
+		
 		#print_r($this->jumbleJudge->testResults); die;
 		
 		foreach($this->trackContextItems as $trackContextItem) {

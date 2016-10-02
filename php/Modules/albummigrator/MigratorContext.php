@@ -46,10 +46,12 @@ trait MigratorContext {
 				)
 			);
 			if($foundValue === FALSE || $foundValue === "0") {
+				// nothing to do in case we have no value
 				continue;
 			}
 
 			// preserve priority by config
+			// do not overwrite value in case a previous setter already populated the property
 			$getterName = "g" . substr($setterName, 1);
 			if(strlen($this->$getterName()) === 0) {
 				$this->$setterName($foundValue);
@@ -68,12 +70,12 @@ trait MigratorContext {
 		if(is_int($mixed))		{ $out = $mixed; }
 		if(is_float($mixed))	{ $out = $mixed; }
 		if(trim($out) === '')	{ return FALSE; }
-		return trim(strip_tags($out));
+		return trim(flattenWhitespace(remU(strip_tags($out))));
 	}
 	
 	public function recommend($properties) {
 		foreach($properties as $setterName => $value) {
-			$this->recommendations[$setterName][] = remU($value);
+			$this->recommendations[$setterName][] = trim(flattenWhitespace(remU($value)));
 		}
 	}
 	

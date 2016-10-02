@@ -21,5 +21,8 @@ namespace Slimpd\Modules\albummigrator\AbstractTests;
 class EqualValue extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public function run() {
 		$this->result = (strlen($this->input)) ? $this->input : "";
+		if($this->result !== "") {
+			$this->matches = [$this->result];
+		}
 	}
 }

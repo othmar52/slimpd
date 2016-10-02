@@ -1,6 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests;
-use Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\albummigrator\EqualTagTests;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -19,36 +18,19 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * pattern: b-sabre_and_jubei-the_struggle.flac
- */
-class FilenameSchema2 extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.8;
-	
-	public function __construct($input) {
-		$this->input = $input;
-		$this->pattern = "/^" . RGX::VINYL . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/i";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'vinyl-artist-title-ext';
-			return;
-		}
-		$this->result = 0;
-	}
-	
+class Album extends \Slimpd\Modules\albummigrator\AbstractTests\EqualValue {
+	public $isAlbumWeight = 1;
+
 	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
-		
+
 		if(count($this->matches) === 0) {
 			return;
 		}
 		$trackContext->recommend([
-			'setTrackNumber' => $this->matches[1],
-			'setArtist' => $this->matches[2],
-			'setTitle' => $this->matches[3]
+			'setAlbum' => $this->matches[0]
+		]);
+		$albumContext->recommend([
+			'setTitle' => $this->matches[0]
 		]);
 	}
 }

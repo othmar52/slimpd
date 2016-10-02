@@ -21,7 +21,9 @@ namespace Slimpd\Modules\albummigrator;
 class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
-	
+
+	public $recommendations;
+
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
 		$this->rawTagArray = unserialize($rawTagArray['tagData']);
@@ -40,7 +42,20 @@ class AlbumContext extends \Slimpd\Models\Album {
 			//->setLastScan($rawTagRecord['lastDirScan'])
 			;
 	}
+	
+	public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
+		// guess attributes by directory name
+		$dirname = basename($this->getRelPath());
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Dirname\ArtistTitleYear($dirname);
+		$test->run();
+		$test->scoreMatches($dirname, $this, $jumbleJudge);
 		
+		$dirname = basename($this->getRelPath());
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Dirname\ArtistTitle($dirname);
+		$test->run();
+		$test->scoreMatches($dirname, $this, $jumbleJudge);
+	}
+
 	public function migrate($trackContextItems, $jumbleJudge) {
 		$album = new \Slimpd\Models\Album();
 

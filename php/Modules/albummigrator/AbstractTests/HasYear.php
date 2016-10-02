@@ -45,6 +45,9 @@ class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 				$trackContext->recommend([
 					'setYear' => $yearMatch
 				]);
+				$albumContext->recommend([
+					'setYear' => $yearMatch
+				]);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator\EqualTagTests;
+namespace Slimpd\Modules\albummigrator\SchemaTests\Dirname;
+use Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,19 +19,30 @@ namespace Slimpd\Modules\albummigrator\EqualTagTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Artist extends \Slimpd\Modules\albummigrator\AbstractTests\EqualValue {
-	public $isAlbumWeight = 0.7;
+class ArtistTitle extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+
+	public function __construct($input) {
+		$this->input = $input;
+		$this->pattern = "/^" . RGX::NO_MINUS . "-" . RGX::NO_MINUS . "$/";
+		return $this;
+	}
+
+	public function run() {
+		if(preg_match($this->pattern, $this->input, $matches)) {
+			$this->matches = $matches;
+			$this->result = 'artist-title';
+			return;
+		}
+	}
 
 	public function scoreMatches(&$trackContext, &$albumContext, $jumbleJudge) {
-
+		
 		if(count($this->matches) === 0) {
 			return;
 		}
-		$trackContext->recommend([
-			'setArtist' => $this->matches[0]
-		]);
 		$albumContext->recommend([
-			'setArtist' => $this->matches[0]
+			'setArtist' => $this->matches[1],
+			'setTitle' => $this->matches[2]
 		]);
 	}
 }

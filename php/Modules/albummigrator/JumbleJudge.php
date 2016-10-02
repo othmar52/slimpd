@@ -48,23 +48,33 @@ class JumbleJudge {
 		$test->run();
 		$this->tests["FilenameCase"][] = $test;
 		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema1($fileName);
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\NumberArtistTitleExt($fileName);
 		$test->run();
-		$this->tests["FilenameSchema1"][] = $test;
+		$this->tests["FilenameNumberArtistTitleExt"][] = $test;
 		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameSchema2($fileName);
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\VinylArtistTitleExt($fileName);
 		$test->run();
-		$this->tests["FilenameSchema2"][] = $test;
+		$this->tests["FilenameVinylArtistTitleExt"][] = $test;
 		
-		$test = new \Slimpd\Modules\albummigrator\SchemaTests\FilenameHasYear($fileName);
+		$test = new \Slimpd\Modules\albummigrator\SchemaTests\Filename\HasYear($fileName);
 		$test->run();
 		$this->tests["FilenameHasYear"][] = $test;
 
 		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Artist($trackContext->getArtist());
 		$test->run();
 		$this->tests["EqualTagArtist"][] = $test;
+		
+		
+		
+		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Album($trackContext->getAlbum());
+		$test->run();
+		$this->tests["EqualTagAlbum"][] = $test;
+		
+		$test = new \Slimpd\Modules\albummigrator\EqualTagTests\Year($trackContext->getYear());
+		$test->run();
+		$this->tests["EqualTagYear"][] = $test;
 	}
-	
+
 	public function judge() {
 		// get decisions for each single test
 		foreach($this->tests as $testname => $tests) {
