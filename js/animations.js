@@ -40,8 +40,6 @@ $(document).ready(function() {
 	TweenMax.staggerFrom($(".track-row"), 0.35, { force3D:true, rotationZ: 0.01, opacity:0, ease: Quint.easeOut, delay: basicDelay+0.35 }, 0.1);
 
 	//click animations
-	$.support.transition = false;
-
 	var blurElement = {a:0};
 
 	$(".overlay-backdrop").on("click", function() {
