@@ -124,7 +124,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 	
 	public function initScorer(&$albumContext, $jumbleJudge) {
-		foreach($jumbleJudge->tests as $testName => $tests) {
+		foreach($jumbleJudge->tests as $tests) {
 			$tests[$this->idx]->scoreMatches($this, $albumContext, $jumbleJudge);
 		}
 	}

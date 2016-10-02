@@ -19,12 +19,14 @@ namespace Slimpd\Modules\albummigrator;
  */
 
 class AlbumMigrator {
+
+	use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
 	public $conf;
 	protected $rawTagItems;
 	protected $trackContextItems;
 	protected $albumContextItem;
 	protected $jumbleJudge;
-	
+
 	public function run() {
 		// create albumContext
 		$this->albumContextItem = new \Slimpd\Modules\albummigrator\AlbumContext();
@@ -86,12 +88,6 @@ class AlbumMigrator {
 		}
 	}
 
-	public function getMergedFromTracks($setterName) {
-		
-	}
-	
-	
-	
 	// TODO: get this from Trait
 	protected $directoryMtime;
 	public function getDirectoryMtime() {
@@ -102,20 +98,16 @@ class AlbumMigrator {
 		return $this;
 	}
 	
-	protected $relPath;
-	protected $relPathHash;
+
 	protected $relDirPath;
 	protected $relDirPathHash;
 	protected $filesize;
 	protected $filemtime = 0;
+
+	// todo: do we really need AlbumMigrator->importStatus property???
 	protected $importStatus;
 
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
+
 	public function getRelDirPath() {
 		return $this->relDirPath;
 	}
@@ -131,15 +123,8 @@ class AlbumMigrator {
 	public function getImportStatus() {
 		return $this->importStatus;
 	}
-	
-	public function setRelPath($value) {
-		$this->relPath = $value;
-		return $this;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-		return $this;
-	}
+
+
 	public function setRelDirPath($value) {
 		$this->relDirPath = $value;
 		return $this;

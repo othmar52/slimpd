@@ -17,22 +17,16 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 
-	protected $relPath;
-	protected $relPathHash;
+abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
+	use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
 	protected $relDirPath;
 	protected $relDirPathHash;
 	protected $filesize;
 	protected $filemtime = 0;
 	protected $importStatus;
 
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
+	// getter
 	public function getRelDirPath() {
 		return $this->relDirPath;
 	}
@@ -48,15 +42,8 @@ abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
 	public function getImportStatus() {
 		return $this->importStatus;
 	}
-	
-	public function setRelPath($value) {
-		$this->relPath = $value;
-		return $this;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-		return $this;
-	}
+
+	// setter
 	public function setRelDirPath($value) {
 		$this->relDirPath = $value;
 		return $this;
