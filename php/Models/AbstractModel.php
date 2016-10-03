@@ -439,6 +439,11 @@ abstract class AbstractModel {
 		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
 		$tmpArray = $app->importerCache;
 		$tmpArray[$classPath]["cache"][$az09] = $itemUid;
+		// delete cache as soon as we reach 1000 items
+		if(count($tmpArray[$classPath]["cache"]) > 1000) {
+			$tmpArray[$classPath]["cache"] = array($az09 => $itemUid);
+			cliLog("clearing cache for " . $classPath, 5, "yellow");
+		}
 		$app->importerCache = $tmpArray;
 	}
 
