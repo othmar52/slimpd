@@ -47,7 +47,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	public static function getMigratedTrackTimstamps() {
 		return self::getMigratedTimstamps('track');
 	}
-	
+
 	public static function getMigratedTimstamps($tablename) {
 		$timestampsMysql = array();
 		
@@ -81,6 +81,8 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
 		
+		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$this->migratedAlbums = 0;
 		
@@ -171,6 +173,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			return;
 		}
 		$this->albumMigrator->run();
+		$this->itemsProcessed += $this->albumMigrator->getTrackCount();
 		$this->migratedAlbums++;
 	}
 }

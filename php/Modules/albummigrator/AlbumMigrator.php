@@ -73,16 +73,20 @@ class AlbumMigrator {
 		#var_dump($this);
 		#die('blaaaaa');
 	}
-	
+
 	public static function parseConfig() {
 		return parse_ini_file(APP_ROOT . "config/importer/tag-mapper.ini", TRUE);
 	}
-	
+
 	public function addTrack(array $rawTagDataArray) {
 		$this->rawTagItems[] = $rawTagDataArray;
 		return $this;
 	}
-	
+
+	public function getTrackCount() {
+		return count($this->rawTagItems);
+	}
+
 	private function runAttributeScoring() {
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
@@ -97,7 +101,7 @@ class AlbumMigrator {
 			$trackContextItem->postProcessProperties();
 		}
 	}
-	
+
 	public function recommendationForAllTracks(array $recommendations) {
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->recommend($recommendations);
