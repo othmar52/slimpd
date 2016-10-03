@@ -91,6 +91,32 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->update();
 
 		$this->setUid($album->getUid());
+		
+		$this->updateAlbumIndex();
+	}
+
+	private function updateAlbumIndex() {
+		$indexChunks = $this->getRelPath() . " " .
+			str_replace(
+				array('/', '_', '-', '.'),
+				' ',
+				$this->getRelPath()
+			)
+			. " " . join(" ", $this->getAllRecommendations("setArtist"))
+			. " " . join(" ", $this->getAllRecommendations("setTitle"))
+			. " " . join(" ", $this->getAllRecommendations("setYear"))
+			. " " . join(" ", $this->getAllRecommendations("setGenre"))
+			. " " . join(" ", $this->getAllRecommendations("setLabel"))
+			. " " . join(" ", $this->getAllRecommendations("setCatalogNr"));
+
+		// make sure to use identical uids in table:trackindex and table:track
+		\Slimpd\Models\Albumindex::ensureRecordUidExists($this->getUid());
+		$albumIndex = new \Slimpd\Models\Albumindex();
+		$albumIndex->setUid($this->getUid())
+			->setArtist($this->getMostScored("setArtist"))
+			->setTitle($this->getMostScored("setTitle"))
+			->setAllchunks($indexChunks)
+			->update();
 	}
 
 	private function scoreLabelByLabelDirectory(&$albumMigrator) {

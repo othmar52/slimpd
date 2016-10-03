@@ -189,7 +189,15 @@ class TrackContext extends \Slimpd\Models\Track {
 				array('/', '_', '-', '.'),
 				' ',
 				$this->getRelPath()
-			);
+			)
+			. " " . join(" ", $this->getAllRecommendations("setArtist"))
+			. " " . join(" ", $this->getAllRecommendations("setTitle"))
+			. " " . join(" ", $this->getAllRecommendations("setAlbum"))
+			. " " . join(" ", $this->getAllRecommendations("setYear"))
+			. " " . join(" ", $this->getAllRecommendations("setGenre"))
+			. " " . join(" ", $this->getAllRecommendations("setLabel"))
+			. " " . join(" ", $this->getAllRecommendations("setFingerprint"))
+			. " " . join(" ", $this->getAllRecommendations("setCatalogNr"));
 		// TODO: add all recomendations and other missing attributes
 
 		// make sure to use identical uids in table:trackindex and table:track

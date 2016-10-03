@@ -81,17 +81,30 @@ trait MigratorContext {
 	}
 	
 	public function getMostScored($setterName) {
-		#// without recommendations return 
+		// without recommendations return instance property
 		if(array_key_exists($setterName, $this->recommendations) === FALSE) {
 			$getterName = "g" . substr($setterName, 1);
 			return $this->$getterName();
 		}
-		// without recommendations return 
+
 		if(count($this->recommendations[$setterName]) === 1) {
 			return $this->recommendations[$setterName][0];
 		}
 		$mostRelevant = uniqueArrayOrderedByRelevance($this->recommendations[$setterName]);
 		return array_shift($mostRelevant);
+	}
+	
+	public function getAllRecommendations($setterName) {
+		// without recommendations return instance property
+		if(array_key_exists($setterName, $this->recommendations) === FALSE) {
+			$getterName = "g" . substr($setterName, 1);
+			return [ $this->$getterName() ];
+		}
+		// without recommendations return 
+		if(count($this->recommendations[$setterName]) === 1) {
+			return [ $this->recommendations[$setterName][0] ];
+		}
+		return array_unique($this->recommendations[$setterName]);
 	}
 }
 
