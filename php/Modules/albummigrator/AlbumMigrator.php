@@ -62,6 +62,12 @@ class AlbumMigrator {
 			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
 			$trackContextItem->migrate();
 		}
+		
+		// complete embedded bitmaps with albumUid
+		// to make sure extracted images will be referenced to an album
+		\Slimpd\Models\Bitmap::addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
+		
+		
 		#var_dump($this);
 		#die('blaaaaa');
 	}

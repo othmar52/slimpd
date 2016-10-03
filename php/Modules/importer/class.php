@@ -189,6 +189,13 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			#	/*->setImportStatus(2)*/;
 
 			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relDirPath'].'filename-not-relevant.mp3');
+			if(count($foundAlbumImages) === 0) {
+				continue;
+			}
+			
+			// get albumUid
+			$query = "SELECT uid FROM album WHERE relPathHash = '".$record['relDirPathHash']."';";
+			$albumUid = (int) $app->db->query($query)->fetch_assoc()['uid'];
 
 			foreach($foundAlbumImages as $relPath) {
 				$imagePath = $app->config['mpd']['musicdir'] . $relPath;
@@ -202,8 +209,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 					->setFileName(basename($relPath))
 					->setFilemtime(filemtime($imagePath))
 					->setFilesize(filesize($imagePath))
-					// TODO: this looks like nonsense...
-					/*->setAlbumUid($record['uid'])*/;
+					->setAlbumUid($albumUid);
 
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);

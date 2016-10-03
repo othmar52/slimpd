@@ -140,13 +140,13 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 		return TRUE;
 	}
 	
-	public static function addAlbumUidToTrackUid($trackUid, $albumUid) {
+	public static function addAlbumUidToRelDirPathHash($relDirPathHash, $albumUid) {
 		# blind adding albumUid - no matter if it a record is affected or not..
 		# TODO: does it matter or not?
 		\Slim\Slim::getInstance()->db->query(
 			'UPDATE '.self::$tableName .
 			' SET albumUid='. (int)$albumUid .
-			' WHERE trackUid='. (int)$trackUid
+			' WHERE relDirPathHash="'. $relDirPathHash . '";'
 		);
 		return;
 	}
