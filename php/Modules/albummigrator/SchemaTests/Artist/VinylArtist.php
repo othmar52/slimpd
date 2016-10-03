@@ -21,19 +21,19 @@ use Slimpd\RegexHelper as RGX;
 
 /*
  * Number and Artist will be extracted from inputs like
- * pattern: 01 Juno Reactor
- * pattern: 01. Juno Reactor
- * pattern: [01] Juno Reactor
- * pattern: [01] - Juno Reactor
- * pattern: [01]. Juno Reactor
+ * pattern: A01 Puppets Of Chaos
+ * pattern: A01 Puppets Of Chaos
+ * pattern: [AA] Puppets Of Chaos
+ * pattern: [B] - Puppets Of Chaos
+ * pattern: [01]. Puppets Of Chaos
  */
 
-class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class VinylArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.8;
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET. RGX::GLUE . RGX::NO_MINUS . "$/i";
+		$this->pattern = "/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET. RGX::GLUE . RGX::NO_MINUS . "$/i";
 		return $this;
 	}
 	
@@ -53,7 +53,7 @@ class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractT
 			return;
 		}
 		$this->trackContext->recommend([
-			'setTrackNumber' => removeLeadingZeroes($this->matches[1]),
+			'setTrackNumber' => $this->matches[1],
 			'setArtist' => $this->matches[2]
 		]);
 		$this->albumContext->recommend([

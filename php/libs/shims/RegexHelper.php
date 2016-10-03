@@ -26,7 +26,7 @@ class RegexHelper {
 	const GLUE_NO_WHITESPACE   = "(?:[.\-_]{1,4})"; // "_-_", ". ", "-",
 	const EXT    = "\.([a-z\d]{2,4})";
 	const SCENE  = "-([^\s\-]+)";
-	const YEAR  = "((?:[1920]{2})(?:[0-9]{2}))";
+	const YEAR  = "(?:[^\d])((?:[1920]{2})(?:[0-9]{2}))(?:[^\d])";
 	#const year  = "([0-9]{4})";
 	const CATNR  = "((?:([\(\[]{1})?((?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
 	const SOURCE  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";

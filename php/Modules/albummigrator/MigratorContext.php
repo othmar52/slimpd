@@ -76,9 +76,13 @@ trait MigratorContext {
 	}
 	
 	public function recommend($properties) {
+		cliLog("  " .__CLASS__ . " recommendations", 10, "purple");
 		foreach($properties as $setterName => $value) {
-			$this->recommendations[$setterName][] = trim(flattenWhitespace(remU($value)));
+			$cleanValue = trim(flattenWhitespace(remU($value)));
+			cliLog("    " . $setterName . ": " . $cleanValue, 10, "cyan");
+			$this->recommendations[$setterName][] = $cleanValue;
 		}
+		cliLog(" ", 10);
 	}
 	
 	public function getMostScored($setterName) {

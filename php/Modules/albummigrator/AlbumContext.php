@@ -46,6 +46,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$dirname = basename($this->getRelPath());
 		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
 			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname)
+			->runTest("SchemaTests\\Dirname\\ArtistYearTitle", $dirname)
 			->runTest("SchemaTests\\Dirname\\HasYear", $dirname);
 
 		$this->scoreLabelByLabelDirectory($albumMigrator);

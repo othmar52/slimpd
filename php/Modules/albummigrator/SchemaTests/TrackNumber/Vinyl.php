@@ -39,7 +39,9 @@ class Vinyl extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	}
 
 	public function scoreMatches() {
+		cliLog(__CLASS__,10, "purple"); cliLog("  INPUT: " . $this->input, 10);
 		if(count($this->matches) === 0) {
+			cliLog("  no matches\n ", 10);
 			return;
 		}
 
