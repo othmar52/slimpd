@@ -51,6 +51,8 @@ class AlbumMigrator {
 		$this->albumContextItem->copyBaseProperties($this->rawTagItems[0]);
 		$this->albumContextItem->collectAlbumStuff($this, $this->jumbleJudge);
 		
+		$this->postProcessTrackProperties();
+		
 		#print_r($this->albumContextItem->recommendations);die;
 		#print_r($this->trackContextItems[0]->recommendations);die;
 		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
@@ -84,10 +86,18 @@ class AlbumMigrator {
 	private function runAttributeScoring() {
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
-			$trackContextItem->postProcessProperties();
+			#$trackContextItem->postProcessProperties();
 		}
 	}
 
+
+	private function postProcessTrackProperties() {
+		foreach($this->trackContextItems as $trackContextItem) {
+			#$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
+			$trackContextItem->postProcessProperties();
+		}
+	}
+	
 	public function recommendationForAllTracks(array $recommendations) {
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->recommend($recommendations);
