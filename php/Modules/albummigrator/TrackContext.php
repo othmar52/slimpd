@@ -32,7 +32,6 @@ class TrackContext extends \Slimpd\Models\Track {
 	public $idx;
 	
 	public $mostScored;
-	public $recommendations;
 	protected $totalTracks;
 	protected $audioBitrateMode;
 	

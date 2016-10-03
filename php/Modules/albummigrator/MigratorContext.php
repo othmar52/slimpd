@@ -24,6 +24,7 @@ trait MigratorContext {
 	protected $zeroWhitelist;
 	protected $rawTagRecord; // database record as array
 	protected $rawTagArray;	// unserialized array of field rawtagdata.tagData
+	public $recommendations = array();
 	
 	private function configBasedSetters() {
 		foreach($this->config as $confSection => $rawTagPaths) {

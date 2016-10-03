@@ -21,7 +21,6 @@ namespace Slimpd\Modules\albummigrator;
 class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
-	public $recommendations;
 
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
@@ -46,7 +45,8 @@ class AlbumContext extends \Slimpd\Models\Album {
 		// guess attributes by directory name
 		$dirname = basename($this->getRelPath());
 		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
-			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname);
+			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname)
+			->runTest("SchemaTests\\Dirname\\HasYear", $dirname);
 
 		$this->scoreLabelByLabelDirectory($albumMigrator);
 	}

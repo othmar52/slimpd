@@ -27,6 +27,8 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	
 	public $migratedAlbums = 0;
 	
+	private $albumMigrator;
+	
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
@@ -78,45 +80,21 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->migratorConfig = \Slimpd\Modules\albummigrator\AlbumMigrator::parseConfig();
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
-		$this->skipAlbum = TRUE;
+		
 
 		$this->migratedAlbums = 0;
 		
-		
-		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
-		
-		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash ";
+		// all dirHashes of rawtagdata - no matter if already migrated or not
+		$dirHashes = array();
+		$query = "SELECT DISTINCT(relDirPathHash) AS dirHash FROM rawtagdata;";
 		$result = $app->db->query($query);
 		while($record = $result->fetch_assoc()) {
-			$this->itemsChecked++;
-			if($this->itemsChecked === 1) {
-				$this->newPrevAlb($record);
-			}
-			
-			// directory had changed within the loop
-			if($record['relDirPathHash'] !== $this->prevAlb->getRelDirPathHash() ) {
-				$this->mayMigrate();
-				cliLog('resetting previousAlbum', 10);
-				$this->newPrevAlb($record);
-				cliLog('  adding hash of dir '. $record['relDirPath'] .' to previousAlbum', 10);
-				$this->skipAlbum = TRUE;
-			}
-			
 			$this->updateJob(array(
-				'currentItem' => $record['relPath'],
+				'currentItem' => "dirHash:" . $record['dirHash'],
 				'migratedAlbums' => $this->migratedAlbums
 			));
-			$this->checkTrackSkip($record);
-			$this->prevAlb->addTrack($record);
-			cliLog('adding track to previousAlbum: ' . $record['relPath'], 10);
-			
-			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
-			
-			// dont forget to check the last directory
-			if($this->itemsChecked === $this->itemsTotal && $this->itemsTotal > 1) {
-				$this->mayMigrate();
-			}
+			$this->checkDirMigration($record["dirHash"]);
+			$dirHashes[] = $record["dirHash"];
 		}
 
 		$this->finishJob(array(
@@ -125,16 +103,49 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		), __FUNCTION__);
 	}
 
+	// fetches records of rawtagdata
+	// comperes modified-times and decides if the migration should be triggered
+	private function checkDirMigration($dirHash) {
+		$app = \Slim\Slim::getInstance();
+		$this->skipAlbum = TRUE;
+		$query = "SELECT * FROM rawtagdata WHERE relDirPathHash=\"" . $dirHash . "\";";
+		$result = $app->db->query($query);
+		$this->albumMigrator = new \Slimpd\Modules\albummigrator\AlbumMigrator();
+		
+		$trackCounter = 0;
+		while($record = $result->fetch_assoc()) {
+			$trackCounter++;
+			$this->itemsChecked++;
+			if($trackCounter === 1) {
+				$this->albumMigrator->conf = $this->migratorConfig;
+				$this->albumMigrator->setRelDirPathHash($record['relDirPathHash']);
+				$this->albumMigrator->setRelDirPath($record['relDirPath']);
+				$this->albumMigrator->setDirectoryMtime($record['directoryMtime']);
+			}
+			$this->updateJob(array(
+				'currentItem' => $record['relPath'],
+				'migratedAlbums' => $this->migratedAlbums
+			));
+			$this->checkTrackSkip($record);
+			$this->albumMigrator->addTrack($record);
+			cliLog('adding track to previousAlbum: ' . $record['relPath'], 10);
+			
+			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
+		}
+		$this->mayMigrate();
+	}
+
+
 	private function checkAlbumSkip() {	
 		// decide if we have to process album or if we can skip it
-		if(isset($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ]) === FALSE) {
-			cliLog('album does NOT exist in migrated data. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
+		if(isset($this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ]) === FALSE) {
+			cliLog('album does NOT exist in migrated data. migrating: ' . $this->albumMigrator->getRelDirPath(), 5);
 			$this->skipAlbum = FALSE;
 			return;
 		}
-		if($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] < $this->prevAlb->getDirectoryMtime()) {
-			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
-			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] .' raw: ' . $this->prevAlb->getDirectoryMtime(), 10, 'yellow');
+		if($this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ] < $this->albumMigrator->getDirectoryMtime()) {
+			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->albumMigrator->getRelDirPath(), 5);
+			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ] .' raw: ' . $this->albumMigrator->getDirectoryMtime(), 10, 'yellow');
 			$this->skipAlbum = FALSE;
 			return;
 		}
@@ -156,18 +167,10 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	private function mayMigrate() {
 		$this->checkAlbumSkip();
 		if($this->skipAlbum === TRUE) {
-			cliLog('skipping migration for: ' . $this->prevAlb->getRelDirPath(), 5);
+			cliLog('skipping migration for: ' . $this->albumMigrator->getRelDirPath(), 5);
 			return;
 		}
-		$this->prevAlb->run();
+		$this->albumMigrator->run();
 		$this->migratedAlbums++;
-	}
-	
-	private function newPrevAlb($record) {
-		$this->prevAlb = new \Slimpd\Modules\albummigrator\AlbumMigrator();
-		$this->prevAlb->conf = $this->migratorConfig;
-		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
-		$this->prevAlb->setRelDirPath($record['relDirPath']);
-		$this->prevAlb->setDirectoryMtime($record['directoryMtime']);
 	}
 }
