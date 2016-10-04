@@ -99,44 +99,45 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
-
-			// remove big-tagData-stuff (images, traktor-waveforms) to keep database-size as small as possible
-			// maybe some or all array paths does not not exist...
-			// TODO: move array paths to config
-
-			$dataCopy = $tagData;
-			// drop large data by common array paths
-			try { unset($dataCopy['comments']['picture']); } catch (\Exception $e) { }
-			try { unset($dataCopy['id3v2']['APIC']); } catch (\Exception $e) { }
-			try { unset($dataCopy['id3v2']['PIC']); } catch (\Exception $e) { }
-			try { unset($dataCopy['id3v2']['PRIV']); } catch (\Exception $e) { }
-			try { unset($dataCopy['id3v2']['picture']); } catch (\Exception $e) { }
-			try { unset($dataCopy['id3v2']['comments']['picture']); } catch (\Exception $e) { }
-			try { unset($dataCopy['flac']['PICTURE']); } catch (\Exception $e) { }
-			try { unset($dataCopy['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
-			try { unset($dataCopy['comments']['text']['COVERART_UUENCODED']); } catch (\Exception $e) { }
-			try { unset($dataCopy['tags']); } catch (\Exception $e) { }
-			try { unset($dataCopy['comments_html']); } catch (\Exception $e) { }
-			try { unset($dataCopy['tags_html']); } catch (\Exception $e) { }
-
-			// drop the rest of large data under non-common array paths
-			try { recursiveDropLargeData($dataCopy); } catch (\Exception $e) { }
-
 			// TODO: should we complete rawTagData with fingerprint on flac files?
-			$rawTagData->setTagData(serialize($dataCopy));
+			$rawTagData->setTagData(serialize($this->removeHugeTagData($tagData)));
 			$rawTagData->update();
 
 			if(!$app->config['images']['read_embedded']) {
 				continue;
 			}
 			$this->extractEmbeddedBitmaps($tagData, $phpThumb, $record);
-			
 		}
 
 		$this->finishJob(array(
 			'extractedImages' => $this->extractedImages
 		), __FUNCTION__);
 		return;
+	}
+
+	/**
+	 * remove big-tagData-stuff (images, traktor-waveforms) to keep database-size as small as possible
+	 * maybe some or all array paths does not not exist...
+	 * TODO: move array paths to config
+	 */
+	private function removeHugeTagData($hugeTagdata) {
+		// drop large data by common array paths
+		try { unset($hugeTagdata['comments']['picture']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['id3v2']['APIC']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['id3v2']['PIC']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['id3v2']['PRIV']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['id3v2']['picture']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['id3v2']['comments']['picture']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['flac']['PICTURE']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['comments']['text']['COVERART_UUENCODED']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['tags']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['comments_html']); } catch (\Exception $e) { }
+		try { unset($hugeTagdata['tags_html']); } catch (\Exception $e) { }
+
+		// drop the rest of large data under non-common array paths
+		try { recursiveDropLargeData($hugeTagdata); } catch (\Exception $e) { }
+		return $hugeTagdata;
 	}
 
 	private function extractEmbeddedBitmaps($tagData, &$phpThumb, $record) {
