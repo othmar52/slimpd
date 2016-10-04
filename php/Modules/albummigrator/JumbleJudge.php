@@ -48,6 +48,7 @@ class JumbleJudge {
 			->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\ArtistTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\NumberTitleExt", $fileName)
+			->runTest("SchemaTests\\Filename\\ArtistAlbumYearNumberTitleExt", $fileName)
 			->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
 			->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
 			->runTest("EqualTagTests\\Album", $trackContext->getAlbum())
