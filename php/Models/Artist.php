@@ -42,13 +42,14 @@ class Artist extends \Slimpd\Models\AbstractModel {
 			return $GLOBALS["artist-blacklist"];
 		}
 		$GLOBALS["artist-blacklist"] = array();
-		if(isset($app->config["artist-blacklist"]) === FALSE) {
+		if(isset($app->config["artist-blacklist"]["blacklist"]) === FALSE) {
 			return $GLOBALS["artist-blacklist"];
 		}
-		foreach($app->config["artist-blacklist"] as $term) {
+		foreach(trimExplode("\n", $app->config["artist-blacklist"]["blacklist"], TRUE) as $term) {
 			$GLOBALS["artist-blacklist"][$term] = 1;
 			$GLOBALS["artist-blacklist"][" " . $term] = 1;
 		}
+		#print_r($GLOBALS["artist-blacklist"]); die;
 		return $GLOBALS["artist-blacklist"];
 	}
 

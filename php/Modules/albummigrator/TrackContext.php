@@ -393,10 +393,19 @@ class TrackContext extends \Slimpd\Models\Track {
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
 		foreach($remixerArtists as $remixerArtist) {
-			if(isset($artistBlacklist[ strtolower($remixerArtist)]) === TRUE) {
-				continue;
+			cliLog(strtolower($remixerArtist), 1, "yellow");
+			$correction = FALSE;
+			foreach(array_keys($artistBlacklist) as $chunk) {
+				if(preg_match("/(.*)" . $chunk . "$/i", $remixerArtist, $matches)) {
+					cliLog(strtolower($chunk), 1, "green");
+					$tmp[] = str_ireplace($chunk, "", $remixerArtist);
+					$correction = TRUE;
+					break;
+				}
 			}
-			$tmp[] = str_ireplace($artistBlacklist, "", $remixerArtist);
+			if($correction === FALSE) {
+				$tmp[] = $remixerArtist;
+			}
 		}
 		$remixerArtists = $tmp;
 		
@@ -461,11 +470,11 @@ class TrackContext extends \Slimpd\Models\Track {
 		}
 		
 		// replace multiple whitespace with a single whitespace
-		$titlePattern = preg_replace('!\s+!', ' ', $titlePattern);
+		$titlePattern = flattenWhitespace($titlePattern);
 		// remove whitespace before bracket
 		$titlePattern = str_replace(' )', ')', $titlePattern);
 		$this->setTitle($titlePattern);
-		
+		#$performTest = 1;
 		if($performTest > 0) {
 			cliLog("----------ARTIST-PARSER---------", 1, "purple");
 			cliLog(" inputArtist: " . $artistStringVanilla);

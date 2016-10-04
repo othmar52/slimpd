@@ -38,7 +38,7 @@ class RegexHelper {
 	const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	
 	const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
-	const REMIX1 = "(.*)\((.*)(\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)";
+	const REMIX1 = "(.*)\((.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ vip|\ remake)";
 	const REMIX2 = "(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)";
 	
 	public static function seemsYeary($input) {
