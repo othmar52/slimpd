@@ -61,7 +61,8 @@ class JumbleJudge {
 			->runTest("SchemaTests\\TrackNumber\\Numeric", $trackContext->getTrackNumber())
 			->runTest("SchemaTests\\TrackNumber\\Vinyl", $trackContext->getTrackNumber())
 			->runTest("SchemaTests\\TrackNumber\\LeadingZero", $trackContext->getTrackNumber())
-			->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber());
+			->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber())
+			->runTest("SchemaTests\\Album\\HasCatalogNr", $trackContext->getAlbum());
 	}
 
 	private function runTest($className, $input) {

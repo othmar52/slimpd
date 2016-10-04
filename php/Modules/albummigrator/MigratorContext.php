@@ -80,7 +80,7 @@ trait MigratorContext {
 		foreach($properties as $setterName => $value) {
 			$cleanValue = fixCaseSensitivity(trim(flattenWhitespace(remU($value))));
 			$caseFunc = ($setterName === "setCatalogNr") ? "strtoupper" : "fixCaseSensitivity";
-			$caseFunc($cleanValue);
+			$cleanValue = $caseFunc($cleanValue);
 			if($cleanValue === "") {
 				continue;
 			}
