@@ -393,11 +393,9 @@ class TrackContext extends \Slimpd\Models\Track {
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
 		foreach($remixerArtists as $remixerArtist) {
-			cliLog(strtolower($remixerArtist), 1, "yellow");
 			$correction = FALSE;
 			foreach(array_keys($artistBlacklist) as $chunk) {
 				if(preg_match("/(.*)" . $chunk . "$/i", $remixerArtist, $matches)) {
-					cliLog(strtolower($chunk), 1, "green");
 					$tmp[] = str_ireplace($chunk, "", $remixerArtist);
 					$correction = TRUE;
 					break;
