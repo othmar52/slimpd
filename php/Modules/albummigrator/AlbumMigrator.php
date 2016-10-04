@@ -55,6 +55,7 @@ class AlbumMigrator {
 		
 		#if($this->getRelDirPath() === "502_recordings/502003--Teeth-Shawty-(502003)-WEB-2011/") {
 		#if($this->getRelDirPath() === "slimpd2/Q4_2015/francois_cousineau-l_initiation_(1970)/") {
+		#if($this->getRelDirPath() === "1980-Rote_Lichter-Macht_Mich_Glucklich_Wie_Nie/") {
 			#print_r($this->albumContextItem->recommendations);die;
 			#print_r($this->trackContextItems[0]->recommendations);die;
 		#}

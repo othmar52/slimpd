@@ -79,6 +79,9 @@ trait MigratorContext {
 		cliLog("  " .__CLASS__ . " recommendations", 10, "purple");
 		foreach($properties as $setterName => $value) {
 			$cleanValue = trim(flattenWhitespace(remU($value)));
+			if($cleanValue === "") {
+				continue;
+			}
 			cliLog("    " . $setterName . ": " . $cleanValue, 10, "cyan");
 			$this->recommendations[$setterName][] = $cleanValue;
 			\Slimpd\Modules\albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
