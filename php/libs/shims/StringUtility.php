@@ -57,8 +57,9 @@ function remU($input){
 
 /** 
  * TODO: fix case sensitivity of strings like
- * "Genaside Ii"
- * "Never Trust The Drugweib (original Mix)"
+ * "Genaside Ii" should be: "...II"
+ * "Never Trust The Drugweib (original Mix)" should be "...(Original..."
+ * "Showdown (Undercover Agent Vip Mix)" should be "... VIP Mix)"
  */
 function fixCaseSensitivity($input){
 	return ucwords($input);
