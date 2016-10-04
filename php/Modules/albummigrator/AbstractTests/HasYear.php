@@ -45,10 +45,10 @@ abstract class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\Abstr
 		foreach($this->matches as $group) {
 			foreach($group as $yearMatch) {
 				$this->trackContext->recommend([
-					'setYear' => $yearMatch
+					'setYear' => az09($yearMatch)
 				]);
 				$this->albumContext->recommend([
-					'setYear' => $yearMatch
+					'setYear' => az09($yearMatch)
 				]);
 			}
 		}

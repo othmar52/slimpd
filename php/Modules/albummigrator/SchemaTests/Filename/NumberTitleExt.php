@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Dirname;
+namespace Slimpd\Modules\albummigrator\SchemaTests\Filename;
 use Slimpd\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
@@ -19,18 +19,19 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtistYearTitle extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class NumberTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+	public $isAlbumWeight = 0.8;
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . RGX::ANYTHING . "$/";
+		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . RGX::EXT . "$/";
 		return $this;
 	}
 	
 	public function run() {
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = 'number-artist-title-ext';
+			$this->result = 'number-title-ext';
 			return;
 		}
 		$this->result = 0;
@@ -42,14 +43,9 @@ class ArtistYearTitle extends \Slimpd\Modules\albummigrator\AbstractTests\Abstra
 			cliLog("  no matches\n ", 10);
 			return;
 		}
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[1],
-			'setYear' => az09($this->matches[2]),
-			'setTitle' => $this->matches[3]
-		]);
-		$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
-			'setArtist' => $this->matches[1],
-			'setYear' => az09($this->matches[2])
+		$this->trackContext->recommend([
+			'setTrackNumber' => $this->matches[1],
+			'setTitle' => $this->matches[2]
 		]);
 	}
 }

@@ -25,26 +25,18 @@ namespace Slimpd\Modules\albummigrator;
  */
 
 class JumbleJudge {
-	
-	// those attributes are used for "handle all directory tracks as album"
-	/*
-	protected $fileNameCase;
-	protected $filenameSchema;
-	protected $titleSchema;
-	protected $artistSchema;
-	protected $albumSchema;
-	protected $numberSchema;
-	*/
-	
+
 	private $isAlbumTreshold = 0.7;
 	public $handleAsAlbum;
 	public $tests;
 	public $testResults;
 	private $trackContext;
 	private $albumContext;
+	public $albumMigrator;
 
-	public function __construct(\Slimpd\Modules\albummigrator\AlbumContext &$albumContextItem) {
+	public function __construct(\Slimpd\Modules\albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
 		$this->albumContext = $albumContextItem;
+		$this->albumMigrator = $albumMigrator;
 	}
 
 	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
@@ -55,6 +47,7 @@ class JumbleJudge {
 			->runTest("SchemaTests\\Filename\\NumberArtistTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\ArtistTitleExt", $fileName)
+			->runTest("SchemaTests\\Filename\\NumberTitleExt", $fileName)
 			->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
 			->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
 			->runTest("EqualTagTests\\Album", $trackContext->getAlbum())

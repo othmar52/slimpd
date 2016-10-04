@@ -30,7 +30,7 @@ class AlbumMigrator {
 	public function run() {
 		// create albumContext
 		$this->albumContextItem = new \Slimpd\Modules\albummigrator\AlbumContext();
-		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge($this->albumContextItem);
+		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge($this->albumContextItem, $this);
 
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
@@ -53,8 +53,11 @@ class AlbumMigrator {
 		
 		$this->postProcessTrackProperties();
 		
-		#print_r($this->albumContextItem->recommendations);die;
-		#print_r($this->trackContextItems[0]->recommendations);die;
+		#if($this->getRelDirPath() === "502_recordings/502003--Teeth-Shawty-(502003)-WEB-2011/") {
+		#if($this->getRelDirPath() === "slimpd2/Q4_2015/francois_cousineau-l_initiation_(1970)/") {
+			#print_r($this->albumContextItem->recommendations);die;
+			#print_r($this->trackContextItems[0]->recommendations);die;
+		#}
 		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
 		
 		
@@ -103,6 +106,7 @@ class AlbumMigrator {
 	}
 
 	public function recommendationForAllTracks(array $recommendations) {
+		#print_r($recommendations); die;
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->recommend($recommendations);
 		}

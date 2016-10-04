@@ -21,13 +21,13 @@ namespace Slimpd;
 class RegexHelper {
 
 	const NUM    = "([\d]{1,3})";
-	const VINYL  = "([A-M\d]{1,3})"; // a1, AA2,
+	const VINYL  = "((?:([A-Ma-m])\\1{1,2})(?:[\d]){1,2})"; // a1, AA2, but not AB1
 	const GLUE   = "(?:[ .\-_\|]{1,4})"; // "_-_", ". ", "-",
 	const GLUE_NO_WHITESPACE   = "(?:[.\-_]{1,4})"; // "_-_", ". ", "-",
 	const EXT    = "\.([a-z\d]{2,4})";
 	const SCENE  = "-([^\s\-]+)";
-	const YEAR  = "(?:[^\d])((?:[1920]{2})(?:[0-9]{2}))(?:[^\d])";
-	#const year  = "([0-9]{4})";
+	// TODO: how to avoid string "2003" beeing extracted of string "Teeth-Shawty-(502003)-WEB-2011/"
+	const YEAR  = "(?:[^\d])?((?:[12]{1})(?:[0-9]{3}))(?:[^\d])?";
 	const CATNR  = "((?:([\(\[]{1})?((?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:([\)\]]{1})?)))";
 	const SOURCE  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
 	const NO_MINUS= "([^-]+)";

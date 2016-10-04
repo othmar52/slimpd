@@ -30,9 +30,11 @@ class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\HasYear {
 		foreach($this->matches as $group) {
 			foreach($group as $yearMatch) {
 				$this->albumContext->recommend([
-					'setYear' => $yearMatch
+					'setYear' => az09($yearMatch)
 				]);
-				// TODO: recommendation for all tracks
+				$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
+					'setYear' => az09($yearMatch)
+				]);
 			}
 		}
 	}

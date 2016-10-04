@@ -21,6 +21,7 @@ namespace Slimpd\Modules\albummigrator;
 class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
+	protected $jumbleJudge;
 
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
@@ -42,6 +43,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 	}
 	
 	public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
+		$this->jumbleJudge = $jumbleJudge;
 		// guess attributes by directory name
 		$dirname = basename($this->getRelPath());
 		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
@@ -54,11 +56,10 @@ class AlbumContext extends \Slimpd\Models\Album {
 
 	private function runTest($className, $input) {
 		$classPath = "\\Slimpd\\Modules\\albummigrator\\" . $className;
-		// for now there is no need for those 2 instances within the test
+		// for now there is no need for this instance within the tests
 		// but abstraction requires any kind of variable... 
 		$dummyTrackContext = NULL;
-		$dummyJumbleJudge = NULL;
-		$test = new $classPath($input, $dummyTrackContext, $this, $dummyJumbleJudge);
+		$test = new $classPath($input, $dummyTrackContext, $this, $this->jumbleJudge);
 		$test->run();
 		$test->scoreMatches();
 		return $this;
