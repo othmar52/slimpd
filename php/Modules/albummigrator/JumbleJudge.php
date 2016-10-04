@@ -62,6 +62,7 @@ class JumbleJudge {
 			->runTest("SchemaTests\\Artist\\NumberArtist", $trackContext->getArtist())
 			->runTest("SchemaTests\\Artist\\VinylArtist", $trackContext->getArtist())
 			->runTest("SchemaTests\\Artist\\NumberArtistTitle", $trackContext->getArtist())
+			->runTest("SchemaTests\\Artist\\VinylArtistTitle", $trackContext->getArtist())
 			->runTest("SchemaTests\\Title\\ArtistTitle", $trackContext->getTitle())
 			->runTest("SchemaTests\\TrackNumber\\Numeric", $trackContext->getTrackNumber())
 			->runTest("SchemaTests\\TrackNumber\\Vinyl", $trackContext->getTrackNumber())

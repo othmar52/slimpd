@@ -81,6 +81,7 @@ trait MigratorContext {
 			$cleanValue = trim(flattenWhitespace(remU($value)));
 			cliLog("    " . $setterName . ": " . $cleanValue, 10, "cyan");
 			$this->recommendations[$setterName][] = $cleanValue;
+			\Slimpd\Modules\albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
 		}
 		cliLog(" ", 10);
 	}
