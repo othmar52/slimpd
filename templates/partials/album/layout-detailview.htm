@@ -21,7 +21,8 @@
 				<i class="fa fa-plus fa-lg"></i>
 			</button>
 			
-		</button> {{album.title}}</h3>
+		</button> {% if album.isJumble %}<span class="col2" title="no album but jumble">*</span>{% endif %}{{album.title}}
+		</h3>
 		
 		<div id="album-info-artist">
 			<span class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
