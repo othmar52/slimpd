@@ -430,6 +430,9 @@ class TrackContext extends \Slimpd\Models\Track {
 		usort($allArtists,'sortHelper');
 		$titlePattern = str_ireplace($allArtists, "%s", $titleString);
 		
+		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
+		$titlePattern = flattenWhitespace(str_replace("%s", "%s ", $titlePattern));
+		
 
 		// remove possible brackets from featuredArtists
 		#$tmp = array();
