@@ -55,14 +55,17 @@ function remU($input){
 	return trim(preg_replace("!\s+!", " ", str_replace("_", " ", $input)));
 }
 
+/* TODO: fix case sensitivity of strings like "Genaside Ii" */
 function fixCaseSensitivity($input){
+	/*
 	if(strtolower($input) == $input) {
 		return ucwords($input);
 	}
 	if(strtoupper($input) == $input && strlen($input)>3) {
 		return ucwords(strtolower($input));
 	}
-	return $input;
+	*/
+	return ucwords($input);
 }
 
 function timeStringToSeconds($time) {
