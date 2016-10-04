@@ -76,7 +76,7 @@ trait MigratorContext {
 	}
 	
 	public function recommend($properties) {
-		cliLog("  " .__CLASS__ . " recommendations", 10, "purple");
+		cliLog("  " .get_called_class() . " recommendations", 10, "purple");
 		foreach($properties as $setterName => $value) {
 			$cleanValue = fixCaseSensitivity(trim(flattenWhitespace(remU($value))));
 			$caseFunc = ($setterName === "setCatalogNr") ? "strtoupper" : "fixCaseSensitivity";
