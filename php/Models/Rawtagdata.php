@@ -17,13 +17,13 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	use \Slimpd\Traits\PropertyLastScan;
 	use \Slimpd\Traits\PropertyFingerprint;
 
 	protected $directoryMtime = 0;
 	protected $added;
-	protected $tagData;
 	protected $extension;
 	protected $lastDirScan;
 	protected $error;	// TODO: move to Trait
@@ -38,10 +38,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function setAdded($value) {
 		$this->added = $value;
-		return $this;
-	}
-	public function setTagData($value) {
-		$this->tagData = $value;
 		return $this;
 	}
 	public function setExtension($value) {
@@ -64,9 +60,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	}
 	public function getAdded() {
 		return $this->added;
-	}
-	public function getTagData() {
-		return $this->tagData;
 	}
 	public function getExtension() {
 		return $this->extension;

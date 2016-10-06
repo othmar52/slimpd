@@ -100,7 +100,17 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
 			// TODO: should we complete rawTagData with fingerprint on flac files?
-			$rawTagData->setTagData(serialize($this->removeHugeTagData($tagData)));
+			
+			// write datachank to filesystem
+			$tagFilePath = getTagDataFileName($record['relPathHash']);
+			\phpthumb_functions::EnsureDirectoryExists($tagFilePath);
+			#$rawTagData->setTagData();
+			file_put_contents(
+				$tagFilePath . DS . $record['relPathHash'],
+				serialize($this->removeHugeTagData($tagData))
+			);
+			#echo ; die;
+			
 			$rawTagData->update();
 
 			if(!$app->config['images']['read_embedded']) {

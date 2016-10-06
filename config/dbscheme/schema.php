@@ -235,7 +235,6 @@ class Schema extends AbstractSchema
       . "  `relDirPath` text NOT NULL,\r"
       . "  `relDirPathHash` varchar(11) NOT NULL,\r"
       . "  `fingerprint` varchar(32) NOT NULL DEFAULT '',\r"
-      . "  `tagData` LONGBLOB,\r"
       . "  PRIMARY KEY (`uid`),\r"
       . "  KEY `relPathHash` (`relPathHash`),\r"
       . "  KEY `relDirPathHash` (`relDirPathHash`),\r"

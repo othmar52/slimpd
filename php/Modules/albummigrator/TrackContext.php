@@ -39,7 +39,12 @@ class TrackContext extends \Slimpd\Models\Track {
 		$this->config = $config;
 		$this->idx = $idx;
 		$this->rawTagRecord = $rawTagArray;
-		$this->rawTagArray = unserialize($rawTagArray['tagData']);
+		// TODO: how to handle non existent files? extract directly from music file?
+		$this->rawTagArray = unserialize(
+			file_get_contents(
+				getTagDataFileName($rawTagArray['relPathHash']) . DS . $rawTagArray['relPathHash'] 
+			)
+		);
 		$this->process();
 	}
 	

@@ -331,7 +331,6 @@ CREATE TABLE IF NOT EXISTS `rawtagdata` (
   `relDirPath` text NOT NULL,
   `relDirPathHash` varchar(11) NOT NULL,
   `fingerprint` varchar(32) NOT NULL DEFAULT '',
-  `tagData` LONGBLOB,
 
   PRIMARY KEY (`uid`),
   KEY `relPathHash` (`relPathHash`),
