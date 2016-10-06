@@ -30,7 +30,7 @@ class RegexHelper {
 	const SCENE  = "-([^\s\-]+)";
 	const YEAR   = "(?<!\d)(?:[^\d])?((?:[12]{1})(?:[0-9]{3}))(?:[^\d])?";
 	const CATNR  = "(?:(?:(?:[\(\[]{1})?(?:(?:[A-Z]{2,14})(?:[0-9]{1,})(?:[A-Z]{2,7})?)(?:(?:[\)\]]{1})?)))";
-	const SOURCE  = "((?:([\(\[]{1})?([vinylVINYLwebWEBCDcd]{3,5})(?:([\)\]]{1})?)))";
+	const SOURCE  = "((?:(?:[\(\[]{1})?(?:[vinylVINYLwebWEBCDMcdm]{3,5})(?:(?:[\)\]]{1})?)))";
 	const NO_MINUS= "([^-]+)";
 	const ANYTHING= "(.*)";
 	const MAY_BRACKET = "(?:(?:[\(\)\[\]]{0,1}))?";

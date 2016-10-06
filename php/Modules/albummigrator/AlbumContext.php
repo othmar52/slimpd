@@ -54,6 +54,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
 			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname)
 			->runTest("SchemaTests\\Dirname\\ArtistYearTitle", $dirname)
+			->runTest("SchemaTests\\Dirname\\ArtistTitleSourceYearScene", $dirname)
 			->runTest("SchemaTests\\Dirname\\HasYear", $dirname)
 			->runTest("SchemaTests\\Dirname\\HasCatalogNr", $dirname)
 			->runTest("SchemaTests\\Dirname\\HasPrefixedCatalogNr", $dirname)

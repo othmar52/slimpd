@@ -19,18 +19,21 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ArtistTitleYear extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class ArtistTitleSourceYearScene extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . "$/";
+		$this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NO_MINUS . RGX::GLUE .
+			RGX::SOURCE . RGX::GLUE . 
+			RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET .
+			RGX::SCENE . "$/";
 		return $this;
 	}
 	
 	public function run() {
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = 'artist-title-year';
+			$this->result = 'artist-title-source-year-scene';
 			return;
 		}
 		$this->result = 0;
@@ -45,7 +48,7 @@ class ArtistTitleYear extends \Slimpd\Modules\albummigrator\AbstractTests\Abstra
 		$this->albumContext->recommend([
 			'setArtist' => $this->matches[1],
 			'setTitle' => $this->matches[2],
-			'setYear' => $this->matches[3]
+			'setYear' => az09($this->matches[4])
 		]);
 	}
 }
