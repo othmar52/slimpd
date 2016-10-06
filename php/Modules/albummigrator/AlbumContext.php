@@ -44,8 +44,13 @@ class AlbumContext extends \Slimpd\Models\Album {
 	
 	public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
 		$this->jumbleJudge = $jumbleJudge;
-		// guess attributes by directory name
 		$dirname = basename($this->getRelPath());
+		// TODO: use parent dir in case dirname is "cd1", "cd01", ???
+
+		// dirname as album name is better than nothing
+		$this->recommend(["setTitle" => $dirname]);
+
+		// guess attributes by directory name
 		$this->runTest("SchemaTests\\Dirname\\ArtistTitleYear", $dirname)
 			->runTest("SchemaTests\\Dirname\\ArtistTitle", $dirname)
 			->runTest("SchemaTests\\Dirname\\ArtistYearTitle", $dirname)
