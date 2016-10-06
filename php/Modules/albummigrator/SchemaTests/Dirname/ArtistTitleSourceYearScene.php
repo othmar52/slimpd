@@ -19,6 +19,21 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * pattern: Wink_-_Higher_State_of_Consciousness_96_Remixes-CDM-1996-TT
+ *          |  |   |                                      | | | |  | |scene
+ *          |  |   |                                      | | | |  | └──
+ *          |  |   |                                      | | | |year
+ *          |  |   |                                      | | | └──
+ *          |  |   |                                      | |source
+ *          |  |   |                                      | └──
+ *          |  |   |albumtitle
+ *          |  |   └──
+ *          |artist
+ *          └──
+ *
+ * pattern: Jah_Mason-Most_Royal-CD-2004-iLL
+ */
 class ArtistTitleSourceYearScene extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
