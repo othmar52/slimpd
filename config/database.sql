@@ -312,6 +312,18 @@ CREATE TABLE IF NOT EXISTS `discogsapicache` (
 -- --------------------------------------------------------
 
 --
+-- table structure `rawtagblob`
+--
+
+CREATE TABLE IF NOT EXISTS `rawtagblob` (
+  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tagData` LONGBLOB,
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- table structure `rawtagdata`
 --
 

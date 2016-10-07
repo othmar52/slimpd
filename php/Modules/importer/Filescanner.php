@@ -25,6 +25,7 @@ use Slimpd\Models\Albumindex;
 use Slimpd\Models\Label;
 use Slimpd\Models\Genre;
 use Slimpd\Models\Rawtagdata;
+use Slimpd\Models\Rawtagblob;
 use Slimpd\Models\Bitmap;
 
 class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
@@ -99,18 +100,15 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
+
+			// write datachunk to different table "rawtagblob" as it would slow down a lot of database operations on table "rawtagdata"
+			Rawtagblob::ensureRecordUidExists($record['uid']);
+			$rawTagBlob = new Rawtagblob();
+			$rawTagBlob->setUid($record['uid'])
+				->setTagData(serialize($this->removeHugeTagData($tagData)))
+				->update();
+
 			// TODO: should we complete rawTagData with fingerprint on flac files?
-			
-			// write datachank to filesystem
-			$tagFilePath = getTagDataFileName($record['relPathHash']);
-			\phpthumb_functions::EnsureDirectoryExists($tagFilePath);
-			#$rawTagData->setTagData();
-			file_put_contents(
-				$tagFilePath . DS . $record['relPathHash'],
-				serialize($this->removeHugeTagData($tagData))
-			);
-			#echo ; die;
-			
 			$rawTagData->update();
 
 			if(!$app->config['images']['read_embedded']) {

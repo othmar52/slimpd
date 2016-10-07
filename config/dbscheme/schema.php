@@ -218,6 +218,11 @@ class Schema extends AbstractSchema
       . "  KEY `position` (`position`),\r"
       . "  KEY `create_time` (`create_time`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
+      "DROP TABLE IF EXISTS `rawtagblob`",
+      "CREATE TABLE `rawtagblob` (\r"
+      . "  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
+      . "  `tagData` LONGBLOB\r"
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `rawtagdata`",
       "CREATE TABLE `rawtagdata` (\r"
       . "  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"

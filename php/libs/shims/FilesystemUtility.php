@@ -83,6 +83,11 @@ function getMimeType ($filename) {
 }
 
 
+/**
+ * temporary helper func to migrate tagdata from filesystem to new db table `rawtagblob`
+ * TODO: remove this helper func
+ * @see: php/routes/cli.php:tagdatatodb()
+ */
 function getTagDataFileName($relPathHash) {
 	$dirDepth = 3;
 	$out = ["localdata", "tagdata"];
