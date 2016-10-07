@@ -221,7 +221,8 @@ class Schema extends AbstractSchema
       "DROP TABLE IF EXISTS `rawtagblob`",
       "CREATE TABLE `rawtagblob` (\r"
       . "  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
-      . "  `tagData` LONGBLOB\r"
+      . "  `tagData` LONGBLOB,\r"
+      . "  PRIMARY KEY (`uid`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `rawtagdata`",
       "CREATE TABLE `rawtagdata` (\r"
