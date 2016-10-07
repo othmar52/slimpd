@@ -27,7 +27,7 @@ class BeginsWithVinyl extends \Slimpd\Modules\albummigrator\AbstractTests\Abstra
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::VINYL . "/i";
+		$this->pattern = "/^" . RGX::VINYL . RGX::GLUE . "/i";
 		return $this;
 	}
 	
