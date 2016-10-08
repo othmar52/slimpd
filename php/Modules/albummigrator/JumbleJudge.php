@@ -41,7 +41,7 @@ class JumbleJudge {
 
 	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
 		$this->trackContext = $trackContext;
-		$fileName = basename($trackContext->getRelPath());
+		$fileName = unifyHyphens(unifyBraces(basename($trackContext->getRelPath())));
 		$this->runTest("SchemaTests\\Filename\\HasYear", $fileName)
 			->runTest("CaseSensitivityTests\\Filename", $fileName)
 			->runTest("SchemaTests\\Filename\\NumberArtistTitleExt", $fileName)

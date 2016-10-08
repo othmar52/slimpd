@@ -92,6 +92,45 @@ function unifyBraces($input) {
 }
 
 /**
+ * replaces hyphen variations to standard hyphen
+ * Thanks to https://www.cs.tut.fi/~jkorpela/dashes.html
+ */
+function unifyHyphens($input) {
+	return str_ireplace(
+		[
+			"~", //	U+007E	&#126;	tilde	the Ascii tilde, with multiple usage; “swung dash”
+			"֊", //	U+058A	&#1418;	armenian hyphen	as soft hyphen, but different in shape
+			"־", //	U+05BE	&#1470;	hebrew punctuation maqaf	word hyphen in Hebrew
+			"‐", //	U+2010	&#8208;	hyphen	unambiguously a hyphen character, as in “left-to-right”; narrow width
+			"‑", //	U+2011	&#8209;	non-breaking hyphen	as hyphen (U+2010), but not an allowed line break point
+			"‒", //	U+2012	&#8210;	figure dash	as hyphen-minus, but has the same width as digits
+			"–", //	U+2013	&#8211;	en dash	used e.g. to indicate a range of values
+			"—", //	U+2014	&#8212;	em dash	used e.g. to make a break in the flow of a sentence
+			"―", //	U+2015	&#8213;	horizontal bar	used to introduce quoted text in some typographic styles; “quotation dash”; often (e.g., in the representative glyph in the Unicode standard) longer than em dash
+			"⁓", //	U+2053	&#8275;	swung dash	like a large tilde
+			"⁻", //	U+207B	&#8315;	superscript minus	a compatibility character which is equivalent to minus sign U+2212 in superscript style
+			"₋", //	U+208B	&#8331;	subscript minus	a compatibility character which is equivalent to minus sign U+2212 in subscript style
+			"−", //	U+2212	&#8722;	minus sign	an arithmetic operator; the glyph may look the same as the glyph for a hyphen-minus, or may be longer ;
+			"⸗", //	U+2E17	&#11799;	double oblique hyphen	used in ancient Near-Eastern linguistics; not in Fraktur, but the glyph of Ascii hyphen or hyphen is similar to this character in Fraktur fonts
+			"⸺", //	U+2E3A	&#11834;	two-em dash	omission dash<(a>, 2 em units wide
+			"⸻", //	U+2E3B	&#11835;	three-em dash	used in bibliographies, 3 em units wide
+			"〜", //	U+301C	&#12316;	wave dash	a Chinese/Japanese/Korean character
+			"〰", //	U+3030	&#12336;	wavy dash	a Chinese/Japanese/Korean character
+			"゠", //	U+30A0	&#12448;	katakana-hiragana double hyphen	in Japasene kana writing
+			"︱", //	U+FE31	&#65073;	presentation form for vertical em dash	vertical variant of em dash
+			"︲", //	U+FE32	&#65074	presentation form for vertical en dash	vertical variant of en dash
+			"﹘", //	U+FE58	&#65112;	small em dash	small variant of em dash
+			"﹣", //	U+FE63	&#65123;	small hyphen-minus	small variant of Ascii hyphen
+			"－", //	U+FF0D	&#65293;	fullwidth hyphen-minus	variant of Ascii hyphen for use with CJK characters
+			"_eao_", //an incorrectly encoded hyphen
+			" eao ", //an incorrectly encoded hyphen
+		],
+		"-",
+		$input
+	);
+}
+
+/**
  * removes leading zeroes from input like "01", "001"
  */
 function removeLeadingZeroes($input) {

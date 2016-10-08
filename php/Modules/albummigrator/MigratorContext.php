@@ -72,7 +72,7 @@ trait MigratorContext {
 		if(is_int($mixed))		{ $out = $mixed; }
 		if(is_float($mixed))	{ $out = $mixed; }
 		if(trim($out) === '')	{ return FALSE; }
-		return trim(flattenWhitespace(remU(strip_tags($out))));
+		return trim(flattenWhitespace(unifyHyphens(unifyBraces(remU(strip_tags($out))))));
 	}
 	
 	public function recommend($properties) {
