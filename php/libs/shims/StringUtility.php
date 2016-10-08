@@ -85,14 +85,14 @@ function flattenWhitespace($input) {
  */
 function unifyBraces($input) {
 	return str_replace(
-		["[", "]","{", "}"],
-		["(", ")","(", ")"],
+		["[", "]", "{", "}", "<", ">"],
+		["(", ")", "(", ")", "(", ")"],
 		$input
 	);
 }
 
 /**
- * replaces hyphen variations to standard hyphen
+ * replaces hyphen variations with standard hyphen
  * Thanks to https://www.cs.tut.fi/~jkorpela/dashes.html
  */
 function unifyHyphens($input) {
