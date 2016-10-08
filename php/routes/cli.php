@@ -172,3 +172,23 @@ $app->get('/tagdatatodb', function () use ($app, $argv, $importer) {
 			->update();
 	}
 });
+
+
+/**
+ * temporary script to migrate tagdata from filesystem to new db table `rawtagblob` AND compression
+ * TODO: remove this route
+ * @see: FilesystemUtility.php:getTagDataFileName()
+ */
+$app->get('/tagdatatodbcompressed', function () use ($app, $argv, $importer) {
+	$query = "SELECT uid,relPathHash FROM rawtagdata";
+	$result = $app->db->query($query);
+	while($record = $result->fetch_assoc()) {
+		cliLog($record['uid']);
+		$tagFilePath = getTagDataFileName($record['relPathHash']);
+		\Slimpd\Models\Rawtagblob::ensureRecordUidExists($record['uid']);
+		$rawTagBlob = new \Slimpd\Models\Rawtagblob();
+		$rawTagBlob->setUid($record['uid'])
+			->setTagData(gzcompress(file_get_contents($tagFilePath . DS . $record['relPathHash'])))
+			->update();
+	}
+});

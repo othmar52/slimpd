@@ -101,13 +101,33 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
 
+			// Version 1: 
 			// write datachunk to different table "rawtagblob" as it would slow down a lot of database operations on table "rawtagdata"
+			#Rawtagblob::ensureRecordUidExists($record['uid']);
+			#$rawTagBlob = new Rawtagblob();
+			#$rawTagBlob->setUid($record['uid'])
+			#	->setTagData(serialize($this->removeHugeTagData($tagData)))
+			#	->update();
+
+
+			// Version 2: from filesystem, serialized
+			// write datachank to filesystem			
+			#$tagFilePath = getTagDataFileName($record['relPathHash']);
+			#\phpthumb_functions::EnsureDirectoryExists($tagFilePath);
+			#file_put_contents(
+			#	$tagFilePath . DS . $record['relPathHash'],
+			#	serialize($this->removeHugeTagData($tagData))
+			#);
+
+			// Version 3: from sparata database table, gzipcompressed, serialized 
 			Rawtagblob::ensureRecordUidExists($record['uid']);
 			$rawTagBlob = new Rawtagblob();
 			$rawTagBlob->setUid($record['uid'])
-				->setTagData(serialize($this->removeHugeTagData($tagData)))
+				->setTagData(gzcompress(serialize($this->removeHugeTagData($tagData))))
 				->update();
 
+
+		
 			// TODO: should we complete rawTagData with fingerprint on flac files?
 			$rawTagData->update();
 
