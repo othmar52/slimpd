@@ -129,7 +129,7 @@ abstract class AbstractImporter {
 			return;
 		}
 
-		$data['progressPercent'] = floor($this->itemsChecked / ($this->itemsTotal/100));
+		$data['progressPercent'] = number_format(($this->itemsChecked / ($this->itemsTotal/100)), 2, ".", "");
 		// make sure we don not display 100% in case it is not finished
 		$data['progressPercent'] = ($data['progressPercent']>99) ? 99 : $data['progressPercent'];
 
