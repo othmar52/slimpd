@@ -26,6 +26,7 @@ class AlbumMigrator {
 	protected $trackContextItems;
 	protected $albumContextItem;
 	protected $jumbleJudge;
+	protected $mostRecentAdded;
 
 	public function run() {
 		// create albumContext
@@ -37,6 +38,7 @@ class AlbumMigrator {
 			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
 			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
+			$this->handleTrackFilemtime($rawTagItem["added"]);
 		}
 		// decide if bunch should be treated as album or as loose tracks
 		$this->jumbleJudge->judge();
@@ -59,7 +61,7 @@ class AlbumMigrator {
 			#print_r($this->albumContextItem->recommendations);die;
 			#print_r($this->trackContextItems[0]->recommendations);die;
 		#}
-		$this->albumContextItem->migrate($this->trackContextItems, $this->jumbleJudge);
+		$this->albumContextItem->setAdded($this->mostRecentAdded)->migrate($this->trackContextItems, $this->jumbleJudge);
 		
 		
 		#print_r($this->jumbleJudge->testResults); die;
@@ -76,6 +78,12 @@ class AlbumMigrator {
 		
 		#var_dump($this);
 		#die('blaaaaa');
+	}
+
+	public function handleTrackFilemtime($trackFilemtime) {
+		$this->mostRecentAdded = ($trackFilemtime > $this->mostRecentAdded)
+			? $trackFilemtime
+			: $this->mostRecentAdded;
 	}
 
 	public static function parseConfig() {

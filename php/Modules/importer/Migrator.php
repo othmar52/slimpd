@@ -20,15 +20,13 @@ namespace Slimpd\Modules\importer;
 class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	private $dbTstampsTrack = array();
 	private $dbTstampsAlbum = array();
-	
+
 	private $skipAlbum = TRUE;
-	
-	private $migratorConfig = array();
-	
+
+	private $batchSize = 5000;
+
 	public $migratedAlbums = 0;
-	
-	private $albumMigrator;
-	
+
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
@@ -36,7 +34,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			\Slim\Slim::getInstance()->db->query($query);
 		}
 	}
-	
+
 	/** 
 	 * @return array 'directoryHash' => 'most-recent-timestamp' 
 	 */
@@ -50,7 +48,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 
 	public static function getMigratedTimstamps($tablename) {
 		$timestampsMysql = array();
-		
+
 		$query = "SELECT relPathHash,filemtime FROM " . az09($tablename);
 		$result = \Slim\Slim::getInstance()->db->query($query);
 		while($record = $result->fetch_assoc()) {
@@ -64,95 +62,101 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	 * TODO: reset album:lastScan for each migrated album 
 	 */
 	public function run($resetMigrationPhase = FALSE) {
-		
+
 		# only for development
 		# TODO: make this step optional controllable via gui
 		if($resetMigrationPhase === TRUE) {
 			$this->tempResetMigrationPhase();
 		}
-		
+
 		$this->jobPhase = 4;
 		$this->beginJob(array(
 			'msg' => "migrateRawtagdataTable"
 		), __FUNCTION__);
 		$app = \Slim\Slim::getInstance();
-		
 		$this->migratorConfig = \Slimpd\Modules\albummigrator\AlbumMigrator::parseConfig();
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
-		
-		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->skipAlbum = TRUE;
 
 		$this->migratedAlbums = 0;
-		
-		// all dirHashes of rawtagdata - no matter if already migrated or not
-		$dirHashes = array();
-		$query = "SELECT DISTINCT(relDirPathHash) AS dirHash FROM rawtagdata;";
-		$result = $app->db->query($query);
-		while($record = $result->fetch_assoc()) {
-			$this->updateJob(array(
-				'currentItem' => "dirHash:" . $record['dirHash'],
-				'migratedAlbums' => $this->migratedAlbums
-			));
-			$this->checkDirMigration($record["dirHash"]);
-			$dirHashes[] = $record["dirHash"];
-		}
 
+		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
+		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->checkBatch();
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemsChecked . ' files',
 			'migratedAlbums' => $this->migratedAlbums
 		), __FUNCTION__);
 	}
 
-	// fetches records of rawtagdata
-	// comperes modified-times and decides if the migration should be triggered
-	private function checkDirMigration($dirHash) {
-		$app = \Slim\Slim::getInstance();
-		$this->skipAlbum = TRUE;
-		$query = "SELECT * FROM rawtagdata WHERE relDirPathHash=\"" . $dirHash . "\";";
-		$result = $app->db->query($query);
-		$this->albumMigrator = new \Slimpd\Modules\albummigrator\AlbumMigrator();
-		
-		$trackCounter = 0;
+	/**
+	 * limiting SELECT query to $this->batchSize to avoid retrieving millions of records within a single query
+	 * so this method calls itself recursively
+	 *
+	 */
+	private function checkBatch() {
+		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash LIMIT " . $this->itemsChecked . "," . $this->batchSize;
+		$result = \Slim\Slim::getInstance()->db->query($query);
+		$counter = 0;
 		while($record = $result->fetch_assoc()) {
-			$trackCounter++;
 			$this->itemsChecked++;
-			if($trackCounter === 1) {
-				$this->albumMigrator->conf = $this->migratorConfig;
-				$this->albumMigrator->setRelDirPathHash($record['relDirPathHash']);
-				$this->albumMigrator->setRelDirPath($record['relDirPath']);
-				$this->albumMigrator->setDirectoryMtime($record['directoryMtime']);
+			$counter++;
+
+			if($counter % $this->batchSize === 0) {
+				cliLog(" shortening itemsChecked by " . $this->prevAlb->getTrackCount(), 10, "cyan");
+				$this->itemsChecked -= ($this->prevAlb->getTrackCount()+1);
+				cliLog(" batch complete...",9 , "cyan");
+				// recursion
+				return $this->checkBatch();
 			}
+
+			if($counter === 1) {
+				$this->newPrevAlb($record);
+				$this->skipAlbum = TRUE;
+			}
+
+			// directory had changed within the loop
+			if($record['relDirPathHash'] !== $this->prevAlb->getRelDirPathHash() ) {
+				$this->mayMigrate();
+				cliLog('resetting previousAlbum', 10);
+				$this->newPrevAlb($record);
+				cliLog('  adding hash of dir '. $record['relDirPath'] .' to previousAlbum', 10);
+				$this->skipAlbum = TRUE;
+			}
+
 			$this->updateJob(array(
 				'currentItem' => $record['relPath'],
 				'migratedAlbums' => $this->migratedAlbums
 			));
 			$this->checkTrackSkip($record);
-			$this->albumMigrator->addTrack($record);
+			$this->prevAlb->addTrack($record);
 			cliLog('adding track to previousAlbum: ' . $record['relPath'], 10);
-			
-			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
-		}
-		$this->mayMigrate();
-	}
 
+			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
+
+			// dont forget to check the last directory
+			if($this->itemsChecked === $this->itemsTotal && $this->itemsTotal > 1) {
+				$this->mayMigrate();
+			}
+		}
+	}
 
 	private function checkAlbumSkip() {	
 		// decide if we have to process album or if we can skip it
-		if(isset($this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ]) === FALSE) {
-			cliLog('album does NOT exist in migrated data. migrating: ' . $this->albumMigrator->getRelDirPath(), 5);
+		if(isset($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ]) === FALSE) {
+			cliLog('album does NOT exist in migrated data. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
 			$this->skipAlbum = FALSE;
 			return;
 		}
-		if($this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ] < $this->albumMigrator->getDirectoryMtime()) {
-			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->albumMigrator->getRelDirPath(), 5);
-			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->albumMigrator->getRelDirPathHash() ] .' raw: ' . $this->albumMigrator->getDirectoryMtime(), 10, 'yellow');
+		if($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] < $this->prevAlb->getDirectoryMtime()) {
+			cliLog('dir-timestamp raw is more recent than migrated. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
+			cliLog('dir-timestamps mig: '. $this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ] .' raw: ' . $this->prevAlb->getDirectoryMtime(), 10, 'yellow');
 			$this->skipAlbum = FALSE;
 			return;
 		}
 	}
-	
+
 	private function checkTrackSkip($record) {
 				// decide if we have to process album based on single-track-change or if we can skip it
 		if(isset($this->dbTstampsTrack[ $record['relPathHash'] ]) === FALSE) {
@@ -165,15 +169,23 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->skipAlbum = FALSE;
 		}
 	}
-	
+
 	private function mayMigrate() {
 		$this->checkAlbumSkip();
 		if($this->skipAlbum === TRUE) {
-			cliLog('skipping migration for: ' . $this->albumMigrator->getRelDirPath(), 5);
+			cliLog('skipping migration for: ' . $this->prevAlb->getRelDirPath(), 5);
 			return;
 		}
-		$this->albumMigrator->run();
-		$this->itemsProcessed += $this->albumMigrator->getTrackCount();
+		$this->prevAlb->run();
+		$this->itemsProcessed += $this->prevAlb->getTrackCount();
 		$this->migratedAlbums++;
+	}
+
+	private function newPrevAlb($record) {
+		$this->prevAlb = new \Slimpd\Modules\albummigrator\AlbumMigrator();
+		$this->prevAlb->conf = $this->migratorConfig;
+		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
+		$this->prevAlb->setRelDirPath($record['relDirPath']);
+		$this->prevAlb->setDirectoryMtime($record['directoryMtime']);
 	}
 }

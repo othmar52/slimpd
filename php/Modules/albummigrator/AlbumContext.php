@@ -81,6 +81,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$album->setRelPath($this->getRelPath())
 			->setRelPathHash($this->getRelPathHash())
 			->setFilemtime($this->getFilemtime())
+			->setAdded($this->getAdded())
 			->setIsJumble($jumbleJudge->handleAsAlbum)
 			->setTitle($this->getMostScored("setTitle"))
 			->setYear($this->getMostScored("setYear"))
@@ -88,9 +89,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->setArtistUid(join(",", \Slimpd\Models\Artist::getUidsByString($this->getMostScored("setArtist"))))
 			->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($this->getMostScored("setGenre"))))
 			->setLabelUid(join(",", \Slimpd\Models\Label::getUidsByString($this->getMostScored("setLabel"))))
-			/*->setCatalogNr($this->mostScored['album']['catalogNr'])
-			->setAdded($this->mostRecentAdded)
-			->setYear($this->mostScored['album']['year'])
+			/*
 			->setLabelUid(
 				join(",", \Slimpd\Models\Label::getUidsByString(
 					($album->getIsJumble() === 1)
