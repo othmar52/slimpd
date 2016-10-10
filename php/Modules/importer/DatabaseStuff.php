@@ -50,7 +50,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// to be able to display a progress status
 		$all = array();
-		$result = $app->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid FROM track");
+		$result = $app->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid,year FROM track");
 		
 		while($record = $result->fetch_assoc()) {
 			$all['al' . $record['albumUid']] = NULL;
@@ -62,6 +62,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			foreach($itemUids as $itemUid) {
 				$tables['Artist'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
 				$tables['Artist'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
+				$tables['Artist'][$itemUid]['years'][ $record['year'] ] = NULL;
 				// add label uids
 				foreach(trimExplode(",",$record['labelUid'], TRUE) as $labelUid) {
 					$tables['Artist'][$itemUid]['labels'][] = $labelUid;
@@ -128,6 +129,12 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 					$genreUids = uniqueArrayOrderedByRelevance($data['genres']);
 					$item->setTopGenreUids(trim(array_shift($genreUids) . "," . array_shift($genreUids), ","));
 				}
+				if($className === "Artist" && isset($data['years']) === TRUE) {
+					$min = min(array_keys($data['years']));
+					$max = max(array_keys($data['years']));
+					$yearString = ($min === $max) ? $min : $min . "-".$max;
+					$item->setYearRange($yearString);
+				}
 				$item->update();
 				$this->itemsProcessed++;
 				$this->itemsChecked++;
@@ -190,6 +197,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 					0,
 					0,
 					'',
+					'',
 					''
 				);";
 		}
@@ -201,6 +209,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				'".az09($app->ll->str('importer.unknownlabel'))."',
 				0,
 				0,
+				'',
 				'',
 				''
 			);";
