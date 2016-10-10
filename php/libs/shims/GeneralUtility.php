@@ -169,13 +169,6 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 
 	// TODO: read from config
 	$shellColorize = TRUE;
-
-	if($shellColorize !== TRUE) {
-		echo $msg ."\n";
-		ob_flush();
-		return;
-	}
-
 	// TODO: check colors (especially the color and boldness after linebreaks)
 	#$black 		= "33[0;30m";
 	#$darkgray 	= "33[1;30m";
@@ -187,21 +180,26 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	#$lightcyan 	= "33[1;36m";
 	#$red 		= "33[0;31m";
 	#$lightred 	= "33[1;31m";
-	#$purple 	= "33[0;35m";
 	#$lightpurple= "33[1;35m";
 	#$brown 		= "33[0;33m";
 	#$yellow 	= "33[1;33m";
 	#$lightgray 	= "33[0;37m";
 	#$white 		= "33[1;37m";
-	switch($color) {
-		case "green":  $prefix = "\033[32m"; $suffix = "\033[37m"; break;
-		case "yellow": $prefix = "\033[33m"; $suffix = "\033[37m"; break;
-		case "red":    $prefix = "\033[1;31m"; $suffix = "\033[0m"; break;
-		case "cyan":   $prefix = "\033[36m"; $suffix = "\033[37m"; break;
-		case "purple": $prefix = "\033[35m"; $suffix = "\033[37m"; break;
-		default:       $prefix = "";         $suffix = "";         break;
+
+	$colors = [
+		"green"        => ["\033[32m",  "\033[37m"],
+		"yellow"       => ["\033[1;33m","\033[0m" ],
+		"red"          => ["\033[1;31m","\033[0m" ],
+		"cyan"         => ["\033[36m",  "\033[37m"],
+		"purple"       => ["\033[35m",  "\033[37m"],
+		"blue"         => ["\033[34m",  "\033[37m"],
+		"lightblue"    => ["\033[1;34m","\033[0m" ]
+	];
+
+	if($shellColorize !== TRUE || isset($colors[$color]) === FALSE) {
+		$colors[$color] = ["", ""];
 	}
-	echo $prefix . $msg . $suffix . "\n";
+	echo $colors[$color][0] . $msg . $colors[$color][1] . "\n";
 	ob_flush();
 }
 
