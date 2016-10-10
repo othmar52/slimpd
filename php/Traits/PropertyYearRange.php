@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Models;
-/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
+namespace Slimpd\Traits;
+/* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
  *
@@ -17,33 +17,15 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Label extends \Slimpd\Models\AbstractModel {
-	use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
-	use \Slimpd\Traits\PropertyTopArtist; // topArtistUids
-	use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
-	use \Slimpd\Traits\PropertyYearRange; // yearRange
+trait PropertyYearRange {
+	protected $yearRange;
 
-	protected $title;
-	protected $az09;
+	public function getYearRange() {
+		return $this->yearRange;
+	}
 
-	public static $tableName = 'label';
-
-	//setter
-	public function setTitle($value) {
-		$this->title = $value;
+	public function setYearRange($value) {
+		$this->yearRange = $value;
 		return $this;
-	}
-	public function setAz09($value) {
-		$this->az09 = $value;
-		return $this;
-	}
-
-
-	// getter
-	public function getTitle() {
-		return $this->title;
-	}
-	public function getAz09() {
-		return $this->az09;
 	}
 }

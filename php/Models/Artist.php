@@ -21,6 +21,7 @@ class Artist extends \Slimpd\Models\AbstractModel {
 	use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
 	use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
 	use \Slimpd\Traits\PropertyTopLabel; // topLabelUids
+	use \Slimpd\Traits\PropertyYearRange; // yearRange
 	protected $title;
 	protected $article;
 	protected $az09;
