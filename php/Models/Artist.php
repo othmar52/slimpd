@@ -124,10 +124,14 @@ class Artist extends \Slimpd\Models\AbstractModel {
 			$instance = new $classPath();
 			$instance->setTitle(ucwords(strtolower($itemPart)))
 				->setAz09($az09)
-				->setArticle($artistArticle)
-				->insert();
-			$itemUid = $app->db->insert_id;
-			
+				->setArticle($artistArticle);
+
+			// TODO: de we need the non-batcher version anymore?
+			#$instance->insert();
+			#$itemUid = $app->db->insert_id;
+			$app->batcher->que($instance);
+			$itemUid = $instance->getUid();
+
 			$itemUids[$itemUid] = $itemUid;
 			self::cacheWrite($app, $classPath, $az09, $itemUid);
 		}

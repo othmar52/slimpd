@@ -341,10 +341,13 @@ class Genre extends \Slimpd\Models\AbstractModel {
 			}
 
 			$instance = new \Slimpd\Models\Genre();
-			$instance->setTitle($genreString);
-			$instance->setAz09($az09);
-			$instance->insert();
-			$itemUid = $app->db->insert_id;
+			$instance->setTitle($genreString)->setAz09($az09);
+
+			// TODO: de we need the non-batcher version anymore?
+			#$instance->insert();
+			#$itemUid = $app->db->insert_id;
+			$app->batcher->que($instance);
+			$itemUid = $instance->getUid();
 
 			$itemUids[$itemUid] = $itemUid;
 			self::cacheWrite($app, get_called_class(), $az09, $itemUid);

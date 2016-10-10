@@ -28,13 +28,40 @@ namespace Slimpd\Modules\database;
 class Batcher {
 	protected $nextUid = array();
 	protected $instances = array();
-	protected $treshold = 100;
+	protected $treshold = 1000;
 
-	public function que($instance) {
+	public function que(&$instance) {
 		$className = get_class($instance);
 		$tableName = $className::$tableName;
+		$this->mayAddUid($instance, $tableName);
 		$this->instances[$tableName][] = $instance;
 		$this->checkQueue($tableName);
+		return $instance;
+	}
+
+	private function mayAddUid(&$instance, $tableName) {
+		// instance already has an uid
+		if($instance->getUid() > 0) {
+			return;
+		}
+
+		// check if we already know what the next uid will be
+		if(isset($this->nextUid[$tableName]) === TRUE) {
+			$instance->setUid($this->nextUid[$tableName]);
+			$this->nextUid[$tableName]++;
+			return;
+		}
+
+		// find out highest id for $instance
+		$app = \Slim\Slim::getInstance();
+		$this->nextUid[$tableName] = $app->db->query("SELECT uid FROM ". $tableName ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
+		if($this->nextUid[$tableName] === NULL) {
+			$this->nextUid[$tableName] = 0;
+		}
+		$this->nextUid[$tableName]++;
+
+		// recursion - now the id should be there
+		$app->batcher->mayAddUid($instance, $tableName);
 	}
 	
 	private function checkQueue($tableName) {
@@ -44,15 +71,27 @@ class Batcher {
 	}
 
 	public function insertBatch($tableName) {
+		if(isset($this->instances[$tableName]) === FALSE) {
+			return;
+		}
+		if(count($this->instances[$tableName]) === 0) {
+			return;
+		}
 		$app = \Slim\Slim::getInstance();
 		$query = "INSERT INTO " . $tableName . " ";
 		$counter = 0;
 		foreach($this->instances[$tableName] as $instance) {
 			$mapped = $instance->mapInstancePropertiesToDatabaseKeys(FALSE);
 			
-			// TODO: remove track.relDirPath
+			// TODO: remove track.relDirPath (caused by abstraction ???)
+			// TODO: remove album.relDirPath (caused by abstraction ???)
 			// for now use this ugly hack...
 			if($tableName === "track") { unset($mapped["relDirPath"]); }
+			if($tableName === "album") {
+				unset($mapped["relDirPath"]);
+				unset($mapped["relDirPathHash"]);
+				unset($mapped["filesize"]);
+			}
 
 			if($counter === 0) {
 				$query .= "(" . join(",", array_keys($mapped)) . ") VALUES ";
@@ -65,10 +104,9 @@ class Batcher {
 			$query = substr($query,0,-1) . "),";
 		}
 		$query = substr($query,0,-1) . ";";
+		cliLog("inserting batch " . $tableName . ", " . $counter . "records" , 1, "purple");
 		$app->db->query($query);
 		$this->instances[$tableName] = array();
-		#print_r($query); die;
-		#print_r($this->instances[$tableName]); die;
 	}
 	
 	public function finishAll() {

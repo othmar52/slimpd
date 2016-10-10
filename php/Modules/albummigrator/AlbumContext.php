@@ -97,14 +97,18 @@ class AlbumContext extends \Slimpd\Models\Album {
 						: $this->mostScored['album']['label']	// only 1 label
 				))
 			)*/
-			->setTrackCount(count($trackContextItems))
-			->update();
+			->setTrackCount(count($trackContextItems));
 
 		// TODO: extend batcher to handle non-inserted uid's
 		// for now do not use batcher for album records
-		$this->setUid($album->getUid());
 		
-		$this->updateAlbumIndex($useBatcher);
+		if($useBatcher === TRUE) {
+			\Slim\Slim::getInstance()->batcher->que($album);
+		} else {
+			\Slimpd\Models\Track::ensureRecordUidExists($album->getUid());
+			$album->update();
+		}
+		$this->setUid($album->getUid())->updateAlbumIndex($useBatcher);
 	}
 
 	private function updateAlbumIndex($useBatcher) {

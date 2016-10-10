@@ -415,10 +415,13 @@ abstract class AbstractModel {
 			}
 
 			$instance = new $classPath();
-			$instance->setTitle($itemPart);
-			$instance->setAz09($az09);
-			$instance->insert();
-			$itemUid = $app->db->insert_id;
+			$instance->setTitle($itemPart)->setAz09($az09);
+
+			// TODO: de we need the non-batcher version anymore?
+			#$instance->insert();
+			#$itemUid = $app->db->insert_id;
+			$app->batcher->que($instance);
+			$itemUid = $instance->getUid();
 
 			$itemUids[$itemUid] = $itemUid;
 			self::cacheWrite($app, $classPath, $az09, $itemUid);
@@ -440,9 +443,12 @@ abstract class AbstractModel {
 		$tmpArray = $app->importerCache;
 		$tmpArray[$classPath]["cache"][$az09] = $itemUid;
 		// delete cache as soon as we reach 1000 items
-		if(count($tmpArray[$classPath]["cache"]) > 1000) {
+		if(count($tmpArray[$classPath]["cache"]) > 5000) {
 			$tmpArray[$classPath]["cache"] = array($az09 => $itemUid);
 			cliLog("clearing cache for " . $classPath, 5, "yellow");
+			// make sure all instances gets written to database
+			$tmpInstance = new $classPath;
+			$app->batcher->insertBatch($tmpInstance::$tableName);
 		}
 		$app->importerCache = $tmpArray;
 	}
