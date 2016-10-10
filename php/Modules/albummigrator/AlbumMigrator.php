@@ -27,6 +27,7 @@ class AlbumMigrator {
 	protected $albumContextItem;
 	protected $jumbleJudge;
 	protected $mostRecentAdded;
+	public $useBatcher = FALSE;
 
 	public function run() {
 		// create albumContext
@@ -61,14 +62,14 @@ class AlbumMigrator {
 			#print_r($this->albumContextItem->recommendations);die;
 			#print_r($this->trackContextItems[0]->recommendations);die;
 		#}
-		$this->albumContextItem->setAdded($this->mostRecentAdded)->migrate($this->trackContextItems, $this->jumbleJudge);
+		$this->albumContextItem->setAdded($this->mostRecentAdded)->migrate($this->trackContextItems, $this->jumbleJudge, $this->useBatcher);
 		
 		
 		#print_r($this->jumbleJudge->testResults); die;
 		
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
-			$trackContextItem->migrate();
+			$trackContextItem->migrate($this->useBatcher);
 		}
 		
 		// complete embedded bitmaps with albumUid

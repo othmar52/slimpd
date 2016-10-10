@@ -38,21 +38,20 @@ try {
 			$app->stop();
 			return;
 		}
-		
-		/*
-		$dbh = new \PDO(
-			"mysql:host=".$app->config['database']['dbhost'] .
-			";dbname=".$app->config['database']['dbdatabase'],
-			$app->config['database']['dbusername'],
-			$app->config['database']['dbpassword']
-		);
-		$dbh->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		*/
 		return $dbh;
 	});
 } catch(\Exception $e) {
 	if ($debug) {
 		echo '<pre><br><br>' . $e->getMessage() . '<br><br></pre>';
 	}
-	#$app->flashNow('error', $app->ll->str('database.connect'));
+};
+
+try {
+	$app->container->singleton('batcher', function($app) {
+		return new \Slimpd\Modules\database\Batcher();
+	});
+} catch(\Exception $e) {
+	if ($debug) {
+		echo '<pre><br><br>' . $e->getMessage() . '<br><br></pre>';
+	}
 };

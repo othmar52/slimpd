@@ -27,12 +27,16 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 
 	public $migratedAlbums = 0;
 
+	/* start with empty database? - then we can maximise speed by using the "Batcher" */
+	public $useBatcher = FALSE;
+
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
 		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
 			\Slim\Slim::getInstance()->db->query($query);
 		}
+		$this->useBatcher = TRUE;
 	}
 
 	/** 
@@ -84,6 +88,8 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
 		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
 		$this->checkBatch();
+		$app->batcher->finishAll();
+
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemsChecked . ' files',
 			'migratedAlbums' => $this->migratedAlbums
@@ -184,6 +190,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	private function newPrevAlb($record) {
 		$this->prevAlb = new \Slimpd\Modules\albummigrator\AlbumMigrator();
 		$this->prevAlb->conf = $this->migratorConfig;
+		$this->prevAlb->useBatcher = $this->useBatcher;
 		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
 		$this->prevAlb->setRelDirPath($record['relDirPath']);
 		$this->prevAlb->setDirectoryMtime($record['directoryMtime']);

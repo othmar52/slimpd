@@ -182,7 +182,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		return $track;
 	}
 
-	public function migrate() {
+	public function migrate($useBatcher) {
 		# setFeaturedArtistsAndRemixers() is processing:
 			# $t->setArtistUid();
 			# $t->setFeaturingUid();
@@ -193,15 +193,17 @@ class TrackContext extends \Slimpd\Models\Track {
 			
 		$track = $this->getTrackInstanceByContext();
 		
-
-		\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
-		$track->update();
-		
+		if($useBatcher === TRUE) {
+			\Slim\Slim::getInstance()->batcher->que($track);
+		} else {
+			\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
+			$track->update();
+		}
 		// add the whole bunch of valid and indvalid attributes to trackindex table
-		$this->updateTrackIndex();
+		$this->updateTrackIndex($useBatcher);
 	}
 	
-	private function updateTrackIndex() {
+	private function updateTrackIndex($useBatcher) {
 		$indexChunks = $this->getRelPath() . " " .
 			str_replace(
 				array('/', '_', '-', '.'),
@@ -219,13 +221,18 @@ class TrackContext extends \Slimpd\Models\Track {
 		// TODO: add all recomendations and other missing attributes
 
 		// make sure to use identical uids in table:trackindex and table:track
-		\Slimpd\Models\Trackindex::ensureRecordUidExists($this->getUid());
 		$trackIndex = new \Slimpd\Models\Trackindex();
 		$trackIndex->setUid($this->getUid())
 			->setArtist($this->getArtist())
 			->setTitle($this->getTitle()) // TODO: we need vanilla title
-			->setAllchunks($indexChunks)
-			->update();
+			->setAllchunks($indexChunks);
+
+		if($useBatcher === TRUE) {
+			\Slim\Slim::getInstance()->batcher->que($trackIndex);
+			return;
+		}
+		\Slimpd\Models\Trackindex::ensureRecordUidExists($this->getUid());
+		$trackIndex->update();
 	}
 
 	public function setAlbum($value) {

@@ -74,7 +74,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		return $this;
 	}
 
-	public function migrate($trackContextItems, $jumbleJudge) {
+	public function migrate($trackContextItems, $jumbleJudge, $useBatcher) {
 		$album = new \Slimpd\Models\Album();
 		#var_dump($this->getMostScored("setArtist")); die;
 
@@ -100,12 +100,14 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->setTrackCount(count($trackContextItems))
 			->update();
 
+		// TODO: extend batcher to handle non-inserted uid's
+		// for now do not use batcher for album records
 		$this->setUid($album->getUid());
 		
-		$this->updateAlbumIndex();
+		$this->updateAlbumIndex($useBatcher);
 	}
 
-	private function updateAlbumIndex() {
+	private function updateAlbumIndex($useBatcher) {
 		$indexChunks = $this->getRelPath() . " " .
 			str_replace(
 				array('/', '_', '-', '.'),
@@ -120,13 +122,18 @@ class AlbumContext extends \Slimpd\Models\Album {
 			. " " . join(" ", $this->getAllRecommendations("setCatalogNr"));
 
 		// make sure to use identical uids in table:trackindex and table:track
-		\Slimpd\Models\Albumindex::ensureRecordUidExists($this->getUid());
 		$albumIndex = new \Slimpd\Models\Albumindex();
 		$albumIndex->setUid($this->getUid())
 			->setArtist($this->getMostScored("setArtist"))
 			->setTitle($this->getMostScored("setTitle"))
-			->setAllchunks($indexChunks)
-			->update();
+			->setAllchunks($indexChunks);
+
+		if($useBatcher === TRUE) {
+			\Slim\Slim::getInstance()->batcher->que($albumIndex);
+			return;
+		}
+		\Slimpd\Models\Albumindex::ensureRecordUidExists($this->getUid());
+		$albumIndex->update();
 	}
 
 	private function scoreLabelByLabelDirectory(&$albumMigrator) {
