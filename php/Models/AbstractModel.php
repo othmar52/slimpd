@@ -524,6 +524,15 @@ abstract class AbstractModel {
 		if(method_exists($instance, 'getFeaturingUid') === TRUE) {
 			$uidString .= $instance->getFeaturingUid() . ',';
 		}
+		if(method_exists($instance, 'getTopArtistUids') === TRUE) {
+			$uidString .= $instance->getTopArtistUids() . ',';
+		}
+		if(method_exists($instance, 'getTopGenreUids') === TRUE) {
+			$uidString .= $instance->getTopGenreUids() . ',';
+		}
+		if(method_exists($instance, 'getTopLabelUids') === TRUE) {
+			$uidString .= $instance->getTopLabelUids() . ',';
+		}
 		return $uidString;
 	}
 

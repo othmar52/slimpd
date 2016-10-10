@@ -25,6 +25,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 
 	/**
 	 * fills databasefields trackCount & albumCount of tables: artist,genre,label
+	 * TODO: refactoring!!!
 	 */
 	public function updateCounterCache() {
 		$app = \Slim\Slim::getInstance();
@@ -61,6 +62,14 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			foreach($itemUids as $itemUid) {
 				$tables['Artist'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
 				$tables['Artist'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
+				// add label uids
+				foreach(trimExplode(",",$record['labelUid'], TRUE) as $labelUid) {
+					$tables['Artist'][$itemUid]['labels'][] = $labelUid;
+				}
+				// add genre uids
+				foreach(trimExplode(",",$record['genreUid'], TRUE) as $genreUid) {
+					$tables['Artist'][$itemUid]['genres'][] = $genreUid;
+				}
 				$all['ar' . $itemUid] = NULL;
 			}
 			$itemUids = trimExplode(",", $record['genreUid'], TRUE);
@@ -104,13 +113,22 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 		foreach($tables as $className => $tableData) {
 			cliLog("updating table:".$className." with trackCount and albumCount", 3);
 			foreach($tableData as $itemUid => $data) {
-				
 				$classPath = "\\Slimpd\\Models\\" . $className;
 				$item = new $classPath();
 				$item->setUid($itemUid)
 					->setTrackCount( count(@$data['tracks']) )
-					->setAlbumCount( count(@$data['albums']) )
-					->update();
+					->setAlbumCount( count(@$data['albums']) );
+
+				if($className === "Artist" && isset($data['labels']) === TRUE) {
+					$labelUids = uniqueArrayOrderedByRelevance($data['labels']);
+					$item->setTopLabelUids(trim(array_shift($labelUids) . "," . array_shift($labelUids), ","));
+				}
+
+				if($className === "Artist" && isset($data['genres']) === TRUE) {
+					$genreUids = uniqueArrayOrderedByRelevance($data['genres']);
+					$item->setTopGenreUids(trim(array_shift($genreUids) . "," . array_shift($genreUids), ","));
+				}
+				$item->update();
 				$this->itemsProcessed++;
 				$this->itemsChecked++;
 				$msg = "updating ".$className.": " . $itemUid .

@@ -14,12 +14,18 @@
 	</div>
 	<div class="col-md-3 vcenter">
 		<div class="vcinner">
-			<span class="dark small">TODO: Top 2 artist labels</span>
+			<span class="dark small">
+				TOP labels:<br>
+				{% include 'partials/label/string.htm' with { labelUids: item.topLabelUids} %}
+			</span>
 		</div>
 	</div>
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<span class="dark small">TODO: Top 2 artist genres</span>
+			<span class="dark small">
+				TOP genres:<br>
+				{% include 'partials/genre/string.htm' with { genreUids: item.topGenreUids} %}
+			</span>
 		</div>
 	</div>
 	<div class="col-md-2 vcenter">
