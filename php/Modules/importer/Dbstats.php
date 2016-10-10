@@ -68,7 +68,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 			$this->itemsChecked = count($all)/2;
 		}
 		cliLog("start processing collected data", 2, "yellow");
-		$this->processCollectedData($tables, $app);
+		$this->processCollectedData($tables);
 		unset($tables);
 		unset($all);
 		$this->deleteOrphans($app);
@@ -140,7 +140,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 	}
 	
-	private function processCollectedData($tables, $app) {
+	private function processCollectedData($tables) {
 		foreach($tables as $className => $tableData) {
 			cliLog("updating table:".$className." with trackCount and albumCount", 3);
 			foreach($tableData as $itemUid => $data) {
