@@ -94,8 +94,8 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 
 	public function updateCounterCache() {
-		$dbStuff = new \Slimpd\Modules\importer\DatabaseStuff();
-		$dbStuff->updateCounterCache();
+		$dbStats = new \Slimpd\Modules\importer\Dbstats();
+		$dbStats->updateCounterCache();
 	}
 
 	// TODO: performance tweaking by processing it vice versa:

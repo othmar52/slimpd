@@ -71,6 +71,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->processCollectedData($tables, $app);
 		unset($tables);
 		unset($all);
+		$this->deleteOrphans($app);
 		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
@@ -149,21 +150,10 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 					->setTrackCount( count(@$data['tracks']) )
 					->setAlbumCount( count(@$data['albums']) );
 
-				if($className === "Artist" && isset($data['labels']) === TRUE) {
-					$labelUids = uniqueArrayOrderedByRelevance($data['labels']);
-					$item->setTopLabelUids(trim(array_shift($labelUids) . "," . array_shift($labelUids), ","));
-				}
+				$this->setTopLabelUids($item, $className, $data);
+				$this->setTopGenreUids($item, $className, $data);
+				$this->setYearRange($item, $data);
 
-				if($className === "Artist" && isset($data['genres']) === TRUE) {
-					$genreUids = uniqueArrayOrderedByRelevance($data['genres']);
-					$item->setTopGenreUids(trim(array_shift($genreUids) . "," . array_shift($genreUids), ","));
-				}
-				if($className === "Artist" && isset($data['years']) === TRUE) {
-					$min = min(array_keys($data['years']));
-					$max = max(array_keys($data['years']));
-					$yearString = ($min === $max) ? $min : $min . "-".$max;
-					$item->setYearRange($yearString);
-				}
 				$item->update();
 				$this->itemsProcessed++;
 				// 2nd half is proccessing collected data
@@ -176,15 +166,49 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 				));
 				cliLog($msg, 7);
 			}
-			
-			// delete all items which does not have any trackCount or albumCount
-			// but preserve default entries
-			$query = "
-				DELETE FROM " . strtolower($className) . "
-				WHERE trackCount=0
-				AND albumCount=0
-				AND uid>" . (($className === 'Artist') ? 11 : 10); // unknown artist=10, various artists=11,...
-			cliLog("deleting ".$className."s  with trackCount=0 AND albumCount=0", 3);
+		}
+	}
+
+	private function setTopGenreUids(&$item, $className, $data) {
+		if($className === "Genre" || isset($data["genres"]) === FALSE) {
+			return;
+		}
+		$genreUids = uniqueArrayOrderedByRelevance($data['genres']);
+		$item->setTopLabelUids(trim(array_shift($genreUids) . "," . array_shift($genreUids), ","));
+	}
+
+	private function setTopLabelUids(&$item, $className, $data) {
+		if($className === "Label" || isset($data["labels"]) === FALSE) {
+			return;
+		}
+		$labelUids = uniqueArrayOrderedByRelevance($data['labels']);
+		$item->setTopLabelUids(trim(array_shift($labelUids) . "," . array_shift($labelUids), ","));
+	}
+
+	private function setYearRange(&$item, $data) {
+		if(isset($data['years']) === FALSE) {
+			return;
+		}
+		$min = min(array_keys($data['years']));
+		$max = max(array_keys($data['years']));
+		$yearString = ($min === $max) ? $min : $min . "-".$max;
+		$item->setYearRange($yearString);
+	}
+
+	/**
+	 * delete all items which does not have any trackCount or albumCount
+	 * but preserve default entries
+	 */
+	private function deleteOrphans($app) {
+		$tables = [
+			// tablename => highestDefaultUid
+			'artist' => 11,	// Unknown artist=10, various artists=11
+			'label' => 10,  // Unknown label
+			'genre' => 10, // Unknown genre
+		];
+		foreach($tables as $tableName => $defaultUid) {
+			$query = "DELETE FROM " . $tableName . " WHERE trackCount=0 AND albumCount=0 AND uid>" . $defaultUid;
+			cliLog("deleting ".$tableName."s  with trackCount=0 AND albumCount=0", 2, "yellow");
 			$app->db->query($query);
 		}
 	}
