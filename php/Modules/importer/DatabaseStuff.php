@@ -62,13 +62,22 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			foreach($itemUids as $itemUid) {
 				$tables['Artist'][$itemUid]['tracks'][ $record['uid'] ] = NULL;
 				$tables['Artist'][$itemUid]['albums'][ $record['albumUid'] ] = NULL;
-				$tables['Artist'][$itemUid]['years'][ $record['year'] ] = NULL;
+				// TODO: do this check seemsYeary in migrator phase (on insert) and remove it from here
+				if(\Slimpd\RegexHelper::seemsYeary($record['year']) === TRUE) {
+					$tables['Artist'][$itemUid]['years'][ $record['year'] ] = NULL;
+				}
 				// add label uids
 				foreach(trimExplode(",",$record['labelUid'], TRUE) as $labelUid) {
+					if($labelUid == 10) { // Unknown Label
+						continue;
+					}
 					$tables['Artist'][$itemUid]['labels'][] = $labelUid;
 				}
 				// add genre uids
 				foreach(trimExplode(",",$record['genreUid'], TRUE) as $genreUid) {
+					if($genreUid == 10) { // Unknown Genre
+						continue;
+					}
 					$tables['Artist'][$itemUid]['genres'][] = $genreUid;
 				}
 				$all['ar' . $itemUid] = NULL;
