@@ -23,7 +23,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 
 	private $skipAlbum = TRUE;
 
-	private $batchSize = 5000;
+	private $batchSize = 1500000; // process only 1.5 million tracks per batch
 
 	public $migratedAlbums = 0;
 
