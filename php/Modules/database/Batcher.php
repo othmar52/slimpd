@@ -104,7 +104,7 @@ class Batcher {
 			$query = substr($query,0,-1) . "),";
 		}
 		$query = substr($query,0,-1) . ";";
-		cliLog("inserting batch " . $tableName . ", " . $counter . "records" , 1, "purple");
+		cliLog("batch-insert " . $tableName . "s (" . $counter . " records)" , 2, "lightblue");
 		$app->db->query($query);
 		$this->instances[$tableName] = array();
 	}
