@@ -18,7 +18,7 @@ use Slimpd\RegexHelper as RGX;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+# TODO: use preg_match_all to fetch multiple matches
 abstract class HasCatalogNr extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
 
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
