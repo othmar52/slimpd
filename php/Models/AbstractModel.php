@@ -527,6 +527,7 @@ abstract class AbstractModel {
 		if(method_exists($instance, 'getTopArtistUids') === TRUE) {
 			$uidString .= $instance->getTopArtistUids() . ',';
 		}
+		// TODO: this is incorrect as all 3 conditions above use artist model - those 2 needs to fetch different models
 		if(method_exists($instance, 'getTopGenreUids') === TRUE) {
 			$uidString .= $instance->getTopGenreUids() . ',';
 		}
