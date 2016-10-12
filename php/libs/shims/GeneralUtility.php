@@ -343,56 +343,26 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	return join(" ", $phrase);
 }
 
-
-function addRenderItem($instance, &$return) {
-	$class = get_class($instance);
-	if($class === "Slimpd\Models\Artist") {
-		$return["artists"][$instance->getUid()] = $instance;
-		return;
-	}
-	if($class === "Slimpd\Models\Label") {
-		$return["labels"][$instance->getUid()] = $instance;
-		return;
-	}
-	if($class === "Slimpd\Models\Genre") {
-		$return["genres"][$instance->getUid()] = $instance;
-		return;
-	}
-	if($class === "Slimpd\Models\Track") {
-		if(isset($return["itembreadcrumbs"][$instance->getRelPathHash()]) === FALSE) {
-			$return["itembreadcrumbs"][$instance->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelPath());
-		}
-		return;
-	}
-	if($class === "Slimpd\Models\Album") {
-		$return["albums"][$instance->getUid()] = $instance;
-		if(isset($return["itembreadcrumbs"][$instance->getRelPathHash()]) === FALSE) {
-			$return["itembreadcrumbs"][$instance->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($instance->getRelPath());
-		}
-		return;
-	}
-}
-
 function getRenderItems() {
 	$args = func_get_args();
 	$return = array(
-		"genres" => call_user_func_array(array("\\Slimpd\\Models\\Genre","getInstancesForRendering"), $args),
-		"labels" => call_user_func_array(array("\\Slimpd\\Models\\Label","getInstancesForRendering"), $args),
-		"artists" => call_user_func_array(array("\\Slimpd\\Models\\Artist","getInstancesForRendering"), $args),
-		"albums" => call_user_func_array(array("\\Slimpd\\Models\\Album","getInstancesForRendering"), $args),
+		"genres" => [],
+		"labels" => [],
+		"artists" => [],
+		"albums" => [],
 		"itembreadcrumbs" => [],
 	);
 
 	foreach($args as $argument) {
 		if(is_object($argument) === TRUE) {
-			addRenderItem($argument, $return);
+			$argument->fetchRenderItems($return);
 		}
 		if(is_array($argument) === TRUE) {
 			foreach($argument as $item) {
 				if(is_object($item) === FALSE) {
 					continue;
 				}
-				addRenderItem($item, $return);
+				$item->fetchRenderItems($return);
 			}
 		}
 	}
@@ -412,7 +382,7 @@ function convertInstancesArrayToRenderItems($input) {
 		if(is_object($item) === FALSE) {
 			continue;
 		}
-		addRenderItem($item, $return);
+		$item->fetchRenderItems($return);
 	}
 	return $return;
 }

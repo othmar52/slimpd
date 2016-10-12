@@ -482,61 +482,6 @@ abstract class AbstractModel {
 		$app->importerCache = $tmpArray;
 	}
 
-	public static function getInstancesForRendering() {
-		$uidString = '';
-		$return = array();
-		$classPath = get_called_class();
-		for($i=0; $i < func_num_args();$i++) {
-			$argument = func_get_arg($i);
-			if(is_array($argument) === TRUE) {
-				foreach($argument as $item) {
-					if(is_object($item) === FALSE) {
-						continue;
-					}
-					$uidString .= self::getUidCommaString($classPath, $item);
-				}
-			}
-			if(is_object($argument) === TRUE) {
-				$uidString .= self::getUidCommaString($classPath, $argument);
-			}
-		}
-	
-		$itemUids = array_unique(trimExplode(",", $uidString, TRUE));
-		foreach($itemUids as $itemUid) {
-			$return[$itemUid] = $classPath::getInstanceByAttributes(array('uid' => $itemUid));
-		}
-		return $return;
-	}
-
-	private static function getUidCommaString($classPath, $instance) {
-		$uidString = "";
-		$getter = 'get' . $classPath . 'Uid';
-		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
-			$getter = 'get' . $matches[1] . 'Uid';
-		}
-		if(method_exists($instance, $getter) === TRUE) {
-			$uidString .= $instance->$getter() . ',';
-		}
-		#$itemUids .= $item->$getter() . ',';
-		if(method_exists($instance, 'getRemixerUid') === TRUE) {
-			$uidString .= $instance->getRemixerUid() . ',';
-		}
-		if(method_exists($instance, 'getFeaturingUid') === TRUE) {
-			$uidString .= $instance->getFeaturingUid() . ',';
-		}
-		if(method_exists($instance, 'getTopArtistUids') === TRUE) {
-			$uidString .= $instance->getTopArtistUids() . ',';
-		}
-		// TODO: this is incorrect as all 3 conditions above use artist model - those 2 needs to fetch different models
-		if(method_exists($instance, 'getTopGenreUids') === TRUE) {
-			$uidString .= $instance->getTopGenreUids() . ',';
-		}
-		if(method_exists($instance, 'getTopLabelUids') === TRUE) {
-			$uidString .= $instance->getTopLabelUids() . ',';
-		}
-		return $uidString;
-	}
-
 	public static function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if($itemsperPage > 500) {

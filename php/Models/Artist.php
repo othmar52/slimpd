@@ -140,6 +140,22 @@ class Artist extends \Slimpd\Models\AbstractModel {
 
 	}
 
+	public function fetchRenderItems(&$renderItems) {
+		$renderItems["artists"][$this->getUid()] = $this;
+		foreach(trimExplode(",", $this->getTopLabelUids(), TRUE) as $labelUid) {
+			if(isset($renderItems["labels"][$labelUid]) === TRUE) {
+				continue;
+			}
+			$renderItems["labels"][$labelUid] = \Slimpd\Models\Label::getInstanceByAttributes(["uid" => $labelUid]);
+		}
+		foreach(trimExplode(",", $this->getTopGenreUids(), TRUE) as $genreUid) {
+			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
+				continue;
+			}
+			$renderItems["genres"][$genreUid] = \Slimpd\Models\Genre::getInstanceByAttributes(["uid" => $genreUid]);
+		}
+		return;
+	}
 
 	//setter
 	public function setTitle($value) {

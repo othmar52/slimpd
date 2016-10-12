@@ -148,7 +148,7 @@ foreach(array_keys($sortfields1) as $className) {
 					) . getNoSurSuffix(), 301
 				);
 			}
-			$vars["renderitems"] = getRenderItems($vars["itemlist"]);
+			$vars["renderitems"] = getRenderItems($vars["item"], $vars["itemlist"]);
 			$app->render("surrounding.htm", $vars);
 		})->name($className . "-show-". $show);
 		

@@ -381,4 +381,21 @@ class Genre extends \Slimpd\Models\AbstractModel {
 
 		$app->importerCache = $tmpArray;
 	}
+
+	public function fetchRenderItems(&$renderItems) {
+		$renderItems["genres"][$this->getUid()] = $this;
+		foreach(trimExplode(",", $this->getTopArtistUids(), TRUE) as $artistUid) {
+			if(isset($renderItems["artists"][$artistUid]) === TRUE) {
+				continue;
+			}
+			$renderItems["artists"][$artistUid] = \Slimpd\Models\Artist::getInstanceByAttributes(["uid" => $artistUid]);
+		}
+		foreach(trimExplode(",", $this->getTopLabelUids(), TRUE) as $labelUid) {
+			if(isset($renderItems["labels"][$labelUid]) === TRUE) {
+				continue;
+			}
+			$renderItems["labels"][$labelUid] = \Slimpd\Models\Label::getInstanceByAttributes(["uid" => $labelUid]);
+		}
+		return;
+	}
 }
