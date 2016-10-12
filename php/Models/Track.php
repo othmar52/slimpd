@@ -74,8 +74,8 @@ class Track extends \Slimpd\Models\AbstractTrack {
 			$renderItems["artists"][$artistUid] = \Slimpd\Models\Artist::getInstanceByAttributes(["uid" => $artistUid]);
 		}
 		
-		if(isset($renderItems["album"][$this->getAlbumUid()]) === FALSE) {
-			$renderItems["album"][$this->getAlbumUid()] = \Slimpd\Models\Album::getInstanceByAttributes(["uid" => $this->getAlbumUid()]);
+		if(isset($renderItems["albums"][$this->getAlbumUid()]) === FALSE) {
+			$renderItems["albums"][$this->getAlbumUid()] = \Slimpd\Models\Album::getInstanceByAttributes(["uid" => $this->getAlbumUid()]);
 		}
 		
 		foreach(trimExplode(",", $this->getGenreUid(), TRUE) as $genreUid) {
