@@ -13,24 +13,18 @@
 		</div>
 	</div>
 	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-			<span class="dark small">
-				TOP labels:<br>
-				{% include 'partials/label/string.htm' with { labelUids: item.topLabelUids} %}
-			</span>
+		<div class="vcinner darker-links small">
+			{% include 'partials/itemstats/inrow-top-labels.htm' %}
+		</div>
+	</div>
+	<div class="col-md-2 vcenter">
+		<div class="vcinner darker-links small">
+			{% include 'partials/itemstats/inrow-top-genres.htm' %}
 		</div>
 	</div>
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<span class="dark small">
-				TOP genres:<br>
-				{% include 'partials/genre/string.htm' with { genreUids: item.topGenreUids} %}
-			</span>
-		</div>
-	</div>
-	<div class="col-md-2 vcenter">
-		<div class="vcinner">
-			<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
+			<span class="badge">{{ item.trackCount|shorty }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount|shorty }}</span> <span class="dark uc small">Albums</span>
 			<br />
 			<span class="dark uc small">{{item.yearRange}}</span>
 		</div>

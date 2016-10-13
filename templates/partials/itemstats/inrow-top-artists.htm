@@ -1,0 +1,6 @@
+{% if item.topArtistUids %}
+	<span class="uc">TOP artists:</span><br>
+	<span class="darker-links">
+	{% include 'partials/artist/link.htm' with { item: { artistUid: item.topArtistUids} } %}<br>
+	</span>
+{% endif %}

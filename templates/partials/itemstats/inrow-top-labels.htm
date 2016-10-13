@@ -1,0 +1,6 @@
+{% if item.topLabelUids %}
+	<span class="uc">labels:</span><br>
+	<span class="darker-links">
+	{% include 'partials/label/link.htm' with { labelUids: item.topLabelUids} %}
+	</span>
+{% endif %}

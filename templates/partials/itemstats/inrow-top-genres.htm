@@ -1,0 +1,6 @@
+{% if item.topGenreUids %}
+	<span class="uc">TOP genres:</span><br>
+	<span class="darker-links">
+	{% include 'partials/genre/link.htm' with { genreUids: item.topGenreUids} %}
+	</span>
+{% endif %}

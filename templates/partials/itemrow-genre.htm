@@ -13,20 +13,23 @@
 		</div>
 	</div>
 	<div class="col-md-3 vcenter">
-		<div class="vcinner">
-			<span class="dark uc small">TODO: Labels</span>
+		<div class="vcinner darker-links small">
+			{% include 'partials/itemstats/inrow-top-artists.htm' %}
 		</div>
 	</div>
 	<div class="col-md-2 vcenter">
-		<div class="vcinner">
-			<span class="dark uc small">TODO: Artists</span>
+		<div class="vcinner darker-links small">
+			{% if item.topLabelUids %}
+				<span class="uc">TOP labels:</span><br>
+				{% include 'partials/label/link.htm' with { labelUids: item.topLabelUids} %}
+			{% endif %}
 		</div>
 	</div>
 	<div class="col-md-2">
 		<div class="vcinner">
-			<span class="badge">{{ item.trackCount }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount }}</span> <span class="dark uc small">Albums</span>
+			<span class="badge">{{ item.trackCount|shorty }}</span> <span class="dark uc small">Tracks</span> <span class="badge">{{ item.albumCount|shorty }}</span> <span class="dark uc small">Albums</span>
 			<br />
-			<span class="dark uc small">TODO: 1996-2002</span>
+			<span class="dark uc small">{{item.yearRange}}</span>
 		</div>
 	</div>
 </div>

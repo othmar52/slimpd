@@ -4,11 +4,7 @@
 	{% if itemUids|length > 1 %}
 		{% for itemUid in itemUids %}
 			<a class="item-link label-link ajax-link trigger-hide-modal" href="{{root}}label/{{renderitems.labels[itemUid].uid}}/tracks/page/1/sort/added/desc">{{renderitems.labels[itemUid].title}}</a>
-			
-			{% if loop.last == false %}
-			<a class="item-link label-link ajax-link trigger-hide-modal" href="{{root}}label/{{labelUids}}/tracks/page/1/sort/added/desc">
-				<span class="label_all">&amp;</span></a>
-			{% endif %}
+			{% if loop.last == false %},{% endif %}
 		{% endfor%}
 	{% else %}
 		<a class="item-link label-link ajax-link trigger-hide-modal" href="{{root}}label/{{renderitems.labels[labelUids].uid}}/tracks/page/1/sort/added/desc">{{renderitems.labels[labelUids].title}}</a>
