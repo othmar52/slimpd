@@ -42,6 +42,11 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 		return TRUE;
 	}
 
+	public function fetchRenderItems(&$renderItems) {
+		// nothing to fetch for directories
+		return;
+	}
+
 	public function getExists() {
 		return $this->exists;
 	}
