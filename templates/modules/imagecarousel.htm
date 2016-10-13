@@ -4,7 +4,7 @@
 <div id="image_all">
 	{% for i,item in itemlist %}
 		{% if not loop.first %}
-		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.uid }}" data-type="image" data-gallery="galname" class="carousel-thumb" style="background-image:url({{root}}image-50/id/{{ item.uid }});background-color:{{ item.bghex }};">
+		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.uid }}" data-type="image" data-gallery="galname" class="carousel-thumb contain-img" style="background-image:url({{root}}image-50/id/{{ item.uid }});background-color:{{ item.bghex }};">
 
 		</a>
 		{% endif %}

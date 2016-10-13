@@ -400,11 +400,14 @@ body.standalone {
 	width: 49px;
 	height: 49px;
 	margin: 0 3px 3px 0;
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size: contain;
 }
 
 .carousel-booklet {
 	text-align: center;
+}
+
+.contain-img {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
 }

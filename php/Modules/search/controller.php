@@ -149,6 +149,7 @@ foreach(array_keys($sortfields1) as $className) {
 				);
 			}
 			$vars["renderitems"] = getRenderItems($vars["item"], $vars["itemlist"]);
+			#print_r($vars["item"]); die();
 			$app->render("surrounding.htm", $vars);
 		})->name($className . "-show-". $show);
 		

@@ -70,27 +70,6 @@
 
 						{% if action == type~'.tracks' %}
 							{% include 'modules/typelist-nav.htm' %}
-
-							{# TODO: make more generic and move to partial #}
-							{% if type == "artist" %}
-								<div class="row">
-									<div class="col-md-2">
-										<img src="{{root}}imagefallback-300/{{type}}" width="150" height="150"/>
-									</div>
-									<div class="col-md-10">
-										{% if item.topLabelUids %}
-										<span class="dark uc small">TOP labels:</span> {% include 'partials/label/link.htm' with { labelUids: item.topLabelUids} %}<br>
-										{% endif %}
-										{% if item.topGenreUids %}
-										<span class="dark uc small">TOP genres:</span> {% include 'partials/genre/link.htm' with { genreUids: item.topGenreUids} %}<br>
-										{% endif %}
-										{% if item.yearRange %}
-										<span class="dark uc small">Track years:</span> {{item.yearRange}}
-										{% endif %}
-									</div>
-								</div>
-							{% endif %}
-
 							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
 

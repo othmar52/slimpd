@@ -36,7 +36,8 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		cliLog("clearing stats in databasetables", 2, "yellow");
 		foreach(array('artist', 'genre', 'label') as $table) {
 			// reset all counters
-			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0");
+			// TODO: reset topArtistUids, topGenreUids, topLabelUids
+			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0, yearRange='' ");
 			// get total amount for displaying progress
 			$query = "SELECT count(uid) AS itemsTotal FROM " . $table;
 			$this->itemsTotal += $app->db->query($query)->fetch_assoc()['itemsTotal'];
@@ -80,41 +81,41 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->updateJob(array(
 			'currentItem' => 'trackUid: ' . $trackRow['uid']
 		));
-		$itemUids = trimExplode(",", join(",", [$trackRow["artistUid"],$trackRow["remixerUid"],$trackRow["featuringUid"]]), TRUE);
-		foreach($itemUids as $itemUid) {
+		$artistUids = trimExplode(",", join(",", [$trackRow["artistUid"],$trackRow["remixerUid"],$trackRow["featuringUid"]]), TRUE);
+		$genreUids = trimExplode(",", $trackRow['genreUid'], TRUE);
+		$labelUids = trimExplode(",", $trackRow['labelUid'], TRUE);
+		foreach($artistUids as $itemUid) {
 			$tables['Artist'][$itemUid]['tracks'][ $trackRow['uid'] ] = NULL;
 			$tables['Artist'][$itemUid]['albums'][ $trackRow['albumUid'] ] = NULL;
-			// TODO: do this check seemsYeary in migrator phase (on insert) and remove it from here
-			if(\Slimpd\RegexHelper::seemsYeary($trackRow['year']) === TRUE) {
-				$tables['Artist'][$itemUid]['years'][ $trackRow['year'] ] = NULL;
-			}
-			// add label uids
-			foreach(trimExplode(",",$trackRow['labelUid'], TRUE) as $labelUid) {
-				if($labelUid == 10) { // Unknown Label
-					continue;
-				}
-				$tables['Artist'][$itemUid]['labels'][] = $labelUid;
-			}
-			// add genre uids
-			foreach(trimExplode(",",$trackRow['genreUid'], TRUE) as $genreUid) {
-				if($genreUid == 10) { // Unknown Genre
-					continue;
-				}
-				$tables['Artist'][$itemUid]['genres'][] = $genreUid;
-			}
+			$tables['Artist'][$itemUid]['years'][ $trackRow['year'] ] = NULL;
+			$this->appendTopRelations($tables, 'Artist', $itemUid, 'genres', $genreUids);
+			$this->appendTopRelations($tables, 'Artist', $itemUid, 'labels', $labelUids);
 			$all['ar' . $itemUid] = NULL;
 		}
-		$itemUids = trimExplode(",", $trackRow['genreUid'], TRUE);
-		foreach($itemUids as $itemUid) {
+		
+		foreach($genreUids as $itemUid) {
 			$tables['Genre'][$itemUid]['tracks'][ $trackRow['uid'] ] = NULL;
 			$tables['Genre'][$itemUid]['albums'][ $trackRow['albumUid'] ] = NULL;
+			$tables['Genre'][$itemUid]['years'][ $trackRow['year'] ] = NULL;
+			$this->appendTopRelations($tables, 'Genre', $itemUid, 'artists', $artistUids);
+			$this->appendTopRelations($tables, 'Genre', $itemUid, 'labels', $labelUids);
 			$all['ge' . $itemUid] = NULL;
 		}
-		$itemUids = trimExplode(",", $trackRow['labelUid'], TRUE);
-		foreach($itemUids as $itemUid) {
+		
+		foreach($labelUids as $itemUid) {
 			$tables['Label'][$itemUid]['tracks'][ $trackRow['uid'] ] = NULL;
 			$tables['Label'][$itemUid]['albums'][ $trackRow['albumUid'] ] = NULL;
+			$tables['Label'][$itemUid]['years'][ $trackRow['year'] ] = NULL;
+			$this->appendTopRelations($tables, 'Label', $itemUid, 'artists', $artistUids);
+			$this->appendTopRelations($tables, 'Label', $itemUid, 'genres', $genreUids);
+			
 			$all['la' . $itemUid] = NULL;
+		}
+	}
+
+	private function appendTopRelations(&$tables, $model, $modelUid, $relName, $relUids) {
+		foreach($relUids as $relUid) {
+			$tables[$model][$modelUid][$relName][] = $relUid;
 		}
 	}
 
@@ -150,8 +151,9 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 					->setTrackCount( count(@$data['tracks']) )
 					->setAlbumCount( count(@$data['albums']) );
 
-				$this->setTopLabelUids($item, $className, $data);
+				$this->setTopArtistUids($item, $className, $data);
 				$this->setTopGenreUids($item, $className, $data);
+				$this->setTopLabelUids($item, $className, $data);
 				$this->setYearRange($item, $data);
 
 				$item->update();
@@ -169,28 +171,87 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 	}
 
+	private function setTopArtistUids(&$item, $className, $data) {
+		if($className === "Artist" || isset($data["artists"]) === FALSE) {
+			return;
+		}
+		$max = 2;
+		$found = 0;
+		$finalUids = "";
+		$artistUids = uniqueArrayOrderedByRelevance($data['artists']);
+		foreach($artistUids as $artistUid) {
+			if($artistUid < 12) { // Unknown Artist=10, Various Artists=11
+				continue;
+			}
+			$found++;
+			$finalUids .= $artistUid . ",";
+			if($found === $max) {
+				break;
+			}
+		}
+		
+		$item->setTopArtistUids(trim($finalUids, ","));
+	}
+
 	private function setTopGenreUids(&$item, $className, $data) {
 		if($className === "Genre" || isset($data["genres"]) === FALSE) {
 			return;
 		}
+		$max = 2;
+		$found = 0;
+		$finalUids = "";
 		$genreUids = uniqueArrayOrderedByRelevance($data['genres']);
-		$item->setTopLabelUids(trim(array_shift($genreUids) . "," . array_shift($genreUids), ","));
+		foreach($genreUids as $genreUid) {
+			if($genreUid < 11) { // Unknown Genre = 10
+				continue;
+			}
+			$found++;
+			$finalUids .= $genreUid . ",";
+			if($found === $max) {
+				break;
+			}
+		}
+		$item->setTopGenreUids(trim($finalUids, ","));
 	}
 
 	private function setTopLabelUids(&$item, $className, $data) {
 		if($className === "Label" || isset($data["labels"]) === FALSE) {
 			return;
 		}
+		$max = 2;
+		$found = 0;
+		$finalUids = "";
 		$labelUids = uniqueArrayOrderedByRelevance($data['labels']);
-		$item->setTopLabelUids(trim(array_shift($labelUids) . "," . array_shift($labelUids), ","));
+		foreach($labelUids as $labelUid) {
+			if($labelUid < 11) { // Unknown Label = 10
+				continue;
+			}
+			$found++;
+			$finalUids .= $labelUid . ",";
+			if($found === $max) {
+				break;
+			}
+		}
+		$item->setTopLabelUids(trim($finalUids, ","));
 	}
 
 	private function setYearRange(&$item, $data) {
 		if(isset($data['years']) === FALSE) {
 			return;
 		}
-		$min = min(array_keys($data['years']));
-		$max = max(array_keys($data['years']));
+		$finalYears = [];
+		foreach(array_keys($data['years']) as $year) {
+			if(\Slimpd\RegexHelper::seemsYeary($year) === FALSE) {
+				continue;
+			}
+			$finalYears[] = $year;
+		}
+		
+		if(count($finalYears) === 0) {
+			return;
+		}
+		$min = min($finalYears);
+		$max = max($finalYears);
 		$yearString = ($min === $max) ? $min : $min . "-".$max;
 		$item->setYearRange($yearString);
 	}
