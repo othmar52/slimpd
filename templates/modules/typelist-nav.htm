@@ -22,12 +22,12 @@
 			</li-->
 			<li class="{{ (listcurrent == 'track') ? 'active' : '' }}{{ (search.track.total == 0) ? 'disabled' : '' }}"> 
 				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/tracks/page/1/sort/added/desc" class="ajax-link">
-					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total }}</span></h3>
+					<h3 class="uc">Tracks <span class="badge bg-col2">{{ search.track.total|shorty }}</span></h3>
 				</a>
 			</li>
 			<li class="{{ (listcurrent == 'album') ? 'active' : '' }}{{ (search.album.total == 0) ? 'disabled' : '' }}"> 
 				<a href="{{root}}{{itemtype}}/{{search[listcurrent].term}}/albums/page/1/sort/added/desc" class="ajax-link">
-					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total }}</span></h3>
+					<h3 class="uc">Albums <span class="badge bg-col2">{{ search.album.total|shorty }}</span></h3>
 				</a>
 			</li>
 		</ul>
