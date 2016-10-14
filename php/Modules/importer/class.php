@@ -44,31 +44,34 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->beginJob(array('msg' => 'starting sliMpd import/update process'), __FUNCTION__);
 		$this->batchUid = $this->jobUid;
 		$this->batchBegin = $this->jobBegin;
-                if($remigrate === FALSE) {
-                        // phase 1: check if mpd database update is running and simply wait if required
-                        $this->waitForMpd();
+		if($remigrate === FALSE) {
+				// phase 1: check if mpd database update is running and simply wait if required
+				$this->waitForMpd();
 
-                        // phase 2: parse mpd database and insert/update table:rawtagdata
-                        $this->processMpdDatabasefile();
+				// phase 2: parse mpd database and insert/update table:rawtagdata
+				$this->processMpdDatabasefile();
 
-                        // phase 3: scan id3 tags and insert into table:rawtagdata of all new or modified files
-                        $this->scanMusicFileTags();
-                }
+				// phase 3: scan id3 tags and insert into table:rawtagdata of all new or modified files
+				$this->scanMusicFileTags();
+		}
 
-                // phase 4: migrate table rawtagdata to table track,album,artist,genre,label
-                $this->migrateRawtagdataTable($remigrate);
+		// phase 4: migrate table rawtagdata to table track,album,artist,genre,label
+		$this->migrateRawtagdataTable($remigrate);
 
-                if($remigrate === FALSE) {
-                        // phase 5: delete dupes of extracted embedded images
-                        $this->destroyExtractedImageDupes();
+		if($remigrate === FALSE) {
+				// phase 5: delete dupes of extracted embedded images
+				$this->destroyExtractedImageDupes();
 
-                        // phase 6: get images
-                        // TODO: extend directory scan with additional relevant files
-                        $this->searchImagesInFilesystem();
-                }
+				// phase 6: get images
+				// TODO: extend directory scan with additional relevant files
+				$this->searchImagesInFilesystem();
+		}
 
 		// phase 7:
 		$this->updateCounterCache();
+
+		// phase 8: add fingerprint to rawtagdata+track table
+		$this->extractAllMp3FingerPrints();
 
 		// update the wrapper entry for all import phases
 		$this->finishBatch();
