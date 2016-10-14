@@ -4,7 +4,7 @@
 	</div>
 	<div class="col-md-10">
 		{% if item.topArtistUids %}
-		<span class="dark uc small">TOP artists:</span> {% include 'partials/artist/link.htm' with { item: { artistUid: item.topArtistUids} } %}<br>
+		<span class="dark uc small">TOP artists:</span> {% include 'partials/artist/link.htm' with { item: { artistUid: item.topArtistUids}, noGlueLink: 1 } %}<br>
 		{% endif %}
 		{% if item.topGenreUids %}
 		<span class="dark uc small">TOP genres:</span> {% include 'partials/genre/link.htm' with { genreUids: item.topGenreUids} %}<br>
