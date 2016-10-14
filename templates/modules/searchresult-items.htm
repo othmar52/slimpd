@@ -32,7 +32,11 @@
 	{% endif %}
 	{% if item is instanceofTrack %}
 	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
-		{% include 'partials/trackrow-1.htm' %}
+		{% if item.error == "notfound" %}
+			{% include 'partials/itemrow-track-notfound.htm' %}
+		{% else %}
+			{% include 'partials/trackrow-1.htm' %}
+		{% endif %}
 	{% endif %}
 	
 	{% if item is instanceofLabel %}

@@ -323,9 +323,16 @@ foreach(array_keys($sortfields) as $currentType) {
 								break;
 							case "dirname":
 								$tmp = \Slimpd\Models\Album::getInstanceByAttributes(array("uid" => $row["itemuid"]));
-								$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
-								$obj->setBreadcrumb(\Slimpd\filebrowser::fetchBreadcrumb($obj->getRelPath()));
+								if($tmp !== NULL) {
+									$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
+									$obj->setBreadcrumb(\Slimpd\filebrowser::fetchBreadcrumb($obj->getRelPath()));
+								}
 								break;
+						}
+						if($obj === NULL) {
+							// vanished item: we have it in sphinx index but not in MySQL database
+							$obj = \Slimpd\Models\Track::getNewInstanceWithoutDbQueries($row["display"]);
+							$obj->setError("notfound");
 						}
 						$vars["itemlist"][] = $obj;
 					}
