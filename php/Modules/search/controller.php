@@ -479,10 +479,10 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 			];
 			switch($filterType) {
 				case "artist":
-					$entry["img"] = $app->config["root"] . "imagefallback-50/artist";
+				case "genre":
+					$entry["img"] = $app->config["root"] . "imagefallback-50/" . $filterType;
 					break;
 				case "label":
-				case "genre":
 				case "dirname":
 					$entry["img"] = $app->config["fileroot"] . "skin/default/img/icon-". $filterType .".png";
 					break;

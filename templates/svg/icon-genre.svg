@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<svg viewBox="0 0 300 300" width="{{imagesize}}px" height="{{imagesize}}px" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g fill="{{color}}">
+	<rect x="0" y="0" width="100%" height="100%" style="fill: {{backgroundcolor}}; stroke: none;"/>
+	<path transform="translate(62, 62) scale(0.335, 0.335)" d="M449.247,0l33.622,285.779l-37.739,4.44L415.104,35H96.896L66.87,290.221l-37.74-4.44L62.75,0H449.247z M128,64h256v32H128
+		V64z M128,128h256v32H128V128z M128,192h256v32H128V192z M128,256h256v32H128V256z M496,320H16c-8.8,0-13.723,6.83-10.94,15.18
+		l53.88,161.643C61.723,505.17,71.2,512,80,512h352c8.8,0,18.275-6.83,21.06-15.179l53.882-161.645
+		C509.724,326.83,504.8,320,496,320z M320,384H192v-32h128V384z"/>
+	<!--text x="0" y="300" font-family="Verdana" font-size="70" fill="#AAA" font-weight="900" >
+		<tspan x="150" y="150" text-anchor="middle">GENRE</tspan>
+	</text-->
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+<g>
+</g>
+</svg>
