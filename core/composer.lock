@@ -211,16 +211,16 @@
         },
         {
             "name": "components/jqueryui",
-            "version": "1.12.0.1",
+            "version": "1.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/jqueryui.git",
-                "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c"
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/jqueryui/zipball/2c9359a9d199da254dd278bef3d4ced047d6581c",
-                "reference": "2c9359a9d199da254dd278bef3d4ced047d6581c",
+                "url": "https://api.github.com/repos/components/jqueryui/zipball/44ecf3794cc56b65954cc19737234a3119d036cc",
+                "reference": "44ecf3794cc56b65954cc19737234a3119d036cc",
                 "shasum": ""
             },
             "require": {
@@ -292,7 +292,7 @@
                 }
             ],
             "description": "jQuery UI is a curated set of user interface interactions, effects, widgets, and themes built on top of the jQuery JavaScript Library. Whether you're building highly interactive web applications or you just need to add a date picker to a form control, jQuery UI is the perfect choice.",
-            "time": "2016-07-19 06:02:37"
+            "time": "2016-09-16 05:47:55"
         },
         {
             "name": "components/underscore",
@@ -727,12 +727,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460"
+                "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/7c7eb57be2adc90b28e167c124c368f1d04b0460",
-                "reference": "7c7eb57be2adc90b28e167c124c368f1d04b0460",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/6e73fd3e65df55c55f14710f7b0298e03fe40969",
+                "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969",
                 "shasum": ""
             },
             "require": {
@@ -755,7 +755,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-08-13 14:02:30"
+            "time": "2016-10-09 16:01:38"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -862,7 +862,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2015-11-08 20:57:18"
+            "time": "2016-09-19 22:22:09"
         },
         {
             "name": "johnkpaul/jquery-ajax-retry",
@@ -1204,7 +1204,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-02-14 10:51:02"
+            "time": "2016-02-16 07:40:54"
         },
         {
             "name": "othmar52/xwax-1.5-osc",
@@ -1372,7 +1372,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2015-12-25 06:20:56"
+            "time": "2016-08-11 10:18:42"
         },
         {
             "name": "slim/slim",
@@ -1479,12 +1479,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "7f20312aa0c870e583db353cc2e9759edbdc3873"
+                "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/7f20312aa0c870e583db353cc2e9759edbdc3873",
-                "reference": "7f20312aa0c870e583db353cc2e9759edbdc3873",
+                "url": "https://api.github.com/repos/symfony/process/zipball/fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
+                "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
                 "shasum": ""
             },
             "require": {
@@ -1520,7 +1520,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-06 11:07:23"
+            "time": "2016-10-01 14:21:27"
         },
         {
             "name": "twbs/bootstrap",
@@ -1528,12 +1528,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e"
+                "reference": "9b7d1406b922300c5d01e99026e4fffc67445185"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e",
-                "reference": "7e2741eb1074afc66bdf2fb5c2b65d476cf7f37e",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/9b7d1406b922300c5d01e99026e4fffc67445185",
+                "reference": "9b7d1406b922300c5d01e99026e4fffc67445185",
                 "shasum": ""
             },
             "replace": {
@@ -1571,7 +1571,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2016-08-03 04:37:14"
+            "time": "2016-09-22 10:06:30"
         },
         {
             "name": "twig/twig",
@@ -1579,12 +1579,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c418d07c64bdf004635973f978c806a53a32b320"
+                "reference": "ef942f60d894f48e751f0e10392a099261938307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c418d07c64bdf004635973f978c806a53a32b320",
-                "reference": "c418d07c64bdf004635973f978c806a53a32b320",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ef942f60d894f48e751f0e10392a099261938307",
+                "reference": "ef942f60d894f48e751f0e10392a099261938307",
                 "shasum": ""
             },
             "require": {
@@ -1597,7 +1597,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.24-dev"
+                    "dev-master": "1.26-dev"
                 }
             },
             "autoload": {
@@ -1632,7 +1632,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-09-01 17:55:16"
+            "time": "2016-10-13 14:03:03"
         },
         {
             "name": "webfontkit/open-sans",

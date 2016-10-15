@@ -21,16 +21,20 @@ class Twig_TokenStream
     protected $current = 0;
     protected $filename;
 
+    private $source;
+
     /**
      * Constructor.
      *
-     * @param array  $tokens   An array of tokens
-     * @param string $filename The name of the filename which tokens are associated with
+     * @param array       $tokens   An array of tokens
+     * @param string|null $filename The name of the filename which tokens are associated with
+     * @param string|null $source   The source code associated with the tokens
      */
-    public function __construct(array $tokens, $filename = null)
+    public function __construct(array $tokens, $filename = null, $source = null)
     {
         $this->tokens = $tokens;
         $this->filename = $filename;
+        $this->source = $source ? $source : '';
     }
 
     /**
@@ -144,12 +148,24 @@ class Twig_TokenStream
     }
 
     /**
-     * Gets the filename associated with this stream.
+     * Gets the filename associated with this stream (null if not defined).
      *
-     * @return string
+     * @return string|null
      */
     public function getFilename()
     {
         return $this->filename;
+    }
+
+    /**
+     * Gets the source code associated with this stream.
+     *
+     * @return string
+     *
+     * @internal Don't use this as it might be empty depending on the environment configuration
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }
