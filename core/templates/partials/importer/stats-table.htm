@@ -57,7 +57,7 @@
 			{% if item.jobStatistics.estimatedTotalRuntime > 0 %}
 				{{ item.jobStatistics.estimatedTotalRuntime|formatSeconds }}
 			{% else %}
-				?
+				{{ item.jobStatistics.runtimeSeconds|formatSeconds }} + ?
 			{% endif %}
 			</td>
 		{% endif %}
