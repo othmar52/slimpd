@@ -6,3 +6,8 @@
 /scripts/custom-xwax-client
 
 
+/core/php/routes/get_local.php
+/core/php/routes/post_local.php
+/core/config/config_local.ini
+/core/config/development.txt
+/core/scripts/custom-xwax-client
