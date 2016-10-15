@@ -122,7 +122,8 @@ class Systemcheck {
 
 	private function runMusicdirChecks(&$check) {
 		// check if we have a configured value for MPD-musicdirectory
-		if(trim($this->config['mpd']['musicdir']) === '') {
+		// DIRECTORY_SEPARATOR automatically gets appended to this config value. so DS means empty
+		if(trim($this->config['mpd']['musicdir']) === DS) {
 			$check['fsMusicdirconf']['status'] = 'danger';
 			$check['fsMusicdir']['hide'] = TRUE;
 			$check['fsMusicdir']['skip'] = TRUE;
