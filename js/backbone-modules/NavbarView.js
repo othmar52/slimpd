@@ -152,7 +152,7 @@
 					case "track":
 						additionalMarkup = $("<a />")
 							.attr("class", "trigger-modal")
-							.attr("href", window.sliMpd.conf.absRefPrefix + "markup/widget-trackcontrol?item="+ item.itemid )
+							.attr("href", window.sliMpd.conf.absRefPrefix + "markup/widget-trackcontrol?item="+ item.itemuid )
 							.html(" <i class='fa fa-plus-square'></i>")
 							.bind("click", function(e){
 								// TODO: find another way to disable autocomplete-select-event when modal-opm has been fired
