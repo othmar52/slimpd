@@ -11,7 +11,7 @@ In case file-time has not changed, there will be no update to the correspondendi
 <h4 class="dark"><span class="badge">Phase 3</span> Scan Music File Tags</h4>
 <p>All tracks of rawtagdata-table whos last scantimes are older than file-time will be scanned by getid3.php<br />
 The information fetched will be stored in the rawtagdata-table without modifying anything (like setting default values).<br />
-If "/config.ini" section:"[images]" option:"read_embedded" is set to "1", the extracted image data will be stored to a file in the folder "/embedded/" and a correspondendig database-record in table:bitmap will be created.</p>
+If "/config.ini" section:"[images]" option:"read_embedded" is set to "1", the extracted image data will be stored to a file in the folder "/localdata/embedded/" and a correspondendig database-record in table:bitmap will be created.</p>
 <hr />
 <h4 class="dark"><span class="badge">Phase 4</span> Migrate Raw Tag Data</h4>
 <p>The table:tracks is very similar to table:rawtagdata.
