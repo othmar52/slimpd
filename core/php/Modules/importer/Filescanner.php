@@ -40,7 +40,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		$app = \Slim\Slim::getInstance();
 		
 		$phpThumb = Bitmap::getPhpThumb();
-		$phpThumb->setParameter('config_cache_directory', APP_ROOT.'embedded');
+		$phpThumb->setParameter('config_cache_directory', APP_ROOT.'localdata/embedded');
 		
 		$getID3 = new \getID3;
 		
@@ -269,7 +269,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		switch(getFileExt($absolutePath)) {
 			case 'mp3':
 				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
-					' ' . APP_ROOT . "scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
+					' ' . APP_ROOT . "core/scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
 				break;
 			case 'flac':
 				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_metaflac'] .

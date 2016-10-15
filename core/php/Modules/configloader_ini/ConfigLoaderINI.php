@@ -74,7 +74,7 @@ class ConfigLoaderINI {
 			throw new \Exception('Master Config file not given', 1);
 		}
 
-		$this->absCacheFilePath = APP_ROOT . "cache" . DS . "conf-". getFilePathHash($masterConfigFile). ".php";
+		$this->absCacheFilePath = APP_ROOT . "localdata" . DS . "cache" . DS . "conf-". getFilePathHash($masterConfigFile). ".php";
 
 		if($noCache === TRUE) {
 			rmfile($this->absCacheFilePath);

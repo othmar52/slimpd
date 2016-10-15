@@ -123,7 +123,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
 			$prefix = ($record['embedded'] == '1')
-				? APP_ROOT.'embedded'
+				? APP_ROOT . 'localdata' . DS . 'embedded'
 				: $app->config['mpd']['musicdir'];
 			if(is_file($prefix . $record['relPath']) === TRUE) {
 				cliLog('keeping database-entry for ' . $record['relPath'], 3);

@@ -77,8 +77,8 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 
 	Helper::setConfig( getDatabaseDiffConf($app) );
 	if (!Helper::checkConfigEnough()) {
-	    Output::error('mmp: please check configuration');
-	    die(1);
+		Output::error('mmp: please check configuration');
+		die(1);
 	}
 
 	# after database-structure changes we have to
@@ -90,11 +90,11 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 
 	$controller = Helper::getController($action, NULL);
 	if ($controller !== false) {
-	    $controller->runStrategy();
+		$controller->runStrategy();
 	} else {
-	    Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
-	    Helper::getController('help')->runStrategy();
-	    die(1);
+		Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+		Helper::getController('help')->runStrategy();
+		die(1);
 	}
 
 	if($action !== 'init') {
@@ -140,8 +140,8 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	// delete files created by sliMpd
 	foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
 		$fileBrowser = new \Slimpd\filebrowser();
-		$fileBrowser->getDirectoryContent($sysDir, TRUE, TRUE);
-		cliLog("Deleting files and directories inside ". $sysDir ."/");
+		$fileBrowser->getDirectoryContent('localdata' . DS . $sysDir, TRUE, TRUE);
+		cliLog("Deleting files and directories inside ". 'localdata' . DS . $sysDir ."/");
 		foreach(['music','playlist','info','image','other'] as $key) {
 			foreach($fileBrowser->files[$key] as $file) {
 				rmfile(APP_ROOT . $file->getRelPath());

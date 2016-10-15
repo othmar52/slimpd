@@ -88,7 +88,7 @@ class AlbumMigrator {
 	}
 
 	public static function parseConfig() {
-		return parse_ini_file(APP_ROOT . "config/importer/tag-mapper.ini", TRUE);
+		return parse_ini_file(APP_ROOT . "core/config/importer/tag-mapper.ini", TRUE);
 	}
 
 	public function addTrack(array $rawTagDataArray) {

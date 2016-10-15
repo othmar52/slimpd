@@ -307,7 +307,7 @@ foreach(array_keys($sortfields) as $currentType) {
 						"label" => "nothing found",
 						"url" => "#",
 						"type" => "",
-						"img" => "/skin/default/img/icon-label.png" // TODO: add not-found-icon
+						"img" => "/core/skin/default/img/icon-label.png" // TODO: add not-found-icon TODO: respect and use root/fileroot variables 
 					];
 				} else {
 					$filterTypeMappingF = array_flip($filterTypeMapping);
@@ -491,7 +491,7 @@ $app->get("/autocomplete/:type/", function($type) use ($app, $vars) {
 					break;
 				case "label":
 				case "dirname":
-					$entry["img"] = $app->config["fileroot"] . "skin/default/img/icon-". $filterType .".png";
+					$entry["img"] = $app->config["fileroot"] . "core/skin/default/img/icon-". $filterType .".png";
 					break;
 				case "album":
 				case "track":

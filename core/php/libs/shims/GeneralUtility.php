@@ -222,7 +222,7 @@ function getDatabaseDropConfirm() {
 }
 
 function fileLog($mixed) {
-	$filename = APP_ROOT . "cache/log-" . date("Y-M-d") . ".log";
+	$filename = APP_ROOT . "localdata/cache/log-" . date("Y-M-d") . ".log";
 	if(is_string($mixed) === TRUE) {
 		$data = $mixed . "\n";
 	}
@@ -238,7 +238,7 @@ function getDatabaseDiffConf($app) {
 		"user"         => $app->config["database"]["dbusername"],
 		"password"     => $app->config["database"]["dbpassword"],
 		"db"           => $app->config["database"]["dbdatabase"],
-		"savedir"      => APP_ROOT . "config/dbscheme",
+		"savedir"      => APP_ROOT . "core/config/dbscheme",
 		"verbose"      => "On",
 		"versiontable" => "db_revisions",
 		"aliastable"   => "db_alias",

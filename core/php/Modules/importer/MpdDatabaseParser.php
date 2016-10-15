@@ -72,7 +72,7 @@ class MpdDatabaseParser {
 	public function decompressDbFile() {
 		// decompress databasefile
 		$bufferSize = 4096; // read 4kb at a time (raising this value may increase performance)
-		$outFileName = APP_ROOT . "cache/mpd-database-plaintext";
+		$outFileName = APP_ROOT . "localdata/cache/mpd-database-plaintext";
 
 		// Open our files (in binary mode)
 		$inFile = gzopen($this->dbFile, "rb");

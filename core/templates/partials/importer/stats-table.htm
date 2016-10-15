@@ -20,7 +20,7 @@
 		{% if loop.first == true %}
 			{% if (servertime - item.jobLastUpdate) < 6 %}
 				{% set statusWording = 'running' %}
-				{% set statusImage = '<img src="'~config.absRefPrefix~'skin/default/img/playing.gif" />' %}
+				{% set statusImage = '<img src="'~config.absRefPrefix~'core/skin/default/img/playing.gif" />' %}
 			{% endif %}
 		{% else %}
 			{% set statusWording = 'dead' %}

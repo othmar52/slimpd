@@ -49,7 +49,7 @@ class Imageweighter {
 
 	private function buildWeightConf() {
 		// read config stuff
-		$rawConf = parse_ini_file(APP_ROOT . "config/importer/image-weights.ini", TRUE);
+		$rawConf = parse_ini_file(APP_ROOT . "core/config/importer/image-weights.ini", TRUE);
 		$conf = array();
 
 		$keyRange = 50;

@@ -160,9 +160,9 @@ class filebrowser {
 			return FALSE;
 		}
 
-		if($systemdir === TRUE && in_array($path, ["cache/", "embedded/", "peakfiles/"]) === TRUE) {
+		if($systemdir === TRUE && in_array($path, ["localdata/cache/", "localdata/embedded/", "localdata/peakfiles/"]) === TRUE) {
 			$return['base'] = APP_ROOT;
-			$realpath = realpath(APP_ROOT.$path) . DS;
+			$realpath = realpath(APP_ROOT . $path) . DS;
 		}
 
 		if(isInAllowedPath($path) === FALSE && $systemdir === FALSE) {

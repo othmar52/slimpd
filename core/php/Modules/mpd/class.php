@@ -375,7 +375,7 @@ class mpd {
 
 			case 'removeDupes':
 				// TODO: remove requirement of having mpc installed
-				$cmd = APP_ROOT . 'vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
+				$cmd = APP_ROOT . 'core/vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
 				exec($cmd);
 				// TODO: count removed dupes and display result
 				notifyJson("MPD: removed dupes in current playlist", 'mpd');

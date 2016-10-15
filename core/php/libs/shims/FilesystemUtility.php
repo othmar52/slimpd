@@ -61,7 +61,7 @@ function isInAppDirectory($itemPath) {
 		return FALSE;
 	}
 	foreach(["cache", "embedded", "peakfiles"] as $appDir) {
-		if(strpos($realPath, APP_ROOT . $appDir) === 0) {
+		if(strpos($realPath, APP_ROOT . 'localdata' . DS . $appDir) === 0) {
 			return TRUE;
 		}
 	}
@@ -69,7 +69,7 @@ function isInAppDirectory($itemPath) {
 }
 
 function getMimeType ($filename) {
-	$mimeExtensionMapping = parse_ini_file(APP_ROOT . "config/mimetypes.ini", TRUE);
+	$mimeExtensionMapping = parse_ini_file(APP_ROOT . "core/config/mimetypes.ini", TRUE);
 
 	//Get Extension
 	$ext = strtolower(substr($filename,strrpos($filename, ".") + 1));

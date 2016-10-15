@@ -36,7 +36,7 @@ class Svggenerator {
 
 		// systemcheck testfiles are not within our music_dirs nor in our database
 		if($this->fingerprint === NULL) {
-			if(strpos(realpath(DS.$arg), APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/') === 0) {
+			if(strpos(realpath(DS.$arg), APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/') === 0) {
 				$this->absolutePath = realpath(DS.$arg);
 				$this->ext = getFileExt($arg);
 			}
@@ -62,7 +62,7 @@ class Svggenerator {
 		}
 		
 		session_write_close(); // do not block other requests during processing
-		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
+		$tmpFileName = APP_ROOT . 'localdata' . DS . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
 		if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
 			# another request already triggered generateSvg
 			$this->fireRetryHeaderAndExit();
@@ -182,7 +182,7 @@ class Svggenerator {
 	}
 
 	public function setPeakFilePath() {
-		$this->peakValuesFilePath = APP_ROOT . 'peakfiles' .
+		$this->peakValuesFilePath = APP_ROOT . 'localdata' . DS . 'peakfiles' .
 			DS . $this->ext .
 			DS . substr($this->fingerprint,0,3) .
 			DS . $this->fingerprint;
@@ -211,7 +211,7 @@ class Svggenerator {
 	}
 
 	private function getPeaks() {
-		$tmpFileName = APP_ROOT . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
+		$tmpFileName = APP_ROOT . 'localdata' . DS . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
 		$inFile = escapeshellarg($this->absolutePath);
 		$tmpWav = escapeshellarg($tmpFileName.'.wav');
 		$tmpMp3 = escapeshellarg($tmpFileName.'.mp3');

@@ -25,7 +25,7 @@ class Localization {
 		// TODO: check if file is readable
 		// read config stuff
 		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\localization\Localization');
-		$reflectedClass->setStaticPropertyValue('lang', parse_ini_file(APP_ROOT . "config/i18n.ini", FALSE));
+		$reflectedClass->setStaticPropertyValue('lang', parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE));
 	}
 	
 	public static function str($itemkey, $vars = array()) {

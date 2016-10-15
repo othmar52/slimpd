@@ -33,12 +33,12 @@ getConfigValue () {
 
 /usr/bin/indexer --rotate $( getConfigValue mainindex )
 
-/usr/bin/indexer $( getConfigValue mainindex ) --buildstops $SCRIPT_PATH/../cache/dict.txt 10000000 --buildfreqs
-php $SCRIPT_PATH/../slimpd builddictsql < $SCRIPT_PATH/../cache/dict.txt > $SCRIPT_PATH/../cache/dict.sql
-mysql -u$( getConfigValue dbusername ) -p$( getConfigValue dbpassword ) $( getConfigValue dbdatabase ) < $SCRIPT_PATH/../cache/dict.sql
+/usr/bin/indexer $( getConfigValue mainindex ) --buildstops $SCRIPT_PATH/../../localdata/cache/dict.txt 10000000 --buildfreqs
+php $SCRIPT_PATH/../../slimpd builddictsql < $SCRIPT_PATH/../../localdata/cache/dict.txt > $SCRIPT_PATH/../../localdata/cache/dict.sql
+mysql -u$( getConfigValue dbusername ) -p$( getConfigValue dbpassword ) $( getConfigValue dbdatabase ) < $SCRIPT_PATH/../../localdata/cache/dict.sql
 
-rm $SCRIPT_PATH/../cache/dict.txt
-rm $SCRIPT_PATH/../cache/dict.sql
+rm $SCRIPT_PATH/../../localdata/cache/dict.txt
+rm $SCRIPT_PATH/../../localdata/cache/dict.sql
 
 /usr/bin/indexer --rotate $( getConfigValue suggestindex )
 

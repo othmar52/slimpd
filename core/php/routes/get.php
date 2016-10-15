@@ -163,7 +163,7 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 	session_write_close();
 
 	// IMPORTANT TODO: move this to an exec-wrapper
-	$cmd = APP_ROOT . 'vendor-dist/othmar52/clean-rename/clean-rename '
+	$cmd = APP_ROOT . 'core/vendor-dist/othmar52/clean-rename/clean-rename '
 		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
 	exec($cmd, $result);
 

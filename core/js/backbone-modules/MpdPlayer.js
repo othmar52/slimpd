@@ -57,7 +57,7 @@
 			this.trackAnimation = { currentPosPerc: 0 };
 			this.timeLineLight = new window.TimelineLite();
 
-			this.pollWorker = new Worker(window.sliMpd.conf.absFilePrefix + "js/poll-worker.js");
+			this.pollWorker = new Worker(window.sliMpd.conf.absFilePrefix + "core/js/poll-worker.js");
 			var that = this;
 			this.pollWorker.addEventListener("message", function(e) {
 				that.processPollData(e.data);

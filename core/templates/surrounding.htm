@@ -32,7 +32,7 @@
 		] %}
 
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}core/{{cssfile}}" />
 		{% endfor %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
 		{# add dynamic css for now-playing status #}
@@ -42,7 +42,7 @@
 		{% for deck in [0,1,2,3] %}
 		<link rel="stylesheet" type="text/css" id="css-xwaxdeck-{{deck}}" href="{{root}}css/xwaxplayer/0" />
 		{% endfor %}
-		<script src="{{fileroot}}vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
+		<script src="{{fileroot}}core/vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
 	</head>
 	<!--style>
 	.blur {
@@ -303,8 +303,8 @@
 
 		{% include 'partials/jsincludes/conf.htm' %}
 		{% include 'partials/jsincludes/filelist.htm' %}
-		<script src="{{fileroot}}js/app.js"></script>
-		<script src="{{fileroot}}js/animations.js"></script>
+		<script src="{{fileroot}}core/js/app.js"></script>
+		<script src="{{fileroot}}core/js/animations.js"></script>
 	</body>
 </html>
 {% endif %}

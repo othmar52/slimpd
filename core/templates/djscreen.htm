@@ -3,16 +3,16 @@
 	<head>
 		<title>{{ config.title }}</title>
 		<meta charset="utf-8">
-    	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    	<meta name="HandheldFriendly" content="True">
-    	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
-    	
-    	<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
-    	{% set cssfiles = [
-    		'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
-    		'vendor-dist/components/font-awesome/css/font-awesome.min.css',
-    		'vendor-dist/webfontkit/open-sans/open-sans.min.css',
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="HandheldFriendly" content="True">
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+		
+		<link rel="shortcut icon" href="{{fileroot}}core/skin/default/img/favicon.png">
+		{% set cssfiles = [
+			'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
+			'vendor-dist/components/font-awesome/css/font-awesome.min.css',
+			'vendor-dist/webfontkit/open-sans/open-sans.min.css',
 			'vendor-dist/hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css',
 			'vendor-dist/rstacruz/nprogress/nprogress.css',
 			'skin/default/fonts/SFDISPLAY/SFNSDisplay.css',
@@ -28,12 +28,12 @@
 			'skin/default/css/widget-autocomplete.css',
 			'skin/default/css/player/player.css'
 		] %}
-    	 
+
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}core/{{cssfile}}" />
 		{% endfor %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
-		<script src="{{fileroot}}vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
+		<script src="{{fileroot}}core/vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
 	</head>
 	<body class="bg-col1 col1 standalone vstretch14 spXXXotcol-{{ spotcolor.xwax }}">
 		<div class="container-fluid">
@@ -69,7 +69,7 @@
 			};
 		</script>
 		{% set jsfiles = [
-    		'vendor-dist/components/jquery/jquery.min.js',
+			'vendor-dist/components/jquery/jquery.min.js',
 			'vendor-dist/components/jqueryui/jquery-ui.min.js',
 			'vendor-dist/twbs/bootstrap/dist/js/bootstrap.min.js',
 			'vendor-dist/twbs/bootstrap/js/dropdown.js',
@@ -93,11 +93,11 @@
 			'js/backbone-modules/XwaxPlayer.js',
 			'js/backbone-modules/Router.js',
 			'js/djscreen.js'
-    		]
+			]
 		%}
-    	 
+
 		{% for jsfile in jsfiles %}
-		<script src="{{fileroot}}{{jsfile}}"></script>
+		<script src="{{fileroot}}core/{{jsfile}}"></script>
 		{% endfor %}		
 	</body>
 </html>

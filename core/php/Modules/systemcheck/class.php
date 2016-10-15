@@ -90,7 +90,7 @@ class Systemcheck {
 
 	private function runConfigLocalCheck(&$check, $app) {
 		// check if individual config file exists
-		$relConfPath = "config/config_local.ini";
+		$relConfPath = "core/config/config_local.ini";
 		if(is_file(APP_ROOT . $relConfPath) === FALSE) {
 			return;
 		}
@@ -144,7 +144,7 @@ class Systemcheck {
 	private function runAppDirChecks(&$check) {
 		// check filesystem access for writable directories
 		foreach(['Cache', 'Embedded', 'Peakfiles'] as $dir) {
-			if(is_dir(APP_ROOT . strtolower($dir)) === FALSE || is_writeable(APP_ROOT . strtolower($dir)) === FALSE) {
+			if(is_dir(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE || is_writeable(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE) {
 				$check['fs'. $dir]['status'] = 'danger';
 				$check['skipAudioTests'] = TRUE;
 			} else {
@@ -311,13 +311,13 @@ class Systemcheck {
 
 		foreach($this->audioFormats as $format => $data) {
 			$check['fp'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
-				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'filepath' => APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
 				'cmd' => '',
 				'resultExpected' => array_keys($data)[0],
 				'resultReal' => FALSE,
 			);
 			$check['wf'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
-				'filepath' => APP_ROOT . 'templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'filepath' => APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
 				'cmd' => ''
 			);
 
@@ -351,9 +351,9 @@ class Systemcheck {
 			if($check[$checkWf]['skip'] === TRUE) {
 				continue;
 			}
-			$peakfile = APP_ROOT . "peakfiles/".$ext.DS. substr($check[$checkFp]['resultExpected'],0,3) . DS . $check[$checkFp]['resultExpected'];
-			$tmpMp3 = APP_ROOT . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.mp3';
-			$tmpWav = APP_ROOT . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.wav';
+			$peakfile = APP_ROOT . "localdata". DS . "peakfiles/".$ext.DS. substr($check[$checkFp]['resultExpected'],0,3) . DS . $check[$checkFp]['resultExpected'];
+			$tmpMp3 = APP_ROOT . "localdata". DS . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.mp3';
+			$tmpWav = APP_ROOT . "localdata". DS . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.wav';
 
 			// make sure we retrieve nothing cached
 			rmfile([$peakfile, $tmpMp3, $tmpWav]);

@@ -8,7 +8,7 @@
 		<meta name="HandheldFriendly" content="True">
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
 
-		<link rel="shortcut icon" href="{{fileroot}}skin/default/img/favicon.png">
+		<link rel="shortcut icon" href="{{fileroot}}core/skin/default/img/favicon.png">
 		{% set cssfiles = [
 			'vendor-dist/twbs/bootstrap/dist/css/bootstrap.min.css',
 			'vendor-dist/components/font-awesome/css/font-awesome.min.css',
@@ -30,14 +30,14 @@
 		] %}
 
 		{% for cssfile in cssfiles %}
-		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}{{cssfile}}" />
+		<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}core/{{cssfile}}" />
 		{% endfor %}
 		<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
 		{% if action == 'trackid3' %}
-			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}skin/default/css/getid3.css" />
+			<link rel="stylesheet" type="text/css" media="all" href="{{fileroot}}core/skin/default/css/getid3.css" />
 			<link rel="stylesheet" type="text/css" media="all" href="{{root}}css/spotcolors.css" />
 		{% endif %}
-		<script src="{{fileroot}}vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
+		<script src="{{fileroot}}core/vendor-dist/codrops/BookBlock/js/modernizr.custom.js"></script>
 	</head>
 	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
 		<div class="container">
@@ -82,7 +82,7 @@
 
 		{% include 'partials/jsincludes/conf.htm' %}
 		{% include 'partials/jsincludes/filelist.htm' %}
-		<script src="{{fileroot}}js/appless.js"></script>
-		<script src="{{fileroot}}js/animations.js"></script>
+		<script src="{{fileroot}}core/js/appless.js"></script>
+		<script src="{{fileroot}}core/js/animations.js"></script>
 	</body>
 </html>

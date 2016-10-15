@@ -78,7 +78,7 @@
 			$(".xwax-error").removeClass("hidden");
 			this.toggler.removeClass("btn-default").addClass("btn-success");
 
-			this.pollWorker = new Worker(window.sliMpd.conf.absFilePrefix+"js/poll-worker.js");
+			this.pollWorker = new Worker(window.sliMpd.conf.absFilePrefix+"core/js/poll-worker.js");
 			var that = this;
 			this.pollWorker.addEventListener("message", function(e) {
 				that.processPollData(e.data);
