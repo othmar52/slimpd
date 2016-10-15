@@ -22,6 +22,8 @@ class MpdDatabaseParser {
 	public $error = FALSE;
 	public $gzipped = FALSE;
 	protected $rawTagItem = FALSE;
+	
+	private $useBatcher = FALSE;
 
 	// needed for traversing
 	private $level = -1;
@@ -57,6 +59,11 @@ class MpdDatabaseParser {
 		}
 
 		$this->dbFile = $dbFilePath;
+		
+		// batcher is only used on the very first import because we can be sure that no update of existing record is required
+		if(\Slimpd\Models\Rawtagdata::getCountAll() < 1) {
+			$this->useBatcher = TRUE;
+		}
 
 		// check if mpd_db_file exists
 		if(is_file($this->dbFile) === TRUE || is_readable($this->dbFile) === TRUE) {
@@ -256,8 +263,13 @@ class MpdDatabaseParser {
 		}
 		$this->rawTagItem->setLastScan(0)
 			->setImportStatus(1)
-			->setExtension(getFileExt($this->rawTagItem->getRelPath()))
-			->update();
+			->setExtension(getFileExt($this->rawTagItem->getRelPath()));
+			
+		if($this->useBatcher === TRUE) {
+			\Slim\Slim::getInstance()->batcher->que($this->rawTagItem);
+		} else {
+			$this->rawTagItem->update();
+		}
 		$this->itemsProcessed++;
 		// reset song attributes
 		$this->rawTagItem = new \Slimpd\Models\Rawtagdata();

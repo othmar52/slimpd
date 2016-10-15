@@ -353,6 +353,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 		$mpdParser->readMysqlTstamps();
 		$mpdParser->parse($this);
+		$app->batcher->finishAll();
 
 		// delete dead items in table:rawtagdata & table:track & table:trackindex
 		if(count($mpdParser->fileOrphans) > 0) {
