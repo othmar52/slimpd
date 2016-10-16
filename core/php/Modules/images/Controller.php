@@ -22,10 +22,58 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
 	private $imageSizes = array(35, 50,100,300,1000);
+	private $weightOrderBy;
+	
+	public function __construct($container) {
+		$this->container = $container;
+		#var_dump($this->__get('conf')['images']['weightening']); die;
+		$weightConf = trimExplode("\n", $this->__get('conf')['images']['weightening'], TRUE);
+		$this->weightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC";
+	}
+
+	public function album(Request $request, Response $response, $args) {
+		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+		$bitmap = \Slimpd\Models\Bitmap::getInstanceByAttributes(
+			$this->__get('db'),
+			[ 'albumUid' => $args['itemUid'] ],
+			$this->weightOrderBy
+		);
+		if($bitmap !== NULL) {
+			return $this->dump($bitmap, $args['imagesize'], $response);
+		}
+		$uri = $request->getUri()->withPath(
+			$this->router->pathFor(
+				'imagefallback',
+				['type' => 'album', 'imagesize' => $args['imagesize'] ]
+			)
+		);
+		return $response->withRedirect($uri, 403);
+	}
+
+	public function track(Request $request, Response $response, $args) {
+		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+		$bitmap = \Slimpd\Models\Bitmap::getInstanceByAttributes(
+			$this->__get('db'),
+			[ 'trackUid' => $args['itemUid'] ],
+			$this->weightOrderBy
+		);
+		if($bitmap !== NULL) {
+			return $this->dump($bitmap, $args['imagesize'], $response);
+		}
+		$track = \Slimpd\Models\Track::getInstanceByAttributes($this->__get('db'), ['uid' => $args['itemUid'] ]);
+		$uri = $request->getUri()->withPath(
+			$this->router->pathFor(
+				'imagealbum',
+				['imagesize' => $args['imagesize'], 'itemUid' => $track->getAlbumUid() ]
+			)
+		);
+		return $response->withRedirect($uri, 403);
+	}
+
 	public function fallback(Request $request, Response $response, $args) {
-		// T
 		if(in_array($args['imagesize'], $this->imageSizes) === FALSE) {
-			die('invalid size');
+			$notFoundHandler = $this->__get('notFoundHandler');
+			return $notFoundHandler($request->withAttribute('message', 'not found'), $response);
 		}
 		$playerMode = $this->view->getEnvironment()->getGlobals()['playerMode'];
 
@@ -42,5 +90,76 @@ class Controller extends \Slimpd\BaseController {
 
 		$this->view->render($response, $template, $args);
 		return $response->withHeader('Content-Type', 'image/svg+xml');
+	}
+
+	public function dump(\Slimpd\Models\Bitmap $bitmap, $imageSize, &$response) {
+		$imgDirecoryPrefix = ($bitmap->getTrackUid())
+			? APP_ROOT
+			: $this->__get('conf')['mpd']['musicdir'];
+			
+		$phpThumb = $this->getPhpThumb();	
+		$phpThumb->setSourceFilename($imgDirecoryPrefix . $bitmap->getRelPath());
+		$phpThumb->setParameter('config_output_format', 'jpg');
+		
+		switch($imageSize) {
+			case 35:
+			case 50:
+			case 100:
+			case 300:
+			case 1000:
+				$phpThumb->setParameter('w', $imageSize);
+				break;
+			default:
+				$phpThumb->setParameter('w', 300);
+		}
+		$phpThumb->SetCacheFilename();
+		
+		try {
+			// check if we already have a cached image
+			if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {
+				$phpThumb->GenerateThumbnail();
+				\phpthumb_functions::EnsureDirectoryExists(
+					dirname($phpThumb->cache_filename),
+					octdec($app->config['config']['dirCreateMask'])
+				);
+				$phpThumb->RenderToFile($phpThumb->cache_filename);
+				if(is_file($phpThumb->cache_filename) === FALSE) {
+					// something went wrong
+					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
+					return;
+				}
+			}
+			return $response->write(
+				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
+			)->withHeader('Content-Type', 'image/jpeg');
+		} catch(\Exception $e) {
+			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
+			return;
+		}
+	}
+
+	# TODO: read phpThumbSettings from config
+	public function getPhpThumb() {
+		$phpThumb = new \phpThumb();
+		#$phpThumb->resetObject();
+		$phpThumb->setParameter('config_disable_debug', FALSE);
+		$phpThumb->setParameter('config_document_root', APP_ROOT);
+		
+		#$phpThumb->setParameter('config_high_security_enabled', TRUE);
+		
+		$phpThumb->setParameter('config_imagemagick_path', '/usr/bin/convert');
+		$phpThumb->setParameter('config_allow_src_above_docroot', true);
+		
+		$phpThumb->setParameter('config_cache_directory', APP_ROOT .'localdata/cache');
+		$phpThumb->setParameter('config_temp_directory',  APP_ROOT .'localdata/cache');
+		$phpThumb->setParameter('config_cache_prefix', 'phpThumb_cache');
+		#$phpThumb->setParameter('config_cache_force_passthru', FALSE);
+		#$phpThumb->setParameter('config_cache_maxage', NULL);
+		#$phpThumb->setParameter('config_cache_maxsize', NULL);
+		#$phpThumb->setParameter('config_cache_maxfile', NULL);
+		$phpThumb->setParameter('config_cache_directory_depth', 3);
+		$phpThumb->setParameter('config_file_create_mask', octdec($this->__get('conf')['config']['fileCreateMask']));
+		$phpThumb->setParameter('config_dir_create_mask', octdec($this->__get('conf')['config']['dirCreateMask']));
+		return $phpThumb;
 	}
 }

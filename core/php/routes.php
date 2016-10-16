@@ -24,6 +24,8 @@
 #$app->get('/', 'Slimpd\Modules\images\Controller:index');#->setName('homepage');
 
 
-	$app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller:fallback');#->name('imagefallback-' .$imagesize);
+$app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller:fallback')->setName('imagefallback');
+$app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controller:album')->setName('imagealbum');
+$app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');#->name('imagefallback-' .$imagesize);
 
 #}

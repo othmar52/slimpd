@@ -179,7 +179,7 @@ abstract class AbstractModel {
 		return $database->query($query)->fetch_assoc()['itemsTotal'];
 	}
 
-	public static function getInstanceByAttributes(array $attributeArray, $orderBy = FALSE) {
+	public static function getInstanceByAttributes($database, array $attributeArray, $orderBy = FALSE) {
 		$instance = NULL;
 		if(is_array($attributeArray) === FALSE) {
 			return $instance;
@@ -188,7 +188,7 @@ abstract class AbstractModel {
 			return $instance;
 		}
 		
-		$database = \Slim\Slim::getInstance()->db;
+		#$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';

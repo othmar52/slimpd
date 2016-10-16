@@ -34,55 +34,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $error;
 	
 	public static $tableName = 'bitmap';
-	
-	public function dump($preConf, $app) {
-		$imgDirecoryPrefix = ($this->getTrackUid())
-			? APP_ROOT
-			: $app->config['mpd']['musicdir'];
-			
-		$phpThumb = self::getPhpThumb();	
-		$phpThumb->setSourceFilename($imgDirecoryPrefix . $this->getRelPath());
-		$phpThumb->setParameter('config_output_format', 'jpg');
-		
-		switch($preConf) {
-			case 35:
-			case 50:
-			case 100:
-			case 300:
-			case 1000:
-				$phpThumb->setParameter('w', $preConf);
-				break;
-			default:
-				$phpThumb->setParameter('w', 300);
-		}
-		$phpThumb->SetCacheFilename();
-		
-		try {
-			// check if we already have a cached image
-			if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {
-				$phpThumb->GenerateThumbnail();
-				\phpthumb_functions::EnsureDirectoryExists(
-					dirname($phpThumb->cache_filename),
-					octdec($app->config['config']['dirCreateMask'])
-				);
-				$phpThumb->RenderToFile($phpThumb->cache_filename);
-				if(is_file($phpThumb->cache_filename) === FALSE) {
-					// something went wrong
-					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
-					return;
-				}
-			}
-			$newResponse = $app->response();
-			$newResponse->body(
-				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
-			);
-			$newResponse->headers->set('Content-Type', 'image/jpeg');
-			return $newResponse;
-		} catch(\Exception $e) {
-			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
-			return;
-		}
-	}
 
 	public function searchUidBeforeInsert() {
 		if($this->getUid() > 0) {
@@ -232,30 +183,4 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	public function getError() {
 		return $this->error;
 	}
-	
-	# TODO: read phpThumbSettings from config
-	public static function getPhpThumb() {
-		$phpThumb = new \phpThumb();
-		#$phpThumb->resetObject();
-		$phpThumb->setParameter('config_disable_debug', FALSE);
-		$phpThumb->setParameter('config_document_root', APP_ROOT);
-		
-		#$phpThumb->setParameter('config_high_security_enabled', TRUE);
-		
-		$phpThumb->setParameter('config_imagemagick_path', '/usr/bin/convert');
-		$phpThumb->setParameter('config_allow_src_above_docroot', true);
-		
-		$phpThumb->setParameter('config_cache_directory', APP_ROOT .'localdata/cache');
-		$phpThumb->setParameter('config_temp_directory',  APP_ROOT .'localdata/cache');
-		$phpThumb->setParameter('config_cache_prefix', 'phpThumb_cache');
-		#$phpThumb->setParameter('config_cache_force_passthru', FALSE);
-		#$phpThumb->setParameter('config_cache_maxage', NULL);
-		#$phpThumb->setParameter('config_cache_maxsize', NULL);
-		#$phpThumb->setParameter('config_cache_maxfile', NULL);
-		$phpThumb->setParameter('config_cache_directory_depth', 3);
-		$phpThumb->setParameter('config_file_create_mask', octdec(\Slim\Slim::getInstance()->config['config']['fileCreateMask']));
-		$phpThumb->setParameter('config_dir_create_mask', octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask']));
-		return $phpThumb;
-	}
-	
 }

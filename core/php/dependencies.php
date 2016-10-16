@@ -86,7 +86,7 @@ $container['view'] = function ($cont) {
 };
 
 $container['db'] = function ($cont) { 
-    $settings = $c->get('conf');
+	$settings = $cont->get('conf');
 	#var_dump($settings['database']);die;
 	#var_dump($settings); die();
 	try {
