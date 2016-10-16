@@ -103,8 +103,10 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
 	#die('sgsgsgd');
     $name = $request->getAttribute('name');
     #$response->getBody()->write("Hello, $name");
-	
+	#echo "<pre>" . print_r($args,1) . "</pre>";die;
+	$args['action'] = 'showplaylist';
 	$this->view->render($response, 'surrounding.htm', $args);
+	#$this->view->render($response, 'teste.htm', $args);
 	
 
     return $response;

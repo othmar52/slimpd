@@ -49,7 +49,7 @@ $container['conf'] = function () {
 
 // Twig
 $container['view'] = function ($cont) {
-    $settings = $cont->get('settings');
+    $conf = $cont->get('conf');
 	
     #$view = new Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
 	$view = new Slim\Views\Twig('core/templates', [
@@ -68,6 +68,16 @@ $container['view'] = function ($cont) {
     	$cont->get('request')->getUri())
 	);
 	$view->addExtension(new \Slimpd\libs\twig\SlimpdTwigExtension\SlimpdTwigExtension($cont));
+	
+	$globalTwigVars = [
+		'playerMode' => (($cont->cookie->get('playerMode') === 'mpd') ? 'mpd' : 'local'),
+		'nosurrounding' => isset($_REQUEST['nosurrounding']),
+		'root' => $conf['config']['absRefPrefix'],
+		'fileroot' => $conf['config']['absFilePrefix']
+	];
+	foreach($globalTwigVars as $varName => $value) {
+		$view->getEnvironment()->addGlobal($varName, $value);
+	}
     
 
     return $view;
