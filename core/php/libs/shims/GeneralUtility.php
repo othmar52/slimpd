@@ -112,7 +112,7 @@ function removeStars($searchterm) {
 
 
 /**
- * @return string : empty string or get-parameter-string which is needed for Slim redirects 
+ * @return string : empty string or get-parameter-string which is needed for Slim redirects
  */
 function getNoSurSuffix($append, $prefixQuestionmark = TRUE) {
 	return ($append === TRUE)

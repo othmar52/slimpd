@@ -45,9 +45,7 @@ class Controller extends \Slimpd\BaseController {
 	
 	public function dircontent(Request $request, Response $response, $args) {
 		$args['action'] = 'filebrowser';
-	
 		$fileBrowser = $this->filebrowser;
-		#var_dump($this->filebrowser); die;
 		$fileBrowser->itemsPerPage = $this->conf['filebrowser']['max-items'];
 		$fileBrowser->currentPage = intval($request->getParam('page'));
 		$fileBrowser->currentPage = ($fileBrowser->currentPage === 0) ? 1 : $fileBrowser->currentPage;
@@ -89,7 +87,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['subDirectories'] = $fileBrowser->subDirectories;
 		$args['files'] = $fileBrowser->files;
 		$args['filter'] = $fileBrowser->filter;
-		
+
 		switch($fileBrowser->filter) {
 			case 'dirs':
 				$totalFilteredItems = $fileBrowser->subDirectories['total'];
@@ -122,120 +120,23 @@ class Controller extends \Slimpd\BaseController {
 		$args['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
+	}
+
+	public function widgetDirectory(Request $request, Response $response, $args) {
+		$fileBrowser = $this->filebrowser;
+		$fileBrowser->getDirectoryContent($args['itemParams']);
+		$args['directory'] = $fileBrowser->directory;
+		$args['breadcrumb'] = $fileBrowser->breadcrumb;
+		$args['subDirectories'] = $fileBrowser->subDirectories;
+		$args['files'] = $fileBrowser->files;
 		
+		// try to fetch album entry for this directory
+		$args['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
+			$this->db,
+			array('relPathHash' => getFilePathHash($fileBrowser->directory))
+		);
 	
-	}
-
-	public function track(Request $request, Response $response, $args) {
-		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$bitmap = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			$this->__get('db'),
-			[ 'trackUid' => $args['itemUid'] ],
-			$this->weightOrderBy
-		);
-		if($bitmap !== NULL) {
-			return $this->dump($bitmap, $args['imagesize'], $response);
-		}
-		$track = \Slimpd\Models\Track::getInstanceByAttributes($this->__get('db'), ['uid' => $args['itemUid'] ]);
-		$uri = $request->getUri()->withPath(
-			$this->router->pathFor(
-				'imagealbum',
-				['imagesize' => $args['imagesize'], 'itemUid' => $track->getAlbumUid() ]
-			)
-		);
-		return $response->withRedirect($uri, 403);
-	}
-
-	public function fallback(Request $request, Response $response, $args) {
-		if(in_array($args['imagesize'], $this->imageSizes) === FALSE) {
-			$notFoundHandler = $this->__get('notFoundHandler');
-			return $notFoundHandler($request->withAttribute('message', 'not found'), $response);
-		}
-		$playerMode = $this->view->getEnvironment()->getGlobals()['playerMode'];
-
-		$args['color'] = $this->conf['images']['noimage'][$playerMode]['color'];
-		$args['backgroundcolor'] = $this->conf['images']['noimage'][$playerMode]['backgroundcolor'];
-
-		switch($args['type']) {
-			case 'artist':    $template = 'svg/icon-artist.svg'; break;
-			case 'genre':     $template = 'svg/icon-genre.svg'; break;
-			case 'noresults': $template = 'svg/icon-noresults.svg'; break;
-			case 'broken':    $template = 'svg/icon-broken-image.svg'; break;
-			default:          $template = 'svg/icon-album.svg';
-		}
-
-		$this->view->render($response, $template, $args);
-		return $response->withHeader('Content-Type', 'image/svg+xml');
-	}
-
-	public function dump(\Slimpd\Models\Bitmap $bitmap, $imageSize, &$response) {
-		$imgDirecoryPrefix = ($bitmap->getTrackUid())
-			? APP_ROOT
-			: $this->__get('conf')['mpd']['musicdir'];
-			
-		$phpThumb = $this->getPhpThumb();	
-		$phpThumb->setSourceFilename($imgDirecoryPrefix . $bitmap->getRelPath());
-		$phpThumb->setParameter('config_output_format', 'jpg');
-		
-		switch($imageSize) {
-			case 35:
-			case 50:
-			case 100:
-			case 300:
-			case 1000:
-				$phpThumb->setParameter('w', $imageSize);
-				break;
-			default:
-				$phpThumb->setParameter('w', 300);
-		}
-		$phpThumb->SetCacheFilename();
-		
-		try {
-			// check if we already have a cached image
-			if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {
-				$phpThumb->GenerateThumbnail();
-				\phpthumb_functions::EnsureDirectoryExists(
-					dirname($phpThumb->cache_filename),
-					octdec($app->config['config']['dirCreateMask'])
-				);
-				$phpThumb->RenderToFile($phpThumb->cache_filename);
-				if(is_file($phpThumb->cache_filename) === FALSE) {
-					// something went wrong
-					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
-					return;
-				}
-			}
-			return $response->write(
-				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
-			)->withHeader('Content-Type', 'image/jpeg');
-		} catch(\Exception $e) {
-			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
-			return;
-		}
-	}
-
-	# TODO: read phpThumbSettings from config
-	public function getPhpThumb() {
-		$phpThumb = new \phpThumb();
-		#$phpThumb->resetObject();
-		$phpThumb->setParameter('config_disable_debug', FALSE);
-		$phpThumb->setParameter('config_document_root', APP_ROOT);
-		
-		#$phpThumb->setParameter('config_high_security_enabled', TRUE);
-		
-		$phpThumb->setParameter('config_imagemagick_path', '/usr/bin/convert');
-		$phpThumb->setParameter('config_allow_src_above_docroot', true);
-		
-		$phpThumb->setParameter('config_cache_directory', APP_ROOT .'localdata/cache');
-		$phpThumb->setParameter('config_temp_directory',  APP_ROOT .'localdata/cache');
-		$phpThumb->setParameter('config_cache_prefix', 'phpThumb_cache');
-		#$phpThumb->setParameter('config_cache_force_passthru', FALSE);
-		#$phpThumb->setParameter('config_cache_maxage', NULL);
-		#$phpThumb->setParameter('config_cache_maxsize', NULL);
-		#$phpThumb->setParameter('config_cache_maxfile', NULL);
-		$phpThumb->setParameter('config_cache_directory_depth', 3);
-		$phpThumb->setParameter('config_file_create_mask', octdec($this->__get('conf')['config']['fileCreateMask']));
-		$phpThumb->setParameter('config_dir_create_mask', octdec($this->__get('conf')['config']['dirCreateMask']));
-		return $phpThumb;
+		$this->view->render($response, 'modules/widget-directory.htm', $args);
+		return $response;
 	}
 }
