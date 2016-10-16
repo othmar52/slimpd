@@ -37,6 +37,7 @@ $container['conf'] = function () {
 	if(isset($_REQUEST['noCache']) === true) {
 		$noCache = true;
 	}
+	// TODO: force clearCache when we access route:systemcheck
 	#if(\Slim\Environment::getInstance()->offsetGet("PATH_INFO") === "/systemcheck") {
 	#	$noCache = true;
 	#}
@@ -69,6 +70,7 @@ $container['view'] = function ($cont) {
 	);
 	$view->addExtension(new \Slimpd\libs\twig\SlimpdTwigExtension\SlimpdTwigExtension($cont));
 	
+	// TODO: is this the right place for adding global template variables?
 	$globalTwigVars = [
 		'playerMode' => (($cont->cookie->get('playerMode') === 'mpd') ? 'mpd' : 'local'),
 		'nosurrounding' => isset($_REQUEST['nosurrounding']),
@@ -146,11 +148,12 @@ $container['logger'] = function ($c) {
 
 $container['errorHandler'] = function ($cont) {
     return function ($request, $response, $exception) use ($cont) {
+    	var_dump($exception->getMessage());
         return $cont['response']->withStatus(500)
                              ->withHeader('Content-Type', 'text/html')
                              ->write('Something went wrong!!!');
     };
-	// TODO refacturing of old implementation
+	// TODO refacturing of old (slim-v2) implementation
 	/*
 	$app->error(function(\Exception $e) use ($app, $vars){
 	$vars['action'] = 'error';
@@ -171,7 +174,7 @@ $container['notFoundHandler'] = function ($cont) {
 	return function ($request, $response) use ($cont) { 
 		return $cont['view']->render($response, 'errors/404.twig')->withStatus(404);
 	};
-	// TODO refacturing of old implementation
+	// TODO refacturing of old (slim-v2) implementation
 	/*
 	// use 404 not found as a search in case we don't have a slash in uri
 	$app->notFound(function() use ($app, $vars){

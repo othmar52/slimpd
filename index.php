@@ -52,44 +52,18 @@ $app = new \Slim\App();
 // Set up dependencies
 require APP_ROOT . 'core/php/dependencies.php';
 
+// Register middleware
+require APP_ROOT . 'core/php/middleware.php';
+
+// Register routes
+require APP_ROOT . 'core/php/routes.php';
 
 
-// LOAD MODULES
-call_user_func(function() use ($app) {
-	$path = APP_ROOT . 'core' . DS . 'php' . DS . 'Modules' . DS;
-	foreach (scandir($path) as $dir) {
-		// suppress warning with "@" and avoid tons of is_file()-checks
-		#include_once($path . $dir . DS . 'class.php');
-	}
-});
-
-
-$container = $app->getContainer();
-
-
-// TODO: where to set variables for all twig templates?
-/*
-$config['current_url']  = rtrim($container->request->getRequestTarget(), '/');
+#$config['current_url']  = rtrim($container->request->getRequestTarget(), '/');
 # TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
-$config['playerMode'] = ($container->cookie->get('playerMode') === 'mpd') ? 'mpd' : 'local';
-$config['nosurrounding'] = isset($_REQUEST['nosurrounding']);
-$config['root'] = $config['config']['absRefPrefix'];
-$config['fileroot'] = $config['config']['absFilePrefix'];
-$app->config = $config;
-$vars = $config;
-*/
 #$app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
 
-
-// LOAD CONTROLLERS
-#call_user_func(function() use ($app, $vars) {
-#	$path = APP_ROOT . 'core' . DS . 'php' . DS . 'Modules' . DS;
-#	foreach (scandir($path) as $dir) {
-#		// suppress warning with "@" and avoid tons of is_file()-checks
-#		#@include_once($path . $dir . DS . 'controller.php');
-#	}
-#});
-
+/*
 // DEFINE GET/POST routes (also check for .gitignored local-routes)
 foreach(array('get', 'post') as $method) {
 	foreach(array('', '_local') as $local) {
@@ -98,7 +72,7 @@ foreach(array('get', 'post') as $method) {
 		}
 	}
 }
-
+*/
 $app->get('/hello/{name}', function (Request $request, Response $response, $args) {
 	#die('sgsgsgd');
     $name = $request->getAttribute('name');
