@@ -30,7 +30,8 @@ class Localization {
 	
 	public static function str($itemkey, $vars = array()) {
 		$checkLanguages = array(
-			\Slim\Slim::getInstance()->config['config']['langkey'],
+			// TODO: how to access configured language?
+			'de',#\Slim\Slim::getInstance()->config['config']['langkey'],
 			'en' // fallback language
 		);
 		foreach($checkLanguages as $langkey) {

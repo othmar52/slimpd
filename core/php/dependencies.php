@@ -51,11 +51,24 @@ $container['conf'] = function () {
 $container['view'] = function ($cont) {
     $settings = $cont->get('settings');
 	
-    $view = new Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
+    #$view = new Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
+	$view = new Slim\Views\Twig('core/templates', [
+ #'cache' => 'localdata/cache',
+ 'debug' => true,
+ #'auto_reload' => true,
+ ]);
 
+	#$view->parserExtensions = array(
+    #new \Slim\Views\TwigExtension(),
+    
     // Add extensions
-    $view->addExtension(new Slim\Views\TwigExtension($cont->get('router'), $cont->get('request')->getUri()));
     $view->addExtension(new Twig_Extension_Debug());
+    $view->addExtension(new \Slim\Views\TwigExtension(
+    	$cont->get('router'),
+    	$cont->get('request')->getUri())
+	);
+	$view->addExtension(new \Slimpd\libs\twig\SlimpdTwigExtension\SlimpdTwigExtension($cont));
+    
 
     return $view;
 };
@@ -110,11 +123,22 @@ $container['cookie'] = function($cont){
 // -----------------------------------------------------------------------------
 // Service factories
 // -----------------------------------------------------------------------------
+
+// monolog
+$container['logger'] = function ($c) {
+  #$settings = $c->get('settings');
+  $logger = new Monolog\Logger('Slimpd');
+  $logger->pushProcessor(new Monolog\Processor\UidProcessor());
+  $logger->pushHandler(new Monolog\Handler\StreamHandler('localdata/cache/mono.log', Monolog\Logger::DEBUG));
+  return $logger;
+};
+
+
 $container['errorHandler'] = function ($cont) {
     return function ($request, $response, $exception) use ($cont) {
         return $cont['response']->withStatus(500)
                              ->withHeader('Content-Type', 'text/html')
-                             ->write('Something went wrong!');
+                             ->write('Something went wrong!!!');
     };
 	// TODO refacturing of old implementation
 	/*

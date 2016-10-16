@@ -1,4 +1,5 @@
 <?php
+namespace Slimpd\libs\twig\SlimpdTwigExtension;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -16,7 +17,17 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInterface {
+class SlimpdTwigExtension extends \Twig_Extension {
+    /**
+     * @var \Slim\Interfaces\RouterInterface
+     */
+    private $container;
+    
+    public function __construct($container)
+    {
+        $this->container = $container;
+	}
+
 	/**
 	 * Name of this extension.
 	 *
@@ -28,7 +39,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 
 	public function getFunctions() {
 		return array(
-			new Twig_SimpleFunction('getRandomInstance', array($this, 'getRandomInstance'))
+			new \Twig_SimpleFunction('getRandomInstance', array($this, 'getRandomInstance'))
 		);
 	}
 
@@ -109,7 +120,7 @@ class Slimpd_Twig_Extension extends Twig_Extension implements Twig_ExtensionInte
 			}),
 
 			new \Twig_SimpleFilter('ll', function ($hans = array(), $vars = array()) {
-				return \Slim\Slim::getInstance()->ll->str($hans, $vars);
+				return $this->container->ll->str($hans, $vars);
 			}),
 
 			new \Twig_SimpleFilter('getType', function ($var) {

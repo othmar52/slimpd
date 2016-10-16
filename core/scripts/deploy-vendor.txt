@@ -29,8 +29,6 @@ ricbra/php-discogs-api/lib/Discogs
 ricbra/php-discogs-api/LICENSE
 ricbra/php-discogs-api/resources/service.php
 
-twig/twig/lib/Twig
-twig/twig/LICENSE
 
 kriswallsmith/assetic/src/
 
@@ -136,16 +134,20 @@ ksubileau/color-thief-php/lib
 
 
 slim/slim/Slim
-slim/views/SmartyPlugins
-slim/views/Smarty.php
-slim/views/Twig.php
-slim/views/TwigExtension.php
 slim/slim/LICENSE.md
 
 slim/twig-view/src
 slim/twig-view/LICENSE.md
 
+slim/flash/src
+slim/flash/LICENSE.md
 
+twig/twig/lib
+twig/twig/test/bootstrap.php
+twig/twig/LICENSE
+
+monolog/monolog/src
+monolog/monolog/LICENSE
 
 nikic/fast-route/src
 nikic/fast-route/LICENSE

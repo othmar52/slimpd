@@ -19,6 +19,7 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
             'Symfony\\Component\\Process\\' => 26,
             'Slimpd\\' => 7,
             'Slim\\Views\\' => 11,
+            'Slim\\Flash\\' => 11,
             'Slim\\' => 5,
         ),
         'R' => 
@@ -27,7 +28,12 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
+        ),
+        'M' => 
+        array (
+            'Monolog\\' => 8,
         ),
         'I' => 
         array (
@@ -59,8 +65,11 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         ),
         'Slim\\Views\\' => 
         array (
-            0 => __DIR__ . '/..' . '/slim/views',
-            1 => __DIR__ . '/..' . '/slim/twig-view/src',
+            0 => __DIR__ . '/..' . '/slim/twig-view/src',
+        ),
+        'Slim\\Flash\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/flash/src',
         ),
         'Slim\\' => 
         array (
@@ -70,9 +79,17 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Monolog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
         'Interop\\Container\\' => 
         array (

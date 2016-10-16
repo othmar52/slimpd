@@ -99,10 +99,13 @@ foreach(array('get', 'post') as $method) {
 	}
 }
 
-$app->get('/hello/{name}', function (Request $request, Response $response) {
-	die('sgsgsgd');
+$app->get('/hello/{name}', function (Request $request, Response $response, $args) {
+	#die('sgsgsgd');
     $name = $request->getAttribute('name');
-    $response->getBody()->write("Hello, $name");
+    #$response->getBody()->write("Hello, $name");
+	
+	$this->view->render($response, 'surrounding.htm', $args);
+	
 
     return $response;
 });
