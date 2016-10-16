@@ -3,24 +3,24 @@
 	sliMpd.conf = {
 		color: {
 			mpd: {
-				bodyclass: 'spotcol-{{ spotcolor.mpd }}',
-				primary: '{{ colors[ spotcolor.mpd ]['1st'] }}',
-				secondary: '{{ colors[ spotcolor.mpd ]['2nd'] }}',
-				favicon: '{{ colors[ spotcolor.mpd ]['fav'] }}',
+				bodyclass: 'spotcol-{{ config.spotcolor.mpd }}',
+				primary: '{{ config.colors[ config.spotcolor.mpd ]['1st'] }}',
+				secondary: '{{ config.colors[ config.spotcolor.mpd ]['2nd'] }}',
+				favicon: '{{ config.colors[ config.spotcolor.mpd ]['fav'] }}',
 			},
 			local: {
-				bodyclass: 'spotcol-{{ spotcolor.local }}',
-				primary: '{{ colors[ spotcolor.local ]['1st'] }}',
-				secondary: '{{ colors[ spotcolor.local ]['2nd'] }}',
-				favicon: '{{ colors[ spotcolor.local ]['fav'] }}',
+				bodyclass: 'spotcol-{{ config.spotcolor.local }}',
+				primary: '{{ config.colors[ config.spotcolor.local ]['1st'] }}',
+				secondary: '{{ config.colors[ config.spotcolor.local ]['2nd'] }}',
+				favicon: '{{ config.colors[ config.spotcolor.local ]['fav'] }}',
 			}
 		},
 		waveform: {
-			barwidth: {{ waveform.barwidth }},
-			gapwidth: {{ waveform.gapwidth }},
-			mirrored: {{ waveform.mirrored }}
+			barwidth: {{ config.waveform.barwidth }},
+			gapwidth: {{ config.waveform.gapwidth }},
+			mirrored: {{ config.waveform.mirrored }}
 		},
-		absRefPrefix: '{{ config.absRefPrefix }}',
-		absFilePrefix: '{{ config.absFilePrefix }}'
+		absRefPrefix: '{{ config.config.absRefPrefix }}',
+		absFilePrefix: '{{ config.config.absFilePrefix }}'
 	};
 </script>

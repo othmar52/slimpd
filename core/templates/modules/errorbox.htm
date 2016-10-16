@@ -1,7 +1,10 @@
-{% if flash.error %}
+{% for msg in flash.getMessages('error') %}
+{# TODO: slimv3 does not support flashNow - so the messages comes very late #}
 <div class="alert alert-danger" role="alert">
   <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  
   <span class="sr-only">Error:</span>
-  {{ flash.error }}
-</div>
-{% endif %}
+        {{ msg.0 }}
+    </div>
+{% endfor %}
+

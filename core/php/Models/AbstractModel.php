@@ -524,8 +524,8 @@ abstract class AbstractModel {
 		return $result->fetch_assoc()['itemsTotal'];
 	}
 	
-	public static function getRandomInstance() {
-		$database = \Slim\Slim::getInstance()->db;
+	public static function getRandomInstance($database) {
+		#$database = \Slim\Slim::getInstance()->db;
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
@@ -539,7 +539,7 @@ abstract class AbstractModel {
 					"SELECT uid FROM ". self::getTableName() ." WHERE uid = " . mt_rand(1, $highestUid)
 				)->fetch_assoc()['uid'];
 				if($try !== NULL) {
-					return self::getInstanceByAttributes( ['uid' => $try] );
+					return self::getInstanceByAttributes($database, ['uid' => $try] );
 				}
 				if($counter > $maxAttempts) {
 					throw new \Exception("OOPZ! couldn't fetch random instance of " . self::getTableName(), 1);

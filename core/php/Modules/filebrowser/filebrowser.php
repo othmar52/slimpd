@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd;
+namespace Slimpd\Modules\filebrowser;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,7 +18,7 @@ namespace Slimpd;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class filebrowser {
-	
+	private $container;
 	public $directory;
 	public $base;
 	public $subDirectories = array(
@@ -40,6 +40,10 @@ class filebrowser {
 	public $currentPage = 1;
 	public $itemsPerPage = 20;
 	public $filter = "";
+	
+	public function __construct($container) {
+		$this->container = $container;
+	}
 
 	public function getDirectoryContent($path, $ignoreLimit = FALSE, $systemdir = FALSE) {
 		$path = $this->checkDirectoryAccess($path, $systemdir);
@@ -123,36 +127,35 @@ class filebrowser {
 	}
 
 	private function getExtMapping() {
-		$app = \Slim\Slim::getInstance();
 		$extTypes = array();
-		foreach($app->config["musicfiles"]["ext"] as $ext) {
+		foreach($this->container->conf["musicfiles"]["ext"] as $ext) {
 			$extTypes[$ext] = "music";
 		}
-		foreach($app->config["playlists"]["ext"] as $ext) {
+		foreach($this->container->conf["playlists"]["ext"] as $ext) {
 			$extTypes[$ext] = "playlist";
 		}
-		foreach($app->config["infofiles"]["ext"] as $ext) {
+		foreach($this->container->conf["infofiles"]["ext"] as $ext) {
 			$extTypes[$ext] = "info";
 		}
-		foreach($app->config["images"]["ext"] as $ext) {
+		foreach($this->container->conf["images"]["ext"] as $ext) {
 			$extTypes[$ext] = "image";
 		}
 		return $extTypes;
 	}
 
 	private function checkDirectoryAccess($path, $systemdir) {
-		$app = \Slim\Slim::getInstance();
-		if($app->config["mpd"]["musicdir"] === "") {
+		
+		if($this->container->conf["mpd"]["musicdir"] === "") {
 			$app->flashNow("error", $app->ll->str("error.mpd.conf.musicdir"));
 			return FALSE;
 		}
 
 		$path = appendTrailingSlash($path);
 
-		$base = $app->config["mpd"]["musicdir"];
+		$base = $this->container->conf["mpd"]["musicdir"];
 		$path = ($path === $base) ? "" : $path;
 		$return = ["base" => $base, "dir" => $path];
-		$realpath = getFileRealPath($path) . DS;
+		$realpath = getFileRealPath($path, $this->container->conf) . DS;
 
 		// avoid path disclosure outside relevant directories
 		if($realpath === FALSE && $systemdir === FALSE) {
@@ -165,7 +168,7 @@ class filebrowser {
 			$realpath = realpath(APP_ROOT . $path) . DS;
 		}
 
-		if(isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
+		if(isInAllowedPath($path, $this->container->conf) === FALSE && $systemdir === FALSE) {
 			// TODO: remove this error message "outsiderealpath"! invaliddir should be enough
 			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
 			$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$realpath]));
@@ -192,17 +195,17 @@ class filebrowser {
 	 * @return object
 	 */
 	public function getNextDirectoryContent($path) {
-		$app = \Slim\Slim::getInstance();
+		#$app = \Slim\Slim::getInstance();
 		
 		// make sure we have directory separator as last char
 		$path .= (substr($path,-1) !== DS) ? DS : "";
 		
 		// fetch content of the parent directory
-		$parentDirectory = new \Slimpd\filebrowser();
+		$parentDirectory = new self($this->container);
 		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
 		if($parentDirectory->directory === "./") {
 			$parentDirectory = new \Slimpd\filebrowser();
-			$parentDirectory->getDirectoryContent($app->config["mpd"]["musicdir"], TRUE);
+			$parentDirectory->getDirectoryContent($this->container->conf["mpd"]["musicdir"], TRUE);
 		}
 		
 		
@@ -217,7 +220,7 @@ class filebrowser {
 				$found = TRUE;
 			}
 		}
-		$app->flashNow("error", $app->ll->str("filebrowser.nonextdir"));
+		$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.nonextdir"));
 		return $this->getDirectoryContent($path);
 	}
 
@@ -227,13 +230,13 @@ class filebrowser {
 	 * @return object
 	 */
 	 public function getPreviousDirectoryContent($path) {
-		$app = \Slim\Slim::getInstance();
+		#$app = \Slim\Slim::getInstance();
 		$path .= (substr($path,-1) !== DS) ? DS : "";
-		$parentDirectory = new \Slimpd\filebrowser();
+		$parentDirectory = new self($this->container);
 		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
 		if($parentDirectory->directory === "./") {
 			$parentDirectory = new \Slimpd\filebrowser();
-			$parentDirectory->getDirectoryContent($app->config["mpd"]["musicdir"], TRUE);
+			$parentDirectory->getDirectoryContent($this->container->conf["mpd"]["musicdir"], TRUE);
 		}
 		
 		$prev = 0;
@@ -248,7 +251,7 @@ class filebrowser {
 			}
 			$prev = $subDir->getRelPath();
 		}
-		$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
+		$app->flashNow("error", $this->ll->str("filebrowser.noprevdir"));
 		return $this->getDirectoryContent($path);
 	}
 

@@ -75,7 +75,9 @@ $container['view'] = function ($cont) {
 		'playerMode' => (($cont->cookie->get('playerMode') === 'mpd') ? 'mpd' : 'local'),
 		'nosurrounding' => isset($_REQUEST['nosurrounding']),
 		'root' => $conf['config']['absRefPrefix'],
-		'fileroot' => $conf['config']['absFilePrefix']
+		'fileroot' => $conf['config']['absFilePrefix'],
+		'config' => $conf,
+		'flash' => $cont['flash']
 	];
 	foreach($globalTwigVars as $varName => $value) {
 		$view->getEnvironment()->addGlobal($varName, $value);
@@ -115,6 +117,13 @@ $container['db'] = function ($cont) {
 $container['batcher'] = function () {
 	return new \Slimpd\Modules\database\Batcher();
 };
+
+
+// Filebrowser
+$container['filebrowser'] = function ($cont) {
+	return new \Slimpd\Modules\filebrowser\filebrowser($cont);
+};
+
 
 // Imageweighter
 $container['imageweighter'] = function () {

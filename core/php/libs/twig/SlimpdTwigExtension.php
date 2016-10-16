@@ -49,7 +49,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
 			if(class_exists($classPath) === FALSE) {
 				return NULL;
 			}
-			return $classPath::getRandomInstance();
+			return $classPath::getRandomInstance($this->container->db);
 		} catch(\Exception $e) {
 			\Slim\Slim::getInstance()->response->redirect(\Slim\Slim::getInstance()->config['root'] . 'systemcheck?dberror');
 		}

@@ -22,8 +22,8 @@ function getFileExt($filePath, $toLower = TRUE) {
 	return ($toLower === TRUE) ? strtolower($ext) : $ext;
 }
 
-function getFileRealPath($pathString) {
-	$mpdConf = \Slim\Slim::getInstance()->config['mpd'];
+function getFileRealPath($pathString, $conf) {
+	$mpdConf = $conf['mpd'];
 	foreach(["alternative_musicdir", "musicdir"] as $confName) {
 		if(file_exists($mpdConf[$confName] . $pathString) === TRUE) {
 			return realpath($mpdConf[$confName] . $pathString);
@@ -35,12 +35,12 @@ function getFileRealPath($pathString) {
 /**
  * checks if file path or directory path is within allowed direcories
  */
-function isInAllowedPath($itemPath) {
-	if(\Slim\Slim::getInstance()->config['filebrowser']['restrict-to-musicdir'] === "0") {
+function isInAllowedPath($itemPath, $conf) {
+	if($conf['filebrowser']['restrict-to-musicdir'] === "0") {
 		return TRUE;
 	}
-	$mpdConf = \Slim\Slim::getInstance()->config['mpd'];
-	$realPath = getFileRealPath($itemPath);
+	$mpdConf = $conf['mpd'];
+	$realPath = getFileRealPath($itemPath, $conf);
 	foreach(["alternative_musicdir", "musicdir"] as $confName) {
 		if(stripos($realPath, $mpdConf[$confName]) === 0) {
 			return TRUE;

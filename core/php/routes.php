@@ -23,6 +23,8 @@
 #foreach (array(35, 50,100,300,1000) as $imagesize) {
 #$app->get('/', 'Slimpd\Modules\images\Controller:index');#->setName('homepage');
 
+$app->get('/filebrowser', 'Slimpd\Modules\filebrowser\Controller:index')->setName('filebrowser');
+$app->get('/filebrowser/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:dircontent');
 
 $app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller:fallback')->setName('imagefallback');
 $app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controller:album')->setName('imagealbum');
