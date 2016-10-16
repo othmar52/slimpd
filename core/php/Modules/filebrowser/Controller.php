@@ -70,11 +70,14 @@ class Controller extends \Slimpd\BaseController {
 				$fileBrowser->getPreviousDirectoryContent($args['itemParams']);
 				break;
 			case 'up':
-				$fileBrowser->getDirectoryContent(dirname($args['itemParams']));
-				if($fileBrowser->directory === './') {
-					$app->response->redirect($app->urlFor('filebrowser') . getNoSurSuffix());
-					return;
+				$parentPath = dirname($args['itemParams']);
+				if($parentPath === '.') {
+					$uri = $request->getUri()->withPath(
+						$this->router->pathFor('filebrowser')
+					)->getPath() . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
+					return $response->withRedirect($uri, 403);
 				}
+				$fileBrowser->getDirectoryContent($parentPath);
 				break;
 			default:
 				$fileBrowser->getDirectoryContent($args['itemParams']);

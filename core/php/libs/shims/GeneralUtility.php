@@ -114,8 +114,8 @@ function removeStars($searchterm) {
 /**
  * @return string : empty string or get-parameter-string which is needed for Slim redirects 
  */
-function getNoSurSuffix($prefixQuestionmark = TRUE) {
-	return (\Slim\Slim::getInstance()->request->get("nosurrounding") == 1)
+function getNoSurSuffix($append, $prefixQuestionmark = TRUE) {
+	return ($append === TRUE)
 		? (($prefixQuestionmark)? "?":"") . "nosurrounding=1"
 		: "";
 }

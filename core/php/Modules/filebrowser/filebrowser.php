@@ -49,6 +49,7 @@ class filebrowser {
 		$path = $this->checkDirectoryAccess($path, $systemdir);
 
 		if($path === FALSE) {
+			die('sdgsdg is false');
 			return;
 		}
 		$dir = $path["dir"];
@@ -146,20 +147,22 @@ class filebrowser {
 	private function checkDirectoryAccess($path, $systemdir) {
 		
 		if($this->container->conf["mpd"]["musicdir"] === "") {
+			
 			$app->flashNow("error", $app->ll->str("error.mpd.conf.musicdir"));
 			return FALSE;
 		}
-
 		$path = appendTrailingSlash($path);
+		$realpath = getFileRealPath($path, $this->container->conf) . DS;
+		#var_dump($realpath, $this->container->conf);
 
 		$base = $this->container->conf["mpd"]["musicdir"];
-		$path = ($path === $base) ? "" : $path;
+		$path = ($realpath === $base) ? "" : $path;
 		$return = ["base" => $base, "dir" => $path];
-		$realpath = getFileRealPath($path, $this->container->conf) . DS;
+		
 
 		// avoid path disclosure outside relevant directories
 		if($realpath === FALSE && $systemdir === FALSE) {
-			$app->flashNow("error", $app->ll->str("filebrowser.realpathempty", [$base.$path]));
+			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.realpathempty", [$realpath]));
 			return FALSE;
 		}
 
@@ -167,17 +170,17 @@ class filebrowser {
 			$return['base'] = APP_ROOT;
 			$realpath = realpath(APP_ROOT . $path) . DS;
 		}
-
+		
 		if(isInAllowedPath($path, $this->container->conf) === FALSE && $systemdir === FALSE) {
 			// TODO: remove this error message "outsiderealpath"! invaliddir should be enough
 			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
-			$app->flashNow("error", $app->ll->str("filebrowser.invaliddir", [$realpath]));
+			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$realpath]));
 			return FALSE;
 		}
 
 		// check filesystem permission
 		if(is_readable($realpath) === FALSE) {
-			$app->flashNow("error", $app->ll->str("filebrowser.dirpermission", [$path]));
+			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.dirpermission", [$path]));
 			return FALSE;
 		}
 
@@ -188,31 +191,34 @@ class filebrowser {
 
 		return $return;
 	}
+	
+	private function getParentDirSelf($path) {
+		$parentPath = dirname($path);
+		$isSysDir = FALSE;
+		if($parentPath === ".") {
+			$parentPath = $this->container->conf["mpd"]["musicdir"];
+			$isSysDir = TRUE;
+		}
+		// fetch content of the parent directory
+		$parentDirectory = new self($this->container);
+		$parentDirectory->getDirectoryContent($parentPath, $isSysDir);
+		return $parentDirectory;
+	}
 
 	/**
 	 * get content of the next silblings directory
 	 * @param string $path: directorypath
 	 * @return object
 	 */
-	public function getNextDirectoryContent($path) {
-		#$app = \Slim\Slim::getInstance();
-		
+	public function getNextDirectoryContent($path) {		
 		// make sure we have directory separator as last char
-		$path .= (substr($path,-1) !== DS) ? DS : "";
-		
-		// fetch content of the parent directory
-		$parentDirectory = new self($this->container);
-		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
-		if($parentDirectory->directory === "./") {
-			$parentDirectory = new \Slimpd\filebrowser();
-			$parentDirectory->getDirectoryContent($this->container->conf["mpd"]["musicdir"], TRUE);
-		}
-		
-		
+		$path = appendTrailingSlash($path);
+		$parentDirectory = $this->getParentDirSelf($path);
+
 		// iterate over parentdirectories until we find the inputdirectory +1
 		$found = FALSE;
-		
 		foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
+			
 			if($found === TRUE) {
 				return $this->getDirectoryContent($subDir->getRelPath());
 			}
@@ -220,6 +226,7 @@ class filebrowser {
 				$found = TRUE;
 			}
 		}
+		// TODO: force message getting displayed immediately (currrently we need another request))
 		$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.nonextdir"));
 		return $this->getDirectoryContent($path);
 	}
@@ -230,28 +237,25 @@ class filebrowser {
 	 * @return object
 	 */
 	 public function getPreviousDirectoryContent($path) {
-		#$app = \Slim\Slim::getInstance();
-		$path .= (substr($path,-1) !== DS) ? DS : "";
-		$parentDirectory = new self($this->container);
-		$parentDirectory->getDirectoryContent(dirname($path), TRUE);
-		if($parentDirectory->directory === "./") {
-			$parentDirectory = new \Slimpd\filebrowser();
-			$parentDirectory->getDirectoryContent($this->container->conf["mpd"]["musicdir"], TRUE);
-		}
-		
+		// make sure we have directory separator as last char
+		$path = appendTrailingSlash($path);
+		$parentDirectory = $this->getParentDirSelf($path);
+
 		$prev = 0;
 		
 		foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
 			if($subDir->getRelPath()."/" === $path) {
 				if($prev === 0) {
-					$app->flashNow("error", $app->ll->str("filebrowser.noprevdir"));
+					// TODO: force message getting displayed immediately (currrently we need another request))
+					$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.noprevdir"));
 					return $this->getDirectoryContent($path);
 				}
 				return $this->getDirectoryContent($prev);
 			}
 			$prev = $subDir->getRelPath();
 		}
-		$app->flashNow("error", $this->ll->str("filebrowser.noprevdir"));
+		// TODO: force message getting displayed immediately (currrently we need another request))
+		$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.noprevdir"));
 		return $this->getDirectoryContent($path);
 	}
 
