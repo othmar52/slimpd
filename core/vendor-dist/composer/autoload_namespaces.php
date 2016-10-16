@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'Slim' => array($vendorDir . '/slim/slim'),
+    'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'OAuth\\Unit' => array($vendorDir . '/lusitanian/oauth/tests'),
     'OAuth' => array($vendorDir . '/lusitanian/oauth/src'),
     'JasonGrimes' => array($vendorDir . '/jasongrimes/paginator/src'),

@@ -38,6 +38,7 @@ class ConfigLoaderINI {
 		}
 
 		$configPath = $this->prepareFilePath($configPath);
+		#var_dump($configPath); die;
 		if (!is_dir($configPath)) {
 			throw new \Exception('ConfigPath no directory', 1);
 		}

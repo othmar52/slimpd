@@ -9,6 +9,7 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
+        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '532945a4b12d830ff3e086cc36a64375' => __DIR__ . '/..' . '/james-heinrich/phpthumb/phpthumb.class.php',
     );
 
@@ -16,11 +17,21 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'S' => 
         array (
             'Symfony\\Component\\Process\\' => 26,
+            'Slimpd\\' => 7,
             'Slim\\Views\\' => 11,
+            'Slim\\' => 5,
         ),
         'R' => 
         array (
             'React\\Promise\\' => 14,
+        ),
+        'P' => 
+        array (
+            'Psr\\Http\\Message\\' => 17,
+        ),
+        'I' => 
+        array (
+            'Interop\\Container\\' => 18,
         ),
         'G' => 
         array (
@@ -31,6 +42,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
             'GuzzleHttp\\Command\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
+        'F' => 
+        array (
+            'FastRoute\\' => 10,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -38,13 +53,30 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
         ),
+        'Slimpd\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/php',
+        ),
         'Slim\\Views\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/views',
+            1 => __DIR__ . '/..' . '/slim/twig-view/src',
+        ),
+        'Slim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/slim/Slim',
         ),
         'React\\Promise\\' => 
         array (
             0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Interop\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
         ),
         'GuzzleHttp\\Subscriber\\Oauth\\' => 
         array (
@@ -70,6 +102,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
+        'FastRoute\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -80,11 +116,11 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
-        'S' => 
+        'P' => 
         array (
-            'Slim' => 
+            'Pimple' => 
             array (
-                0 => __DIR__ . '/..' . '/slim/slim',
+                0 => __DIR__ . '/..' . '/pimple/pimple/src',
             ),
         ),
         'O' => 
