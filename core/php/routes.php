@@ -30,4 +30,6 @@ $app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controlle
 
 
 $app->get("/album/{itemUid}", 'Slimpd\Modules\album\Controller:detailAction');
+$app->get("/markup/albumtracks/{itemUid}", 'Slimpd\Modules\album\Controller:albumTracksAction');
+$app->get("/markup/widget-album/{itemUid}", 'Slimpd\Modules\album\Controller:widgetAlbumAction');
 $app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');

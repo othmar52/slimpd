@@ -49,15 +49,45 @@ class Controller extends \Slimpd\BaseController {
 		return $response;
 	}
 
-	
-
 	public function detailAction(Request $request, Response $response, $args) {
-		$albumUid = $args['itemUid'];
-		$args['action'] = 'album.detail';
-		$args['album'] = $this->container->albumRepo->getInstanceByAttributes(array('uid' => $albumUid));
+		$this->completeArgsForDetailView($args['itemUid'], $args);
 		if($args['album'] === NULL) {
 			die('TODO: redirect to 404');
 			$app->notFound();
+			return;
+		}
+		$args['action'] = 'album.detail';
+		$this->view->render($response, 'surrounding.htm', $args);
+		return $response;
+	}
+	
+	public function albumTracksAction(Request $request, Response $response, $args) {
+		$this->completeArgsForDetailView($args['itemUid'], $args);
+		if($args['album'] === NULL) {
+			die('TODO: redirect to 404');
+			$app->notFound();
+			return;
+		}
+		$args['action'] = 'albumtracks';
+		$this->view->render($response, 'surrounding.htm', $args);
+		return $response;
+	}
+	
+	public function widgetAlbumAction(Request $request, Response $response, $args) {
+		$this->completeArgsForDetailView($args['itemUid'], $args);
+		if($args['album'] === NULL) {
+			die('TODO: redirect to 404');
+			$app->notFound();
+			return;
+		}
+		$args['action'] = 'albumwidget';
+		$this->view->render($response, 'modules/widget-album.htm', $args);
+		return $response;
+	}
+
+	private function completeArgsForDetailView($albumUid, &$args) {
+		$args['album'] = $this->container->albumRepo->getInstanceByAttributes(array('uid' => $albumUid));
+		if($args['album'] === NULL) {
 			return;
 		}
 		$args['itemlist'] = $this->container->trackRepo->getInstancesByAttributes(
@@ -89,9 +119,6 @@ class Controller extends \Slimpd\BaseController {
 		}
 		
 		$args['breadcrumb'] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['album']->getRelPath());
-		
-		$this->view->render($response, 'surrounding.htm', $args);
-		return $response;
-		
+		return;
 	}
 }
