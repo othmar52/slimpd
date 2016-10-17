@@ -27,21 +27,21 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	public function localPlayerCssAction(Request $request, Response $response, $args) {
-		$this->view->render($response, 'css/nowplaying.css', $args);
 		$args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['local'] ]['1st'];
+		$this->view->render($response, 'css/nowplaying.css', $args);
 		return $response->withHeader('Content-Type', 'text/css');
 	}
 
 	public function mpdPlayerCssAction(Request $request, Response $response, $args) {
-		$this->view->render($response, 'css/nowplaying.css', $args);
 		$args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['mpd'] ]['1st'];
+		$this->view->render($response, 'css/nowplaying.css', $args);
 		return $response->withHeader('Content-Type', 'text/css');
 	}
 
 	public function xwaxPlayerCssAction(Request $request, Response $response, $args) {
-		$this->view->render($response, 'css/nowplaying.css', $args);
 		$args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['xwax'] ]['1st'];
 		$args['deck'] = $request->getParam('deck');
+		$this->view->render($response, 'css/nowplaying.css', $args);
 		return $response->withHeader('Content-Type', 'text/css');
 	}
 }

@@ -100,7 +100,7 @@
  	{# FIXME: remove this as soon as MpdPlayer.js::reloadCSS() is working #}
     <style type="text/css">{% include 'css/nowplaying.css' with {
     		relPathHash: item.relPathHash,
-    		color: colors[ spotcolor.mpd ]['1st'] } %}</style>
+    		color: config.colors[ config.spotcolor.mpd ]['1st'] } %}</style>
 	{% endif %}
 {% else %}
 	{% include 'partials/player/empty-player.htm' %}

@@ -42,7 +42,7 @@ class Mpd {
 		if($filePaths === FALSE) {
 			return $playlist;
 		}
-		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
 		$minIndex = (($pageNum-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
 
@@ -50,7 +50,7 @@ class Mpd {
 			if($idx < $minIndex || $idx >= $maxIndex) {
 				continue;
 			}
-			$playlist[$idx] = \Slimpd\Models\Track::getInstanceByPath($filePath, TRUE);
+			$playlist[$idx] = $this->trackRepo->getInstanceByPath($filePath, TRUE);
 		}
 		return $playlist;
 	}
@@ -63,7 +63,7 @@ class Mpd {
 	public function getCurrentPlaylistTotalPages() {
 		$status = $this->mpd('status');
 		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
 		$totalPages = floor($listLength/$itemsPerPage)+1;
 		return $totalPages;
 	}
@@ -71,7 +71,7 @@ class Mpd {
 	public function getCurrentPlaylistCurrentPage() {
 		$status = $this->mpd('status');
 		$listPos = isset($status['song']) ? $status['song'] : 0;
-		$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
 		$currentPage = floor($listPos/$itemsPerPage)+1;
 		return $currentPage;
 	}
@@ -159,7 +159,7 @@ class Mpd {
 
 	private function getItemPath($item) {
 		if(is_numeric($item) === TRUE) {
-			$instance = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => $item));
+			$instance = $this->trackRepo->getInstanceByAttributes(array('uid' => $item));
 			if($instance === NULL) {
 				return FALSE;
 			}
@@ -175,7 +175,7 @@ class Mpd {
 	}
 
 	private function getItemType($itemPath) {
-		$musicDir = \Slim\Slim::getInstance()->config['mpd']['musicdir'];
+		$musicDir = $this->conf['mpd']['musicdir'];
 		if(is_file($musicDir.$itemPath) === TRUE) {
 			return 'file';
 		}
@@ -201,7 +201,7 @@ class Mpd {
 		$softclearPlaylist = $this->getSoftClear($cmd);
 
 
-		$config = \Slim\Slim::getInstance()->config['mpd'];
+		$config = $this->conf['mpd'];
 
 		// don't clear playlist in case we have nothing to add
 		if($clearPlaylist === TRUE) {
@@ -412,14 +412,14 @@ class Mpd {
 		if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
 			return $item;
 		}
-		if(is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] .$item ) === TRUE) {
+		if(is_file($this->conf['mpd']['musicdir'] .$item ) === TRUE) {
 			$item = dirname($item);
 		}
 
 		$item = explode(DS, removeTrailingSlash($item));
 
 		// single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
-		if(count($item) === 1 && is_file(\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $item[0])) {
+		if(count($item) === 1 && is_file($this->conf['mpd']['musicdir'] . $item[0])) {
 			return NULL;
 		}
 
@@ -484,18 +484,18 @@ class Mpd {
 				3
 			);
 			if($socket === FALSE) {
-				$app->flashNow('error', $errorString . "(" . $errorNo . ")");
+				$this->container->flash->AddMessage('error', $errorString . "(" . $errorNo . ")");
 				return FALSE;
 			}
 		} catch (\Exception $e) {
-			$app->flashNow('error', $app->ll->str('error.mpdconnect'));
+			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnect'));
 			return FALSE;
 		}
 
 		try {
 			fwrite($socket, $command . "\n");
 		} catch (\Exception $e) {
-			$app->flashNow('error', $app->ll->str('error.mpdwrite'));
+			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdwrite'));
 			return FALSE;
 		}
 
@@ -504,13 +504,13 @@ class Mpd {
 		$line = trim(fgets($socket, 1024));
 		if (substr($line, 0, 3) === 'ACK') {
 			fclose($socket);
-			$app->flashNow('error', $app->ll->str('error.mpdgeneral', array($line)));
+			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
 			return FALSE;
 		}
 
 		if (substr($line, 0, 6) !== 'OK MPD') {
 			fclose($socket);
-			$app->flashNow('error', $app->ll->str('error.mpdgeneral', array($line)));
+			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
 			return FALSE;
 		}
 
@@ -519,7 +519,7 @@ class Mpd {
 			$line = trim(@fgets($socket, 1024));
 			if (substr($line, 0, 3) == 'ACK') {
 				fclose($socket);
-				$app->flashNow('error', $app->ll->str('error.mpdgeneral', array($line)));
+				$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
 				return FALSE;
 			}
 			if (substr($line, 0, 2) == 'OK') {
@@ -540,7 +540,7 @@ class Mpd {
 			$array[$key] = $value;
 		}
 		fclose($socket);
-		$app->flashNow('error', $app->ll->str('error.mpdconnectionclosed', array($line)));
+		$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
 		return FALSE;
 	}
 }

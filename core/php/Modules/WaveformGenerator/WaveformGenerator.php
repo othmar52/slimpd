@@ -17,6 +17,7 @@ namespace Slimpd\Modules\WaveformGenerator;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class WaveformGenerator {
 	protected $svgResolution = 300;
 	protected $absolutePath;
@@ -31,47 +32,6 @@ class WaveformGenerator {
 		$this->conf = $container->conf;
 		$this->container = $container;
 		return $this;
-		$config = \Slim\Slim::getInstance()->config['mpd'];
-		$arg = join(DS, $arg);
-		$track = \Slimpd\Models\Track::getInstanceByPath($arg, TRUE);
-
-		$this->absolutePath = $config['musicdir'] . $track->getRelPath();
-		$this->fingerprint = $track->getFingerprint();
-
-		// systemcheck testfiles are not within our music_dirs nor in our database
-		if($this->fingerprint === NULL) {
-			if(strpos(realpath(DS.$arg), APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/') === 0) {
-				$this->absolutePath = realpath(DS.$arg);
-				$this->ext = getFileExt($arg);
-			}
-		}
-
-		if(is_file($this->absolutePath) === FALSE) {
-			// TODO: should we serve a default waveform svg?
-			return NULL;
-		}
-
-		if(!preg_match("/^([a-f0-9]){32}$/", $this->fingerprint)) {
-			// extract the fingerprint
-			$fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($this->absolutePath);
-			if(!$fingerprint) {
-				# TODO: handle missing fingerprint
-				return NULL;
-			}
-			$this->fingerprint = $fingerprint;
-		}
-		$this->setPeakFilePath();
-		if(is_file($this->peakValuesFilePath) === TRUE) {
-			return $this;
-		}
-		
-		session_write_close(); // do not block other requests during processing
-		$tmpFileName = APP_ROOT . 'localdata' . DS . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
-		if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
-			# another request already triggered generateSvg
-			$this->fireRetryHeaderAndExit();
-		}
-		$this->generatePeakFile();
 	}
 
 	public function prepare(&$response) {
@@ -103,7 +63,6 @@ class WaveformGenerator {
 
 	public function getSvgValues($pixel=300, $half, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			
 			$uri = $this->container->router->pathFor(
 				'imagefallback',
 				['type' => 'broken', 'imagesize' => 100 ]
@@ -160,9 +119,13 @@ class WaveformGenerator {
 
 	public function generateJson($resolution=300, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			$app = \Slim\Slim::getInstance();
-			$app->response->redirect($app->config['root'] . 'imagefallback-100/broken');
-			return;
+			// TODO: deliver something like a broken-waveform-json :P 
+			$uri = $this->container->router->pathFor(
+				'imagefallback',
+				['type' => 'broken', 'imagesize' => 100 ]
+			);
+			$newResponse = $response->withRedirect($uri, 403);
+			return $newResponse;
 		}
 
 		$peaks = file_get_contents($this->peakValuesFilePath);

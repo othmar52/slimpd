@@ -54,7 +54,7 @@
 	  50% { -webkit-filter: blur(6px); }
 	}
 </style-->
-	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? spotcolor.mpd : spotcolor.local }}">
+	<body class="bg-col1 col1 {{ action == '404' ? 'rotate2' : '' }} spotcol-{{ playerMode == 'mpd' ? config.spotcolor.mpd : config.spotcolor.local }}">
 		<div class="container">
 			{% include 'modules/header-menu.htm' %}
 			<div class="row">
