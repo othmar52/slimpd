@@ -24,10 +24,11 @@ class Controller extends \Slimpd\BaseController {
 
 /*
 // track routes
-$app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
-$app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
+DONE $app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
+DONE $app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
+DONE $app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widgetTrackcontrolAction');
+ 
 $app->get("/markup/xwaxplayer", 'Slimpd\Modules\track\Controller:xwaxplayerAction');
-$app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widgetTrackcontrolAction');
 $app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
 $app->get("/markup/widget-deckselector", 'Slimpd\Modules\track\Controller:widgetDeckselectorAction');
 $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:standaloneTrackviewAction');
@@ -48,17 +49,11 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 	}
 
 	public function mpdplayerAction(Request $request, Response $response, $args) {
-		#$itemParam = $request->getParam('item');
-		
-		$mpd = new \Slimpd\Modules\mpd\mpd();
-		$vars['item'] = $mpd->getCurrentlyPlayedTrack();
-		if($vars['item'] !== NULL) {
-			$itemRelPath = $vars['item']->getRelPath();
-		}
-		die;
-		
-		$this->completeArgsForDetailView($itemParam, $args);
-		$args['player'] = 'local';
+		$itemRelPath = 0;
+		$item = $this->mpd->getCurrentlyPlayedTrack();
+		$itemRelPath = ($item !== NULL) ? $item->getRelPath() : 0;
+		$this->completeArgsForDetailView($itemRelPath, $args);
+		$args['player'] = 'mpd';
 		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
 		return $response;
 	}
@@ -70,7 +65,7 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 			$args['item'] = $this->trackRepo->getInstanceByAttributes($search);
 		}
 		if($args['item'] === NULL) {
-			$itemPath = trimAltMusicDirPrefix($itemParam, $this->conf);
+			$itemPath = $this->filesystemUtility->trimAltMusicDirPrefix($itemParam, $this->conf);
 			$search = array('relPathHash' => getFilePathHash($itemPath));
 			$itemRelPath = $itemPath;
 			$args['item'] = $this->trackRepo->getInstanceByAttributes($search);
@@ -78,7 +73,6 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 
 		if($args['item'] === NULL) {
 			// track has not been imported in slimpd database yet...
-			// so we are not able to get any renderitems
 			$args['item'] = $this->trackRepo->getNewInstanceWithoutDbQueries($itemRelPath);
 		}
 

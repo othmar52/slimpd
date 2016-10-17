@@ -37,22 +37,6 @@ class Track extends \Slimpd\Models\AbstractTrack {
 	public static $tableName = 'track';
 	public static $repoKey = 'trackRepo';
 
-	
-	/**
-	 * in case tracks have been added via playlist containing absolute paths that
-	 * does not begin with mpd-music dir try to fix the path...
-	 */
-	public static function getInstanceByPath($pathString, $createDummy = FALSE) {
-		$pathString = trimAltMusicDirPrefix($pathString);
-		$instance = self::getInstanceByAttributes(
-			array('relPathHash' => getFilePathHash($pathString))
-		);
-		if($instance !== NULL || $createDummy === FALSE) {
-			return $instance;
-		}
-		// track is not imported in sliMpd database
-		return self::getNewInstanceWithoutDbQueries($pathString);
-	}
 
 
 	/*

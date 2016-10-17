@@ -128,10 +128,9 @@ function notifyJson($message, $type="info") {
 	deliverJson($out);
 }
 
-function deliverJson($data) {
-	$newResponse = \Slim\Slim::getInstance()->response();
-	$newResponse->body(json_encode($data));
-	$newResponse->headers->set('Content-Type', 'application/json');
+function deliverJson($data, $response) {
+	$newResponse = $response->withHeader('Content-Type', 'application/json');
+	$newResponse->getBody()->write(json_encode($data));
 	return $newResponse;
 }
 

@@ -229,6 +229,10 @@ $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);
 };
 
+$container['mpd'] = function($cont) {
+	return new \Slimpd\Modules\Mpd\Mpd($cont);
+};
+
 // -----------------------------------------------------------------------------
 // Action factories
 // -----------------------------------------------------------------------------

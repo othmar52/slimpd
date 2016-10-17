@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\mpd;
+namespace Slimpd\Modules\Mpd;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,8 +17,14 @@ namespace Slimpd\Modules\mpd;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-use Slimpd\Models\Track;
-class mpd {
+
+class Mpd {
+	public function __construct(\Slim\Container $container) {
+		$this->container = $container;
+		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
+		$this->conf = $container->conf;
+		$this->trackRepo = $container->trackRepo;
+	}
 	public function getCurrentlyPlayedTrack() {
 		$status 		= $this->mpd('status');
 		$listpos		= isset($status['song']) ? $status['song'] : 0;
@@ -27,7 +33,7 @@ class mpd {
 		if($listlength < 1) {
 			return NULL;
 		}
-		return \Slimpd\Models\Track::getInstanceByPath($files[$listpos], TRUE);
+		return $this->trackRepo->getInstanceByPath($files[$listpos], TRUE);
 	}
 
 	public function getCurrentPlaylist($pageNum = 1) {
@@ -469,11 +475,10 @@ class mpd {
 	//  | Music Player Daemon                                                    |
 	//  +------------------------------------------------------------------------+
 	public function mpd($command) {
-		$app = \Slim\Slim::getInstance();
 		try {
 			$socket = fsockopen(
-				$app->config['mpd']['host'],
-				$app->config['mpd']['port'],
+				$this->conf['mpd']['host'],
+				$this->conf['mpd']['port'],
 				$errorNo,
 				$errorString,
 				3

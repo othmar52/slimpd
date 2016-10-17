@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd;
+namespace Slimpd\Modules\WaveformGenerator;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,7 +17,7 @@ namespace Slimpd;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Svggenerator {
+class WaveformGenerator {
 	protected $svgResolution = 300;
 	protected $absolutePath;
 	protected $fingerprint;
@@ -25,8 +25,12 @@ class Svggenerator {
 	protected $peakFileResolution = 4000;
 	protected $ext;
 	protected $cmdTempwav = '';
+	protected $conf;
 
-	public function __construct($arg) {
+	public function __construct($container) {
+		$this->conf = $container->conf;
+		$this->container = $container;
+		return $this;
 		$config = \Slim\Slim::getInstance()->config['mpd'];
 		$arg = join(DS, $arg);
 		$track = \Slimpd\Models\Track::getInstanceByPath($arg, TRUE);
@@ -70,13 +74,24 @@ class Svggenerator {
 		$this->generatePeakFile();
 	}
 
-	public function fireRetryHeaderAndExit() {
-		$newResponse = \Slim\Slim::getInstance()->response();
-		$newResponse->headers->set('Retry-After', 5);
-		# TODO: check why slim's setStatus does not work
-		#$newResponse->setStatus(503);
-		header('HTTP/1.1 503 Service Temporarily Unavailable');
-		header('Status: 503 Service Temporarily Unavailable');
+	public function prepare(&$response) {
+		$this->setPeakFilePath();
+		if(is_file($this->peakValuesFilePath) === TRUE) {
+			// peakfile already exists - no need to generate it again
+			return $this;
+		}
+
+		$tmpFileName = APP_ROOT . 'localdata' . DS . 'cache' . DS . $this->ext . '.' . $this->fingerprint . '.';
+		if(is_file($tmpFileName.'mp3') === TRUE || is_file($tmpFileName.'wav') === TRUE) {
+			// check if another request already triggered the peakfile-extraction
+			$this->fireRetryHeaderAndExit($response);
+		}
+		session_write_close(); // do not block other requests during processing
+		$this->generatePeakFile();
+	}
+
+	public function fireRetryHeaderAndExit(&$response) {
+		$newResponse = $response->withHeader('Retry-After', 5)->withStatus(503);
 		return $newResponse;
 	}
 
@@ -86,16 +101,20 @@ class Svggenerator {
 		return ($byte1 + ($byte2*256));
 	}
 
-	public function generateSvg($pixel=300) {
+	public function getSvgValues($pixel=300, $half, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
-			$app = \Slim\Slim::getInstance();
-			$app->response->redirect($app->config['root'] . 'imagefallback-100/broken');
-			return;
+			
+			$uri = $this->container->router->pathFor(
+				'imagefallback',
+				['type' => 'broken', 'imagesize' => 100 ]
+			);
+			$newResponse = $response->withRedirect($uri, 403);
+			return $newResponse;
 		}
 
 		$peaks = file_get_contents($this->peakValuesFilePath);
 		if($peaks === 'generating') {
-			$this->fireRetryHeaderAndExit();
+			$this->fireRetryHeaderAndExit($response);
 		}
 
 		$values = array_map('trim', explode("\n", $peaks));
@@ -130,37 +149,16 @@ class Svggenerator {
 				'y1' => number_format($diffPercent/2, 2, '.', ''),
 				'y2' => number_format($diffPercent/2 + $percent, 2, '.', '')
 			);
-			if(\Slim\Slim::getInstance()->request->get('mode') === 'half') {
+			if($half === TRUE) {
 				$stroke["y1"] = number_format($diffPercent, 2, '.', '');
 				$stroke["y2"] = 100;
 			}
 			$renderValues[] = $stroke;
 		}
-
-		$app = \Slim\Slim::getInstance();
-		switch( $app->request->get('colorFor') ) {
-			case 'mpd':
-			case 'local':
-			case 'xwax':
-				$color = $app->config['colors'][ $app->config['spotcolor'][$app->request->get('colorFor')] ]['1st'];
-				break;
-			default:
-				$color = $app->config['colors']['defaultwaveform'];
-				break;
-		}
-		$newResponse = $app->response();
-		$newResponse->headers->set('Content-Type', 'image/svg+xml');
-		$app->render(
-			'svg/waveform.svg',
-			array(
-				'peakvalues' => $renderValues,
-				'color' => $color
-			)
-		);
-		return $newResponse;
+		return $renderValues;
 	}
 
-	public function generateJson($resolution=300) {
+	public function generateJson($resolution=300, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
 			$app = \Slim\Slim::getInstance();
 			$app->response->redirect($app->config['root'] . 'imagefallback-100/broken');
@@ -169,7 +167,7 @@ class Svggenerator {
 
 		$peaks = file_get_contents($this->peakValuesFilePath);
 		if($peaks === 'generating') {
-			$this->fireRetryHeaderAndExit();
+			$this->fireRetryHeaderAndExit($response);
 			return NULL;
 		}
 
@@ -178,7 +176,7 @@ class Svggenerator {
 		$values = $this->limitArray($values, $resolution);
 		$values = $this->beautifyPeaks($values);
 
-		deliverJson($values);
+		deliverJson($values, $response);
 	}
 
 	public function setPeakFilePath() {
@@ -192,7 +190,7 @@ class Svggenerator {
 
 		\phpthumb_functions::EnsureDirectoryExists(
 			dirname($this->peakValuesFilePath),
-			octdec(\Slim\Slim::getInstance()->config['config']['dirCreateMask'])
+			octdec($this->conf['config']['dirCreateMask'])
 		);
 		file_put_contents($this->peakValuesFilePath, "generating");
 
@@ -206,7 +204,7 @@ class Svggenerator {
 		$peakValues = $this->limitArray($peakValues, $this->peakFileResolution);
 
 		file_put_contents($this->peakValuesFilePath, join("\n", $peakValues));
-		chmod($this->peakValuesFilePath, octdec(\Slim\Slim::getInstance()->config['config']['fileCreateMask']));
+		chmod($this->peakValuesFilePath, octdec($this->conf['config']['fileCreateMask']));
 		return;
 	}
 
@@ -215,7 +213,7 @@ class Svggenerator {
 		$inFile = escapeshellarg($this->absolutePath);
 		$tmpWav = escapeshellarg($tmpFileName.'.wav');
 		$tmpMp3 = escapeshellarg($tmpFileName.'.mp3');
-		$binConf = \Slim\Slim::getInstance()->config['modules'];
+		$binConf = $this->conf['modules'];
 
 		switch($this->ext) {
 			case 'flac':
@@ -293,14 +291,14 @@ class Svggenerator {
 		exec($this->cmdTempwav);
 
 		// delete temporary mp3 file
-		rmfile($tmpFileName . ".mp3");
+		$this->container->filesystemUtility->rmfile($tmpFileName . ".mp3");
 
 		if(is_file($tmpFileName.'.wav') === FALSE) {
 			return FALSE;
 		}
 		$values = $this->getWavPeaks($tmpFileName.'.wav');
 		// delete temporary wav file
-		rmfile($tmpFileName . ".wav");
+		$this->container->filesystemUtility->rmfile($tmpFileName . ".wav");
 		return $values;
 	}
 
@@ -433,5 +431,24 @@ class Svggenerator {
 	}
 	public function getCmdTempwav() {
 		return $this->cmdTempwav;
+	}
+	
+	public function setAbsolutePath($value) {
+		$this->absolutePath = $value;
+		return $this;
+	}
+	
+	public function setFingerprint($value) {
+		$this->fingerprint = $value;
+		return $this;
+	}
+	
+	public function getFingerprint() {
+		return $this->fingerprint;
+	}
+	
+	public function setExt($value) {
+		$this->ext = $value;
+		return $this;
 	}
 }

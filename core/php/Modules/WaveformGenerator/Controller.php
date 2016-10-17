@@ -1,0 +1,85 @@
+<?php
+namespace Slimpd\Modules\WaveformGenerator;
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
+ *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.	See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.	If not, see <http://www.gnu.org/licenses/>.
+ */
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+
+class Controller extends \Slimpd\BaseController {
+
+	public function svgAction(Request $request, Response $response, $args) {
+		$WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
+		$valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
+		if(($valid) === FALSE) {
+			// TODO: handle invalid input
+			die('invalid path');
+		}
+		$WaveformGenerator->prepare($response);
+		$half = ($request->getParam('mode') === "half");
+		$args['peakvalues'] = $WaveformGenerator->getSvgValues($args['width'], $half, $response);
+		if(is_object($args['peakvalues']) === TRUE) {
+			// $response got returned so something went wrong...
+			return $args['peakvalues'];
+		}
+		
+		
+		$args['color'] =  $this->conf['colors']['defaultwaveform'];
+		$colorFor = $request->getParam('colorFor');
+		if(in_array($colorFor, ['mpd', 'local', 'xwax']) === TRUE) {
+			$args['color'] =  $this->conf['colors'][ $this->conf['spotcolor'][$colorFor] ]['1st'];
+		}
+		$this->view->render($response, 'svg/waveform.svg', $args);
+		$newResponse = $response->withHeader('Content-Type', 'image/svg+xml');
+		return $newResponse;
+	}
+	
+	public function jsonAction(Request $request, Response $response, $args) {
+		$WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
+		$valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
+		if(($valid) === FALSE) {
+			// TODO: handle invalid input
+			die('invalid path');
+		}
+		$WaveformGenerator->prepare($response);
+		return $WaveformGenerator->generateJson($args['width'], $response);
+	}
+	
+	private function validateInput($input, &$WaveformGenerator) {
+		#var_dump($input);
+		$track = $this->trackRepo->getInstanceByPath($input, TRUE);
+
+		if($this->filesystemUtility->isInAllowedPath($track->getRelPath()) === FALSE) {
+			#die(' not within allowed path');
+			return FALSE;
+		}
+		$WaveformGenerator->setAbsolutePath($this->filesystemUtility->getFileRealPath($track->getRelPath()));
+		$WaveformGenerator->setExt($track->getAudioDataformat());
+		$WaveformGenerator->setFingerprint($track->getFingerprint());
+		if(isValidFingerprint($WaveformGenerator->getFingerprint()) === 1) {
+			return TRUE;
+		}
+		$fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($WaveformGenerator->absolutePath);
+		if(isValidFingerprint($fingerprint) === 1) {
+			$WaveformGenerator->setFingerprint($fingerprint);
+			return TRUE;
+		}
+		# TODO: handle missing fingerprint
+		die('invalid fingerprint');
+		return FALSE;
+	}
+}

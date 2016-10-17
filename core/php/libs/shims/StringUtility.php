@@ -37,6 +37,9 @@ function removeAppRootPrefix($inputString) {
 	return str_replace(APP_ROOT, "", $inputString);
 }
 
+function isValidFingerprint($inputString) {
+	return preg_match("/^([a-f0-9]){32}$/", $inputString);
+}
 
 function remU($input){
 	return trim(preg_replace("!\s+!", " ", str_replace("_", " ", $input)));

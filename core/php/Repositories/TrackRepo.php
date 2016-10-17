@@ -22,11 +22,29 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
 	public static $tableName = 'track';
 	public static $classPath = '\Slimpd\Models\Track';
 	
+	
+	/**
+	 * in case tracks have been added via playlist containing absolute paths that
+	 * does not begin with mpd-music dir try to fix the path...
+	 */
+	public function getInstanceByPath($pathString, $createDummy = FALSE) {
+		$pathString = $this->container->filesystemUtility->trimAltMusicDirPrefix($pathString);
+		$instance = $this->getInstanceByAttributes(
+			array('relPathHash' => getFilePathHash($pathString))
+		);
+		if($instance !== NULL || $createDummy === FALSE) {
+			return $instance;
+		}
+		// track is not imported in sliMpd database
+		return $this->getNewInstanceWithoutDbQueries($pathString);
+	}
+
+	
 	public function getNewInstanceWithoutDbQueries($pathString) {
 		$track = new \Slimpd\Models\Track();
 		$track->setRelPath($pathString);
 		$track->setRelPathHash(getFilePathHash($pathString));
-		$track->setAudioDataFormat(getFileExt($pathString));
+		$track->setAudioDataFormat($this->container->filesystemUtility->getFileExt($pathString));
 		return $track;
 	}
 

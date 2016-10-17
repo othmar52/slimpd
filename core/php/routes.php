@@ -67,3 +67,6 @@ $app->get("/css/mpdplayer/{relPathHash}", 'Slimpd\Modules\Tools\Controller:mpdPl
 $app->get("/css/xwaxplayer/{relPathHash}", 'Slimpd\Modules\Tools\Controller:xwaxPlayerCssAction');
 
 
+// waveformgenerator routes
+$app->get("/audiosvg/width/{width}/[{itemParams:.*}]", 'Slimpd\Modules\WaveformGenerator\Controller:svgAction');
+$app->get("/audiojson/resolution/{width}/[{itemParams:.*}]", 'Slimpd\Modules\WaveformGenerator\Controller:jsonAction');
