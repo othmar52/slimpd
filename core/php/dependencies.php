@@ -44,7 +44,7 @@ $container['conf'] = function () {
 	
 	$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 	$config = $configLoader->loadConfig('master.ini', NULL, $noCache);
-	\Slimpd\Modules\localization\Localization::setLocaleByLangKey($config['config']['langkey']);
+	\Slimpd\Modules\Localization\Localization::setLocaleByLangKey($config['config']['langkey']);
 	return $config;
 };
 
@@ -115,7 +115,7 @@ $container['db'] = function ($cont) {
 
 // Batcher
 $container['batcher'] = function () {
-	return new \Slimpd\Modules\database\Batcher();
+	return new \Slimpd\Modules\Database\Batcher();
 };
 
 
@@ -133,7 +133,7 @@ $container['imageweighter'] = function () {
 
 // Localization
 $container['ll'] = function () {
-	return new \Slimpd\Modules\localization\Localization();
+	return new \Slimpd\Modules\Localization\Localization();
 };
 
 // Cookies

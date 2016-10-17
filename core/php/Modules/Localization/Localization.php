@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\localization;
+namespace Slimpd\Modules\Localization;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -24,7 +24,7 @@ class Localization {
 		// TODO: caching of parsed ll-config
 		// TODO: check if file is readable
 		// read config stuff
-		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\localization\Localization');
+		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\Localization\Localization');
 		$reflectedClass->setStaticPropertyValue('lang', parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE));
 	}
 	

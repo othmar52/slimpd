@@ -20,61 +20,80 @@
 // Routes
 
 // library routes
-$app->get('[/]', 'Slimpd\Modules\Library\Controller:indexAction');
-$app->get('/library[/]', 'Slimpd\Modules\Library\Controller:indexAction');
+$ctrlName = 'Slimpd\Modules\Library\Controller';
+$app->get('[/]', $ctrlName . ':indexAction');
+$app->get('/library[/]', $ctrlName . ':indexAction');
 
 // filebrowser routes
-$app->get('/filebrowser', 'Slimpd\Modules\filebrowser\Controller:index')->setName('filebrowser');
-$app->get('/filebrowser/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:dircontent');
-$app->get('/markup/widget-directory/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:widgetDirectory');
-$app->get('/deliver/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:deliverAction');
+$ctrlName = 'Slimpd\Modules\filebrowser\Controller';
+$app->get('/filebrowser', $ctrlName . ':index')->setName('filebrowser');
+$app->get('/filebrowser/[{itemParams:.*}]', $ctrlName . ':dircontent');
+$app->get('/markup/widget-directory/[{itemParams:.*}]', $ctrlName . ':widgetDirectory');
+$app->get('/deliver/[{itemParams:.*}]', $ctrlName . ':deliverAction');
 
 // image routes
-$app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller:fallback')->setName('imagefallback');
-$app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controller:album')->setName('imagealbum');
-$app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');
-$app->get('/image-{imagesize}/id/{itemUid}', 'Slimpd\Modules\images\Controller:bitmap');
-$app->get('/image-{imagesize}/path/[{itemParams:.*}]', 'Slimpd\Modules\images\Controller:path');
+$ctrlName = 'Slimpd\Modules\Bitmap\Controller';
+$app->get('/imagefallback-{imagesize}/{type}', $ctrlName . ':fallback')->setName('imagefallback');
+$app->get('/image-{imagesize}/album/{itemUid}', $ctrlName . ':album')->setName('imagealbum');
+$app->get('/image-{imagesize}/track/{itemUid}', $ctrlName . ':track');
+$app->get('/image-{imagesize}/id/{itemUid}', $ctrlName . ':bitmap');
+$app->get('/image-{imagesize}/path/[{itemParams:.*}]', $ctrlName . ':path');
 
 // album routes
-$app->get('/album/{itemUid}', 'Slimpd\Modules\album\Controller:detailAction');
-$app->get('/markup/albumtracks/{itemUid}', 'Slimpd\Modules\album\Controller:albumTracksAction');
-$app->get('/markup/widget-album/{itemUid}', 'Slimpd\Modules\album\Controller:widgetAlbumAction');
-$app->get('/albums/page/{currentPage}/sort/{sort}/{direction}', 'Slimpd\Modules\album\Controller:listAction');
+$ctrlName = 'Slimpd\Modules\Album\Controller';
+$app->get('/album/{itemUid}', $ctrlName . ':detailAction');
+$app->get('/markup/albumtracks/{itemUid}', $ctrlName . ':albumTracksAction');
+$app->get('/markup/widget-album/{itemUid}', $ctrlName . ':widgetAlbumAction');
+$app->get('/albums/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':listAction');
 
 // track routes
-$app->get('/markup/mpdplayer', 'Slimpd\Modules\Track\Controller:mpdplayerAction');
-$app->get('/markup/localplayer', 'Slimpd\Modules\Track\Controller:localplayerAction');
-$app->get('/markup/xwaxplayer', 'Slimpd\Modules\Track\Controller:xwaxplayerAction');
-$app->get('/markup/widget-trackcontrol', 'Slimpd\Modules\Track\Controller:widgetTrackcontrolAction');
-$app->get('/markup/widget-xwax', 'Slimpd\Modules\Track\Controller:widgetXwaxAction');
-$app->get('/markup/widget-deckselector', 'Slimpd\Modules\Track\Controller:widgetDeckselectorAction');
-$app->get('/markup/standalone-trackview', 'Slimpd\Modules\Track\Controller:standaloneTrackviewAction');
+$ctrlName = 'Slimpd\Modules\Track\Controller';
+$app->get('/markup/mpdplayer', $ctrlName . ':mpdplayerAction');
+$app->get('/markup/localplayer', $ctrlName . ':localplayerAction');
+$app->get('/markup/xwaxplayer', $ctrlName . ':xwaxplayerAction');
+$app->get('/markup/widget-trackcontrol', $ctrlName . ':widgetTrackcontrolAction');
+$app->get('/markup/widget-xwax', $ctrlName . ':widgetXwaxAction');
+$app->get('/markup/widget-deckselector', $ctrlName . ':widgetDeckselectorAction');
+$app->get('/markup/standalone-trackview', $ctrlName . ':standaloneTrackviewAction');
 
 // artist routes
-$app->get('/artists/[{itemParams:.*}]', 'Slimpd\Modules\Artist\Controller:listAction');
+$ctrlName = 'Slimpd\Modules\Artist\Controller';
+$app->get('/artists/[{itemParams:.*}]', $ctrlName . ':listAction');
 
 // genre routes
-$app->get('/genres/[{itemParams:.*}]', 'Slimpd\Modules\Genre\Controller:listAction');
+$ctrlName = 'Slimpd\Modules\Genre\Controller';
+$app->get('/genres/[{itemParams:.*}]', $ctrlName . ':listAction');
 
 // label routes
-$app->get('/labels/[{itemParams:.*}]', 'Slimpd\Modules\Label\Controller:listAction');
+$ctrlName = 'Slimpd\Modules\Label\Controller';
+$app->get('/labels/[{itemParams:.*}]', $ctrlName . ':listAction');
 
 // tools routes
-$app->get('/css/spotcolors.css', 'Slimpd\Modules\Tools\Controller:spotcolorsCssAction');
-$app->get('/css/localplayer/{relPathHash}', 'Slimpd\Modules\Tools\Controller:localPlayerCssAction');
-$app->get('/css/mpdplayer/{relPathHash}', 'Slimpd\Modules\Tools\Controller:mpdPlayerCssAction');
-$app->get('/css/xwaxplayer/{relPathHash}', 'Slimpd\Modules\Tools\Controller:xwaxPlayerCssAction');
+$ctrlName = 'Slimpd\Modules\Tools\Controller';
+$app->get('/css/spotcolors.css', $ctrlName . ':spotcolorsCssAction');
+$app->get('/css/localplayer/{relPathHash}', $ctrlName . ':localPlayerCssAction');
+$app->get('/css/mpdplayer/{relPathHash}', $ctrlName . ':mpdPlayerCssAction');
+$app->get('/css/xwaxplayer/{relPathHash}', $ctrlName . ':xwaxPlayerCssAction');
 
 
 // waveformgenerator routes
-$app->get('/audiosvg/width/{width}/[{itemParams:.*}]', 'Slimpd\Modules\WaveformGenerator\Controller:svgAction');
-$app->get('/audiojson/resolution/{width}/[{itemParams:.*}]', 'Slimpd\Modules\WaveformGenerator\Controller:jsonAction');
+$ctrlName = 'Slimpd\Modules\WaveformGenerator\Controller';
+$app->get('/audiosvg/width/{width}/[{itemParams:.*}]', $ctrlName . ':svgAction');
+$app->get('/audiojson/resolution/{width}/[{itemParams:.*}]', $ctrlName . ':jsonAction');
 
 
 // mpd
-$app->get('/mpdstatus[/]', 'Slimpd\Modules\Mpd\Controller:mpdstatusAction');
-$app->get('/mpdctrl/{cmd}', 'Slimpd\Modules\Mpd\Controller:cmdAction');
-$app->get('/mpdctrl/{cmd}/[{item:.*}]', 'Slimpd\Modules\Mpd\Controller:cmdAction');
-$app->get('/playlist/page/{pagenum}', 'Slimpd\Modules\Mpd\Controller:playlistAction');
+$ctrlName = 'Slimpd\Modules\Mpd\Controller';
+$app->get('/mpdstatus[/]', $ctrlName . ':mpdstatusAction');
+$app->get('/mpdctrl/{cmd}', $ctrlName . ':cmdAction');
+$app->get('/mpdctrl/{cmd}/[{item:.*}]', $ctrlName . ':cmdAction');
+$app->get('/playlist/page/{pagenum}', $ctrlName . ':playlistAction');
+
+// search
+$ctrlName = 'Slimpd\Modules\Search\Controller';
+$app->get('/{className}/{itemUid}/{show}s/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':listAction')->setName('search-list');
+$app->get('/search{currentType}/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':searchAction');
+$app->get('/autocomplete/{type}/', $ctrlName . ':autocompleteAction');
+$app->get('/directory/[{itemParams:.*}]', $ctrlName . 'directoryAction');
+$app->get('/alphasearch/', $ctrlName . 'alphasearchAction');
 

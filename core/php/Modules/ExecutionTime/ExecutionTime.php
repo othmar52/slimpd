@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd;
+namespace Slimpd\Modules\ExecutionTime;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client

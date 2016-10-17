@@ -18,8 +18,8 @@ namespace Slimpd\Modules\sphinx;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Sphinx {
-	public static function getPdo() {
-		$sphinxConf = \Slim\Slim::getInstance()->config["sphinx"];
+	public static function getPdo($conf) {
+		$sphinxConf = $conf["sphinx"];
 		self::defineSphinxConstants($sphinxConf);
 		return new \PDO(
 			"mysql:host=".$sphinxConf["host"].";port=". $sphinxConf["port"] .";charset=utf8;", "",""

@@ -1,7 +1,4 @@
 <?php
-
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -73,18 +70,6 @@ foreach(array('get', 'post') as $method) {
 	}
 }
 */
-$app->get('/hello/{name}', function (Request $request, Response $response, $args) {
-	#die('sgsgsgd');
-    $name = $request->getAttribute('name');
-    #$response->getBody()->write("Hello, $name");
-	#echo "<pre>" . print_r($args,1) . "</pre>";die;
-	$args['action'] = 'showplaylist';
-	$this->view->render($response, 'surrounding.htm', $args);
-	#$this->view->render($response, 'teste.htm', $args);
-	
-
-    return $response;
-});
 
 
 
