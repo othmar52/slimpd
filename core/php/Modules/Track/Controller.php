@@ -46,6 +46,22 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
 		return $response;
 	}
+
+	public function mpdplayerAction(Request $request, Response $response, $args) {
+		#$itemParam = $request->getParam('item');
+		
+		$mpd = new \Slimpd\Modules\mpd\mpd();
+		$vars['item'] = $mpd->getCurrentlyPlayedTrack();
+		if($vars['item'] !== NULL) {
+			$itemRelPath = $vars['item']->getRelPath();
+		}
+		die;
+		
+		$this->completeArgsForDetailView($itemParam, $args);
+		$args['player'] = 'local';
+		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
+		return $response;
+	}
 	
 	private function completeArgsForDetailView($itemParam, &$args) {
 		$args['item'] = NULL;

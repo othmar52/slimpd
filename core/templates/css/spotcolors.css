@@ -1,5 +1,5 @@
 {% set trans = "all 0.5s ease 0.2s" %}
-{% for colname,values in colors %}
+{% for colname,values in config.colors %}
 	{% if values["1st"] %}
 
 .spotcol-{{ colname }} .col2,
@@ -42,6 +42,6 @@
 {% endfor %}
 
 .alert-mpd {
-	border-left: 3px solid {{ colors[ spotcolor.mpd ]["1st"] }};
+	border-left: 3px solid {{ config.colors[ config.spotcolor.mpd ]["1st"] }};
 	transition: {{trans}};
 }

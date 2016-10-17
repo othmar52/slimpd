@@ -43,13 +43,13 @@ $app->get("/markup/widget-album/{itemUid}", 'Slimpd\Modules\album\Controller:wid
 $app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');
 
 // track routes
-$app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
-$app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
-$app->get("/markup/xwaxplayer", 'Slimpd\Modules\track\Controller:xwaxplayerAction');
-$app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widgetTrackcontrolAction');
-$app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
-$app->get("/markup/widget-deckselector", 'Slimpd\Modules\track\Controller:widgetDeckselectorAction');
-$app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:standaloneTrackviewAction');
+$app->get("/markup/mpdplayer", 'Slimpd\Modules\Track\Controller:mpdplayerAction');
+$app->get("/markup/localplayer", 'Slimpd\Modules\Track\Controller:localplayerAction');
+$app->get("/markup/xwaxplayer", 'Slimpd\Modules\Track\Controller:xwaxplayerAction');
+$app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\Track\Controller:widgetTrackcontrolAction');
+$app->get("/markup/widget-xwax", 'Slimpd\Modules\Track\Controller:widgetXwaxAction');
+$app->get("/markup/widget-deckselector", 'Slimpd\Modules\Track\Controller:widgetDeckselectorAction');
+$app->get("/markup/standalone-trackview", 'Slimpd\Modules\Track\Controller:standaloneTrackviewAction');
 
 // artist routes
 $app->get("/artists/[{itemParams:.*}]", 'Slimpd\Modules\Artist\Controller:listAction');
@@ -59,3 +59,11 @@ $app->get("/genres/[{itemParams:.*}]", 'Slimpd\Modules\Genre\Controller:listActi
 
 // label routes
 $app->get("/labels/[{itemParams:.*}]", 'Slimpd\Modules\Label\Controller:listAction');
+
+// tools routes
+$app->get("/css/spotcolors.css", 'Slimpd\Modules\Tools\Controller:spotcolorsCssAction');
+$app->get("/css/localplayer/{relPathHash}", 'Slimpd\Modules\Tools\Controller:localPlayerCssAction');
+$app->get("/css/mpdplayer/{relPathHash}", 'Slimpd\Modules\Tools\Controller:mpdPlayerCssAction');
+$app->get("/css/xwaxplayer/{relPathHash}", 'Slimpd\Modules\Tools\Controller:xwaxPlayerCssAction');
+
+

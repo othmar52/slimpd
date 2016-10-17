@@ -106,24 +106,6 @@ foreach([
 		$app->stop();
 	});
 	
-	$app->get('/css/'.$markupSnippet . '/:relPathHash', function($relPathHash) use ($app, $vars, $markupSnippet){
-		$vars['relPathHash'] = $relPathHash;
-		$vars['deck'] = $app->request->get('deck');
-		if($markupSnippet === 'localplayer') {
-			$vars['color'] = $vars['colors'][ $vars['spotcolor']['local'] ]['1st'];
-			$markupSnippet = 'nowplaying';
-		}
-		if($markupSnippet === 'mpdplayer') {
-			$vars['color'] = $vars['colors'][ $vars['spotcolor']['mpd'] ]['1st'];
-			$markupSnippet = 'nowplaying';
-		}
-		if($markupSnippet === 'xwaxplayer') {
-			$vars['color'] = $vars['colors'][ $vars['spotcolor']['xwax'] ]['1st'];
-			$markupSnippet = 'nowplaying';
-		}
-		$app->response->headers->set('Content-Type', 'text/css');
-		$app->render('css/'.$markupSnippet.'.css', $vars);
-	});
 }
 
 

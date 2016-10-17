@@ -204,9 +204,6 @@ $container['notFoundHandler'] = function ($cont) {
 	*/
 };
 
-#$container[Slimpd\Repositories\AlbumRepo::class] = function($cont) {
-#	return new Slimpd\Repositories\AlbumRepo($cont);
-#};
 
 $container['albumRepo'] = function($cont) {
 	return new \Slimpd\Repositories\AlbumRepo($cont);
