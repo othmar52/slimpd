@@ -11,7 +11,7 @@
 			</button>
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' with { 'targetselector': item.relPathHash~'-'~mpdidx } %}
-			<button role="control" title="remove from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"remove","item":{{ playerCtrlItem }},"mpdurl":"{{root}}mpdctrl/deleteIndex/{{ mpdidx }}"}'>
+			<button role="control" title="remove track from playlist" class="btn btn-trnsp player-ctrl" data-player='{"action":"removeTrack","item":{{ playerCtrlItem }},"mpdurl":"{{root}}mpdctrl/deleteIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-trash"></i>
 			</button>
 		</div>

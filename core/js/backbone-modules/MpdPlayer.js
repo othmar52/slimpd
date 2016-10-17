@@ -127,10 +127,10 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
 		},
 
-		remove(item) {
+		removeTrack(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
-			window.sliMpd.modules.AbstractPlayer.prototype.remove.call(this, item);
+			window.sliMpd.modules.AbstractPlayer.prototype.removeTrack.call(this, item);
 		},
 
 		toggleRepeat(item) {

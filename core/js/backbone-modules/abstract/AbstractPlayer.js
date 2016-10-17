@@ -175,6 +175,7 @@
 
 		soundEnded(item) { return; },
 		removeDupes(item) { return; },
+		removeTrack(item) { return; },
 
 		reloadCss(hash) {
 			// TODO: comment whats happening here
