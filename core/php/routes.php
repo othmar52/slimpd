@@ -19,6 +19,10 @@
 
 // Routes
 
+// library routes
+$app->get('[/]', 'Slimpd\Modules\Library\Controller:indexAction');
+$app->get('/library[/]', 'Slimpd\Modules\Library\Controller:indexAction');
+
 // filebrowser routes
 $app->get('/filebrowser', 'Slimpd\Modules\filebrowser\Controller:index')->setName('filebrowser');
 $app->get('/filebrowser/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:dircontent');
@@ -38,7 +42,6 @@ $app->get("/markup/albumtracks/{itemUid}", 'Slimpd\Modules\album\Controller:albu
 $app->get("/markup/widget-album/{itemUid}", 'Slimpd\Modules\album\Controller:widgetAlbumAction');
 $app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');
 
-
 // track routes
 $app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
 $app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
@@ -47,3 +50,12 @@ $app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widget
 $app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
 $app->get("/markup/widget-deckselector", 'Slimpd\Modules\track\Controller:widgetDeckselectorAction');
 $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:standaloneTrackviewAction');
+
+// artist routes
+$app->get("/artists/[{itemParams:.*}]", 'Slimpd\Modules\Artist\Controller:listAction');
+
+// genre routes
+$app->get("/genres/[{itemParams:.*}]", 'Slimpd\Modules\Genre\Controller:listAction');
+
+// label routes
+$app->get("/labels/[{itemParams:.*}]", 'Slimpd\Modules\Label\Controller:listAction');

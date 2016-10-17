@@ -16,20 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$app->get('/', function() use ($app, $vars){
-	$app->response->redirect($app->config['root'] . 'library', 303);
-});
 
-$app->get('/library(/)', function() use ($app, $vars){
-	$vars['action'] = "landing";
-	$vars['itemlist'] = \Slimpd\Models\Album::getAll(11, 0, "added desc");
-	$vars['totalAlbums'] = \Slimpd\Models\Album::getCountAll();
-	$vars['totalArtists'] = \Slimpd\Models\Artist::getCountAll();
-	$vars['totalGenres'] = \Slimpd\Models\Genre::getCountAll();
-	$vars['totalLabels'] = \Slimpd\Models\Label::getCountAll();
-	$vars['renderitems'] = getRenderItems($vars['itemlist']);
-	$app->render('surrounding.htm', $vars);
-});
 
 $app->get('/djscreen', function() use ($app, $vars){
 	$vars['action'] = "djscreen";
@@ -125,14 +112,6 @@ $app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars)
 	$app->render('modules/widget-plaintext.htm', $vars);
 });
 
-$app->get('/deliver/:item+', function($item) use ($app, $vars){
-	$path = join(DS, $item);
-	if(is_numeric($path)) {
-		$track = \Slimpd\Models\Track::getInstanceByAttributes(array('uid' => (int)$path));
-		$path = ($track === NULL) ? '' : $track->getRelPath();
-	}
-	deliver(trimAltMusicDirPrefix($path, $app), $app);
-});
 
 
 
