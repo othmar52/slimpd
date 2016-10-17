@@ -27,6 +27,7 @@ class Artist extends \Slimpd\Models\AbstractModel {
 	protected $az09;
 
 	public static $tableName = "artist";
+	public static $repoKey = 'artistRepo';
 
 	protected static function unifyItemnames($items) {
 		$return = array();
@@ -138,23 +139,6 @@ class Artist extends \Slimpd\Models\AbstractModel {
 		}
 		return $itemUids;
 
-	}
-
-	public function fetchRenderItems(&$renderItems) {
-		$renderItems["artists"][$this->getUid()] = $this;
-		foreach(trimExplode(",", $this->getTopLabelUids(), TRUE) as $labelUid) {
-			if(isset($renderItems["labels"][$labelUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["labels"][$labelUid] = \Slimpd\Models\Label::getInstanceByAttributes(["uid" => $labelUid]);
-		}
-		foreach(trimExplode(",", $this->getTopGenreUids(), TRUE) as $genreUid) {
-			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["genres"][$genreUid] = \Slimpd\Models\Genre::getInstanceByAttributes(["uid" => $genreUid]);
-		}
-		return;
 	}
 
 	//setter

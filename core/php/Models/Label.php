@@ -27,23 +27,7 @@ class Label extends \Slimpd\Models\AbstractModel {
 	protected $az09;
 
 	public static $tableName = 'label';
-
-	public function fetchRenderItems(&$renderItems) {
-		$renderItems["labels"][$this->getUid()] = $this;
-		foreach(trimExplode(",", $this->getTopArtistUids(), TRUE) as $artistUid) {
-			if(isset($renderItems["artists"][$artistUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["artists"][$artistUid] = \Slimpd\Models\Artist::getInstanceByAttributes(["uid" => $artistUid]);
-		}
-		foreach(trimExplode(",", $this->getTopGenreUids(), TRUE) as $genreUid) {
-			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["genres"][$genreUid] = \Slimpd\Models\Genre::getInstanceByAttributes(["uid" => $genreUid]);
-		}
-		return;
-	}
+	public static $repoKey = 'labelRepo';
 
 	//setter
 	public function setTitle($value) {

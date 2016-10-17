@@ -343,32 +343,6 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	return join(" ", $phrase);
 }
 
-function getRenderItems() {
-	$args = func_get_args();
-	$return = array(
-		"genres" => [],
-		"labels" => [],
-		"artists" => [],
-		"albums" => [],
-		"itembreadcrumbs" => [],
-	);
-
-	foreach($args as $argument) {
-		if(is_object($argument) === TRUE) {
-			$argument->fetchRenderItems($return);
-		}
-		if(is_array($argument) === TRUE) {
-			foreach($argument as $item) {
-				if(is_object($item) === FALSE) {
-					continue;
-				}
-				$item->fetchRenderItems($return);
-			}
-		}
-	}
-	return $return;
-}
-
 function convertInstancesArrayToRenderItems($input) {
 	$return = [
 		"genres" => [],

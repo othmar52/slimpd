@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Models;
+namespace Slimpd\Repositories;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,10 +17,17 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-abstract class AbstractModel {
+class BaseRepository {
 	public static $tableName;
-	public static $repoKey;
-	protected $uid;
+	public static $classPath;
+	protected $container;
+	protected $db;
+	
+	public function __construct(\Slim\Container $container) {
+		$this->container = $container;
+		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
+		$this->db = $container->db;
+	}
 
 	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
@@ -31,10 +38,9 @@ abstract class AbstractModel {
 			return $instances;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
+			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 
@@ -58,7 +64,7 @@ abstract class AbstractModel {
 
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
-		$result = $database->query($query);
+		$result = $this->db->query($query);
 		if($singleInstance === TRUE && $result->num_rows == 0) {
 			return NULL;
 		}
@@ -83,10 +89,9 @@ abstract class AbstractModel {
 			return $instances;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= ' FIND_IN_SET('. (int)$value .',' .$database->real_escape_string($key) . ') OR ';
+			$query .= ' FIND_IN_SET('. (int)$value .',' .$this->db->real_escape_string($key) . ') OR ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ') OR '
 		$query .= ')'; // close bracket
@@ -97,7 +102,7 @@ abstract class AbstractModel {
 
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
-		$result = $database->query($query);
+		$result = $this->db->query($query);
 		if($result->num_rows == 0) {
 			return NULL;
 		}
@@ -119,14 +124,13 @@ abstract class AbstractModel {
 			return $instances;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= ' FIND_IN_SET('. (int)$value .',' .$database->real_escape_string($key) . ') OR ';
+			$query .= ' FIND_IN_SET('. (int)$value .',' .$this->db->real_escape_string($key) . ') OR ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ') OR '
 		$query .= ')'; // close bracket
-		return $database->query($query)->fetch_assoc()['itemsTotal'];
+		return $this->db->query($query)->fetch_assoc()['itemsTotal'];
 	}
 
 	public static function getInstancesLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
@@ -138,17 +142,16 @@ abstract class AbstractModel {
 			return $instances;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $database->real_escape_string($key) . ' LIKE "%'. $database->real_escape_string($value) .'%" OR ';
+			$query .= $this->db->real_escape_string($key) . ' LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
 
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit and ordering stuff
 		#echo $query; die();
-		$result = $database->query($query);
+		$result = $this->db->query($query);
 		if($result->num_rows == 0) {
 			return NULL;
 		}
@@ -170,17 +173,16 @@ abstract class AbstractModel {
 			return $instances;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $database->real_escape_string($key) . ' LIKE "%'. $database->real_escape_string($value) .'%" OR ';
+			$query .= $this->db->real_escape_string($key) . ' LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
-		return $database->query($query)->fetch_assoc()['itemsTotal'];
+		return $this->db->query($query)->fetch_assoc()['itemsTotal'];
 	}
 
-	public static function getInstanceByAttributes($database, array $attributeArray, $orderBy = FALSE) {
+	public function getInstanceByAttributes(array $attributeArray, $orderBy = FALSE) {
 		$instance = NULL;
 		if(is_array($attributeArray) === FALSE) {
 			return $instance;
@@ -192,7 +194,7 @@ abstract class AbstractModel {
 		#$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
+			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 		
@@ -201,14 +203,14 @@ abstract class AbstractModel {
 			$query .= ' ORDER BY ' . $orderBy . ' ';
 		}
 		$query .= ' LIMIT 1';
-		$result = $database->query($query);
+		$result = $this->db->query($query);
 		if($result === FALSE) {
 			return NULL;
 		}
 		if($result->num_rows == 0) {
 			return $instance;
 		}
-		$calledClass =get_called_class();
+		$calledClass = $this->getClassPath();
 		while($record = $result->fetch_assoc()) {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
@@ -217,7 +219,7 @@ abstract class AbstractModel {
 		return $instance;
 	}
 
-	public static function getCountByAttributes(array $attributeArray) {
+	public function getCountByAttributes(array $attributeArray) {
 		$count = 0;
 		if(is_array($attributeArray) === FALSE) {
 			return $count;
@@ -226,13 +228,12 @@ abstract class AbstractModel {
 			return $count;
 		}
 
-		$database = \Slim\Slim::getInstance()->db;
 		$query = "SELECT count(*) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $database->real_escape_string($key) . '="' . $database->real_escape_string($value) . '" AND ';
+			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
-		return $database->query($query)->fetch_assoc()['itemsTotal'];
+		return $this->db->query($query)->fetch_assoc()['itemsTotal'];
 	}
 
 	private static function getTableName() {
@@ -240,9 +241,9 @@ abstract class AbstractModel {
 		return $class::$tableName;
 	}
 	
-	public static function getRepoKey() {
+	private static function getClassPath() {
 		$class = get_called_class();
-		return $class::$repoKey;
+		return $class::$classPath;
 	}
 	
 	public function mapArrayToInstance($array) {
@@ -280,7 +281,6 @@ abstract class AbstractModel {
 	}
 
 	public function insert() {
-		$app = \Slim\Slim::getInstance();
 
 		// automatically add timestamp if possible
 		$setter = 'setAdded';
@@ -293,10 +293,10 @@ abstract class AbstractModel {
 		$mapped = $this->mapInstancePropertiesToDatabaseKeys();
 		$query = 'INSERT INTO '. self::getTableName().' (' . join(",", array_keys($mapped)) . ') VALUES (';
 		foreach($mapped as $value) {
-			$query .= "\"" . $app->db->real_escape_string($value) . "\",";
+			$query .= "\"" . $this->db->real_escape_string($value) . "\",";
 		}
 		$query = substr($query,0,-1) . ");";
-		$app->db->query($query);
+		$this->db->query($query);
 		$this->setUid($app->db->insert_id);
 	}
 
@@ -488,7 +488,7 @@ abstract class AbstractModel {
 		$app->importerCache = $tmpArray;
 	}
 
-	public static function getAll($database, $itemsperPage = 500, $currentPage = 1, $orderBy = "") {
+	public function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if($itemsperPage > 500) {
 			$itemsperPage = 500;
@@ -509,11 +509,13 @@ abstract class AbstractModel {
 		#$query .= ' ORDER BY trackCount DESC '; // TODO: handle ordering
 		$query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit
 		#echo $query; die();
-		$result = $database->query($query);
+		$result = $this->db->query($query);
+		
+		$classPath = self::getClassPath();
 
-		$calledClass =get_called_class();
 		while($record = $result->fetch_assoc()) {
-			$instance = new $calledClass();
+			
+			$instance = new $classPath();
 			$instance->mapArrayToInstance($record);
 			$instances[] = $instance;
 		}
@@ -522,7 +524,7 @@ abstract class AbstractModel {
 	
 	public static function getCountAll($database) {
 		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName();
-		$result = $database->query($query);
+		$result = $this->db->query($query);
 		if($result === FALSE) {
 			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
 			return 0;
@@ -535,13 +537,13 @@ abstract class AbstractModel {
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
-		$highestUid = $database->query("SELECT uid FROM ". self::getTableName() ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
+		$highestUid = $this->db->query("SELECT uid FROM ". self::getTableName() ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
 
 		$maxAttempts = 1000;
 		$counter = 0;
 		try {
 			while (TRUE) {
-				$try = $database->query(
+				$try = $this->db->query(
 					"SELECT uid FROM ". self::getTableName() ." WHERE uid = " . mt_rand(1, $highestUid)
 				)->fetch_assoc()['uid'];
 				if($try !== NULL) {
@@ -581,3 +583,4 @@ abstract class AbstractModel {
 		return $this;
 	}
 }
+

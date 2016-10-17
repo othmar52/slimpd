@@ -133,7 +133,7 @@ class Controller extends \Slimpd\BaseController {
 				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
 			)->withHeader('Content-Type', 'image/jpeg');
 		} catch(\Exception $e) {
-			$app->response->redirect($app->config['root'] . 'imagefallback-'.$preConf.'/broken');
+			$app->response->redirect($this->conf['config']['absRefPrefix'] . 'imagefallback-'.$preConf.'/broken');
 			return;
 		}
 	}

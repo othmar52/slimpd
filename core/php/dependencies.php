@@ -141,6 +141,10 @@ $container['cookie'] = function($cont){
     $request = $cont->get('request');
     return new \Slim\Http\Cookies($request->getCookieParams());
 };
+
+
+
+
 // -----------------------------------------------------------------------------
 // Service factories
 // -----------------------------------------------------------------------------
@@ -200,10 +204,27 @@ $container['notFoundHandler'] = function ($cont) {
 	*/
 };
 
+#$container[Slimpd\Repositories\AlbumRepo::class] = function($cont) {
+#	return new Slimpd\Repositories\AlbumRepo($cont);
+#};
+
+$container['albumRepo'] = function($cont) {
+	return new \Slimpd\Repositories\AlbumRepo($cont);
+};
+$container['artistRepo'] = function($cont) {
+	return new \Slimpd\Repositories\ArtistRepo($cont);
+};
+$container['genreRepo'] = function($cont) {
+	return new \Slimpd\Repositories\GenreRepo($cont);
+};
+$container['labelRepo'] = function($cont) {
+	return new \Slimpd\Repositories\LabelRepo($cont);
+};
+
 // -----------------------------------------------------------------------------
 // Action factories
 // -----------------------------------------------------------------------------
 
 $container[App\Action\HomeAction::class] = function ($c) {
-    return new App\Action\HomeAction($c->get('view'), $c->get('logger'));
+	return new App\Action\HomeAction($c->get('view'), $c->get('logger'));
 };

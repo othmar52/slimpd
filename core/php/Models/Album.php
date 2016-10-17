@@ -43,51 +43,8 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $beatportId;
 	protected $junoId;
 
-	public static $tableName = 'album';
-
-	public function getAlbumByRelPath($relPath) {
-		$app = \Slim\Slim::getInstance();
-		$query = "
-			SELECT * 
-			FROM album
-			WHERE relPathHash=\"" . getFilePathHash($relPath) . "\"";
-		$result = $app->db->query($query);
-		$record = $result->fetch_assoc();
-		if($record === NULL) {
-			return NULL;
-		}
-		$this->mapArrayToInstance($record);
-	}
-
-	public function fetchRenderItems(&$renderItems) {
-		$renderItems["albums"][$this->getUid()] = $this;
-		if(isset($renderItems["itembreadcrumbs"][$this->getRelPathHash()]) === FALSE) {
-			$renderItems["itembreadcrumbs"][$this->getRelPathHash()] = \Slimpd\filebrowser::fetchBreadcrumb($this->getRelPath());
-		}
-
-		foreach(trimExplode(",", $this->getArtistUid(), TRUE) as $artistUid) {
-			if(isset($renderItems["artists"][$artistUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["artists"][$artistUid] = \Slimpd\Models\Artist::getInstanceByAttributes(["uid" => $artistUid]);
-		}
-		
-		foreach(trimExplode(",", $this->getGenreUid(), TRUE) as $genreUid) {
-			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["genres"][$genreUid] = \Slimpd\Models\Genre::getInstanceByAttributes(["uid" => $genreUid]);
-		}
-		
-		foreach(trimExplode(",", $this->getLabelUid(), TRUE) as $labelUid) {
-			if(isset($renderItems["labels"][$labelUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["labels"][$labelUid] = \Slimpd\Models\Label::getInstanceByAttributes(["uid" => $labelUid]);
-		}
-		
-		return;
-	}
+	public static $tableName = 'album'; // TODO remove this as its part of the repo
+	public static $repoKey = 'albumRepo';
 
 	//setter
 	public function setTitle($value) {

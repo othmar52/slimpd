@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\filebrowser;
+namespace Slimpd\Modules\album;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -21,22 +21,30 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-	private $imageSizes = array(35, 50,100,300,1000);
-	private $weightOrderBy;
 
 
-	public function index(Request $request, Response $response, $args) {
-		$args['action'] = 'filebrowser';
-		$fileBrowser = $this->filebrowser;
-		$fileBrowser->getDirectoryContent($this->__get('conf')['mpd']['musicdir']);
-		$args['breadcrumb'] = $fileBrowser->breadcrumb;
-		$args['subDirectories'] = $fileBrowser->subDirectories;
-		$args['files'] = $fileBrowser->files;
-		$args['hotlinks'] = array();
-		$args['hideQuicknav'] = 1;
-		foreach(trimExplode("\n", $this->conf['filebrowser']['hotlinks'], TRUE) as $path){
-			$args['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
-		}
+
+	public function listAction(Request $request, Response $response, $args) {
+		
+		#var_dump($this->albumRepository);die;
+		
+		$args["action"] = "albums";
+		$args["itemlist"] = [];
+		$itemsPerPage = 18;
+	
+		$args['itemlist'] = $this->albumRepo->getAll($itemsPerPage, $args['currentPage'], $args['sort'] . " " . $args['direction']);
+		#die(__FUNCTION__);
+		$args["totalresults"] = \Slimpd\Models\Album::getCountAll($this->db);
+		$args["activesorting"] = $args['sort'] . "-" . $args['direction'];
+	
+		$args["paginator"] = new \JasonGrimes\Paginator(
+			$args["totalresults"],
+			$itemsPerPage,
+			$args['currentPage'],
+			$this->conf['config']['absRefPrefix'] ."albums/page/(:num)/sort/".$args['sort']."/".$args['direction']
+		);
+		$args["paginator"]->setMaxPagesToShow(paginatorPages($args['currentPage']));
+		$args['renderitems'] = $this->getRenderItems($args['itemlist']);
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}

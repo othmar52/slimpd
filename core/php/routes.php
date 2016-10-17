@@ -31,4 +31,7 @@ $app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller
 $app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controller:album')->setName('imagealbum');
 $app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');#->name('imagefallback-' .$imagesize);
 
+
+$app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');
+
 #}

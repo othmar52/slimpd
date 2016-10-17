@@ -32,4 +32,34 @@ class BaseController {
 			return $this->container->{$property};
 	}
 
+
+	// Magic property
+	public function getRenderItems() {
+		#print_r($this->container->db); die;
+		$args = func_get_args();
+		$return = array(
+			"genres" => [],
+			"labels" => [],
+			"artists" => [],
+			"albums" => [],
+			"itembreadcrumbs" => [],
+		);
+	
+		foreach($args as $argument) {
+			if(is_object($argument) === TRUE) {
+				$repoKey = $argument->getRepoKey();
+				$this->container->$repoKey->fetchRenderItems($return, $argument);
+			}
+			if(is_array($argument) === TRUE) {
+				foreach($argument as $item) {
+					if(is_object($item) === FALSE) {
+						continue;
+					}
+					$repoKey = $item->getRepoKey();
+					$this->container->$repoKey->fetchRenderItems($return, $item);
+				}
+			}
+		}
+		return $return;
+	}
 }
