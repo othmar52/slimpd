@@ -34,6 +34,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $error;
 	
 	public static $tableName = 'bitmap';
+	public static $repoKey = 'bitmapRepo';
 
 	public function searchUidBeforeInsert() {
 		if($this->getUid() > 0) {

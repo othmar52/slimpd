@@ -20,9 +20,6 @@
 // Routes
 
 
-#foreach (array(35, 50,100,300,1000) as $imagesize) {
-#$app->get('/', 'Slimpd\Modules\images\Controller:index');#->setName('homepage');
-
 $app->get('/filebrowser', 'Slimpd\Modules\filebrowser\Controller:index')->setName('filebrowser');
 $app->get('/filebrowser/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:dircontent');
 $app->get('/markup/widget-directory/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:widgetDirectory');
@@ -32,6 +29,5 @@ $app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controlle
 $app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');#->name('imagefallback-' .$imagesize);
 
 
+$app->get("/album/{itemUid}", 'Slimpd\Modules\album\Controller:detailAction');
 $app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');
-
-#}

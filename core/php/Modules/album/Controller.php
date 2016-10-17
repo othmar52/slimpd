@@ -48,101 +48,50 @@ class Controller extends \Slimpd\BaseController {
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}
-	
-	public function dircontent(Request $request, Response $response, $args) {
-		$args['action'] = 'filebrowser';
-		$fileBrowser = $this->filebrowser;
-		$fileBrowser->itemsPerPage = $this->conf['filebrowser']['max-items'];
-		$fileBrowser->currentPage = intval($request->getParam('page'));
-		$fileBrowser->currentPage = ($fileBrowser->currentPage === 0) ? 1 : $fileBrowser->currentPage;
-		switch($request->getParam('filter')) {
-			case 'dirs':
-				$fileBrowser->filter = 'dirs';
-				break;
-			case 'files':
-				$fileBrowser->filter = 'files';
-				break;
-			default :
-				break;
-		}
-		
-		switch($request->getParam('neighbour')) {
-			case 'next':
-				$fileBrowser->getNextDirectoryContent($args['itemParams']);
-				break;
-			case 'prev':
-				$fileBrowser->getPreviousDirectoryContent($args['itemParams']);
-				break;
-			case 'up':
-				$parentPath = dirname($args['itemParams']);
-				if($parentPath === '.') {
-					$uri = $request->getUri()->withPath(
-						$this->router->pathFor('filebrowser')
-					)->getPath() . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
-					return $response->withRedirect($uri, 403);
-				}
-				$fileBrowser->getDirectoryContent($parentPath);
-				break;
-			default:
-				$fileBrowser->getDirectoryContent($args['itemParams']);
-				break;
-		}
-	
-		$args['directory'] = $fileBrowser->directory;
-		$args['breadcrumb'] = $fileBrowser->breadcrumb;
-		$args['subDirectories'] = $fileBrowser->subDirectories;
-		$args['files'] = $fileBrowser->files;
-		$args['filter'] = $fileBrowser->filter;
 
-		switch($fileBrowser->filter) {
-			case 'dirs':
-				$totalFilteredItems = $fileBrowser->subDirectories['total'];
-				$args['showDirFilterBadge'] = FALSE;
-				$args['showFileFilterBadge'] = FALSE;
-				break;
-			case 'files':
-				$totalFilteredItems = $fileBrowser->files['total'];
-				$args['showDirFilterBadge'] = FALSE;
-				$args['showFileFilterBadge'] = FALSE;
-				break;
-			default :
-				$totalFilteredItems = 0;
-				$args['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
-					? TRUE
-					: FALSE;
-				
-				$args['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->files['total'])
-					? TRUE
-					: FALSE;
-				break;
+	
+
+	public function detailAction(Request $request, Response $response, $args) {
+		$albumUid = $args['itemUid'];
+		$args['action'] = 'album.detail';
+		$args['album'] = $this->container->albumRepo->getInstanceByAttributes(array('uid' => $albumUid));
+		if($args['album'] === NULL) {
+			die('TODO: redirect to 404');
+			$app->notFound();
+			return;
+		}
+		$args['itemlist'] = $this->container->trackRepo->getInstancesByAttributes(
+			['albumUid' => $albumUid], FALSE, 200, 1, 'trackNumber ASC'
+		);
+		$args['renderitems'] = $this->getRenderItems($args['album'], $args['itemlist']);
+		$args['albumimages'] = [];
+		$args['bookletimages'] = [];
+		$bitmaps = $this->container->bitmapRepo->getInstancesByAttributes(
+			['albumUid' => $albumUid], FALSE, 200, 1, 'imageweight'
+		);
+		$foundFront = FALSE;
+		foreach($bitmaps as $bitmap) {
+			switch($bitmap->getPictureType()) {
+				case 'front':
+					if($foundFront === TRUE && $app->config['images']['hide_front_duplicates'] === '1') {
+						continue;
+					}
+					$args['albumimages'][] = $bitmap;
+					$foundFront = TRUE;
+					break;
+				case 'booklet':
+					$args['bookletimages'][] = $bitmap;
+					break;
+				default:
+					$args['albumimages'][] = $bitmap;
+					break;
+			}
 		}
 		
-		$args['paginator'] = new \JasonGrimes\Paginator(
-			$totalFilteredItems,
-			$fileBrowser->itemsPerPage,
-			$fileBrowser->currentPage,
-			$this->conf['config']['absRefPrefix'] . 'filebrowser/'.$fileBrowser->directory . '?filter=' . $fileBrowser->filter . '&page=(:num)'
-		);
-		$args['paginator']->setMaxPagesToShow(paginatorPages($fileBrowser->currentPage));
+		$args['breadcrumb'] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['album']->getRelPath());
+		
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
-	}
-
-	public function widgetDirectory(Request $request, Response $response, $args) {
-		$fileBrowser = $this->filebrowser;
-		$fileBrowser->getDirectoryContent($args['itemParams']);
-		$args['directory'] = $fileBrowser->directory;
-		$args['breadcrumb'] = $fileBrowser->breadcrumb;
-		$args['subDirectories'] = $fileBrowser->subDirectories;
-		$args['files'] = $fileBrowser->files;
 		
-		// try to fetch album entry for this directory
-		$args['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
-			$this->db,
-			array('relPathHash' => getFilePathHash($fileBrowser->directory))
-		);
-	
-		$this->view->render($response, 'modules/widget-directory.htm', $args);
-		return $response;
 	}
 }

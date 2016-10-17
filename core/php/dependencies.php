@@ -221,6 +221,13 @@ $container['labelRepo'] = function($cont) {
 	return new \Slimpd\Repositories\LabelRepo($cont);
 };
 
+$container['trackRepo'] = function($cont) {
+	return new \Slimpd\Repositories\TrackRepo($cont);
+};
+$container['bitmapRepo'] = function($cont) {
+	return new \Slimpd\Repositories\BitmapRepo($cont);
+};
+
 // -----------------------------------------------------------------------------
 // Action factories
 // -----------------------------------------------------------------------------

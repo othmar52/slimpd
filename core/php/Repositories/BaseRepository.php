@@ -29,7 +29,7 @@ class BaseRepository {
 		$this->db = $container->db;
 	}
 
-	public static function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
+	public function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -52,7 +52,7 @@ class BaseRepository {
 				$orderBy = ' ORDER BY trackNumber + 0 ASC ';
 				break;
 			case 'imageweight':
-				$weightConf = trimExplode("\n", \Slim\Slim::getInstance()->config['images']['weightening'], TRUE);
+				$weightConf = trimExplode("\n", $this->container->conf['images']['weightening'], TRUE);
 				$orderBy = " ORDER BY FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC ";
 				break;
 			default:
@@ -68,7 +68,7 @@ class BaseRepository {
 		if($singleInstance === TRUE && $result->num_rows == 0) {
 			return NULL;
 		}
-		$calledClass =get_called_class();
+		$calledClass = self::getClassPath();
 		while($record = $result->fetch_assoc()) {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
