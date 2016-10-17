@@ -152,7 +152,7 @@ class filebrowser {
 			return FALSE;
 		}
 		$path = appendTrailingSlash($path);
-		$realpath = getFileRealPath($path, $this->container->conf) . DS;
+		$realpath = $this->container->filesystemUtility->getFileRealPath($path) . DS;
 		#var_dump($realpath, $this->container->conf);
 
 		$base = $this->container->conf["mpd"]["musicdir"];
@@ -171,7 +171,7 @@ class filebrowser {
 			$realpath = realpath(APP_ROOT . $path) . DS;
 		}
 		
-		if(isInAllowedPath($path, $this->container->conf) === FALSE && $systemdir === FALSE) {
+		if($this->container->filesystemUtility->isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
 			// TODO: remove this error message "outsiderealpath"! invaliddir should be enough
 			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
 			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$realpath]));

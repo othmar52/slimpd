@@ -22,45 +22,7 @@ $imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), s
 #echo $imageWeightOrderBy; die();
 // predefined album-image sizes
 foreach (array(35, 50,100,300,1000) as $imagesize) {
-	$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('albumUid' => $itemUid), $imageWeightOrderBy
-		);
-		if($image !== NULL) {
-			$image->dump($imagesize, $app);
-			return;
-		}
-		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'album']));
-	});
 
-	$app->get('/image-'.$imagesize.'/track/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('trackUid' => $itemUid), $imageWeightOrderBy
-		);
-		if($image !== NULL) {
-			$image->dump($imagesize, $app);
-			return;
-		}
-		$track = \Slimpd\Models\Track::getInstanceByAttributes(['uid' => $itemUid]);
-		$app->response->redirect($app->config['root'] . 'image-'.$imagesize.'/album/' . $track->getAlbumUid());
-	});
-
-	$app->get('/image-'.$imagesize.'/id/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$image = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			array('uid' => $itemUid), $imageWeightOrderBy
-		);
-		if($image !== NULL) {
-			$image->dump($imagesize, $app);
-			return;
-		}
-		$app->response->redirect($app->urlFor('imagefallback-'.$imagesize, ['type' => 'track']));
-	});
-
-	$app->get('/image-'.$imagesize.'/path/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
-		$image = new \Slimpd\Models\Bitmap();
-		$image->setRelPath(join(DS, $itemParams))->dump($imagesize, $app);
-	})->name('imagepath-' .$imagesize);
-	
 	$app->get('/image-'.$imagesize.'/searchfor/:itemParams+', function($itemParams) use ($app, $vars, $imagesize){
 		$filesystemReader = new \Slimpd\Modules\importer\FilesystemReader();
 		$images = $filesystemReader->getFilesystemImagesForMusicFile(join(DS, $itemParams));
@@ -75,23 +37,6 @@ foreach (array(35, 50,100,300,1000) as $imagesize) {
 		
 		$app->response->redirect($app->urlFor('imagepath-'.$imagesize, ['itemParams' => path2url($path)]));
 	});
-	
-	$app->get('/imagefallback-'.$imagesize.'/:type', function($type) use ($app, $vars, $imagesize){
-		$vars['imagesize'] = $imagesize;
-		$vars['color'] = $vars['images']['noimage'][ $vars['playerMode'] ]['color'];
-		$vars['backgroundcolor'] = $vars['images']['noimage'][ $vars['playerMode'] ]['backgroundcolor'];
-		
-		switch($type) {
-			case 'artist': $template = 'svg/icon-artist.svg'; break;
-			case 'genre': $template = 'svg/icon-genre.svg'; break;
-			case 'noresults': $template = 'svg/icon-noresults.svg'; break;
-			case 'broken': $template = 'svg/icon-broken-image.svg'; break;
-			default: $template = 'svg/icon-album.svg';
-		}
-		$app->response->headers->set('Content-Type', 'image/svg+xml');
-		header("Content-Type: image/svg+xml");
-		$app->render($template, $vars);
-	})->name('imagefallback-' .$imagesize);
 	
 	// missing track or album paramter caused by items that are not imported in slimpd yet
 	# TODO: maybe use another fallback image for those items...

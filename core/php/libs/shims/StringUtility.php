@@ -20,19 +20,6 @@
 /**
  * removes [mpd]alternative_musicdir prefix in case it is configured and present
  */
-function trimAltMusicDirPrefix($pathString, $app = NULL) {
-	if($app === NULL) {
-		$app = \Slim\Slim::getInstance();
-	}
-	$altMusicDir = $app->config['mpd']['alternative_musicdir'];
-	if(trim($altMusicDir) === "") {
-		return $pathString;
-	}
-	if(stripos($pathString, $altMusicDir) === 0) {
-		return substr($pathString, strlen($altMusicDir));
-	}
-	return $pathString;
-}
 
 function appendTrailingSlash($pathString) {
 	return removeTrailingSlash($pathString) . DS;

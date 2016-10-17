@@ -228,6 +228,10 @@ $container['bitmapRepo'] = function($cont) {
 	return new \Slimpd\Repositories\BitmapRepo($cont);
 };
 
+$container['filesystemUtility'] = function($cont) {
+	return new \Slimpd\Utilities\FilesystemUtility($cont);
+};
+
 // -----------------------------------------------------------------------------
 // Action factories
 // -----------------------------------------------------------------------------

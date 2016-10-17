@@ -33,8 +33,7 @@ class Controller extends \Slimpd\BaseController {
 
 	public function album(Request $request, Response $response, $args) {
 		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$bitmap = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			$this->__get('db'),
+		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
 			[ 'albumUid' => $args['itemUid'] ],
 			$this->weightOrderBy
 		);
@@ -52,15 +51,14 @@ class Controller extends \Slimpd\BaseController {
 
 	public function track(Request $request, Response $response, $args) {
 		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
-		$bitmap = \Slimpd\Models\Bitmap::getInstanceByAttributes(
-			$this->__get('db'),
+		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
 			[ 'trackUid' => $args['itemUid'] ],
 			$this->weightOrderBy
 		);
 		if($bitmap !== NULL) {
 			return $this->dump($bitmap, $args['imagesize'], $response);
 		}
-		$track = \Slimpd\Models\Track::getInstanceByAttributes($this->__get('db'), ['uid' => $args['itemUid'] ]);
+		$track = $this->trackRepo->getInstanceByAttributes(['uid' => $args['itemUid'] ]);
 		$uri = $request->getUri()->withPath(
 			$this->router->pathFor(
 				'imagealbum',
@@ -68,6 +66,31 @@ class Controller extends \Slimpd\BaseController {
 			)
 		);
 		return $response->withRedirect($uri, 403);
+	}
+	
+	public function bitmap(Request $request, Response $response, $args) {
+		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
+		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
+			[ 'uid' => $args['itemUid'] ],
+			$this->weightOrderBy
+		);
+		if($bitmap !== NULL) {
+			return $this->dump($bitmap, $args['imagesize'], $response);
+		}
+		$track = $this->trackRepo->getInstanceByAttributes(['uid' => $args['itemUid'] ]);
+		$uri = $request->getUri()->withPath(
+			$this->router->pathFor(
+				'imagealbum',
+				['imagesize' => $args['imagesize'], 'itemUid' => $track->getAlbumUid() ]
+			)
+		);
+		return $response->withRedirect($uri, 403);
+	}
+
+	public function path(Request $request, Response $response, $args) {
+		$bitmap = new \Slimpd\Models\Bitmap();
+		$bitmap->setRelPath($args['itemParams']);
+		return $this->dump($bitmap, $args['imagesize'], $response);
 	}
 
 	public function fallback(Request $request, Response $response, $args) {
@@ -95,7 +118,7 @@ class Controller extends \Slimpd\BaseController {
 	public function dump(\Slimpd\Models\Bitmap $bitmap, $imageSize, &$response) {
 		$imgDirecoryPrefix = ($bitmap->getTrackUid())
 			? APP_ROOT
-			: $this->__get('conf')['mpd']['musicdir'];
+			: $this->conf['mpd']['musicdir'];
 			
 		$phpThumb = $this->getPhpThumb();	
 		$phpThumb->setSourceFilename($imgDirecoryPrefix . $bitmap->getRelPath());
@@ -120,21 +143,26 @@ class Controller extends \Slimpd\BaseController {
 				$phpThumb->GenerateThumbnail();
 				\phpthumb_functions::EnsureDirectoryExists(
 					dirname($phpThumb->cache_filename),
-					octdec($app->config['config']['dirCreateMask'])
+					octdec($this->conf['config']['dirCreateMask'])
 				);
 				$phpThumb->RenderToFile($phpThumb->cache_filename);
 				if(is_file($phpThumb->cache_filename) === FALSE) {
-					// something went wrong
-					$app->response->redirect($app->urlFor('imagefallback-'.$preConf, ['type' => 'album']));
-					return;
+					$uri = $this->router->pathFor(
+						'imagefallback',
+						['imagesize' => $imageSize, 'type' => 'album']
+					);
+					return $response->withRedirect($uri, 403);
 				}
 			}
 			return $response->write(
 				new \GuzzleHttp\Stream\LazyOpenStream($phpThumb->cache_filename, 'r')
 			)->withHeader('Content-Type', 'image/jpeg');
 		} catch(\Exception $e) {
-			$app->response->redirect($this->conf['config']['absRefPrefix'] . 'imagefallback-'.$preConf.'/broken');
-			return;
+			$uri = $this->router->pathFor(
+				'imagefallback',
+				['imagesize' => $imageSize, 'type' => 'broken']
+			);
+			return $response->withRedirect($uri, 403);
 		}
 	}
 
@@ -158,8 +186,8 @@ class Controller extends \Slimpd\BaseController {
 		#$phpThumb->setParameter('config_cache_maxsize', NULL);
 		#$phpThumb->setParameter('config_cache_maxfile', NULL);
 		$phpThumb->setParameter('config_cache_directory_depth', 3);
-		$phpThumb->setParameter('config_file_create_mask', octdec($this->__get('conf')['config']['fileCreateMask']));
-		$phpThumb->setParameter('config_dir_create_mask', octdec($this->__get('conf')['config']['dirCreateMask']));
+		$phpThumb->setParameter('config_file_create_mask', octdec($this->conf['config']['fileCreateMask']));
+		$phpThumb->setParameter('config_dir_create_mask', octdec($this->conf['config']['dirCreateMask']));
 		return $phpThumb;
 	}
 }

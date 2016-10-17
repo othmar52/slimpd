@@ -203,9 +203,10 @@ class BaseRepository {
 			$query .= ' ORDER BY ' . $orderBy . ' ';
 		}
 		$query .= ' LIMIT 1';
+		#echo $query; die;
 		$result = $this->db->query($query);
 		if($result === FALSE) {
-			return NULL;
+			#return NULL;
 		}
 		if($result->num_rows == 0) {
 			return $instance;
@@ -514,15 +515,14 @@ class BaseRepository {
 		$classPath = self::getClassPath();
 
 		while($record = $result->fetch_assoc()) {
-			
 			$instance = new $classPath();
 			$instance->mapArrayToInstance($record);
 			$instances[] = $instance;
 		}
 		return $instances;
 	}
-	
-	public static function getCountAll($database) {
+
+	public function getCountAll() {
 		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName();
 		$result = $this->db->query($query);
 		if($result === FALSE) {
@@ -532,7 +532,7 @@ class BaseRepository {
 		return $result->fetch_assoc()['itemsTotal'];
 	}
 	
-	public static function getRandomInstance($database) {
+	public static function getRandomInstance() {
 		#$database = \Slim\Slim::getInstance()->db;
 
 		// ORDER BY RAND is the killer on huge tables

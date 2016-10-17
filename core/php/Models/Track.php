@@ -54,13 +54,6 @@ class Track extends \Slimpd\Models\AbstractTrack {
 		return self::getNewInstanceWithoutDbQueries($pathString);
 	}
 
-	public static function getNewInstanceWithoutDbQueries($pathString) {
-		$track = new \Slimpd\Models\Track();
-		$track->setRelPath($pathString);
-		$track->setRelPathHash(getFilePathHash($pathString));
-		$track->setAudioDataFormat(getFileExt($pathString));
-		return $track;
-	}
 
 	/*
 	# TODO: extract catNr from labelString

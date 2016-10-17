@@ -21,20 +21,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-
-
-
 	public function listAction(Request $request, Response $response, $args) {
-		
-		#var_dump($this->albumRepository);die;
-		
 		$args["action"] = "albums";
 		$args["itemlist"] = [];
 		$itemsPerPage = 18;
 	
 		$args['itemlist'] = $this->albumRepo->getAll($itemsPerPage, $args['currentPage'], $args['sort'] . " " . $args['direction']);
 		#die(__FUNCTION__);
-		$args["totalresults"] = \Slimpd\Models\Album::getCountAll($this->db);
+		$args["totalresults"] = $this->albumRepo->getCountAll();
 		$args["activesorting"] = $args['sort'] . "-" . $args['direction'];
 	
 		$args["paginator"] = new \JasonGrimes\Paginator(

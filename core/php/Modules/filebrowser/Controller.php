@@ -137,4 +137,29 @@ class Controller extends \Slimpd\BaseController {
 		$this->view->render($response, 'modules/widget-directory.htm', $args);
 		return $response;
 	}
+	
+	public function deliverAction(Request $request, Response $response, $args) {
+		#var_dump($args['itemParams']); die;
+		if(is_numeric($args['itemParams'])) {
+			$track = $this->trackRepo->getInstanceByAttributes(array('uid' => (int)$args['itemParams']));
+			$path = ($track === NULL) ? '' : $track->getRelPath();
+		}
+		$this->filesystemUtility->deliver($this->filesystemUtility->trimAltMusicDirPrefix($path));
+		
+		
+		$fileBrowser = $this->filebrowser;
+		$fileBrowser->getDirectoryContent($args['itemParams']);
+		$args['directory'] = $fileBrowser->directory;
+		$args['breadcrumb'] = $fileBrowser->breadcrumb;
+		$args['subDirectories'] = $fileBrowser->subDirectories;
+		$args['files'] = $fileBrowser->files;
+		
+		// try to fetch album entry for this directory
+		$args['album'] = $this->albumRepo->getInstanceByAttributes(
+			array('relPathHash' => $this->filesystemUtility->getFilePathHash($fileBrowser->directory))
+		);
+	
+		$this->view->render($response, 'modules/widget-directory.htm', $args);
+		return $response;
+	}
 }

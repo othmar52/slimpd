@@ -21,6 +21,14 @@ namespace Slimpd\Repositories;
 class TrackRepo extends \Slimpd\Repositories\BaseRepository {
 	public static $tableName = 'track';
 	public static $classPath = '\Slimpd\Models\Track';
+	
+	public function getNewInstanceWithoutDbQueries($pathString) {
+		$track = new \Slimpd\Models\Track();
+		$track->setRelPath($pathString);
+		$track->setRelPathHash(getFilePathHash($pathString));
+		$track->setAudioDataFormat(getFileExt($pathString));
+		return $track;
+	}
 
 	public function fetchRenderItems(&$renderItems, $trackInstance) {
 		if(isset($renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()]) === FALSE) {

@@ -19,17 +19,31 @@
 
 // Routes
 
-
+// filebrowser routes
 $app->get('/filebrowser', 'Slimpd\Modules\filebrowser\Controller:index')->setName('filebrowser');
 $app->get('/filebrowser/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:dircontent');
 $app->get('/markup/widget-directory/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:widgetDirectory');
+$app->get('/deliver/[{itemParams:.*}]', 'Slimpd\Modules\filebrowser\Controller:deliverAction');
 
+// image routes
 $app->get('/imagefallback-{imagesize}/{type}', 'Slimpd\Modules\images\Controller:fallback')->setName('imagefallback');
 $app->get('/image-{imagesize}/album/{itemUid}', 'Slimpd\Modules\images\Controller:album')->setName('imagealbum');
-$app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');#->name('imagefallback-' .$imagesize);
+$app->get('/image-{imagesize}/track/{itemUid}', 'Slimpd\Modules\images\Controller:track');
+$app->get('/image-{imagesize}/id/{itemUid}', 'Slimpd\Modules\images\Controller:bitmap');
+$app->get('/image-{imagesize}/path/[{itemParams:.*}]', 'Slimpd\Modules\images\Controller:path');
 
-
+// album routes
 $app->get("/album/{itemUid}", 'Slimpd\Modules\album\Controller:detailAction');
 $app->get("/markup/albumtracks/{itemUid}", 'Slimpd\Modules\album\Controller:albumTracksAction');
 $app->get("/markup/widget-album/{itemUid}", 'Slimpd\Modules\album\Controller:widgetAlbumAction');
 $app->get("/albums/page/{currentPage}/sort/{sort}/{direction}", 'Slimpd\Modules\album\Controller:listAction');
+
+
+// track routes
+$app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
+$app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
+$app->get("/markup/xwaxplayer", 'Slimpd\Modules\track\Controller:xwaxplayerAction');
+$app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widgetTrackcontrolAction');
+$app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
+$app->get("/markup/widget-deckselector", 'Slimpd\Modules\track\Controller:widgetDeckselectorAction');
+$app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:standaloneTrackviewAction');
