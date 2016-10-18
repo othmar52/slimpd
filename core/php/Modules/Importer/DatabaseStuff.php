@@ -74,8 +74,7 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
 	}
 
 
-	public static function buildDictionarySql() {
-		$app = \Slim\Slim::getInstance();
+	public function buildDictionarySql() {
 		\Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($this->conf['sphinx']);
 
 		$input  = fopen ("php://stdin", "r");
@@ -104,7 +103,6 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
 			fwrite ( $output, ";" );
 		}
 		fwrite ( $output,  "\n");
-		$app->stop();
 	}
 
 	private static function addKeywordToSql($keyword, $freq, $usedKeywords) {

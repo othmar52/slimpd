@@ -49,7 +49,6 @@ class filebrowser {
 		$path = $this->checkDirectoryAccess($path, $systemdir);
 
 		if($path === FALSE) {
-			die('sdgsdg is false');
 			return;
 		}
 		$dir = $path["dir"];

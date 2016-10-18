@@ -32,8 +32,80 @@ class CliController extends \Slimpd\BaseController {
 		$importer->triggerImport(TRUE);
 		return $response;
 	}
+	public function updateAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
+		$importer->triggerImport();
+		return $response;
+	}
+	public function builddictsqlAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$importer = new \Slimpd\Modules\Importer\DatabaseStuff($this->container);
+		$importer->buildDictionarySql();
+		return $response;
+	}
+	public function updateDbSchemeAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		die('TODO: remimgrate to slimv3 '. __FUNCTION__ );
+		$action = 'migrate';
 	
+		// TODO: manually performed db-changes does not get recognized here - find a solution!
 	
+		// check if we can query the revisions table
+		$query = "SELECT * FROM db_revisions";
+		$result = $this->db->query($query);
+		if($result === FALSE) {
+			// obviosly table(s) never have been created
+			// let's force initial creation of all tables
+			$action = 'init';
+		}
+	
+		Helper::setConfig( getDatabaseDiffConf($app) );
+		if (!Helper::checkConfigEnough()) {
+			Output::error('mmp: please check configuration');
+			die(1);
+		}
+	
+		# after database-structure changes we have to
+		# 1) uncomment next line
+		# 2) run ./slimpd update-db-scheme
+		# 3) recomment this line again
+		# to make a new revision
+		#$action = 'create';
+	
+		$controller = Helper::getController($action, NULL);
+		if ($controller !== false) {
+			$controller->runStrategy();
+		} else {
+			Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+			Helper::getController('help')->runStrategy();
+			die(1);
+		}
+	
+		if($action !== 'init') {
+			exit;
+		}
+	
+		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
+			$this->db->query($query);
+		}
+		return $response;
+	}
+	public function databaseCleanerAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		die('TODO: not implemented yet '. __FUNCTION__ );
+		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
+		// phase 11: delete all bitmap-database-entries that does not exist in filesystem
+		// TODO: limit this to embedded images only
+		$importer->deleteOrphanedBitmapRecords();
+		
+		// TODO: delete orphaned artists + genres + labels
+		return $response;
+	}
+
+	/**
+	 * start from scratch by dropping and recreating database
+	 */
 	public function hardResetAction(Request $request, Response $response, $args) {
 		if($this->getDatabaseDropConfirm() === FALSE) {
 			return $response;

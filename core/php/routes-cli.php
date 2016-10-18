@@ -17,11 +17,11 @@
  * along with this program.	If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Routes
-
-
-
+// CLI Routes
 $app->get('[/]', '\Slimpd\Modules\Importer\CliController:indexAction');
 $app->get('/hard-reset', '\Slimpd\Modules\Importer\CliController:hardResetAction');
 $app->get('/remigrate', '\Slimpd\Modules\Importer\CliController:remigrateAction');
-
+$app->get('/update', '\Slimpd\Modules\Importer\CliController:updateAction');
+$app->get('/builddictsql', '\Slimpd\Modules\Importer\CliController:builddictsqlAction');
+$app->get('/update-db-scheme', '\Slimpd\Modules\Importer\CliController:updateDbSchemeAction');
+$app->get('/database-cleaner', '\Slimpd\Modules\Importer\CliController:databaseCleanerAction');
