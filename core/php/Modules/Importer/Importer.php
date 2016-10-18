@@ -117,8 +117,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->jobPhase = 8;
 		$this->beginJob(array('msg' => 'collecting records to check from table:bitmap'), __FUNCTION__);
 
-		$app = \Slim\Slim::getInstance();
-
 		$query = "SELECT count(uid) AS itemsTotal FROM bitmap";
 		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
@@ -224,9 +222,9 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 						\Slimpd\Modules\Importer\Filescanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
 					)
 					->setMimeType($imageSize['mime'])
-					->setPictureType($app->imageweighter->getType($bitmap->getRelPath()))
-					->setSorting($app->imageweighter->getWeight($bitmap->getRelPath()))
-					->update();
+					->setPictureType($this->container->imageweighter->getType($bitmap->getRelPath()))
+					->setSorting($this->container->imageweighter->getWeight($bitmap->getRelPath()));
+				$this->container->bitmapRepo->update($bitmap);
 				$insertedImages++;
 			}
 			#$album->update();
@@ -289,7 +287,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	 * queDirectoryUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
 	public static function queDirectoryUpdate($relPath) {
-		$app = \Slim\Slim::getInstance();
 		if(is_dir($this->conf['mpd']['musicdir'] .$relPath ) === FALSE) {
 			// no need to process invalid directory
 			return;
@@ -440,8 +437,8 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 				$bitmap->setUid($record['uid'])
 					->setTrackUid($record['trackUid'])
 					->setEmbedded($record['embedded'])
-					->setRelPath($record['relPath'])
-					->destroy();
+					->setRelPath($record['relPath']);
+				$this->container->bitmapRepo->destroy($bitmap);
 
 				$this->itemsProcessed++;
 				$deletedFilesize += $record['filesize'];

@@ -205,8 +205,9 @@ $container['notFoundHandler'] = function ($cont) {
 	}
 	
 	 
-	return function ($request, $response) use ($cont) { 
-		return $cont['view']->render($response, 'errors/404.twig')->withStatus(404);
+	return function ($request, $response) use ($cont) {
+		$vars['action'] = '404';
+		return $cont['view']->render($response, 'surrounding.htm', $vars)->withStatus(404);
 	};
 	// TODO refacturing of old (slim-v2) implementation
 	/*

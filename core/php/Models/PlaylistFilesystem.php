@@ -62,7 +62,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 				$this->parseNml($raw, $minIndex, $maxIndex);
 				break;
 			default :
-				$app->flashNow('error', 'playlist extension ' . $this->getExt() . ' is not supported');
+				$this->flash->AddMessage('error', 'playlist extension ' . $this->getExt() . ' is not supported');
 				return;
 		}
 		$this->fetchedLength === TRUE;
@@ -105,7 +105,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
 	private function parseNml($rawFileContent, $minIndex, $maxIndex) {
 		if(isValidXml($rawFileContent) === FALSE) {
-			\Slim\Slim::getInstance()->flashNow('error', 'invalid XML ' . $this->getTitle());
+			$this->container->flash->AddMessage('error', 'invalid XML ' . $this->getTitle());
 			return;
 		}
 		$playlistContent = new \SimpleXMLElement($rawFileContent);

@@ -277,7 +277,7 @@ class MpdDatabaseParser {
 		if($this->useBatcher === TRUE) {
 			$this->batcher->que($this->rawTagItem);
 		} else {
-			$this->rawTagItem->update();
+			$this->rawtagdataRepo->update($this->rawTagItem);
 		}
 		$this->itemsProcessed++;
 		// reset song attributes

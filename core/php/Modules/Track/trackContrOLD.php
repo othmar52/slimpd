@@ -17,10 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 foreach([
-		'mpdplayer',
-		'localplayer',
 		'xwaxplayer',
-		'widget-trackcontrol',
 		'widget-xwax',
 		'widget-deckselector',
 		'standalone-trackview'

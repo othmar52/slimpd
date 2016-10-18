@@ -93,7 +93,7 @@ $app->get('/css/spotcolors.css', $ctrlName . ':spotcolorsCssAction');
 $app->get('/css/localplayer/{relPathHash}', $ctrlName . ':localPlayerCssAction');
 $app->get('/css/mpdplayer/{relPathHash}', $ctrlName . ':mpdPlayerCssAction');
 $app->get('/css/xwaxplayer/{relPathHash}', $ctrlName . ':xwaxPlayerCssAction');
-
+$app->get('/showplaintext/[{itemParams:.*}]', $ctrlName . ':showplaintextAction');
 
 // waveformgenerator routes
 $ctrlName = 'Slimpd\Modules\WaveformGenerator\Controller';

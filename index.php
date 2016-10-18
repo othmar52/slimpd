@@ -30,9 +30,8 @@ require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
 #require_once APP_ROOT . 'core' . DS . 'php' . DS . 'autoload.php';
 
 
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'StringUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'FilesystemUtility.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'GeneralUtility.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'StringUtility.php';
 require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
 require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'twig'  . DS . 'SlimpdTwigExtension.php';
 

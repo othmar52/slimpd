@@ -164,7 +164,6 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 		if(is_array($tagData['comments']['picture']) === FALSE) {
 			return;
 		}
-		$app = \Slim\Slim::getInstance();
 		// loop through all embedded images
 		foreach($tagData['comments']['picture'] as $bitmapIndex => $bitmapData) {	
 			if(isset($bitmapData['image_mime']) === FALSE) {
@@ -211,14 +210,14 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 			}
 			
 			// remove tempfiles of phpThumb
-			clearPhpThumbTempFiles($phpThumb);
+			$this->container->filesystemUtility->clearPhpThumbTempFiles($phpThumb);
 			
 			$relPath = removeAppRootPrefix($phpThumb->cache_filename);
 			$relPathHash = getFilePathHash($relPath);
 			
 			$imageSize = GetImageSize($phpThumb->cache_filename);
 			
-			$bitmap = new Bitmap();
+			$bitmap = new \Slimpd\Models\Bitmap();
 			$bitmap->setRelPath($relPath)
 				->setRelPathHash($relPathHash)
 				->setFilemtime(filemtime($phpThumb->cache_filename))
@@ -232,11 +231,12 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 						? $bitmapData['picturetype'] . '.ext'
 						: 'Other.ext'
 				)
-				->setPictureType($app->imageweighter->getType($bitmap->getFileName()))
-				->setSorting($app->imageweighter->getWeight($bitmap->getFileName()));
+				->setPictureType($this->container->imageweighter->getType($bitmap->getFileName()))
+				->setSorting($this->container->imageweighter->getWeight($bitmap->getFileName()));
 
 			if($imageSize === FALSE) {
-				$bitmap->setError(1)->update();
+				$bitmap->setError(1);
+				$this->container->bitmapRepo->update($bitmap);
 				continue;
 			}
 
@@ -245,10 +245,11 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 				->setBghex(
 					self::getDominantColor($phpThumb->cache_filename, $imageSize[0], $imageSize[1])
 				)
-				->setMimeType($imageSize['mime'])
-				# TODO: can we call insert() immediatly instead of letting check the update() function itself?
-				# this could save performance...
-				->update();
+				->setMimeType($imageSize['mime']);
+				
+			# TODO: can we call insert() immediatly instead of letting check the update() function itself?
+			# this could save performance...
+			$this->container->bitmapRepo->update($bitmap);
 		}
 	}
 

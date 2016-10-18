@@ -66,7 +66,7 @@ class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
 			return FALSE;
 		}
 		
-		if(!$this->getRelPath()) {
+		if(!$instance->getRelPath()) {
 			// invalid instance 
 			return FALSE;
 		}

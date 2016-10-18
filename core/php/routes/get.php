@@ -36,20 +36,6 @@ $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 });
 
 
-$app->get('/showplaintext/:itemParams+', function($itemParams) use ($app, $vars){
-	$vars['action'] = "showplaintext";
-	$relPath = join(DS, $itemParams);
-	$validPath = getFileRealPath($relPath);
-	if($validPath === FALSE) {
-		$app->flashNow('error', 'invalid path ' . $relPath);
-	} else {
-		$vars['plaintext'] = nfostring2html(file_get_contents($validPath));
-	}
-	$vars['filepath'] = $relPath;
-	$app->render('modules/widget-plaintext.htm', $vars);
-});
-
-
 
 
 $app->get('/tools/clean-rename-confirm/:itemParams+', function($itemParams) use ($app, $vars){
