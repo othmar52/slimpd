@@ -442,9 +442,9 @@ class Controller extends \Slimpd\BaseController {
 			}
 		} else {
 			$filterTypeMapping = array_flip($filterTypeMapping);
-			$cl = new \SphinxClient();
+			$sphinxClient = new \SphinxClient();
 			foreach($rows as $row) {
-				$excerped = $cl->BuildExcerpts([$row["display"]], $this->conf["sphinx"]["mainindex"], $term);
+				$excerped = $sphinxClient->BuildExcerpts([$row["display"]], $this->conf["sphinx"]["mainindex"], $term);
 				$filterType = $filterTypeMapping[$row["type"]];
 				
 				switch($filterType) {
