@@ -276,17 +276,16 @@ class Controller extends \Slimpd\BaseController {
 					}
 					$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
 					if($suggest !== FALSE) {
-						die('FIXME ' . __FUNCTION__ . __LINE__);
-						$response->redirect($app->urlFor(
-							"search".$args['currentType'],
+						$uri = $this->router->pathFor(
+							'search',
 							[
 								"type" => $args['currentType'],
 								"currentPage" => $args['currentPage'],
 								"sort" => $args['sort'],
 								"direction" => $args['direction']
 							]
-						) . "?nosuggestion=1&q=".$suggest . "&" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'], FALSE));
-						$app->stop();
+						) . "?nosuggestion=1&q=".$suggest . "&" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'], FALSE);
+						return $response->withRedirect($uri, 403);
 					}
 					$result[] = [
 						"label" => "nothing found",
@@ -317,7 +316,7 @@ class Controller extends \Slimpd\BaseController {
 						}
 						if($obj === NULL) {
 							// vanished item: we have it in sphinx index but not in MySQL database
-							$obj = $this->trackRepogetNewInstanceWithoutDbQueries($row["display"]);
+							$obj = $this->trackRepo->getNewInstanceWithoutDbQueries($row["display"]);
 							$obj->setError("notfound");
 						}
 						$args["itemlist"][] = $obj;
@@ -390,12 +389,12 @@ class Controller extends \Slimpd\BaseController {
 		$stmt = $sphinxPdo->prepare("
 			SELECT id,type,itemuid,display,trackCount,albumCount FROM ". $this->conf["sphinx"]["mainindex"]."
 			WHERE MATCH(:match)
-			" . (($type !== "all") ? " AND type=:type " : "") . "
+			" . (($args["type"] !== "all") ? " AND type=:type " : "") . "
 			GROUP BY itemuid,type
 			LIMIT $start,$offset;");
 		
-		if(($type !== "all")) {
-			$stmt->bindValue(":type", $filterTypeMapping[$type], \PDO::PARAM_INT);
+		if(($args["type"] !== "all")) {
+			$stmt->bindValue(":type", $filterTypeMapping[$args["type"]], \PDO::PARAM_INT);
 		}
 		$stmt->bindValue(":match", getSphinxMatchSyntax([$term,$originalTerm]), \PDO::PARAM_STR);
 	
@@ -435,19 +434,15 @@ class Controller extends \Slimpd\BaseController {
 			$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
 			$timLogData[] = " MakePhaseSuggestion() " . (getMicrotimeFloat() - $timeLogBegin);
 			if($suggest !== FALSE) {
-				$app->response->redirect(
-					$app->urlFor(
-						"autocomplete",
-						array(
-							"type" => $type
-						)
-					) . "?suggested=1&q=" . rawurlencode($suggest) . "&qo=" . rawurlencode($term)
-				);
-				$app->stop();
+				$uri = $this->router->pathFor(
+					'autocomplete',
+					['type' => $args['type'] ]
+				). "?suggested=1&q=" . rawurlencode($suggest) . "&qo=" . rawurlencode($term);
+				return $response->withRedirect($uri, 403);
 			}
 		} else {
 			$filterTypeMapping = array_flip($filterTypeMapping);
-			$cl = new SphinxClient();
+			$cl = new \SphinxClient();
 			foreach($rows as $row) {
 				$excerped = $cl->BuildExcerpts([$row["display"]], $this->conf["sphinx"]["mainindex"], $term);
 				$filterType = $filterTypeMapping[$row["type"]];
@@ -481,7 +476,7 @@ class Controller extends \Slimpd\BaseController {
 						break;
 					case "label":
 					case "dirname":
-						$entry["img"] = $this->conf["fileroot"] . "core/skin/default/img/icon-". $filterType .".png";
+						$entry["img"] = $this->conf['config']['absFilePrefix'] . "core/skin/default/img/icon-". $filterType .".png";
 						break;
 					case "album":
 					case "track":
@@ -494,7 +489,7 @@ class Controller extends \Slimpd\BaseController {
 		}
 		if(count($result) === 0) {
 			$result[] = [
-				"label" => $this->container->ll->str("autocomplete." . $type . ".noresults", [$originalTerm]),
+				"label" => $this->container->ll->str("autocomplete." . $args["type"] . ".noresults", [$originalTerm]),
 				"url" => "#",
 				"type" => "",
 				"img" => $this->conf['config']['absRefPrefix'] . "imagefallback-50/noresults"
@@ -504,20 +499,17 @@ class Controller extends \Slimpd\BaseController {
 	
 		// TODO: read usage of file-logging from config
 		#fileLog($timLogData);
-		deliverJson($result);
-		$app->stop();
-		$this->view->render($response, 'surrounding.htm', $args);
-		return $response;
+		return deliverJson($result, $response);
 	}
 
 	public function directoryAction(Request $request, Response $response, $args) {
 	
 		// validate directory
-		$directory = new \Slimpd\Models\Directory(join(DS, $itemParams));
-		if($directory->validate() === FALSE) {
+		$directory = $this->directoryRepo->create($args['itemParams']);
+		if($this->directoryRepo->validate($directory) === FALSE) {
 			$this->container->flash->AddMessage("error", $this->container->ll->str("directory.notfound"));
-			$app->render("surrounding.htm", $vars);
-			return;
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response;
 		}
 	
 		// get total items of directory from sphinx
@@ -562,13 +554,13 @@ class Controller extends \Slimpd\BaseController {
 		$rows = $stmt->fetchAll();
 		$args["itemlist"] = [];
 		foreach($rows as $row) {
-			$args["itemlist"][] = \Slimpd\Models\Track::getInstanceByAttributes(array("uid" => $row["itemuid"]));
+			$args["itemlist"][] = $this->trackRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
 		}
 	
 		// get additional stuff we need for rendering the view
 		$args["action"] = "directorytracks";
 		$args["renderitems"] = $this->getRenderItems($args["itemlist"]);
-		$args["breadcrumb"] = \Slimpd\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+		$args["breadcrumb"] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
 		$args["paginator"] = new \JasonGrimes\Paginator(
 			$total,
 			$itemsPerPage,

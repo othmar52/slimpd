@@ -92,8 +92,8 @@ $app->get('/playlist/page/{pagenum}', $ctrlName . ':playlistAction');
 // search
 $ctrlName = 'Slimpd\Modules\Search\Controller';
 $app->get('/{className}/{itemUid}/{show}s/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':listAction')->setName('search-list');
-$app->get('/search{currentType}/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':searchAction');
-$app->get('/autocomplete/{type}/', $ctrlName . ':autocompleteAction');
-$app->get('/directory/[{itemParams:.*}]', $ctrlName . 'directoryAction');
-$app->get('/alphasearch/', $ctrlName . 'alphasearchAction');
+$app->get('/search{currentType}/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':searchAction')->setName('search');
+$app->get('/autocomplete/{type}/', $ctrlName . ':autocompleteAction')->setName('autocomplete');
+$app->get('/directory/[{itemParams:.*}]', $ctrlName . ':directoryAction');
+$app->get('/alphasearch/', $ctrlName . ':alphasearchAction');
 

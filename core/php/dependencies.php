@@ -224,6 +224,9 @@ $container['trackRepo'] = function($cont) {
 $container['bitmapRepo'] = function($cont) {
 	return new \Slimpd\Repositories\BitmapRepo($cont);
 };
+$container['directoryRepo'] = function($cont) {
+	return new \Slimpd\Repositories\DirectoryRepo($cont);
+};
 
 $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);

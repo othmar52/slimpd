@@ -17,6 +17,7 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $exists = FALSE;
 	protected $breadcrumb;
@@ -26,20 +27,6 @@ class Directory extends \Slimpd\Models\AbstractFilesystemItem {
 			$this->title = basename($dirPath);
 			$this->relPathHash = getFilePathHash($this->relPath);
 		} catch (Exception $e) {}
-	}
-
-	public function validate() {
-		$realPath = getFileRealPath($this->getRelPath());
-		if(isInAllowedPath($this->getRelPath()) === FALSE || $realPath === FALSE) {
-			return FALSE;
-		}
-
-		// check if it is really a directory because getFileRealPath() also works for files
-		if(is_dir($realPath) === FALSE) {
-			return FALSE;
-		}
-		$this->setExists(TRUE);
-		return TRUE;
 	}
 
 	public function fetchRenderItems() {
