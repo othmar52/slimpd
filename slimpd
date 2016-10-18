@@ -1,6 +1,5 @@
 #!/usr/bin/env php
 <?php
-
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -19,6 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 /* TODO: currently there is no check of any update status
  * TODO: remove dead items after update
  * TODO: instead of heaving multiple update-cli.php scripts merge the together with a procedural logic
@@ -26,105 +26,56 @@
  */
 if(PHP_SAPI !== 'cli') {
 	header('HTTP/1.0 403 Forbidden');
-	echo "Sorry, execution is not allowed via http...";
+	echo "Sorry, execution is not allowed via http...\n";
 	die();
 }
 
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '4096M');
+
+
+ob_start();
+
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__ . DS);
+define('APP_DEFAULT_CHARSET', 'UTF-8');
+require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
 
-chdir(dirname(__DIR__)); // set directory to root
+// set directory to root
+chdir(dirname(__DIR__)); 
 
-require_once 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
-require_once 'core' . DS . 'php' . DS . 'autoload.php';
-require_once 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
-require_once 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'StringUtility.php';
-require_once 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'FilesystemUtility.php';
-require_once 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
-require_once 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'RegexHelper.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'GeneralUtility.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'StringUtility.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'FilesystemUtility.php';
+require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
+
 date_default_timezone_set('Europe/Vienna');
 
+session_start();
 
 // convert all the command line arguments into a URL
 $argv = $GLOBALS['argv'];
 array_shift($GLOBALS['argv']);
 $pathInfo = '/' . implode('/', $argv);
 
+// Create app
+$app = new \Slim\App(
+	[
+		'environment' => \Slim\Http\Environment::mock(['REQUEST_URI' => '/' . $pathInfo]),
+		'debug' => FALSE,
+		'settings' => [
+			'addContentLengthHeader' => false,
+			'outputBuffering' => false
+		]
+	]
+);
 
-// Create our app instance
-$app = new Slim\Slim([
-	'debug' => false,  // Turn off Slim's own PrettyExceptions
-]);
+// Set up dependencies
+require APP_ROOT . 'core/php/dependencies.php';
 
-// Set up the environment so that Slim can route
-$app->environment = Slim\Environment::mock([
-	'PATH_INFO'   => $pathInfo
-]);
-
-
-// CLI-compatible not found error handler
-$app->notFound(function () use ($app) {
-	$url = $app->environment['PATH_INFO'];
-	cliLog($app->ll->str('cli.arg.invalid', [ltrim($url, '/')]));
-	cliLog('');
-	renderCliHelp();
-	$app->stop();
-});
-
-// Format errors for CLI
-$app->error(function (\Exception $e) use ($app) {
-	echo $e;
-	// delete cached config
-	$app->configLoaderINI->loadConfig('master.ini', NULL, '1');
-	$app->stop();
-});
+// Register routes
+require APP_ROOT . 'core/php/routes-cli.php';
 
 
-// LOAD MODULES
-call_user_func(function() use ($app) {
-	$path = APP_ROOT . 'core' . DS . 'php' . DS . 'Modules' . DS;
-	foreach (scandir($path) as $dir) {
-		// suppress warning with "@" and avoid tons of is_file()-checks 
-		@include_once($path . $dir . DS . 'class.php');
-	}
-});
-
-$config = $app->configLoaderINI->loadConfig('master.ini');
-
-$noCache = FALSE;
-$clearCacheFor = [
-	"/update", "/hard-reset", "/remigrate"
-];
-if(in_array(\Slim\Environment::getInstance()->offsetGet("PATH_INFO"), $clearCacheFor) === TRUE) {
-	$noCache = TRUE;
-}
-
-$config = $app->configLoaderINI->loadConfig('master.ini', NULL, $noCache);
-\Slimpd\Modules\localization\Localization::setLocaleByLangKey($config['config']['langkey']);
-
-
-$config['root'] = $config['config']['absRefPrefix'];
-$config['fileroot'] = $config['config']['absFilePrefix'];
-$app->config = $config;
-$vars = $config;
-
-
-$app->config = $vars;
-
-// LOAD CONTROLLERS
-call_user_func(function() use ($app, $vars) {
-	$path = APP_ROOT . 'core' . DS . 'php' . DS . 'Modules' . DS;
-	foreach (scandir($path) as $dir) {
-		// suppress warning with "@" and avoid tons of is_file()-checks 
-		@include_once($path . $dir . DS . 'controller.php');
-	}
-});
-
-// DEFINE CLI routes
-include_once APP_ROOT . 'core' . DS . 'php' . DS . 'routes' . DS . 'cli.php';
-
-// run!
 $app->run();

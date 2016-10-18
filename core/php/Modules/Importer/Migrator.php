@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,7 +17,7 @@ namespace Slimpd\Modules\importer;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
+class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 	private $dbTstampsTrack = array();
 	private $dbTstampsAlbum = array();
 
@@ -33,8 +33,8 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	// only for development purposes
 	public function tempResetMigrationPhase() {
 		cliLog('truncating all tables with migrated data', 1, 'red', TRUE);
-		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
-			\Slim\Slim::getInstance()->db->query($query);
+		foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries($this->ll) as $query) {
+			$this->db->query($query);
 		}
 		$this->useBatcher = TRUE;
 	}
@@ -42,19 +42,19 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	/** 
 	 * @return array 'directoryHash' => 'most-recent-timestamp' 
 	 */
-	public static function getMigratedAlbumTimstamps() {
-		return self::getMigratedTimstamps('album');
+	public function getMigratedAlbumTimstamps() {
+		return $this->getMigratedTimstamps('album');
 	}
 
-	public static function getMigratedTrackTimstamps() {
-		return self::getMigratedTimstamps('track');
+	public function getMigratedTrackTimstamps() {
+		return $this->getMigratedTimstamps('track');
 	}
 
-	public static function getMigratedTimstamps($tablename) {
+	public function getMigratedTimstamps($tablename) {
 		$timestampsMysql = array();
 
 		$query = "SELECT relPathHash,filemtime FROM " . az09($tablename);
-		$result = \Slim\Slim::getInstance()->db->query($query);
+		$result = $this->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$timestampsMysql[ $record['relPathHash'] ] = $record['filemtime'];
 		}
@@ -77,7 +77,6 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->beginJob(array(
 			'msg' => "migrateRawtagdataTable"
 		), __FUNCTION__);
-		$app = \Slim\Slim::getInstance();
 		$this->migratorConfig = \Slimpd\Modules\albummigrator\AlbumMigrator::parseConfig();
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
@@ -86,9 +85,9 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->migratedAlbums = 0;
 
 		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 		$this->checkBatch();
-		$app->batcher->finishAll();
+		$this->batcher->finishAll();
 
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemsChecked . ' files',
@@ -103,7 +102,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	 */
 	private function checkBatch() {
 		$query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash LIMIT " . $this->itemsChecked . "," . $this->batchSize;
-		$result = \Slim\Slim::getInstance()->db->query($query);
+		$result = $this->db->query($query);
 		$counter = 0;
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -188,7 +187,7 @@ class Migrator extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 
 	private function newPrevAlb($record) {
-		$this->prevAlb = new \Slimpd\Modules\albummigrator\AlbumMigrator();
+		$this->prevAlb = new \Slimpd\Modules\Albummigrator\AlbumMigrator();
 		$this->prevAlb->conf = $this->migratorConfig;
 		$this->prevAlb->useBatcher = $this->useBatcher;
 		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);

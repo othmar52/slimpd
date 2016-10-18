@@ -158,11 +158,10 @@ function recursiveArrayParser($pathChunks, $inputArray) {
 }
 
 function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
-	if($verbosity > \Slim\Slim::getInstance()->config["config"]["cli-verbosity"] && $fatal === FALSE) {
+	if(PHP_SAPI !== "cli") {
 		return;
 	}
-
-	if(PHP_SAPI !== "cli") {
+	if($verbosity > $_SESSION['cliVerbosity'] && $fatal === FALSE) {
 		return;
 	}
 
@@ -202,23 +201,6 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	ob_flush();
 }
 
-function getDatabaseDropConfirm() {
-	$app = \Slim\Slim::getInstance();
-	$userInput = '';
-	do {
-		if ($userInput != "\n") {
-			cliLog($app->ll->str("cli.dropdbconfirm", [$app->config['database']['dbdatabase']]), 1 , "red");
-		}
-		$userInput = fread(STDIN, 1);
-		if (strtolower($userInput) === 'y') {
-			return;
-		}
-		if (strtolower($userInput) === 'n') {
-			cliLog($app->ll->str("cli.dropdbconfirm.abort"));
-			$app->stop();
-		}
-	} while (TRUE);
-}
 
 function fileLog($mixed) {
 	$filename = APP_ROOT . "localdata/cache/log-" . date("Y-M-d") . ".log";
@@ -385,27 +367,26 @@ function deliveryError( $code = 401, $msg = null ) {
 	$app->stop();
 }
 
-function renderCliHelp() {
-	$app = \Slim\Slim::getInstance();
-	cliLog($app->ll->str("cli.copyright.line1"));
+function renderCliHelp($ll) {
+	cliLog($ll->str("cli.copyright.line1"));
 	cliLog("");
-	cliLog(" " . $app->ll->str("cli.copyright.line2"));
-	cliLog(" " . $app->ll->str("cli.copyright.line3"));
-	cliLog(" " . $app->ll->str("cli.copyright.line4"));
-	cliLog(" " . $app->ll->str("cli.copyright.line5"));
+	cliLog(" " . $ll->str("cli.copyright.line2"));
+	cliLog(" " . $ll->str("cli.copyright.line3"));
+	cliLog(" " . $ll->str("cli.copyright.line4"));
+	cliLog(" " . $ll->str("cli.copyright.line5"));
 	cliLog("");
-	cliLog($app->ll->str("cli.usage"), 1, "yellow");
+	cliLog($ll->str("cli.usage"), 1, "yellow");
 	cliLog("  ./slimpd [ARGUMENT]");
 	cliLog("ARGUMENTS", 1, "yellow");
 	cliLog("  update", 1, "cyan");
-	cliLog("    " . $app->ll->str("cli.args.update"));
+	cliLog("    " . $ll->str("cli.args.update"));
 	cliLog("  remigrate", 1, "cyan");
-	cliLog("    " . $app->ll->str("cli.args.remigrate.line1"));
-	cliLog("    " . $app->ll->str("cli.args.remigrate.line2"));
+	cliLog("    " . $ll->str("cli.args.remigrate.line1"));
+	cliLog("    " . $ll->str("cli.args.remigrate.line2"));
 	cliLog("  hard-reset", 1, "cyan");
-	cliLog("    " . $app->ll->str("cli.args.hard-reset.line1"));
-	cliLog("    " . $app->ll->str("cli.args.hard-reset.line2"));
-	cliLog("    " . $app->ll->str("cli.args.hard-reset.warning"), 1, "yellow");
+	cliLog("    " . $ll->str("cli.args.hard-reset.line1"));
+	cliLog("    " . $ll->str("cli.args.hard-reset.line2"));
+	cliLog("    " . $ll->str("cli.args.hard-reset.warning"), 1, "yellow");
 	cliLog("");
 	cliLog("  ..................................");
 	cliLog("  https://github.com/othmar52/slimpd");

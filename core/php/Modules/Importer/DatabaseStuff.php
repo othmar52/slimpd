@@ -23,10 +23,7 @@ namespace Slimpd\Modules\importer;
  */
 class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 
-	public static function getInitialDatabaseQueries($app = NULL) {
-		if($app === NULL) {
-			$app = \Slim\Slim::getInstance();
-		}
+	public static function getInitialDatabaseQueries($ll) {
 		$queries = array(
 			"TRUNCATE artist;",
 			"TRUNCATE genre;",
@@ -51,9 +48,9 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 				"INSERT INTO `".$table."` ".
 				"VALUES (
 					NULL,
-					'".$app->ll->str('importer.' . $llKey)."',
+					'".$ll->str('importer.' . $llKey)."',
 					'',
-					'".az09($app->ll->str('importer.' . $llKey))."',
+					'".az09($ll->str('importer.' . $llKey))."',
 					0,
 					0,
 					'',
@@ -65,8 +62,8 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 			"INSERT INTO `label` ".
 			"VALUES (
 				NULL,
-				'".$app->ll->str('importer.unknownlabel')."',
-				'".az09($app->ll->str('importer.unknownlabel'))."',
+				'".$ll->str('importer.unknownlabel')."',
+				'".az09($ll->str('importer.unknownlabel'))."',
 				0,
 				0,
 				'',

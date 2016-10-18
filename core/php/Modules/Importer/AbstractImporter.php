@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -30,16 +30,21 @@ abstract class AbstractImporter {
 	protected $itemsChecked = 0;
 	protected $itemsProcessed = 0;
 	protected $itemsTotal = 0;
+	
+	public function __construct($container) {
+		$this->container = $container;
+		$this->db = $container->db;
+		$this->ll = $container->ll;
+	}
 
 	protected function beginJob($data = array(), $function = '') {
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
-		$app = \Slim\Slim::getInstance();
 		$this->jobBegin = getMicrotimeFloat();
 		$this->itemsChecked = 0;
 		$this->itemsProcessed = 0;
 		
 		$relPath = (isset($data['relPath']) === TRUE)
-			? $app->db->real_escape_string($data['relPath'])
+			? $this->db->real_escape_string($data['relPath'])
 			: '';
 		//$this->itemsTotal = 0;
 		$query = "INSERT INTO importer
@@ -51,14 +56,14 @@ abstract class AbstractImporter {
 				". $this->jobBegin. ",
 				'" .serialize($data)."',
 				'". $relPath ."')";
-		$app->db->query($query);
-		$this->jobUid = $app->db->insert_id;
+		$this->db->query($query);
+		$this->jobUid = $this->db->insert_id;
 		$this->lastJobStatusUpdate = $this->jobBegin;
 		if($this->jobPhase !== 0) {
 			return;
 		}
 		$query = "UPDATE importer SET batchUid='" .$this->jobUid."' WHERE uid=" . $this->jobUid;
-		$app->db->query($query);
+		$this->db->query($query);
 	}
 
 	public function updateJob($data = array()) {
@@ -75,7 +80,7 @@ abstract class AbstractImporter {
 			SET jobStatistics='" .serialize($data)."',
 			jobLastUpdate=".$microtime."
 			WHERE uid=" . $this->jobUid;
-		\Slim\Slim::getInstance()->db->query($query);
+		$this->db->query($query);
 		cliLog('progress:' . $data['progressPercent'] . '%', 1);
 		$this->lastJobStatusUpdate = $microtime;
 		return;
@@ -93,7 +98,7 @@ abstract class AbstractImporter {
 			jobLastUpdate=".$microtime.",
 			jobStatistics='" .serialize($data)."' WHERE uid=" . $this->jobUid;
 		
-		\Slim\Slim::getInstance()->db->query($query);
+		$this->db->query($query);
 		$this->jobUid = 0;
 		$this->itemsChecked = 0;
 		$this->itemsProcessed = 0;
@@ -139,7 +144,7 @@ abstract class AbstractImporter {
 
 	protected function getLastBatchUid() {
 		$query = "SELECT uid FROM importer WHERE jobPhase = 0 ORDER BY uid DESC LIMIT 1;";
-		$batchUid = \Slim\Slim::getInstance()->db->query($query)->fetch_assoc()['uid'];
+		$batchUid = $this->db->query($query)->fetch_assoc()['uid'];
 		if($batchUid !== NULL) {
 			return $batchUid;
 		}

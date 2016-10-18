@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -27,7 +27,7 @@ use Slimpd\Models\Genre;
 use Slimpd\Models\Rawtagdata;
 use Slimpd\Models\Bitmap;
 
-class Importer extends \Slimpd\Modules\importer\AbstractImporter {
+class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	// waiting until mpd has finished his internal database-update
 	protected $waitingLoop = 0;
@@ -88,12 +88,12 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 
 	public function scanMusicFileTags() {
-		$fileScanner = new \Slimpd\Modules\importer\Filescanner();
+		$fileScanner = new \Slimpd\Modules\Importer\Filescanner();
 		$fileScanner->run();
 	}
 
 	public function updateCounterCache() {
-		$dbStats = new \Slimpd\Modules\importer\Dbstats();
+		$dbStats = new \Slimpd\Modules\Importer\Dbstats();
 		$dbStats->updateCounterCache();
 	}
 
@@ -167,7 +167,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 		$result = $app->db->query($query);
 		$insertedImages = 0;
 
-		$filesystemReader = new \Slimpd\Modules\importer\FilesystemReader();
+		$filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader();
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -219,7 +219,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				$bitmap->setWidth($imageSize[0])
 					->setHeight($imageSize[1])
 					->setBghex(
-						\Slimpd\Modules\importer\Filescanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
+						\Slimpd\Modules\Importer\Filescanner::getDominantColor($imagePath, $imageSize[0], $imageSize[1])
 					)
 					->setMimeType($imageSize['mime'])
 					->setPictureType($app->imageweighter->getType($bitmap->getRelPath()))
@@ -317,7 +317,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 
 
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
-		$migrator = new \Slimpd\Modules\importer\Migrator();
+		$migrator = new \Slimpd\Modules\Importer\Migrator($this->container);
 		$migrator->run($resetMigrationPhase);
 	}
 
@@ -328,7 +328,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 			'msg' => $app->ll->str('importer.processing.mpdfile')
 		), __FUNCTION__);
 
-		$mpdParser = new \Slimpd\Modules\importer\MpdDatabaseParser($app->config['mpd']['dbfile']);
+		$mpdParser = new \Slimpd\Modules\Importer\MpdDatabaseParser($app->config['mpd']['dbfile']);
 		if($mpdParser->error === TRUE) {
 			$msg = $app->ll->str('error.mpd.dbfile', array($app->config['mpd']['dbfile']));
 			cliLog($msg, 1, 'red', TRUE);
@@ -507,7 +507,7 @@ class Importer extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 
-			$fingerPrint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($fullPath);
+			$fingerPrint = \Slimpd\Modules\Importer\Filescanner::extractAudioFingerprint($fullPath);
 			if($fingerPrint === FALSE) {
 				cliLog("ERROR: regex fingerprint result " . $record['relPath'], 1, 'red');
 				continue;

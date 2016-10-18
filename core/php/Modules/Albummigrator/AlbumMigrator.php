@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
+namespace Slimpd\Modules\Albummigrator;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -31,12 +31,12 @@ class AlbumMigrator {
 
 	public function run() {
 		// create albumContext
-		$this->albumContextItem = new \Slimpd\Modules\albummigrator\AlbumContext();
-		$this->jumbleJudge = new \Slimpd\Modules\albummigrator\JumbleJudge($this->albumContextItem, $this);
+		$this->albumContextItem = new \Slimpd\Modules\Albummigrator\AlbumContext();
+		$this->jumbleJudge = new \Slimpd\Modules\Albummigrator\JumbleJudge($this->albumContextItem, $this);
 
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
-			$this->trackContextItems[$idx] = new \Slimpd\Modules\albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
+			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
 			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
 			$this->handleTrackFilemtime($rawTagItem["added"]);

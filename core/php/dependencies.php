@@ -45,11 +45,20 @@ $container['conf'] = function () {
 	$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 	$config = $configLoader->loadConfig('master.ini', NULL, $noCache);
 	\Slimpd\Modules\Localization\Localization::setLocaleByLangKey($config['config']['langkey']);
+	
+	if(PHP_SAPI === 'cli') {
+		$_SESSION['cliVerbosity'] = $config['config']['cli-verbosity'];
+	} 
+	
 	return $config;
 };
 
+
 // Twig
 $container['view'] = function ($cont) {
+	if(PHP_SAPI === 'cli') {
+		return new stdClass();
+	}
     $conf = $cont->get('conf');
 	
     #$view = new Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
@@ -183,7 +192,19 @@ $container['errorHandler'] = function ($cont) {
 };
 
 
-$container['notFoundHandler'] = function ($cont) { 
+$container['notFoundHandler'] = function ($cont) {
+	if(PHP_SAPI === 'cli') {
+		return function ($request, $response) use ($cont) {
+			$_SESSION['cliVerbosity'] = $cont->conf['config']['cli-verbosity'];
+			$url = $cont->environment['REQUEST_URI'];
+			cliLog($cont->ll->str('cli.arg.invalid', [ltrim($url, '/')]), 1, "red");
+			cliLog('');
+			renderCliHelp($cont->ll);
+			return $response->withStatus(404);
+		};
+	}
+	
+	 
 	return function ($request, $response) use ($cont) { 
 		return $cont['view']->render($response, 'errors/404.twig')->withStatus(404);
 	};
@@ -228,6 +249,20 @@ $container['directoryRepo'] = function($cont) {
 	return new \Slimpd\Repositories\DirectoryRepo($cont);
 };
 
+$container['rawtagblobRepo'] = function($cont) {
+	return new \Slimpd\Repositories\RawtagblobRepo($cont);
+};
+
+$container['rawtagdataRepo'] = function($cont) {
+	return new \Slimpd\Repositories\RawtagdataRepo($cont);
+};
+
+$container['albumindexRepo'] = function($cont) {
+	return new \Slimpd\Repositories\AlbumindexRepo($cont);
+};
+$container['trackindexRepo'] = function($cont) {
+	return new \Slimpd\Repositories\TrackindexRepo($cont);
+};
 $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);
 };
@@ -239,7 +274,3 @@ $container['mpd'] = function($cont) {
 // -----------------------------------------------------------------------------
 // Action factories
 // -----------------------------------------------------------------------------
-
-$container[App\Action\HomeAction::class] = function ($c) {
-	return new App\Action\HomeAction($c->get('view'), $c->get('logger'));
-};

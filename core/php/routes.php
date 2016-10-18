@@ -19,32 +19,42 @@
 
 // Routes
 
-// library routes
-$ctrlName = 'Slimpd\Modules\Library\Controller';
-$app->get('[/]', $ctrlName . ':indexAction');
-$app->get('/library[/]', $ctrlName . ':indexAction');
+$ctrlRoutes = [
+	'Library' => [
+		['[/]', 'indexAction'],
+		['/library[/]', 'indexAction']
+	],
+	'filebrowser' => [
+		['/filebrowser', 'index', 'filebrowser'],
+		['/filebrowser/[{itemParams:.*}]', 'dircontent'],
+		['/markup/widget-directory/[{itemParams:.*}]', 'widgetDirectory'],
+		['/deliver/[{itemParams:.*}]', 'deliverAction']
+	],
+	'Bitmap' => [
+		['/imagefallback-{imagesize}/{type}','fallback', 'imagefallback'],
+		['/image-{imagesize}/album/{itemUid}', 'album', 'imagealbum'],
+		['/image-{imagesize}/track/{itemUid}', 'track'],
+		['/image-{imagesize}/id/{itemUid}', 'bitmap'],
+		['/image-{imagesize}/path/[{itemParams:.*}]', 'path']
+	],
+	'Album' => [
+		['/album/{itemUid}', 'detailAction'],
+		['/markup/albumtracks/{itemUid}', 'albumTracksAction'],
+		['/markup/widget-album/{itemUid}', 'widgetAlbumAction'],
+		['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
+	]
+];
 
-// filebrowser routes
-$ctrlName = 'Slimpd\Modules\filebrowser\Controller';
-$app->get('/filebrowser', $ctrlName . ':index')->setName('filebrowser');
-$app->get('/filebrowser/[{itemParams:.*}]', $ctrlName . ':dircontent');
-$app->get('/markup/widget-directory/[{itemParams:.*}]', $ctrlName . ':widgetDirectory');
-$app->get('/deliver/[{itemParams:.*}]', $ctrlName . ':deliverAction');
-
-// image routes
-$ctrlName = 'Slimpd\Modules\Bitmap\Controller';
-$app->get('/imagefallback-{imagesize}/{type}', $ctrlName . ':fallback')->setName('imagefallback');
-$app->get('/image-{imagesize}/album/{itemUid}', $ctrlName . ':album')->setName('imagealbum');
-$app->get('/image-{imagesize}/track/{itemUid}', $ctrlName . ':track');
-$app->get('/image-{imagesize}/id/{itemUid}', $ctrlName . ':bitmap');
-$app->get('/image-{imagesize}/path/[{itemParams:.*}]', $ctrlName . ':path');
-
-// album routes
-$ctrlName = 'Slimpd\Modules\Album\Controller';
-$app->get('/album/{itemUid}', $ctrlName . ':detailAction');
-$app->get('/markup/albumtracks/{itemUid}', $ctrlName . ':albumTracksAction');
-$app->get('/markup/widget-album/{itemUid}', $ctrlName . ':widgetAlbumAction');
-$app->get('/albums/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':listAction');
+foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
+	foreach($ctrlRoutes as $ctrlRoute) {
+		$routeName = (isset($ctrlRoute[2]) === TRUE) ? $ctrlRoute[2] : '';
+		$app->get(
+			$ctrlRoute[0],
+			'Slimpd\Modules\\'. $ctrlName .'\Controller' . ':' . $ctrlRoute[1]
+		)->setName($routeName);
+	}
+}
+// TODO: move to config array above
 
 // track routes
 $ctrlName = 'Slimpd\Modules\Track\Controller';
