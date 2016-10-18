@@ -80,7 +80,7 @@ class BaseRepository {
 		return $instances;
 	}
 
-	public static function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy=NULL, $sortDirection='desc') {
+	public function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy=NULL, $sortDirection='desc') {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -106,7 +106,7 @@ class BaseRepository {
 		if($result->num_rows == 0) {
 			return NULL;
 		}
-		$calledClass =get_called_class();
+		$calledClass = $this->getClassPath();
 		while($record = $result->fetch_assoc()) {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
@@ -115,7 +115,7 @@ class BaseRepository {
 		return $instances;
 	}
 
-	public static function getCountByFindInSetAttributes(array $attributeArray) {
+	public function getCountByFindInSetAttributes(array $attributeArray) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -133,7 +133,7 @@ class BaseRepository {
 		return $this->db->query($query)->fetch_assoc()['itemsTotal'];
 	}
 
-	public static function getInstancesLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
+	public function getInstancesLikeAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -155,7 +155,7 @@ class BaseRepository {
 		if($result->num_rows == 0) {
 			return NULL;
 		}
-		$calledClass =get_called_class();
+		$calledClass = $this->getClassPath();
 		while($record = $result->fetch_assoc()) {
 			$instance = new $calledClass();
 			$instance->mapArrayToInstance($record);
@@ -164,7 +164,7 @@ class BaseRepository {
 		return $instances;
 	}
 
-	public static function getCountLikeAttributes(array $attributeArray) {
+	public function getCountLikeAttributes(array $attributeArray) {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
@@ -324,19 +324,20 @@ class BaseRepository {
 		}
 		// check if we have a record with this path
 		$classPath = get_called_class();
+		$repoKey = $this->getClassPath();
 		$instance = new $classPath;
 
 		if(method_exists($classPath, 'getRelPathHash') === TRUE) {
-			$instance = $classPath::getInstanceByAttributes(array('relPathHash' => $this->getRelPathHash()));
+			$instance = $this->$repoKey->getInstanceByAttributes(array('relPathHash' => $this->getRelPathHash()));
 			if($instance === NULL && $this->getRelPathHash() !== '') {
 				return;
 			}
 		}
 		if($instance === NULL && method_exists($classPath, 'getRelPath') === TRUE) {
-			$instance = $classPath::getInstanceByAttributes(array('relPath' => $this->getRelPath()));
+			$instance = $this->$repoKey->getInstanceByAttributes(array('relPath' => $this->getRelPath()));
 		}
 		if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
-			$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+			$instance = $this->$repoKey->getInstanceByAttributes(array('az09' => $this->getAz09()));
 		}
 		if($instance === NULL || $instance->getUid() < 1) {
 			return;
@@ -350,13 +351,14 @@ class BaseRepository {
 		} else {
 			// check if we have a record with this path
 			$classPath = get_called_class();
+			$repoKey = $this->getClassPath();
 			$instance = new $classPath;
 			if(method_exists($classPath, 'getRelPath') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('relPath' => $this->getRelPath()));
+				$instance = $this->$repoKey->getInstanceByAttributes(array('relPath' => $this->getRelPath()));
 			}
 			
 			if(method_exists($classPath, 'getAz09') === TRUE) {
-				$instance = $classPath::getInstanceByAttributes(array('az09' => $this->getAz09()));
+				$instance = $this->$repoKey->getInstanceByAttributes(array('az09' => $this->getAz09()));
 			}
 			if($instance !== NULL && $instance->getUid() > 0) {
 				$this->setUid($instance->getUid());
@@ -532,7 +534,7 @@ class BaseRepository {
 		return $result->fetch_assoc()['itemsTotal'];
 	}
 	
-	public static function getRandomInstance() {
+	public function getRandomInstance() {
 		#$database = \Slim\Slim::getInstance()->db;
 
 		// ORDER BY RAND is the killer on huge tables
@@ -547,7 +549,7 @@ class BaseRepository {
 					"SELECT uid FROM ". self::getTableName() ." WHERE uid = " . mt_rand(1, $highestUid)
 				)->fetch_assoc()['uid'];
 				if($try !== NULL) {
-					return self::getInstanceByAttributes($database, ['uid' => $try] );
+					return $this->getInstanceByAttributes(['uid' => $try] );
 				}
 				if($counter > $maxAttempts) {
 					throw new \Exception("OOPZ! couldn't fetch random instance of " . self::getTableName(), 1);

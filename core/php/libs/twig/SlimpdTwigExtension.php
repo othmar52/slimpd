@@ -49,8 +49,10 @@ class SlimpdTwigExtension extends \Twig_Extension {
 			if(class_exists($classPath) === FALSE) {
 				return NULL;
 			}
-			return $classPath::getRandomInstance($this->container->db);
+			$repoKey = strtolower($type) . 'Repo';
+			return $this->container->$repoKey->getRandomInstance();
 		} catch(\Exception $e) {
+			// FIXME: how to access the response object?
 			\Slim\Slim::getInstance()->response->redirect(\Slim\Slim::getInstance()->config['root'] . 'systemcheck?dberror');
 		}
 	}

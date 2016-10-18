@@ -21,8 +21,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-	private $imageSizes = array(35, 50,100,300,1000);
-	private $weightOrderBy;
 
 
 	public function index(Request $request, Response $response, $args) {
@@ -35,7 +33,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['hotlinks'] = array();
 		$args['hideQuicknav'] = 1;
 		foreach(trimExplode("\n", $this->conf['filebrowser']['hotlinks'], TRUE) as $path){
-			$args['hotlinks'][] =  \Slimpd\filebrowser::fetchBreadcrumb($path);
+			$args['hotlinks'][] =  \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($path);
 		}
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
@@ -129,8 +127,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['files'] = $fileBrowser->files;
 		
 		// try to fetch album entry for this directory
-		$args['album'] = \Slimpd\Models\Album::getInstanceByAttributes(
-			$this->db,
+		$args['album'] = $this->albumRepo->getInstanceByAttributes(
 			array('relPathHash' => getFilePathHash($fileBrowser->directory))
 		);
 	

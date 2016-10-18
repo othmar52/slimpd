@@ -556,16 +556,16 @@ class Controller extends \Slimpd\BaseController {
 		foreach($rows as $row) {
 			$args["itemlist"][] = $this->trackRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
 		}
-	
+
 		// get additional stuff we need for rendering the view
 		$args["action"] = "directorytracks";
 		$args["renderitems"] = $this->getRenderItems($args["itemlist"]);
-		$args["breadcrumb"] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb(join(DS, $itemParams));
+		$args["breadcrumb"] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['itemParams']);
 		$args["paginator"] = new \JasonGrimes\Paginator(
 			$total,
 			$itemsPerPage,
 			$args['currentPage'],
-			$this->conf['config']['absRefPrefix'] . "directory/".join(DS, $itemParams) . "?page=(:num)"
+			$this->conf['config']['absRefPrefix'] . "directory/".$args['itemParams'] . "?page=(:num)"
 		);
 		$args["paginator"]->setMaxPagesToShow(paginatorPages($args['currentPage']));
 		$this->view->render($response, 'surrounding.htm', $args);
@@ -573,8 +573,9 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	public function alphasearchAction(Request $request, Response $response, $args) {
-
-		$this->view->render($response, 'surrounding.htm', $args);
-		return $response;
+		$type = $request->getParam("searchtype");
+		$term = $request->getParam("searchterm");
+		$uri = $this->conf['config']['absRefPrefix'] . $type."s/searchterm/".rawurlencode($term)."/page/1" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
+		return $response->withRedirect($uri, 403);
 	}
 }
