@@ -26,7 +26,11 @@ class FilesystemUtility {
 		$this->container = $container;
 		$this->conf = $container->conf;
 	}
+	// TODO ename method because it also makes sense to trim regular music-dir-prefix
 	public function trimAltMusicDirPrefix($pathString) {
+		if(stripos($pathString, $this->conf['mpd']['musicdir']) === 0) {
+			return substr($pathString, strlen($this->conf['mpd']['musicdir']));
+		}
 		$altMusicDir = $this->conf['mpd']['alternative_musicdir'];
 		if(trim($altMusicDir) === "") {
 			return $pathString;
@@ -36,8 +40,7 @@ class FilesystemUtility {
 		}
 		return $pathString;
 	}
-		
-	
+
 	function getFileExt($filePath, $toLower = TRUE) {
 		//$ext = preg_replace('/^.*\./', '', $filePath);
 		$ext = pathinfo($filePath, PATHINFO_EXTENSION);

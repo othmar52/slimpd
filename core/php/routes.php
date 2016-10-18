@@ -46,6 +46,11 @@ $ctrlRoutes = [
 	],
 	'Systemcheck' => [
 		['/systemcheck', 'runAction']
+	],
+	'Playlist' => [
+		['/playlists', 'indexAction'],
+		['/showplaylist/[{itemParams:.*}]', 'showAction'],
+		['/markup/widget-playlist/[{itemParams:.*}]', 'widgetAction']
 	]
 ];
 

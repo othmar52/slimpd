@@ -26,24 +26,32 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $tracks = [];		// track-instances
 	private $fetchedLength = FALSE;
 
-	public function __construct($relPath) {
-		$app = \Slim\Slim::getInstance();
-		if(isInAllowedPath($relPath) === TRUE) {
+	public function __construct(\Slim\Container $container) {
+		#$this->container = $container;
+		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
+		#$this->db = $container->db;
+		#$this->conf = $container->conf;
+		$this->fsUtil = $container->filesystemUtility;
+		$this->trackRepo = $container->trackRepo;
+		$this->flash = $container->flash;
+	}
+	
+	public function load($relPath) {
+		if($this->fsUtil->isInAllowedPath($relPath) === TRUE) {
 			$this->setRelPath($relPath);
 			$this->setErrorPath(FALSE);
 		}
 
 		if($this->getErrorPath() === TRUE) {
-			$app->flashNow('error', 'playlist file ' . $relPath . ' does not exist');
+			$this->flash->AddMessage('error', 'playlist file ' . $relPath . ' does not exist');
 			return $this;
 		}
 		$this->setTitle(basename($this->getRelPath()));
-		$this->setExt(getFileExt($this->getRelPath()));
+		$this->setExt($this->fsUtil->getFileExt($this->getRelPath()));
 	}
 
 	public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
-		$app = \Slim\Slim::getInstance();
-		$raw = file_get_contents(getFileRealPath($this->relPath));
+		$raw = file_get_contents($this->fsUtil->getFileRealPath($this->relPath));
 		switch($this->getExt()) {
 			case 'm3u':
 			case 'pls':
@@ -60,21 +68,21 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 		$this->fetchedLength === TRUE;
 
 		if($pathOnly === FALSE) {
-			$this->tracks = self::pathStringsToTrackInstancesArray($this->itemPaths);
+			$this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths);
 			return;
 		}
-		$this->tracks = self::pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
+		$this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
 	}
 
-	public static function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
+	public function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
 		$return = array();
 		foreach($pathStringArray as $itemPath) {
 			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
 			$track = ($noDatabaseQueries === FALSE)
-				? \Slimpd\Models\Track::getInstanceByPath($itemPath, TRUE)
-				: \Slimpd\Models\Track::getNewInstanceWithoutDbQueries(trimAltMusicDirPrefix($itemPath));
+				? $this->trackRepo->getInstanceByPath($itemPath, TRUE)
+				: $this->trackRepo->getNewInstanceWithoutDbQueries($this->fsUtil->trimAltMusicDirPrefix($itemPath));
 
-			if(getFileRealPath($track->getRelPath()) === FALSE) {
+			if($this->fsUtil->getFileRealPath($track->getRelPath()) === FALSE) {
 				$track->setError('notfound');
 			}
 			$return[] = $track;
