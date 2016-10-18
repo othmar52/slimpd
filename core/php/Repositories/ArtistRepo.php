@@ -38,4 +38,114 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
 		}
 		return;
 	}
+	
+	protected static function unifyItemnames($items) {
+		$return = array();
+		foreach($items as $az09 => $itemString) {
+			$return[$az09] = $itemString;
+		}
+		return $return;
+	}
+
+	public function getArtistBlacklist() {
+		// get unified artist-blacklist
+		if(isset($GLOBALS["artist-blacklist"]) === TRUE) {
+			return $GLOBALS["artist-blacklist"];
+		}
+		$GLOBALS["artist-blacklist"] = array();
+		if(isset($this->conf["artist-blacklist"]["blacklist"]) === FALSE) {
+			return $GLOBALS["artist-blacklist"];
+		}
+		foreach(trimExplode("\n", $this->conf["artist-blacklist"]["blacklist"], TRUE) as $term) {
+			$GLOBALS["artist-blacklist"][$term] = 1;
+			$GLOBALS["artist-blacklist"][" " . $term] = 1;
+		}
+		#print_r($GLOBALS["artist-blacklist"]); die;
+		return $GLOBALS["artist-blacklist"];
+	}
+
+	public function getUidsByString($itemString) {
+		if(trim($itemString) === "") {
+			return array("10"); // Unknown
+		}
+
+		$classPath = self::$classPath;
+		#$class = strtolower($classPath);
+		#if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
+		#	$class = strtolower($matches[1]);
+		#}
+		$class = self::$tableName;
+
+		$this->cacheUnifier($classPath);
+
+		$itemUids = array();
+		$tmpGlue = "tmpGlu3";
+		foreach(trimExplode($tmpGlue, str_ireplace($this->conf[$class . "-glue"], $tmpGlue, $itemString), TRUE) as $itemPart) {
+			$az09 = az09($itemPart);
+
+			if($az09 === "" || isHash($az09) === TRUE) {
+				// TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
+				$itemUids[10] = 10; // Unknown Genre
+				continue;
+			}
+
+			$artistArticle = "";
+			// TODO: read articles from config
+			foreach(array("The", "Die", ) as $matchArticle) {
+				// search for prefixed article
+				if(preg_match("/^".$matchArticle." (.*)$/i", $itemPart, $matches)) {
+					$artistArticle = $matchArticle." ";
+					$itemPart = $matches[1];
+					$az09 = az09($itemPart);
+					#var_dump($itemString); die("prefixed-article");
+				}
+				// search for suffixed article
+				if(preg_match("/^(.*)([\ ,]+)".$matchArticle."/i", $itemPart, $matches)) {
+					$artistArticle = $matchArticle." ";
+					$itemPart = remU($matches[1]);
+					$az09 = az09($itemPart);
+					#var_dump($matches); die("suffixed-article");
+				}
+			}
+
+			// unify items based on config
+			if(isset($app->importerCache[$classPath]["unified"][$az09]) === TRUE) {
+				$itemPart = $app->importerCache[$classPath]["unified"][$az09];
+				$az09 = az09($itemPart);
+			}
+
+			// check if we alread have an id
+			// permformance improvement ~8%
+			$itemUid = $this->cacheRead($classPath, $az09);
+			if($itemUid !== FALSE) {
+				$itemUids[$itemUid] = $itemUid;
+				continue;
+			}
+
+			$query = "SELECT uid FROM " . self::$tableName ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$result = $this->db->query($query);
+			$record = $result->fetch_assoc();
+			if($record) {
+				$itemUid = $record["uid"];
+				$itemUids[$record["uid"]] = $record["uid"];
+				$this->cacheWrite($classPath, $az09, $record["uid"]);
+				continue;
+			}
+
+			$instance = new $classPath();
+			$instance->setTitle(ucwords(strtolower($itemPart)))
+				->setAz09($az09)
+				->setArticle($artistArticle);
+
+			// TODO: de we need the non-batcher version anymore?
+			#$instance->insert();
+			#$itemUid = $this->db->insert_id;
+			$this->container->batcher->que($instance);
+			$itemUid = $instance->getUid();
+
+			$itemUids[$itemUid] = $itemUid;
+			$this->cacheWrite($classPath, $az09, $itemUid);
+		}
+		return $itemUids;
+	}
 }

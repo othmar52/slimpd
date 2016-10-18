@@ -29,6 +29,11 @@ class Batcher {
 	protected $nextUid = array();
 	protected $instances = array();
 	protected $treshold = 1000;
+	
+	public function __construct($container) {
+		$this->db = $container->db;
+
+	}
 
 	public function que(&$instance) {
 		$className = get_class($instance);
@@ -53,15 +58,14 @@ class Batcher {
 		}
 
 		// find out highest id for $instance
-		$app = \Slim\Slim::getInstance();
-		$this->nextUid[$tableName] = $app->db->query("SELECT uid FROM ". $tableName ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
+		$this->nextUid[$tableName] = $this->db->query("SELECT uid FROM ". $tableName ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
 		if($this->nextUid[$tableName] === NULL) {
 			$this->nextUid[$tableName] = 0;
 		}
 		$this->nextUid[$tableName]++;
 
 		// recursion - now the id should be there
-		$app->batcher->mayAddUid($instance, $tableName);
+		$this->mayAddUid($instance, $tableName);
 	}
 	
 	private function checkQueue($tableName) {
@@ -77,7 +81,6 @@ class Batcher {
 		if(count($this->instances[$tableName]) === 0) {
 			return;
 		}
-		$app = \Slim\Slim::getInstance();
 		$query = "INSERT INTO " . $tableName . " ";
 		$counter = 0;
 		foreach($this->instances[$tableName] as $instance) {
@@ -99,13 +102,14 @@ class Batcher {
 			$counter++;
 			$query .= "(";
 			foreach($mapped as $value) {
-				$query .= "\"" . $app->db->real_escape_string($value) . "\",";
+				$query .= "\"" . $this->db->real_escape_string($value) . "\",";
 			}
 			$query = substr($query,0,-1) . "),";
 		}
 		$query = substr($query,0,-1) . ";";
 		cliLog("batch-insert " . $tableName . "s (" . $counter . " records)" , 2, "lightblue");
-		$app->db->query($query);
+		#echo $query; die;
+		$this->db->query($query);
 		$this->instances[$tableName] = array();
 	}
 	

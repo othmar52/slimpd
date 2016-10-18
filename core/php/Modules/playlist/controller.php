@@ -19,7 +19,7 @@
 $app->get('/playlists', function() use ($app, $vars){
 	$vars['action'] = "playlists";
 	$app->flash('error', 'playlists not implemented yet - fallback to filebrowser/playlists');
-	$app->response->redirect($app->config['root'] . 'filebrowser/playlists' . getNoSurSuffix(), 301);
+	$app->response->redirect($this->conf['root'] . 'filebrowser/playlists' . getNoSurSuffix(), 301);
 });
 
 
@@ -32,7 +32,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 		return;
 	}
 	
-	$itemsPerPage = \Slim\Slim::getInstance()->config['mpd-playlist']['max-items'];
+	$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
 	
 	$totalItems = $playlist->getLength();
 	
@@ -54,7 +54,7 @@ $app->get('/showplaylist/:itemParams+', function($itemParams) use ($app, $vars){
 		$totalItems,
 		$itemsPerPage,
 		$currentPage,
-		$app->config['root'] . 'showplaylist/'.$playlist->getRelPath() .'?page=(:num)'
+		$this->conf['root'] . 'showplaylist/'.$playlist->getRelPath() .'?page=(:num)'
 	);
 	$vars['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
 	$app->render('surrounding.htm', $vars);

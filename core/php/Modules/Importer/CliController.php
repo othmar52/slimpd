@@ -38,45 +38,46 @@ class CliController extends \Slimpd\BaseController {
 		if($this->getDatabaseDropConfirm() === FALSE) {
 			return $response;
 		}
-		// we cant use $app->db for dropping and creating
+		// we cant use $this->db for dropping and creating
 		$db = new \mysqli(
-			$app->config['database']['dbhost'],
-			$app->config['database']['dbusername'],
-			$app->config['database']['dbpassword']
+			$this->conf['database']['dbhost'],
+			$this->conf['database']['dbusername'],
+			$this->conf['database']['dbpassword']
 		);
 		cliLog("Dropping database");
 	
-		$result = $db->query("DROP DATABASE IF EXISTS " . $app->config['database']['dbdatabase'].";");
+		$result = $db->query("DROP DATABASE IF EXISTS " . $this->conf['database']['dbdatabase'].";");
 		cliLog("Recreating database");
-		$result = $db->query("CREATE DATABASE " . $app->config['database']['dbdatabase'].";");
+		$result = $db->query("CREATE DATABASE " . $this->conf['database']['dbdatabase'].";");
 		$action = 'init';
 	
-		Helper::setConfig( getDatabaseDiffConf($app) );
-		if (!Helper::checkConfigEnough()) {
+		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
+		if (!\Helper::checkConfigEnough()) {
 			cliLog("mmp: invalid configuration");
 			$app->stop();
 		}
-		$controller = Helper::getController($action, NULL);
+		$controller = \Helper::getController($action, NULL);
 		$controller->runStrategy();
 	
-		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
-			$app->db->query($query);
+		foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries($this->ll) as $query) {
+			$this->db->query($query);
 		}
 	
 		// delete files created by sliMpd
 		foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
-			$fileBrowser = new \Slimpd\filebrowser();
+			$fileBrowser = new \Slimpd\Modules\filebrowser\filebrowser($this->container);
 			$fileBrowser->getDirectoryContent('localdata' . DS . $sysDir, TRUE, TRUE);
 			cliLog("Deleting files and directories inside ". 'localdata' . DS . $sysDir ."/");
 			foreach(['music','playlist','info','image','other'] as $key) {
 				foreach($fileBrowser->files[$key] as $file) {
-					rmfile(APP_ROOT . $file->getRelPath());
+					$this->filesystemUtility->rmfile(APP_ROOT . $file->getRelPath());
 				}
 			}
 			foreach($fileBrowser->subDirectories['dirs'] as $dir) {
-				rrmdir(APP_ROOT . $dir->getRelPath());
+				$this->filesystemUtility->rrmdir(APP_ROOT . $dir->getRelPath());
 			}
 		}
+		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
 	}
 

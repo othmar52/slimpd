@@ -35,6 +35,7 @@ abstract class AbstractImporter {
 		$this->container = $container;
 		$this->db = $container->db;
 		$this->ll = $container->ll;
+		$this->conf = $container->conf;
 	}
 
 	protected function beginJob($data = array(), $function = '') {

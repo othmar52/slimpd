@@ -213,12 +213,12 @@ function fileLog($mixed) {
 	file_put_contents($filename, $data, FILE_APPEND);
 }
 
-function getDatabaseDiffConf($app) {
+function getDatabaseDiffConf($conf) {
 	return array(
-		"host"         => $app->config["database"]["dbhost"],
-		"user"         => $app->config["database"]["dbusername"],
-		"password"     => $app->config["database"]["dbpassword"],
-		"db"           => $app->config["database"]["dbdatabase"],
+		"host"         => $conf["database"]["dbhost"],
+		"user"         => $conf["database"]["dbusername"],
+		"password"     => $conf["database"]["dbpassword"],
+		"db"           => $conf["database"]["dbdatabase"],
 		"savedir"      => APP_ROOT . "core/config/dbscheme",
 		"verbose"      => "On",
 		"versiontable" => "db_revisions",

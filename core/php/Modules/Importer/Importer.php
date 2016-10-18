@@ -50,13 +50,18 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 				// phase 2: parse mpd database and insert/update table:rawtagdata
 				$this->processMpdDatabasefile();
+				
+				
 
 				// phase 3: scan id3 tags and insert into table:rawtagdata of all new or modified files
 				$this->scanMusicFileTags();
+				
+				
 		}
 
 		// phase 4: migrate table rawtagdata to table track,album,artist,genre,label
 		$this->migrateRawtagdataTable($remigrate);
+		#die(__FUNCTION__);
 
 		if($remigrate === FALSE) {
 				// phase 5: delete dupes of extracted embedded images
@@ -81,19 +86,19 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->jobPhase = 0;
 		$this->jobUid = $this->batchUid;
 		$this->jobBegin = $this->batchBegin;
-		$this->itemsChecked = Track::getCountAll();
+		$this->itemsChecked = $this->container->trackRepo->getCountAll();
 		$this->itemsProcessed = $this->itemsChecked;
 		$this->itemsTotal = $this->itemsChecked;
 		$this->finishJob(array('msg' => 'finished sliMpd import/update process'), __FUNCTION__);
 	}
 
 	public function scanMusicFileTags() {
-		$fileScanner = new \Slimpd\Modules\Importer\Filescanner();
+		$fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
 		$fileScanner->run();
 	}
 
 	public function updateCounterCache() {
-		$dbStats = new \Slimpd\Modules\Importer\Dbstats();
+		$dbStats = new \Slimpd\Modules\Importer\Dbstats($this->container);
 		$dbStats->updateCounterCache();
 	}
 
@@ -115,16 +120,16 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$app = \Slim\Slim::getInstance();
 
 		$query = "SELECT count(uid) AS itemsTotal FROM bitmap";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$deletedRecords = 0;
 		$query = "SELECT uid, relPath, embedded FROM bitmap;";
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
 			$prefix = ($record['embedded'] == '1')
 				? APP_ROOT . 'localdata' . DS . 'embedded'
-				: $app->config['mpd']['musicdir'];
+				: $this->conf['mpd']['musicdir'];
 			if(is_file($prefix . $record['relPath']) === TRUE) {
 				cliLog('keeping database-entry for ' . $record['relPath'], 3);
 			} else {
@@ -157,17 +162,14 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->jobPhase = 6;
 		$this->beginJob(array('msg' => 'collecting directories to scan from table:albums'), __FUNCTION__);
 
-		
-		$app = \Slim\Slim::getInstance();
-
 		$query = "SELECT count(DISTINCT relDirPathHash) AS itemsTotal FROM rawtagdata WHERE lastDirScan <= directoryMtime;";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		$query = "SELECT uid, relDirPath, relDirPathHash, directoryMtime FROM rawtagdata WHERE lastDirScan <= directoryMtime GROUP BY relDirPathHash;";
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 		$insertedImages = 0;
 
-		$filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader();
+		$filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader($this->container);
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -179,7 +181,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			));
 			
 			$query = "UPDATE rawtagdata SET lastDirScan = ".time()." WHERE relDirPathHash='". $record['relDirPathHash'] ."';";
-			$app->db->query($query);
+			$this->db->query($query);
 
 			#$album = new RawTagData();
 			#$album->setUid($record['uid'])
@@ -194,10 +196,10 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			
 			// get albumUid
 			$query = "SELECT uid FROM album WHERE relPathHash = '".$record['relDirPathHash']."';";
-			$albumUid = (int) $app->db->query($query)->fetch_assoc()['uid'];
+			$albumUid = (int) $this->db->query($query)->fetch_assoc()['uid'];
 
 			foreach($foundAlbumImages as $relPath) {
-				$imagePath = $app->config['mpd']['musicdir'] . $relPath;
+				$imagePath = $this->conf['mpd']['musicdir'] . $relPath;
 				$relPathHash = getFilePathHash($relPath);
 				$imageSize = GetImageSize($imagePath);
 
@@ -243,7 +245,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	 * TODO: consider to remove because maybe tons of files gets remigrated
 	 */
 	public function modifyDirectoryTimestamps($relDirPath) {
-		$database = \Slim\Slim::getInstance()->db;
+		$database = $this->db;
 		$query = "
 			UPDATE album
 			SET
@@ -265,7 +267,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$query = "SELECT uid, relPath FROM importer
 			WHERE jobPhase=0 AND jobEnd=0";
 
-		$result = \Slim\Slim::getInstance()->db->query($query);
+		$result = $this->db->query($query);
 		$directories = array();
 		while($record = $result->fetch_assoc()) {
 			$runImporter = TRUE;
@@ -288,7 +290,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	 */
 	public static function queDirectoryUpdate($relPath) {
 		$app = \Slim\Slim::getInstance();
-		if(is_dir($app->config['mpd']['musicdir'] .$relPath ) === FALSE) {
+		if(is_dir($this->conf['mpd']['musicdir'] .$relPath ) === FALSE) {
 			// no need to process invalid directory
 			return;
 		}
@@ -323,43 +325,42 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	public function processMpdDatabasefile() {
 		$this->jobPhase = 2;
-		$app = \Slim\Slim::getInstance();
 		$this->beginJob(array(
-			'msg' => $app->ll->str('importer.processing.mpdfile')
+			'msg' => $this->ll->str('importer.processing.mpdfile')
 		), __FUNCTION__);
 
-		$mpdParser = new \Slimpd\Modules\Importer\MpdDatabaseParser($app->config['mpd']['dbfile']);
+		$mpdParser = new \Slimpd\Modules\Importer\MpdDatabaseParser($this->container, $this->conf['mpd']['dbfile']);
 		if($mpdParser->error === TRUE) {
-			$msg = $app->ll->str('error.mpd.dbfile', array($app->config['mpd']['dbfile']));
+			$msg = $this->ll->str('error.mpd.dbfile', array($this->conf['mpd']['dbfile']));
 			cliLog($msg, 1, 'red', TRUE);
 			$this->finishJob(array('msg' => $msg));
 			$app->stop();
 		}
 
 		$this->updateJob(array(
-			'msg' => $app->ll->str('importer.collecting.mysqlitems')
+			'msg' => $this->ll->str('importer.collecting.mysqlitems')
 		));
 
 		$this->updateJob(array(
-			'msg' => $app->ll->str('importer.testdbfile')
+			'msg' => $this->ll->str('importer.testdbfile')
 		));
 
 		if($mpdParser->gzipped === TRUE) {
 			$this->updateJob(array(
-				'msg' => $app->ll->str('importer.gunzipdbfile')
+				'msg' => $this->ll->str('importer.gunzipdbfile')
 			));
 			$mpdParser->decompressDbFile();
 		}
 
 		$mpdParser->readMysqlTstamps();
 		$mpdParser->parse($this);
-		$app->batcher->finishAll();
+		$this->container->batcher->finishAll();
 
 		// delete dead items in table:rawtagdata & table:track & table:trackindex
 		if(count($mpdParser->fileOrphans) > 0) {
-			Rawtagdata::deleteRecordsByUids($mpdParser->fileOrphans);
-			Track::deleteRecordsByUids($mpdParser->fileOrphans);
-			Trackindex::deleteRecordsByUids($mpdParser->fileOrphans);
+			$this->container->rawtagdataRepo->deleteRecordsByUids($mpdParser->fileOrphans);
+			$this->container->trackRepo->deleteRecordsByUids($mpdParser->fileOrphans);
+			$this->container->trackindexRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 
 			// TODO: last check if those 3 tables has identical totalCount()
 			// reason: basis is only rawtagdata and not all 3 tables
@@ -368,8 +369,8 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		// delete dead items in table:album & table:albumindex
 		if(count($mpdParser->dirOrphans) > 0) {
 			print_r($mpdParser->dirOrphans);
-			Album::deleteRecordsByUids($mpdParser->dirOrphans);
-			Albumindex::deleteRecordsByUids($mpdParser->dirOrphans);
+			$this->container->albumRepo->deleteRecordsByUids($mpdParser->dirOrphans);
+			$this->container->albumindexRepo->deleteRecordsByUids($mpdParser->dirOrphans);
 		}
 
 		cliLog("dircount: " . $mpdParser->dirCount);
@@ -399,10 +400,9 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->beginJob(array(
 			'msg' => "searching extracted image-dupes in database ..."
 		), __FUNCTION__);
-		$app = \Slim\Slim::getInstance();
 
 		$query = "SELECT count(uid) AS itemsTotal FROM  bitmap WHERE error=0 AND trackUid > 0";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 		$query = "
 			SELECT
 				uid,
@@ -414,15 +414,15 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			FROM  bitmap
 			WHERE error=0 AND embedded=1
 			ORDER BY albumUid;";
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 
 		$previousKey = '';
 
 		$deletedFilesize = 0;
 
-		#$msgKeep = $app->ll->str('importer.image.keep');
-		#$msgDestroy = $app->ll->str('importer.image.destroy');
-		$msgProcessing = $app->ll->str('importer.image.dupecheck.processing');
+		#$msgKeep = $this->ll->str('importer.image.keep');
+		#$msgDestroy = $this->ll->str('importer.image.destroy');
+		$msgProcessing = $this->ll->str('importer.image.dupecheck.processing');
 		while ($record = $result->fetch_assoc()) {
 			$this->updateJob(array(
 				'msg' => $msgProcessing,
@@ -431,11 +431,11 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			$this->itemsChecked++;
 			if($this->itemsChecked === 1) {
 				$previousKey = $record['dupes'];
-				cliLog($app->ll->str('importer.image.keep', array($record['relPath'])), 3);
+				cliLog($this->ll->str('importer.image.keep', array($record['relPath'])), 3);
 				continue;
 			}
 			if($record['dupes'] === $previousKey) {
-				$msg = $app->ll->str('importer.image.destroy', array($record['relPath']));
+				$msg = $this->ll->str('importer.image.destroy', array($record['relPath']));
 				$bitmap = new Bitmap();
 				$bitmap->setUid($record['uid'])
 					->setTrackUid($record['trackUid'])
@@ -446,13 +446,13 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 				$this->itemsProcessed++;
 				$deletedFilesize += $record['filesize'];
 			} else {
-				$msg = $app->ll->str('importer.image.keep', array($record['relPath']));
+				$msg = $this->ll->str('importer.image.keep', array($record['relPath']));
 			}
 			cliLog($msg, 3);
 			$previousKey = $record['dupes'];
 		}
 
-		$msg = $app->ll->str('importer.destroyimages.result', array($this->itemsProcessed, formatByteSize($deletedFilesize)));
+		$msg = $this->ll->str('importer.destroyimages.result', array($this->itemsProcessed, formatByteSize($deletedFilesize)));
 		cliLog($msg);
 
 		$this->finishJob(array(
@@ -463,11 +463,9 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	}
 
 	public function extractAllMp3FingerPrints() {
-		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 8;
 
-		
-		if($app->config['modules']['enable_fingerprints'] !== '1') {
+		if($this->conf['modules']['enable_fingerprints'] !== '1') {
 			return;
 		}
 		// reset phase 
@@ -482,7 +480,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			SELECT count(uid) AS itemsTotal
 			FROM rawtagdata
 			WHERE extension='mp3' AND fingerprint='';";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
 		
 		$query = "
@@ -490,7 +488,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			FROM rawtagdata
 			WHERE extension='mp3' AND fingerprint='';";
 
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -501,13 +499,15 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 			$this->itemsProcessed++;
 
-			$fullPath = $app->config['mpd']['musicdir'] . $record['relPath'];
+			$fullPath = $this->conf['mpd']['musicdir'] . $record['relPath'];
 			if(is_file($fullPath) == FALSE || is_readable($fullPath) === FALSE) {
 				cliLog("ERROR: fileaccess " . $record['relPath'], 1, 'red');
 				continue;
 			}
 
-			$fingerPrint = \Slimpd\Modules\Importer\Filescanner::extractAudioFingerprint($fullPath);
+			$fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
+
+			$fingerPrint = $fileScanner->extractAudioFingerprint($fullPath);
 			if($fingerPrint === FALSE) {
 				cliLog("ERROR: regex fingerprint result " . $record['relPath'], 1, 'red');
 				continue;
@@ -516,19 +516,20 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			// complete rawtagdata record
 			$rawTagData = new Rawtagdata();
 			$rawTagData->setUid($record['uid'])
-				->setFingerprint($fingerPrint)
-				->update();
+				->setFingerprint($fingerPrint);
+			$this->container->rawtagdataRepo->update($rawTagData);
 
 			// complete track record
 			$track = new Track();
 			$track->setUid($record['uid'])
-				->setFingerprint($fingerPrint)
-				->update();
+				->setFingerprint($fingerPrint);
+			$this->container->trackRepo->update($track);
 
 			// complete trackindex record
 			$track = new Trackindex();
-			$trackIndex = \Slimpd\Models\Trackindex::getInstanceByAttributes([ 'uid' => $record['uid'] ]);
-			$trackIndex->setAllchunks($trackIndex->getAllchunks() . " " . $fingerPrint)->update();
+			$trackIndex = $this->container->trackindexRepo->getInstanceByAttributes([ 'uid' => $record['uid'] ]);
+			$trackIndex->setAllchunks($trackIndex->getAllchunks() . " " . $fingerPrint);
+			$trackIndex = $this->container->trackindexRepo->update($trackIndex);
 
 			cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 		}
@@ -545,8 +546,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			$this->itemsTotal = (int)$this->maxWaitingTime;
 			$this->beginJob(array(), __FUNCTION__);
 		}
-		$mpd = new \Slimpd\Modules\mpd\mpd();
-		$status = $mpd->cmd('status');
+		$status = $this->container->mpd->cmd('status');
 		if(isset($status['updating_db'])) {
 			if(time() - $this->waitingLoop > $this->maxWaitingTime) {
 				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);

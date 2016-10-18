@@ -173,7 +173,7 @@ class filebrowser {
 		
 		if($this->container->filesystemUtility->isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
 			// TODO: remove this error message "outsiderealpath"! invaliddir should be enough
-			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $app->config["mpd"]["musicdir"]]));
+			// $app->flashNow("error", $app->ll->str("filebrowser.outsiderealpath", [$realpath, $this->conf["mpd"]["musicdir"]]));
 			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$realpath]));
 			return FALSE;
 		}
@@ -185,7 +185,7 @@ class filebrowser {
 		}
 
 		// TODO: remove possibility for non music dir at all
-		//if($app->config["filebrowser"]["restrict-to-musicdir"] !== "1" || $systemdir === TRUE) {
+		//if($this->conf["filebrowser"]["restrict-to-musicdir"] !== "1" || $systemdir === TRUE) {
 		//	return $return;
 		//}
 

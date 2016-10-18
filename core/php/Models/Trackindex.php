@@ -23,6 +23,7 @@ class Trackindex extends \Slimpd\Models\AbstractModel {
 	protected $allchunks;
 	
 	public static $tableName = 'trackindex';
+	public static $repoKey = 'trackindexRepo';
 
 	//setter
 	public function setArtist($value) {

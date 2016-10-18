@@ -92,9 +92,9 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->setTitle($this->getMostScored("setTitle"))
 			->setYear($this->getMostScored("setYear"))
 			->setCatalogNr($this->getMostScored("setCatalogNr"))
-			->setArtistUid(join(",", \Slimpd\Models\Artist::getUidsByString($this->getMostScored("setArtist"))))
-			->setGenreUid(join(",", \Slimpd\Models\Genre::getUidsByString($this->getMostScored("setGenre"))))
-			->setLabelUid(join(",", \Slimpd\Models\Label::getUidsByString($this->getMostScored("setLabel"))))
+			->setArtistUid(join(",", $this->container->artistRepo->getUidsByString($this->getMostScored("setArtist"))))
+			->setGenreUid(join(",", $this->container->genreRepo->getUidsByString($this->getMostScored("setGenre"))))
+			->setLabelUid(join(",", $this->container->labelRepo->getUidsByString($this->getMostScored("setLabel"))))
 			/*
 			->setLabelUid(
 				join(",", \Slimpd\Models\Label::getUidsByString(
@@ -109,10 +109,10 @@ class AlbumContext extends \Slimpd\Models\Album {
 		// for now do not use batcher for album records
 		
 		if($useBatcher === TRUE) {
-			\Slim\Slim::getInstance()->batcher->que($album);
+			$this->container->batcher->que($album);
 		} else {
-			\Slimpd\Models\Track::ensureRecordUidExists($album->getUid());
-			$album->update();
+			$this->container->albumRepo->ensureRecordUidExists($album->getUid());
+			$this->container->albumRepo->update($album);
 		}
 		$this->setUid($album->getUid())->updateAlbumIndex($useBatcher);
 	}
@@ -139,25 +139,24 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->setAllchunks($indexChunks);
 
 		if($useBatcher === TRUE) {
-			\Slim\Slim::getInstance()->batcher->que($albumIndex);
+			$this->container->batcher->que($albumIndex);
 			return;
 		}
-		\Slimpd\Models\Albumindex::ensureRecordUidExists($this->getUid());
-		$albumIndex->update();
+		$this->container->albumindexRepo->ensureRecordUidExists($this->getUid());
+		$this->container->albumindexRepo->update($albumIndex);
 	}
 
 	private function scoreLabelByLabelDirectory(&$albumMigrator) {
 		cliLog("--- add LABEL based on directory ---", 8);
 		cliLog("  album directory: " . $this->getRelPath(), 8);
-		$app = \Slim\Slim::getInstance();
 
 		// check config
-		if(isset($app->config['label-parent-directories']) === FALSE) {
+		if(isset($this->conf['label-parent-directories']) === FALSE) {
 			cliLog("  aborting because no label directories configured",8);
 			return;
 		}
 
-		foreach($app->config['label-parent-directories'] as $labelDir) {
+		foreach($this->conf['label-parent-directories'] as $labelDir) {
 			$labelDir = appendTrailingSlash($labelDir);
 			cliLog("  configured label dir: " . $labelDir, 10);
 			if(stripos($this->getRelPath(), $labelDir) !== 0) {

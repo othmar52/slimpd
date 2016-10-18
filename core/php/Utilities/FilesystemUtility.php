@@ -132,9 +132,13 @@ class FilesystemUtility {
 				continue;
 			}
 			$continueWith = (is_dir($dir."/".$object)) ? "rrmdir" : "unlink";
-			$continueWith($dir."/".$object);
+			$this->$continueWith($dir."/".$object);
 		}
 		rmdir($dir);
+	}
+	
+	function unlink($filePath) {
+		unlink($filePath);
 	}
 	
 	/**

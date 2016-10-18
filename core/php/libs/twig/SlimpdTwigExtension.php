@@ -53,7 +53,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
 			return $this->container->$repoKey->getRandomInstance();
 		} catch(\Exception $e) {
 			// FIXME: how to access the response object?
-			\Slim\Slim::getInstance()->response->redirect(\Slim\Slim::getInstance()->config['root'] . 'systemcheck?dberror');
+			\Slim\Slim::getInstance()->response->redirect($this->conf['root'] . 'systemcheck?dberror');
 		}
 	}
 

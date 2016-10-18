@@ -31,7 +31,7 @@ class Localization {
 	public static function str($itemkey, $vars = array()) {
 		$checkLanguages = array(
 			// TODO: how to access configured language in slim3?
-			'de',#\Slim\Slim::getInstance()->config['config']['langkey'],
+			'de',#$this->conf['config']['langkey'],
 			'en' // fallback language
 		);
 		foreach($checkLanguages as $langkey) {

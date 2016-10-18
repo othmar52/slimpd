@@ -87,7 +87,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 		$query = "SELECT count(uid) AS itemsTotal FROM rawtagdata";
 		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 		$this->checkBatch();
-		$this->batcher->finishAll();
+		$this->container->batcher->finishAll();
 
 		$this->finishJob(array(
 			'msg' => 'migrated ' . $this->itemsChecked . ' files',
@@ -188,7 +188,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	private function newPrevAlb($record) {
 		$this->prevAlb = new \Slimpd\Modules\Albummigrator\AlbumMigrator($this->container);
-		$this->prevAlb->conf = $this->migratorConfig;
+		$this->prevAlb->migratorConf = $this->migratorConfig;
 		$this->prevAlb->useBatcher = $this->useBatcher;
 		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);
 		$this->prevAlb->setRelDirPath($record['relDirPath']);

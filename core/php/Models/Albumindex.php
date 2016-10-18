@@ -23,6 +23,7 @@ class Albumindex extends \Slimpd\Models\AbstractModel {
 	protected $allchunks;
 	
 	public static $tableName = 'albumindex';
+	public static $repoKey = 'albumindexRepo';
 
 	//setter
 	public function setArtist($value) {

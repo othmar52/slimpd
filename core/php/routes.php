@@ -109,6 +109,6 @@ $app->get('/alphasearch/', $ctrlName . ':alphasearchAction');
 
 
 // importer
-$ctrlName = 'Slimpd\Modules\importer\Controller';
+$ctrlName = 'Slimpd\Modules\Importer\Controller';
 $app->get('/importer[/]', $ctrlName . ':indexAction');
 $app->get('/importer/triggerUpdate', $ctrlName . ':triggerUpdateAction');

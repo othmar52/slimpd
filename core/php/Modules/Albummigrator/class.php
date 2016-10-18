@@ -884,12 +884,12 @@ class AlbumMigratorOld {
 		$app = \Slim\Slim::getInstance();
 
 		// check config
-		if(isset($app->config['label-parent-directories']) === FALSE) {
+		if(isset($this->conf['label-parent-directories']) === FALSE) {
 			cliLog("  aborting because no label directories configured",8);
 			return;
 		}
 
-		foreach($app->config['label-parent-directories'] as $labelDir) {
+		foreach($this->conf['label-parent-directories'] as $labelDir) {
 			$labelDir = appendTrailingSlash($labelDir);
 			cliLog("  configured label dir: " . $labelDir, 10);
 			if(stripos($albumPath, $labelDir) !== 0) {

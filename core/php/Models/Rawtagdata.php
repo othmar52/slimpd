@@ -29,6 +29,7 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
 	protected $error;	// TODO: move to Trait
 
 	public static $tableName = 'rawtagdata';
+	public static $repoKey = 'rawtagdataRepo';
 
 
 	//setter

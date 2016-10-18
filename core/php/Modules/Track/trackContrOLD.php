@@ -133,7 +133,7 @@ $app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app
 	$vars['action'] = 'trackid3';
 
 	$getID3 = new \getID3;
-	$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . join(DS, $itemParams));
+	$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . join(DS, $itemParams));
 	\getid3_lib::CopyTagsToComments($tagData);
 	\getid3_lib::ksort_recursive($tagData);
 

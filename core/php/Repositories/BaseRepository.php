@@ -27,6 +27,7 @@ class BaseRepository {
 		$this->container = $container;
 		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
 		$this->db = $container->db;
+		$this->conf = $container->conf;
 	}
 
 	public function getInstancesByAttributes(array $attributeArray, $singleInstance = FALSE, $itemsperPage = 200, $currentPage = 1, $orderBy = "") {
@@ -191,7 +192,7 @@ class BaseRepository {
 			return $instance;
 		}
 		
-		#$database = \Slim\Slim::getInstance()->db;
+		#$database = $this->db;
 		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
@@ -281,68 +282,61 @@ class BaseRepository {
 		return $return;
 	}
 
-	public function insert() {
+	public function insert(&$instance) {
 
 		// automatically add timestamp if possible
 		$setter = 'setAdded';
-		if(method_exists(get_called_class(), $setter)) {
+		if(method_exists($instance, $setter)) {
 			$getter = 'getAdded';
-			if($this->$getter() < 1) {
-				$this->$setter(time());
+			if($instance->$getter() < 1) {
+				$instance->$setter(time());
 			}
 		}
-		$mapped = $this->mapInstancePropertiesToDatabaseKeys();
+		$mapped = $instance->mapInstancePropertiesToDatabaseKeys();
 		$query = 'INSERT INTO '. self::getTableName().' (' . join(",", array_keys($mapped)) . ') VALUES (';
 		foreach($mapped as $value) {
 			$query .= "\"" . $this->db->real_escape_string($value) . "\",";
 		}
 		$query = substr($query,0,-1) . ");";
 		$this->db->query($query);
-		$this->setUid($app->db->insert_id);
+		$instance->setUid($this->db->insert_id);
 	}
 
-	public function update() {
-		$this->searchExistingUid();
+	public function update(&$instance) {
+		$this->searchExistingUid($instance);
 		// we can't update. lets insert new record
-		if($this->getUid() < 1) {
-			return $this->insert();
+		if($instance->getUid() < 1) {
+			return $this->insert($instance);
 		}
-			
-		$app = \Slim\Slim::getInstance();
-		
 		$query = 'UPDATE '. self::getTableName() . ' SET ';
-		foreach($this->mapInstancePropertiesToDatabaseKeys() as $dbField => $value) {
-			$query .= $dbField . '="' . $app->db->real_escape_string($value) . '",';
+		foreach($instance->mapInstancePropertiesToDatabaseKeys() as $dbField => $value) {
+			$query .= $dbField . '="' . $this->db->real_escape_string($value) . '",';
 		}
-		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$this->getUid() . ";";
-		$app->db->query($query);
+		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$instance->getUid() . ";";
+		$this->db->query($query);
 	}
 
-	private function searchExistingUid() {
-		if($this->getUid() > 0) {
+	private function searchExistingUid(&$instance) {
+		if($instance->getUid() > 0) {
 			return;
 		}
 		// check if we have a record with this path
-		$classPath = get_called_class();
-		$repoKey = $this->getClassPath();
-		$instance = new $classPath;
-
-		if(method_exists($classPath, 'getRelPathHash') === TRUE) {
-			$instance = $this->$repoKey->getInstanceByAttributes(array('relPathHash' => $this->getRelPathHash()));
-			if($instance === NULL && $this->getRelPathHash() !== '') {
+		if(method_exists($instance, 'getRelPathHash') === TRUE) {
+			$dummyInstance = $this->getInstanceByAttributes(array('relPathHash' => $instance->getRelPathHash()));
+			if($dummyInstance === NULL && $instance->getRelPathHash() !== '') {
 				return;
 			}
 		}
-		if($instance === NULL && method_exists($classPath, 'getRelPath') === TRUE) {
-			$instance = $this->$repoKey->getInstanceByAttributes(array('relPath' => $this->getRelPath()));
+		if($dummyInstance === NULL && method_exists($instance, 'getRelPath') === TRUE) {
+			$dummyInstance = $this->getInstanceByAttributes(array('relPath' => $instance->getRelPath()));
 		}
-		if($instance === NULL && method_exists($classPath, 'getAz09') === TRUE) {
-			$instance = $this->$repoKey->getInstanceByAttributes(array('az09' => $this->getAz09()));
+		if($dummyInstance === NULL && method_exists($instance, 'getAz09') === TRUE) {
+			$dummyInstance = $this->getInstanceByAttributes(array('az09' => $instance->getAz09()));
 		}
-		if($instance === NULL || $instance->getUid() < 1) {
+		if($dummyInstance === NULL || $instance->getUid() < 1) {
 			return;
 		}
-		$this->setUid($instance->getUid());
+		$this->setUid($dummyInstance->getUid());
 	}
 
 	public function delete() {
@@ -367,29 +361,30 @@ class BaseRepository {
 				return FALSE;
 			}
 		}
-		\Slim\Slim::getInstance()->db->query(
+		$this->db->query(
 			'DELETE FROM '. self::getTableName() . ' WHERE uid=' . (int)$this->getUid()
 		);
 	}
 
-	public static function getUidsByString($itemString) {
+	public function getUidsByString($itemString) {
 		$uidForUnknown = 10;
 		if(trim($itemString) === '') {
 			return array($uidForUnknown => $uidForUnknown); // Unknown
 		}
 		
-		$app = \Slim\Slim::getInstance();
-		$classPath = get_called_class();
+		$tmp = get_called_class();
+		$classPath = $tmp::$classPath;
+		
 		$class = strtolower($classPath);
 		if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
 			$class = strtolower($matches[1]);
 		}
 
-		self::cacheUnifier($app, $classPath);
+		$this->cacheUnifier($classPath);
 
 		$itemUids = array();
 		$tmpGlue = "tmpGlu3";
-		foreach(trimExplode($tmpGlue, str_ireplace($app->config[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
+		foreach(trimExplode($tmpGlue, str_ireplace($this->conf[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
 			$az09 = az09($itemPart);
 			
 			if($az09 === '' || isHash($az09) === TRUE) {
@@ -399,27 +394,27 @@ class BaseRepository {
 			}
 
 			// unify items based on config
-			if(isset($app->importerCache[$classPath]["unified"][$az09]) === TRUE) {
-				$itemPart = $app->importerCache[$classPath]["unified"][$az09];
+			if(isset($this->importerCache[$classPath]["unified"][$az09]) === TRUE) {
+				$itemPart = $this->importerCache[$classPath]["unified"][$az09];
 				$az09 = az09($itemPart);
 			}
 			
 			// check if we alread have an id
 			// permformance improvement ~8%
-			$itemUid = self::cacheRead($app, $classPath, $az09);
+			$itemUid = $this->cacheRead($classPath, $az09);
 			if($itemUid !== FALSE) {
 				$itemUids[$itemUid] = $itemUid;
 				continue;
 			}
 
 			$query = "SELECT uid FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
-			$result = $app->db->query($query);
+			$result = $this->db->query($query);
 			$record = $result->fetch_assoc();
 
 			if($record) {
 				$itemUid = $record["uid"];
 				$itemUids[$record["uid"]] = $record["uid"];
-				self::cacheWrite($app, $classPath, $az09, $record["uid"]);
+				$this->cacheWrite($classPath, $az09, $record["uid"]);
 				continue;
 			}
 
@@ -428,28 +423,28 @@ class BaseRepository {
 
 			// TODO: de we need the non-batcher version anymore?
 			#$instance->insert();
-			#$itemUid = $app->db->insert_id;
-			$app->batcher->que($instance);
+			#$itemUid = $this->db->insert_id;
+			$this->container->batcher->que($instance);
 			$itemUid = $instance->getUid();
 
 			$itemUids[$itemUid] = $itemUid;
-			self::cacheWrite($app, $classPath, $az09, $itemUid);
+			$this->cacheWrite($classPath, $az09, $itemUid);
 		}
 		return $itemUids;
 	}
 
-	public static function cacheRead($app, $classPath, $az09) {
-		self::cacheUnifier($app, $classPath);
-		if(isset($app->importerCache[$classPath]["cache"][$az09]) === TRUE) {
-			return $app->importerCache[$classPath]["cache"][$az09];
+	public function cacheRead($classPath, $az09) {
+		$this->cacheUnifier($classPath);
+		if(isset($this->importerCache[$classPath]["cache"][$az09]) === TRUE) {
+			return $this->importerCache[$classPath]["cache"][$az09];
 		}
 		return FALSE;
 	}
 
-	public static function cacheWrite($app, $classPath, $az09, $itemUid) {
-		self::cacheUnifier($app, $classPath);
+	public function cacheWrite($classPath, $az09, $itemUid) {
+		$this->cacheUnifier($classPath);
 		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
-		$tmpArray = $app->importerCache;
+		$tmpArray = $this->importerCache;
 		$tmpArray[$classPath]["cache"][$az09] = $itemUid;
 		// delete cache as soon as we reach 1000 items
 		if(count($tmpArray[$classPath]["cache"]) > 5000) {
@@ -457,25 +452,25 @@ class BaseRepository {
 			cliLog("clearing cache for " . $classPath, 5, "yellow");
 			// make sure all instances gets written to database
 			$tmpInstance = new $classPath;
-			$app->batcher->insertBatch($tmpInstance::$tableName);
+			$this->container->batcher->insertBatch($tmpInstance::$tableName);
 		}
-		$app->importerCache = $tmpArray;
+		$this->importerCache = $tmpArray;
 	}
 
-	public static function cacheUnifier($app, $classPath) {
-		if(isset($app->importerCache[$classPath]) === TRUE) {
+	public function cacheUnifier($classPath) {
+		if(isset($this->importerCache[$classPath]) === TRUE) {
 			return;
 		}
-		if(isset($app->importerCache) === FALSE) {
-			$app->importerCache = array();
+		if(isset($this->importerCache) === FALSE) {
+			$this->importerCache = array();
 		}
 		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
-		$tmpArray = $app->importerCache;
+		$tmpArray = $this->importerCache;
 		$tmpArray[$classPath] = array(
 			"unified" => array(),
 			"cache" => array()
 		);
-		$app->importerCache = $tmpArray;
+		$this->importerCache = $tmpArray;
 		if(method_exists($classPath, "unifyItemnames") === FALSE) {
 			return;
 		}
@@ -484,11 +479,11 @@ class BaseRepository {
 			? strtolower($matches[1])
 			: strtolower($classPath);
 
-		if(isset($app->config[$class ."s"]) === FALSE) {
+		if(isset($this->conf[$class ."s"]) === FALSE) {
 			return;
 		}
-		$tmpArray[$classPath]["unified"] = $classPath::unifyItemnames($app->config[$class ."s"]);
-		$app->importerCache = $tmpArray;
+		$tmpArray[$classPath]["unified"] = $classPath::unifyItemnames($this->conf[$class ."s"]);
+		$this->importerCache = $tmpArray;
 	}
 
 	public function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
@@ -535,7 +530,7 @@ class BaseRepository {
 	}
 	
 	public function getRandomInstance() {
-		#$database = \Slim\Slim::getInstance()->db;
+		#$database = $this->db;
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
@@ -566,23 +561,15 @@ class BaseRepository {
 			return;
 		}
 		$query = "DELETE FROM " . self::getTableName() . " WHERE uid IN (" . join(',', $uidArray) . ");";
-		\Slim\Slim::getInstance()->db->query($query);
+		$this->db->query($query);
 	}
 
-	public static function ensureRecordUidExists($itemUid) {
-		if(\Slim\Slim::getInstance()->db->query("SELECT uid FROM " . self::getTableName() . " WHERE uid=" . (int)$itemUid)->num_rows == $itemUid) {
+	public function ensureRecordUidExists($itemUid) {
+		if($this->db->query("SELECT uid FROM " . self::getTableName() . " WHERE uid=" . (int)$itemUid)->num_rows == $itemUid) {
 			return;
 		}
-		\Slim\Slim::getInstance()->db->query("INSERT INTO " . self::getTableName() . " (uid) VALUES (".(int)$itemUid.")");
+		$this->db->query("INSERT INTO " . self::getTableName() . " (uid) VALUES (".(int)$itemUid.")");
 		return;
-	}
-
-	public function getUid() {
-		return $this->uid;
-	}
-	public function setUid($value) {
-		$this->uid = $value;
-		return $this;
 	}
 }
 

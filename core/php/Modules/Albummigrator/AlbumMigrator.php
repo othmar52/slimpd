@@ -22,6 +22,7 @@ class AlbumMigrator {
 
 	use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
 	public $conf;
+	public $migratorConf;
 	protected $rawTagItems;
 	protected $trackContextItems;
 	protected $albumContextItem;
@@ -33,6 +34,7 @@ class AlbumMigrator {
 		$this->container = $container;
 		$this->db = $container->db;
 		$this->ll = $container->ll;
+		$this->conf = $container->conf;
 	}
 
 	public function run() {
@@ -42,7 +44,7 @@ class AlbumMigrator {
 
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
-			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->conf, $this->container);
+			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->migratorConf, $this->container);
 			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
 			$this->handleTrackFilemtime($rawTagItem["added"]);
@@ -50,7 +52,7 @@ class AlbumMigrator {
 		// decide if bunch should be treated as album or as loose tracks
 		$this->jumbleJudge->judge();
 		
-		if(\Slim\Slim::getInstance()->config["modules"]["enable_guessing"] == "1") {
+		if($this->conf["modules"]["enable_guessing"] == "1") {
 			// do some voting for each attribute
 			$this->runAttributeScoring();
 		}
@@ -80,7 +82,7 @@ class AlbumMigrator {
 		
 		// complete embedded bitmaps with albumUid
 		// to make sure extracted images will be referenced to an album
-		\Slimpd\Models\Bitmap::addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
+		$this->container->bitmapRepo->addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
 		
 		
 		#var_dump($this);

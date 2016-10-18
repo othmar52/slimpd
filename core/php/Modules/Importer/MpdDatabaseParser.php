@@ -50,25 +50,35 @@ class MpdDatabaseParser {
 	public $itemsTotal = 0;
 	public $itemsChecked = 0;
 	public $itemsProcessed = 0;
+	
+	private $rawtagdataRepo;
 
-	public function __construct($dbFilePath) {
+	public function __construct($container, $dbFilePath) {
+		$this->container = $container;
+		$this->db = $container->db;
+		$this->ll = $container->ll;
+		$this->conf = $container->conf;
+		$this->rawtagdataRepo = $container->rawtagdataRepo;
+		$this->filesystemUtility = $container->filesystemUtility;
+		$this->batcher = $container->batcher;
+		
 		// very first import may use filesystem timestamp as attribute:added instead of time()
-		if(\Slimpd\Models\Rawtagdata::getCountAll() < 1
-		&& \Slim\Slim::getInstance()->config["importer"]["use-filemtime-on-initial-import"] === "1") {
+		if($this->rawtagdataRepo->getCountAll() < 1
+		&& $this->conf["importer"]["use-filemtime-on-initial-import"] === "1") {
 			$this->useNowAsAdded = FALSE;
 		}
 
 		$this->dbFile = $dbFilePath;
 		
 		// batcher is only used on the very first import because we can be sure that no update of existing record is required
-		if(\Slimpd\Models\Rawtagdata::getCountAll() < 1) {
+		if($this->rawtagdataRepo->getCountAll() < 1) {
 			$this->useBatcher = TRUE;
 		}
 
 		// check if mpd_db_file exists
 		if(is_file($this->dbFile) === TRUE || is_readable($this->dbFile) === TRUE) {
 			// check if we have a plaintext or gzipped mpd-databasefile
-			$this->gzipped = testBinary($this->dbFile);
+			$this->gzipped = $this->filesystemUtility->testBinary($this->dbFile);
 			return $this;
 		}
 		$this->error = TRUE;
@@ -99,11 +109,10 @@ class MpdDatabaseParser {
 	}
 
 	public function readMysqlTstamps() {
-		$app = \Slim\Slim::getInstance();
 		// get timestamps of all tracks and directories from mysql database
 		// get all existing track-uids to determine orphans		
 		$query = "SELECT uid, relPathHash, relDirPathHash, filemtime, directoryMtime FROM rawtagdata;";
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->itemsTotal++;
 			$this->fileOrphans[ $record["relPathHash"] ] = $record["uid"];
@@ -121,7 +130,7 @@ class MpdDatabaseParser {
 		// get all existing album-uids to determine orphans
 		$this->dirOrphans = array();
 		$query = "SELECT uid, relPathHash FROM album;";
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 		while($record = $result->fetch_assoc()) {
 			$this->dirOrphans[ $record["relPathHash"] ] = $record["uid"];
 		}
@@ -222,7 +231,7 @@ class MpdDatabaseParser {
 		// further we have to read directory-modified-time manually because there is no info
 		// about mpd-root-directory in mpd-database-file
 		if($this->currentDir === "") {
-			$this->rawTagItem->setDirectoryMtime(filemtime(\Slim\Slim::getInstance()->config["mpd"]["musicdir"]));
+			$this->rawTagItem->setDirectoryMtime(filemtime($this->conf["mpd"]["musicdir"]));
 		}
 
 		$this->rawTagItem->setRelPath($this->rawTagItem->getRelDirPath() . $this->currentSong)
@@ -263,10 +272,10 @@ class MpdDatabaseParser {
 		}
 		$this->rawTagItem->setLastScan(0)
 			->setImportStatus(1)
-			->setExtension(getFileExt($this->rawTagItem->getRelPath()));
+			->setExtension($this->filesystemUtility->getFileExt($this->rawTagItem->getRelPath()));
 			
 		if($this->useBatcher === TRUE) {
-			\Slim\Slim::getInstance()->batcher->que($this->rawTagItem);
+			$this->batcher->que($this->rawTagItem);
 		} else {
 			$this->rawTagItem->update();
 		}

@@ -25,10 +25,10 @@ class Xwax {
 	protected $pollcache = NULL;
 
 	public function cmd($cmd, $params, $app, $returnResponse = FALSE) {
-		if($app->config['modules']['enable_xwax'] !== '1') {
+		if($this->conf['modules']['enable_xwax'] !== '1') {
 			notifyJson($app->ll->str('xwax.notenabled'), 'danger');
 		}
-		$xConf = $app->config['xwax'];
+		$xConf = $this->conf['xwax'];
 
 		if($xConf['decks'] < 1) {
 			notifyJson($app->ll->str('xwax.deckconfig'), 'danger');
@@ -141,7 +141,7 @@ class Xwax {
 
 	public function getCurrentlyPlayedTrack($deckIndex) {
 		$app = \Slim\Slim::getInstance();
-		#$xConf = $app->config['xwax'];
+		#$xConf = $this->conf['xwax'];
 		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
 		$deckItem = ($deckStatus['path'] !== NULL)
 			 ? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
@@ -152,7 +152,7 @@ class Xwax {
 	public function fetchAllDeckStats() {
 		$return = array();
 		$app = \Slim\Slim::getInstance();
-		$xConf = $app->config['xwax'];
+		$xConf = $this->conf['xwax'];
 		for($i=0; $i<$xConf['decks']; $i++) {
 			// dont try other decks in case first deck fails
 			$response = $this->cmd('get_status', array($i+1), $app, TRUE);

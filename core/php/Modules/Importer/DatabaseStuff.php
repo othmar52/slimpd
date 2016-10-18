@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -21,7 +21,7 @@ namespace Slimpd\Modules\importer;
  * pretty global database operations
  * TODO: find a better name for this class
  */
-class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
+class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	public static function getInitialDatabaseQueries($ll) {
 		$queries = array(
@@ -76,7 +76,7 @@ class DatabaseStuff extends \Slimpd\Modules\importer\AbstractImporter {
 
 	public static function buildDictionarySql() {
 		$app = \Slim\Slim::getInstance();
-		\Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($app->config['sphinx']);
+		\Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($this->conf['sphinx']);
 
 		$input  = fopen ("php://stdin", "r");
 		$output = fopen ("php://stdout", "w+");

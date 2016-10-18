@@ -20,4 +20,71 @@ namespace Slimpd\Repositories;
 class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
 	public static $tableName = 'bitmap';
 	public static $classPath = '\Slimpd\Models\Bitmap';
+	
+
+	public function searchUidBeforeInsert() {
+		if($this->getUid() > 0) {
+			// we already have an uid ...
+			return;
+		}
+
+		// check if we have a record with this path
+		// multiple usage of same image files is possible. so albumDirHash has to match
+		$bitmap2 = Bitmap::getInstanceByAttributes(array(
+			'relPathHash' => $this->getRelPathHash(),
+			'relDirPathHash' => $this->getRelDirPathHash(),
+		));
+
+		if($bitmap2 !== NULL) {
+			$this->setUid($bitmap2->getUid());
+		}
+		return;
+	}
+	
+	public function update() {
+		$this->searchUidBeforeInsert();
+		if($this->getUid() < 1) {
+			return $this->insert();
+		}
+		
+		$query = 'UPDATE '.self::$tableName .' SET ';
+		foreach($this->mapInstancePropertiesToDatabaseKeys() as $dbfield => $value) {
+			$query .= $dbfield . '="' . $this->db->real_escape_string($value) . '",';
+		}
+		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$this->getUid() . ";";
+		$this->db->query($query);
+	}
+	
+	public function destroy() {
+		if($this->getUid() < 1) {
+			// invalid instance
+			return FALSE;
+		}
+		
+		if($this->getEmbedded() < 1) {
+			// currently it is only allowed to delete images extracted from musicfiles
+			return FALSE;
+		}
+		
+		if(!$this->getRelPath()) {
+			// invalid instance 
+			return FALSE;
+		}
+		rmfile(APP_ROOT . $this->getRelPath());
+		$query = 'DELETE FROM '.self::$tableName .' WHERE uid=' . (int)$this->getUid() . ";";
+		$this->db->query($query);
+		return TRUE;
+	}
+	
+	public function addAlbumUidToRelDirPathHash($relDirPathHash, $albumUid) {
+		# blind adding albumUid - no matter if it a record is affected or not..
+		# TODO: does it matter or not?
+		$this->db->query(
+			'UPDATE '.self::$tableName .
+			' SET albumUid='. (int)$albumUid .
+			' WHERE relDirPathHash="'. $relDirPathHash . '";'
+		);
+		return;
+	}
+
 }

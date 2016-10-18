@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,7 +17,7 @@ namespace Slimpd\Modules\importer;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
+class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
 	
 	// a whitelist with common directory names like "cover", "artwork" 
 	protected $artworkDirNames = array();
@@ -45,7 +45,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 
 		// read from filesystem
 		$scanned = $this->getDirectoryFiles(
-			\Slim\Slim::getInstance()->config['mpd']['musicdir'] . $dirPath
+			$this->conf['mpd']['musicdir'] . $dirPath
 		);
 
 		// create cache entry cache array
@@ -54,7 +54,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 
 		foreach($scanned as $imgPath) {
 			// remove prefixed music directory
-			$relPath = substr($imgPath, strlen(\Slim\Slim::getInstance()->config['mpd']['musicdir']));
+			$relPath = substr($imgPath, strlen($this->conf['mpd']['musicdir']));
 			// write found files to cache array
 			$this->dirImgCache[$dirHash][$relPath] = $relPath;
 			// add to result set
@@ -71,20 +71,18 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 
 		$directory = dirname($musicFilePath) . DS;
 
-		$app = \Slim\Slim::getInstance();
-
-		if($app->config['images']['look_current_directory']) {
+		if($this->conf['images']['look_current_directory']) {
 			$this->getCachedOrScan($directory);
 		}
 
-		if($app->config['images']['look_cover_directory']) {
+		if($this->conf['images']['look_cover_directory']) {
 			// search for specific named subdirectories
 			foreach($this->lookupSpecialDirNames($directory) as $specialDir) {
 				$this->getCachedOrScan($directory . $specialDir);
 			}
 		}
 
-		if($app->config['images']['look_silbling_directory']) {
+		if($this->conf['images']['look_silbling_directory']) {
 			$parentDir = dirname($directory) . DS;
 			// search for specific named silbling directories
 			foreach($this->lookupSpecialDirNames($parentDir) as $specialDir) {
@@ -92,7 +90,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 			}
 		}
 
-		if($app->config['images']['look_parent_directory'] && count($this->foundImgPaths) === 0) {
+		if($this->conf['images']['look_parent_directory'] && count($this->foundImgPaths) === 0) {
 			$parentDir = dirname($directory) . DS;
 			$this->getCachedOrScan($parentDir);
 		}
@@ -100,8 +98,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 	}
 
 	private function lookupSpecialDirNames($parentPath) {
-		$app = \Slim\Slim::getInstance();
-		if(is_dir($app->config['mpd']['musicdir'] . $parentPath) === FALSE) {
+		if(is_dir($this->conf['mpd']['musicdir'] . $parentPath) === FALSE) {
 			return;
 		}
 		$dirHash = getFilePathHash($parentPath);
@@ -115,10 +112,10 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->artworkDirCache[$dirHash] = [];
 
 		// scan filesystem
-		$handle = opendir($app->config['mpd']['musicdir'] . $parentPath);
+		$handle = opendir($this->conf['mpd']['musicdir'] . $parentPath);
 		while($dirname = readdir ($handle)) {
 			// skip files
-			if(is_dir($app->config['mpd']['musicdir'] . $parentPath . $dirname) === FALSE) {
+			if(is_dir($this->conf['mpd']['musicdir'] . $parentPath . $dirname) === FALSE) {
 				continue;
 			}
 			// check if directory name matches configured values 
@@ -138,8 +135,7 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 			// we already have pluralized those strings
 			return;
 		}
-		$app = \Slim\Slim::getInstance();
-		foreach($app->config['images']['common_artwork_dir_names'] as $dirname) {
+		foreach($this->conf['images']['common_artwork_dir_names'] as $dirname) {
 			$this->artworkDirNames[] = az09($dirname);
 			$this->artworkDirNames[] = az09($dirname) . 's';
 		}
@@ -161,13 +157,12 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 			return $foundFiles;
 		}
 
-		$app = \Slim\Slim::getInstance();
 		$validExtensions = array(strtolower($ext));
-		if(array_key_exists($ext, $app->config["mimetypes"])) {
-			if(is_array($app->config["mimetypes"][$ext]) === TRUE) {
-				$validExtensions = array_keys($app->config["mimetypes"][$ext]);
+		if(array_key_exists($ext, $this->conf["mimetypes"])) {
+			if(is_array($this->conf["mimetypes"][$ext]) === TRUE) {
+				$validExtensions = array_keys($this->conf["mimetypes"][$ext]);
 			}
-			if(is_string($app->config["mimetypes"][$ext]) === TRUE) {
+			if(is_string($this->conf["mimetypes"][$ext]) === TRUE) {
 				$checkMimeType = FALSE;
 			}
 		}
@@ -176,15 +171,15 @@ class FilesystemReader extends \Slimpd\Modules\importer\AbstractImporter {
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$handle = opendir ($dir);
 		while ($file = readdir ($handle)) {
-			$foundExt = getFileExt($file);
+			$foundExt = $this->container->filesystemUtility->getFileExt($file);
 			if(is_dir($dir . $file) === TRUE) {
 				continue;
 			}
 			if(in_array($foundExt, $validExtensions) === FALSE) {
 				continue;
 			}
-			if($checkMimeType == TRUE && array_key_exists($ext, $app->config["mimetypes"])) {
-				if(finfo_file($finfo, $dir.$file) !== $app->config["mimetypes"][$ext][$foundExt]) {
+			if($checkMimeType == TRUE && array_key_exists($ext, $this->conf["mimetypes"])) {
+				if(finfo_file($finfo, $dir.$file) !== $this->conf["mimetypes"][$ext][$foundExt]) {
 					continue;
 				}
 			}

@@ -68,7 +68,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 
 	// check if we can query the revisions table
 	$query = "SELECT * FROM db_revisions";
-	$result = $app->db->query($query);
+	$result = $this->db->query($query);
 	if($result === FALSE) {
 		// obviosly table(s) never have been created
 		// let's force initial creation of all tables
@@ -102,7 +102,7 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
 	}
 
 	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
-		$app->db->query($query);
+		$this->db->query($query);
 	}
 });
 
@@ -112,17 +112,17 @@ $app->get('/update-db-scheme', function () use ($app, $argv) {
  */
 $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	getDatabaseDropConfirm();
-	// we cant use $app->db for dropping and creating
+	// we cant use $this->db for dropping and creating
 	$db = new \mysqli(
-		$app->config['database']['dbhost'],
-		$app->config['database']['dbusername'],
-		$app->config['database']['dbpassword']
+		$this->conf['database']['dbhost'],
+		$this->conf['database']['dbusername'],
+		$this->conf['database']['dbpassword']
 	);
 	cliLog("Dropping database");
 
-	$result = $db->query("DROP DATABASE IF EXISTS " . $app->config['database']['dbdatabase'].";");
+	$result = $db->query("DROP DATABASE IF EXISTS " . $this->conf['database']['dbdatabase'].";");
 	cliLog("Recreating database");
-	$result = $db->query("CREATE DATABASE " . $app->config['database']['dbdatabase'].";");
+	$result = $db->query("CREATE DATABASE " . $this->conf['database']['dbdatabase'].";");
 	$action = 'init';
 
 	Helper::setConfig( getDatabaseDiffConf($app) );
@@ -134,7 +134,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
 	$controller->runStrategy();
 
 	foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
-		$app->db->query($query);
+		$this->db->query($query);
 	}
 
 	// delete files created by sliMpd
@@ -161,7 +161,7 @@ $app->get('/hard-reset', function () use ($app, $argv, $importer) {
  */
 $app->get('/tagdatatodb', function () use ($app, $argv, $importer) {
 	$query = "SELECT uid,relPathHash FROM rawtagdata";
-	$result = $app->db->query($query);
+	$result = $this->db->query($query);
 	while($record = $result->fetch_assoc()) {
 		cliLog($record['uid']);
 		$tagFilePath = getTagDataFileName($record['relPathHash']);
@@ -181,7 +181,7 @@ $app->get('/tagdatatodb', function () use ($app, $argv, $importer) {
  */
 $app->get('/tagdatatodbcompressed', function () use ($app, $argv, $importer) {
 	$query = "SELECT uid,relPathHash FROM rawtagdata";
-	$result = $app->db->query($query);
+	$result = $this->db->query($query);
 	while($record = $result->fetch_assoc()) {
 		cliLog($record['uid']);
 		$tagFilePath = getTagDataFileName($record['relPathHash']);

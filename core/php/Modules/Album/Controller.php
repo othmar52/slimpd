@@ -97,7 +97,7 @@ class Controller extends \Slimpd\BaseController {
 		foreach($bitmaps as $bitmap) {
 			switch($bitmap->getPictureType()) {
 				case 'front':
-					if($foundFront === TRUE && $app->config['images']['hide_front_duplicates'] === '1') {
+					if($foundFront === TRUE && $this->conf['images']['hide_front_duplicates'] === '1') {
 						continue;
 					}
 					$args['albumimages'][] = $bitmap;

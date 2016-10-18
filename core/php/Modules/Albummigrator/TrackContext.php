@@ -195,16 +195,16 @@ class TrackContext extends \Slimpd\Models\Track {
 			# $t->setFeaturingUid();
 			# $t->setRemixerUid();
 		$this->setFeaturedArtistsAndRemixers()
-			->setLabelUid( join(",", \Slimpd\Models\Label::getUidsByString($this->getLabel())))
-			->setGenreUid( join(",", \Slimpd\Models\Genre::getUidsByString($this->getGenre())));
+			->setLabelUid( join(",", $this->container->labelRepo->getUidsByString($this->getLabel())))
+			->setGenreUid( join(",", $this->container->genreRepo->getUidsByString($this->getGenre())));
 			
 		$track = $this->getTrackInstanceByContext();
 		
 		if($useBatcher === TRUE) {
-			\Slim\Slim::getInstance()->batcher->que($track);
+			$this->container->batcher->que($track);
 		} else {
-			\Slimpd\Models\Track::ensureRecordUidExists($track->getUid());
-			$track->update();
+			$this->container->trackRepo->ensureRecordUidExists($track->getUid());
+			$this->container->trackRepo->update($track);
 		}
 		// add the whole bunch of valid and indvalid attributes to trackindex table
 		$this->updateTrackIndex($useBatcher);
@@ -235,11 +235,11 @@ class TrackContext extends \Slimpd\Models\Track {
 			->setAllchunks($indexChunks);
 
 		if($useBatcher === TRUE) {
-			\Slim\Slim::getInstance()->batcher->que($trackIndex);
+			$this->container->batcher->que($trackIndex);
 			return;
 		}
-		\Slimpd\Models\Trackindex::ensureRecordUidExists($this->getUid());
-		$trackIndex->update();
+		$this->container->trackindexRepo->ensureRecordUidExists($this->getUid());
+		$this->container->trackindexRepo->update($trackIndex);
 	}
 
 	public function setAlbum($value) {
@@ -284,7 +284,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	// TODO: refacture!!!
 	// TODO: pretty sure getzFeaturedArtist() from id3 tags is currently not used at all
 	public function setFeaturedArtistsAndRemixers() {
-		$artistBlacklist = \Slimpd\Models\Artist::getArtistBlacklist();
+		$artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
 
 		$artistStringVanilla = $this->getArtist();
 		$titleStringVanilla = $this->getTitle();
@@ -488,18 +488,18 @@ class TrackContext extends \Slimpd\Models\Track {
 		// clean up artist names
 		// unfortunately there are artist names like "45 Thieves"
 		$regularArtists = $this->removeLeadingNumbers($regularArtists);
-		$this->setArtistUid(join(",", Artist::getUidsByString(join(" & ", $regularArtists))));
+		$this->setArtistUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $regularArtists))));
 
 		$this->setFeaturingUid('');
 		$featuredArtists = $this->removeLeadingNumbers($featuredArtists);
 		if(count($featuredArtists) > 0) { 
-			$this->setFeaturingUid(join(",", Artist::getUidsByString(join(" & ", $featuredArtists))));
+			$this->setFeaturingUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $featuredArtists))));
 		}
 
 		$this->setRemixerUid('');
 		$remixerArtists = $this->removeLeadingNumbers($remixerArtists);
 		if(count($remixerArtists) > 0) {
-			$this->setRemixerUid(join(",", Artist::getUidsByString(join(" & ", $remixerArtists))));
+			$this->setRemixerUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $remixerArtists))));
 		}
 		
 		// replace multiple whitespace with a single whitespace

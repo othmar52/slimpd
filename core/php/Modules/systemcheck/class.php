@@ -28,7 +28,7 @@ class Systemcheck {
 
 	
 	public function __construct() {
-		$this->config = \Slim\Slim::getInstance()->config;
+		$this->config = $this->conf;
 	}
 
 	public function runChecks() {
@@ -100,7 +100,7 @@ class Systemcheck {
 		// check if individual config file is not served by webserver
 		$env = \Slim\Environment::getInstance();
 		$confHttpUrl = $env->offsetGet("slim.url_scheme") . "://" . $env->offsetGet("HTTP_HOST") .
-			$app->config['config']['absFilePrefix'] . $relConfPath;
+			$this->conf['config']['absFilePrefix'] . $relConfPath;
 
 		$httpClient = new \GuzzleHttp\Client();
 		try {
@@ -160,11 +160,11 @@ class Systemcheck {
 			return;
 		}
 		$tmpDb = $this->config['database']['dbdatabase']."_prmchk";
-		$result = $app->db->query("CREATE DATABASE ". $tmpDb .";");
+		$result = $this->db->query("CREATE DATABASE ". $tmpDb .";");
 		if (!$result) {#
 			$check['dbPerms']['status'] = 'danger';
 		} else {
-			$app->db->query("DROP DATABASE ". $tmpDb .";");
+			$this->db->query("DROP DATABASE ". $tmpDb .";");
 			$check['dbPerms']['status'] = 'success';
 			$check['dbSchema']['skip'] = FALSE;
 		}

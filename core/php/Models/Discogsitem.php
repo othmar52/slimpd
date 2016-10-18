@@ -123,7 +123,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
 		$app = \Slim\Slim::getInstance();
 		$client = \Discogs\ClientFactory::factory([
 		    'defaults' => [
-		        'headers' => ['User-Agent' => $app->config['discogsapi']['useragent']],
+		        'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
 		    ]
 		]);
 		

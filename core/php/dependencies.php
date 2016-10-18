@@ -115,7 +115,7 @@ $container['db'] = function ($cont) {
 			$app->stop();
 		}
 		$app->flash('error', $app->ll->str('database.connect'));
-		$app->redirect($app->config['root'] . 'systemcheck?dberror');
+		$app->redirect($this->conf['root'] . 'systemcheck?dberror');
 		$app->stop();
 		return;
 	}
@@ -123,8 +123,8 @@ $container['db'] = function ($cont) {
 };
 
 // Batcher
-$container['batcher'] = function () {
-	return new \Slimpd\Modules\Database\Batcher();
+$container['batcher'] = function ($cont) {
+	return new \Slimpd\Modules\Database\Batcher($cont);
 };
 
 
@@ -185,7 +185,7 @@ $container['errorHandler'] = function ($cont) {
 	$vars['file'] = removeAppRootPrefix($e->getFile());
 	$vars['line'] = $e->getLine();
 	// delete cached config
-	$app->configLoaderINI->loadConfig('master.ini', NULL, '1');
+	$this->confLoaderINI->loadConfig('master.ini', NULL, '1');
 	$app->render('appless.htm', $vars);
 });
 	*/
@@ -219,7 +219,7 @@ $container['notFoundHandler'] = function ($cont) {
 			$app->render('surrounding.htm', $vars);
 		} else {
 			// trigger a search
-			$app->response->redirect($app->config['root'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
+			$app->response->redirect($this->conf['root'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
 		}
 	});
 	*/

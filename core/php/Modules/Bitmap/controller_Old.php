@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-$weightConf = trimExplode("\n", $app->config['images']['weightening'], TRUE);
+$weightConf = trimExplode("\n", $this->conf['images']['weightening'], TRUE);
 $imageWeightOrderBy = "FIELD(pictureType, '" . join("','", $weightConf) . "'), sorting ASC, filesize DESC";
 
 #echo $imageWeightOrderBy; die();

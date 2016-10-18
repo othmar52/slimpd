@@ -17,16 +17,6 @@ namespace Slimpd\Modules\importer;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-use Slimpd\Models\Track;
-use Slimpd\Models\Trackindex;
-use Slimpd\Models\Artist;
-use Slimpd\Models\Album;
-use Slimpd\Models\Albumindex;
-use Slimpd\Models\Label;
-use Slimpd\Models\Genre;
-use Slimpd\Models\Rawtagdata;
-use Slimpd\Models\Rawtagblob;
-use Slimpd\Models\Bitmap;
 
 class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 	public $extractedImages = 0;
@@ -37,9 +27,8 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->jobPhase = 3;
 		$this->beginJob(array('msg' => 'collecting tracks to scan from mysql database' ), __FUNCTION__);
 		
-		$app = \Slim\Slim::getInstance();
-		
-		$phpThumb = Bitmap::getPhpThumb();
+		$bitmapController = new \Slimpd\Modules\Bitmap\Controller($this->container);
+		$phpThumb = $bitmapController->getPhpThumb();
 		$phpThumb->setParameter('config_cache_directory', APP_ROOT.'localdata/embedded');
 		
 		$getID3 = new \getID3;
@@ -50,22 +39,22 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			////////////////////////////////////////////////////////////////
 			// TEMP reset database status for testing purposes
 			#$query = "UPDATE rawtagdata SET importStatus=1, lastScan=0;";
-			#$app->db->query($query);
+			#$this->db->query($query);
 			#$query = "DELETE FROM bitmap WHERE trackUid > 0;";
-			#$app->db->query($query);
+			#$this->db->query($query);
 			////////////////////////////////////////////////////////////////
 		
 		$query = "
 			SELECT COUNT(*) AS itemsTotal
 			FROM rawtagdata WHERE lastScan=0";
-		$this->itemsTotal = (int) $app->db->query($query)->fetch_assoc()['itemsTotal'];
+		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 			
 			
 		$query = "
 			SELECT uid, relPath, relPathHash, relDirPathHash
 			FROM rawtagdata WHERE lastScan=0";
 
-		$result = $app->db->query($query);
+		$result = $this->db->query($query);
 		$this->extractedImages = 0;
 		while($record = $result->fetch_assoc()) {
 			$this->itemsChecked++;
@@ -75,20 +64,20 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				'currentItem' => $record['relPath'],
 				'extractedImages' => $this->extractedImages
 			));
-			$rawTagData = new Rawtagdata();
+			$rawTagData = new \Slimpd\Models\Rawtagdata();
 			$rawTagData->setUid($record['uid'])
 				->setRelPath($record['relPath'])
 				->setLastScan(time())
 				->setImportStatus(2);
 			
 			// TODO: handle not found files
-			if(is_file($app->config['mpd']['musicdir'] . $record['relPath']) === FALSE) {
+			if(is_file($this->conf['mpd']['musicdir'] . $record['relPath']) === FALSE) {
 				$rawTagData->setError('invalid file');
 				$rawTagData->update();
 				continue;
 			}
 
-			$rawTagData->setFilesize( filesize($app->config['mpd']['musicdir'] . $record['relPath']) );
+			$rawTagData->setFilesize( filesize($this->conf['mpd']['musicdir'] . $record['relPath']) );
 			
 			// skip very large files
 			// TODO: how to handle this?
@@ -98,7 +87,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 				continue;
 			}
 			
-			$tagData = $getID3->analyze($app->config['mpd']['musicdir'] . $record['relPath']);
+			$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $record['relPath']);
 			\getid3_lib::CopyTagsToComments($tagData);
 
 			// Version 1: 
@@ -120,18 +109,18 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			#);
 
 			// Version 3: from sparata database table, gzipcompressed, serialized 
-			Rawtagblob::ensureRecordUidExists($record['uid']);
-			$rawTagBlob = new Rawtagblob();
+			$this->container->rawtagblobRepo->ensureRecordUidExists($record['uid']);
+			$rawTagBlob = new \Slimpd\Models\Rawtagblob();
 			$rawTagBlob->setUid($record['uid'])
-				->setTagData(gzcompress(serialize($this->removeHugeTagData($tagData))))
-				->update();
+				->setTagData(gzcompress(serialize($this->removeHugeTagData($tagData))));
+			$this->container->rawtagblobRepo->update($rawTagBlob);
 
 
 		
 			// TODO: should we complete rawTagData with fingerprint on flac files?
-			$rawTagData->update();
+			$this->container->rawtagdataRepo->update($rawTagData);
 
-			if(!$app->config['images']['read_embedded']) {
+			if(!$this->conf['images']['read_embedded']) {
 				continue;
 			}
 			$this->extractEmbeddedBitmaps($tagData, $phpThumb, $record);
@@ -204,7 +193,7 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 			}
 			\phpthumb_functions::EnsureDirectoryExists(
 				dirname($phpThumb->cache_filename),
-				octdec($app->config['config']['dirCreateMask'])
+				octdec($this->conf['config']['dirCreateMask'])
 			);
 			try {
 				$phpThumb->RenderToFile($phpThumb->cache_filename);
@@ -265,19 +254,19 @@ class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
 
 	// TODO: where to move pythonscript?
 	// TODO: general wrapper for shell-executing stuff
-	public static function extractAudioFingerprint($absolutePath, $returnCommand = FALSE) {
-		switch(getFileExt($absolutePath)) {
+	public function extractAudioFingerprint($absolutePath, $returnCommand = FALSE) {
+		switch($this->container->filesystemUtility->getFileExt($absolutePath)) {
 			case 'mp3':
-				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_python_2'] .
+				$cmd =  $this->conf['modules']['bin_python_2'] .
 					' ' . APP_ROOT . "core/scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
 				break;
 			case 'flac':
-				$cmd =  \Slim\Slim::getInstance()->config['modules']['bin_metaflac'] .
+				$cmd =  $this->conf['modules']['bin_metaflac'] .
 					' --show-md5sum ' . escapeshellargDirty($absolutePath);
 				break;
 			default:
 				# TODO: can we get md5sum with php in a performant way?
-				$cmd = \Slim\Slim::getInstance()->config['modules']['bin_md5'] .' ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
+				$cmd = $this->conf['modules']['bin_md5'] .' ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
 		}
 		if($returnCommand === TRUE) {
 			return $cmd;

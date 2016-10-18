@@ -80,7 +80,7 @@ $app->get('/tools/clean-rename/:itemParams+', function($itemParams) use ($app, $
 
 	// IMPORTANT TODO: move this to an exec-wrapper
 	$cmd = APP_ROOT . 'core/vendor-dist/othmar52/clean-rename/clean-rename '
-		. escapeshellarg($app->config['mpd']['musicdir']. $fileBrowser->directory);
+		. escapeshellarg($this->conf['mpd']['musicdir']. $fileBrowser->directory);
 	exec($cmd, $result);
 
 	$vars['result'] = join("\n", $result);

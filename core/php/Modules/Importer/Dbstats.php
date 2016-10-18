@@ -28,7 +28,6 @@ namespace Slimpd\Modules\importer;
  */
 class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 	public function updateCounterCache() {
-		$app = \Slim\Slim::getInstance();
 		$this->jobPhase = 7;
 		$this->beginJob(array(
 			'currentItem' => "counting items to process for displaying progressbar ..."
@@ -37,10 +36,10 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		foreach(array('artist', 'genre', 'label') as $table) {
 			// reset all counters
 			// TODO: reset topArtistUids, topGenreUids, topLabelUids
-			$app->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0, yearRange='' ");
+			$this->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0, yearRange='' ");
 			// get total amount for displaying progress
 			$query = "SELECT count(uid) AS itemsTotal FROM " . $table;
-			$this->itemsTotal += $app->db->query($query)->fetch_assoc()['itemsTotal'];
+			$this->itemsTotal += $this->db->query($query)->fetch_assoc()['itemsTotal'];
 		}
 		
 		// collect all genreUids, labelUids, artistUids, remixerUids, featuringUids, albumUid provided by tracks
@@ -52,7 +51,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		
 		// "$all" is used for displaying current progress but not processed
 		$all = array();
-		$result = $app->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid,year FROM track");
+		$result = $this->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid,year FROM track");
 		cliLog("collecting track data", 2, "yellow");
 		while($trackRow = $result->fetch_assoc()) {
 			$this->handleTrackRow($trackRow, $tables, $all);
@@ -61,7 +60,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 
 		// we may have album artists|genres|labels that does not exist as track artists|genres|labels
-		$result = $app->db->query("SELECT uid,artistUid,genreUid,labelUid FROM album");
+		$result = $this->db->query("SELECT uid,artistUid,genreUid,labelUid FROM album");
 		cliLog("collecting album data", 2, "yellow");
 		while($albumRow = $result->fetch_assoc()) {
 			$this->handleAlbumRow($albumRow, $tables, $all);
@@ -72,7 +71,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		$this->processCollectedData($tables);
 		unset($tables);
 		unset($all);
-		$this->deleteOrphans($app);
+		$this->deleteOrphans();
 		$this->finishJob(array(), __FUNCTION__);
 		return;
 	}
@@ -155,8 +154,9 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 				$this->setTopGenreUids($item, $className, $data);
 				$this->setTopLabelUids($item, $className, $data);
 				$this->setYearRange($item, $data);
-
-				$item->update();
+				
+				$repoKey = $item::$repoKey;
+				$this->container->$repoKey->update($item);
 				$this->itemsProcessed++;
 				// 2nd half is proccessing collected data
 				$this->itemsChecked += 0.5;
@@ -260,7 +260,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 	 * delete all items which does not have any trackCount or albumCount
 	 * but preserve default entries
 	 */
-	private function deleteOrphans($app) {
+	private function deleteOrphans() {
 		$tables = [
 			// tablename => highestDefaultUid
 			'artist' => 11,	// Unknown artist=10, various artists=11
@@ -270,7 +270,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		foreach($tables as $tableName => $defaultUid) {
 			$query = "DELETE FROM " . $tableName . " WHERE trackCount=0 AND albumCount=0 AND uid>" . $defaultUid;
 			cliLog("deleting ".$tableName."s  with trackCount=0 AND albumCount=0", 2, "yellow");
-			$app->db->query($query);
+			$this->db->query($query);
 		}
 	}
 }
