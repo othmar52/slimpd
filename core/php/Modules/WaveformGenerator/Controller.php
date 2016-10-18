@@ -63,7 +63,8 @@ class Controller extends \Slimpd\BaseController {
 		#var_dump($input);
 		$track = $this->trackRepo->getInstanceByPath($input, TRUE);
 
-		if($this->filesystemUtility->isInAllowedPath($track->getRelPath()) === FALSE) {
+		if($this->filesystemUtility->isInAllowedPath($track->getRelPath()) === FALSE
+		&& $this->filesystemUtility->isSystemCheckSample($track->getRelPath()) === FALSE) {
 			#die(' not within allowed path');
 			return FALSE;
 		}

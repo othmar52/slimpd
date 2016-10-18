@@ -43,6 +43,9 @@ $ctrlRoutes = [
 		['/markup/albumtracks/{itemUid}', 'albumTracksAction'],
 		['/markup/widget-album/{itemUid}', 'widgetAlbumAction'],
 		['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
+	],
+	'Systemcheck' => [
+		['/systemcheck', 'runAction']
 	]
 ];
 

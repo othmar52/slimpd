@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd;
+namespace Slimpd\Modules\Systemcheck;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -25,14 +25,18 @@ class Systemcheck {
 	protected $config;
 	protected $checks;
 	protected $audioFormats;
+	public $configLocalUrl;
 
 	
-	public function __construct() {
-		$this->config = $this->conf;
+	public function __construct($container, $request) {
+		$this->container = $container;
+		$this->conf = $container->conf;
+		$this->ll = $container->ll;
+		$this->db = $container->db;
+		$this->request = $request;
 	}
 
 	public function runChecks() {
-		$app = \Slim\Slim::getInstance();
 		$check = array(
 			// filesystem
 			'fsConfLocalExists'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
@@ -63,14 +67,14 @@ class Systemcheck {
 			'skipAudioTests'=> FALSE
 		);
 
-		$this->runConfigLocalCheck($check, $app);
+		$this->runConfigLocalCheck($check);
 
 		
 		$this->runMusicdirChecks($check);
 		$this->runAppDirChecks($check);
 
 		// check if we can connect to database
-		if($app->request->get('dberror') !== NULL) {
+		if($this->request->getParam('dberror') !== NULL) {
 			$check['dbConn']['status'] = 'danger';
 			$check['skipAudioTests'] = TRUE;
 		} else {
@@ -78,8 +82,8 @@ class Systemcheck {
 			$check['dbPerms']['skip'] = FALSE;
 		}
 
-		$this->runDatabasePermissionCheck($check, $app);
-		$this->runDatabaseSchemaCheck($check, $app);
+		$this->runDatabasePermissionCheck($check);
+		$this->runDatabaseSchemaCheck($check);
 		$this->runDatabaseContentCheck($check);
 		$this->runMpdChecks($check);
 		$this->runSphinxChecks($check);
@@ -88,7 +92,7 @@ class Systemcheck {
 		return $check;
 	}
 
-	private function runConfigLocalCheck(&$check, $app) {
+	private function runConfigLocalCheck(&$check) {
 		// check if individual config file exists
 		$relConfPath = "core/config/config_local.ini";
 		if(is_file(APP_ROOT . $relConfPath) === FALSE) {
@@ -98,13 +102,9 @@ class Systemcheck {
 		$check['fsConfLocalExists']['status'] = 'success';
 
 		// check if individual config file is not served by webserver
-		$env = \Slim\Environment::getInstance();
-		$confHttpUrl = $env->offsetGet("slim.url_scheme") . "://" . $env->offsetGet("HTTP_HOST") .
-			$this->conf['config']['absFilePrefix'] . $relConfPath;
-
 		$httpClient = new \GuzzleHttp\Client();
 		try {
-			$response = $httpClient->get($confHttpUrl);
+			$response = $httpClient->get($this->configLocalUrl);
 			$statusCode = $response->getStatusCode();
 		} catch(\GuzzleHttp\Exception\ClientException $exception) {
 			$statusCode = $exception->getResponse()->getStatusCode();
@@ -123,7 +123,7 @@ class Systemcheck {
 	private function runMusicdirChecks(&$check) {
 		// check if we have a configured value for MPD-musicdirectory
 		// DIRECTORY_SEPARATOR automatically gets appended to this config value. so DS means empty
-		if(trim($this->config['mpd']['musicdir']) === DS) {
+		if(trim($this->conf['mpd']['musicdir']) === DS) {
 			$check['fsMusicdirconf']['status'] = 'danger';
 			$check['fsMusicdir']['hide'] = TRUE;
 			$check['fsMusicdir']['skip'] = TRUE;
@@ -135,7 +135,7 @@ class Systemcheck {
 		// check if we can access [mpd]-musicdir
 		// TODO: check if there is any content inside
 		// TODO: is it possible to read this from mpd API instead of configuring it manually?
-		if(is_dir($this->config['mpd']['musicdir']) === FALSE || is_readable($this->config['mpd']['musicdir']) === FALSE) {
+		if(is_dir($this->conf['mpd']['musicdir']) === FALSE || is_readable($this->conf['mpd']['musicdir']) === FALSE) {
 			$check['fsMusicdir']['status'] = 'danger';
 			return;
 		}
@@ -154,12 +154,12 @@ class Systemcheck {
 		}
 	}
 
-	private function runDatabasePermissionCheck(&$check, $app) {
+	private function runDatabasePermissionCheck(&$check) {
 		// check permissions for "create database" (needed for schema-comparison)
 		if($check['dbPerms']['skip'] === TRUE) {
 			return;
 		}
-		$tmpDb = $this->config['database']['dbdatabase']."_prmchk";
+		$tmpDb = $this->conf['database']['dbdatabase']."_prmchk";
 		$result = $this->db->query("CREATE DATABASE ". $tmpDb .";");
 		if (!$result) {#
 			$check['dbPerms']['status'] = 'danger';
@@ -170,12 +170,12 @@ class Systemcheck {
 		}
 	}
 
-	private function runDatabaseSchemaCheck(&$check, $app) {
+	private function runDatabaseSchemaCheck(&$check) {
 		// check if db-schema is correct
 		if($check['dbSchema']['skip'] === TRUE) {
 			return;
 		}
-		\Helper::setConfig( getDatabaseDiffConf($app) );
+		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
 		$tmpdb = \Helper::getTmpDbObject();
 		\Helper::loadTmpDb($tmpdb);
 		$diff = new \dbDiff(\Helper::getDbObject(), $tmpdb);
@@ -195,11 +195,11 @@ class Systemcheck {
 		if($check['dbContent']['skip'] === TRUE) {
 			return;
 		}
-		$check['dbContent']['tracks']  = \Slimpd\Models\Track::getCountAll();
-		$check['dbContent']['albums']  = \Slimpd\Models\Album::getCountAll();
-		$check['dbContent']['artists'] = \Slimpd\Models\Artist::getCountAll();
-		$check['dbContent']['genres']  = \Slimpd\Models\Genre::getCountAll();
-		$check['dbContent']['labels']  = \Slimpd\Models\Label::getCountAll();
+		$check['dbContent']['tracks']  = $this->container->trackRepo->getCountAll();
+		$check['dbContent']['albums']  = $this->container->albumRepo->getCountAll();
+		$check['dbContent']['artists'] = $this->container->artistRepo->getCountAll();
+		$check['dbContent']['genres']  = $this->container->genreRepo->getCountAll();
+		$check['dbContent']['labels']  = $this->container->labelRepo->getCountAll();
 		$check['dbContent']['status'] = ($check['dbContent']['tracks'] > 0)
 			? 'success'
 			: 'danger';
@@ -207,11 +207,10 @@ class Systemcheck {
 
 	private function runMpdChecks(&$check) {
 				// check MPD connection
-		$mpd = new \Slimpd\Modules\mpd\mpd();
-		$check['mpdConn']['status'] = ($mpd->cmd('status') === FALSE) ? 'danger' : 'success';
+		$check['mpdConn']['status'] = ($this->container->mpd->cmd('status') === FALSE) ? 'danger' : 'success';
 
 		// check if we have a configured value for MPD-databasefile
-		if(trim($this->config['mpd']['dbfile']) === '') {
+		if(trim($this->conf['mpd']['dbfile']) === '') {
 			$check['mpdDbfileconf']['status'] = 'danger';
 			$check['mpdDbfile']['hide'] = TRUE;
 		} else {
@@ -224,7 +223,7 @@ class Systemcheck {
 			return;
 		}
 
-		if(is_file($this->config['mpd']['dbfile']) == FALSE || is_readable($this->config['mpd']['dbfile']) === FALSE) {
+		if(is_file($this->conf['mpd']['dbfile']) == FALSE || is_readable($this->conf['mpd']['dbfile']) === FALSE) {
 			$check['mpdDbfile']['status'] = 'danger';
 			return;
 		}
@@ -236,7 +235,7 @@ class Systemcheck {
 		// check sphinx connection
 		$check['sxConn']['status'] = 'success';
 		try {
-			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
 		} catch (\Exception $e) {
 			$check['sxConn']['status'] = 'danger';
 			$check['sxSchema']['skip'] = TRUE;
@@ -247,9 +246,9 @@ class Systemcheck {
 		$schemaError = FALSE;
 		$contentError = FALSE;
 		foreach(['main', 'suggest'] as $indexName) {
-			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo();
+			$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
 			$stmt = $sphinxPdo->prepare(
-				"SELECT ". $this->config['sphinx']['fields_'.$indexName]." FROM ". $this->config['sphinx'][$indexName . 'index']." LIMIT 1;"
+				"SELECT ". $this->conf['sphinx']['fields_'.$indexName]." FROM ". $this->conf['sphinx'][$indexName . 'index']." LIMIT 1;"
 			);
 			$stmt->execute();
 			if($stmt->errorInfo()[0] > 0) {
@@ -329,13 +328,13 @@ class Systemcheck {
 		if($check['skipAudioTests'] === TRUE) {
 			return;
 		}
-
+		$fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
 		// check if can extract a fingerprint of music file
 		foreach($check['audioFormats'] as $ext) {
 			$checkFp = 'fp'.ucfirst($ext);
 			$checkWf = 'wf'.ucfirst($ext);
 			if($check[$checkFp]['skip'] === FALSE) {
-				$check[$checkFp]['cmd'] = \Slimpd\Modules\Importer\Filescanner::extractAudioFingerprint($check[$checkFp]['filepath'], TRUE);
+				$check[$checkFp]['cmd'] = $fileScanner->extractAudioFingerprint($check[$checkFp]['filepath'], TRUE);
 				exec($check[$checkFp]['cmd'], $response);
 				$check[$checkFp]['resultReal'] = trim(join("\n", $response));
 				unset($response);
@@ -357,11 +356,14 @@ class Systemcheck {
 			$tmpWav = APP_ROOT . "localdata". DS . "cache/".$ext."." . $check[$checkFp]['resultExpected'] . '.wav';
 
 			// make sure we retrieve nothing cached
-			rmfile([$peakfile, $tmpMp3, $tmpWav]);
+			$this->container->filesystemUtility->rmfile([$peakfile, $tmpMp3, $tmpWav]);
+			$waveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
+			$waveformGenerator->setAbsolutePath($this->container->filesystemUtility->getFileRealPath($check[$checkWf]['filepath']));
+			$waveformGenerator->setExt($this->container->filesystemUtility->getFileExt($check[$checkWf]['filepath']));
+			$waveformGenerator->setFingerprint($check[$checkFp]['resultReal']);
+			$waveformGenerator->getPeaks();
 
-			$svgGenerator = new \Slimpd\Svggenerator([$check[$checkWf]['filepath']]);
-
-			$check[$checkWf]['cmd'] = $svgGenerator->getCmdTempwav();
+			$check[$checkWf]['cmd'] = $waveformGenerator->getCmdTempwav();
 
 			exec($check[$checkWf]['cmd'], $response, $returnStatus);
 			$check[$checkWf]['status'] = ($returnStatus === 0) ? 'success' : 'danger';
@@ -372,7 +374,7 @@ class Systemcheck {
 			if(is_file($tmpWav) === FALSE) {
 				$check[$checkWf]['status'] = 'danger';
 			}
-			rmfile([$peakfile, $tmpMp3, $tmpWav]);
+			$this->container->filesystemUtility->rmfile([$peakfile, $tmpMp3, $tmpWav]);
 		}
 	}
 }

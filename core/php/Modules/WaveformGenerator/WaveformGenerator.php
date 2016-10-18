@@ -171,7 +171,7 @@ class WaveformGenerator {
 		return;
 	}
 
-	private function getPeaks() {
+	public function getPeaks() {
 		$tmpFileName = APP_ROOT . 'localdata' . DS . 'cache' . DS . $this->ext . '.' . $this->fingerprint;
 		$inFile = escapeshellarg($this->absolutePath);
 		$tmpWav = escapeshellarg($tmpFileName.'.wav');

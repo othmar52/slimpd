@@ -73,7 +73,19 @@ class FilesystemUtility {
 		}
 		return FALSE;
 	}
-	
+
+	/**
+	 * checks if file path or directory path is within a special directory
+	 * these are tiny sample audio files shipped with sliMpd
+	 */
+	function isSystemCheckSample($itemPath) {
+		$search = APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/';
+		if(strpos(realpath($itemPath), $search) === 0) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 	/**
 	 * checks if file path or directory path is within our application directory
 	 */
