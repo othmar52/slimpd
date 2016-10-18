@@ -1,7 +1,7 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
+namespace Slimpd\Modules\Albummigrator;
 use \Slimpd\Models\Artist;
-use \Slimpd\RegexHelper as RGX;
+use \Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -21,7 +21,7 @@ use \Slimpd\RegexHelper as RGX;
  */
 
 class TrackContext extends \Slimpd\Models\Track {
-	use \Slimpd\Modules\albummigrator\MigratorContext; // config
+	use \Slimpd\Modules\Albummigrator\MigratorContext; // config
 	protected $confKey = "track-tag-mapping-";
 	
 	// those attributes holds string values (track holds relational Uids)
@@ -35,10 +35,17 @@ class TrackContext extends \Slimpd\Models\Track {
 	protected $totalTracks;
 	protected $audioBitrateMode;
 	
-	public function __construct($rawTagArray, $idx, $config) {
+	public function __construct($rawTagArray, $idx, $config, $container) {
 		$this->config = $config;
 		$this->idx = $idx;
 		$this->rawTagRecord = $rawTagArray;
+		
+		
+		$this->container = $container;
+		$this->db = $container->db;
+		$this->ll = $container->ll;
+		
+		
 		// TODO: how to handle non existent tagBlob? extract directly from music file?
 		
 		// TODO compare performance of different versions
@@ -53,7 +60,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		#);
 		
 		// Version 3: from sparata database table, gzipcompressed, serialized 
-		$rawTagBlob = \Slimpd\Models\Rawtagblob::getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
+		$rawTagBlob = $this->container->rawtagblobRepo->getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
 		$data = gzuncompress($rawTagBlob->getTagData());
 		
 		$data = unserialize($data);

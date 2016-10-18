@@ -77,7 +77,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->beginJob(array(
 			'msg' => "migrateRawtagdataTable"
 		), __FUNCTION__);
-		$this->migratorConfig = \Slimpd\Modules\albummigrator\AlbumMigrator::parseConfig();
+		$this->migratorConfig = \Slimpd\Modules\Albummigrator\AlbumMigrator::parseConfig();
 		$this->dbTstampsAlbum = self::getMigratedAlbumTimstamps();
 		$this->dbTstampsTrack = self::getMigratedTrackTimstamps();
 		$this->skipAlbum = TRUE;
@@ -187,7 +187,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 	}
 
 	private function newPrevAlb($record) {
-		$this->prevAlb = new \Slimpd\Modules\Albummigrator\AlbumMigrator();
+		$this->prevAlb = new \Slimpd\Modules\Albummigrator\AlbumMigrator($this->container);
 		$this->prevAlb->conf = $this->migratorConfig;
 		$this->prevAlb->useBatcher = $this->useBatcher;
 		$this->prevAlb->setRelDirPathHash($record['relDirPathHash']);

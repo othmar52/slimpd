@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
+namespace Slimpd\Modules\Albummigrator;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -34,12 +34,12 @@ class JumbleJudge {
 	private $albumContext;
 	public $albumMigrator;
 
-	public function __construct(\Slimpd\Modules\albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
+	public function __construct(\Slimpd\Modules\Albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
 		$this->albumContext = $albumContextItem;
 		$this->albumMigrator = $albumMigrator;
 	}
 
-	public function collect(\Slimpd\Modules\albummigrator\TrackContext &$trackContext) {
+	public function collect(\Slimpd\Modules\Albummigrator\TrackContext &$trackContext) {
 		$this->trackContext = $trackContext;
 		$fileName = unifyHyphens(unifyBraces(basename($trackContext->getRelPath())));
 		$this->runTest("SchemaTests\\Filename\\HasYear", $fileName)
@@ -70,7 +70,7 @@ class JumbleJudge {
 	}
 
 	private function runTest($className, $input) {
-		$classPath = "\\Slimpd\\Modules\\albummigrator\\" . $className;
+		$classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
 		$test = new $classPath($input, $this->trackContext, $this->albumContext, $this);
 		$test->run();
 		$this->tests[$className][] = $test;

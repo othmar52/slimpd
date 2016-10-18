@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\TrackNumber;
-use Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\Albummigrator\SchemaTests\TrackNumber;
+use Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -19,7 +19,7 @@ use Slimpd\RegexHelper as RGX;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class LeadingZero extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class LeadingZero extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 	// TODO: this test does return misleading result in case we have more than 9 tracks ...09, 10, 11,...
 	// for now keep isAlbumWeight low
 	public $isAlbumWeight = 0.5;

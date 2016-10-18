@@ -546,7 +546,7 @@ class AlbumMigratorOld {
 		if($this->mostScored['album']['label'] === "") {
 			$this->mostScored['album']['label'] = \Slim\Slim::getInstance()->ll->str("importer.unknownlabel");
 		}
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 		
 		// last fixes :)                                   hopefully...
 		foreach($this->mostScored as $idx => $item) {
@@ -740,7 +740,7 @@ class AlbumMigratorOld {
 		if($value == '') {
 			return 'missing';
 		}
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 		$iHateRegex = array(
 			// 01 - Super Tracktitle
 			'prefixed-number' => $rgx->dStart.$rgx->mayBracket.$rgx->num.$rgx->mayBracket.$rgx->glue.$rgx->noMinus.$rgx->dEndInsens,
@@ -811,7 +811,7 @@ class AlbumMigratorOld {
 			return $this->guessAttributesByDirectoryName(basename(dirname($value)));
 		}
 
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 		#$value = "Tony_Tuff-Tony_Tuff_1980";
 		#$value = "Tony_Tuff-Tony_Tuff_(ESO1980";
 		#$value = "Tony_Tuff-Tony_Tuff"; 
@@ -912,7 +912,7 @@ class AlbumMigratorOld {
 	}
 
 	private function recommend($idx, $attrArray, $score = 1) {
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 
 		foreach($attrArray as $attrName => $attrValue) {
 			$this->scoreAttribute($idx, $attrName, $attrValue, $score);
@@ -1023,7 +1023,7 @@ class AlbumMigratorOld {
 		#print_r($this->r);
 		#cliLog('---------', 10);
 
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 
 		switch($attrName) {
 			case 'year':
@@ -1088,7 +1088,7 @@ class AlbumMigratorOld {
 		#cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'red');
 		#return $result;
 
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 
 		// What Has Become EP-HWARE007 Vinyl
 		// The Horsemen Present Revelations-HWARECD01
@@ -1217,7 +1217,7 @@ class AlbumMigratorOld {
 		if($value == '') {
 			return 'missing';
 		}
-		$rgx = new \Slimpd\RegexHelper();
+		$rgx = new \Slimpd\Utilities\RegexHelper();
 
 		// maybe we have a year in filename -> add little score
 		if(preg_match_all("/".$rgx->mayBracket.$rgx->year.$rgx->mayBracket."/", $value, $matches)) {

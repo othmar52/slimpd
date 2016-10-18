@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\CaseSensitivityTests;
+namespace Slimpd\Modules\Albummigrator\CaseSensitivityTests;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,6 +18,6 @@ namespace Slimpd\Modules\albummigrator\CaseSensitivityTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Filename extends \Slimpd\Modules\albummigrator\AbstractTests\CaseSensitivity {
+class Filename extends \Slimpd\Modules\Albummigrator\AbstractTests\CaseSensitivity {
 	public $isAlbumWeight = 0.8;
 }

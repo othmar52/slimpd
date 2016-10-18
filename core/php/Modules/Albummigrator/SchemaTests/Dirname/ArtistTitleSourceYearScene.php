@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Dirname;
-use Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\Albummigrator\SchemaTests\Dirname;
+use Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -34,7 +34,7 @@ use Slimpd\RegexHelper as RGX;
  *
  * pattern: Jah_Mason-Most_Royal-CD-2004-iLL
  */
-class ArtistTitleSourceYearScene extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class ArtistTitleSourceYearScene extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);

@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\EqualTagTests;
+namespace Slimpd\Modules\Albummigrator\EqualTagTests;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,7 +18,7 @@ namespace Slimpd\Modules\albummigrator\EqualTagTests;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Genre extends \Slimpd\Modules\albummigrator\AbstractTests\EqualValue {
+class Genre extends \Slimpd\Modules\Albummigrator\AbstractTests\EqualValue {
 	public $isAlbumWeight = 0.7;
 
 	public function scoreMatches() {

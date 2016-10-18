@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Filename;
-use Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\Albummigrator\SchemaTests\Filename;
+use Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -22,7 +22,7 @@ use Slimpd\RegexHelper as RGX;
 /**
  * example filename: "Alvin_Curran-Songs_and_Views_of_the_Magnetic_Garden-1973-1.From_a_Room_on_the_Piazza.mp3"
  */
-class ArtistAlbumYearNumberTitleExt extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class ArtistAlbumYearNumberTitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.6;
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {

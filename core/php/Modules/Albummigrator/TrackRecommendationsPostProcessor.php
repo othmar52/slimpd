@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
-use \Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\Albummigrator;
+use \Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client

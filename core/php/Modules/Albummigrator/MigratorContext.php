@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
+namespace Slimpd\Modules\Albummigrator;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -91,7 +91,7 @@ trait MigratorContext {
 			}
 			cliLog("    " . $setterName . ": " . $cleanValue, 10, "cyan");
 			$this->recommendations[$setterName][] = $cleanValue;
-			\Slimpd\Modules\albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
+			\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
 		}
 		cliLog(" ", 10);
 	}

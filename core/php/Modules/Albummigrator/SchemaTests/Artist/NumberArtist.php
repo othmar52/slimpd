@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Artist;
-use Slimpd\RegexHelper as RGX;
+namespace Slimpd\Modules\Albummigrator\SchemaTests\Artist;
+use Slimpd\Utilities\RegexHelper as RGX;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -28,7 +28,7 @@ use Slimpd\RegexHelper as RGX;
  * pattern: [01]. Juno Reactor
  */
 
-class NumberArtist extends \Slimpd\Modules\albummigrator\AbstractTests\AbstractTest {
+class NumberArtist extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 	public $isAlbumWeight = 0.8;
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {

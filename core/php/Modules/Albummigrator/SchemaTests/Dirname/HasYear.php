@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator\SchemaTests\Dirname;
+namespace Slimpd\Modules\Albummigrator\SchemaTests\Dirname;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,7 +18,7 @@ namespace Slimpd\Modules\albummigrator\SchemaTests\Dirname;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class HasYear extends \Slimpd\Modules\albummigrator\AbstractTests\HasYear {
+class HasYear extends \Slimpd\Modules\Albummigrator\AbstractTests\HasYear {
 	public $isAlbumWeight = 0.1;
 
 	public function scoreMatches() {

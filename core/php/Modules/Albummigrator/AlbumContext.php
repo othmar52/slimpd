@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\albummigrator;
+namespace Slimpd\Modules\Albummigrator;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -19,9 +19,15 @@ namespace Slimpd\Modules\albummigrator;
  */
 
 class AlbumContext extends \Slimpd\Models\Album {
-	use \Slimpd\Modules\albummigrator\MigratorContext; // config
+	use \Slimpd\Modules\Albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
 	protected $jumbleJudge;
+	
+	public function __construct($container) {
+		$this->container = $container;
+		$this->db = $container->db;
+		$this->ll = $container->ll;
+	}
 
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
@@ -64,7 +70,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 	}
 
 	private function runTest($className, $input) {
-		$classPath = "\\Slimpd\\Modules\\albummigrator\\" . $className;
+		$classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
 		// for now there is no need for this instance within the tests
 		// but abstraction requires any kind of variable... 
 		$dummyTrackContext = NULL;

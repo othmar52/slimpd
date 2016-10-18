@@ -241,7 +241,7 @@ class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
 		}
 		$finalYears = [];
 		foreach(array_keys($data['years']) as $year) {
-			if(\Slimpd\RegexHelper::seemsYeary($year) === FALSE) {
+			if(\Slimpd\Utilities\RegexHelper::seemsYeary($year) === FALSE) {
 				continue;
 			}
 			$finalYears[] = $year;

@@ -29,14 +29,20 @@ class AlbumMigrator {
 	protected $mostRecentAdded;
 	public $useBatcher = FALSE;
 
+	public function __construct($container) {
+		$this->container = $container;
+		$this->db = $container->db;
+		$this->ll = $container->ll;
+	}
+
 	public function run() {
 		// create albumContext
-		$this->albumContextItem = new \Slimpd\Modules\Albummigrator\AlbumContext();
+		$this->albumContextItem = new \Slimpd\Modules\Albummigrator\AlbumContext($this->container);
 		$this->jumbleJudge = new \Slimpd\Modules\Albummigrator\JumbleJudge($this->albumContextItem, $this);
 
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
-			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->conf);
+			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->conf, $this->container);
 			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
 			$this->handleTrackFilemtime($rawTagItem["added"]);
