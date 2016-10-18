@@ -92,6 +92,28 @@ class Controller extends \Slimpd\BaseController {
 		$bitmap->setRelPath($args['itemParams']);
 		return $this->dump($bitmap, $args['imagesize'], $response);
 	}
+	
+	public function searchfor(Request $request, Response $response, $args) {
+		$filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader($this->container);
+		$images = $filesystemReader->getFilesystemImagesForMusicFile($args['itemParams']);
+		if(count($images) === 0) {
+			$uri = $this->router->pathFor(
+				'imagefallback',
+				['type' => 'track', 'imagesize' => $args['imagesize'] ]
+			);
+			return $response->withRedirect($uri, 403);
+		}
+		// pick a random image
+		shuffle($images);
+		$path = array_shift($images);
+		
+		// redirect to image route with bitmap path
+		$uri = $this->router->pathFor(
+			'imagepath',
+			['itemParams' => path2url($path), 'imagesize' => $args['imagesize'] ]
+		);
+		return $response->withRedirect($uri, 403);
+	}
 
 	public function fallback(Request $request, Response $response, $args) {
 		if(in_array($args['imagesize'], $this->imageSizes) === FALSE) {

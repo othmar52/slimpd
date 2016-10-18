@@ -16,7 +16,11 @@
 		</div>
 		
 		<div class="col-md-2">
+			{% if item.albumUid %}
 	    	<img src="{{root}}image-100/album/{{ item.albumUid }}" />
+	    	{% else %}
+	    	<img src="{{root}}image-100/searchfor/{{ playerCtrlItem|path2url }}" />
+	    	{% endif %}
 	    </div>
 	</div>
 	<div class="row">

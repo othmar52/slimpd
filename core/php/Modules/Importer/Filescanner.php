@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,7 +18,7 @@ namespace Slimpd\Modules\importer;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Filescanner extends \Slimpd\Modules\importer\AbstractImporter {
+class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 	public $extractedImages = 0;
 	public function run() {
 		# TODO: handle orphaned records

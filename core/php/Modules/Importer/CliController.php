@@ -86,7 +86,7 @@ class CliController extends \Slimpd\BaseController {
 			exit;
 		}
 	
-		foreach(\Slimpd\Modules\importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
+		foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
 			$this->db->query($query);
 		}
 		return $response;

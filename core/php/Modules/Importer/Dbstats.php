@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\importer;
+namespace Slimpd\Modules\Importer;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -26,7 +26,7 @@ namespace Slimpd\Modules\importer;
  * [artist|label].topGenreUids (TODO: not finished for all models)
  * [artist|genre].topLabelUids (TODO: not finished for all models)
  */
-class Dbstats extends \Slimpd\Modules\importer\AbstractImporter {
+class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
 	public function updateCounterCache() {
 		$this->jobPhase = 7;
 		$this->beginJob(array(

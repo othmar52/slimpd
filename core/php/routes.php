@@ -35,7 +35,8 @@ $ctrlRoutes = [
 		['/image-{imagesize}/album/{itemUid}', 'album', 'imagealbum'],
 		['/image-{imagesize}/track/{itemUid}', 'track'],
 		['/image-{imagesize}/id/{itemUid}', 'bitmap'],
-		['/image-{imagesize}/path/[{itemParams:.*}]', 'path']
+		['/image-{imagesize}/path/[{itemParams:.*}]', 'path', 'imagepath'],
+		['/image-{imagesize}/searchfor/[{itemParams:.*}]', 'searchfor']
 	],
 	'Album' => [
 		['/album/{itemUid}', 'detailAction'],

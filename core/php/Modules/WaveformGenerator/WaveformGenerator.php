@@ -400,6 +400,9 @@ class WaveformGenerator {
 		$this->absolutePath = $value;
 		return $this;
 	}
+	public function getAbsolutePath() {
+		return $this->absolutePath;
+	}
 	
 	public function setFingerprint($value) {
 		$this->fingerprint = $value;

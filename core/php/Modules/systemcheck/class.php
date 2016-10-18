@@ -335,7 +335,7 @@ class Systemcheck {
 			$checkFp = 'fp'.ucfirst($ext);
 			$checkWf = 'wf'.ucfirst($ext);
 			if($check[$checkFp]['skip'] === FALSE) {
-				$check[$checkFp]['cmd'] = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($check[$checkFp]['filepath'], TRUE);
+				$check[$checkFp]['cmd'] = \Slimpd\Modules\Importer\Filescanner::extractAudioFingerprint($check[$checkFp]['filepath'], TRUE);
 				exec($check[$checkFp]['cmd'], $response);
 				$check[$checkFp]['resultReal'] = trim(join("\n", $response));
 				unset($response);

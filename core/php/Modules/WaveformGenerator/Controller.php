@@ -73,7 +73,9 @@ class Controller extends \Slimpd\BaseController {
 		if(isValidFingerprint($WaveformGenerator->getFingerprint()) === 1) {
 			return TRUE;
 		}
-		$fingerprint = \Slimpd\Modules\importer\Filescanner::extractAudioFingerprint($WaveformGenerator->absolutePath);
+		
+		$fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
+		$fingerprint = $fileScanner->extractAudioFingerprint($WaveformGenerator->getAbsolutePath());
 		if(isValidFingerprint($fingerprint) === 1) {
 			$WaveformGenerator->setFingerprint($fingerprint);
 			return TRUE;
