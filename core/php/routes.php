@@ -43,6 +43,7 @@ $ctrlRoutes = [
 		['/markup/albumtracks/{itemUid}', 'albumTracksAction'],
 		['/markup/widget-album/{itemUid}', 'widgetAlbumAction'],
 		['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
+		['/maintainance/albumdebug/[{itemParams:.*}]', 'editAction'],
 	],
 	'Systemcheck' => [
 		['/systemcheck', 'runAction']
@@ -74,6 +75,8 @@ $app->get('/markup/widget-trackcontrol', $ctrlName . ':widgetTrackcontrolAction'
 $app->get('/markup/widget-xwax', $ctrlName . ':widgetXwaxAction');
 $app->get('/markup/widget-deckselector', $ctrlName . ':widgetDeckselectorAction');
 $app->get('/markup/standalone-trackview', $ctrlName . ':standaloneTrackviewAction');
+$app->get('/maintainance/trackid3/[{itemParams:.*}]', $ctrlName . ':dumpid3Action');
+$app->get('/maintainance/trackdebug/[{itemParams:.*}]', $ctrlName . ':editAction');
 
 // artist routes
 $ctrlName = 'Slimpd\Modules\Artist\Controller';

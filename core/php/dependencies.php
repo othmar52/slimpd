@@ -264,6 +264,9 @@ $container['albumindexRepo'] = function($cont) {
 $container['trackindexRepo'] = function($cont) {
 	return new \Slimpd\Repositories\TrackindexRepo($cont);
 };
+$container['discogsitemRepo'] = function($cont) {
+	return new \Slimpd\Repositories\DiscogsitemRepo($cont);
+};
 $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);
 };

@@ -24,9 +24,6 @@ class Controller extends \Slimpd\BaseController {
 
 /*
 // track routes
-DONE $app->get("/markup/mpdplayer", 'Slimpd\Modules\track\Controller:mpdplayerAction');
-DONE $app->get("/markup/localplayer", 'Slimpd\Modules\track\Controller:localplayerAction');
-DONE $app->get("/markup/widget-trackcontrol", 'Slimpd\Modules\track\Controller:widgetTrackcontrolAction');
  
 $app->get("/markup/xwaxplayer", 'Slimpd\Modules\track\Controller:xwaxplayerAction');
 $app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
@@ -57,7 +54,41 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
 		return $response;
 	}
+
+	public function dumpid3Action(Request $request, Response $response, $args) {
+		$args['action'] = 'trackid3';
+		$getID3 = new \getID3;
+		$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $args['itemParams']);
+		\getid3_lib::CopyTagsToComments($tagData);
+		\getid3_lib::ksort_recursive($tagData);
+		$args['dumpvar'] = $tagData;
+		$args['getid3version'] = $getID3->version();
+		$this->view->render($response, 'appless.htm', $args);
+		return $response;
+	}
+
+	public function editAction(Request $request, Response $response, $args) {
+		$this->completeArgsForDetailView($args['itemParams'], $args);
 	
+		$args['action'] = 'maintainance.trackdebug';
+		// TODO: currently we have a dummy track in every case...
+		// var_dump($args['item']);die;
+		if($args['item'] === NULL) {
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
+		}
+		$args['itemraw'] = $this->rawtagdataRepo->getInstanceByAttributes(
+			['relPathHash' => $args['item']->getRelPathHash()]
+		);
+
+		// TODO: complete rawtagdata with rawtagblob and provide
+		// an instance of \Slimpd\Modules\Albummigrator\TrackContext
+		$args['renderitems'] = $this->getRenderItems($args['item']);
+		$this->view->render($response, 'surrounding.htm', $args);
+		return $response;
+	}
+
 	private function completeArgsForDetailView($itemParam, &$args) {
 		$args['item'] = NULL;
 		if(is_numeric($itemParam) === TRUE) {

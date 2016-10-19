@@ -32,7 +32,6 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	public function album(Request $request, Response $response, $args) {
-		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
 			[ 'albumUid' => $args['itemUid'] ],
 			$this->weightOrderBy
@@ -50,7 +49,6 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	public function track(Request $request, Response $response, $args) {
-		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
 			[ 'trackUid' => $args['itemUid'] ],
 			$this->weightOrderBy
@@ -69,7 +67,6 @@ class Controller extends \Slimpd\BaseController {
 	}
 	
 	public function bitmap(Request $request, Response $response, $args) {
-		#$app->get('/image-'.$imagesize.'/album/:itemUid', function($itemUid) use ($app, $vars, $imagesize, $imageWeightOrderBy){
 		$bitmap = $this->bitmapRepo->getInstanceByAttributes(
 			[ 'uid' => $args['itemUid'] ],
 			$this->weightOrderBy

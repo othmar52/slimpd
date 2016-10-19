@@ -46,9 +46,9 @@ class Controller extends \Slimpd\BaseController {
 	public function detailAction(Request $request, Response $response, $args) {
 		$this->completeArgsForDetailView($args['itemUid'], $args);
 		if($args['album'] === NULL) {
-			die('TODO: redirect to 404');
-			$app->notFound();
-			return;
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
 		}
 		$args['action'] = 'album.detail';
 		$this->view->render($response, 'surrounding.htm', $args);
@@ -58,9 +58,9 @@ class Controller extends \Slimpd\BaseController {
 	public function albumTracksAction(Request $request, Response $response, $args) {
 		$this->completeArgsForDetailView($args['itemUid'], $args);
 		if($args['album'] === NULL) {
-			die('TODO: redirect to 404');
-			$app->notFound();
-			return;
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
 		}
 		$args['action'] = 'albumtracks';
 		$this->view->render($response, 'surrounding.htm', $args);
@@ -70,12 +70,66 @@ class Controller extends \Slimpd\BaseController {
 	public function widgetAlbumAction(Request $request, Response $response, $args) {
 		$this->completeArgsForDetailView($args['itemUid'], $args);
 		if($args['album'] === NULL) {
-			die('TODO: redirect to 404');
-			$app->notFound();
-			return;
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
 		}
 		$args['action'] = 'albumwidget';
 		$this->view->render($response, 'modules/widget-album.htm', $args);
+		return $response;
+	}
+	
+	public function editAction(Request $request, Response $response, $args) {
+		$this->completeArgsForDetailView($args['itemParams'], $args);
+		if($args['album'] === NULL) {
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
+		}
+		$args['action'] = 'maintainance.albumdebug';
+
+	
+		$tracks = $this->trackRepo->getInstancesByAttributes(array('albumUid' => $args['album']->getUid()));
+		$trackInstances = array();
+		$rawTagDataInstances = array();
+		foreach($tracks as $track) {
+			$args['itemlist'][$track->getUid()] = $track;
+			$args['itemlistraw'][$track->getUid()] = $this->rawtagdataRepo->getInstanceByAttributes(array('uid' => (int)$track->getUid()));
+		}
+		#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
+		
+		$args['discogstracks'] = array();
+		$args['matchmapping'] = array();
+		
+		$discogsId = $request->getParam('discogsid');
+		if($discogsId !== NULL) {
+			
+			/* possible usecases:
+			 * we have same track amount on local side and discogs side
+			 *   each local track matches to one discogs track
+			 *   one ore more local track does not have a match on the discogs side
+			 *   two local tracks matches one discogs-track 
+			 * 
+			 * we have more tracks on the local side
+			 *   we have dupes on the local side
+			 *   we have tracks on the local side that dous not exist on the discogs side
+			 * 
+			 * we have more tracks on the discogs side
+			 *   all local tracks exists on the discogs side
+			 *   some local tracks does not have a track on the discogs side
+			 * 
+			 * 
+			 */
+			
+			$discogsItem = $this->discogsitemRepo->retrieveAlbum($discogsId);
+			$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
+			#$args['matchmapping'] = $discogsItem->guessTrackMatch($discogsItem, $vars['itemlistraw']);
+			$args['discogstracks'] = $discogsItem->trackstrings;
+			$args['discogsalbum'] = $discogsItem->albumAttributes;
+		}
+
+		$args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
+		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}
 

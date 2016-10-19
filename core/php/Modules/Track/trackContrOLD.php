@@ -30,39 +30,11 @@ foreach([
 		
 		$templateFile = 'modules/'.$markupSnippet.'.htm';
 		$vars['action'] = $markupSnippet;
-		if($markupSnippet === 'mpdplayer') {
-			$vars['player'] = 'mpd';
-			$templateFile = 'partials/player/permaplayer.htm';
-		}
-		if($markupSnippet === 'localplayer') {
-			$vars['player'] = 'local';
-			$templateFile = 'partials/player/permaplayer.htm';
-		}
-		
+
 		$itemsToRender = array();
 		
 		switch($markupSnippet) {
-			case 'mpdplayer':
-				$mpd = new \Slimpd\Modules\mpd\mpd();
-				$vars['item'] = $mpd->getCurrentlyPlayedTrack();
-				if($vars['item'] !== NULL) {
-					$itemRelPath = $vars['item']->getRelPath();
-				}
-				break;
-			case 'xwaxplayer':
-				$xwax = new \Slimpd\Xwax();
-				$vars['decknum'] = $app->request->get('deck');
-				$vars['item'] = $xwax->getCurrentlyPlayedTrack($vars['decknum']);
-				
-				if($vars['item'] !== NULL) {
-					$itemRelPath = $vars['item']->getRelPath();
-				}
-				if($app->request->get('type') == 'djscreen') {
-					$markupSnippet = 'standalone-trackview';
-					$templateFile = 'modules/standalone-trackview.htm';
-				}
 
-				break;
 			case 'widget-xwax':
 			case 'widget-deckselector':
 				$xwax = new \Slimpd\Xwax();
@@ -105,36 +77,3 @@ foreach([
 	
 }
 
-
-$app->get('/maintainance/trackdebug/:itemParams+', function($itemParams) use ($app, $vars){
-	$vars['action'] = 'maintainance.trackdebug';
-	$itemRelPath = '';
-	$itemRelPathHash = '';
-	$vars['item'] = (count($itemParams) === 1 && is_numeric($itemParams[0]))
-		? \Slimpd\Models\Track::getInstanceByAttributes(['uid' => (int)$itemParams[0]])
-		: \Slimpd\Models\Track::getInstanceByPath(join(DS, $itemParams), TRUE);
-
-	if($vars['item'] === NULL) {
-		$app->notFound();
-		return;
-	}
-	$vars['itemraw'] = \Slimpd\Models\Rawtagdata::getInstanceByAttributes(
-		['relPathHash' => $vars['item']->getRelPathHash()]
-	);
-	$vars['renderitems'] = getRenderItems($vars['item']);
-	$app->render('surrounding.htm', $vars);
-});
-
-
-$app->get('/maintainance/trackid3/:itemParams+', function($itemParams) use ($app, $vars){
-	$vars['action'] = 'trackid3';
-
-	$getID3 = new \getID3;
-	$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . join(DS, $itemParams));
-	\getid3_lib::CopyTagsToComments($tagData);
-	\getid3_lib::ksort_recursive($tagData);
-
-	$vars['dumpvar'] = $tagData;
-	$vars['getid3version'] = $getID3->version();
-	$app->render('appless.htm', $vars);
-});
