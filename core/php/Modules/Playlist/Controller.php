@@ -31,16 +31,14 @@ class Controller extends \Slimpd\BaseController {
 		$args['action'] = "showplaylist";
 		$playlist = new \Slimpd\Models\PlaylistFilesystem($this->container);
 		$playlist->load($args['itemParams']);
-	
+
 		if($playlist->getErrorPath() === TRUE) {
 			$this->view->render($response, 'surrounding.htm', $args);
 			return $response;
 		}
-		
+
 		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
-		
 		$totalItems = $playlist->getLength();
-		
 		if($request->getParam('page') === 'last') {
 			$currentPage = ceil($totalItems/$itemsPerPage);
 		} else {
@@ -49,9 +47,9 @@ class Controller extends \Slimpd\BaseController {
 		$currentPage = ($currentPage) ? $currentPage : 1;
 		$minIndex = (($currentPage-1) * $itemsPerPage);
 		$maxIndex = $minIndex +  $itemsPerPage;
-	
+
 		$playlist->fetchTrackRange($minIndex, $maxIndex);
-	
+
 		$args['itemlist'] = $playlist->getTracks();
 		$args['renderitems'] = $this->getRenderItems($args['itemlist']);
 		$args['playlist'] = $playlist;
@@ -62,7 +60,6 @@ class Controller extends \Slimpd\BaseController {
 			$this->conf['config']['absRefPrefix'] . 'showplaylist/'.$playlist->getRelPath() .'?page=(:num)'
 		);
 		$args['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
-		#$app->render('surrounding.htm', $vars);
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}

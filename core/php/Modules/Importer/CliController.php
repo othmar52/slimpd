@@ -46,7 +46,6 @@ class CliController extends \Slimpd\BaseController {
 	}
 	public function updateDbSchemeAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
-		die('TODO: remimgrate to slimv3 '. __FUNCTION__ );
 		$action = 'migrate';
 	
 		// TODO: manually performed db-changes does not get recognized here - find a solution!
@@ -60,10 +59,10 @@ class CliController extends \Slimpd\BaseController {
 			$action = 'init';
 		}
 	
-		Helper::setConfig( getDatabaseDiffConf($app) );
-		if (!Helper::checkConfigEnough()) {
-			Output::error('mmp: please check configuration');
-			die(1);
+		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
+		if (!\Helper::checkConfigEnough()) {
+			\Output::error('mmp: please check configuration');
+			return $response;
 		}
 	
 		# after database-structure changes we have to
@@ -73,17 +72,17 @@ class CliController extends \Slimpd\BaseController {
 		# to make a new revision
 		#$action = 'create';
 	
-		$controller = Helper::getController($action, NULL);
+		$controller = \Helper::getController($action, NULL);
 		if ($controller !== false) {
 			$controller->runStrategy();
 		} else {
-			Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
-			Helper::getController('help')->runStrategy();
-			die(1);
+			\Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+			\Helper::getController('help')->runStrategy();
+			return $response;
 		}
 	
 		if($action !== 'init') {
-			exit;
+			return $response;
 		}
 	
 		foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
