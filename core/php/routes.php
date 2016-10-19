@@ -52,7 +52,57 @@ $ctrlRoutes = [
 		['/playlists', 'indexAction'],
 		['/showplaylist/[{itemParams:.*}]', 'showAction'],
 		['/markup/widget-playlist/[{itemParams:.*}]', 'widgetAction']
-	]
+	],
+	'Track' => [
+		['/markup/mpdplayer', 'mpdplayerAction'],
+		['/markup/localplayer', 'localplayerAction'],
+		['/markup/xwaxplayer', 'xwaxplayerAction'],
+		['/markup/widget-trackcontrol', 'widgetTrackcontrolAction'],
+		['/markup/widget-xwax', 'widgetXwaxAction'],
+		['/markup/widget-deckselector', 'widgetDeckselectorAction'],
+		['/markup/standalone-trackview', 'standaloneTrackviewAction'],
+		['/maintainance/trackid3/[{itemParams:.*}]', 'dumpid3Action'],
+		['/maintainance/trackdebug/[{itemParams:.*}]', 'editAction']
+	],
+	'Artist' => [
+		['/artists/[{itemParams:.*}]', 'listAction'],
+	],
+	'Genre' => [
+		['/genres/[{itemParams:.*}]', 'listAction'],
+	],
+	'Label' => [
+		['/labels/[{itemParams:.*}]', 'listAction'],
+	],
+	'Tools' => [
+		['/css/spotcolors.css', 'spotcolorsCssAction'],
+		['/css/localplayer/{relPathHash}', 'localPlayerCssAction'],
+		['/css/mpdplayer/{relPathHash}', 'mpdPlayerCssAction'],
+		['/css/xwaxplayer/{relPathHash}', 'xwaxPlayerCssAction'],
+		['/showplaintext/[{itemParams:.*}]', 'showplaintextAction'],
+		['/tools/clean-rename-confirm/[{itemParams:.*}]', 'cleanRenameConfirmAction'],
+		['/tools/clean-rename/[{itemParams:.*}]', 'cleanRenameAction'],
+	],
+	'WaveformGenerator' => [
+		['/audiosvg/width/{width}/[{itemParams:.*}]', 'svgAction'],
+		['/audiojson/resolution/{width}/[{itemParams:.*}]', 'jsonAction'],
+	],
+	'Mpd' => [
+		['/mpdstatus[/]', 'mpdstatusAction'],
+		['/mpdctrl/{cmd}', 'cmdAction'],
+		['/mpdctrl/{cmd}/[{item:.*}]', 'cmdAction'],
+		['/playlist/page/{pagenum}', 'playlistAction'],
+	],
+	'Search' => [
+		['/{className}/{itemUid}/{show}s/page/{currentPage}/sort/{sort}/{direction}', 'listAction', 'search-list'],
+		['/search{currentType}/page/{currentPage}/sort/{sort}/{direction}', 'searchAction', 'search'],
+		['/autocomplete/{type}/', 'autocompleteAction', 'autocomplete'],
+		['/directory/[{itemParams:.*}]', 'directoryAction'],
+		['/alphasearch/', 'alphasearchAction'],
+	],
+	'Importer' => [
+		['/importer[/]', 'indexAction'],
+		['/importer/triggerUpdate', 'triggerUpdateAction']
+	],
 ];
 
 foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
@@ -64,63 +114,3 @@ foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
 		)->setName($routeName);
 	}
 }
-// TODO: move to config array above
-
-// track routes
-$ctrlName = 'Slimpd\Modules\Track\Controller';
-$app->get('/markup/mpdplayer', $ctrlName . ':mpdplayerAction');
-$app->get('/markup/localplayer', $ctrlName . ':localplayerAction');
-$app->get('/markup/xwaxplayer', $ctrlName . ':xwaxplayerAction');
-$app->get('/markup/widget-trackcontrol', $ctrlName . ':widgetTrackcontrolAction');
-$app->get('/markup/widget-xwax', $ctrlName . ':widgetXwaxAction');
-$app->get('/markup/widget-deckselector', $ctrlName . ':widgetDeckselectorAction');
-$app->get('/markup/standalone-trackview', $ctrlName . ':standaloneTrackviewAction');
-$app->get('/maintainance/trackid3/[{itemParams:.*}]', $ctrlName . ':dumpid3Action');
-$app->get('/maintainance/trackdebug/[{itemParams:.*}]', $ctrlName . ':editAction');
-
-// artist routes
-$ctrlName = 'Slimpd\Modules\Artist\Controller';
-$app->get('/artists/[{itemParams:.*}]', $ctrlName . ':listAction');
-
-// genre routes
-$ctrlName = 'Slimpd\Modules\Genre\Controller';
-$app->get('/genres/[{itemParams:.*}]', $ctrlName . ':listAction');
-
-// label routes
-$ctrlName = 'Slimpd\Modules\Label\Controller';
-$app->get('/labels/[{itemParams:.*}]', $ctrlName . ':listAction');
-
-// tools routes
-$ctrlName = 'Slimpd\Modules\Tools\Controller';
-$app->get('/css/spotcolors.css', $ctrlName . ':spotcolorsCssAction');
-$app->get('/css/localplayer/{relPathHash}', $ctrlName . ':localPlayerCssAction');
-$app->get('/css/mpdplayer/{relPathHash}', $ctrlName . ':mpdPlayerCssAction');
-$app->get('/css/xwaxplayer/{relPathHash}', $ctrlName . ':xwaxPlayerCssAction');
-$app->get('/showplaintext/[{itemParams:.*}]', $ctrlName . ':showplaintextAction');
-
-// waveformgenerator routes
-$ctrlName = 'Slimpd\Modules\WaveformGenerator\Controller';
-$app->get('/audiosvg/width/{width}/[{itemParams:.*}]', $ctrlName . ':svgAction');
-$app->get('/audiojson/resolution/{width}/[{itemParams:.*}]', $ctrlName . ':jsonAction');
-
-
-// mpd
-$ctrlName = 'Slimpd\Modules\Mpd\Controller';
-$app->get('/mpdstatus[/]', $ctrlName . ':mpdstatusAction');
-$app->get('/mpdctrl/{cmd}', $ctrlName . ':cmdAction');
-$app->get('/mpdctrl/{cmd}/[{item:.*}]', $ctrlName . ':cmdAction');
-$app->get('/playlist/page/{pagenum}', $ctrlName . ':playlistAction');
-
-// search
-$ctrlName = 'Slimpd\Modules\Search\Controller';
-$app->get('/{className}/{itemUid}/{show}s/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':listAction')->setName('search-list');
-$app->get('/search{currentType}/page/{currentPage}/sort/{sort}/{direction}', $ctrlName . ':searchAction')->setName('search');
-$app->get('/autocomplete/{type}/', $ctrlName . ':autocompleteAction')->setName('autocomplete');
-$app->get('/directory/[{itemParams:.*}]', $ctrlName . ':directoryAction');
-$app->get('/alphasearch/', $ctrlName . ':alphasearchAction');
-
-
-// importer
-$ctrlName = 'Slimpd\Modules\Importer\Controller';
-$app->get('/importer[/]', $ctrlName . ':indexAction');
-$app->get('/importer/triggerUpdate', $ctrlName . ':triggerUpdateAction');

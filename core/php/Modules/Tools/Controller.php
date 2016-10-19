@@ -59,4 +59,48 @@ class Controller extends \Slimpd\BaseController {
 		$this->view->render($response, 'modules/widget-plaintext.htm', $args);
 		return $response->withHeader('Content-Type', 'text/css');
 	}
+
+	public function cleanRenameAction(Request $request, Response $response, $args) {
+
+		die('TODO: upgrade to slim3');
+		if($vars['destructiveness']['clean-rename'] !== '1') {
+			$app->notFound();
+			return;
+		}
+	
+		$fileBrowser = new \Slimpd\filebrowser();
+		$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+	
+		// do not block other requests of this client
+		session_write_close();
+	
+		// IMPORTANT TODO: move this to an exec-wrapper
+		$cmd = APP_ROOT . 'core/vendor-dist/othmar52/clean-rename/clean-rename '
+			. escapeshellarg($this->conf['mpd']['musicdir']. $fileBrowser->directory);
+		exec($cmd, $result);
+	
+		$vars['result'] = join("\n", $result);
+		$vars['directory'] = $fileBrowser;
+		$vars['cmd'] = $cmd;
+		$vars['action'] = 'clean-rename';
+	
+		$app->render('modules/widget-cleanrename.htm', $vars);
+
+		$this->view->render($response, 'css/nowplaying.css', $args);
+		return $response->withHeader('Content-Type', 'text/css');
+	}
+
+	public function cleanRenameConfirmAction(Request $request, Response $response, $args) {
+		die('TODO: upgrade to slim3');
+		if($vars['destructiveness']['clean-rename'] !== '1') {
+			$app->notFound();
+			return;
+		}
+	
+		$fileBrowser = new \Slimpd\filebrowser();
+		$fileBrowser->getDirectoryContent(join(DS, $itemParams));
+		$vars['directory'] = $fileBrowser;
+		$vars['action'] = 'clean-rename-confirm';
+		$app->render('modules/widget-cleanrename.htm', $vars);
+	}
 }

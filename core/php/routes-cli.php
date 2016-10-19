@@ -18,10 +18,20 @@
  */
 
 // CLI Routes
-$app->get('[/]', '\Slimpd\Modules\Importer\CliController:indexAction');
-$app->get('/hard-reset', '\Slimpd\Modules\Importer\CliController:hardResetAction');
-$app->get('/remigrate', '\Slimpd\Modules\Importer\CliController:remigrateAction');
-$app->get('/update', '\Slimpd\Modules\Importer\CliController:updateAction');
-$app->get('/builddictsql', '\Slimpd\Modules\Importer\CliController:builddictsqlAction');
-$app->get('/update-db-scheme', '\Slimpd\Modules\Importer\CliController:updateDbSchemeAction');
-$app->get('/database-cleaner', '\Slimpd\Modules\Importer\CliController:databaseCleanerAction');
+$ctrlRoutes = [
+	['[/]', 'indexAction'],
+	['/hard-reset', 'hardResetAction'],
+	['/remigrate', 'remigrateAction'],
+	['/update', 'updateAction'],
+	['/builddictsql', 'builddictsqlAction'],
+	['/update-db-scheme', 'updateDbSchemeAction'],
+	['/database-cleaner', 'databaseCleanerAction'],
+];
+
+foreach($ctrlRoutes as $ctrlRoute) {
+	$routeName = (isset($ctrlRoute[2]) === TRUE) ? $ctrlRoute[2] : '';
+	$app->get(
+		$ctrlRoute[0],
+		'Slimpd\Modules\Importer\CliController' . ':' . $ctrlRoute[1]
+	)->setName($routeName);
+}

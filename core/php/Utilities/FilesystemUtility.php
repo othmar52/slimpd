@@ -118,22 +118,7 @@ class FilesystemUtility {
 		}
 		return "x-extension/" . $ext;
 	}
-	
-	
-	/**
-	 * temporary helper func to migrate tagdata from filesystem to new db table `rawtagblob`
-	 * TODO: remove this helper func
-	 * @see: php/routes/cli.php:tagdatatodb()
-	 */
-	function getTagDataFileName($relPathHash) {
-		$dirDepth = 3;
-		$out = ["localdata", "tagdata"];
-		for ($i = 0; $i < $dirDepth; $i++) {
-			$out[] = substr($relPathHash, 0, $i + 1);
-		}
-		return APP_ROOT . join(DS, $out); 
-	}
-	
+
 	/**
 	 * recursive delete directory
 	 */
