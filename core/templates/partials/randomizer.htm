@@ -1,4 +1,4 @@
-{% if config.showrandomizer == 1 %}
+{% if config.config.showrandomizer == 1 %}
 {% set randomitem = getRandomInstance(subject) %}
 <div class="randomizer" title="view random item">
 	<a href="{{root}}{{ urlpattern|format(randomitem.uid)|raw }}" class="ajax-link">

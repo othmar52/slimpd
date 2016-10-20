@@ -103,6 +103,10 @@ $ctrlRoutes = [
 		['/importer[/]', 'indexAction'],
 		['/importer/triggerUpdate', 'triggerUpdateAction']
 	],
+	'Xwax' => [
+		['/xwaxstatus[/]', 'statusAction'],
+		['/xwax/{cmd}/[{params:.*}]', 'cmdAction']
+	],
 ];
 
 foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {

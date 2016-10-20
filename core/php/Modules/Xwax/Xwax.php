@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd;
+namespace Slimpd\Modules\Xwax;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -24,29 +24,34 @@ class Xwax {
 	protected $type = 'xwax';
 	protected $pollcache = NULL;
 
+	public function __construct($container) {
+		$this->ll = $container->ll;
+		$this->conf = $container->conf;
+	}
+
 	public function cmd($cmd, $params, $app, $returnResponse = FALSE) {
 		if($this->conf['modules']['enable_xwax'] !== '1') {
-			notifyJson($app->ll->str('xwax.notenabled'), 'danger');
+			notifyJson($this->ll->str('xwax.notenabled'), 'danger');
 		}
 		$xConf = $this->conf['xwax'];
 
 		if($xConf['decks'] < 1) {
-			notifyJson($app->ll->str('xwax.deckconfig'), 'danger');
+			notifyJson($this->ll->str('xwax.deckconfig'), 'danger');
 		}
 
 		if(count($params) === 0) {
-			notifyJson($app->ll->str('xwax.missing.deckparam'), 'danger');
+			notifyJson($this->ll->str('xwax.missing.deckparam'), 'danger');
 		}
 
 		$totalDecks = $xConf['decks'];
 		$selectedDeck = $params[0];
 
 		if(is_numeric($selectedDeck) === FALSE || $selectedDeck < 1 || $selectedDeck > $totalDecks) {
-			notifyJson($app->ll->str('xwax.invalid.deckparam'), 'danger');
+			notifyJson($this->ll->str('xwax.invalid.deckparam'), 'danger');
 		}
 
 		if(isset($xConf['cmd_'. $cmd]) === FALSE) {
-			notifyJson($app->ll->str('xwax.invalid.cmd'), 'danger');
+			notifyJson($this->ll->str('xwax.invalid.cmd'), 'danger');
 		}
 
 		$loadArgs = '';
@@ -58,7 +63,7 @@ class Xwax {
 			// TODO: try to fetch artist and title from database
 			$filePath = getFileRealPath(join(DS, $params));
 			if($filePath === FALSE) {
-				notifyJson($app->ll->str('xwax.invalid.file'), 'danger');
+				notifyJson($this->ll->str('xwax.invalid.file'), 'danger');
 			}
 			$loadArgs = ' ' . escapeshellarg($filePath) . ' '
 							. escapeshellarg('dummyartist') . ' '
@@ -70,7 +75,7 @@ class Xwax {
 			: APP_ROOT . $xConf['clientpath'];
 
 		if(is_file($xConf['clientpath']) === FALSE) {
-			notifyJson($app->ll->str('xwax.invalid.clientpath'), 'danger');
+			notifyJson($this->ll->str('xwax.invalid.clientpath'), 'danger');
 		}
 
 		$useCache = FALSE;
@@ -102,13 +107,13 @@ class Xwax {
 
 		if(isset($response[0]) && $response[0] === "OK") {
 			if($returnResponse === FALSE) {
-				notifyJson($app->ll->str('xwax.cmd.success'), 'success');
+				notifyJson($this->ll->str('xwax.cmd.success'), 'success');
 			} else {
 				array_shift($response);
 				return $response;
 			}
 		} else {
-			notifyJson($app->ll->str('xwax.cmd.error'), 'danger');
+			notifyJson($this->ll->str('xwax.cmd.error'), 'danger');
 		}
 	}
 
@@ -140,7 +145,7 @@ class Xwax {
 	}
 
 	public function getCurrentlyPlayedTrack($deckIndex) {
-		$app = \Slim\Slim::getInstance();
+		
 		#$xConf = $this->conf['xwax'];
 		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
 		$deckItem = ($deckStatus['path'] !== NULL)
@@ -151,7 +156,6 @@ class Xwax {
 
 	public function fetchAllDeckStats() {
 		$return = array();
-		$app = \Slim\Slim::getInstance();
 		$xConf = $this->conf['xwax'];
 		for($i=0; $i<$xConf['decks']; $i++) {
 			// dont try other decks in case first deck fails

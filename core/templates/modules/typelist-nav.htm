@@ -4,8 +4,8 @@
 } %}
 <div class="row">
 	<div class="col-md-7">
-		<div class="dark uc tinyfont darker-links">{% include 'partials/'~itemtype~'/linked-label.htm' %}</div>
-		<h2 class="uc nomargin">
+		<h2 class="uc nomargin darker-links">
+			{% include 'partials/'~itemtype~'/linked-label.htm' %} &nbsp;&nbsp;
 			{% if itemtype == 'artist' %}
 				{% include 'partials/'~itemtype~'/string.htm' with { item: {artistUid: itemUids} } %}
 			{% else %}

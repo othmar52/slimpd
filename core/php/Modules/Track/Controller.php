@@ -46,11 +46,31 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 	}
 
 	public function mpdplayerAction(Request $request, Response $response, $args) {
-		$itemRelPath = 0;
 		$item = $this->mpd->getCurrentlyPlayedTrack();
 		$itemRelPath = ($item !== NULL) ? $item->getRelPath() : 0;
 		$this->completeArgsForDetailView($itemRelPath, $args);
 		$args['player'] = 'mpd';
+		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
+		return $response;
+	}
+
+	public function xwaxplayerAction(Request $request, Response $response, $args) {
+		die('TODO: upgrade to slimv3');
+		$xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
+		$args['decknum'] = $app->request->get('deck');
+		$item = $xwax->getCurrentlyPlayedTrack($args['decknum']);
+		
+		if($args['item'] !== NULL) {
+			$itemRelPath = $args['item']->getRelPath();
+		}
+		if($app->request->get('type') == 'djscreen') {
+			$markupSnippet = 'standalone-trackview';
+			$templateFile = 'modules/standalone-trackview.htm';
+		}
+
+		$itemParam = $request->getParam('item');
+		$this->completeArgsForDetailView($itemParam, $args);
+		$args['player'] = 'xwax';
 		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
 		return $response;
 	}
