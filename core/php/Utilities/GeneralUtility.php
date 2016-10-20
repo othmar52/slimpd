@@ -238,7 +238,7 @@ function uniqueArrayOrderedByRelevance(array $input) {
 }
 
 /// build a list of trigrams for a given keywords
-function buildTrigrams ( $keyword ) {
+function buildTrigrams ($keyword) {
 	$pattern = "__" . $keyword . "__";
 	$trigrams = "";
 	for ($charIndex=0; $charIndex<strlen($pattern)-2; $charIndex++) {

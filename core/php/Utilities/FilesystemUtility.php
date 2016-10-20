@@ -26,7 +26,7 @@ class FilesystemUtility {
 		$this->container = $container;
 		$this->conf = $container->conf;
 	}
-	// TODO ename method because it also makes sense to trim regular music-dir-prefix
+	// TODO rename method because it also makes sense to trim regular music-dir-prefix
 	public function trimAltMusicDirPrefix($pathString) {
 		if(stripos($pathString, $this->conf['mpd']['musicdir']) === 0) {
 			return substr($pathString, strlen($this->conf['mpd']['musicdir']));

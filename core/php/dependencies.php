@@ -169,26 +169,21 @@ $container['logger'] = function ($c) {
 
 
 $container['errorHandler'] = function ($cont) {
-    return function ($request, $response, $exception) use ($cont) {
-    	var_dump($exception->getMessage());
-        return $cont['response']->withStatus(500)
-                             ->withHeader('Content-Type', 'text/html')
-                             ->write('Something went wrong!!!');
-    };
-	// TODO refacturing of old (slim-v2) implementation
-	/*
-	$app->error(function(\Exception $e) use ($app, $vars){
-	$vars['action'] = 'error';
-	$vars['errormessage'] = $e->getMessage();
-	$vars['tracestring'] = removeAppRootPrefix(str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($e->getTraceAsString())));
-	$vars['url'] = $app->request->getResourceUri();
-	$vars['file'] = removeAppRootPrefix($e->getFile());
-	$vars['line'] = $e->getLine();
-	// delete cached config
-	$this->confLoaderINI->loadConfig('master.ini', NULL, '1');
-	$app->render('appless.htm', $vars);
-});
-	*/
+	return function ($request, $response, $exception) use ($cont) {
+		$vars['action'] = 'error';
+		$vars['errormessage'] = $exception->getMessage();
+		$vars['tracestring'] = removeAppRootPrefix(str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($exception->getTraceAsString())));
+		$vars['url'] = $request->getRequestTarget();
+		$vars['file'] = removeAppRootPrefix($exception->getFile());
+		$vars['line'] = $exception->getLine();
+		
+		// delete cached config
+		$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
+		$config = $configLoader->loadConfig('master.ini', NULL, 1);
+		
+		$cont->view->render($response, 'appless.htm', $vars);
+		return $response->withStatus(500);
+	};
 };
 
 
@@ -203,8 +198,7 @@ $container['notFoundHandler'] = function ($cont) {
 			return $response->withStatus(404);
 		};
 	}
-	
-	 
+
 	return function ($request, $response) use ($cont) {
 		$vars['action'] = '404';
 		return $cont['view']->render($response, 'surrounding.htm', $vars)->withStatus(404);

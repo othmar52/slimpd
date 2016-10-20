@@ -22,7 +22,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
 
-
 	public function index(Request $request, Response $response, $args) {
 		$args['action'] = 'filebrowser';
 		$fileBrowser = $this->filebrowser;
@@ -136,25 +135,17 @@ class Controller extends \Slimpd\BaseController {
 	}
 	
 	public function deliverAction(Request $request, Response $response, $args) {
-		#var_dump($args['itemParams']); die;
 		$path = $args['itemParams'];
 		if(is_numeric($path)) {
 			$track = $this->trackRepo->getInstanceByAttributes(array('uid' => (int)$args['itemParams']));
 			$path = ($track === NULL) ? '' : $track->getRelPath();
 		}
-
 		$newResponse = $response;
 
 		// IMPORTANT TODO: check if a proper check is necessary
 		if($this->filesystemUtility->isInAllowedPath($path) === FALSE) {
 			return $this->deliveryError($newResponse, 404);
 		}
-		
-		
-		#$newStream = new \GuzzleHttp\Stream\LazyOpenStream($this->filesystemUtility->getFileRealPath($path), 'r');
-		#$newResponse->getBody()->write($newStream);
-		#return $newResponse;
-		
 		return $this->deliver(
 			$request,
 			$response,
@@ -193,10 +184,7 @@ class Controller extends \Slimpd\BaseController {
 		if(!$file) {
 			return $this->deliveryError($response, 500);
 		}
-
-		//check if http_range is sent by browser (or download manager)
 		$fileSize = filesize($filePath);
-		
 		$seekStart = 0;
 		$seekEnd = $fileSize - 1;
 
@@ -207,14 +195,15 @@ class Controller extends \Slimpd\BaseController {
 			->withHeader("Pragma", "public")
 			->withHeader("Expires", "-1")
 			->withHeader("Cache-Control", "public, must-revalidate, post-check=0, pre-check=0")
-			->withHeader("Content-Disposition", "inline");
+			->withHeader("Content-Disposition", "attachment; filename=\"".str_replace('"', "_",$fileName)."\"");
 
+		//check if http_range is sent by browser (or download manager)
 		$this->checkPartialContentDelivery($request, $response, $seekStart, $seekEnd, $fileSize);
 		
 		// allow a file to be streamed instead of sent as an attachment
 		// set appropriate headers for attachment or streamed file
 		if($request->getParam("stream") === "1") {
-			$response = $response->withHeader("Content-Disposition", "attachment; filename=\"".str_replace('"', "_",$fileName)."\"");
+			$response = $response->withHeader("Content-Disposition", "inline");
 		}
 
 		// do not block other requests of this client
@@ -263,7 +252,7 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 
-	public function deliveryError($response, $code = 401, $msg = null ) {
+	public function deliveryError($response, $code = 401, $msg = null) {
 		$msgs = array(
 			400 => "Bad Request",
 			401 => "Unauthorized",
