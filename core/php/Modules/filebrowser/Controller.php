@@ -137,26 +137,151 @@ class Controller extends \Slimpd\BaseController {
 	
 	public function deliverAction(Request $request, Response $response, $args) {
 		#var_dump($args['itemParams']); die;
-		if(is_numeric($args['itemParams'])) {
+		$path = $args['itemParams'];
+		if(is_numeric($path)) {
 			$track = $this->trackRepo->getInstanceByAttributes(array('uid' => (int)$args['itemParams']));
 			$path = ($track === NULL) ? '' : $track->getRelPath();
 		}
-		$this->filesystemUtility->deliver($this->filesystemUtility->trimAltMusicDirPrefix($path));
+
+		$newResponse = $response;
+
+		// IMPORTANT TODO: check if a proper check is necessary
+		if($this->filesystemUtility->isInAllowedPath($path) === FALSE) {
+			return $this->deliveryError($newResponse, 404);
+		}
 		
 		
-		$fileBrowser = $this->filebrowser;
-		$fileBrowser->getDirectoryContent($args['itemParams']);
-		$args['directory'] = $fileBrowser->directory;
-		$args['breadcrumb'] = $fileBrowser->breadcrumb;
-		$args['subDirectories'] = $fileBrowser->subDirectories;
-		$args['files'] = $fileBrowser->files;
+		#$newStream = new \GuzzleHttp\Stream\LazyOpenStream($this->filesystemUtility->getFileRealPath($path), 'r');
+		#$newResponse->getBody()->write($newStream);
+		#return $newResponse;
 		
-		// try to fetch album entry for this directory
-		$args['album'] = $this->albumRepo->getInstanceByAttributes(
-			array('relPathHash' => $this->filesystemUtility->getFilePathHash($fileBrowser->directory))
+		return $this->deliver(
+			$request,
+			$response,
+			$this->filesystemUtility->trimAltMusicDirPrefix($path)
 		);
+	}
+
+
+	/**
+	 * IMPORTANT TODO: check why performance on huge files is so bad (seeking-performance in large mixes is pretty poor compared to serving the mp3-mix directly)
+	 */
+	private function deliver($request, $response, $file) {
 	
-		$this->view->render($response, 'modules/widget-directory.htm', $args);
+		/**
+		 * Copyright 2012 Armand Niculescu - media-division.com
+		 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+		 * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+		 * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+		 * THIS SOFTWARE IS PROVIDED BY THE FREEBSD PROJECT "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE FREEBSD PROJECT OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+		 */
+	 
+	 
+		//- turn off compression on the server
+		if(function_exists("apache_setenv")) {
+			@apache_setenv("no-gzip", 1);
+		}
+		@ini_set("zlib.output_compression", "Off");
+	
+		// convert to absolute filepath
+	
+		// sanitize the file request, keep just the name and extension
+		$filePath  = $this->filesystemUtility->getFileRealPath($file);
+		$pathParts = pathinfo($filePath);
+		$fileName  = $pathParts["basename"];
+		$file = @fopen($filePath,"rb");
+		if(!$file) {
+			return $this->deliveryError($response, 500);
+		}
+
+		//check if http_range is sent by browser (or download manager)
+		$fileSize = filesize($filePath);
+		
+		$seekStart = 0;
+		$seekEnd = $fileSize - 1;
+
+		// set the headers, prevent caching
+		$response = $response->withHeader("Content-Length", $fileSize)
+			->withHeader("Content-Type", $this->filesystemUtility->getMimeType($fileName))
+			->withHeader("Accept-Ranges", "bytes")
+			->withHeader("Pragma", "public")
+			->withHeader("Expires", "-1")
+			->withHeader("Cache-Control", "public, must-revalidate, post-check=0, pre-check=0")
+			->withHeader("Content-Disposition", "inline");
+
+		$this->checkPartialContentDelivery($request, $response, $seekStart, $seekEnd, $fileSize);
+		
+		// allow a file to be streamed instead of sent as an attachment
+		// set appropriate headers for attachment or streamed file
+		if($request->getParam("stream") === "1") {
+			$response = $response->withHeader("Content-Disposition", "attachment; filename=\"".str_replace('"', "_",$fileName)."\"");
+		}
+
+		// do not block other requests of this client
+		session_write_close();
+		set_time_limit(0);
+		fseek($file, $seekStart);
+		while(!feof($file)) {
+			$response->getBody()->write(@fread($file, 1024*8));
+			if (connection_status()!=0) {
+				@fclose($file);
+				return $response;
+			}
+		}
+		@fclose($file);
 		return $response;
+	}
+
+	private function checkPartialContentDelivery($request, &$response, &$seekStart, &$seekEnd, $fileSize) {
+
+		$requestedRange = $request->getServerParam("HTTP_RANGE");
+		if($requestedRange === NULL) {
+			return;
+		}
+
+		$rangeParams = trimExplode("=", $requestedRange, TRUE, 2);
+		if($rangeParams[0] !== "bytes") {
+			return $this->deliveryError($response, 416);
+		}
+		//multiple ranges could be specified at the same time, but for simplicity only serve the first range
+		$multipleRanges = trimExplode(",", $rangeParams[1], TRUE);
+
+		//figure out download piece from range (if set)
+		//set start and end based on range (if set)
+		$seekRange = trimExplode("-", $multipleRanges[0], TRUE);
+		$seekStart = max(abs(intval($seekRange[0])),0);
+		if(isset($seekRange[1]) === TRUE) {
+			$seekEnd = min(abs(intval($seekRange[1])),($fileSize - 1));
+		}
+
+		//Only send partial content header if downloading a piece of the file (IE workaround)
+		if ($seekStart > 0 || $seekEnd < ($fileSize - 1)) {
+			$response = $response->withStatus(206) // Partial Content
+				->withHeader("Content-Range", "bytes ".$seekStart."-".$seekEnd."/".$fileSize)
+				->withHeader("Content-Length", ($seekEnd - $seekStart + 1));
+		}
+	}
+
+
+	public function deliveryError($response, $code = 401, $msg = null ) {
+		$msgs = array(
+			400 => "Bad Request",
+			401 => "Unauthorized",
+			402 => "Payment Required",
+			403 => "Forbidden",
+			404 => "Not Found",
+			416 => "Requested Range Not Satisfiable",
+			500 => "Internal Server Error"
+		);
+		if(!$msg) {
+			// TODO: catch possible invalid array key error
+			$msg = $msgs[$code];
+		}
+
+		// TODO: sliMpd branding of all error pages
+		$response->getBody()->write(
+			sprintf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>", $code, $msg, $msg)
+		);
+		return $response->withStatus($code);
 	}
 }

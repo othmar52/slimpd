@@ -342,31 +342,6 @@ function convertInstancesArrayToRenderItems($input) {
 	return $return;
 }
 
-function deliveryError( $code = 401, $msg = null ) {
-	$msgs = array(
-		400 => "Bad Request",
-		401 => "Unauthorized",
-		402 => "Payment Required",
-		403 => "Forbidden",
-		404 => "Not Found",
-		416 => "Requested Range Not Satisfiable",
-		500 => "Internal Server Error"
-	);
-	if(!$msg) {
-		// TODO: catch possible invalid array key error
-		$msg = $msgs[$code];
-	}
-
-	$app = \Slim\Slim::getInstance();
-	$newResponse = $app->response();
-	$newResponse->body(
-		sprintf("<html><head><title>%s %s</title></head><body><h1>%s</h1></body></html>", $code, $msg, $msg)
-	);
-	$newResponse->status($code);
-	header(sprintf("HTTP/1.0 %s %s",$code,$msg));
-	$app->stop();
-}
-
 function renderCliHelp($ll) {
 	cliLog($ll->str("cli.copyright.line1"));
 	cliLog("");
