@@ -32,11 +32,10 @@ class Systemcheck {
 		$this->container = $container;
 		$this->conf = $container->conf;
 		$this->ll = $container->ll;
-		$this->db = $container->db;
 		$this->request = $request;
 	}
 
-	public function runChecks() {
+	public function runChecks($dbError) {
 		$check = array(
 			// filesystem
 			'fsConfLocalExists'=> array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
@@ -68,18 +67,19 @@ class Systemcheck {
 		);
 
 		$this->runConfigLocalCheck($check);
-
-		
 		$this->runMusicdirChecks($check);
 		$this->runAppDirChecks($check);
 
+		$check['dbConn']['status'] = 'success';
+		$check['dbPerms']['skip'] = FALSE;
 		// check if we can connect to database
-		if($this->request->getParam('dberror') !== NULL) {
+		if($dbError === TRUE) {
 			$check['dbConn']['status'] = 'danger';
+			$check['dbPerms']['skip'] = TRUE;
+			$check['dbSchema']['skip'] = TRUE;
+			$check['dbContent']['skip'] = TRUE;
+			$check['mpdConn']['skip'] = TRUE;
 			$check['skipAudioTests'] = TRUE;
-		} else {
-			$check['dbConn']['status'] = 'success';
-			$check['dbPerms']['skip'] = FALSE;
 		}
 
 		$this->runDatabasePermissionCheck($check);
@@ -160,11 +160,11 @@ class Systemcheck {
 			return;
 		}
 		$tmpDb = $this->conf['database']['dbdatabase']."_prmchk";
-		$result = $this->db->query("CREATE DATABASE ". $tmpDb .";");
+		$result = $this->container->db->query("CREATE DATABASE ". $tmpDb .";");
 		if (!$result) {#
 			$check['dbPerms']['status'] = 'danger';
 		} else {
-			$this->db->query("DROP DATABASE ". $tmpDb .";");
+			$this->container->db->query("DROP DATABASE ". $tmpDb .";");
 			$check['dbPerms']['status'] = 'success';
 			$check['dbSchema']['skip'] = FALSE;
 		}
@@ -206,8 +206,10 @@ class Systemcheck {
 	}
 
 	private function runMpdChecks(&$check) {
-				// check MPD connection
-		$check['mpdConn']['status'] = ($this->container->mpd->cmd('status') === FALSE) ? 'danger' : 'success';
+		// check MPD connection
+		if($check['mpdConn']['skip'] === FALSE) {
+			$check['mpdConn']['status'] = ($this->container->mpd->cmd('status') === FALSE) ? 'danger' : 'success';
+		}
 
 		// check if we have a configured value for MPD-databasefile
 		if(trim($this->conf['mpd']['dbfile']) === '') {

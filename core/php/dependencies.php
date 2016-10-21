@@ -27,7 +27,7 @@ $container = $app->getContainer();
 
 // Flash messages
 $container['flash'] = function () {
-    return new Slim\Flash\Messages;
+	return new Slim\Flash\Messages;
 };
 
 // Config loader
@@ -41,15 +41,14 @@ $container['conf'] = function () {
 	#if(\Slim\Environment::getInstance()->offsetGet("PATH_INFO") === "/systemcheck") {
 	#	$noCache = true;
 	#}
-	
+
 	$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 	$config = $configLoader->loadConfig('master.ini', NULL, $noCache);
 	\Slimpd\Modules\Localization\Localization::setLocaleByLangKey($config['config']['langkey']);
-	
+
 	if(PHP_SAPI === 'cli') {
 		$_SESSION['cliVerbosity'] = $config['config']['cli-verbosity'];
-	} 
-	
+	}
 	return $config;
 };
 
@@ -59,26 +58,24 @@ $container['view'] = function ($cont) {
 	if(PHP_SAPI === 'cli') {
 		return new stdClass();
 	}
-    $conf = $cont->get('conf');
-	
-    #$view = new Slim\Views\Twig($settings['view']['template_path'], $settings['view']['twig']);
-	$view = new Slim\Views\Twig('core/templates', [
- #'cache' => 'localdata/cache',
- 'debug' => true,
- #'auto_reload' => true,
- ]);
+	$conf = $cont->get('conf');
+	$view = new Slim\Views\Twig(
+		'core/templates',
+		[
+			#'cache' => 'localdata/cache',
+			'debug' => true,
+			#'auto_reload' => true,
+		]
+	);
 
-	#$view->parserExtensions = array(
-    #new \Slim\Views\TwigExtension(),
-    
-    // Add extensions
-    $view->addExtension(new Twig_Extension_Debug());
-    $view->addExtension(new \Slim\Views\TwigExtension(
-    	$cont->get('router'),
-    	$cont->get('request')->getUri())
+	// Add extensions
+	$view->addExtension(new Twig_Extension_Debug());
+	$view->addExtension(new \Slim\Views\TwigExtension(
+		$cont->get('router'),
+		$cont->get('request')->getUri())
 	);
 	$view->addExtension(new \Slimpd\libs\twig\SlimpdTwigExtension\SlimpdTwigExtension($cont));
-	
+
 	// TODO: is this the right place for adding global template variables?
 	$globalTwigVars = [
 		'playerMode' => (($cont->cookie->get('playerMode') === 'mpd') ? 'mpd' : 'local'),
@@ -91,32 +88,29 @@ $container['view'] = function ($cont) {
 	foreach($globalTwigVars as $varName => $value) {
 		$view->getEnvironment()->addGlobal($varName, $value);
 	}
-    
-
-    return $view;
+	return $view;
 };
 
 $container['db'] = function ($cont) { 
-	$settings = $cont->get('conf');
-	#var_dump($settings['database']);die;
-	#var_dump($settings); die();
 	try {
 		mysqli_report(MYSQLI_REPORT_STRICT);
+		$settings = $cont->get('conf')['database'];
 		$dbh = new \mysqli(
-			$settings['database']['dbhost'],
-			$settings['database']['dbusername'],
-			$settings['database']['dbpassword'],
-			$settings['database']['dbdatabase']
+			$settings['dbhost'],
+			$settings['dbusername'],
+			$settings['dbpassword'],
+			$settings['dbdatabase']
 		);
 	} catch (\Exception $e) {
-		$app = \Slim\Slim::getInstance();
 		if(PHP_SAPI === 'cli') {
-			cliLog($app->ll->str('database.connect'), 1, 'red');
-			$app->stop();
+			cliLog($cont->ll->str('database.connect'), 1, 'red');
+			exit;
 		}
-		$app->flash('error', $app->ll->str('database.connect'));
-		$app->redirect($this->conf['root'] . 'systemcheck?dberror');
-		$app->stop();
+		$cont->flash->AddMessage('error', $cont->ll->str('database.connect'));
+		$uri = $cont->conf['config']['absRefPrefix'] . 'systemcheck?dberror';
+		// TODO: are we able to set the header in the reponse object?
+		// workaround without response object:
+		header('Location: ' . $uri);
 		return;
 	}
 	return $dbh;
@@ -147,8 +141,8 @@ $container['ll'] = function () {
 
 // Cookies
 $container['cookie'] = function($cont){
-    $request = $cont->get('request');
-    return new \Slim\Http\Cookies($request->getCookieParams());
+	$request = $cont->get('request');
+	return new \Slim\Http\Cookies($request->getCookieParams());
 };
 
 
@@ -160,11 +154,11 @@ $container['cookie'] = function($cont){
 
 // monolog
 $container['logger'] = function ($c) {
-  #$settings = $c->get('settings');
-  $logger = new Monolog\Logger('Slimpd');
-  $logger->pushProcessor(new Monolog\Processor\UidProcessor());
-  $logger->pushHandler(new Monolog\Handler\StreamHandler('localdata/cache/mono.log', Monolog\Logger::DEBUG));
-  return $logger;
+	#$settings = $c->get('settings');
+	$logger = new Monolog\Logger('Slimpd');
+	$logger->pushProcessor(new Monolog\Processor\UidProcessor());
+	$logger->pushHandler(new Monolog\Handler\StreamHandler('localdata/cache/mono.log', Monolog\Logger::DEBUG));
+	return $logger;
 };
 
 

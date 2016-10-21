@@ -33,13 +33,11 @@ class Controller extends \Slimpd\BaseController {
 	public function playlistAction(Request $request, Response $response, $args) {
 		$args['action'] = 'playlist';
 		$args['item'] = $this->mpd->getCurrentlyPlayedTrack();
+		$args['nowplaying_album'] = NULL;
 		if($args['item'] !== NULL) {
 			$args['nowplaying_album'] = $this->albumRepo->getInstanceByAttributes(
 				array('uid' => $args['item']->getAlbumUid())
 			);
-		} else {
-			// TODO: how to handle mpd played tracks we cant find in database
-			$args['nowplaying_album'] = NULL;
 		}
 		
 		switch($args['pagenum']) {
@@ -98,16 +96,20 @@ class Controller extends \Slimpd\BaseController {
 			);
 		}
 		try {
-			if(isset($args['mpd']['status']['elapsed']) === FALSE) {
-				$args['mpd']['status']['elapsed'] = 0;
+			$currentSong = $this->mpd->cmd('currentsong');
+			if(isset($currentSong['Time']) === FALSE || $currentSong['Time'] < 1) {
+				return $response->withJson($args['mpd']['status'], 201);
 			}
-			$args['mpd']['status']['duration'] = $this->mpd->cmd('currentsong')['Time'];
+			if(isset($args['mpd']['status']['elapsed']) === FALSE) {
+				return $response->withJson($args['mpd']['status'], 201);
+			}
+			$args['mpd']['status']['duration'] = $currentSong['Time'];
 			$percent = $args['mpd']['status']['elapsed'] / ($args['mpd']['status']['duration']/100);
 			$args['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
 		} catch (\Exception $e) {
 			$args['mpd']['status']['duration'] = "0";
 			$args['mpd']['status']['percent'] = "0";
 		}
-		return deliverJson($args['mpd']['status'], $response);
+		return $response->withJson($args['mpd']['status'], 201);
 	}
 }

@@ -302,7 +302,6 @@ class Mpd {
 				notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
 				break;
 
-				
 			case 'update':
 
 				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges

@@ -23,6 +23,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 	use \Slimpd\Traits\MethodTypeListAction;
 	public function runAction(Request $request, Response $response, $args) {
+		$dbError = ($request->getParam('dberror') !== NULL) ? TRUE : FALSE;
+
 		$systemCheck = new \Slimpd\Modules\Systemcheck\Systemcheck($this->container, $request);		
 		$systemCheck->configLocalUrl = $request->getUri()->getScheme()
 			. "://" . $request->getUri()->getHost()
@@ -30,7 +32,7 @@ class Controller extends \Slimpd\BaseController {
 			. 'core/config/config_local.ini';
 
 		$args['configLocalUrl'] = $systemCheck->configLocalUrl;
-		$args['sys'] = $systemCheck->runChecks();
+		$args['sys'] = $systemCheck->runChecks($dbError);
 		$args['appRoot'] = APP_ROOT;
 		$args['action'] = 'systemcheck';
 		$this->view->render($response, 'appless.htm', $args);
