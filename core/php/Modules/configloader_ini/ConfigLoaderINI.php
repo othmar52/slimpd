@@ -77,8 +77,8 @@ class ConfigLoaderINI {
 
 		$this->absCacheFilePath = APP_ROOT . "localdata" . DS . "cache" . DS . "conf-". getFilePathHash($masterConfigFile). ".php";
 
-		if($noCache === TRUE) {
-			rmfile($this->absCacheFilePath);
+		if($noCache === TRUE && is_writeable($this->absCacheFilePath) === TRUE) {
+			unlink($this->absCacheFilePath);
 		}
 
 		if($cachedConfig = $this->getCachedConfig()) {

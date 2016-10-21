@@ -31,16 +31,17 @@ $container['flash'] = function () {
 };
 
 // Config loader
-$container['conf'] = function () {
+$container['conf'] = function ($cont) {
 	// set cache parameter
 	$noCache = false;
 	if(isset($_REQUEST['noCache']) === true) {
 		$noCache = true;
 	}
-	// TODO: force clearCache when we access route:systemcheck
-	#if(\Slim\Environment::getInstance()->offsetGet("PATH_INFO") === "/systemcheck") {
-	#	$noCache = true;
-	#}
+
+	// force clearCache when we access route:systemcheck
+	if($cont->request->getUri()->getPath() === "systemcheck") {
+		$noCache = true;
+	}
 
 	$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 	$config = $configLoader->loadConfig('master.ini', NULL, $noCache);
@@ -154,7 +155,6 @@ $container['cookie'] = function($cont){
 
 // monolog
 $container['logger'] = function ($c) {
-	#$settings = $c->get('settings');
 	$logger = new Monolog\Logger('Slimpd');
 	$logger->pushProcessor(new Monolog\Processor\UidProcessor());
 	$logger->pushHandler(new Monolog\Handler\StreamHandler('localdata/cache/mono.log', Monolog\Logger::DEBUG));
@@ -170,11 +170,11 @@ $container['errorHandler'] = function ($cont) {
 		$vars['url'] = $request->getRequestTarget();
 		$vars['file'] = removeAppRootPrefix($exception->getFile());
 		$vars['line'] = $exception->getLine();
-		
+
 		// delete cached config
 		$configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 		$config = $configLoader->loadConfig('master.ini', NULL, 1);
-		
+
 		$cont->view->render($response, 'appless.htm', $vars);
 		return $response->withStatus(500);
 	};
@@ -194,24 +194,18 @@ $container['notFoundHandler'] = function ($cont) {
 	}
 
 	return function ($request, $response) use ($cont) {
-		$vars['action'] = '404';
-		return $cont['view']->render($response, 'surrounding.htm', $vars)->withStatus(404);
-	};
-	// TODO refacturing of old (slim-v2) implementation
-	/*
-	// use 404 not found as a search in case we don't have a slash in uri
-	$app->notFound(function() use ($app, $vars){
-		$uri = ltrim(rawurldecode($app->request->getResourceUri()),'/');
+		// use 404 not found as a search in case we don't have a slash in requestet uri
+		$uri = rawurldecode($request->getUri()->getPath());
 		// check if we do have a slash in uri
 		if(stripos($uri, '/') !== FALSE) {
 			$vars['action'] = '404';
-			$app->render('surrounding.htm', $vars);
-		} else {
-			// trigger a search
-			$app->response->redirect($this->conf['root'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri) . getNoSurSuffix(), 301);
+			return $cont['view']->render($response, 'surrounding.htm', $vars)->withStatus(404);
 		}
-	});
-	*/
+		// trigger a search
+		$searchUri = $cont->conf['config']['absRefPrefix'] . 'searchall/page/1/sort/relevance/desc?q='.rawurlencode($uri);
+		$newResponse = $response->withRedirect($searchUri, 301);
+		return $newResponse;
+	};
 };
 
 
