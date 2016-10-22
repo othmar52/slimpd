@@ -28,10 +28,10 @@ class BaseController {
 
 	// Magic property
 	public function __get($property) {
-		if ($this->container->{$property}) 
+		if ($this->container->{$property}) {
 			return $this->container->{$property};
+		}
 	}
-
 
 	// Magic property
 	public function getRenderItems() {
@@ -44,10 +44,9 @@ class BaseController {
 			"albums" => [],
 			"itembreadcrumbs" => [],
 		);
-	
+
 		foreach($args as $argument) {
 			if(is_object($argument) === TRUE) {
-				#var_dump(get_class($argument)); ob_flush();#die;
 				if(get_class($argument) === "Slimpd\Models\Directory") {
 					continue;
 				}
@@ -62,7 +61,6 @@ class BaseController {
 					if(get_class($item) === "Slimpd\Models\Directory") {
 						continue;
 					}
-					#var_dump(get_class($item)); ob_flush();#die;
 					$repoKey = $item->getRepoKey();
 					$this->container->$repoKey->fetchRenderItems($return, $item);
 				}

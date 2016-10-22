@@ -26,30 +26,34 @@ class CliController extends \Slimpd\BaseController {
 		renderCliHelp($this->ll);
 		return $response;
 	}
+
 	public function remigrateAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport(TRUE);
 		return $response;
 	}
+
 	public function updateAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
 		return $response;
 	}
+
 	public function builddictsqlAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
 		$importer = new \Slimpd\Modules\Importer\DatabaseStuff($this->container);
 		$importer->buildDictionarySql();
 		return $response;
 	}
+
 	public function updateDbSchemeAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
 		$action = 'migrate';
-	
+
 		// TODO: manually performed db-changes does not get recognized here - find a solution!
-	
+		
 		// check if we can query the revisions table
 		$query = "SELECT * FROM db_revisions";
 		$result = $this->db->query($query);
@@ -90,6 +94,7 @@ class CliController extends \Slimpd\BaseController {
 		}
 		return $response;
 	}
+
 	public function databaseCleanerAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
 		die('TODO: not implemented yet '. __FUNCTION__ );
@@ -116,12 +121,12 @@ class CliController extends \Slimpd\BaseController {
 			$this->conf['database']['dbpassword']
 		);
 		cliLog("Dropping database");
-	
+
 		$result = $db->query("DROP DATABASE IF EXISTS " . $this->conf['database']['dbdatabase'].";");
 		cliLog("Recreating database");
 		$result = $db->query("CREATE DATABASE " . $this->conf['database']['dbdatabase'].";");
 		$action = 'init';
-	
+
 		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
 		if (!\Helper::checkConfigEnough()) {
 			cliLog("mmp: invalid configuration");
@@ -129,11 +134,11 @@ class CliController extends \Slimpd\BaseController {
 		}
 		$controller = \Helper::getController($action, NULL);
 		$controller->runStrategy();
-	
+
 		foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries($this->ll) as $query) {
 			$this->db->query($query);
 		}
-	
+
 		// delete files created by sliMpd
 		foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
 			$fileBrowser = new \Slimpd\Modules\filebrowser\filebrowser($this->container);
@@ -160,8 +165,7 @@ class CliController extends \Slimpd\BaseController {
 		#$this->view->render($response, 'surrounding.htm', $args);
 		#return $response;
 	}
-	
-	
+
 	private function getDatabaseDropConfirm() {
 		$userInput = '';
 		do {

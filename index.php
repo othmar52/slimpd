@@ -26,16 +26,17 @@ if($debug){
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__ . DS);
 define('APP_DEFAULT_CHARSET', 'UTF-8');
+
+// register autoloader
 require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
-#require_once APP_ROOT . 'core' . DS . 'php' . DS . 'autoload.php';
 
-
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'GeneralUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'StringUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'twig'  . DS . 'SlimpdTwigExtension.php';
-
-
+// include some additional files
+foreach([
+	'Utilities' . DS . 'GeneralUtility.php',
+	'Utilities' . DS . 'StringUtility.php',
+	'libs' . DS . 'twig'  . DS . 'SlimpdTwigExtension.php'] as $filePath) {
+	require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
+}
 
 date_default_timezone_set('Europe/Vienna');
 
@@ -53,23 +54,5 @@ require APP_ROOT . 'core/php/middleware.php';
 
 // Register routes
 require APP_ROOT . 'core/php/routes.php';
-
-
-#$config['current_url']  = rtrim($container->request->getRequestTarget(), '/');
-# TODO: its not possible to use 2 browsertabs in different playermodes simultaneously!?
-#$app->view->getEnvironment()->addGlobal('flash', @$_SESSION['slim.flash']);
-
-/*
-// DEFINE GET/POST routes (also check for .gitignored local-routes)
-foreach(array('get', 'post') as $method) {
-	foreach(array('', '_local') as $local) {
-		if(file_exists(APP_ROOT . 'core' . DS . 'php' . DS . 'routes' . DS . $method . $local . '.php')) {
-			#include_once APP_ROOT . 'core' . DS . 'php' . DS . 'routes' . DS . $method . $local . '.php';
-		}
-	}
-}
-*/
-
-
 
 $app->run();

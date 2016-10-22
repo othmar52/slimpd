@@ -21,33 +21,38 @@
 
 /* TODO: currently there is no check of any update status
  * TODO: remove dead items after update
- * TODO: instead of heaving multiple update-cli.php scripts merge the together with a procedural logic
  * TODO: move memory_limit - value to config
  */
+ 
+ // make sure the script es executed via php-cli
 if(PHP_SAPI !== 'cli') {
 	header('HTTP/1.0 403 Forbidden');
 	echo "Sorry, execution is not allowed via http...\n";
-	die();
+	exit;
 }
 
 
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '4096M');
 
-
 ob_start();
 
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', __DIR__ . DS);
 define('APP_DEFAULT_CHARSET', 'UTF-8');
+
+// register autoloader
 require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
+
+// include some additional files
+foreach([
+	'Utilities' . DS . 'GeneralUtility.php',
+	'Utilities' . DS . 'StringUtility.php'] as $filePath) {
+	require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
+}
 
 // set directory to root
 chdir(dirname(__DIR__)); 
-
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'GeneralUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'Utilities' . DS . 'StringUtility.php';
-require_once APP_ROOT . 'core' . DS . 'php' . DS . 'libs' . DS . 'shims' . DS . 'CompareImages.php';
 
 date_default_timezone_set('Europe/Vienna');
 
@@ -75,6 +80,5 @@ require APP_ROOT . 'core/php/dependencies.php';
 
 // Register routes
 require APP_ROOT . 'core/php/routes-cli.php';
-
 
 $app->run();

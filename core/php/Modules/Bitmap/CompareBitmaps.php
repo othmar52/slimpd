@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Models\Bitmap;
+namespace Slimpd\Modules\Bitmap;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -18,7 +18,7 @@ namespace Slimpd\Models\Bitmap;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 // from http://compareimages.nikhazy-dizajn.hu/
-class compareImages {
+class CompareBitmaps {
 	private function mimeType($fileName) {
 		/*returns array with mime type and if its jpg or png. Returns false if it isn't jpg or png*/
 		$mime = getimagesize($fileName);
