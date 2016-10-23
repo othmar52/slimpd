@@ -95,7 +95,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 		if(!$this->conf['images']['read_embedded']) {
 			return;
 		}
-		$this->extractEmbeddedBitmaps($tagData, $phpThumb, $record);
+		$this->extractEmbeddedBitmaps($tagData, $record);
 	}
 
 	// Write tagdata-array into sparata database table, gzipcompressed, serialized
@@ -132,7 +132,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 		return $hugeTagdata;
 	}
 
-	private function extractEmbeddedBitmaps($tagData, &$phpThumb, $record) {
+	private function extractEmbeddedBitmaps($tagData, $record) {
 		if(isset($tagData['comments']['picture']) === FALSE) {
 			return;
 		}
