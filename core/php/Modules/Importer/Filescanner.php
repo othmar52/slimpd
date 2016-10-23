@@ -26,30 +26,12 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 		# TODO: which speed-calculation makes sense? itemsChecked/minutute or itemsProcessed/minute or both?
 		$this->jobPhase = 3;
 		$this->beginJob(array('msg' => 'collecting tracks to scan from mysql database' ), __FUNCTION__);
-		
-		$bitmapController = new \Slimpd\Modules\Bitmap\Controller($this->container);
-		$phpThumb = $bitmapController->getPhpThumb();
-		$phpThumb->setParameter('config_cache_directory', APP_ROOT.'localdata/embedded');
-		
-		$getID3 = new \getID3;
-		
-		// get timestamps of all images from mysql database
-		//$imageTimestampsMysql = array();
-		
-			////////////////////////////////////////////////////////////////
-			// TEMP reset database status for testing purposes
-			#$query = "UPDATE rawtagdata SET importStatus=1, lastScan=0;";
-			#$this->db->query($query);
-			#$query = "DELETE FROM bitmap WHERE trackUid > 0;";
-			#$this->db->query($query);
-			////////////////////////////////////////////////////////////////
-		
+
 		$query = "
 			SELECT COUNT(*) AS itemsTotal
 			FROM rawtagdata WHERE lastScan=0";
 		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
-			
-			
+
 		$query = "
 			SELECT uid, relPath, relPathHash, relDirPathHash
 			FROM rawtagdata WHERE lastScan=0";
@@ -64,72 +46,65 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 				'currentItem' => $record['relPath'],
 				'extractedImages' => $this->extractedImages
 			));
-			$rawTagData = new \Slimpd\Models\Rawtagdata();
-			$rawTagData->setUid($record['uid'])
-				->setRelPath($record['relPath'])
-				->setLastScan(time())
-				->setImportStatus(2);
-			
-			// TODO: handle not found files
-			if(is_file($this->conf['mpd']['musicdir'] . $record['relPath']) === FALSE) {
-				$rawTagData->setError('invalid file');
-				$rawTagData->update();
-				continue;
-			}
-
-			$rawTagData->setFilesize( filesize($this->conf['mpd']['musicdir'] . $record['relPath']) );
-			
-			// skip very large files
-			// TODO: how to handle this?
-			if($rawTagData->getFilesize() > 1000000000) {
-				$rawTagData->setError('invalid filesize ' . $rawTagData->getFilesize() . ' bytes')
-					->update();
-				continue;
-			}
-			
-			$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $record['relPath']);
-			\getid3_lib::CopyTagsToComments($tagData);
-
-			// Version 1: 
-			// write datachunk to different table "rawtagblob" as it would slow down a lot of database operations on table "rawtagdata"
-			#Rawtagblob::ensureRecordUidExists($record['uid']);
-			#$rawTagBlob = new Rawtagblob();
-			#$rawTagBlob->setUid($record['uid'])
-			#	->setTagData(serialize($this->removeHugeTagData($tagData)))
-			#	->update();
-
-
-			// Version 2: from filesystem, serialized
-			// write datachank to filesystem			
-			#$tagFilePath = getTagDataFileName($record['relPathHash']);
-			#\phpthumb_functions::EnsureDirectoryExists($tagFilePath);
-			#file_put_contents(
-			#	$tagFilePath . DS . $record['relPathHash'],
-			#	serialize($this->removeHugeTagData($tagData))
-			#);
-
-			// Version 3: from sparata database table, gzipcompressed, serialized 
-			$this->container->rawtagblobRepo->ensureRecordUidExists($record['uid']);
-			$rawTagBlob = new \Slimpd\Models\Rawtagblob();
-			$rawTagBlob->setUid($record['uid'])
-				->setTagData(gzcompress(serialize($this->removeHugeTagData($tagData))));
-			$this->container->rawtagblobRepo->update($rawTagBlob);
-
-
-		
-			// TODO: should we complete rawTagData with fingerprint on flac files?
-			$this->container->rawtagdataRepo->update($rawTagData);
-
-			if(!$this->conf['images']['read_embedded']) {
-				continue;
-			}
-			$this->extractEmbeddedBitmaps($tagData, $phpThumb, $record);
+			$this->singleFile2Database($record);
 		}
 
 		$this->finishJob(array(
 			'extractedImages' => $this->extractedImages
 		), __FUNCTION__);
 		return;
+	}
+
+	public function singleFile2Database($record) {
+		$rawTagData = new \Slimpd\Models\Rawtagdata();
+		$rawTagData->setUid($record['uid'])
+			->setRelPath($record['relPath'])
+			->setLastScan(time())
+			->setImportStatus(2);
+		
+		// TODO: handle not found files
+		if(is_file($this->conf['mpd']['musicdir'] . $record['relPath']) === FALSE) {
+			$rawTagData->setError('invalid file');
+			$this->container->rawtagdataRepo->update($rawTagData);
+			$this->createTagBlobEntry($record['uid'], array());
+			return;
+		}
+
+		$rawTagData->setFilesize( filesize($this->conf['mpd']['musicdir'] . $record['relPath']) );
+		
+		// skip very large files
+		// TODO: how to handle this?
+		if($rawTagData->getFilesize() > 1000000000) {
+			cliLog("ERROR: cant handle filesize (". formatByteSize($rawTagData->getFilesize()) .") of ". $rawTagData->getRelpath(), 1, "red");
+			$rawTagData->setError('invalid filesize ' . $rawTagData->getFilesize() . ' bytes');
+			$this->container->rawtagdataRepo->update($rawTagData);
+			$this->createTagBlobEntry($record['uid'], array());
+			return;
+		}
+		$getID3 = new \getID3;
+		$tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $record['relPath']);
+		\getid3_lib::CopyTagsToComments($tagData);
+
+
+		// Write tagdata-array into sparata database table, gzipcompressed, serialized
+		$this->createTagBlobEntry($record['uid'], $tagData);
+	
+		// TODO: should we complete rawTagData with fingerprint on flac files?
+		$this->container->rawtagdataRepo->update($rawTagData);
+
+		if(!$this->conf['images']['read_embedded']) {
+			return;
+		}
+		$this->extractEmbeddedBitmaps($tagData, $phpThumb, $record);
+	}
+
+	// Write tagdata-array into sparata database table, gzipcompressed, serialized
+	private function createTagBlobEntry($uid, $tagData) {
+		$this->container->rawtagblobRepo->ensureRecordUidExists($uid);
+		$rawTagBlob = new \Slimpd\Models\Rawtagblob();
+		$rawTagBlob->setUid($uid)
+			->setTagData(gzcompress(serialize($this->removeHugeTagData($tagData))));
+		$this->container->rawtagblobRepo->update($rawTagBlob);
 	}
 
 	/**
@@ -164,6 +139,11 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 		if(is_array($tagData['comments']['picture']) === FALSE) {
 			return;
 		}
+		
+		$bitmapController = new \Slimpd\Modules\Bitmap\Controller($this->container);
+		$phpThumb = $bitmapController->getPhpThumb();
+		$phpThumb->setParameter('config_cache_directory', APP_ROOT.'localdata/embedded');
+		
 		// loop through all embedded images
 		foreach($tagData['comments']['picture'] as $bitmapIndex => $bitmapData) {	
 			if(isset($bitmapData['image_mime']) === FALSE) {

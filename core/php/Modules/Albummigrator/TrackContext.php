@@ -47,20 +47,16 @@ class TrackContext extends \Slimpd\Models\Track {
 		
 		
 		// TODO: how to handle non existent tagBlob? extract directly from music file?
-		
-		// TODO compare performance of different versions
-		
-		// Version 1: from sparata database table, serialized 
-		#$rawTagBlob = \Slimpd\Models\Rawtagblob::getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
-		#$data = $rawTagBlob->getTagData();
-		
-		// Version 2: from filesystem, serialized
-		#$data = file_get_contents(
-		#	getTagDataFileName($rawTagArray['relPathHash']) . DS . $rawTagArray['relPathHash']             
-		#);
-		
+
 		// Version 3: from sparata database table, gzipcompressed, serialized 
 		$rawTagBlob = $this->container->rawtagblobRepo->getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
+		if($rawTagBlob === NULL) {
+			// for some reason we are not able to fetch this from database.
+			// so we have to scan the file and fetch the database entry again
+			$fileScanner = new \Slimpd\Modules\Importer\Filescanner($container);
+			$fileScanner->singleFile2Database($rawTagArray);
+			$rawTagBlob = $this->container->rawtagblobRepo->getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
+		}
 		$data = gzuncompress($rawTagBlob->getTagData());
 		
 		$data = unserialize($data);
