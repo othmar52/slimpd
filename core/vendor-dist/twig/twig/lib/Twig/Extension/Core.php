@@ -274,7 +274,7 @@ class Twig_Extension_Core extends Twig_Extension
     public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
     {
         $stream = $parser->getStream();
-        list($name, $test) = $this->getTest($parser, $node->getLine());
+        list($name, $test) = $this->getTest($parser, $node->getTemplateLine());
 
         if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
             $message = sprintf('Twig Test "%s" is deprecated', $name);
@@ -284,7 +284,7 @@ class Twig_Extension_Core extends Twig_Extension
             if ($test->getAlternative()) {
                 $message .= sprintf('. Use "%s" instead', $test->getAlternative());
             }
-            $message .= sprintf(' in %s at line %d.', $stream->getFilename(), $stream->getCurrent()->getLine());
+            $message .= sprintf(' in %s at line %d.', $stream->getSourceContext()->getName(), $stream->getCurrent()->getLine());
 
             @trigger_error($message, E_USER_DEPRECATED);
         }
@@ -319,7 +319,7 @@ class Twig_Extension_Core extends Twig_Extension
             }
         }
 
-        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $parser->getFilename());
+        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext()->getName());
         $e->addSuggestions($name, array_keys($env->getTests()));
 
         throw $e;
@@ -1489,8 +1489,13 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  */
 function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
+    $loader = $env->getLoader();
     try {
-        return $env->getLoader()->getSource($name);
+        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+            return $loader->getSource($name);
+        } else {
+            return $loader->getSourceContext($name)->getCode();
+        }
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;

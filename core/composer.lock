@@ -1223,7 +1223,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-01-21 23:37:59"
+            "time": "2016-10-15 15:06:36"
         },
         {
             "name": "neutron/sphinxsearch-api",
@@ -1936,12 +1936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "ef942f60d894f48e751f0e10392a099261938307"
+                "reference": "09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/ef942f60d894f48e751f0e10392a099261938307",
-                "reference": "ef942f60d894f48e751f0e10392a099261938307",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0",
+                "reference": "09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0",
                 "shasum": ""
             },
             "require": {
@@ -1954,7 +1954,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.26-dev"
+                    "dev-master": "1.27-dev"
                 }
             },
             "autoload": {
@@ -1989,7 +1989,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-13 14:03:03"
+            "time": "2016-10-22 03:23:53"
         },
         {
             "name": "webfontkit/open-sans",
