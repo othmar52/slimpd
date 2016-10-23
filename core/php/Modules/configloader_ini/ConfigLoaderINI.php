@@ -77,7 +77,7 @@ class ConfigLoaderINI {
 
 		$this->absCacheFilePath = APP_ROOT . "localdata" . DS . "cache" . DS . "conf-". getFilePathHash($masterConfigFile). ".php";
 
-		if($noCache === TRUE && is_writeable($this->absCacheFilePath) === TRUE) {
+		if($noCache === TRUE && touch($this->absCacheFilePath) === TRUE) {
 			unlink($this->absCacheFilePath);
 		}
 
@@ -261,5 +261,6 @@ class ConfigLoaderINI {
 		}
 		$fileContent = "<?php \$cachedConf = " . var_export($configArray,1) . ";";
 		file_put_contents($this->absCacheFilePath, $fileContent);
+		chmod($this->absCacheFilePath, octdec($configArray['config']['fileCreateMask']));
 	}
 }
