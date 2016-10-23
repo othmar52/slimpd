@@ -125,7 +125,7 @@ function notifyJson($message, $type="info") {
 	$out->notify = 1;
 	$out->message = $message;
 	$out->type = $type;
-	deliverJson($out);
+	return $out;
 }
 
 function deliverJson($data, $response) {

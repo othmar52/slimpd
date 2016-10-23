@@ -1,17 +1,17 @@
 {% extends 'partials/track/not-imported-templatevars.twig' %}
 {% block content %}
-    <div class="col-sm-12 col-md-12 xwaxplayer">
-    	<div class="row">
-    		<div class="col-md-2">
-		    	<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link">
-		    		<img src="{{root}}image-100/album/{{ item.albumUid }}" class="icon-50" />
-		    	</a>
-    		</div>
-    		<div class="col-md-10">
-    			<div class="row">
-    				<div class="row-md-12">
-    					{% if item.uid %}
-				    		<span class="shortenXX">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span> -
+	<div class="col-sm-12 col-md-12 xwaxplayer">
+		<div class="row">
+			<div class="col-md-2">
+				<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link">
+					<img src="{{root}}image-100/album/{{ item.albumUid }}" class="icon-50" />
+				</a>
+			</div>
+			<div class="col-md-10">
+				<div class="row">
+					<div class="row-md-12">
+						{% if item.uid %}
+							<span class="shortenXX">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span> -
 							<span class="shortenXX">{% include 'partials/artist/link.htm' %}</span>
 							
 						{% else %}
@@ -22,15 +22,11 @@
 								{% include 'partials/track/no-track-selected-badge.htm' %}
 							{% endif %}
 						{% endif %}
-						
-						
-			
-			
-    					<span class="xwax-status-timestring status-timestring pull-right">
-				    		<span class="xwax-deck-{{decknum}}-status-elapsed">0:00</span>&nbsp; | &nbsp;
-				    		<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
-				    	</span>
-    				</div>
+						<span class="xwax-status-timestring status-timestring pull-right">
+							<span class="xwax-deck-{{decknum}}-status-elapsed">0:00</span>&nbsp; | &nbsp;
+							<span class="xwax-deck-{{decknum}}-status-total">0:00</span>
+						</span>
+					</div>
 					<div class="col-md-12">
 						<div style="position: relative;">
 							<div class="xwax-deck-{{decknum}}-status-progressbar xwax-deck-progressbar"></div>
@@ -39,10 +35,10 @@
 								data-svgurl="{{ waveformSvgUrl }}?colorFor=xwax&mode=half" type="image/svg+xml">
 							</object>
 						</div>
-    				</div>
-    			</div>
-    			
-    		</div>
+					</div>
+				</div>
+				
+			</div>
 	</div>
 	<div class="show-no-connection">
 		xwax connection failed

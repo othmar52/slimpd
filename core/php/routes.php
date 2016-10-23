@@ -56,9 +56,8 @@ $ctrlRoutes = [
 	'Track' => [
 		['/markup/mpdplayer', 'mpdplayerAction'],
 		['/markup/localplayer', 'localplayerAction'],
-		['/markup/xwaxplayer', 'xwaxplayerAction'],
 		['/markup/widget-trackcontrol', 'widgetTrackcontrolAction'],
-		['/markup/widget-xwax', 'widgetXwaxAction'],
+		#['/markup/widget-xwax', 'widgetXwaxAction'],
 		['/markup/widget-deckselector', 'widgetDeckselectorAction'],
 		['/markup/standalone-trackview', 'standaloneTrackviewAction'],
 		['/maintainance/trackid3/[{itemParams:.*}]', 'dumpid3Action'],
@@ -105,7 +104,14 @@ $ctrlRoutes = [
 	],
 	'Xwax' => [
 		['/xwaxstatus[/]', 'statusAction'],
-		['/xwax/{cmd}/[{params:.*}]', 'cmdAction']
+		['/markup/xwaxplayer', 'xwaxplayerAction'],
+		['/markup/widget-xwax', 'widgetAction'],
+		['/xwax/load_track/{deckIndex}/[{itemParams:.*}]', 'cmdLoadTrackAction'],
+		['/xwax/reconnect/{deckIndex}', 'cmdReconnectAction'],
+		['/xwax/disconnect/{deckIndex}', 'cmdDisconnectAction'],
+		['/xwax/recue/{deckIndex}', 'cmdRecueAction'],
+		['/xwax/cycle_timecode/{deckIndex}', 'cmdCycleTimecodeAction']
+		
 	],
 ];
 

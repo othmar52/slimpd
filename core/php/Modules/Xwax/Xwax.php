@@ -18,69 +18,50 @@ namespace Slimpd\Modules\Xwax;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Xwax {
-	protected $ipAddress;
+	public $ipAddress;
 	protected $port = 0;
-	protected $deckIndex;
 	protected $type = 'xwax';
 	protected $pollcache = NULL;
+	
+	public $clientPath;
+	public $totalDecks;
+	public $runCmd;
+	public $deckIndex;
+	public $loadArgs = '';
+	public $notifyJson = NULL;
+	public $noCache = FALSE;
 
 	public function __construct($container) {
 		$this->ll = $container->ll;
 		$this->conf = $container->conf;
+		$this->pollcacheRepo = $container->pollcacheRepo;
+		$this->trackRepo = $container->trackRepo;
 	}
 
-	public function cmd($cmd, $params, $returnResponse = FALSE) {
-		if($this->conf['modules']['enable_xwax'] !== '1') {
-			notifyJson($this->ll->str('xwax.notenabled'), 'danger');
-		}
-		$xConf = $this->conf['xwax'];
-
-		if($xConf['decks'] < 1) {
-			notifyJson($this->ll->str('xwax.deckconfig'), 'danger');
-		}
-
-		if(count($params) === 0) {
-			notifyJson($this->ll->str('xwax.missing.deckparam'), 'danger');
-		}
-
-		$totalDecks = $xConf['decks'];
-		$selectedDeck = $params[0];
-
-		if(is_numeric($selectedDeck) === FALSE || $selectedDeck < 1 || $selectedDeck > $totalDecks) {
-			notifyJson($this->ll->str('xwax.invalid.deckparam'), 'danger');
-		}
-
-		if(isset($xConf['cmd_'. $cmd]) === FALSE) {
-			notifyJson($this->ll->str('xwax.invalid.cmd'), 'danger');
-		}
-
-		$loadArgs = '';
-		$this->ipAddress = $xConf['server'];
-		$this->deckIndex = $selectedDeck-1;
-
+	public function cmd() {
+		
+/*
 		if($cmd == "load_track") {
+			// TODO: consider to make separate routes instead of messing around with this string...
+			#if(preg_match("/^(\d*)\/(.*)$/", ))
+			var_dump($this->deckIndex); die;
 			array_shift($params);
 			// TODO: try to fetch artist and title from database
 			$filePath = getFileRealPath(join(DS, $params));
 			if($filePath === FALSE) {
-				notifyJson($this->ll->str('xwax.invalid.file'), 'danger');
+				$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.file'), 'danger');
+				return;
 			}
 			$loadArgs = ' ' . escapeshellarg($filePath) . ' '
 							. escapeshellarg('dummyartist') . ' '
 							. escapeshellarg('dummytitle');
 		}
 
-		$xConf['clientpath'] = ($xConf['clientpath'][0] === '/')
-			? $xConf['clientpath']
-			: APP_ROOT . $xConf['clientpath'];
-
-		if(is_file($xConf['clientpath']) === FALSE) {
-			notifyJson($this->ll->str('xwax.invalid.clientpath'), 'danger');
-		}
+*/
 
 		$useCache = FALSE;
 
-		if($cmd === "get_status") {
+		if($this->runCmd === "get_status") {
 			$this->onBeforeGetStatus();
 			if($this->pollcache !== NULL) {
 				$interval = 2;
@@ -88,40 +69,42 @@ class Xwax {
 					$useCache = TRUE;
 				}
 			}
-			if($app->request->get('force' === '1')) {
+			if($this->noCache === TRUE) {
 				$useCache = FALSE;
 			}
 		}
 
 		if($useCache === FALSE) {
-			$execCmd = 'timeout 1 ' . $xConf['clientpath'] . " " . $this->ipAddress . " "  . $cmd . " " . $this->deckIndex . $loadArgs;
+			$execCmd = 'timeout 1 ' . $this->clientPath . " " . $this->ipAddress . " "  . $this->runCmd . " " . $this->deckIndex . " " .$this->loadArgs;
+			#var_dump($execCmd);
 			exec($execCmd, $response);
 
-			if($cmd === "get_status") {
+			if($this->runCmd === "get_status") {
 				$this->onAfterGetStatus($response);
 			}
 
 		} else {
 			$response = unserialize($this->pollcache->getResponse());
 		}
-
+		#var_dump($response);die;
 		if(isset($response[0]) && $response[0] === "OK") {
-			if($returnResponse === FALSE) {
-				notifyJson($this->ll->str('xwax.cmd.success'), 'success');
-			} else {
-				array_shift($response);
-				return $response;
+			if($this->runCmd !== "get_status") {
+				$this->notifyJson = notifyJson($this->ll->str('xwax.cmd.success'), 'success');
+				return;
 			}
-		} else {
-			notifyJson($this->ll->str('xwax.cmd.error'), 'danger');
+			array_shift($response);
+			return $response;
 		}
+		#die('sdrgdr');
+		$this->notifyJson = notifyJson($this->ll->str('xwax.cmd.error'), 'danger');
+		return;
 	}
 
 	/*
 	 * check if we have a cached pollresult to avoid xwax-client-penetration caused by multiple web-clients
 	 **/
 	private function onBeforeGetStatus() {
-		$this->pollcache = \Slimpd\Models\Pollcache::getInstanceByAttributes(
+		$this->pollcache = $this->pollcacheRepo->getInstanceByAttributes(
 			array(
 				'type' => $this->type,
 				'deckindex' => $this->deckIndex,
@@ -139,33 +122,32 @@ class Xwax {
 				->setIpAddress($this->ipAddress)
 				->setPort($this->port);
 		}
-		$this->pollcache->setResponse(serialize($response))
-			->setMicrotstamp(getMicrotimeFloat())
-			->update();
+		$this->pollcache->setResponse(serialize($response))->setMicrotstamp(getMicrotimeFloat());
+		$this->pollcacheRepo->update($this->pollcache);
 	}
 
-	public function getCurrentlyPlayedTrack($deckIndex) {
-		
-		#$xConf = $this->conf['xwax'];
-		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), TRUE));
-		$deckItem = ($deckStatus['path'] !== NULL)
-			 ? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
+	public function getCurrentlyPlayedTrack() {
+		$deckStatus = self::clientResponseToArray($this->cmd());
+		#var_dump($deckStatus);die;
+		$deckItem = (isset($deckStatus['path']) === TRUE && $deckStatus['path'] !== NULL)
+			 ? $this->trackRepo->getInstanceByPath($deckStatus['path'], TRUE)
 			 : NULL;
 		return $deckItem;
 	}
 
 	public function fetchAllDeckStats() {
+		#var_dump($this->totalDecks);die;
 		$return = array();
-		$xConf = $this->conf['xwax'];
-		for($i=0; $i<$xConf['decks']; $i++) {
+		for($i=0; $i<$this->totalDecks; $i++) {
 			// dont try other decks in case first deck fails
-			$response = $this->cmd('get_status', array($i+1), TRUE);
+			$this->deckIndex = $i;
+			$response = $this->cmd();
 			if(count($response) === 0) {
 				return NULL;
 			}
 			$deckStatus = self::clientResponseToArray($response);
 			$deckStatus['item'] = ($deckStatus['path'] !== NULL)
-				? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]->jsonSerialize()
+				? $this->trackRepo->getInstanceByPath($deckStatus['path'], TRUE)->jsonSerialize()
 				: NULL;
 			$return[] = $deckStatus;
 		}
@@ -181,13 +163,16 @@ class Xwax {
 		foreach($responseArray as $line) {
 			$params = trimExplode(":", $line, TRUE, 2);
 			try {
-				$out[$params[0]] = $params[1];
+				$out[$params[0]] = @$params[1];
 			} catch(\Exception $e) {
 				$out[$params[0]] = NULL;
 			}
 		}
+		$out['percent'] = 0;
 		try {
-			$out['percent'] = $out['position'] /($out['length']/100);
+			if($out['length'] > 0) {
+				$out['percent'] = $out['position'] /($out['length']/100);
+			}
 		} catch(\Exception $e) {
 			$out['percent'] = 0;
 		}

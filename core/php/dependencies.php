@@ -249,6 +249,9 @@ $container['trackindexRepo'] = function($cont) {
 $container['discogsitemRepo'] = function($cont) {
 	return new \Slimpd\Repositories\DiscogsitemRepo($cont);
 };
+$container['pollcacheRepo'] = function($cont) {
+	return new \Slimpd\Repositories\PollcacheRepo($cont);
+};
 $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);
 };

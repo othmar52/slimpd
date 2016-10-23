@@ -36,7 +36,7 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 		$this->view->render($response, 'modules/widget-trackcontrol.htm', $args);
 		return $response;
 	}
-	
+
 	public function localplayerAction(Request $request, Response $response, $args) {
 		$itemParam = $request->getParam('item');
 		$this->completeArgsForDetailView($itemParam, $args);
@@ -45,32 +45,18 @@ $app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:stand
 		return $response;
 	}
 
+	public function widgetDeckselectorAction(Request $request, Response $response, $args) {
+		$itemParam = $request->getParam('item');
+		$this->completeArgsForDetailView($itemParam, $args);
+		$this->view->render($response, 'modules/widget-deckselector.htm', $args);
+		return $response;
+	}
+
 	public function mpdplayerAction(Request $request, Response $response, $args) {
 		$item = $this->mpd->getCurrentlyPlayedTrack();
 		$itemRelPath = ($item !== NULL) ? $item->getRelPath() : 0;
 		$this->completeArgsForDetailView($itemRelPath, $args);
 		$args['player'] = 'mpd';
-		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
-		return $response;
-	}
-
-	public function xwaxplayerAction(Request $request, Response $response, $args) {
-		die('TODO: upgrade to slimv3');
-		$xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
-		$args['decknum'] = $app->request->get('deck');
-		$item = $xwax->getCurrentlyPlayedTrack($args['decknum']);
-		
-		if($args['item'] !== NULL) {
-			$itemRelPath = $args['item']->getRelPath();
-		}
-		if($app->request->get('type') == 'djscreen') {
-			$markupSnippet = 'standalone-trackview';
-			$templateFile = 'modules/standalone-trackview.htm';
-		}
-
-		$itemParam = $request->getParam('item');
-		$this->completeArgsForDetailView($itemParam, $args);
-		$args['player'] = 'xwax';
 		$this->view->render($response, 'partials/player/permaplayer.htm', $args);
 		return $response;
 	}

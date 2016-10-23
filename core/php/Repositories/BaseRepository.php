@@ -320,6 +320,7 @@ class BaseRepository {
 		if($instance->getUid() > 0) {
 			return;
 		}
+		$dummyInstance = NULL;
 		// check if we have a record with this path
 		if(method_exists($instance, 'getRelPathHash') === TRUE) {
 			$dummyInstance = $this->getInstanceByAttributes(array('relPathHash' => $instance->getRelPathHash()));
