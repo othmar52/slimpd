@@ -1,4 +1,4 @@
-{% if modules.enable_xwax != '1' %}
+{% if config.modules.enable_xwax != '1' %}
 	<div class="col-md-12 error xwax-mode-show">
 	{{'xwax.notenabled'|ll}}
 	</div>
@@ -19,7 +19,7 @@
 					<i class="fa fa-plus"></i> xwaxctrl
 				</button>
 				<div class="show-no-connection">
-					<button role="control" data-href="{{root}}xwax/{{xwax.cmd_launch}}/1" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
+					<button role="control" data-href="{{root}}xwax/{{config.xwax.cmd_launch}}/1" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
 						start xwax
 					</button>
 				</div>
@@ -27,4 +27,3 @@
 		</div>
 	</div>
 {% endif %}
-	  	

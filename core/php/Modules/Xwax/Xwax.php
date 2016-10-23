@@ -29,7 +29,7 @@ class Xwax {
 		$this->conf = $container->conf;
 	}
 
-	public function cmd($cmd, $params, $app, $returnResponse = FALSE) {
+	public function cmd($cmd, $params, $returnResponse = FALSE) {
 		if($this->conf['modules']['enable_xwax'] !== '1') {
 			notifyJson($this->ll->str('xwax.notenabled'), 'danger');
 		}
@@ -147,7 +147,7 @@ class Xwax {
 	public function getCurrentlyPlayedTrack($deckIndex) {
 		
 		#$xConf = $this->conf['xwax'];
-		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), $app, TRUE));
+		$deckStatus = self::clientResponseToArray($this->cmd('get_status', array($deckIndex+1), TRUE));
 		$deckItem = ($deckStatus['path'] !== NULL)
 			 ? \Slimpd\Models\PlaylistFilesystem::pathStringsToTrackInstancesArray([$deckStatus['path']])[0]
 			 : NULL;
@@ -159,7 +159,7 @@ class Xwax {
 		$xConf = $this->conf['xwax'];
 		for($i=0; $i<$xConf['decks']; $i++) {
 			// dont try other decks in case first deck fails
-			$response = $this->cmd('get_status', array($i+1), $app, TRUE);
+			$response = $this->cmd('get_status', array($i+1), TRUE);
 			if(count($response) === 0) {
 				return NULL;
 			}
