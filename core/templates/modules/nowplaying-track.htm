@@ -2,7 +2,7 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-3">
-		<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link">
+		<a href="{{ albumHref }}" class="ajax-link">
 			{% if item.uid %}
 			<img class="main-image" src="{{root}}image-300/track/{{ item.uid }}" alt="">
 			{% else %}
