@@ -4,7 +4,7 @@
 	<div class="col-md-2 no-padding-right vcenter">
 		<div class="vcinner">
 			<a href="{{ albumHref }}" class="ajax-link toggle-tooltip" title="show album">
-				<img src="{{root}}image-100/track/{{ item.uid }}" alt="" class="icon-50">
+				<img src="{{artworkUrl}}" alt="" class="icon-50">
 			</a>
 			<button role="control" title="play" class="btn btn-trnsp player-ctrl is-playbtn" data-player='{"action":"play","item":{{ playerCtrlItem }},"ext":"{{item.audioDataformat }}","hash":"{{ item.relPathHash }}","mpdurl":"{{root}}mpdctrl/playIndex/{{ mpdidx }}"}'>
 				<i class="fa fa-play"></i>
