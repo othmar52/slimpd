@@ -75,7 +75,6 @@ class Xwax {
 			array_shift($response);
 			return $response;
 		}
-		#die('sdrgdr');
 		$this->notifyJson = notifyJson($this->ll->str('xwax.cmd.error'), 'danger');
 		return;
 	}
@@ -108,7 +107,6 @@ class Xwax {
 
 	public function getCurrentlyPlayedTrack() {
 		$deckStatus = self::clientResponseToArray($this->cmd());
-		#var_dump($deckStatus);die;
 		$deckItem = (isset($deckStatus['path']) === TRUE && $deckStatus['path'] !== NULL)
 			 ? $this->trackRepo->getInstanceByPath($deckStatus['path'], TRUE)
 			 : NULL;
@@ -116,10 +114,10 @@ class Xwax {
 	}
 
 	public function fetchAllDeckStats() {
-		#var_dump($this->totalDecks);die;
 		$return = array();
 		for($i=0; $i<$this->totalDecks; $i++) {
 			// dont try other decks in case first deck fails
+			// TODO: as soon as xwax-client supports returning ALL deckstats within a single call, remove this
 			$this->deckIndex = $i;
 			$response = $this->cmd();
 			if(count($response) === 0) {
@@ -133,7 +131,6 @@ class Xwax {
 		}
 		return $return;
 	}
-
 
 	public static function clientResponseToArray($responseArray) {
 		$out = array();

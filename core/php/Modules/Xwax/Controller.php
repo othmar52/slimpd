@@ -33,10 +33,7 @@ class Controller extends \Slimpd\BaseController {
 		$this->validateDeckParam($args['decknum']);
 		
 		$args['item'] = $this->xwax->getCurrentlyPlayedTrack($args['decknum']);
-		#var_dump($args['item']);die;
-		
 		if($args['item'] !== NULL) {
-			#$itemRelPath = $args['item']->getRelPath();
 			$args['renderitems'] = $this->getRenderItems($args['item']);
 		}
 		$templateFile = ($request->getParam('type') === 'djscreen')
@@ -55,11 +52,11 @@ class Controller extends \Slimpd\BaseController {
 			return $newResponse->withJson($this->notifyJson);
 		}
 		if($request->getParam('force' === '1')) {
+			// do not use database-cached poll result
 			$this->xwax->noCache = TRUE;
 		}
-		
+
 		$deckStats = $this->xwax->fetchAllDeckStats();
-		#var_dump($deckStats); die('sdgsdgdfhd');
 		$newResponse = $response;
 		if($this->xwax->notifyJson !== NULL) {
 			return $newResponse->withJson($this->xwax->notifyJson);
@@ -72,35 +69,48 @@ class Controller extends \Slimpd\BaseController {
 		$this->validateBaseConfig();
 		$this->validateClientCommand('load_track');
 		$this->validateDeckParam($args['deckIndex']);
-		
+		$newResponse = $response;
 		$filePath = $this->filesystemUtility->getFileRealPath($args['itemParams']);
 		if($filePath === FALSE) {
-			$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.file'), 'danger');
+			return $newResponse->withJson(notifyJson($this->ll->str('xwax.invalid.file'), 'danger'));
 		}
 		// TODO: fetch artist and title from database
-		$this->xwax->loadArgs = escapeshellarg($filePath) . ' artistname tracktitle';
+		$this->xwax->loadArgs = escapeshellargDirty($filePath) . ' artistname tracktitle';
+		$this->xwax->cmd();
+		return $newResponse->withJson($this->xwax->notifyJson);
+	}
 
+	public function cmdReconnectAction(Request $request, Response $response, $args) {
+		return $this->runSingleDeckCommand($request, $response, $args, 'reconnect');
+	}
+
+	public function cmdDisconnectAction(Request $request, Response $response, $args) {
+		return $this->runSingleDeckCommand($request, $response, $args, 'disconnect');
+	}
+
+	public function cmdRecueAction(Request $request, Response $response, $args) {
+		return $this->runSingleDeckCommand($request, $response, $args, 'recue');
+	}
+
+	public function cmdCycleTimecodeAction(Request $request, Response $response, $args) {
+		return $this->runSingleDeckCommand($request, $response, $args, 'cycle_timecode');
+	}
+
+	public function runSingleDeckCommand(Request $request, Response $response, $args, $cmd) {
+		$this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
+		$this->validateBaseConfig();
+		$this->validateClientCommand($cmd);
+		$this->validateDeckParam($args['deckIndex']);
+		$newResponse = $response;
 		if($this->notifyJson !== NULL) {
-			$newResponse = $response;
 			return $newResponse->withJson($this->notifyJson);
 		}
 		$this->xwax->cmd();
-		$newResponse = $response;
 		return $newResponse->withJson($this->xwax->notifyJson);
-		die(__FUNCTION__);
-		$xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
-		if($request->getParam('force' === '1')) {
-			$xwax->noCache = TRUE;
-		}
-		$xwax->cmd($args['cmd'], $args['params']);
-		$app->stop();
-
-
-		$this->view->render($response, 'css/nowplaying.css', $args);
-		return $response->withHeader('Content-Type', 'text/css');
 	}
-	
+
 	private function validateClientCommand($cmd) {
+		// check if we can fetch the command mapping from config
 		if(isset($this->conf['xwax']['cmd_'. $cmd]) === FALSE || trim($this->conf['xwax']['cmd_'. $cmd]) === '') {
 			$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.cmd'), 'danger');
 			return;
@@ -113,6 +123,7 @@ class Controller extends \Slimpd\BaseController {
 			// we do not need a param for lauch or exit
 			return;
 		}
+		// all other commands needs a deck parameter (first deck is "0")
 		if($deckIndex >= $this->xwax->totalDecks) {
 			$this->notifyJson = notifyJson($this->ll->str('xwax.missing.deckparam'), 'danger');
 			return;
@@ -139,15 +150,17 @@ class Controller extends \Slimpd\BaseController {
 			? $this->conf['xwax']['clientpath']
 			: APP_ROOT . $this->conf['xwax']['clientpath'];
 
+		// check if the client-file exists
 		if(is_file($this->xwax->clientPath) === FALSE) {
 			$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.clientpath'), 'danger');
 			return;
 		}
+
+		// check if we have a configured IP or server-name
 		if(trim($this->conf['xwax']['server']) === '') {
 			$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.serverconf'), 'danger');
 			return;
 		}
-		
 		$this->xwax->ipAddress = $this->conf['xwax']['server'];
 		return;
 	}
@@ -156,13 +169,12 @@ class Controller extends \Slimpd\BaseController {
 		$this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
 		$this->validateBaseConfig();
 		$this->validateClientCommand('get_status');
+		$newResponse = $response;
 		if($this->notifyJson !== NULL) {
-			$newResponse = $response;
 			return $newResponse->withJson($this->notifyJson);
 		}
 		$args['xwax']['deckstats'] = $this->xwax->fetchAllDeckStats();
 		if($this->xwax->notifyJson !== NULL) {
-			$newResponse = $response;
 			return $newResponse->withJson($this->xwax->notifyJson);
 		}
 		foreach($args['xwax']['deckstats'] as $deckStat) {
