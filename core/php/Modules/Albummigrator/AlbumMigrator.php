@@ -18,20 +18,7 @@ namespace Slimpd\Modules\Albummigrator;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-
-/*###################################################################################
- * THIS CLASS IS NOT USED ANYMORE AS IT HAS BEEN REFACTURED TO MULTIPLE OTHER FILES
- * 
- * TODO: DELETE THIS FILE AS SOON AS REFACTURING IS FINISHED
- *###################################################################################
- */
-
-
-
-
-
-class AlbumMigrator___________DELETEME {
+class AlbumMigrator {
 
 	use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
 	public $conf;

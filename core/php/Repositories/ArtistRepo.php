@@ -109,8 +109,8 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
 			}
 
 			// unify items based on config
-			if(isset($app->importerCache[$classPath]["unified"][$az09]) === TRUE) {
-				$itemPart = $app->importerCache[$classPath]["unified"][$az09];
+			if(isset($this->importerCache[$classPath]["unified"][$az09]) === TRUE) {
+				$itemPart = $this->importerCache[$classPath]["unified"][$az09];
 				$az09 = az09($itemPart);
 			}
 

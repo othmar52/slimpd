@@ -49,9 +49,6 @@ $app = new \Slim\App();
 // Set up dependencies
 require APP_ROOT . 'core/php/dependencies.php';
 
-// Register middleware
-require APP_ROOT . 'core/php/middleware.php';
-
 // Register routes
 require APP_ROOT . 'core/php/routes.php';
 

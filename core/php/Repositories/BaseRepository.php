@@ -20,6 +20,7 @@ namespace Slimpd\Repositories;
 class BaseRepository {
 	public static $tableName;
 	public static $classPath;
+	public $importerCache;
 	protected $container;
 	protected $db;
 	

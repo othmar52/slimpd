@@ -40,7 +40,21 @@ namespace Slimpd\Modules;
  * TODO: override label-attribute (based on dirs in config_local.ini) immediatly and remove it from importer phase ?7?
  */
 
-class AlbumMigratorOld {
+
+
+
+/*###################################################################################
+ * THIS CLASS IS NOT USED ANYMORE AS IT HAS BEEN REFACTURED TO MULTIPLE OTHER FILES
+ * 
+ * TODO: DELETE THIS FILE AS SOON AS REFACTURING IS FINISHED
+ *###################################################################################
+ */
+
+
+
+
+
+class AlbumMigrator___________DELETEME {
 	protected $relDirPathHash;
 	protected $relDirPath;
 	public $directoryMtime;
