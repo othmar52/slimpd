@@ -143,16 +143,20 @@ class filebrowser {
 		return $extTypes;
 	}
 
-	private function checkDirectoryAccess($path, $systemdir) {
+	private function checkDirectoryAccess($requestedPath, $systemdir) {
 		
 		if($this->container->conf["mpd"]["musicdir"] === "") {
-			
 			$this->container->flash->AddMessage("error", $this->container->ll->str("error.mpd.conf.musicdir"));
 			return FALSE;
 		}
-		$path = appendTrailingSlash($path);
+
+		$path = appendTrailingSlash($requestedPath);
 		$realpath = $this->container->filesystemUtility->getFileRealPath($path) . DS;
-		#var_dump($realpath, $this->container->conf);
+
+		if($realpath === DS) {
+			$this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
+			return FALSE;
+		}
 
 		$base = $this->container->conf["mpd"]["musicdir"];
 		$path = ($realpath === $base) ? "" : $path;
