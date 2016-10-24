@@ -22,7 +22,7 @@ class Xwax {
 	protected $port = 0;
 	protected $type = 'xwax';
 	protected $pollcache = NULL;
-	
+
 	public $clientPath;
 	public $totalDecks;
 	public $runCmd;

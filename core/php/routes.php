@@ -111,6 +111,8 @@ $ctrlRoutes = [
 		['/xwax/disconnect/{deckIndex}', 'cmdDisconnectAction'],
 		['/xwax/recue/{deckIndex}', 'cmdRecueAction'],
 		['/xwax/cycle_timecode/{deckIndex}', 'cmdCycleTimecodeAction'],
+		['/xwax/launch', 'cmdLaunchAction'],
+		['/xwax/exit', 'cmdExitAction'],
 		['/djscreen', 'djscreenAction']
 		
 	],

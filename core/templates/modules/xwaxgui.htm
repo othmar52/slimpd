@@ -19,9 +19,11 @@
 					<i class="fa fa-plus"></i> xwaxctrl
 				</button>
 				<div class="show-no-connection">
-					<button role="control" data-href="{{root}}xwax/{{config.xwax.cmd_launch}}/1" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
+					{% if config.xwax.showlauncher == 1%}
+					<button role="control" data-href="{{root}}xwax/launch" class="ajax-rqst btn btn-default btn-lg" title="start xwax">
 						start xwax
 					</button>
+					{% endif %}
 				</div>
 			</div>
 		</div>

@@ -109,6 +109,30 @@ class Controller extends \Slimpd\BaseController {
 		return $newResponse->withJson($this->xwax->notifyJson);
 	}
 
+	public function cmdLaunchAction(Request $request, Response $response, $args) {
+		$this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
+		$this->validateBaseConfig();
+		$this->validateClientCommand('launch');
+		$newResponse = $response;
+		if($this->notifyJson !== NULL) {
+			return $newResponse->withJson($this->notifyJson);
+		}
+		$this->xwax->cmd();
+		return $newResponse->withJson($this->xwax->notifyJson);
+	}
+
+	public function cmdExitAction(Request $request, Response $response, $args) {
+		$this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
+		$this->validateBaseConfig();
+		$this->validateClientCommand('exit');
+		$newResponse = $response;
+		if($this->notifyJson !== NULL) {
+			return $newResponse->withJson($this->notifyJson);
+		}
+		$this->xwax->cmd();
+		return $newResponse->withJson($this->xwax->notifyJson);
+	}
+
 	private function validateClientCommand($cmd) {
 		// check if we can fetch the command mapping from config
 		if(isset($this->conf['xwax']['cmd_'. $cmd]) === FALSE || trim($this->conf['xwax']['cmd_'. $cmd]) === '') {
@@ -119,7 +143,7 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	private function validateDeckParam($deckIndex) {
-		if(in_array($this->xwax->runCmd, ['launch', 'kill']) === TRUE) {
+		if(in_array($this->xwax->runCmd, ['launch', 'exit']) === TRUE) {
 			// we do not need a param for lauch or exit
 			return;
 		}
