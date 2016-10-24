@@ -12,7 +12,7 @@
 				</div>
 				<div class="col-xs-4 centered-text">
 					{% include 'partials/button/player-toggle-'~player~'.htm' %}
-					<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+					<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax {{'plus1'|ll}}">{{'plus1'|ll}}</button>
 				</div>
 				<div class="col-xs-4 centered-text">
 					{% include 'partials/player/'~player~'-controls-secondary.htm' %}
@@ -61,7 +61,7 @@
 							<div class="media-body-inner-table">
 								<div class="media-body-inner-row slimplayer-hidden">
 									{# TODO: remove external liking as soon we have implemented a proper functionality #}
-									<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax +1">+1</button>
+									<button class="ajax-rqst btn btn-trnsp btn-xs btn-bordered col2" data-href="{{ temp_likerurl }}" title="temp ixwax {{'plus1'|ll}}">{{'plus1'|ll}}</button>
 								</div>
 								<div class="media-body-inner-row">
 									{% include 'partials/button/showtrackwidget.htm' with { 'buttonClass': 'btn-xs', 'iconClass': 'col2' } %}
