@@ -110,7 +110,8 @@ $ctrlRoutes = [
 		['/xwax/reconnect/{deckIndex}', 'cmdReconnectAction'],
 		['/xwax/disconnect/{deckIndex}', 'cmdDisconnectAction'],
 		['/xwax/recue/{deckIndex}', 'cmdRecueAction'],
-		['/xwax/cycle_timecode/{deckIndex}', 'cmdCycleTimecodeAction']
+		['/xwax/cycle_timecode/{deckIndex}', 'cmdCycleTimecodeAction'],
+		['/djscreen', 'djscreenAction']
 		
 	],
 ];

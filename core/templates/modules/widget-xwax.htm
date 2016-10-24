@@ -31,22 +31,22 @@
 			{% for i in 1..config.xwax.decks %}
 			<div class="col-md-{{colidx}} centered-text">
 				<div class="row">
-					<button role="control" data-href="{{root}}xwax/disconnect/{{i}}" class="ajax-rqst btn btn-default btn-lg" title="Send disconnect to xwax deck {{i}}">
+					<button role="control" data-href="{{root}}xwax/disconnect/{{i-1}}" class="ajax-rqst btn btn-default btn-lg" title="Send disconnect to xwax deck {{i}}">
 						Disconnect {{i}}
 					</button>
 				</div>
 				<div class="row">
-					<button role="control" data-href="{{root}}xwax/reconnect/{{i}}" class="ajax-rqst btn btn-default btn-lg" title="Send reconnect to xwax deck {{i}}">
+					<button role="control" data-href="{{root}}xwax/reconnect/{{i-1}}" class="ajax-rqst btn btn-default btn-lg" title="Send reconnect to xwax deck {{i}}">
 						Reconnect {{i}}
 					</button>
 				</div>
 				<div class="row">
-					<button role="control" data-href="{{root}}xwax/recue/{{i}}" class="ajax-rqst btn btn-default btn-lg" title="Send recue to xwax deck {{i}}">
+					<button role="control" data-href="{{root}}xwax/recue/{{i-1}}" class="ajax-rqst btn btn-default btn-lg" title="Send recue to xwax deck {{i}}">
 						Recue {{i}}
 					</button>
 				</div>
 				<div class="row">
-					<button role="control" data-href="{{root}}xwax/cycle_timecode/{{i}}" class="ajax-rqst btn btn-default btn-lg" title="Cycle timecode on xwax deck {{i}}">
+					<button role="control" data-href="{{root}}xwax/cycle_timecode/{{i-1}}" class="ajax-rqst btn btn-default btn-lg" title="Cycle timecode on xwax deck {{i}}">
 						Cycle TC {{i}}
 					</button>
 				</div>

@@ -18,10 +18,6 @@
  */
 
 
-$app->get('/djscreen', function() use ($app, $vars){
-	$vars['action'] = "djscreen";
-	$app->render('djscreen.htm', $vars);
-});
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
 	$vars['action'] = 'library.year';

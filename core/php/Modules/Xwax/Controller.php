@@ -39,14 +39,11 @@ class Controller extends \Slimpd\BaseController {
 			#$itemRelPath = $args['item']->getRelPath();
 			$args['renderitems'] = $this->getRenderItems($args['item']);
 		}
-		
-		$this->view->render($response, 'modules/xwaxplayer.htm', $args);
+		$templateFile = ($request->getParam('type') === 'djscreen')
+			? 'modules/standalone-trackview.htm'
+			: 'modules/xwaxplayer.htm';
+		$this->view->render($response, $templateFile , $args);
 		return $response;
-		
-		#if($app->request->get('type') == 'djscreen') {
-		#	$markupSnippet = 'standalone-trackview';
-		#	$templateFile = 'modules/standalone-trackview.htm';
-		#}
 	}
 
 	public function statusAction(Request $request, Response $response, $args) {
@@ -116,12 +113,11 @@ class Controller extends \Slimpd\BaseController {
 			// we do not need a param for lauch or exit
 			return;
 		}
-		if($deckIndex < 1 || $deckIndex > $this->xwax->totalDecks) {
+		if($deckIndex >= $this->xwax->totalDecks) {
 			$this->notifyJson = notifyJson($this->ll->str('xwax.missing.deckparam'), 'danger');
 			return;
 		}
-		// url uses "1" as first deck but client needs "0" for first deck 
-		$this->xwax->deckIndex = $deckIndex-1;
+		$this->xwax->deckIndex = $deckIndex;
 	}
 
 	private function validateBaseConfig() {
@@ -157,14 +153,17 @@ class Controller extends \Slimpd\BaseController {
 	}
 
 	public function widgetAction(Request $request, Response $response, $args) {
-		$xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
-		if($request->getParam('force' === '1')) {
-			$xwax->noCache = TRUE;
-		}
-		$args['xwax']['deckstats'] = $xwax->fetchAllDeckStats();
-		if($xwax->notifyJson !== NULL) {
+		$this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
+		$this->validateBaseConfig();
+		$this->validateClientCommand('get_status');
+		if($this->notifyJson !== NULL) {
 			$newResponse = $response;
-			return $newResponse->withJson($xwax->notifyJson);
+			return $newResponse->withJson($this->notifyJson);
+		}
+		$args['xwax']['deckstats'] = $this->xwax->fetchAllDeckStats();
+		if($this->xwax->notifyJson !== NULL) {
+			$newResponse = $response;
+			return $newResponse->withJson($this->xwax->notifyJson);
 		}
 		foreach($args['xwax']['deckstats'] as $deckStat) {
 			$itemsToRender[] = $deckStat['item'];
@@ -172,12 +171,10 @@ class Controller extends \Slimpd\BaseController {
 		$vars['renderitems'] = $this->getRenderItems($itemsToRender);
 		$this->view->render($response, 'modules/widget-xwax.htm', $args);
 		return $response;
-		die(__FUNCTION__);
-		$xwax->cmd($cmd, $params, $app);
-		$app->stop();
-
-
-		$this->view->render($response, 'css/nowplaying.css', $args);
-		return $response->withHeader('Content-Type', 'text/css');
+	}
+	public function djscreenAction(Request $request, Response $response, $args) {
+		$args['action'] = "djscreen";
+		$this->view->render($response, 'djscreen.htm', $args);
+		return $response;
 	}
 }

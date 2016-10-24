@@ -39,26 +39,6 @@ class Xwax {
 	}
 
 	public function cmd() {
-		
-/*
-		if($cmd == "load_track") {
-			// TODO: consider to make separate routes instead of messing around with this string...
-			#if(preg_match("/^(\d*)\/(.*)$/", ))
-			var_dump($this->deckIndex); die;
-			array_shift($params);
-			// TODO: try to fetch artist and title from database
-			$filePath = getFileRealPath(join(DS, $params));
-			if($filePath === FALSE) {
-				$this->notifyJson = notifyJson($this->ll->str('xwax.invalid.file'), 'danger');
-				return;
-			}
-			$loadArgs = ' ' . escapeshellarg($filePath) . ' '
-							. escapeshellarg('dummyartist') . ' '
-							. escapeshellarg('dummytitle');
-		}
-
-*/
-
 		$useCache = FALSE;
 
 		if($this->runCmd === "get_status") {
@@ -76,7 +56,7 @@ class Xwax {
 
 		if($useCache === FALSE) {
 			$execCmd = 'timeout 1 ' . $this->clientPath . " " . $this->ipAddress . " "  . $this->runCmd . " " . $this->deckIndex . " " .$this->loadArgs;
-			#var_dump($execCmd);
+			#var_dump($execCmd); die;
 			exec($execCmd, $response);
 
 			if($this->runCmd === "get_status") {
