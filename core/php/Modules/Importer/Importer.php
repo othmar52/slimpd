@@ -211,7 +211,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 				if($imageSize === FALSE) {
 					$bitmap->setError(1);
-					$bitmap->update();
+					$this->container->bitmapRepo->update($bitmap);
 					cliLog("ERROR getting image size from " . $relPath, 2, 'red');
 					continue;
 				}
