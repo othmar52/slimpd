@@ -2,60 +2,64 @@
 {% block content %}
 	<div class="row">
 		<div class="col-xs-4">
-	    	<img src="{{root}}image-300/album/{{ item.albumUid }}" style="width: 100%;"/>
-	    	<span class="uc timecoder label label-primary"></span>
+			{% if item.albumUid %}
+			<img src="{{root}}image-300/album/{{ item.albumUid }}" style="width: 100%;"/>
+			{% else %}
+			<img src="{{root}}image-300/searchfor/{{ item.relPath }}" style="width: 100%;"/>
+			{% endif %}
+			<span class="uc timecoder label label-primary"></span>
 		</div>
-	    
-	    <div class="col-xs-8">
-	    	{% if item.uid %}
-	    	<div class="row">
-	    		<div class="col-xs-12">
-	    			<span class="dark uc small darker-links">{{'track'|ll}}:</span><br>
-	    			<span style="font-size: 2em;" class="uc">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span>
-	    		</div>
-	    		
-	    		<div class="col-xs-12">
-	    			<span class="dark uc small darker-links">{{'artist'|ll}}:</span><br>
-	    			<span style="font-size: 1.4em;" class="uc">{% include 'partials/artist/link.htm' %}</span>
-	    			<br>
-	    		</div>
-	    		
-	    		{% if item.albumUid %}
-	    		<div class="col-xs-3">
-	    			<span class="dark uc small darker-links">{{'album'|ll}}:</span>
-	    		</div>
-	    		<div class="col-xs-9">
-	    			{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}
-	    		</div>
-	    		{% endif %}
-	    		
-	    		{% if item.year %}
-	    		<div class="col-xs-3">
-	    			<span class="dark uc small darker-links">{{'year'|ll}}:</span>
-	    		</div>
-	    		<div class="col-xs-9">
-	    			{% include 'partials/year/link.htm' %}
-	    		</div>
-	    		{% endif %}
-	    		
-	    		{% if item.labelUid %}
-	    		<div class="col-xs-3">
-	    			<span class="dark uc small darker-links">{{'label'|ll}}:</span>
-	    		</div>
-	    		<div class="col-xs-9">
-	    			{% include 'partials/label/link.htm' with { 'labelUids': item.labelUid } %}
-	    		</div>
-	    		{% endif %}
-	    		
-	    		{% if item.genreUid %}
-	    		<div class="col-xs-3">
-	    			<span class="dark uc small darker-links">{{'genre'|ll}}:</span>
-	    		</div>
-	    		<div class="col-xs-9">
-	    			{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid } %}
-	    		</div>
-	    		{% endif %}
-	    		
+		
+		<div class="col-xs-8">
+			{% if item.uid %}
+			<div class="row">
+				<div class="col-xs-12">
+					<span class="dark uc small darker-links">{{'track'|ll}}:</span><br>
+					<span style="font-size: 2em;" class="uc">{% include 'partials/track/title.htm' with { 'titlestring': item.title } %}</span>
+				</div>
+				
+				<div class="col-xs-12">
+					<span class="dark uc small darker-links">{{'artist'|ll}}:</span><br>
+					<span style="font-size: 1.4em;" class="uc">{% include 'partials/artist/link.htm' %}</span>
+					<br>
+				</div>
+				
+				{% if item.albumUid %}
+				<div class="col-xs-3">
+					<span class="dark uc small darker-links">{{'album'|ll}}:</span>
+				</div>
+				<div class="col-xs-9">
+					{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}
+				</div>
+				{% endif %}
+				
+				{% if item.year %}
+				<div class="col-xs-3">
+					<span class="dark uc small darker-links">{{'year'|ll}}:</span>
+				</div>
+				<div class="col-xs-9">
+					{% include 'partials/year/link.htm' %}
+				</div>
+				{% endif %}
+				
+				{% if item.labelUid %}
+				<div class="col-xs-3">
+					<span class="dark uc small darker-links">{{'label'|ll}}:</span>
+				</div>
+				<div class="col-xs-9">
+					{% include 'partials/label/link.htm' with { 'labelUids': item.labelUid } %}
+				</div>
+				{% endif %}
+				
+				{% if item.genreUid %}
+				<div class="col-xs-3">
+					<span class="dark uc small darker-links">{{'genre'|ll}}:</span>
+				</div>
+				<div class="col-xs-9">
+					{% include 'partials/genre/link.htm' with { 'genreUids': item.genreUid } %}
+				</div>
+				{% endif %}
+				
 			</div>
 			{% else %}
 				{% if item.relPath %}
@@ -71,13 +75,13 @@
 			{% endif %}
 			{% include 'partials/track/audioformat.htm' %}
 
-	    </div>
-	    
-	    
+		</div>
+		
+		
 
-	    
+		
 	</div>
-    <div class="show-no-connection">
+	<div class="show-no-connection">
 		xwax connection failed
 	</div>
 {% endblock %}
