@@ -68,7 +68,12 @@ class Controller extends \Slimpd\BaseController {
 			#die(' not within allowed path');
 			return FALSE;
 		}
-		$WaveformGenerator->setAbsolutePath($this->filesystemUtility->getFileRealPath($track->getRelPath()));
+
+		$absolutePath = ($this->filesystemUtility->isSystemCheckSample($track->getRelPath()) === TRUE)
+			? APP_ROOT . $track->getRelPath()
+			: $this->filesystemUtility->getFileRealPath($track->getRelPath());
+
+		$WaveformGenerator->setAbsolutePath($absolutePath);
 		$WaveformGenerator->setExt($track->getAudioDataformat());
 		$WaveformGenerator->setFingerprint($track->getFingerprint());
 		if(isValidFingerprint($WaveformGenerator->getFingerprint()) === 1) {
@@ -82,7 +87,7 @@ class Controller extends \Slimpd\BaseController {
 			return TRUE;
 		}
 		# TODO: handle missing fingerprint
-		die('invalid fingerprint');
+		//die('invalid fingerprint');
 		return FALSE;
 	}
 }

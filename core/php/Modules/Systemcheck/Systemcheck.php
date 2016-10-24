@@ -313,13 +313,13 @@ class Systemcheck {
 
 		foreach($this->audioFormats as $format => $data) {
 			$check['fp'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
-				'filepath' => APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'filepath' => 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
 				'cmd' => '',
 				'resultExpected' => array_keys($data)[0],
 				'resultReal' => FALSE,
 			);
 			$check['wf'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE,
-				'filepath' => APP_ROOT . 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
+				'filepath' => 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
 				'cmd' => ''
 			);
 
@@ -336,7 +336,7 @@ class Systemcheck {
 			$checkFp = 'fp'.ucfirst($ext);
 			$checkWf = 'wf'.ucfirst($ext);
 			if($check[$checkFp]['skip'] === FALSE) {
-				$check[$checkFp]['cmd'] = $fileScanner->extractAudioFingerprint($check[$checkFp]['filepath'], TRUE);
+				$check[$checkFp]['cmd'] = $fileScanner->extractAudioFingerprint(APP_ROOT . $check[$checkFp]['filepath'], TRUE);
 				exec($check[$checkFp]['cmd'], $response);
 				$check[$checkFp]['resultReal'] = trim(join("\n", $response));
 				unset($response);
@@ -360,7 +360,8 @@ class Systemcheck {
 			// make sure we retrieve nothing cached
 			$this->container->filesystemUtility->rmfile([$peakfile, $tmpMp3, $tmpWav]);
 			$waveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
-			$waveformGenerator->setAbsolutePath($this->container->filesystemUtility->getFileRealPath($check[$checkWf]['filepath']));
+			#var_dump($check[$checkWf]['filepath']);die;
+			$waveformGenerator->setAbsolutePath(APP_ROOT . $check[$checkWf]['filepath']);
 			$waveformGenerator->setExt($this->container->filesystemUtility->getFileExt($check[$checkWf]['filepath']));
 			$waveformGenerator->setFingerprint($check[$checkFp]['resultReal']);
 			$waveformGenerator->getPeaks();
