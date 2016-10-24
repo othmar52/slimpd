@@ -102,10 +102,10 @@ class Controller extends \Slimpd\BaseController {
 		try {
 			$currentSong = $this->mpd->cmd('currentsong');
 			if(isset($currentSong['Time']) === FALSE || $currentSong['Time'] < 1) {
-				return $response->withJson($args['mpd']['status'], 201);
+				return $response->withJson($args['mpd']['status']);
 			}
 			if(isset($args['mpd']['status']['elapsed']) === FALSE) {
-				return $response->withJson($args['mpd']['status'], 201);
+				return $response->withJson($args['mpd']['status']);
 			}
 			$args['mpd']['status']['duration'] = $currentSong['Time'];
 			$percent = $args['mpd']['status']['elapsed'] / ($args['mpd']['status']['duration']/100);
@@ -114,6 +114,6 @@ class Controller extends \Slimpd\BaseController {
 			$args['mpd']['status']['duration'] = "0";
 			$args['mpd']['status']['percent'] = "0";
 		}
-		return $response->withJson($args['mpd']['status'], 201);
+		return $response->withJson($args['mpd']['status']);
 	}
 }
