@@ -21,15 +21,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-
-/*
-// track routes
- 
-$app->get("/markup/xwaxplayer", 'Slimpd\Modules\track\Controller:xwaxplayerAction');
-$app->get("/markup/widget-xwax", 'Slimpd\Modules\track\Controller:widgetXwaxAction');
-$app->get("/markup/widget-deckselector", 'Slimpd\Modules\track\Controller:widgetDeckselectorAction');
-$app->get("/markup/standalone-trackview", 'Slimpd\Modules\track\Controller:standaloneTrackviewAction');
-*/
 	public function widgetTrackcontrolAction(Request $request, Response $response, $args) {
 		$itemParam = $request->getParam('item');
 		$this->completeArgsForDetailView($itemParam, $args);
