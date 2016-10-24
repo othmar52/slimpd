@@ -19,6 +19,7 @@ namespace Slimpd\Modules\Mpd;
  */
 
 class Mpd {
+	public $notifyJson = NULL;
 	public function __construct(\Slim\Container $container) {
 		$this->container = $container;
 		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
@@ -206,7 +207,7 @@ class Mpd {
 		// don't clear playlist in case we have nothing to add
 		if($clearPlaylist === TRUE) {
 			if($itemType === FALSE) {
-				notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+				$this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
 				return;
 			}
 			$this->mpd('clear');
@@ -214,7 +215,7 @@ class Mpd {
 		// don't softclear playlist in case we have nothing to add
 		if($softclearPlaylist === TRUE) {
 			if($itemType === FALSE) {
-				notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+				$this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
 				return;
 			}
 			$this->softclearPlaylist();
@@ -224,23 +225,23 @@ class Mpd {
 			case 'injectTrack':
 			case 'injectTrackAndPlay':
 				if($itemType !== 'file') {
-					notifyJson("ERROR: invalid file", 'mpd');
+					$this->notifyJson = notifyJson("ERROR: invalid file", 'mpd');
 					return;
 				}
 				$this->mpd('addid "' . str_replace("\"", "\\\"", $itemPath) . '" ' . $targetPosition);
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
-				notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+				$this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
 				return;
 			case 'injectDir':
 			case 'injectDirAndPlay':
 				// this is not supported by mpd so we have to add each track manually
 				// TODO: how to fetch possibly millions of tracks recursively?
-				notifyJson("ERROR: injecting dirs is not supported yet. please append it to playlist", 'mpd');
+				$this->notifyJson = notifyJson("ERROR: injecting dirs is not supported yet. please append it to playlist", 'mpd');
 				return;
 				if($itemType !== 'dir') {
-					notifyJson("ERROR: invalid dir " . $itemPath, 'mpd');
+					$this->notifyJson = notifyJson("ERROR: invalid dir " . $itemPath, 'mpd');
 					return;
 				}
 				break;
@@ -252,7 +253,7 @@ class Mpd {
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
-				notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
+				$this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
 				return;
 			case 'appendTrack':
 			case 'appendTrackAndPlay':
@@ -269,7 +270,7 @@ class Mpd {
 				$closest = $this->findClosestExistingItem($itemPath);
 				if(removeTrailingSlash($itemPath) !== $closest) {
 					$this->mpd('update "' . str_replace("\"", "\\\"", $closest) . '"');
-					notifyJson(
+					$this->notifyJson = notifyJson(
 						"OH Snap!<br>
 						" . $itemPath . " does not exist in MPD-database.<br>
 						updating " . $closest,
@@ -284,7 +285,7 @@ class Mpd {
 					$this->mpd('play ' . intval($targetPosition));
 				}
 
-				notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+				$this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
 				return;
 
 			case 'appendPlaylist':
@@ -299,8 +300,8 @@ class Mpd {
 				if($firePlay === TRUE) {
 					$this->mpd('play ' . intval($targetPosition));
 				}
-				notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
-				break;
+				$this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
+				return;
 
 			case 'update':
 
@@ -327,7 +328,7 @@ class Mpd {
 
 				// trailing slash on directories does not work - lets remove it
 				$this->mpd('update "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"');
-				notifyJson("MPD: updating directory " . $closestMpdItem, 'mpd');
+				$this->notifyJson = notifyJson("MPD: updating directory " . $closestMpdItem, 'mpd');
 				return;
 			case 'seekPercent':
 				$currentSong = $this->mpd('currentsong');
@@ -370,21 +371,21 @@ class Mpd {
 
 			case 'clearPlaylist':
 				$this->mpd('clear');
-				notifyJson("MPD: cleared playlist", 'mpd');
-				break;
+				$this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
+				return;
 
 			case 'softclearPlaylist':
 				$this->softclearPlaylist();
-				notifyJson("MPD: cleared playlist", 'mpd');
-				break;
+				$this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
+				return;
 
 			case 'removeDupes':
 				// TODO: remove requirement of having mpc installed
 				$cmd = APP_ROOT . 'core/vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
 				exec($cmd);
 				// TODO: count removed dupes and display result
-				notifyJson("MPD: removed dupes in current playlist", 'mpd');
-				break;
+				$this->notifyJson = notifyJson("MPD: removed dupes in current playlist", 'mpd');
+				return;
 
 			case 'playSelect': //		playSelect();
 			case 'deleteIndexAjax'://	deleteIndexAjax();
@@ -395,8 +396,8 @@ class Mpd {
 
 			case 'playlistTrack'://	playlistTrack();
 			default:
-				notifyJson("sorry, not implemented yet", "mpd");
-				break;
+				$this->notifyJson = notifyJson("sorry, not implemented yet", "mpd");
+				return;
 		}
 	}
 

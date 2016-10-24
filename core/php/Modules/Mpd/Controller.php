@@ -27,6 +27,10 @@ class Controller extends \Slimpd\BaseController {
 			$args['item'] = '';
 		}
 		$this->mpd->cmd($args['cmd'], $args['item']);
+		if($this->mpd->notifyJson !== NULL) {
+			$newResponse = $response;
+			return $newResponse->withJson($this->mpd->notifyJson);
+		}
 		return $response;
 	}
 
