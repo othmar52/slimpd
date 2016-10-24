@@ -1,7 +1,11 @@
-{% if destructiveness["clean-rename"] == '0' %}
-<div class="alert alert-danger" role="alert">	
+{# TODO: move modalsurrounding to partial #}
+<div class="modal-body">
+	{% include 'partials/modal/close-button-top.htm' %}
+
+{% if config.destructiveness["clean-rename"] == '0' %}
+<div class="alert alert-danger" role="alert">
 	<h4>clean-rename is disabled!</h4>
-  	<p>please check section:[destructiveness] in your configuration</p>
+	<p>please check section:[destructiveness] in your configuration</p>
 </div>
 
 
@@ -10,8 +14,8 @@
 
 <div class="alert alert-danger" role="alert">
 	<h4>please confirm clean-rename of directory <strong>{{ directory.directory }}</strong><br /><br />
-  	<strong class="uc">there is no undo!</strong>
-  </h4>
+	<strong class="uc">there is no undo!</strong>
+	</h4>
 </div>
 
 
@@ -48,3 +52,8 @@
 	<div class="nfo small">{{result}}</div>
 	{% endif %}
 {% endif %}
+
+</div>
+<div class="modal-footer">
+	{% include 'partials/modal/close-button-bottom.htm' %}
+</div>
