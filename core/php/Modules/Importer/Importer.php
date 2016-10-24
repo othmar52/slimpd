@@ -19,11 +19,6 @@ namespace Slimpd\Modules\Importer;
  */
 use Slimpd\Models\Track;
 use Slimpd\Models\Trackindex;
-use Slimpd\Models\Artist;
-use Slimpd\Models\Album;
-use Slimpd\Models\Albumindex;
-use Slimpd\Models\Label;
-use Slimpd\Models\Genre;
 use Slimpd\Models\Rawtagdata;
 use Slimpd\Models\Bitmap;
 
@@ -34,7 +29,8 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	protected $maxWaitingTime = 60; // seconds
 
 	protected $directoryHashes = array(/* dirhash -> albumUid */);
-	protected $updatedAlbums = array(/* uid -> NULL */); 
+	protected $updatedAlbums = array(/* uid -> NULL */);
+	protected $error = FALSE;
 
 	# TODO: unset all big arrays at the end of each method
 
@@ -50,8 +46,11 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 				// phase 2: parse mpd database and insert/update table:rawtagdata
 				$this->processMpdDatabasefile();
-				
-				
+				if($this->error !== FALSE) {
+					cliLog($this->error, 1, 'red', TRUE);
+					$this->finishBatch();
+					return;
+				}
 
 				// phase 3: scan id3 tags and insert into table:rawtagdata of all new or modified files
 				$this->scanMusicFileTags();
@@ -328,10 +327,9 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 		$mpdParser = new \Slimpd\Modules\Importer\MpdDatabaseParser($this->container, $this->conf['mpd']['dbfile']);
 		if($mpdParser->error === TRUE) {
-			$msg = $this->ll->str('error.mpd.dbfile', array($this->conf['mpd']['dbfile']));
-			cliLog($msg, 1, 'red', TRUE);
-			$this->finishJob(array('msg' => $msg));
-			$app->stop();
+			$this->error = $this->ll->str('error.mpd.dbfile', array($this->conf['mpd']['dbfile']));
+			$this->finishJob(array('msg' => $this->error), __FUNCTION__);
+			return;
 		}
 
 		$this->updateJob(array(
@@ -356,10 +354,11 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		// delete dead items in table:rawtagdata & table:track & table:trackindex
 		if(count($mpdParser->fileOrphans) > 0) {
 			$this->container->rawtagdataRepo->deleteRecordsByUids($mpdParser->fileOrphans);
+			$this->container->rawtagblobRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 			$this->container->trackRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 			$this->container->trackindexRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 
-			// TODO: last check if those 3 tables has identical totalCount()
+			// TODO: last check if those 4 tables has identical totalCount()
 			// reason: basis is only rawtagdata and not all 3 tables
 		}
 
@@ -526,7 +525,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			$track = new Trackindex();
 			$trackIndex = $this->container->trackindexRepo->getInstanceByAttributes([ 'uid' => $record['uid'] ]);
 			$trackIndex->setAllchunks($trackIndex->getAllchunks() . " " . $fingerPrint);
-			$trackIndex = $this->container->trackindexRepo->update($trackIndex);
+			$this->container->trackindexRepo->update($trackIndex);
 
 			cliLog("fingerprint: " . $fingerPrint . " for " . $record['relPath'],3);
 		}

@@ -129,8 +129,8 @@ class CliController extends \Slimpd\BaseController {
 
 		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
 		if (!\Helper::checkConfigEnough()) {
-			cliLog("mmp: invalid configuration");
-			$app->stop();
+			cliLog("ERROR: invalid mmp configuration", 1, "red");
+			return $response;
 		}
 		$controller = \Helper::getController($action, NULL);
 		$controller->runStrategy();

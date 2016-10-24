@@ -881,7 +881,6 @@ class AlbumMigratorOld {
 	private function scoreLabelByLabelDirectory($albumPath) {
 		cliLog("--- add LABEL based on directory ---", 8);
 		cliLog("  album directory: " . $albumPath, 8);
-		$app = \Slim\Slim::getInstance();
 
 		// check config
 		if(isset($this->conf['label-parent-directories']) === FALSE) {
