@@ -360,10 +360,10 @@ class Systemcheck {
 			// make sure we retrieve nothing cached
 			$this->container->filesystemUtility->rmfile([$peakfile, $tmpMp3, $tmpWav]);
 			$waveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
-			#var_dump($check[$checkWf]['filepath']);die;
-			$waveformGenerator->setAbsolutePath(APP_ROOT . $check[$checkWf]['filepath']);
-			$waveformGenerator->setExt($this->container->filesystemUtility->getFileExt($check[$checkWf]['filepath']));
-			$waveformGenerator->setFingerprint($check[$checkFp]['resultReal']);
+			$waveformGenerator
+				->setAbsolutePath(APP_ROOT . $check[$checkWf]['filepath'])
+				->setExt($this->container->filesystemUtility->getFileExt($check[$checkWf]['filepath']))
+				->setFingerprint($check[$checkFp]['resultReal']);
 			$waveformGenerator->getPeaks();
 
 			$check[$checkWf]['cmd'] = $waveformGenerator->getCmdTempwav();
