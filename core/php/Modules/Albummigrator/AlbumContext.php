@@ -27,6 +27,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$this->container = $container;
 		$this->db = $container->db;
 		$this->ll = $container->ll;
+		$this->conf = $container->conf;
 	}
 
 	public function getTagsFromTrack($rawTagArray, $config) {
