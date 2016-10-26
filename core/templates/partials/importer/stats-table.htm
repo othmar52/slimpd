@@ -40,7 +40,7 @@
 		<td>{{ item.jobStatistics.runtimeSeconds|formatSeconds }}</td>
 		{% else %}
 		{# TODO: animate progressbar with "item.jobStatistics.progressPercent" and "item.jobStatistics.speedPercentPerSecond" #}
-		<td>
+		<td title="progress {{item.jobStatistics.progressPercent}} %">
 			<div class="progress">
 			{% if item.jobStatistics.progressPercent > 0 %}
 				<div class="progress-bar" role="progressbar" aria-valuenow="{{ item.jobStatistics.progressPercent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ item.jobStatistics.progressPercent }}%;">
@@ -65,9 +65,9 @@
 		<td class="ar" title="{{ item.jobStatistics.speedItemsPerMinute }}">{{ item.jobStatistics.speedItemsPerMinute|shorty }}
 		<td class="ar" title="{{ item.jobStatistics.speedItemsPerHour }}">{{ item.jobStatistics.speedItemsPerHour|shorty }}</td>
 		</td>
-		<td>{{ item.jobStatistics.itemsTotal|shorty }}</td>
-		<td>{{ item.jobStatistics.itemsChecked|shorty }}</td>
-		<td>{{ item.jobStatistics.itemsProcessed|shorty }}</td>
+		<td title="{{ item.jobStatistics.itemsTotal }}">{{ item.jobStatistics.itemsTotal|shorty }}</td>
+		<td title="{{ item.jobStatistics.itemsChecked }}">{{ item.jobStatistics.itemsChecked|shorty }}</td>
+		<td title="{{ item.jobStatistics.itemsProcessed }}">{{ item.jobStatistics.itemsProcessed|shorty }}</td>
 		<td>
 			{% if item.jobStatistics.extractedImages %}
 				<strong>Extracted Images:</strong> {{ item.jobStatistics.extractedImages|shorty }}<br/> 
