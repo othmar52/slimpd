@@ -114,12 +114,22 @@ class CliController extends \Slimpd\BaseController {
 		if($this->getDatabaseDropConfirm() === FALSE) {
 			return $response;
 		}
-		// we cant use $this->db for dropping and creating
-		$db = new \mysqli(
-			$this->conf['database']['dbhost'],
-			$this->conf['database']['dbusername'],
-			$this->conf['database']['dbpassword']
-		);
+
+		try {
+			// we cant use $this->db for dropping and creating
+			@$db = new \mysqli(
+				$this->conf['database']['dbhost'],
+				$this->conf['database']['dbusername'],
+				$this->conf['database']['dbpassword']
+			);
+		} catch (\Exception $e) {
+			cliLog($this->ll->str('database.connect'), 1, 'red');
+			return $response;
+		}
+		if($db->connect_error) {
+			cliLog($this->ll->str('database.connect'), 1, 'red');
+			return $response;
+		}
 		cliLog("Dropping database");
 
 		$result = $db->query("DROP DATABASE IF EXISTS " . $this->conf['database']['dbdatabase'].";");
