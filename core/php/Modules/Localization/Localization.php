@@ -17,29 +17,30 @@ namespace Slimpd\Modules\Localization;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 class Localization {
-	public static $lang = array();
-	
-	public function __construct() {
+	private $lang = array();
+	private $preferedLang;
+
+	public function __construct($preferedLang) {
+		$this->preferedLang = $preferedLang;
 		// TODO: caching of parsed ll-config
 		// TODO: check if file is readable
 		// read config stuff
-		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\Localization\Localization');
-		$reflectedClass->setStaticPropertyValue('lang', parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE));
+		$this->lang = parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE);
 	}
-	
-	public static function str($itemkey, $vars = array()) {
+
+	public function str($itemkey, $vars = array()) {
 		$checkLanguages = array(
-			// TODO: how to access configured language in slim3?
-			'de',#$this->conf['config']['langkey'],
+			$this->preferedLang,
 			'en' // fallback language
 		);
 		foreach($checkLanguages as $langkey) {
-			if(isset(self::$lang[$langkey . '.' . $itemkey])) {
+			if(isset($this->lang[$langkey . '.' . $itemkey])) {
 				if(count($vars) === 0) {
-					return self::$lang[$langkey . '.' . $itemkey];
+					return $this->lang[$langkey . '.' . $itemkey];
 				}
-				return vsprintf(self::$lang[$langkey . '.' . $itemkey], $vars);
+				return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
 			}
 		}
 		return 'TRNSLT:' . $itemkey;

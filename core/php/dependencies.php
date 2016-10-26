@@ -136,8 +136,8 @@ $container['imageweighter'] = function () {
 
 
 // Localization
-$container['ll'] = function () {
-	return new \Slimpd\Modules\Localization\Localization();
+$container['ll'] = function ($cont) {
+	return new \Slimpd\Modules\Localization\Localization($cont->conf['config']['langkey']);
 };
 
 // Cookies
