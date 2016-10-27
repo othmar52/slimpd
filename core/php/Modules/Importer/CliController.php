@@ -216,12 +216,24 @@ class CliController extends \Slimpd\BaseController {
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
 
-		// TODO: create runSphinxTriggerFile
+
+		// we have reached the maximum waiting time for MPD's update process without starting sliMpd's update process 
+		if($importer->keepGuiTrigger === TRUE) {
+			cliLog("marking importer triggers as NOT running again", 3);
+			$query = "UPDATE importer
+				SET jobStart=0
+				WHERE batchUid=0 AND jobStatistics='update';";
+			$this->db->query($query);
+			return $response;
+		}
 
 		cliLog("deleting already processed importer triggers from database", 3);
 		$query = "DELETE FROM importer
 			WHERE batchUid=0 AND jobStatistics='update';";
 		$this->db->query($query);
+
+		// TODO: create runSphinxTriggerFile which should be processed by scripts/sphinxrotate.sh
+
 		return $response;
 	}
 }

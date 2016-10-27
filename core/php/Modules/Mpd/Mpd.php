@@ -305,23 +305,12 @@ class Mpd {
 
 			case 'update':
 
-				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
-				#if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
-				#	return $this->mpd($cmd);
-				#}
-
-				#if($itemType === FALSE) {
-				#	// error - invalid $item
-				#	return FALSE;
-				#}
-
 				// now we have to find the nearest parent directory that already exists in mpd-database
 				$closestMpdItem = ($itemPath === "") ? "" : $this->findClosestExistingItem($itemPath);
 
-				if($itemPath !== "" && $closestMpdItem === ""/*&& $config['disallow_full_database_update'] == '1'*/) {
-					// requested item to update does not exist in database
-					# TODO: send warning to client?
-					return FALSE;
+				if($closestMpdItem === "" && $config['disallow_full_database_update'] == '1') {
+					$this->notifyJson = notifyJson("full db update is disabled by config", 'error');
+					return;
 				}
 
 				$mpdUpdateArg = "";

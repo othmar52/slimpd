@@ -8,9 +8,11 @@
 		<h2>Recent Importer Jobs <span class="small uc">TODO: auto <a href="{{root}}importer" class="ajax-link">refresh</a></span></h2>
 	</div>
 	<div class="col-md-2">
-		<button role="control" data-href="{{root}}importer/triggerUpdate" title="update sliMpd-db based on MPD-db" class="ajax-rqst btn btn-default">
+		{% if config.mpd.disallow_full_database_update == '0' %}
+		<button role="control" data-href="{{root}}mpdctrl/update" title="update sliMpd-db based on MPD-db" class="ajax-rqst btn btn-default">
 			<i class="fa fa-refresh"></i> Update sliMpd Database
 		</button>
+		{% endif %}
 	</div>
 </div>
 <style type="text/css">

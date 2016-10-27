@@ -32,7 +32,8 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	protected $updatedAlbums = array(/* uid -> NULL */);
 	protected $error = FALSE;
 
-	# TODO: unset all big arrays at the end of each method
+	public $keepGuiTrigger = FALSE;
+
 
 	public function triggerImport($remigrate = FALSE) {
 		// create a wrapper entry for all import phases
@@ -54,13 +55,10 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 				// phase 3: scan id3 tags and insert into table:rawtagdata of all new or modified files
 				$this->scanMusicFileTags();
-				
-				
 		}
 
 		// phase 4: migrate table rawtagdata to table track,album,artist,genre,label
 		$this->migrateRawtagdataTable($remigrate);
-		#die(__FUNCTION__);
 
 		if($remigrate === FALSE) {
 				// phase 5: delete dupes of extracted embedded images
@@ -488,7 +486,8 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 				cliLog('max waiting time ('.$this->maxWaitingTime .' sec) for mpd reached. exiting now...', 1, 'red', TRUE);
 				$this->finishJob(NULL, __FUNCTION__);
 				$this->finishBatch();
-				\Slim\Slim::getInstance()->stop();
+				$this->keepGuiTrigger = TRUE;
+				return;
 			}
 			$this->itemsProcessed = time()-$this->waitingLoop;
 			$this->itemsChecked = time()-$this->waitingLoop;

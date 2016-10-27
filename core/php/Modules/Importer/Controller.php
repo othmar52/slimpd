@@ -50,13 +50,4 @@ class Controller extends \Slimpd\BaseController {
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}
-	
-	public function triggerUpdateAction(Request $request, Response $response, $args) {
-		// FIXME: relly trigger update
-		return $response;
-		
-		#\Slimpd\Modules\Importer::queStandardUpdate();
-		#$this->view->render($response, 'surrounding.htm', $args);
-		#return $response;
-	}
 }

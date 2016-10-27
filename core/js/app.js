@@ -40,9 +40,8 @@ $(document).ready(function() {
 			});
 		},
 
-		checkNotify(endcodedResponse) {
+		checkNotify(notifyConf) {
 			try {
-				var notifyConf = JSON.parse(endcodedResponse);
 				if (typeof notifyConf.notify !== "undefined") {
 					this.notify(notifyConf);
 				}
