@@ -151,7 +151,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	# TODO: it makes sense to search for other files (like discogs-links) during
 	# this scan process to avoid multiple scan-processes of the same directory
-	 
 	public function searchImagesInFilesystem() {
 
 		# TODO: in case an image gets replaced with same filename, the database record should get updated 
@@ -176,21 +175,15 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 				'currentItem' => $record['relDirPath'],
 				'insertedImages' => $insertedImages
 			));
-			
+
 			$query = "UPDATE rawtagdata SET lastDirScan = ".time()." WHERE relDirPathHash='". $record['relDirPathHash'] ."';";
 			$this->db->query($query);
-
-			#$album = new RawTagData();
-			#$album->setUid($record['uid'])
-			#	->setLastDirScan(time())
-			#	// TODO: should we update import status here?
-			#	/*->setImportStatus(2)*/;
 
 			$foundAlbumImages = $filesystemReader->getFilesystemImagesForMusicFile($record['relDirPath'].'filename-not-relevant.mp3');
 			if(count($foundAlbumImages) === 0) {
 				continue;
 			}
-			
+
 			// get albumUid
 			$query = "SELECT uid FROM album WHERE relPathHash = '".$record['relDirPathHash']."';";
 			$albumUid = (int) $this->db->query($query)->fetch_assoc()['uid'];
@@ -226,7 +219,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 				$this->container->bitmapRepo->update($bitmap);
 				$insertedImages++;
 			}
-			#$album->update();
 		}
 		$this->finishJob(array(
 			'msg' => 'processed ' . $this->itemsChecked . ' directories',
@@ -234,7 +226,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		), __FUNCTION__);
 		return;
 	}
-
 
 
 	/**
@@ -313,7 +304,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		return;
 	}
 
-
 	public function migrateRawtagdataTable($resetMigrationPhase = FALSE) {
 		$migrator = new \Slimpd\Modules\Importer\Migrator($this->container);
 		$migrator->run($resetMigrationPhase);
@@ -351,7 +341,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		$mpdParser->parse($this);
 		$this->container->batcher->finishAll();
 
-		// delete dead items in table:rawtagdata & table:track & table:trackindex
+		// delete dead items in table:rawtagdata & table:track & table:trackindex & table:rawtagblob
 		if(count($mpdParser->fileOrphans) > 0) {
 			$this->container->rawtagdataRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 			$this->container->rawtagblobRepo->deleteRecordsByUids($mpdParser->fileOrphans);
@@ -359,7 +349,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			$this->container->trackindexRepo->deleteRecordsByUids($mpdParser->fileOrphans);
 
 			// TODO: last check if those 4 tables has identical totalCount()
-			// reason: basis is only rawtagdata and not all 3 tables
+			// reason: basis is only rawtagdata and not all 4 tables
 		}
 
 		// delete dead items in table:album & table:albumindex
@@ -464,10 +454,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		if($this->conf['modules']['enable_fingerprints'] !== '1') {
 			return;
 		}
-		// reset phase 
-		// UPDATE rawtagdata SET fingerprint="" WHERE audioDataFormat="mp3"
 
-		
 		$this->beginJob(array(
 			'currentItem' => "fetching mp3 files with missing fingerprint attribute"
 		), __FUNCTION__);
@@ -478,7 +465,6 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 			WHERE extension='mp3' AND fingerprint='';";
 		$this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
-		
 		$query = "
 			SELECT uid, relPath
 			FROM rawtagdata
@@ -565,5 +551,4 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		}
 		return;
 	}
-
 }
