@@ -21,35 +21,57 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class CliController extends \Slimpd\BaseController {
+	private $force = FALSE;
+
 	public function indexAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
 		renderCliHelp($this->ll);
 		return $response;
 	}
 
+	public function remigrateForceAction(Request $request, Response $response, $args) {
+		self::deleteLockFile();
+		return $this->remigrateAction($request, $response, $args);
+	}
+
 	public function remigrateAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+		if($this->abortOnLockfile($this->ll) === TRUE) {
+			return $response;
+		}
+		self::touchLockFile();
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport(TRUE);
+		self::deleteLockFile();
 		return $response;
 	}
 
+	public function updateForceAction(Request $request, Response $response, $args) {
+		self::deleteLockFile();
+		return $this->updateAction($request, $response, $args);
+	}
+
 	public function updateAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+		if($this->abortOnLockfile($this->ll) === TRUE) {
+			return $response;
+		}
+		self::touchLockFile();
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
+		self::deleteLockFile();
 		return $response;
 	}
 
 	public function builddictsqlAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
 		$importer = new \Slimpd\Modules\Importer\DatabaseStuff($this->container);
 		$importer->buildDictionarySql();
 		return $response;
 	}
 
 	public function updateDbSchemeAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
 		$action = 'migrate';
 
 		// TODO: manually performed db-changes does not get recognized here - find a solution!
@@ -96,7 +118,7 @@ class CliController extends \Slimpd\BaseController {
 	}
 
 	public function databaseCleanerAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
 		die('TODO: not implemented yet '. __FUNCTION__ );
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		// phase 11: delete all bitmap-database-entries that does not exist in filesystem
@@ -186,9 +208,10 @@ class CliController extends \Slimpd\BaseController {
 
 	/**
 	 * this function checks if any processing has been requested via sliMpd-GUI
+	 * TODO: add support for "remigrate" trigger
 	 */
 	public function checkQueAction(Request $request, Response $response, $args) {
-		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
 
 		cliLog("checking database for importer triggers", 3);
 		// check if we have something to process
@@ -204,6 +227,8 @@ class CliController extends \Slimpd\BaseController {
 			cliLog("Nothing to do. exiting...", 1, "green");
 			return $response;
 		}
+
+		// TODO: how to avoid parallel execution?
 
 		cliLog("marking importer triggers as running", 3);
 		// update database - so we can avoid parallel execution
@@ -235,5 +260,25 @@ class CliController extends \Slimpd\BaseController {
 		// TODO: create runSphinxTriggerFile which should be processed by scripts/sphinxrotate.sh
 
 		return $response;
+	}
+
+	private function abortOnLockfile($ll) {
+		if(file_exists(APP_ROOT . "localdata/importer.lock") === TRUE) {
+			$age = filemtime(APP_ROOT . "localdata/importer.lock");
+			cliLog($ll->str("cli.parallel.execution.line1"), 1, "red", TRUE);
+			cliLog("  " . $ll->str("cli.parallel.execution.line2",[timeElapsedString($age)]), 1, "yellow");
+			cliLog("  " . $ll->str("cli.parallel.execution.line3"), 1, "yellow");
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	public static function touchLockFile() {
+		touch(APP_ROOT . "localdata/importer.lock");
+	}
+
+	public static function deleteLockFile() {
+		cliLog("deleting .lock file", 3);
+		@unlink(APP_ROOT . "localdata/importer.lock");
 	}
 }
