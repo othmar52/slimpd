@@ -88,16 +88,16 @@
         },
         {
             "name": "components/font-awesome",
-            "version": "4.6.3",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/components/font-awesome.git",
-                "reference": "daa3ef598620217085dcb13ad11149e89a20a925"
+                "reference": "885308b939369d147bec93174722786bc2c4eedd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/components/font-awesome/zipball/daa3ef598620217085dcb13ad11149e89a20a925",
-                "reference": "daa3ef598620217085dcb13ad11149e89a20a925",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/885308b939369d147bec93174722786bc2c4eedd",
+                "reference": "885308b939369d147bec93174722786bc2c4eedd",
                 "shasum": ""
             },
             "type": "component",
@@ -119,7 +119,7 @@
                 "OFL-1.1"
             ],
             "description": "The iconic font designed for use with Twitter Bootstrap.",
-            "time": "2016-05-18 10:46:59"
+            "time": "2016-10-25 10:56:23"
         },
         {
             "name": "components/jquery",
@@ -1514,12 +1514,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90"
+                "reference": "5131098293d66d58e5750c244988d5a465ffd9df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
-                "reference": "d3d5fdeadbb8489f73d74b8ec6bca1d3eb521d90",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/5131098293d66d58e5750c244988d5a465ffd9df",
+                "reference": "5131098293d66d58e5750c244988d5a465ffd9df",
                 "shasum": ""
             },
             "require": {
@@ -1550,7 +1550,7 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2016-05-09 07:16:19"
+            "time": "2016-10-24 08:39:42"
         },
         {
             "name": "ricbra/php-discogs-api",
@@ -1936,12 +1936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0"
+                "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0",
-                "reference": "09bf2bae50e1dd9d332d29fd06b09e2d5e8796a0",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
+                "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
                 "shasum": ""
             },
             "require": {
@@ -1989,7 +1989,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-22 03:23:53"
+            "time": "2016-10-25 19:28:14"
         },
         {
             "name": "webfontkit/open-sans",
