@@ -199,7 +199,7 @@
 			// for now use all rendered tracks as playlist
 
 			//console.log("local soundEnded()");
-			if(this.state.random === "1") {
+			if(this.state.random === 1) {
 				//console.log("local random is active");
 				var playableItems = $("#main .track-row:not(.track-"+ this.nowPlayingItem+")");
 				if(playableItems.length < 1) {
