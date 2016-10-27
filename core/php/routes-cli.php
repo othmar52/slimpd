@@ -26,6 +26,7 @@ $ctrlRoutes = [
 	['/builddictsql', 'builddictsqlAction'],
 	['/update-db-scheme', 'updateDbSchemeAction'],
 	['/database-cleaner', 'databaseCleanerAction'],
+	['/check-que', 'checkQueAction'],
 ];
 
 foreach($ctrlRoutes as $ctrlRoute) {

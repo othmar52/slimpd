@@ -558,7 +558,7 @@ class BaseRepository {
 		}
 	}
 
-	public static function deleteRecordsByUids(array $uidArray) {
+	public function deleteRecordsByUids(array $uidArray) {
 		if(count($uidArray) === 0) {
 			return;
 		}

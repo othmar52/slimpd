@@ -306,29 +306,41 @@ class Mpd {
 			case 'update':
 
 				# TODO: move 'disallow_full_database_update' from config.ini to user-previleges
-				if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
-					return $this->mpd($cmd);
-				}
+				#if($itemPath === FALSE && $config['disallow_full_database_update'] == '0') {
+				#	return $this->mpd($cmd);
+				#}
 
-				if($itemType === FALSE) {
-					// error - invalid $item
-					return FALSE;
-				}
+				#if($itemType === FALSE) {
+				#	// error - invalid $item
+				#	return FALSE;
+				#}
 
 				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestMpdItem = $this->findClosestExistingItem($itemPath);
+				$closestMpdItem = ($itemPath === "") ? "" : $this->findClosestExistingItem($itemPath);
 
-				// special case when we try to play a single new file (without parent-dir) out of mpd root
-				if($closestMpdItem === NULL && $config['disallow_full_database_update'] == '1') {
+				if($itemPath !== "" && $closestMpdItem === ""/*&& $config['disallow_full_database_update'] == '1'*/) {
+					// requested item to update does not exist in database
 					# TODO: send warning to client?
 					return FALSE;
 				}
 
-				\Slimpd\Modules\Importer::queDirectoryUpdate($closestMpdItem);
+				$mpdUpdateArg = "";
+				$mpdNotifyMsg = "MPD: running full database update";
 
-				// trailing slash on directories does not work - lets remove it
-				$this->mpd('update "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"');
-				$this->notifyJson = notifyJson("MPD: updating directory " . $closestMpdItem, 'mpd');
+				if($closestMpdItem !== "") {
+					// trailing slash on directories does not work - lets remove it
+					$mpdUpdateArg = ' "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"';
+					$mpdNotifyMsg = "MPD: updating directory " . $closestMpdItem;
+				}
+
+				// trigger MPD's internal update process
+				$this->mpd('update' . $mpdUpdateArg);
+
+				// insert database record which will be processed on next CLI run for sliMpd database update
+				$importer = new \Slimpd\Modules\Importer\Importer($this->container);
+				$importer->queUpdate();
+
+				$this->notifyJson = notifyJson($mpdNotifyMsg, 'mpd');
 				return;
 			case 'seekPercent':
 				$currentSong = $this->mpd('currentsong');

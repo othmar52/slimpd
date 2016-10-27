@@ -26,7 +26,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
 	// waiting until mpd has finished his internal database-update
 	protected $waitingLoop = 0;
-	protected $maxWaitingTime = 60; // seconds
+	protected $maxWaitingTime = 600; // seconds
 
 	protected $directoryHashes = array(/* dirhash -> albumUid */);
 	protected $updatedAlbums = array(/* uid -> NULL */);
@@ -227,12 +227,13 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 		return;
 	}
 
-
 	/**
 	 * decrease timestamps - so all tracks will get remigrated on next standard-update-run
 	 * TODO: consider to remove because maybe tons of files gets remigrated
 	 */
 	public function modifyDirectoryTimestamps($relDirPath) {
+		// deactivate this for now...
+		return;
 		$database = $this->db;
 		$query = "
 			UPDATE album
@@ -246,61 +247,14 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 	}
 
 	/**
-	 * 
+	 * queUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
 	 */
-	public function checkQue() {
-
-		// check if we really have something to process
-		$runImporter = FALSE;
-		$query = "SELECT uid, relPath FROM importer
-			WHERE jobPhase=0 AND jobEnd=0";
-
-		$result = $this->db->query($query);
-		$directories = array();
-		while($record = $result->fetch_assoc()) {
-			$runImporter = TRUE;
-			if(strlen($record['relPath']) > 0) {
-				$directories[ $record['relPath'] ] = $record['relPath'];
-			}
-			$this->jobUid = $record['uid'];
-			$this->finishJob(array(), __FUNCTION__);
-		}
-		// process unified directories
-		foreach($directories as $dir) {
-			$this->modifyDirectoryTimestamps($dir);
-		}
-		$this->jobUid = 0;
-		return $runImporter;
-	}
-
-	/**
-	 * queDirectoryUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
-	 */
-	public static function queDirectoryUpdate($relPath) {
-		if(is_dir($this->conf['mpd']['musicdir'] .$relPath ) === FALSE) {
-			// no need to process invalid directory
-			return;
-		}
-		cliLog('adding dir to que: ' . $relPath, 5);
-		$data = array(
-			'relPath' => $relPath
-		);
-		$importer = new self();
-		$importer->jobPhase = 0;
-		$importer->beginJob($data, __FUNCTION__);
-		return;
-	}
-
-	/**
-	 * queStandardUpdate() inserts a database record which will be processed by ./slimpd (cli-tool)
-	 */
-	public static function queStandardUpdate() {
-		$data = array(
-			'standardUpdate' => 1
-		);
-		$importer = new self();
-		$importer->jobPhase = 0;
-		$importer->beginJob($data, __FUNCTION__);
+	public function queUpdate() {
+		$query = "INSERT INTO importer
+			(batchUid, jobPhase, jobStatistics)
+			VALUES
+			(0, 0, 'update');";
+		$this->db->query($query);
 		return;
 	}
 

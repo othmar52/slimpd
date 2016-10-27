@@ -167,15 +167,6 @@ class CliController extends \Slimpd\BaseController {
 		$importer->triggerImport();
 	}
 
-	public function triggerUpdateAction(Request $request, Response $response, $args) {
-		// FIXME: relly trigger update
-		return $response;
-		
-		#\Slimpd\Modules\Importer::queStandardUpdate();
-		#$this->view->render($response, 'surrounding.htm', $args);
-		#return $response;
-	}
-
 	private function getDatabaseDropConfirm() {
 		$userInput = '';
 		do {
@@ -191,5 +182,46 @@ class CliController extends \Slimpd\BaseController {
 				return FALSE;
 			}
 		} while (TRUE);
+	}
+
+	/**
+	 * this function checks if any processing has been requested via sliMpd-GUI
+	 */
+	public function checkQueAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session ver beeing set?
+
+		cliLog("checking database for importer triggers", 3);
+		// check if we have something to process
+		$query = "SELECT uid FROM importer
+			WHERE batchUid=0 AND jobStart=0 AND jobStatistics='update';";
+
+		$result = $this->db->query($query);
+		$runUpdate = FALSE;
+		while($record = $result->fetch_assoc()) {
+			$runUpdate = TRUE;
+		}
+		if($runUpdate === FALSE) {
+			cliLog("Nothing to do. exiting...", 1, "green");
+			return $response;
+		}
+
+		cliLog("marking importer triggers as running", 3);
+		// update database - so we can avoid parallel execution
+		$query = "UPDATE importer
+			SET jobStart=". getMicrotimeFloat()."
+			WHERE batchUid=0 AND jobStatistics='update';";
+		$this->db->query($query);
+
+		// start update process
+		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
+		$importer->triggerImport();
+
+		// TODO: create runSphinxTriggerFile
+
+		cliLog("deleting already processed importer triggers from database", 3);
+		$query = "DELETE FROM importer
+			WHERE batchUid=0 AND jobStatistics='update';";
+		$this->db->query($query);
+		return $response;
 	}
 }
