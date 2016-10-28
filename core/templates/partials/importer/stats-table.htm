@@ -104,18 +104,34 @@
 			{% if item.jobStatistics.deletedRecords %}
 				<strong>Deleted Records:</strong> {{ item.jobStatistics.deletedRecords|shorty }}<br/> 
 			{% endif %}
-			
-			
 		</td>
-	
 	</tr>
 	{% if item.jobStatistics.currentItem %}
 	<tr class="headerX">
 		<td colspan="10" class="dark tinyfont">
 			<strong>Current Item:</strong> {{ item.jobStatistics.currentItem }}<br/>
-		</td> 
+		</td>
+	</tr>
 	{% endif %}
-	
-	<tr class="line"><td colspan="10"></td></tr>
+
 	{% endfor %}
+
+	{% if itemlist.length is odd %}
+		<tr class="bg-col2"><td colspan="10"><hr></td></tr>
+		<tr class="bg-col3">
+	{% else %}
+		<tr class="bg-col3"><td colspan="10"><hr></td></tr>
+		<tr class="bg-col2">
+	{% endif %}
+		<td style="text-align: left;">Total runtime</td>
+		<td></td>
+		<td>{{item.interruptedAfter|formatSeconds}}</td>
+	{% if item.status == 'finished' %}
+		<td>{{item.jobStatistics.speedItemsPerMinute|shorty}}</td>
+		<td>{{item.jobStatistics.speedItemsPerHour|shorty}}</td>
+		<td colspan="5"></td>
+	{% else %}
+		<td colspan="7"></td>
+	{% endif %}
+	</tr>
 </table>

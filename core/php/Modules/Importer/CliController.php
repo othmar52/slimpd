@@ -307,6 +307,7 @@ class CliController extends \Slimpd\BaseController {
 
 	public static function touchLockFile() {
 		touch(APP_ROOT . "localdata/importer.lock");
+		@chmod(APP_ROOT . "localdata/importer.lock", 0777);
 	}
 
 	public static function deleteLockFile() {
@@ -316,6 +317,7 @@ class CliController extends \Slimpd\BaseController {
 
 	public static function heartBeat() {
 		touch(APP_ROOT . "localdata/importer.heartbeat");
+		@chmod(APP_ROOT . "localdata/importer.heartbeat", 0777);
 	}
 
 	public static function getHeartBeatTstamp() {
