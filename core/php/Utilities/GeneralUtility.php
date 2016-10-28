@@ -353,6 +353,8 @@ function renderCliHelp($ll) {
 	cliLog($ll->str("cli.usage"), 1, "yellow");
 	cliLog("  ./slimpd [ARGUMENT]");
 	cliLog("ARGUMENTS", 1, "yellow");
+	cliLog("  check-que", 1, "cyan");
+	cliLog("    " . $ll->str("cli.args.check-que"));
 	cliLog("  update", 1, "cyan");
 	cliLog("    " . $ll->str("cli.args.update"));
 	cliLog("  remigrate", 1, "cyan");

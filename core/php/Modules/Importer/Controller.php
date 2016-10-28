@@ -25,7 +25,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['action'] = 'importer';
 		$args['servertime'] = time();
 		
-		$query = "SELECT * FROM importer ORDER BY batchUid DESC, jobPhase ASC LIMIT 200;";
+		$query = "SELECT * FROM importer WHERE batchUid>0 ORDER BY batchUid DESC, jobPhase ASC LIMIT 200;";
 		$result = $this->db->query($query);
 		$showDetail = TRUE;
 		$running = TRUE;
@@ -47,6 +47,7 @@ class Controller extends \Slimpd\BaseController {
 			$args['itemlist'][$batchUid]["interruptedAfter"] = $record["jobLastUpdate"] - $batchBegin;
 			$args['itemlist'][$batchUid]["phases"][ $record["jobPhase"] ] = $record;
 		}
+		$args['lastHeartBeat'] = CliController::getHeartBeatTstamp();
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}

@@ -164,6 +164,12 @@ $container['logger'] = function ($c) {
 
 $container['errorHandler'] = function ($cont) {
 	return function ($request, $response, $exception) use ($cont) {
+		if(PHP_SAPI === 'cli') {
+			cliLog("ERROR: " . $exception->getMessage(), 1, "red", TRUE);
+			cliLog("  FILE: " . $exception->getFile(), 1, "white", TRUE);
+			cliLog("  LINE: " . $exception->getLine(), 1, "white", TRUE);
+			return $response->withStatus(500);
+		}
 		$vars['action'] = 'error';
 		$vars['errormessage'] = $exception->getMessage();
 		$vars['tracestring'] = removeAppRootPrefix(str_replace(array('#', "\n"), array('<div>#', '</div>'), htmlspecialchars($exception->getTraceAsString())));

@@ -39,6 +39,7 @@ abstract class AbstractImporter {
 	}
 
 	protected function beginJob($data = array(), $function = '') {
+		CliController::heartBeat();
 		cliLog("STARTING import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
 		$this->jobBegin = getMicrotimeFloat();
 		$this->itemsChecked = 0;
@@ -72,7 +73,7 @@ abstract class AbstractImporter {
 		if($microtime - $this->lastJobStatusUpdate < $this->jobStatusInterval) {
 			return;
 		}
-
+		CliController::heartBeat();
 		$data['progressPercent'] = 0;
 		$data['microTimestamp'] = $microtime;
 		$this->calculateSpeed($data);
@@ -89,6 +90,7 @@ abstract class AbstractImporter {
 
 	protected function finishJob($data = array(), $function = '') {
 		cliLog("FINISHED import phase " . $this->jobPhase . " " . $function . '()', 1, "cyan");
+		CliController::heartBeat();
 		$microtime = getMicrotimeFloat();
 		$data['progressPercent'] = 100;
 		$data['microTimestamp'] = $microtime;

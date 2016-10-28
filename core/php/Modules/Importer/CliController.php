@@ -21,7 +21,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class CliController extends \Slimpd\BaseController {
-	private $force = FALSE;
+	private $force = FALSE; // ignore parallel execution (or orphaned .lock file caused by crashed script-run)
+
+	private $interval = 5; //seconds for recursion of check-que
+	private $maxTime = 59;	// seconds - fits for cronjob executed every minute
+	private $startTime = 0;
 
 	public function indexAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
@@ -133,7 +137,12 @@ class CliController extends \Slimpd\BaseController {
 	 * start from scratch by dropping and recreating database
 	 */
 	public function hardResetAction(Request $request, Response $response, $args) {
+		if($this->abortOnLockfile($this->ll) === TRUE) {
+			return $response;
+		}
+		self::touchLockFile();
 		if($this->getDatabaseDropConfirm() === FALSE) {
+			self::deleteLockFile();
 			return $response;
 		}
 
@@ -146,10 +155,12 @@ class CliController extends \Slimpd\BaseController {
 			);
 		} catch (\Exception $e) {
 			cliLog($this->ll->str('database.connect'), 1, 'red');
+			self::deleteLockFile();
 			return $response;
 		}
 		if($db->connect_error) {
 			cliLog($this->ll->str('database.connect'), 1, 'red');
+			self::deleteLockFile();
 			return $response;
 		}
 		cliLog("Dropping database");
@@ -162,6 +173,7 @@ class CliController extends \Slimpd\BaseController {
 		\Helper::setConfig( getDatabaseDiffConf($this->conf) );
 		if (!\Helper::checkConfigEnough()) {
 			cliLog("ERROR: invalid mmp configuration", 1, "red");
+			self::deleteLockFile();
 			return $response;
 		}
 		$controller = \Helper::getController($action, NULL);
@@ -187,6 +199,8 @@ class CliController extends \Slimpd\BaseController {
 		}
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
+		self::deleteLockFile();
+		return $response;
 	}
 
 	private function getDatabaseDropConfirm() {
@@ -212,7 +226,10 @@ class CliController extends \Slimpd\BaseController {
 	 */
 	public function checkQueAction(Request $request, Response $response, $args) {
 		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
-
+		self::heartBeat();
+		if($this->startTime === 0) {
+			$this->startTime = time();
+		}
 		cliLog("checking database for importer triggers", 3);
 		// check if we have something to process
 		$query = "SELECT uid FROM importer
@@ -224,11 +241,25 @@ class CliController extends \Slimpd\BaseController {
 			$runUpdate = TRUE;
 		}
 		if($runUpdate === FALSE) {
-			cliLog("Nothing to do. exiting...", 1, "green");
-			return $response;
+			$cliMsg = "Nothing to do. ";
+
+			// check for recursion
+			if((time() - $this->startTime) >= $this->maxTime) {
+				$cliMsg .= "exiting...";
+				cliLog($cliMsg, 1, "green");
+				return $response;
+			}
+			$cliMsg .= "waiting " . $this->interval . " seconds...";
+			cliLog($cliMsg, 1, "green");
+			sleep($this->interval);
+			return $this->checkQueAction($request, $response, $args);
 		}
 
-		// TODO: how to avoid parallel execution?
+		// avoid parallel execution
+		if($this->abortOnLockfile($this->ll) === TRUE) {
+			return $response;
+		}
+		self::touchLockFile();
 
 		cliLog("marking importer triggers as running", 3);
 		// update database - so we can avoid parallel execution
@@ -240,7 +271,6 @@ class CliController extends \Slimpd\BaseController {
 		// start update process
 		$importer = new \Slimpd\Modules\Importer\Importer($this->container);
 		$importer->triggerImport();
-
 
 		// we have reached the maximum waiting time for MPD's update process without starting sliMpd's update process 
 		if($importer->keepGuiTrigger === TRUE) {
@@ -259,6 +289,8 @@ class CliController extends \Slimpd\BaseController {
 
 		// TODO: create runSphinxTriggerFile which should be processed by scripts/sphinxrotate.sh
 
+		self::deleteLockFile();
+		return $this->checkQueAction($request, $response, $args);
 		return $response;
 	}
 
@@ -280,5 +312,16 @@ class CliController extends \Slimpd\BaseController {
 	public static function deleteLockFile() {
 		cliLog("deleting .lock file", 3);
 		@unlink(APP_ROOT . "localdata/importer.lock");
+	}
+
+	public static function heartBeat() {
+		touch(APP_ROOT . "localdata/importer.heartbeat");
+	}
+
+	public static function getHeartBeatTstamp() {
+		if(file_exists(APP_ROOT . "localdata/importer.heartbeat") === TRUE) {
+			return filemtime(APP_ROOT . "localdata/importer.heartbeat");
+		}
+		return FALSE;
 	}
 }

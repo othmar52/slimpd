@@ -3,3 +3,4 @@
 /core/config/config_local.ini
 /core/config/development.txt
 /core/scripts/custom-xwax-client
+/localdata/importer.*
