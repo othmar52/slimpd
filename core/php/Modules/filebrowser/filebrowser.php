@@ -204,7 +204,7 @@ class filebrowser {
 		}
 		// fetch content of the parent directory
 		$parentDirectory = new self($this->container);
-		$parentDirectory->getDirectoryContent($parentPath, $isSysDir);
+		$parentDirectory->getDirectoryContent($parentPath, TRUE, $isSysDir);
 		return $parentDirectory;
 	}
 
