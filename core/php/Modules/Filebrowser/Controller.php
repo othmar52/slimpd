@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\filebrowser;
+namespace Slimpd\Modules\Filebrowser;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -32,7 +32,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['hotlinks'] = array();
 		$args['hideQuicknav'] = 1;
 		foreach(trimExplode("\n", $this->conf['filebrowser']['hotlinks'], TRUE) as $path){
-			$args['hotlinks'][] =  \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($path);
+			$args['hotlinks'][] =  \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($path);
 		}
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;

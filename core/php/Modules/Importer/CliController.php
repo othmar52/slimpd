@@ -185,7 +185,7 @@ class CliController extends \Slimpd\BaseController {
 
 		// delete files created by sliMpd
 		foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
-			$fileBrowser = new \Slimpd\Modules\filebrowser\filebrowser($this->container);
+			$fileBrowser = new \Slimpd\Modules\Filebrowser\Filebrowser($this->container);
 			$fileBrowser->getDirectoryContent('localdata' . DS . $sysDir, TRUE, TRUE);
 			cliLog("Deleting files and directories inside ". 'localdata' . DS . $sysDir ."/");
 			foreach(['music','playlist','info','image','other'] as $key) {

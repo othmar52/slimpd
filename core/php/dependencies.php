@@ -125,7 +125,7 @@ $container['batcher'] = function ($cont) {
 
 // Filebrowser
 $container['filebrowser'] = function ($cont) {
-	return new \Slimpd\Modules\filebrowser\filebrowser($cont);
+	return new \Slimpd\Modules\Filebrowser\Filebrowser($cont);
 };
 
 

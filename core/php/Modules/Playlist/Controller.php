@@ -71,7 +71,7 @@ class Controller extends \Slimpd\BaseController {
 		$args['playlist']->fetchTrackRange(0, 5);
 		$args['playlisttracks'] = $args['playlist']->getTracks();
 		$args['renderitems'] = $this->getRenderItems($args['playlist']->getTracks());
-		$args['breadcrumb'] =  \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['itemParams']);
+		$args['breadcrumb'] =  \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($args['itemParams']);
 		$this->view->render($response, 'modules/widget-playlist.htm', $args);
 		return $response;
 	}

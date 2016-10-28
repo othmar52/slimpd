@@ -310,7 +310,7 @@ class Controller extends \Slimpd\BaseController {
 								$tmp = $this->albumRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
 								if($tmp !== NULL) {
 									$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
-									$obj->setBreadcrumb(\Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($obj->getRelPath()));
+									$obj->setBreadcrumb(\Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($obj->getRelPath()));
 								}
 								break;
 						}
@@ -560,7 +560,7 @@ class Controller extends \Slimpd\BaseController {
 		// get additional stuff we need for rendering the view
 		$args["action"] = "directorytracks";
 		$args["renderitems"] = $this->getRenderItems($args["itemlist"]);
-		$args["breadcrumb"] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['itemParams']);
+		$args["breadcrumb"] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($args['itemParams']);
 		$args["paginator"] = new \JasonGrimes\Paginator(
 			$total,
 			$itemsPerPage,

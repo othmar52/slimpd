@@ -50,7 +50,7 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
 
 	public function fetchRenderItems(&$renderItems, $trackInstance) {
 		if(isset($renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()]) === FALSE) {
-			$renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($trackInstance->getRelPath());
+			$renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($trackInstance->getRelPath());
 		}
 		
 		$artistUidString = join(",", [$trackInstance->getArtistUid(), $trackInstance->getFeaturingUid(), $trackInstance->getRemixerUid()]);

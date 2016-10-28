@@ -41,7 +41,7 @@ class AlbumRepo extends \Slimpd\Repositories\BaseRepository {
 	public function fetchRenderItems(&$renderItems, $albumInstance) {
 		$renderItems["albums"][$albumInstance->getUid()] = $albumInstance;
 		if(isset($renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()]) === FALSE) {
-			$renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($albumInstance->getRelPath());
+			$renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($albumInstance->getRelPath());
 		}
 
 		foreach(trimExplode(",", $albumInstance->getArtistUid(), TRUE) as $artistUid) {

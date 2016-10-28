@@ -166,7 +166,7 @@ class Controller extends \Slimpd\BaseController {
 			}
 		}
 		
-		$args['breadcrumb'] = \Slimpd\Modules\filebrowser\filebrowser::fetchBreadcrumb($args['album']->getRelPath());
+		$args['breadcrumb'] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($args['album']->getRelPath());
 		return;
 	}
 }

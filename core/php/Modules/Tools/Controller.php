@@ -65,7 +65,7 @@ class Controller extends \Slimpd\BaseController {
 			$this->view->render($response, 'modules/widget-cleanrename.htm', $args);
 			return $response;
 		}
-		$fileBrowser = new \Slimpd\Modules\filebrowser\filebrowser($this->container);
+		$fileBrowser = new \Slimpd\Modules\Filebrowser\Filebrowser($this->container);
 		$fileBrowser->getDirectoryContent($args['itemParams']);
 		$args['directory'] = $fileBrowser;
 		$args['action'] = 'clean-rename-confirm';
@@ -79,7 +79,7 @@ class Controller extends \Slimpd\BaseController {
 			return $response;
 		}
 
-		$fileBrowser = new \Slimpd\Modules\filebrowser\filebrowser($this->container);
+		$fileBrowser = new \Slimpd\Modules\Filebrowser\Filebrowser($this->container);
 		$fileBrowser->getDirectoryContent($args['itemParams']);
 
 		// do not block other requests of this client

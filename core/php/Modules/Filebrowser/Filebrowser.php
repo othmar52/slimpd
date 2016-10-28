@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\filebrowser;
+namespace Slimpd\Modules\Filebrowser;
 /* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -17,7 +17,8 @@ namespace Slimpd\Modules\filebrowser;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-class filebrowser {
+
+class Filebrowser {
 	private $container;
 	public $directory;
 	public $base;
