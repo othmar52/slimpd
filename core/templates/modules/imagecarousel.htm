@@ -1,14 +1,36 @@
 
 {% if itemlist|length > 1 %}
-{# skip first image as we alread have it displayed big above the carousel#}
+{# skip first image as we alread have it displayed big above the carousel #}
+{% set visibleThumbs = 10 %}
+{% set showToggler = 0 %}
+{% if itemlist|length > 10 %}
+	{% set visibleThumbs = 9 %}
+	{% set showToggler = 1 %}
+{% endif %}
 <div id="image_all">
 	{% for i,item in itemlist %}
-		{% if not loop.first %}
+		{% if (not loop.first) and (i <= visibleThumbs) %}
 		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.uid }}" data-type="image" data-gallery="galname" class="carousel-thumb contain-img" style="background-image:url({{root}}image-50/id/{{ item.uid }});background-color:{{ item.bghex }};">
-
+			
 		</a>
 		{% endif %}
 	{% endfor %}
+	{% if showToggler == 1 %}
+</div>
+	<a class="toggle-content carousel-thumb contain-img" data-toggle="#hidden-album-thumbs" data-text1="show more" data-text2="hide">
+		<span class="badge">{{ itemlist|length - visibleThumbs }}<br/>more</span>
+	</a>
+<div id="hidden-album-thumbs" style="display:none;">
+	{% for i,item in itemlist %}
+		{% if (not loop.first) and (i > visibleThumbs) %}
+		<a data-toggle="lightbox" href="{{root}}image-1000/id/{{ item.uid }}" data-type="image" data-gallery="galname" class="carousel-thumb contain-img" style="background-image:url({{root}}image-50/id/{{ item.uid }});background-color:{{ item.bghex }};">
+			
+		</a>
+		{% endif %}
+	{% endfor %}
+
+	{% endif %}
+	
 	{% if bookletimages|length > 0 %}
 		<a class="carousel-thumb carousel-booklet toggle-content bg-col2" data-toggle="#booklet-wrapper" data-text1="Booklet beta" data-text2="Booklet beta">
 			Booklet beta
