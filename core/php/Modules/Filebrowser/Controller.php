@@ -23,21 +23,15 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 
 	public function index(Request $request, Response $response, $args) {
-		$args['action'] = 'filebrowser';
-		$fileBrowser = $this->filebrowser;
-		$fileBrowser->getDirectoryContent($this->__get('conf')['mpd']['musicdir']);
-		$args['breadcrumb'] = $fileBrowser->breadcrumb;
-		$args['subDirectories'] = $fileBrowser->subDirectories;
-		$args['files'] = $fileBrowser->files;
+		$args['itemParams'] = $this->conf['mpd']['musicdir'];
 		$args['hotlinks'] = array();
-		$args['hideQuicknav'] = 1;
+		#$args['hideQuicknav'] = 1;
 		foreach(trimExplode("\n", $this->conf['filebrowser']['hotlinks'], TRUE) as $path){
 			$args['hotlinks'][] =  \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($path);
 		}
-		$this->view->render($response, 'surrounding.htm', $args);
-		return $response;
+		return $this->dircontent($request, $response, $args);
 	}
-	
+
 	public function dircontent(Request $request, Response $response, $args) {
 		$args['action'] = 'filebrowser';
 		$fileBrowser = $this->filebrowser;
@@ -54,7 +48,7 @@ class Controller extends \Slimpd\BaseController {
 			default :
 				break;
 		}
-		
+
 		switch($request->getParam('neighbour')) {
 			case 'next':
 				$fileBrowser->getNextDirectoryContent($args['itemParams']);
@@ -76,7 +70,7 @@ class Controller extends \Slimpd\BaseController {
 				$fileBrowser->getDirectoryContent($args['itemParams']);
 				break;
 		}
-	
+
 		$args['directory'] = $fileBrowser->directory;
 		$args['breadcrumb'] = $fileBrowser->breadcrumb;
 		$args['subDirectories'] = $fileBrowser->subDirectories;
@@ -99,13 +93,13 @@ class Controller extends \Slimpd\BaseController {
 				$args['showDirFilterBadge'] = ($fileBrowser->subDirectories['count'] < $fileBrowser->subDirectories['total'])
 					? TRUE
 					: FALSE;
-				
+
 				$args['showFileFilterBadge'] = ($fileBrowser->files['count'] < $fileBrowser->files['total'])
 					? TRUE
 					: FALSE;
 				break;
 		}
-		
+
 		$args['paginator'] = new \JasonGrimes\Paginator(
 			$totalFilteredItems,
 			$fileBrowser->itemsPerPage,
@@ -124,16 +118,16 @@ class Controller extends \Slimpd\BaseController {
 		$args['breadcrumb'] = $fileBrowser->breadcrumb;
 		$args['subDirectories'] = $fileBrowser->subDirectories;
 		$args['files'] = $fileBrowser->files;
-		
+
 		// try to fetch album entry for this directory
 		$args['album'] = $this->albumRepo->getInstanceByAttributes(
 			array('relPathHash' => getFilePathHash($fileBrowser->directory))
 		);
-	
+
 		$this->view->render($response, 'modules/widget-directory.htm', $args);
 		return $response;
 	}
-	
+
 	public function deliverAction(Request $request, Response $response, $args) {
 		$path = $args['itemParams'];
 		if(is_numeric($path)) {
@@ -158,7 +152,7 @@ class Controller extends \Slimpd\BaseController {
 	 * IMPORTANT TODO: check why performance on huge files is so bad (seeking-performance in large mixes is pretty poor compared to serving the mp3-mix directly)
 	 */
 	private function deliver($request, $response, $file) {
-	
+
 		/**
 		 * Copyright 2012 Armand Niculescu - media-division.com
 		 * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -173,9 +167,9 @@ class Controller extends \Slimpd\BaseController {
 			@apache_setenv("no-gzip", 1);
 		}
 		@ini_set("zlib.output_compression", "Off");
-	
+
 		// convert to absolute filepath
-	
+
 		// sanitize the file request, keep just the name and extension
 		$filePath  = $this->filesystemUtility->getFileRealPath($file);
 		$pathParts = pathinfo($filePath);
@@ -199,7 +193,7 @@ class Controller extends \Slimpd\BaseController {
 
 		//check if http_range is sent by browser (or download manager)
 		$this->checkPartialContentDelivery($request, $response, $seekStart, $seekEnd, $fileSize);
-		
+
 		// allow a file to be streamed instead of sent as an attachment
 		// set appropriate headers for attachment or streamed file
 		if($request->getParam("stream") === "1") {

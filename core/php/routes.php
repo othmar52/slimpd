@@ -25,8 +25,8 @@ $ctrlRoutes = [
 		['/library[/]', 'indexAction']
 	],
 	'Filebrowser' => [
-		['/filebrowser', 'index', 'filebrowser'],
-		['/filebrowser/[{itemParams:.*}]', 'dircontent'],
+		['/filebrowser[/]', 'index', 'filebrowser'],
+		['/filebrowser/{itemParams:.*}', 'dircontent'],
 		['/markup/widget-directory/[{itemParams:.*}]', 'widgetDirectory'],
 		['/deliver/[{itemParams:.*}]', 'deliverAction']
 	],
