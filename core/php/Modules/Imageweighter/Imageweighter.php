@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\imageweighter;
+namespace Slimpd\Modules\Imageweighter;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -83,7 +83,7 @@ class Imageweighter {
 		#echo "<pre>" . print_r($weightArray, 1);
 		#echo "<pre>" . print_r($conf, 1); die();
 		#echo "<pre>" . print_r($rawConf, 1);
-		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\imageweighter\Imageweighter');
+		$reflectedClass = new \ReflectionClass('\Slimpd\Modules\Imageweighter\Imageweighter');
 		$reflectedClass->setStaticPropertyValue('types', $typeArray);
 		$reflectedClass->setStaticPropertyValue('weights', $weightArray);
 	}

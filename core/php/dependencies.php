@@ -131,7 +131,7 @@ $container['filebrowser'] = function ($cont) {
 
 // Imageweighter
 $container['imageweighter'] = function () {
-	return new \Slimpd\Modules\imageweighter\Imageweighter();
+	return new \Slimpd\Modules\Imageweighter\Imageweighter();
 };
 
 
