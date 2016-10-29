@@ -292,7 +292,7 @@ var FavIconX = (function() {
 	// we get to the public methods now.
 	return {
 		// a helper to configure mucho settings at once
-		config(cfg){
+		config : function(cfg){
 			shape = cfg.shape || shape;
 			doughnutRadius = cfg.doughnutRadius || doughnutRadius;
 			overlay = cfg.overlay || overlay;
@@ -320,7 +320,7 @@ var FavIconX = (function() {
 		// when specified the animated overrides the component setting.
 		// when specified the speed orrides the component setting
 		// callback called once the animation is finished
-		setValue(v, isAnimated, animSpeed, callback){
+		setValue : function(v, isAnimated, animSpeed, callback){
 			if(v<0 || v>100) {
 				throw "value must be between 0 and 100";
 			}
@@ -346,12 +346,12 @@ var FavIconX = (function() {
 		},
 
 		// returns the current value of the widget
-		getValue(){
+		getValue : function(){
 			return animValue || value;
 		},
 
 		// restoring the past... or is it...
-		reset(){
+		reset : function(){
 			setDefaults();
 			if(originalIcon){
 				head.removeChild(icon);
@@ -365,7 +365,7 @@ var FavIconX = (function() {
 		},
 
 		// displays the awesome checkbox. colors can be tweaked here
-		complete(fgColor, bgColor){
+		complete : function(fgColor, bgColor){
 			isReset = false;
 			generateSuccess(fgColor, bgColor);
 			refreshFavIcon();
@@ -373,7 +373,7 @@ var FavIconX = (function() {
 		},
 
 		// displays the even more awesome cross. colors can be tweaked here
-		fail(fgColor, bgColor){
+		fail : function(fgColor, bgColor){
 			isReset = false;
 			generateFailure(fgColor, bgColor);
 			refreshFavIcon();

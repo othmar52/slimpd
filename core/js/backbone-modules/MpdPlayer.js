@@ -51,7 +51,7 @@
 		playlistState : false,
 		initialNotificationBlocker : true,
 
-		initialize(options) {
+		initialize : function(options) {
 			this.$content = $(".player-"+ this.mode, this.$el);
 
 			this.trackAnimation = { currentPosPerc: 0 };
@@ -80,18 +80,18 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
 		},
 
-		render(options) {
+		render : function(options) {
 			window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
 		},
 
-		play(item) {
+		play : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.redraw();
 			//this.reloadCss(item.hash);
 			window.sliMpd.modules.AbstractPlayer.prototype.play.call(this, item);
 		},
 
-		togglePause(item) {
+		togglePause : function(item) {
 			if(this.nowPlayingState === "play") {
 				window.sliMpd.fireRequestAndNotify(window.sliMpd.conf.absRefPrefix + "mpdctrl/pause");
 				this.nowPlayingState = "pause";
@@ -104,174 +104,174 @@
 			window.sliMpd.drawFavicon();
 		},
 
-		seek(item) {
+		seek : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.seek.call(this, item);
 		},
 
-		seekzero(item) {
+		seekzero : function(item) {
 			window.sliMpd.fireRequestAndNotify(window.sliMpd.conf.absRefPrefix + "mpdctrl/seekPercent/0");
 			this.timelineSetValue(0);
 			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
 		},
 
-		prev(item) {
+		prev : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
 		},
 
-		next(item) {
+		next : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
 		},
 
-		removeTrack(item) {
+		removeTrack : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.removeTrack.call(this, item);
 		},
 
-		toggleRepeat(item) {
+		toggleRepeat : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
 		},
 
-		toggleRandom(item) {
+		toggleRandom : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
 		},
 
-		toggleConsume(item) {
+		toggleConsume : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
 		},
 
-		softclearPlaylist(item) {
+		softclearPlaylist : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
 		},
 
-		appendTrack(item) {
+		appendTrack : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.appendTrack.call(this, item);
 		},
-		appendTrackAndPlay(item) {
+		appendTrackAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.appendTrackAndPlay.call(this, item);
 		},
 
-		injectTrack(item) {
+		injectTrack : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectTrack.call(this, item);
 		},
 
-		injectTrackAndPlay(item) {
+		injectTrackAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectTrackAndPlay.call(this, item);
 		},
 
-		replaceTrack(item) {
+		replaceTrack : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.replaceTrack.call(this, item);
 		},
 
-		softreplaceTrack(item) {
+		softreplaceTrack : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceTrack.call(this, item);
 		},
 
 
-		appendDir(item) {
+		appendDir : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.appendDir.call(this, item);
 		},
 
-		appendDirAndPlay(item) {
+		appendDirAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.appendDirAndPlay.call(this, item);
 		},
 
-		injectDir(item) {
+		injectDir : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectDir.call(this, item);
 		},
 
-		injectDirAndPlay(item) {
+		injectDirAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectDirAndPlay.call(this, item);
 		},
 
-		replaceDir(item) {
+		replaceDir : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.replaceDir.call(this, item);
 		},
 
-		softreplaceDir(item) {
+		softreplaceDir : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceDir.call(this, item);
 		},
 
 
-		appendPlaylist(item) {
+		appendPlaylist : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylist.call(this, item);
 		},
 
-		appendPlaylistAndPlay(item) {
+		appendPlaylistAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylistAndPlay.call(this, item);
 		},
 
-		injectPlaylist(item) {
+		injectPlaylist : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylist.call(this, item);
 		},
 
-		injectPlaylistAndPlay(item) {
+		injectPlaylistAndPlay : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylistAndPlay.call(this, item);
 		},
 
-		replacePlaylist(item) {
+		replacePlaylist : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.replacePlaylist.call(this, item);
 		},
 
-		softreplacePlaylist(item) {
+		softreplacePlaylist : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
 		},
 
-		removeDupes(item) {
+		removeDupes : function(item) {
 			window.sliMpd.fireRequestAndNotify(item.mpdurl);
 			this.refreshInterval();
 			window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
 		},
 
-		process(item) {
+		process : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.process.call(this, item);
 		},
 
-		processPollData(data){
+		processPollData : function(data){
 
 			this.nowPlayingPercent = data.percent;
 			this.nowPlayingState = data.state;
@@ -339,11 +339,11 @@
 			}
 		},
 
-		refreshInterval() {
+		refreshInterval : function() {
 			window.sliMpd.modules.AbstractPlayer.prototype.refreshInterval.call(this);
 		},
 
-		onRedrawComplete(item) {
+		onRedrawComplete : function(item) {
 			var that = this;
 			$(".mpd-ctrl-seekbar").on("click", function(e){
 				var percent = Math.round((e.pageX - $(this).offset().left) / ($(this).width()/100));
@@ -388,12 +388,12 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
 
-		updateStateIcons() {
+		updateStateIcons : function() {
 			window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
 		},
 
 		// TODO: make markup more generic and move this to AbstractPlayer for usage in both players (local+mpd)
-		setPlayPauseIcon(item) {
+		setPlayPauseIcon : function(item) {
 			if(this.nowPlayingState === "play") {
 				$(".mpd-status-playpause", this.$el).addClass("fa-pause");
 				$(".mpd-status-playpause", this.$el).removeClass("fa-play");
@@ -404,7 +404,7 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 
-		zeroPad(number, n) {
+		zeroPad : function(number, n) {
 			var zeroPad = "" + number;
 			while(zeroPad.length < n) {
 				zeroPad = "0" + zeroPad;
@@ -412,12 +412,12 @@
 			return zeroPad;
 		},
 
-		timelineSetValue(value) {
+		timelineSetValue : function(value) {
 			this.timeLineLight.progress(value/100);
 			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
 		},
 
-		updateSlider(item) {
+		updateSlider : function(item) {
 			$(".mpd-status-progressbar").css("width", this.timeLineLight.progress() *100 +"%");
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		}

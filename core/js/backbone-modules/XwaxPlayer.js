@@ -43,7 +43,7 @@
 
 		timeLineLight : null,
 
-		initialize(options) {
+		initialize : function(options) {
 			this.deckIndex = options.deckIndex;
 			this.timeGridSelectorCanvas = "timegrid-xwax-deck-"+ this.deckIndex;
 			this.$content = $(".player-"+ this.mode, this.$el);
@@ -61,12 +61,12 @@
 			this.render(true);
 		},
 
-		render(options) {
+		render : function(options) {
 			//console.log("calling XwaxPlayer::render() " + this.deckIndex);
 			window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
 		},
 
-		onRedrawComplete(item) {
+		onRedrawComplete : function(item) {
 			if(this.showWaveform !== true) {
 				this.updateTimecode(this.timecode);
 				return;
@@ -90,13 +90,13 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
 
-		updateStateIcons() {
+		updateStateIcons : function() {
 			$(".xwax-deck-"+this.deckIndex+"-status-elapsed").text(this.formatTime(this.nowPlayingElapsed));
 			$(".xwax-deck-"+this.deckIndex+"-status-total").text(this.formatTime(this.nowPlayingDuration));
 			window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
 		},
 
-		zeroPad(number, n) {
+		zeroPad : function(number, n) {
 			var zeroPad = "" + number;
 			while(zeroPad.length < n) {
 				zeroPad = "0" + zeroPad;
@@ -104,12 +104,12 @@
 			return zeroPad;
 		},
 
-		timelineSetValue(value) {
+		timelineSetValue : function(value) {
 			this.timeLineLight.progress(value/100);
 			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
 		},
 
-		updateSlider(item) {
+		updateSlider : function(item) {
 			if(this.showWaveform !== true) {
 				return;
 			}
@@ -117,7 +117,7 @@
 			$(".xwax-deck-"+ this.deckIndex+"-status-progressbar").css("width", "calc("+ this.timeLineLight.progress() *100 +"% - 15px)");
 			window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
 		},
-		updateTimecode(timecode) {
+		updateTimecode : function(timecode) {
 			this.timecode = timecode;
 			$(".xwax-deck-"+ this.deckIndex+ " .timecoder").text(timecode);
 		}

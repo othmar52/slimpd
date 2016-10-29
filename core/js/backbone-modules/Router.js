@@ -42,12 +42,12 @@
 			// "albums/(*generic)" : "album"
 		},
 
-		initialize(options) {
+		initialize : function(options) {
 			this.$content = $("#main");
 			this.$body = $("body");
 		},
 
-		navigate(fragment, options) {
+		navigate : function(fragment, options) {
 			if (this.ajaxLoading) {
 				return;
 			}
@@ -82,7 +82,7 @@
 			window.Backbone.Router.prototype.navigate.call(this, fragment, options);
 		},
 
-		generic(route, queryString) {
+		generic : function(route, queryString) {
 			var name = ((route === null) ? "home" : route + "?" + queryString),
 				url = "/" + ((route === null) ? "" : route + "?" + queryString);
 
@@ -92,7 +92,7 @@
 			// first time page loaded markup is delivered by backend, no need for ajax call!
 			if (!this.rendered) {
 				this.currentView = new window.sliMpd.modules.PageView({
-					name,
+					name: name,
 					templateString : "",
 					el : "#main>.main-content"
 				});
@@ -112,7 +112,7 @@
 					this.previousView.remove();
 				}
 				this.currentView = new window.sliMpd.modules.PageView({
-					name,
+					name: name,
 					templateString : response
 				});
 				this.currentView.render(true);
@@ -132,7 +132,7 @@
 		},
 
 		// FIXME: how to refresh #main view without pushing anything to history?
-		refreshIfName(routename) {
+		refreshIfName : function(routename) {
 			// TODO: check if we can use a generic function
 			// for now lets define each usecase separately
 			switch(routename) {
@@ -159,7 +159,7 @@
 		//	overidden method: "%2B" gets preserved
 		// TODO: combinations of "%" and "#" and "\" in urls still does not work
 		// @see: issue #3
-		_extractParameters(route, fragment) {
+		_extractParameters : function(route, fragment) {
 			var params = route.exec(fragment).slice(1);
 			return window._.map(params, function(param, i) {
 				// Don"t decode the search params.
@@ -183,7 +183,7 @@
 		 * @param {string} paramName
 		 * @param {string} paramValue
 		 */
-		setGetParameter(urlstring, paramName, paramValue) {
+		setGetParameter : function(urlstring, paramName, paramValue) {
 			if (urlstring.indexOf(paramName + "=") >= 0) {
 				var prefix = urlstring.substring(0, urlstring.indexOf(paramName));
 				var suffix = urlstring.substring(urlstring.indexOf(paramName));

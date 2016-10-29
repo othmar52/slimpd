@@ -28,19 +28,19 @@ $(document).ready(function() {
 
 		xwax : false,
 
-		drawFavicon() {
+		drawFavicon : function() {
 			clearTimeout(window.sliMpd.drawFaviconTimeout);
 			window.sliMpd.currentPlayer.drawFavicon();
 			window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
 		},
 
-		fireRequestAndNotify(url) {
+		fireRequestAndNotify : function(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);
 			});
 		},
 
-		checkNotify(notifyConf) {
+		checkNotify : function(notifyConf) {
 			try {
 				if (typeof notifyConf.notify !== "undefined") {
 					this.notify(notifyConf);
@@ -51,7 +51,7 @@ $(document).ready(function() {
 		},
 
 		// TODO: respect playersize + visible xwax gui for positioning
-		notify(notifyConf) {
+		notify : function(notifyConf) {
 			$.notify({
 				// options
 				message: notifyConf.message
@@ -70,7 +70,7 @@ $(document).ready(function() {
 			});
 		},
 
-		notifyError(errorUrl) {
+		notifyError : function(errorUrl) {
 			// TODO: get message from language file
 			this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
@@ -79,7 +79,7 @@ $(document).ready(function() {
 		},
 
 		/* toggle between mpd-control and local player (jPlayer) */
-		togglePlayer() {
+		togglePlayer : function() {
 			var TweenMax = window.TweenMax;
 			var Back = window.Back;
 			var Power2 = window.Power2;

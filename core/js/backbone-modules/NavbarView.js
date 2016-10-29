@@ -34,11 +34,11 @@
 
 		searchfield : $("#mainsearch"),
 
-		initialize(options) {
+		initialize : function(options) {
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
 
-		render() {
+		render : function() {
 			// only render page once (to prevent multiple click listeners)
 			if (this.rendered) {
 				return;
@@ -66,7 +66,7 @@
 			});
 
 			this.tabAutocomplete = this.searchfield.autocomplete({
-				source( request, response ) {
+				source : function( request, response ) {
 					window.NProgress.start();
 					var $this = $(this);
 					var $element = $(this.element);
@@ -83,13 +83,13 @@
 						type: "GET",
 						url: window.sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($("#mainsearch").val()),
 						dataType: "json",
-						success( data ) {
+						success : function( data ) {
 							window.NProgress.done();
 							response( data );
 						},
 						messages: {
 							noResults: "",
-							results() {}
+							results : function() {}
 						}
 					}));
 				},
@@ -98,14 +98,14 @@
 				minLength: 3,
 				delay: 300,
 
-				focus( event, ui ) {
+				focus : function( event, ui ) {
 					$(".ui-helper-hidden-accessible").hide();
 					if(typeof ui.item !== "undefined") {
 						ui.item.value = that.stripTags(ui.item.value);
 					}
 				},
 
-				select( event, ui ) {
+				select : function( event, ui ) {
 					// do not navigate away with visible modal
 					if(window.sliMpd.modal.$modal.hasClass("in")) {
 						return false;
@@ -262,7 +262,7 @@
 			this.rendered = true;
 		},
 		
-		changeAutocompleteUrl(type) {
+		changeAutocompleteUrl : function(type) {
 			// set input value to initial searchterm
 			this.searchfield.val(this.searchfield.data("ui-autocomplete").term);
 
@@ -274,13 +274,13 @@
 					url: window.sliMpd.conf.absRefPrefix + "autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 					dataType: "json",
 					type: "get",
-					success( data ) {
+					success : function( data ) {
 						window.NProgress.done();
 						response( data );
 					},
 					messages: {
 						noResults: "",
-						results() {}
+						results : function() {}
 					}
 				});
 			});
@@ -292,12 +292,12 @@
 			this.searchfield.autocomplete().data("ui-autocomplete")._search();
 		},
 
-		stripTags(str) {
+		stripTags : function(str) {
 			str=str.toString();
 			return str.replace(/<\/?[^>]+>/gi, "");
 		},
 
-		enableAutocompleteDelayed() {
+		enableAutocompleteDelayed : function() {
 			setTimeout(function(){
 				window.sliMpd.navbar.searchfield.autocomplete("enable");
 			},

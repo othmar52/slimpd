@@ -31,12 +31,12 @@
 
 		rendered : false,
 
-		initialize(options) {
+		initialize : function(options) {
 			window.Backbone.View.prototype.initialize.call(this, options);
 			_.bindAll.apply(_, [this].concat(_.functions(this)));
 		},
 
-		render() {
+		render : function() {
 			// only render page once (to prevent multiple click listeners)
 			if (this.rendered) {
 				return;
@@ -88,7 +88,7 @@
 			$("[data-toggle=\"popover\"]", this.$el).popover({
 				html: "true",
 				container: "#main",
-				content() {
+				content : function() {
 					return ($(this).data("imageUrl"))
 						? "<img class=\"popover-image\" src=\""+$(this).data("imageUrl")+"\">"
 						: $(this).attr("title");
@@ -154,7 +154,7 @@
 			this.rendered = true;
 		},
 
-		remove() {
+		remove : function() {
 			$("a.ajax-link", this.$el).off("click", this.genericClickListener);
 			$(".ajax-rqst", this.$el).off("click", this.ajaxRequestClickListener);
 			$(".player-ctrl", this.$el).off("click", this.playerCtrlClickListener);
@@ -177,13 +177,13 @@
 			window.Backbone.View.prototype.remove.call(this);
 		},
 
-		close() {
+		close : function() {
 			//console.log("AbstractView::destroyView");
 			this.remove();
 			this.unbind();
 		},
 
-		genericClickListener(e) {
+		genericClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			window.sliMpd.router.navigate($el.attr("href"), {
@@ -194,7 +194,7 @@
 			}
 		},
 
-		playerCtrlClickListener(e) {
+		playerCtrlClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			if(typeof $el.attr("data-player") == "undefined") {
@@ -212,7 +212,7 @@
 			}
 		},
 
-		ajaxPartialClickListener(e) {
+		ajaxPartialClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			if(typeof $el.attr("data-ajaxtarget") == "undefined") {
@@ -235,7 +235,7 @@
 			});
 		},
 
-		ajaxRequestClickListener(e) {
+		ajaxRequestClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			$.ajax({
@@ -251,7 +251,7 @@
 			});
 		},
 
-		triggerModalClickListener(e) {
+		triggerModalClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 
@@ -288,29 +288,29 @@
 			});
 		},
 		*/
-		playerModeToggleTriggerListener(e) {
+		playerModeToggleTriggerListener : function(e) {
 			e.preventDefault();
 			window.sliMpd.togglePlayer();
 		},
 
-		playerSizeToggleTriggerListener(e) {
+		playerSizeToggleTriggerListener : function(e) {
 			e.preventDefault();
 			$("body").toggleClass("slimplayer");
 			$(this).find("i").toggleClass("fa-chevron-down").toggleClass("fa-chevron-up");
 			this.drawWaveform();
 		},
 
-		itemGlueMouseenterListener(e) {
+		itemGlueMouseenterListener : function(e) {
 			e.preventDefault();
 			$(e.currentTarget).closest(".glue-hover-wrap").addClass("underline");
 		},
 
-		itemGlueMouseleaveListener(e) {
+		itemGlueMouseleaveListener : function(e) {
 			e.preventDefault();
 			$(e.currentTarget).closest(".glue-hover-wrap").removeClass("underline");
 		},
 
-		itemToggleClickListener(e) {
+		itemToggleClickListener : function(e) {
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			var $target = $($el.attr("data-toggle"));
@@ -318,21 +318,21 @@
 			$el.text((($target.is(":hidden")) ? $el.attr("data-text1") : $el.attr("data-text2") ) );
 		},
 
-		process(e) { },
+		process : function(e) { },
 
-		clearableInputListener(e) {
+		clearableInputListener : function(e) {
 			var $el = $(e.currentTarget);
 			$el.siblings(".clearinput").toggle(Boolean($el.val()));
 		},
 
-		clearinputClickListener(e) {
+		clearinputClickListener : function(e) {
 			//console.log("clearinputClickListener()");
 			var $el = $(e.currentTarget);
 			$( $el.attr("data-selector") ).val("").focus();
 			$el.hide();
 		},
 
-		forceXwaxPoll(e) {
+		forceXwaxPoll : function(e) {
 			try {
 				window.sliMpd.xwax.pollWorker.postMessage({ cmd: "refreshIntervalDelayed"});
 			} catch (error) {
@@ -340,17 +340,17 @@
 			}
 		},
 
-		xwaxGuiToggleTriggerListener(e) {
+		xwaxGuiToggleTriggerListener : function(e) {
 			e.preventDefault();
 			window.sliMpd.xwax.toggleXwaxGui();
 		},
 
-		bookblockNextClickListener(e) {
+		bookblockNextClickListener : function(e) {
 			e.preventDefault();
 			$("#bb-bookblock").bookblock("next");
 		},
 
-		bookblockPrevClickListener(e) {
+		bookblockPrevClickListener : function(e) {
 			e.preventDefault();
 			$("#bb-bookblock").bookblock("prev");
 		}

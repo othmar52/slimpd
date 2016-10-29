@@ -30,11 +30,11 @@
 		name : null,
 		rendered : false,
 
-		initialize(options) {
+		initialize : function(options) {
 			window.Backbone.View.prototype.initialize.call(this, options);
 		},
 
-		render() {
+		render : function() {
 			if (this.rendered) {
 				return;
 			}

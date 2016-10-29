@@ -47,7 +47,7 @@
 		// TODO: remove property as soon as local player has full functionality
 		tempNotSupportedYetNotify : {"message": "not supported in <strong>local player</strong> yet - use <strong>mpd</strong>", "type": "danger"},
 
-		initialize(options) {
+		initialize : function(options) {
 			var that = this;
 
 			/* init local player */
@@ -61,10 +61,10 @@
 				keyEnabled: false,
 				remainingDuration: false,
 				toggleDuration: true,
-				ended() {
+				ended : function() {
 					that.soundEnded({});
 				},
-				progress(e,data){
+				progress : function(e,data){
 					//console.log($(this).data("jPlayer").status);
 					var jStatus = $(this).data("jPlayer").status;
 					that.nowPlayingPercent = jStatus.currentPercentAbsolute;
@@ -78,7 +78,7 @@
 					// @see: http://jplayer.org/latest/developer-guide/#jPlayer-events
 					that.drawTimeGrid();
 				},
-				seeked() {
+				seeked : function() {
 					window.sliMpd.drawFavicon();
 				}
 			});
@@ -87,11 +87,11 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
 		},
 
-		render(options) {
+		render : function(options) {
 			window.sliMpd.modules.AbstractPlayer.prototype.render.call(this, options);
 		},
 
-		play(item) {
+		play : function(item) {
 			// TODO: check why item.ext is sometimes "vorbis" instead of "ogg" 			
 			item.ext = (item.ext === "vorbis") ? "ogg" : item.ext;
 
@@ -113,26 +113,26 @@
 			//this.reloadCss(item.hash);
 		},
 
-		prev(item) {
+		prev : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.prev.call(this, item);
 		},
 
-		next(item) {
+		next : function(item) {
 			this.soundEnded(item);
 			window.sliMpd.modules.AbstractPlayer.prototype.next.call(this, item);
 		},
 
-		seekzero(item) {
+		seekzero : function(item) {
 			$(this.playerSelector).jPlayer("playHead", 0);
 			window.sliMpd.modules.AbstractPlayer.prototype.seekzero.call(this, item);
 		},
 
-		redraw(item) {
+		redraw : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.redraw.call(this, item);
 		},
 
-		onRedrawComplete(item) {
+		onRedrawComplete : function(item) {
 			// re-bind controls(seeek-bar) on ajax loaded control-markup
 			$(this.playerSelector).jPlayer({cssSelectorAncestor: "#jp_container_1"});
 			var that = this;
@@ -143,12 +143,12 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
 		},
 
-		updateStateIcons() {
+		updateStateIcons : function() {
 			window.sliMpd.modules.AbstractPlayer.prototype.updateStateIcons.call(this);
 		},
 
 		// TODO: make markup more generic and move this to AbstractPlayer
-		setPlayPauseIcon(item) {
+		setPlayPauseIcon : function(item) {
 			var control = $(".localplayer-play-pause");
 			if (this.nowPlayingState === "play") {
 				$(control).addClass("localplayer-pause").removeClass("localplayer-play").html("<i class='fa fa-pause sign-ctrl fa-lg'></i>");
@@ -159,14 +159,14 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 
-		pause(item) {
+		pause : function(item) {
 			$(this.playerSelector).jPlayer("pause");
 			this.nowPlayingState = "pause";
 			window.sliMpd.modules.AbstractPlayer.prototype.pause.call(this, item);
 			this.setPlayPauseIcon(item);
 		},
 
-		togglePause(item) {
+		togglePause : function(item) {
 			if (this.nowPlayingState === "play") {
 				$(this.playerSelector).jPlayer("pause");
 				this.nowPlayingState = "pause";
@@ -178,23 +178,23 @@
 			this.setPlayPauseIcon(item);
 		},
 
-		toggleRepeat(item) {
+		toggleRepeat : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			// deactivating repeat is currently not possible - so dont call AbstractPlayer::toggleRepeat()
 			//window.sliMpd.modules.AbstractPlayer.prototype.toggleRepeat.call(this, item);
 		},
 
-		toggleRandom(item) {
+		toggleRandom : function(item) {
 			window.sliMpd.modules.AbstractPlayer.prototype.toggleRandom.call(this, item);
 		},
 
-		toggleConsume(item) {
+		toggleConsume : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			// consume mode is currently not possible - so dont call AbstractPlayer::toggleConsume()
 			//window.sliMpd.modules.AbstractPlayer.prototype.toggleConsume.call(this, item);
 		},
 
-		soundEnded(item) {
+		soundEnded : function(item) {
 			// TODO: add functionality "current playlist" (like mpd) for local player 
 			// for now use all rendered tracks as playlist
 
@@ -228,103 +228,103 @@
 			$("#main .is-playbtn")[0].click();
 		},
 
-		removeDupes(item) {
+		removeDupes : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
 		},
 
-		softclearPlaylist(item) {
+		softclearPlaylist : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.softclearPlaylist.call(this, item);
 		},
 
-		appendTrack(item) {
+		appendTrack : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendTrack.call(this, item);
 		},
-		appendTrackAndPlay(item) {
+		appendTrackAndPlay : function(item) {
 			this.play(item);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendTrackAndPlay.call(this, item);
 		},
 
-		injectTrack(item) {
+		injectTrack : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectTrack.call(this, item);
 		},
 
-		injectTrackAndPlay(item) {
+		injectTrackAndPlay : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectTrackAndPlay.call(this, item);
 		},
 
-		replaceTrack(item) {
+		replaceTrack : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.replaceTrack.call(this, item);
 		},
 
-		softreplaceTrack(item) {
+		softreplaceTrack : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceTrack.call(this, item);
 		},
 
 
-		appendDir(item) {
+		appendDir : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendDir.call(this, item);
 		},
 
-		appendDirAndPlay(item) {
+		appendDirAndPlay : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendDirAndPlay.call(this, item);
 		},
 
-		injectDir(item) {
+		injectDir : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectDir.call(this, item);
 		},
 
-		injectDirAndPlay(item) {
+		injectDirAndPlay : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectDirAndPlay.call(this, item);
 		},
 
-		replaceDir(item) {
+		replaceDir : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.replaceDir.call(this, item);
 		},
 
-		softreplaceDir(item) {
+		softreplaceDir : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplaceDir.call(this, item);
 		},
 
 
-		appendPlaylist(item) {
+		appendPlaylist : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylist.call(this, item);
 		},
 
-		appendPlaylistAndPlay(item) {
+		appendPlaylistAndPlay : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.appendPlaylistAndPlay.call(this, item);
 		},
 
-		injectPlaylist(item) {
+		injectPlaylist : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylist.call(this, item);
 		},
 
-		injectPlaylistAndPlay(item) {
+		injectPlaylistAndPlay : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.injectPlaylistAndPlay.call(this, item);
 		},
 
-		replacePlaylist(item) {
+		replacePlaylist : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.replacePlaylist.call(this, item);
 		},
 
-		softreplacePlaylist(item) {
+		softreplacePlaylist : function(item) {
 			window.sliMpd.notify(this.tempNotSupportedYetNotify);
 			window.sliMpd.modules.AbstractPlayer.prototype.softreplacePlaylist.call(this, item);
 		}

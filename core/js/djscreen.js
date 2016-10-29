@@ -23,13 +23,13 @@ $(document).ready(function() {
 		modules : {},
 		xwax : false,
 
-		fireRequestAndNotify(url) {
+		fireRequestAndNotify : function(url) {
 			$.get(url).done(function(response) {
 				window.sliMpd.checkNotify(response);
 			});
 		},
 
-		checkNotify(endcodedResponse) {
+		checkNotify : function(endcodedResponse) {
 			try {
 				var notifyConf = JSON.parse(endcodedResponse);
 				if (typeof notifyConf.notify !== "undefined") {
@@ -40,7 +40,7 @@ $(document).ready(function() {
 			}
 		},
 
-		notify(notifyConf) {
+		notify : function(notifyConf) {
 			////////////////////////////////////////////////
 			// FIXME:
 			// bootstrap-notify.min.js:1 Uncaught TypeError: Cannot read property "title" of undefined
@@ -57,7 +57,7 @@ $(document).ready(function() {
 			$.notify();
 		},
 
-		notifyError(errorUrl) {
+		notifyError : function(errorUrl) {
 			this.notify({
 				message : "<h4>OOOPS!</h4> something went wrong...<br /><a class=\"alert-link\" target=\"_blank\" href=\""+ errorUrl+"\">" + errorUrl + "</a>",
 				type : "danger"

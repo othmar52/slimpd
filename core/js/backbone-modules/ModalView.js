@@ -32,25 +32,25 @@
 
 		$modal : null,
 
-		initialize(options) {
+		initialize : function(options) {
 			//console.log(options);
 			this.$modal = $("#global-modal");
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
 
-		render() {
+		render : function() {
 			window.sliMpd.modules.AbstractView.prototype.render.call(this);
 			this.rendered = true;
 		},
 
-		renderModalContent(markup) {
+		renderModalContent : function(markup) {
 			this.$modal.find(".modal-content").html(markup);
 			this.rendered = false;
 			this.render();
 			this.$modal.modal("show");
 		},
 
-		addMarkupToModal(markup) {
+		addMarkupToModal : function(markup) {
 
 		}
 	});

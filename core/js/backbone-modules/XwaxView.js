@@ -36,12 +36,12 @@
 		notrunningTolerance : 2,
 		notrunningCounter : 0,
 
-		initialize(options) {
+		initialize : function(options) {
 			this.showWaveform = options.showWaveform;
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
 
-		render() {
+		render : function() {
 			// only render page once (to prevent multiple click listeners)
 			if (this.rendered) {
 				return;
@@ -52,7 +52,7 @@
 			this.rendered = true;
 		},
 
-		toggleXwaxGui() {
+		toggleXwaxGui : function() {
 			if(this.visible === false) {
 				this.showXwaxGui();
 				return;
@@ -60,7 +60,7 @@
 			this.hideXwaxGui();
 		},
 
-		showXwaxGui() {
+		showXwaxGui : function() {
 			for(var i=0; i< this.totalDecks; i++) {
 				$(".xwax-deck-"+i).html("<div></div>");
 				var deckView = new window.sliMpd.modules.XwaxPlayer({
@@ -99,7 +99,7 @@
 			});
 		},
 
-		hideXwaxGui() {
+		hideXwaxGui : function() {
 			this.lastDeckTracks = [];
 			this.lastTimecodes = [];
 			this.pollWorker.postMessage({
@@ -119,7 +119,7 @@
 			this.visible = false;
 		},
 		
-		processXwaxNotRunning() {
+		processXwaxNotRunning : function() {
 			//console.log("processXwaxNotRunning()");
 
 			// sometimes we have connection errors with xwax"s socket
@@ -142,7 +142,7 @@
 			});
 		},
 		
-		processPollData(data){
+		processPollData : function(data){
 			if(this.visible === false) {
 				return;
 			}
@@ -196,7 +196,7 @@
 					this.lastDeckTracks[i] = data[i].path;
 					this.deckViews[i].nowPlayingItem = data[i].path;
 					var hash = (data[i].item === null) ? "0000000" : data[i].item.relPathHash;
-					this.deckViews[i].redraw({hash});
+					this.deckViews[i].redraw({hash:hash});
 					//console.log("redraw deck " + i);
 				}
 				if(this.lastTimecodes[i] !== data[i].timecode) {

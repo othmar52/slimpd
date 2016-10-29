@@ -59,12 +59,12 @@
 
 		waveformSettings : { },
 
-		initialize(options) {
+		initialize : function(options) {
 			this.render();
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
 
-		render(renderMarkup) {
+		render : function(renderMarkup) {
 			if (this.rendered) {
 				return;
 			}
@@ -79,7 +79,7 @@
 		},
 
 		// fetch markup with trackinfos
-		redraw(item) {
+		redraw : function(item) {
 			item = item || { item : 0};
 			var url =  window.sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
 			if(this.mode === "xwax") {
@@ -92,7 +92,7 @@
 			}
 
 			$.ajax({
-				url
+				url : url
 			}).done(function(response){
 				// place markup in DOM
 				this._template = _.template(response);
@@ -102,10 +102,10 @@
 				this.reloadCss(item.hash);
 			}.bind(this));
 		},
-		onRedrawComplete(item) { return; },
+		onRedrawComplete : function(item) { return; },
 
 		// highlight state icons when state is active
-		updateStateIcons() {
+		updateStateIcons : function() {
 			var that = this;
 			["repeat", "random", "consume"].forEach(function(prop) {
 				if(that.state[prop] === 1) {
@@ -116,7 +116,7 @@
 			});
 		},
 
-		process(item) {
+		process : function(item) {
 			if(typeof this[item.action] === "function") {
 				this[item.action](item);
 				return;
@@ -126,58 +126,58 @@
 		},
 
 		// define those methods in inherited implementation of AbstractPlayer
-		play(item) { return; },
-		pause(item) { return; },
-		togglePause(item) { return; },
-		toggleRepeat(item) {
+		play : function(item) { return; },
+		pause : function(item) { return; },
+		togglePause : function(item) { return; },
+		toggleRepeat : function(item) {
 			this.state.repeat = (this.state.repeat === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
-		toggleRandom(item) {
+		toggleRandom : function(item) {
 			this.state.random = (this.state.random === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
-		toggleConsume(item) {
+		toggleConsume : function(item) {
 			this.state.consume = (this.state.consume === 1) ? 0 : 1;
 			this.updateStateIcons();
 		},
-		setPlayPauseIcon() { return; },
-		next(item) { return; },
-		prev(item) { return; },
-		seek(item) { return; },
-		seekzero(item) { return; },
-		remove() {
+		setPlayPauseIcon : function() { return; },
+		next : function(item) { return; },
+		prev : function(item) { return; },
+		seek : function(item) { return; },
+		seekzero : function(item) { return; },
+		remove : function() {
 			window.sliMpd.modules.AbstractView.prototype.remove.call(this);
 		},
 
-		softclearPlaylist(item) { return; },
+		softclearPlaylist : function(item) { return; },
 
-		appendTrack(item) { return; },
-		appendTrackAndPlay(item) { return; },
-		injectTrack(item) { return; },
-		injectTrackAndPlay(item) { return; },
-		replaceTrack(item) { return; },
-		softreplaceTrack(item) { return; },
+		appendTrack : function(item) { return; },
+		appendTrackAndPlay : function(item) { return; },
+		injectTrack : function(item) { return; },
+		injectTrackAndPlay : function(item) { return; },
+		replaceTrack : function(item) { return; },
+		softreplaceTrack : function(item) { return; },
 
-		appendDir(item) { return; },
-		appendDirAndPlay(item) { return; },
-		injectDir(item) { return; },
-		injectDirAndPlay(item) { return; },
-		replaceDir(item) { return; },
-		softreplaceDir(item) { return; },
+		appendDir : function(item) { return; },
+		appendDirAndPlay : function(item) { return; },
+		injectDir : function(item) { return; },
+		injectDirAndPlay : function(item) { return; },
+		replaceDir : function(item) { return; },
+		softreplaceDir : function(item) { return; },
 
-		appendPlaylist(item) { return; },
-		appendPlaylistAndPlay(item) { return; },
-		injectPlaylist(item) { return; },
-		injectPlaylistAndPlay(item) { return; },
-		replacePlaylist(item) { return; },
-		softreplacePlaylist(item) { return; },
+		appendPlaylist : function(item) { return; },
+		appendPlaylistAndPlay : function(item) { return; },
+		injectPlaylist : function(item) { return; },
+		injectPlaylistAndPlay : function(item) { return; },
+		replacePlaylist : function(item) { return; },
+		softreplacePlaylist : function(item) { return; },
 
-		soundEnded(item) { return; },
-		removeDupes(item) { return; },
-		removeTrack(item) { return; },
+		soundEnded : function(item) { return; },
+		removeDupes : function(item) { return; },
+		removeTrack : function(item) { return; },
 
-		reloadCss(hash) {
+		reloadCss : function(hash) {
 			// TODO: comment whats happening here
 			// FIXME: mpd-version is broken since backbonify
 			var suffix, selector;
@@ -192,7 +192,7 @@
 
 		},
 
-		drawFavicon() {
+		drawFavicon : function() {
 			window.FavIconX.config({
 				updateTitle: false,
 				shape: "doughnut",
@@ -203,13 +203,13 @@
 				fillColor: this.faviconDoghnutColor,
 				borderWidth : 1.2,
 				backgroundColor : this.faviconBackgroundColor,
-				titleRenderer(v, t){
+				titleRenderer : function(v, t){
 					return $(".player-"+ this.mode +" .now-playing-string").text();
 				}
 			}).setValue(this.nowPlayingPercent);
 		},
 
-		drawTimeGrid() {
+		drawTimeGrid : function() {
 			if(this.nowPlayingDuration <= 0) {
 				return;
 			}
@@ -257,7 +257,7 @@
 			ctx.fill();
 		},
 
-		drawWaveform() {
+		drawWaveform : function() {
 			// thanks to https://github.com/Idnan/SoundCloud-Waveform-Generator
 			var $waveFormWrapper = $("#"+ this.mode +"-waveform-wrapper");
 			$waveFormWrapper.html(
@@ -279,7 +279,7 @@
 			$.ajax({
 				url: $waveFormWrapper.attr("data-jsonurl"),
 				dataType: "json",
-				success(vals) {
+				success : function(vals) {
 					var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
 					var maxVal = that.getMaxVal(vals);
 					for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
@@ -295,7 +295,7 @@
 					$waveFormWrapper.html("");
 					$(that.waveformSettings.canvas).appendTo($waveFormWrapper);
 				},
-				error(response) {
+				error : function(response) {
 					$waveFormWrapper.html(
 						$("<p />").html("error generating waveform...")
 					);
@@ -303,7 +303,7 @@
 			});
 		},
 
-		bufferMeasure(position, length, data) {
+		bufferMeasure : function(position, length, data) {
 			var sum = 0.0;
 			for (var i = position; i <= (position + length) - 1; i++) {
 				sum += Math.pow(data[i], 2);
@@ -311,7 +311,7 @@
 			return Math.sqrt(sum / data.length);
 		},
 
-		drawBar(i, h) {
+		drawBar : function(i, h) {
 			this.waveformSettings.context.fillStyle = this.waveformSettings.waveColor;
 			var w = this.waveformSettings.barWidth;
 			if (this.waveformSettings.barGap !== 0) {
@@ -327,7 +327,7 @@
 			this.waveformSettings.context.fillRect(x, y, w, h);
 		},
 
-		getMaxVal(inputArray) {
+		getMaxVal : function(inputArray) {
 			var max = 0;
 			for(var i=0; i<inputArray.length; i++) {
 				max = (inputArray[i] > max) ? inputArray[i] : max;
@@ -335,7 +335,7 @@
 			return max;
 		},
 
-		formatTime(seconds) {
+		formatTime : function(seconds) {
 			if(typeof seconds === "undefined") {
 				return "-- : --";
 			}
@@ -351,21 +351,21 @@
 		},
 
 		/* only for polled mpd player implementation - begin */
-		refreshInterval() {
+		refreshInterval : function() {
 			this.pollWorker.postMessage({
 				cmd: "refreshInterval"
 			});
 		},
 		pollWorker : null,
-		processPollData(data) { return; },
+		processPollData : function(data) { return; },
 		/* only for polled mpd player implementation - end */
 
 
 		/* only for mpd player progressbar implementation/interpolation - begin */
 		trackAnimation : null,
 		timeLineLight : null,
-		timelineSetValue(value) { return; },
-		updateSlider() { return; }
+		timelineSetValue : function(value) { return; },
+		updateSlider : function() { return; }
 		/* only for polled mpd player implementation/interpolation  - end */
 	});
 }());
