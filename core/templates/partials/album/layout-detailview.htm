@@ -3,8 +3,13 @@
 <div class="row">
 	<div class="col-md-3">
 		{% if albumimages|length > 0 %}
-		<a data-toggle="lightbox" href="{{root}}image-1000/album/{{ album.uid }}" data-type="image" data-gallery="galname">
-			<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
+		<a href="{{root}}image-1000/id/{{ albumimages|first.uid }}"
+			data-toggle="lightbox"
+			data-type="image"
+			data-gallery="galname"
+			class="contain-img img-placeholder main-image"
+			style="background-image:url({{root}}image-300/id/{{ albumimages|first.uid }});background-color:{{ albumimages|first.bghex }};">
+
 		</a>
 		{% include 'modules/imagecarousel.htm' with { 'itemlist': albumimages } %}
 		{% else %}
