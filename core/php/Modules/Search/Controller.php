@@ -174,7 +174,7 @@ class Controller extends \Slimpd\BaseController {
 			GROUP BY itemuid,type
 			LIMIT 1;
 		");
-		$stmt->bindValue(":match", getSphinxMatchSyntax([$term]), \PDO::PARAM_STR);
+		$stmt->bindValue(":match", getSphinxMatchSyntax([$term], $args['useExactMatch']), \PDO::PARAM_STR);
 		if(($typeString !== "all")) {
 			$stmt->bindValue(":type", $typeIndex, \PDO::PARAM_INT);
 		}
@@ -217,9 +217,9 @@ class Controller extends \Slimpd\BaseController {
 			".$sortQuery."
 			LIMIT :offset,:max
 			OPTION
-				field_weights=(display=30, title=8, artist=7, allchunks=1),
+				field_weights=(title=50, display=40, artist=30, allchunks=1),
 				max_matches=1000000;"); // TODO: move max_matches to sliMpd conf
-		$stmt->bindValue(":match", getSphinxMatchSyntax([$term]), \PDO::PARAM_STR);
+		$stmt->bindValue(":match", getSphinxMatchSyntax([$term], $args['useExactMatch']), \PDO::PARAM_STR);
 		$stmt->bindValue(":offset", ($args['currentPage']-1)*$itemsPerPage , \PDO::PARAM_INT);
 		$stmt->bindValue(":max", $itemsPerPage, \PDO::PARAM_INT);
 		if($typeString !== "all") {
@@ -327,7 +327,9 @@ class Controller extends \Slimpd\BaseController {
 
 		# TODO: evaluate if modifying searchterm makes sense
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
-		$term = cleanSearchterm($request->getParam("q"));
+		$originalTerm = $request->getParam("q");
+		$term = cleanSearchterm($originalTerm);
+		$args['useExactMatch'] = (preg_match("/^\".*\"$/", trim($originalTerm))) ? TRUE : FALSE;
 
 		$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
 		$startTime = getMicrotimeFloat();
@@ -373,6 +375,7 @@ class Controller extends \Slimpd\BaseController {
 		// "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
 
 		$term = cleanSearchterm($term);
+		$args['useExactMatch'] = (preg_match("/^\".*\"$/", trim($originalTerm))) ? TRUE : FALSE;
 		$start =0;
 		$offset =20;
 		$current = 1;
@@ -386,7 +389,7 @@ class Controller extends \Slimpd\BaseController {
 			GROUP BY itemuid,type
 			LIMIT $start,$offset
 			OPTION
-				field_weights=(display=30, title=8, artist=7, allchunks=1);");
+				field_weights=(title=50, display=40, artist=30, allchunks=1);");
 
 		if(($args["type"] !== "all")) {
 			$stmt->bindValue(":type", $this->filterTypeMapping[$args["type"]], \PDO::PARAM_INT);

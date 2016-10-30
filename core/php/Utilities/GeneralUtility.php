@@ -24,7 +24,7 @@ function sortHelper($string1,$string2){
 function cleanSearchterm($searchterm) {
 	# TODO: use flattenWhitespace() in albummigrator on reading tag-information
 	return trim(flattenWhitespace(
-		str_replace(["_", "-", "/", " ", "(", ")"], " ", $searchterm)
+		str_replace(["_", "-", "/", " ", "(", ")", "\"", "'"], " ", $searchterm)
 	));
 }
 
@@ -79,7 +79,7 @@ function parseMetaForTotal($metaArray) {
  * @param array $terms : array with searchphrases
  * @return string : query syntax which can be used in MATCH(:match)
  */
-function getSphinxMatchSyntax(array $terms) {
+function getSphinxMatchSyntax(array $terms, $useExactMatch = FALSE) {
 	$groups = [];
 	foreach($terms as $term) {
 		
@@ -90,9 +90,9 @@ function getSphinxMatchSyntax(array $terms) {
 		
 		$groups[] = "('@* ". join(" ", $terms) ."')";
 		$groups[] = "(' \"". addStars($term) . "\"')";
-		// TODO: can we make this controlable via GUI?
-		// maybe by adding double quotes around complete searchterm!?
-		$groups[] = "('". str_replace(" ", " | ", $term) ."')";
+		if($useExactMatch === FALSE) {
+			$groups[] = "('". str_replace(" ", " | ", $term) ."')";
+		}
 	}
 	$groups = array_unique(array_map('simplifySphinxQuery', $groups));
 	#echo "<pre>" . print_r($groups,1);die;
