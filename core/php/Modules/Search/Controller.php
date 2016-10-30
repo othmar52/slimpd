@@ -22,6 +22,16 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
 
+	// those values have to match sphinxindex:srcslimpdautocomplete
+	private $filterTypeMapping = [
+		"artist" => 1,
+		"album" => 2,
+		"label" => 3,
+		"track" => 4,
+		"genre" => 5,
+		"dirname" => 6,
+	];
+
 	// TODO: carefully check which sorting is possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
 	//   compare with templates/partials/dropdown-search-sorting.htm
 	//   compare with templates/partials/dropdown-typelist-sorting.htm
@@ -394,16 +404,17 @@ class Controller extends \Slimpd\BaseController {
 			LIMIT $start,$offset;");
 		
 		if(($args["type"] !== "all")) {
-			$stmt->bindValue(":type", $filterTypeMapping[$args["type"]], \PDO::PARAM_INT);
+			$stmt->bindValue(":type", $this->filterTypeMapping[$args["type"]], \PDO::PARAM_INT);
 		}
 		$stmt->bindValue(":match", getSphinxMatchSyntax([$term,$originalTerm]), \PDO::PARAM_STR);
 	
 		// do some timelogging for debugging purposes
 		$timLogData = [
 			"-----------------------------------------------",
-			"AUTOCOMPLETE timelogger",
+			"AUTOCOMPLETE timelogger " . getMicrotimeFloat(),
 			" term: " . $term,
-			" orignal term: " . $originalTerm
+			" orignal term: " . $originalTerm,
+			" matcher: " . getSphinxMatchSyntax([$term,$originalTerm])
 		];
 	
 		// in case an autocomplete ajax call gets aborted make sure to stop query against our index
@@ -441,7 +452,7 @@ class Controller extends \Slimpd\BaseController {
 				return $response->withRedirect($uri, 403);
 			}
 		} else {
-			$filterTypeMapping = array_flip($filterTypeMapping);
+			$filterTypeMapping = array_flip($this->filterTypeMapping);
 			$sphinxClient = new \SphinxClient();
 			foreach($rows as $row) {
 				$excerped = $sphinxClient->BuildExcerpts([$row["display"]], $this->conf["sphinx"]["mainindex"], $term);

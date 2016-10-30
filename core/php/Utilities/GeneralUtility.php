@@ -84,12 +84,19 @@ function getSphinxMatchSyntax(array $terms) {
 	foreach($terms as $term) {
 		$groups[] = "(' \"". addStars($term) . "\"')";
 		$groups[] = "('\"". $term ."\"')";
-		$groups[] = "('\"". str_replace(" ", "*", $term) ."\"')";
-		$groups[] = "('\"". str_replace(" ", ",", $term) ."\"')";
-		$groups[] = "('\"". str_replace(" ", " | ", $term) ."\"')";
+		#$groups[] = "('\"". str_replace(" ", "*", $term) ."\"')";
+		#$groups[] = "('\"". str_replace(" ", ",", $term) ."\"')";
+		#$groups[] = "('\"". str_replace(" ", " | ", $term) ."\"')";
 		$groups[] = "('\"". str_replace(" ", "* | ", $term) ."*\"')";
 	}
+	$groups = array_unique(array_map('simplyfySphinxQuery', $groups));
 	return join("|\n", $groups);
+}
+
+function simplyfySphinxQuery($input) {
+	// replace multiple asterisks with single asterisk
+	$output = preg_replace('/\*+/', '*', strtolower($input));
+	return str_replace('* *', '*', $output);
 }
 
 /**
