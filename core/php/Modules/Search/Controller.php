@@ -217,6 +217,7 @@ class Controller extends \Slimpd\BaseController {
 			".$sortQuery."
 			LIMIT :offset,:max
 			OPTION
+			ranker = wordcount,
 				field_weights=(title=50, display=40, artist=30, allchunks=1),
 				max_matches=1000000;"); // TODO: move max_matches to sliMpd conf
 		$stmt->bindValue(":match", getSphinxMatchSyntax([$term], $args['useExactMatch']), \PDO::PARAM_STR);
@@ -248,28 +249,35 @@ class Controller extends \Slimpd\BaseController {
 			]
 		);
 
+		
+		#if($args['useExactMatch'] === TRUE) {
+		#	$args['useExactMatch'] = FALSE;
+		#	// recursion with fuzzy search
+		#	return $this->querySphinxIndex($sphinxPdo, $typeString, $term, $args);
+		#}
+		$meta = $sphinxPdo->query("SHOW META")->fetchAll();
+		foreach($meta as $m) {
+			$meta_map[$m["Variable_name"]] = $m["Value"];
+		}
+		$words = array();
+		foreach($meta_map as $k=>$v) {
+			if(preg_match("/keyword\[\d+]/", $k)) {
+				preg_match("/\d+/", $k,$key);
+				$key = $key[0];
+				$words[$key]["keyword"] = $v;
+			}
+			if(preg_match("/docs\[\d+]/", $k)) {
+				preg_match("/\d+/", $k,$key);
+				$key = $key[0];
+				$words[$key]["docs"] = $v;
+			}
+		}
+		$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo, TRUE);
+		#echo "xfdbgdg"; var_dump($suggest); die;
+		if($suggest !== FALSE) {
+			$args['suggestions'] = explode(" ", $suggest);
+		}
 		if(count($rows) === 0) {
-			// TODO: show suggestions for each single phrase
-			return;
-			$meta = $sphinxPdo->query("SHOW META")->fetchAll();
-			foreach($meta as $m) {
-				$meta_map[$m["Variable_name"]] = $m["Value"];
-			}
-			$words = array();
-			foreach($meta_map as $k=>$v) {
-				if(preg_match("/keyword\[\d+]/", $k)) {
-					preg_match("/\d+/", $k,$key);
-					$key = $key[0];
-					$words[$key]["keyword"] = $v;
-				}
-				if(preg_match("/docs\[\d+]/", $k)) {
-					preg_match("/\d+/", $k,$key);
-					$key = $key[0];
-					$words[$key]["docs"] = $v;
-				}
-			}
-			$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
-			echo "<pre>SUGGEST:" . var_dump($suggest);die;
 			return;
 		}
 
@@ -389,6 +397,7 @@ class Controller extends \Slimpd\BaseController {
 			GROUP BY itemuid,type
 			LIMIT $start,$offset
 			OPTION
+			ranker = wordcount,
 				field_weights=(title=50, display=40, artist=30, allchunks=1);");
 
 		if(($args["type"] !== "all")) {

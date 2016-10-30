@@ -260,9 +260,8 @@ function buildTrigrams ($keyword) {
 	return $trigrams;
 }
 
-function MakeSuggestion($keyword, $sphinxPDO) {
-	$trigrams = buildTrigrams($keyword);
-	$query = "\"$trigrams\"/1";
+function MakeSuggestion($keyword, $sphinxPDO, $force = FALSE) {
+	$query = '"' . buildTrigrams($keyword) .'"/1';
 	$len = strlen($keyword);
 
 	$delta = LENGTH_THRESHOLD;
@@ -270,6 +269,8 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 		SELECT *, weight() as w, w+:delta-ABS(len-:len) as myrank
 		FROM slimpdsuggest
 		WHERE MATCH(:match) AND len BETWEEN :lowlen AND :highlen
+		". (($force === TRUE) ? "AND keyword != :keyword" : "" )."
+		AND keyword != :keyword
 		ORDER BY myrank DESC, freq DESC
 		LIMIT 0,:topcount OPTION ranker=wordcount
 	");
@@ -279,6 +280,9 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 	$stmt->bindValue(":delta", $delta, PDO::PARAM_INT);
 	$stmt->bindValue(":lowlen", $len - $delta, PDO::PARAM_INT);
 	$stmt->bindValue(":highlen", $len + $delta, PDO::PARAM_INT);
+	if($force === TRUE) {
+		$stmt->bindValue(":keyword", $keyword, PDO::PARAM_STR);
+	}
 	$stmt->bindValue(":topcount",TOP_COUNT, PDO::PARAM_INT);
 	$stmt->execute();
 
@@ -293,10 +297,11 @@ function MakeSuggestion($keyword, $sphinxPDO) {
 			return $suggested;
 		}
 	}
+	
 	return $keyword;
 }
 
-function MakePhaseSuggestion($words, $query, $sphinxPDO) {
+function MakePhaseSuggestion($words, $query, $sphinxPDO, $force = FALSE) {
 	$suggested = array();
 	$docsCount = 0;
 	$idx = 0;
@@ -311,16 +316,20 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO) {
 	}
 	$docsCount = $docsCount / ($idx * $idx);
 	$mismatches = [];
+	if($force === TRUE) {
+		$mismatches = trimExplode(" ", $query);
+	}
 	foreach ($words as $key => $word) {
 		if ($word["docs"] == 0 | $word["docs"] < $docsCount) {
 			$mismatches[] = $word["keyword"];
 		}
 	}
+	
 	if(count($mismatches) < 1) {
 		return FALSE;
 	}
 	foreach ($mismatches as $mismatch) {
-		$result = MakeSuggestion($mismatch, $sphinxPDO);
+		$result = MakeSuggestion($mismatch, $sphinxPDO, $force);
 		if ($result && $mismatch !== $result) {
 			$suggested[$mismatch] = $result;
 		}

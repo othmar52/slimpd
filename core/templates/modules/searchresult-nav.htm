@@ -3,6 +3,12 @@
 		<span class="dark uc tinyfont darker">{{'searchresults'|ll}}</span>
 		<h2 class="inline-heading nomargin">&quot;{{ search.all.term }}&quot;</h2>
 		<span class="dark uc tinyfont darker">{{ statsstring }}</span>
+		{% if (suggestions) and (search[searchcurrent].total > 0) %}
+			<br/><span class="dark uc tinyfont">Similar search phrases:</span>
+			{% for chunk in suggestions %}
+			<a href="{{root}}searchall/page/1/sort/relevance/desc?q={{chunk}}" class="dark ajax-link">{{chunk}}</a>{% if not loop.last%},{% endif %}
+			{% endfor %}
+		{% endif %}
 	</div>
 </div>
 <div class="row">

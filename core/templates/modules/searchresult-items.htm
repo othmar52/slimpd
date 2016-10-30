@@ -79,4 +79,11 @@
 	{% endif %}
 {% else %}
 <h3>nothing found...</h3>
+
+{% if suggestions %}
+	<span class="dark">Did you mean:</span>
+	{% for chunk in suggestions %}
+	<a href="{{root}}searchall/page/1/sort/relevance/desc?q={{chunk}}" class="col2 ajax-link">{{chunk}}</a>{% if not loop.last%},{% endif %}
+	{% endfor %}
+{% endif %}
 {% endif %}
