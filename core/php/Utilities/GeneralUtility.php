@@ -23,9 +23,9 @@ function sortHelper($string1,$string2){
 
 function cleanSearchterm($searchterm) {
 	# TODO: use flattenWhitespace() in albummigrator on reading tag-information
-	return flattenWhitespace(
+	return trim(flattenWhitespace(
 		str_replace(["_", "-", "/", " ", "(", ")"], " ", $searchterm)
-	);
+	));
 }
 
 function isFutureTimestamp($inputTstamp) {
@@ -82,18 +82,24 @@ function parseMetaForTotal($metaArray) {
 function getSphinxMatchSyntax(array $terms) {
 	$groups = [];
 	foreach($terms as $term) {
+		
+		#$groups[] = "('\"". $term ."\"')";
+		##$groups[] = "('\"". str_replace(" ", "*", $term) ."\"')";
+		##$groups[] = "('\"". str_replace(" ", ",", $term) ."\"')";
+		##$groups[] = "('\"". str_replace(" ", " | ", $term) ."\"')";
+		
+		$groups[] = "('@* ". join(" ", $terms) ."')";
 		$groups[] = "(' \"". addStars($term) . "\"')";
-		$groups[] = "('\"". $term ."\"')";
-		#$groups[] = "('\"". str_replace(" ", "*", $term) ."\"')";
-		#$groups[] = "('\"". str_replace(" ", ",", $term) ."\"')";
-		#$groups[] = "('\"". str_replace(" ", " | ", $term) ."\"')";
-		$groups[] = "('\"". str_replace(" ", "* | ", $term) ."*\"')";
+		// TODO: can we make this controlable via GUI?
+		// maybe by adding double quotes around complete searchterm!?
+		$groups[] = "('". str_replace(" ", " | ", $term) ."')";
 	}
-	$groups = array_unique(array_map('simplyfySphinxQuery', $groups));
+	$groups = array_unique(array_map('simplifySphinxQuery', $groups));
+	#echo "<pre>" . print_r($groups,1);die;
 	return join("|\n", $groups);
 }
 
-function simplyfySphinxQuery($input) {
+function simplifySphinxQuery($input) {
 	// replace multiple asterisks with single asterisk
 	$output = preg_replace('/\*+/', '*', strtolower($input));
 	return str_replace('* *', '*', $output);

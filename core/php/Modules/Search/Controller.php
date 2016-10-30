@@ -195,7 +195,6 @@ class Controller extends \Slimpd\BaseController {
 
 	private function querySphinxIndex($sphinxPdo, $typeString, $term, &$args) {
 
-		$ranker = "sph04";
 		$start = 0;
 		$itemsPerPage = 20;
 
@@ -217,15 +216,15 @@ class Controller extends \Slimpd\BaseController {
 			GROUP BY itemuid,type
 			".$sortQuery."
 			LIMIT :offset,:max
-			OPTION ranker=".$ranker.";");
+			OPTION
+				field_weights=(display=30, title=8, artist=7, allchunks=1),
+				max_matches=1000000;"); // TODO: move max_matches to sliMpd conf
 		$stmt->bindValue(":match", getSphinxMatchSyntax([$term]), \PDO::PARAM_STR);
 		$stmt->bindValue(":offset", ($args['currentPage']-1)*$itemsPerPage , \PDO::PARAM_INT);
 		$stmt->bindValue(":max", $itemsPerPage, \PDO::PARAM_INT);
 		if($typeString !== "all") {
 			$stmt->bindValue(":type", $typeIndex, \PDO::PARAM_INT);
 		}
-
-
 
 		$stmt->execute();
 		$meta = $sphinxPdo->query("SHOW META")->fetchAll();
@@ -251,6 +250,26 @@ class Controller extends \Slimpd\BaseController {
 
 		if(count($rows) === 0) {
 			// TODO: show suggestions for each single phrase
+			return;
+			$meta = $sphinxPdo->query("SHOW META")->fetchAll();
+			foreach($meta as $m) {
+				$meta_map[$m["Variable_name"]] = $m["Value"];
+			}
+			$words = array();
+			foreach($meta_map as $k=>$v) {
+				if(preg_match("/keyword\[\d+]/", $k)) {
+					preg_match("/\d+/", $k,$key);
+					$key = $key[0];
+					$words[$key]["keyword"] = $v;
+				}
+				if(preg_match("/docs\[\d+]/", $k)) {
+					preg_match("/\d+/", $k,$key);
+					$key = $key[0];
+					$words[$key]["docs"] = $v;
+				}
+			}
+			$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
+			echo "<pre>SUGGEST:" . var_dump($suggest);die;
 			return;
 		}
 
@@ -302,81 +321,6 @@ class Controller extends \Slimpd\BaseController {
 			$args["itemlist"][] = $obj;
 		}
 		$args["renderitems"] = $this->getRenderItems($args["itemlist"]);
-		return;
-
-
-
-		#die(__FUNCTION__);
-		$meta = $sphinxPdo->query("SHOW META")->fetchAll();
-		foreach($meta as $m) {
-			$meta_map[$m["Variable_name"]] = $m["Value"];
-		}
-
-		if(count($rows) === 0 && !$request->getParam("nosuggestion")) {
-			$words = array();
-			foreach($meta_map as $k=>$v) {
-				if(preg_match("/keyword\[\d+]/", $k)) {
-					preg_match("/\d+/", $k,$key);
-					$key = $key[0];
-					$words[$key]["keyword"] = $v;
-				}
-				if(preg_match("/docs\[\d+]/", $k)) {
-					preg_match("/\d+/", $k,$key);
-					$key = $key[0];
-					$words[$key]["docs"] = $v;
-				}
-			}
-			$suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
-			if($suggest !== FALSE) {
-				$uri = $this->router->pathFor(
-					'search',
-					[
-						"type" => $args['currentType'],
-						"currentPage" => $args['currentPage'],
-						"sort" => $args['sort'],
-						"direction" => $args['direction']
-					]
-				) . "?nosuggestion=1&q=".$suggest . "&" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'], FALSE);
-				return $response->withRedirect($uri, 403);
-			}
-			$result[] = [
-				"label" => "nothing found",
-				"url" => "#",
-				"type" => "",
-				"img" => "/core/skin/default/img/icon-label.png" // TODO: add not-found-icon TODO: respect and use root/fileroot variables 
-			];
-		} else {
-
-			$filterTypeMappingF = array_flip($filterTypeMapping);
-			foreach($rows as $row) {
-				switch($filterTypeMappingF[$row["type"]]) {
-					case "artist":
-					case "label":
-					case "album":
-					case "track":
-					case "genre":
-						$repoKey = $filterTypeMappingF[$row["type"]] . 'Repo';
-						$obj = $this->$repoKey->getInstanceByAttributes(array("uid" => $row["itemuid"]));
-						break;
-					case "dirname":
-						$tmp = $this->albumRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
-						if($tmp !== NULL) {
-							$obj = new \Slimpd\Models\Directory($tmp->getRelPath());
-							$obj->setBreadcrumb(\Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($obj->getRelPath()));
-						}
-						break;
-				}
-				if($obj === NULL) {
-					// vanished item: we have it in sphinx index but not in MySQL database
-					$obj = $this->trackRepo->getNewInstanceWithoutDbQueries($row["display"]);
-					$obj->setError("notfound");
-				}
-				$args["itemlist"][] = $obj;
-			}
-
-		}
-		$args["search"][$type]["time"] = number_format(getMicrotimeFloat() - $args["search"][$type]["time"],3);
-		$args["timelog"][$type]->End();
 	}
 
 	public function searchAction(Request $request, Response $response, $args) {
@@ -435,23 +379,14 @@ class Controller extends \Slimpd\BaseController {
 		$result = [];
 
 		$sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
-
-		// those values have to match sphinxindex:srcslimpdautocomplete
-		$filterTypeMapping = array(
-			"artist" => 1,
-			"album" => 2,
-			"label" => 3,
-			"track" => 4,
-			"genre" => 5,
-			"dirname" => 6,
-		);
-
 		$stmt = $sphinxPdo->prepare("
 			SELECT id,type,itemuid,display,trackCount,albumCount FROM ". $this->conf["sphinx"]["mainindex"]."
 			WHERE MATCH(:match)
 			" . (($args["type"] !== "all") ? " AND type=:type " : "") . "
 			GROUP BY itemuid,type
-			LIMIT $start,$offset;");
+			LIMIT $start,$offset
+			OPTION
+				field_weights=(display=30, title=8, artist=7, allchunks=1);");
 
 		if(($args["type"] !== "all")) {
 			$stmt->bindValue(":type", $this->filterTypeMapping[$args["type"]], \PDO::PARAM_INT);
