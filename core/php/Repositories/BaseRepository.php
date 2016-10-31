@@ -51,7 +51,7 @@ class BaseRepository {
 		switch($orderBy) {
 			case 'trackNumber ASC':
 				// as we have a string field(01, A1,...) we have to cast it by adding ' +0'
-				$orderBy = ' ORDER BY trackNumber + 0 ASC ';
+				$orderBy = ' ORDER BY trackNumber + 0 ASC, trackNumber ASC ';
 				break;
 			case 'imageweight':
 				$weightConf = trimExplode("\n", $this->container->conf['images']['weightening'], TRUE);
