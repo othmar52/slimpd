@@ -32,30 +32,30 @@ class TrackRecommendationsPostProcessor {
 	private static function setArtist($value, &$contextItem) {
 		// "A01. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->recommendations["setTrackNumber"][] = strtoupper($matches[1]);
-			$contextItem->recommendations["setArtist"][] = $matches[2];
+			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
 		}
 		// "1. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->recommendations["setTrackNumber"][] = removeLeadingZeroes($matches[1]);
-			$contextItem->recommendations["setArtist"][] = $matches[2];
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
 		}
 	}
 
 	private static function setTitle($value, &$contextItem) {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->recommendations["setTrackNumber"][] = strtoupper($matches[1]);
-			$contextItem->recommendations["setTitle"][] = $matches[2];
+			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->recommendations["setTrackNumber"][] = removeLeadingZeroes($matches[1]);
-			$contextItem->recommendations["setTitle"][] = $matches[2];
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
 		}
 	}
 
 	private static function setTrackNumber($value, &$contextItem) {
 		if(isset($value[0]) && $value[0] === "0") {
-			$contextItem->recommendations["setTrackNumber"][] = removeLeadingZeroes($value);
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($value), 1);
 		}
 	}
 
@@ -65,20 +65,20 @@ class TrackRecommendationsPostProcessor {
 		// "(p) & (c) 2005 Mute Records Ltd"
 		// "(P)+(C) 1998 Elektrolux"
 		if(preg_match("/^(?:℗|\(p\)|\(p\)[ &+]\(c\))" . RGX::YEAR . "\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->recommendations["setYear"][] = trim($matches[1]);
-			$contextItem->recommendations["setLabel"][] = trim($matches[2]);
+			$contextItem->setRecommendationEntry("setYear", trim($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), 1);
 			return;
 		}
 
 		// "(c)Subtitles Music (UK)"
 		if(preg_match("/^\(c\)" . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
 			return;
 		}
 
 		// "a division of Universal Music GmbH"
 		if(preg_match("/^a\ division\ of\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
 			return;
 		}
 
@@ -87,8 +87,8 @@ class TrackRecommendationsPostProcessor {
 		// "Viper Recordings | VPR051" // TODO: make sure glue gets removed
 		// "Jazzman - JMANCD048" // TODO: make sure glue gets removed
 		if(preg_match("/^" . RGX::ANYTHING . RGX::GLUE . RGX::CATNR . "$/", $value, $matches)) {
-			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
-			$contextItem->recommendations["setCatalogNr"][] = trim($matches[2]);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setCatalogNr", trim($matches[2]), 1);
 			return;
 		}
 	}

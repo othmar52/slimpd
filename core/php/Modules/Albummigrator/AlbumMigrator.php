@@ -123,10 +123,10 @@ class AlbumMigrator {
 		}
 	}
 
-	public function recommendationForAllTracks(array $recommendations) {
+	public function recommendationForAllTracks(array $recommendations, $score = 1) {
 		#print_r($recommendations); die;
 		foreach($this->trackContextItems as $trackContextItem) {
-			$trackContextItem->recommend($recommendations);
+			$trackContextItem->recommend($recommendations, $score);
 		}
 	}
 

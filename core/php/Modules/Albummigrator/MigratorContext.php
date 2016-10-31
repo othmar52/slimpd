@@ -59,8 +59,8 @@ trait MigratorContext {
 				$this->$setterName($foundValue);
 			}
 
-			// but add to recommendations in any case
-			$this->recommend([$setterName => $foundValue]);
+			// but add to recommendations in any case (higher scoring for real tag attributes)
+			$this->recommend([$setterName => $foundValue], 2);
 		}
 	}
 
@@ -75,7 +75,7 @@ trait MigratorContext {
 		return trim(flattenWhitespace(unifyHyphens(unifyBraces(remU(strip_tags($out))))));
 	}
 	
-	public function recommend($properties) {
+	public function recommend($properties, $score = 1) {
 		cliLog("  " .get_called_class() . " recommendations", 10, "purple");
 		foreach($properties as $setterName => $value) {
 			$cleanValue = fixCaseSensitivity(trim(flattenWhitespace(remU($value))));
@@ -89,12 +89,24 @@ trait MigratorContext {
 			if($cleanValue === "") {
 				continue;
 			}
-			cliLog("    " . $setterName . ": " . $cleanValue, 10, "cyan");
-			$this->recommendations[$setterName][] = $cleanValue;
+			cliLog("    [".($score>0?"+":"") .$score. "]" . $setterName . ": " . $cleanValue, 10, "cyan");
+
+			$this->setRecommendationEntry($setterName, $cleanValue, $score);
 			\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
 		}
 		cliLog(" ", 10);
 	}
+	
+	/**
+	 * checks if array key exists before scoring
+	 */
+	public function setRecommendationEntry($setterName, $value, $score) {
+		if(isset($this->recommendations[$setterName][$value]) === FALSE) {
+			$this->recommendations[$setterName][$value] = 0;
+		}
+		$this->recommendations[$setterName][$value] += $score;
+	}
+
 	
 	public function getMostScored($setterName) {
 		// without recommendations return instance property
@@ -103,11 +115,19 @@ trait MigratorContext {
 			return $this->$getterName();
 		}
 
-		if(count($this->recommendations[$setterName]) === 1) {
-			return $this->recommendations[$setterName][0];
+		$highestScore = array_keys($this->recommendations[$setterName], max($this->recommendations[$setterName]));
+
+		// there is only one item with highscore
+		if(count($highestScore) === 1) {
+			return $highestScore[0];
 		}
-		$mostRelevant = uniqueArrayOrderedByRelevance($this->recommendations[$setterName]);
-		return array_shift($mostRelevant);
+
+		// hard to decide what to take if we have same score for different values
+		// lets take the longest string :)
+		$lengths = array_map('strlen', $highestScore);
+		$maxLength = max($lengths);
+		$index = array_search($maxLength, $lengths);
+		return $highestScore[$index];
 	}
 	
 	public function getAllRecommendations($setterName) {
@@ -116,11 +136,7 @@ trait MigratorContext {
 			$getterName = "g" . substr($setterName, 1);
 			return [ $this->$getterName() ];
 		}
-		// without recommendations return 
-		if(count($this->recommendations[$setterName]) === 1) {
-			return [ $this->recommendations[$setterName][0] ];
-		}
-		return array_unique($this->recommendations[$setterName]);
+		return array_unique(array_keys($this->recommendations[$setterName]));
 	}
 }
 

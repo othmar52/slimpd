@@ -22,6 +22,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 	use \Slimpd\Modules\Albummigrator\MigratorContext; // config
 	protected $confKey = "album-tag-mapping-";
 	protected $jumbleJudge;
+	#public $sceneSuffix;
 	
 	public function __construct($container) {
 		$this->container = $container;
@@ -71,6 +72,25 @@ class AlbumContext extends \Slimpd\Models\Album {
 			;
 
 		$this->scoreLabelByLabelDirectory($albumMigrator);
+		
+		// check if we have a common scene suffix string
+		$sceneSuffixes = [];
+		foreach($jumbleJudge->tests["SchemaTests\Filename\HasSceneSuffix"] as $sceneSuffixTest) {
+			$sceneSuffixes[] = $sceneSuffixTest->result;
+		}
+		if(count(array_unique($sceneSuffixes)) === 1) {
+			// downvoting in case scene-suffix had been guessed as artist or title
+			$this->jumbleJudge->albumMigrator->recommendationForAllTracks(
+				[
+					'setArtist' => ucfirst($sceneSuffixes[0]),
+					'setTitle' => ucfirst($sceneSuffixes[0])
+				],
+				-1
+			);
+			//$this->sceneSuffix = $sceneSuffixes[0];
+		}
+		
+
 	}
 
 	private function runTest($className, $input) {
