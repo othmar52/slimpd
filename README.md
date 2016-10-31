@@ -1,4 +1,4 @@
-<p align="center"><a name="top" href="https://github.com/othmar52/slimpd/wiki"><img alt="home" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/slimpd_logo_moustache_v2.png"></a></p>
+<p align="center"><a name="top" href="https://github.com/othmar52/slimpd/wiki"><img alt="home" src="https://github.com/othmar52/slimpd/raw/master/core/skin/default/img/slimpd_logo_moustache_v2.png"></a></p>
 <p align="center"><sup>PHP/JS/MySQL based MPD-web-client for large music collections
 heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p>
 <p align="center">
@@ -71,7 +71,7 @@ heavily inspired by <a href="http://ompd.pl"><strong>O!MPD</strong></a></sup></p
 
 ***
 
-<h5 id="license"><a id="OSI" href="https://opensource.org/about"><img border="0" alt="OpenSourceInitiative" width="42" height="48" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/osi_standard_logo.png" /></a>  <a id="AGPLv3" href="https://www.gnu.org/licenses/agpl.html"><img border="0" alt="AGPLv3" width="146" height="48" src="https://github.com/othmar52/slimpd/raw/master/skin/default/img/agplv3-146x48.png" /></a> License:<code>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</code></h5>
+<h5 id="license"><a id="OSI" href="https://opensource.org/about"><img border="0" alt="OpenSourceInitiative" width="42" height="48" src="https://github.com/othmar52/slimpd/raw/master/core/skin/default/img/osi_standard_logo.png" /></a>  <a id="AGPLv3" href="https://www.gnu.org/licenses/agpl.html"><img border="0" alt="AGPLv3" width="146" height="48" src="https://github.com/othmar52/slimpd/raw/master/core/skin/default/img/agplv3-146x48.png" /></a> License:<code>GNU AFFERO GENERAL PUBLIC LICENSE Version 3</code></h5>
 ***
 <h5 id="credits">Credits:</h5>
 
