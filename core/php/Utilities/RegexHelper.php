@@ -29,7 +29,7 @@ class RegexHelper {
 	const EXT    = "\.([a-zA-Z\d]{2,4})";
 	const SCENE  = "-([^\s\-]+)";
 	const YEAR   = "(?<!\d)(?:\D)?([12]{1}[0-9]{3})(?:\D)?";
-	const CATNR  = "(?:[\(\[]{1})?[A-Za-z]{2,14}[0-9]{1,}(?:[A-Za-z]{2,7})?(?:[\)\]]{1})?";
+	const CATNR  = "(?:[\(\[]{1})?([A-Za-z]{2,14}[0-9]{1,}(?:[A-Za-z]{2,7})?)(?:[\)\]]{1})?";
 	const SOURCE  = "((?:[\(\[]{1})?[vinylVINYLwebWEBCDMScdms]{2,5}(?:[\)\]]{1})?)"; // (cd, cdm, cds, vinyl, web)
 	const NO_MINUS= "([^-]+)";
 	const ANYTHING= "(.*)";

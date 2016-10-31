@@ -58,4 +58,38 @@ class TrackRecommendationsPostProcessor {
 			$contextItem->recommendations["setTrackNumber"][] = removeLeadingZeroes($value);
 		}
 	}
+
+	private static function setLabel($value, &$contextItem) {
+		// "℗ 2010 Lench Mob Records"
+		// "(p) 2009 Lotus Records"
+		// "(p) & (c) 2005 Mute Records Ltd"
+		// "(P)+(C) 1998 Elektrolux"
+		if(preg_match("/^(?:℗|\(p\)|\(p\)[ &+]\(c\))" . RGX::YEAR . "\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
+			$contextItem->recommendations["setYear"][] = trim($matches[1]);
+			$contextItem->recommendations["setLabel"][] = trim($matches[2]);
+			return;
+		}
+
+		// "(c)Subtitles Music (UK)"
+		if(preg_match("/^\(c\)" . RGX::ANYTHING ."$/i", $value, $matches)) {
+			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
+			return;
+		}
+
+		// "a division of Universal Music GmbH"
+		if(preg_match("/^a\ division\ of\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
+			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
+			return;
+		}
+
+		// "Jerona Fruits (JF006)"
+		// "World Of Drum & Bass (WODNB003)"
+		// "Viper Recordings | VPR051" // TODO: make sure glue gets removed
+		// "Jazzman - JMANCD048" // TODO: make sure glue gets removed
+		if(preg_match("/^" . RGX::ANYTHING . RGX::GLUE . RGX::CATNR . "$/", $value, $matches)) {
+			$contextItem->recommendations["setLabel"][] = trim($matches[1]);
+			$contextItem->recommendations["setCatalogNr"][] = trim($matches[2]);
+			return;
+		}
+	}
 }
