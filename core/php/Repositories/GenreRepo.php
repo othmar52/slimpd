@@ -124,7 +124,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 		cliLog(" Phase 2: check if we do have a single cached genre", 6);
 		$itemString = str_replace(array("(",")","[","]", "{","}", "<", ">"), " ", $itemString);
 		$az09 = az09($itemString);
-		$itemUid = $this->cacheRead(get_called_class(), $az09);
+		$itemUid = $this->cacheRead(self::$classPath, $az09);
 		if($itemUid !== FALSE) {
 			$finalGenres[$az09] = $itemString;
 			return;
@@ -135,7 +135,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 
 	public function parseGenreStringPhase3(&$itemString, &$finalGenres, &$badChunk) {
 		cliLog(" Phase 3: check if we do have multiple cached genres", 6);
-		$classPath = get_called_class();
+		$classPath = self::$classPath;
 		$tmpGlue = "tmpGlu3";
 		$chunks = trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE);
 		foreach($chunks as $chunk) {
@@ -167,7 +167,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 
 	public function parseGenreStringPhase4(&$itemString, &$finalGenres, &$badChunk) {
 		cliLog(" Phase 4: check remaining chunks", 6);
-		$classPath = get_called_class();
+		$classPath = self::$classPath;
 		$tmpGlue = "tmpGlu3";
 		#print_r($this->conf['genre-replace-chunks']); die();
 		// phase 4: tiny chunks
@@ -201,7 +201,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 
 	public function parseGenreStringPhase5(&$itemString, &$finalGenres, &$badChunk) {
 		cliLog(" Phase 5: check remaining chunks after replacement and removal", 6);
-		$classPath = get_called_class();
+		$classPath = self::$classPath;
 		$tmpGlue = "tmpGlu3";
 		$splitBy = array_merge($this->conf['genre-glue'], array(" ", "-", ".", "_", ""));
 		$badChunk = FALSE;
@@ -286,9 +286,9 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 	}
 	
 	public function getUidsByString($itemString) {
-		$this->cacheUnifier(get_called_class());
-		$this->buildPreserveCache(get_called_class());
-		
+		$this->cacheUnifier(self::$classPath);
+		$this->buildPreserveCache(self::$classPath);
+
 		$genreStringArray = [];
 		$tmpGlue = "tmpGlu3";
 		foreach(trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
@@ -309,7 +309,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 
 			// check if we alread have an id
 			// permformance improvement ~8%
-			$itemUid = $this->cacheRead(get_called_class(), $az09);
+			$itemUid = $this->cacheRead(self::$classPath, $az09);
 			if($itemUid !== FALSE) {
 				$itemUids[$itemUid] = $itemUid;
 				continue;
@@ -321,7 +321,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 			if($record) {
 				$itemUid = $record["uid"];
 				$itemUids[$record["uid"]] = $record["uid"];
-				$this->cacheWrite(get_called_class(), $az09, $record["uid"]);
+				$this->cacheWrite(self::$classPath, $az09, $record["uid"]);
 				continue;
 			}
 
@@ -335,7 +335,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
 			$itemUid = $instance->getUid();
 
 			$itemUids[$itemUid] = $itemUid;
-			$this->cacheWrite(get_called_class(), $az09, $itemUid);
+			$this->cacheWrite(self::$classPath, $az09, $itemUid);
 		}
 		
 		return $itemUids;

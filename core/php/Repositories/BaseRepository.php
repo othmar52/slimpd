@@ -20,7 +20,7 @@ namespace Slimpd\Repositories;
 class BaseRepository {
 	public static $tableName;
 	public static $classPath;
-	public $importerCache;
+	public $importerCache = array();
 	protected $container;
 	protected $db;
 	
@@ -445,47 +445,37 @@ class BaseRepository {
 
 	public function cacheWrite($classPath, $az09, $itemUid) {
 		$this->cacheUnifier($classPath);
-		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
-		$tmpArray = $this->importerCache;
-		$tmpArray[$classPath]["cache"][$az09] = $itemUid;
-		// delete cache as soon as we reach 1000 items
-		if(count($tmpArray[$classPath]["cache"]) > 5000) {
-			$tmpArray[$classPath]["cache"] = array($az09 => $itemUid);
-			cliLog("clearing cache for " . $classPath, 5, "yellow");
-			// make sure all instances gets written to database
-			$tmpInstance = new $classPath;
-			$this->container->batcher->insertBatch($tmpInstance::$tableName);
+		$this->importerCache[$classPath]["cache"][$az09] = $itemUid;
+		if(count($this->importerCache[$classPath]["cache"]) <= 5000) {
+			return;
 		}
-		$this->importerCache = $tmpArray;
+		// delete cache as soon as we reach 5000 items
+		$this->importerCache[$classPath]["cache"] = array($az09 => $itemUid);
+		cliLog("clearing cache for " . $classPath, 5, "yellow");
+		// make sure all instances gets written to database
+		$tmpInstance = new $classPath;
+		$this->container->batcher->insertBatch($tmpInstance::$tableName);
 	}
 
 	public function cacheUnifier($classPath) {
-		if(isset($this->importerCache[$classPath]) === TRUE) {
+		if(isset($this->importerCache[$classPath]['unified']) === TRUE) {
 			return;
 		}
 		if(isset($this->importerCache) === FALSE) {
 			$this->importerCache = array();
 		}
-		// we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
-		$tmpArray = $this->importerCache;
-		$tmpArray[$classPath] = array(
-			"unified" => array(),
-			"cache" => array()
-		);
-		$this->importerCache = $tmpArray;
-		if(method_exists($classPath, "unifyItemnames") === FALSE) {
+
+		$this->importerCache[$classPath]['unified'] = [];
+
+		$repoPath = get_called_class();
+		if(method_exists($repoPath, "unifyItemnames") === FALSE) {
 			return;
 		}
 
-		$class = (preg_match("/\\\([^\\\]*)$/", $classPath, $matches))
-			? strtolower($matches[1])
-			: strtolower($classPath);
-
-		if(isset($this->conf[$class ."s"]) === FALSE) {
+		if(isset($this->conf[$repoPath::$tableName ."s"]) === FALSE) {
 			return;
 		}
-		$tmpArray[$classPath]["unified"] = $classPath::unifyItemnames($this->conf[$class ."s"]);
-		$this->importerCache = $tmpArray;
+		$this->importerCache[$classPath]["unified"] = $repoPath::unifyItemnames($this->conf[$repoPath::$tableName ."s"]);
 	}
 
 	public function getAll($itemsperPage = 500, $currentPage = 1, $orderBy = "") {
@@ -532,7 +522,6 @@ class BaseRepository {
 	}
 	
 	public function getRandomInstance() {
-		#$database = $this->db;
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
