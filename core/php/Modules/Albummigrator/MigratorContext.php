@@ -60,7 +60,7 @@ trait MigratorContext {
 			}
 
 			// but add to recommendations in any case
-			$this->recommendations[$setterName][] = $foundValue;
+			$this->recommend([$setterName => $foundValue]);
 		}
 	}
 

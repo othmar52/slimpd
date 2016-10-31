@@ -25,7 +25,7 @@ class TrackRecommendationsPostProcessor {
 		if(method_exists(__CLASS__, $setterName) === FALSE) {
 			// we dont have a post processer for this property
 			return;
-		} 
+		}
 		self::$setterName($value, $contextItem);
 	}
 
