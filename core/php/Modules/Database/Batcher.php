@@ -60,7 +60,8 @@ class Batcher {
 		// find out highest id for $instance
 		$this->nextUid[$tableName] = $this->db->query("SELECT uid FROM ". $tableName ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
 		if($this->nextUid[$tableName] === NULL) {
-			$this->nextUid[$tableName] = 0;
+			// empty tables have an AUTO_INCREMENT of 10
+			$this->nextUid[$tableName] = 9;
 		}
 		$this->nextUid[$tableName]++;
 
