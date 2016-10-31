@@ -57,6 +57,7 @@ class JumbleJudge {
 			->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
 			->runTest("EqualTagTests\\Album", $trackContext->getAlbum())
 			->runTest("EqualTagTests\\Year", $trackContext->getYear())
+			->runTest("EqualTagTests\\Label", $trackContext->getLabel())
 			->runTest("SchemaTests\\Artist\\NumberArtist", $trackContext->getArtist())
 			->runTest("SchemaTests\\Artist\\VinylArtist", $trackContext->getArtist())
 			->runTest("SchemaTests\\Artist\\NumberArtistTitle", $trackContext->getArtist())

@@ -30,13 +30,16 @@ class AlbumContext extends \Slimpd\Models\Album {
 		$this->conf = $container->conf;
 	}
 
+	/*
+	// TODO: currently this is not used - does it make sense to use it?
 	public function getTagsFromTrack($rawTagArray, $config) {
 		$this->rawTagRecord = $rawTagArray;
 		$this->rawTagArray = unserialize($rawTagArray['tagData']);
 		$this->config = $config;
 		$this->configBasedSetters();
 	}
-	
+	*/
+
 	/**
 	 * some rawTagData-fields are identical to album fields 
 	 */
