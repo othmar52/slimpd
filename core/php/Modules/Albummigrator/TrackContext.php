@@ -191,13 +191,19 @@ class TrackContext extends \Slimpd\Models\Track {
 			->setGenreUid( join(",", $this->container->genreRepo->getUidsByString($this->getGenre())));
 			
 		$track = $this->getTrackInstanceByContext();
-		
+
 		if($useBatcher === TRUE) {
 			$this->container->batcher->que($track);
 		} else {
 			$this->container->trackRepo->ensureRecordUidExists($track->getUid());
 			$this->container->trackRepo->update($track);
 		}
+
+		// set all artist uids of track-context that we can do a vice-versa chck for album-artists on album-context
+		$this->setArtistUid($track->getArtistUid());
+		$this->setRemixerUid($track->getRemixerUid());
+		$this->setFeaturingUid($track->getFeaturingUid());
+
 		// add the whole bunch of valid and indvalid attributes to trackindex table
 		$this->updateTrackIndex($useBatcher);
 	}

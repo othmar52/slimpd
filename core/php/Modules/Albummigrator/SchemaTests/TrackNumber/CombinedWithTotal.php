@@ -40,9 +40,14 @@ class CombinedWithTotal extends \Slimpd\Modules\Albummigrator\AbstractTests\Abst
 			cliLog("  no matches\n ", 10);
 			return;
 		}
+		// upvoting vor separated tracknumber
 		$this->trackContext->recommend([
 			'setTrackNumber' => $this->matches[0],
-			'setTotalTracks' => $this->matches[1],
+			'setTotalTracks' => $this->matches[1]
 		]);
+		// downvoting for combined tracknumber
+		$this->trackContext->recommend([
+			'setTrackNumber' => $this->input
+		], -2);
 	}
 }

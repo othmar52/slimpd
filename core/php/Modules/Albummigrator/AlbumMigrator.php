@@ -80,13 +80,83 @@ class AlbumMigrator {
 			$trackContextItem->migrate($this->useBatcher);
 		}
 		
+		// at this point we have the final artist uids of tracks
+		// lets set the album artist
+		$this->albumArtistViceVersaCorrection();
+
 		// complete embedded bitmaps with albumUid
 		// to make sure extracted images will be referenced to an album
 		$this->container->bitmapRepo->addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
+	}
+
+	/**
+	 * TODO: how to handle albums/compilations where album artist does not appear on any track?
+	 * example compilation: "Sly & Robbie - LateNightTales"
+	 */
+	private function albumArtistViceVersaCorrection() {
+		cliLog('AlbumArtistViceVersaCheck');
+		// collect all final artist-uids of each album-track
+		$trackArtistUids = "";
+		foreach($this->trackContextItems as $trackContextItem) {
+			$trackArtistUids .= join(
+				",",
+				[
+					$trackContextItem->getArtistUid(),
+					// TODO: does it make sense to added featured artists and remixer artists to album-artist?
+					// case yes: make sure album-artist won't get transformed into "Various Artists"
+					#$trackContextItem->getFeaturingUid(),
+					#$trackContextItem->getRemixerUid()
+				]
+			) . ",";
+		}
+
+		// append already extracted album-artist-uids
+		#$trackArtistUids .= $this->albumContextItem->getArtistUid();
+
+		// sort by most appearances
+		$trackArtistUids = uniqueArrayOrderedByRelevance(trimExplode(",", $trackArtistUids, TRUE));
+
+		// in case "Various Artists" is already included - remove it
+		$vaKey = array_search('11', $trackArtistUids);
+		if($vaKey !== FALSE) {
+			unset($trackArtistUids[$vaKey]);
+		}
+
+		// in case we have more than 4 artists use "Various Artists" as album-artist
+		$vaTreshold = 4;
+		if(count($trackArtistUids) <= $vaTreshold) {
+			$this->injectAlbumArtistUid($trackArtistUids);
+			return;
+		}
+
+		// set "various Artists"
+		$this->injectAlbumArtistUid([11]);
 		
-		
-		#var_dump($this);
-		#die('blaaaaa');
+	}
+
+	/**
+	 * update property on already persisted album or batcher-queued album-instance
+	 */
+	private function injectAlbumArtistUid($artistUids) {
+		$uidString = join(",", $artistUids);
+		if($this->albumContextItem->getArtistUid() === $uidString) {
+			// album-artist-uid already is identical to all collected track-artist-uids
+			return;
+		}
+
+		if($this->useBatcher === FALSE) {
+			$album = new \Slimpd\Modules\Album();
+			$album->setUid($this->albumContextItem->getUid())->setArtistUid($uidString);
+			$this->container->albumRepo->update($album);
+			return;
+		}
+		// batcher has not inserted album-instance in it's que
+		$this->container->batcher->modifyQueuedInstanceProperty(
+			'album',
+			$this->albumContextItem->getUid(),
+			'setArtistUid',
+			$uidString
+		);
 	}
 
 	public function handleTrackFilemtime($trackFilemtime) {

@@ -87,10 +87,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 				],
 				-1
 			);
-			//$this->sceneSuffix = $sceneSuffixes[0];
 		}
-		
-
 	}
 
 	private function runTest($className, $input) {
@@ -106,8 +103,6 @@ class AlbumContext extends \Slimpd\Models\Album {
 
 	public function migrate($trackContextItems, $jumbleJudge, $useBatcher) {
 		$album = new \Slimpd\Models\Album();
-		#var_dump($this->getMostScored("setArtist")); die;
-
 		$album->setRelPath($this->getRelPath())
 			->setRelPathHash($this->getRelPathHash())
 			->setFilemtime($this->getFilemtime())
@@ -119,25 +114,26 @@ class AlbumContext extends \Slimpd\Models\Album {
 			->setArtistUid(join(",", $this->container->artistRepo->getUidsByString($this->getMostScored("setArtist"))))
 			->setGenreUid(join(",", $this->container->genreRepo->getUidsByString($this->getMostScored("setGenre"))))
 			->setLabelUid(join(",", $this->container->labelRepo->getUidsByString($this->getMostScored("setLabel"))))
-			/*
-			->setLabelUid(
-				join(",", \Slimpd\Models\Label::getUidsByString(
+			/*->setLabelUid(
+				join(",", $this->container->labelRepo->getUidsByString(
 					($album->getIsJumble() === 1)
-						? $mergedFromTracks['label']			// all labels
-						: $this->mostScored['album']['label']	// only 1 label
+						? $this->getAllRecommendations("setLabel")			// all labels
+						: $this->getMostScored("setLabel")	// only 1 label
 				))
 			)*/
 			->setTrackCount(count($trackContextItems));
 
-		// TODO: extend batcher to handle non-inserted uid's
-		// for now do not use batcher for album records
-		
 		if($useBatcher === TRUE) {
 			$this->container->batcher->que($album);
 		} else {
 			$this->container->albumRepo->ensureRecordUidExists($album->getUid());
 			$this->container->albumRepo->update($album);
 		}
+
+		// at this time we have an album-artist-uid
+		// copy from album-item to album-context-item for a later vice-versa check with artist-uids of track-context-items
+		$this->setArtistUid($album->getArtistUid());
+
 		$this->setUid($album->getUid())->updateAlbumIndex($useBatcher);
 	}
 

@@ -29,56 +29,71 @@ class TrackRecommendationsPostProcessor {
 		self::$setterName($value, $contextItem);
 	}
 
-	private static function setArtist($value, &$contextItem) {
+	public static function setArtist($value, &$contextItem) {
 		// "A01. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
 			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
+			$contextItem->setRecommendationEntry("setArtist", $value, -2);
 		}
 		// "1. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
 			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
+			$contextItem->setRecommendationEntry("setArtist", $value, -2);
 		}
 	}
 
-	private static function setTitle($value, &$contextItem) {
+	public static function setTitle($value, &$contextItem) {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
 			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
+			$contextItem->setRecommendationEntry("setTitle", $value, -2);
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
 			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
+			$contextItem->setRecommendationEntry("setTitle", $value, -2);
 		}
 	}
 
-	private static function setTrackNumber($value, &$contextItem) {
+	public static function setTrackNumber($value, &$contextItem) {
 		if(isset($value[0]) && $value[0] === "0") {
 			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($value), 1);
+			$contextItem->setRecommendationEntry("setTrackNumber", $value, -2);
 		}
 	}
 
-	private static function setLabel($value, &$contextItem) {
+	public static function setYear($value, &$contextItem) {
+		$score = (RGX::seemsYeary($value) === TRUE) ? 1 : -1;
+		$contextItem->setRecommendationEntry("setYear", $value, $score);
+	}
+
+	public static function setLabel($value, &$contextItem) {
 		// "℗ 2010 Lench Mob Records"
 		// "(p) 2009 Lotus Records"
 		// "(p) & (c) 2005 Mute Records Ltd"
 		// "(P)+(C) 1998 Elektrolux"
 		if(preg_match("/^(?:℗|\(p\)|\(p\)[ &+]\(c\))" . RGX::YEAR . "\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setYear", trim($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), 1);
-			return;
+			if(RGX::seemsYeary($value) === TRUE) {
+				$contextItem->setRecommendationEntry("setYear", trim($matches[1]), 1);
+				$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), 1);
+				$contextItem->setRecommendationEntry("setLabel", $value, -2);
+				return;
+			}
 		}
 
 		// "(c)Subtitles Music (UK)"
 		if(preg_match("/^\(c\)" . RGX::ANYTHING ."$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setLabel", $value, -2);
 			return;
 		}
 
 		// "a division of Universal Music GmbH"
 		if(preg_match("/^a\ division\ of\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
+			$contextItem->setRecommendationEntry("setLabel", $value, -2);
 			return;
 		}
 
@@ -89,6 +104,7 @@ class TrackRecommendationsPostProcessor {
 		if(preg_match("/^" . RGX::ANYTHING . RGX::GLUE . RGX::CATNR . "$/", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
 			$contextItem->setRecommendationEntry("setCatalogNr", trim($matches[2]), 1);
+			$contextItem->setRecommendationEntry("setLabel", $value, -2);
 			return;
 		}
 	}

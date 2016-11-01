@@ -247,7 +247,12 @@ function uniqueArrayOrderedByRelevance(array $input) {
 	}
 	$acv = array_count_values($input);
 	arsort($acv); 
-	return array_keys($acv);	
+	$return = array_keys($acv);
+	if(count($return) === count($input)) {
+		// preserve ordering in case array does not have duplicate entries
+		return $input;
+	}
+	return $return;
 }
 
 /// build a list of trigrams for a given keywords

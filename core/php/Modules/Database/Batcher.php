@@ -32,16 +32,24 @@ class Batcher {
 	
 	public function __construct($container) {
 		$this->db = $container->db;
-
 	}
 
 	public function que(&$instance) {
 		$className = get_class($instance);
 		$tableName = $className::$tableName;
 		$this->mayAddUid($instance, $tableName);
-		$this->instances[$tableName][] = $instance;
+		$this->instances[$tableName][$instance->getUid()] = $instance;
 		$this->checkQueue($tableName);
 		return $instance;
+	}
+
+	public function modifyQueuedInstanceProperty($tableName, $uid, $setterName, $value) {
+		if(isset($this->instances[$tableName][$uid]) === FALSE) {
+			cliLog('BATCHER: failed to modify instance property', 1, "red");
+			return;
+		}
+		$this->instances[$tableName][$uid]->$setterName($value);
+		return;
 	}
 
 	private function mayAddUid(&$instance, $tableName) {
