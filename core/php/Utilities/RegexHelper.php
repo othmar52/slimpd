@@ -34,6 +34,7 @@ class RegexHelper {
 	const NO_MINUS= "([^-]+)";
 	const ANYTHING= "(.*)";
 	const MAY_BRACKET = "(?:[\(\)\[\]]{0,1})?";
+	const URL = "((?:http|https)\:\/\/(?:[^\s]+))";
 	
 	const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	

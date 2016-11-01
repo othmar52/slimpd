@@ -145,7 +145,7 @@ class AlbumMigrator {
 		}
 
 		if($this->useBatcher === FALSE) {
-			$album = new \Slimpd\Modules\Album();
+			$album = new \Slimpd\Models\Album();
 			$album->setUid($this->albumContextItem->getUid())->setArtistUid($uidString);
 			$this->container->albumRepo->update($album);
 			return;
