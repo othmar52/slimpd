@@ -174,7 +174,7 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	if(PHP_SAPI !== "cli") {
 		return;
 	}
-	if($verbosity > $_SESSION['cliVerbosity'] && $fatal === FALSE) {
+	if($verbosity > @$_SESSION['cliVerbosity'] && $fatal === FALSE) {
 		return;
 	}
 
