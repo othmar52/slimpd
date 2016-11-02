@@ -141,7 +141,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 			cliLog("#" . $this->itemsChecked . " " . $record['relPath'],2);
 
 			// dont forget to check the last directory
-			if($this->itemsChecked === $this->itemsTotal && $this->itemsTotal > 1) {
+			if($this->itemsChecked === $this->itemsTotal) {
 				$this->mayMigrate();
 			}
 		}
