@@ -148,6 +148,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 	
 	public function postProcessProperties() {
+		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::checkRemovalArtistFromTitle($this);
 		$this->setArtist($this->getMostScored('setArtist'));
 		$this->setTitle($this->getMostScored('setTitle'));
 		$this->setAlbum($this->getMostScored('setAlbum'));

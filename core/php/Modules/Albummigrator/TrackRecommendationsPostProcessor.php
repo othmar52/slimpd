@@ -108,4 +108,27 @@ class TrackRecommendationsPostProcessor {
 			return;
 		}
 	}
+
+	/**
+	 * in case we have
+	 * 	 most scored artist: "Franck Dona & Dan Marciano - Losing My Religion(Chris Kaeser Mix)"
+	 *   most scored title : "Losing My Religion(Chris Kaeser Mix)"
+	 * remove title from artist
+	 *
+	 * this test only makes sense AFTER ALL recommentations
+	 */
+	public static function checkRemovalArtistFromTitle(&$contextItem) {
+		cliLog(__FUNCTION__, 9, "purple");
+		$artist = $contextItem->getMostScored("setArtist");
+		cliLog("  most scored artist: " . $artist, 10);
+		$title = $contextItem->getMostScored("setTitle");
+		cliLog("  most scored title : " . $title, 10);
+		if(stripos($artist, $title) === FALSE) {
+			cliLog("  artist does not contain title", 9);
+			return;
+		}
+		$shortenedArtist = trim(str_ireplace($title, "", $artist), " -");
+		cliLog("  shortened artist  : " . $shortenedArtist, 9);
+		$contextItem->recommend(["setArtist" => $shortenedArtist], 5);
+	}
 }
