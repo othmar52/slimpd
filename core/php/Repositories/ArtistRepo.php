@@ -57,6 +57,13 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
 			return $GLOBALS["artist-blacklist"];
 		}
 		foreach(trimExplode("\n", $this->conf["artist-blacklist"]["blacklist"], TRUE) as $term) {
+
+			// TODO: make configurable if 's should be removed
+			// good example: "I Need Your Lovin (Popmuschi’s Radar Radio Cut)"
+			// bad example:  "Jungle Brother (Stereo MC's Mix)"
+			// maybe we need another blacklist's whitelist for this special case :)
+			$GLOBALS["remixer-blacklist"]["'s " . $term] = 1;
+
 			$GLOBALS["artist-blacklist"][$term] = 1;
 			$GLOBALS["artist-blacklist"][" " . $term] = 1;
 		}
