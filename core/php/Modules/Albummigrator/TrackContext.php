@@ -28,6 +28,8 @@ class TrackContext extends \Slimpd\Models\Track {
 	protected $album;
 	protected $remixArtists;
 	protected $featuredArtists;
+	protected $fullArtistString; // this will be displayed in table:trackIndex and visible in autocomplete-widget
+	protected $fullTitleString;  // this will be displayed in table:trackIndex and visible in autocomplete-widget
 	
 	public $idx;
 	
@@ -182,6 +184,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 
 	public function migrate($useBatcher) {
+		#print_r($this->recommendations);die;
 		# setFeaturedArtistsAndRemixers() is processing:
 			# $t->setArtistUid();
 			# $t->setFeaturingUid();
@@ -199,7 +202,7 @@ class TrackContext extends \Slimpd\Models\Track {
 			$this->container->trackRepo->update($track);
 		}
 
-		// set all artist uids of track-context that we can do a vice-versa chck for album-artists on album-context
+		// set all artist uids of track-context that we can do a vice-versa check for album-artists on album-context
 		$this->setArtistUid($track->getArtistUid());
 		$this->setRemixerUid($track->getRemixerUid());
 		$this->setFeaturingUid($track->getFeaturingUid());
@@ -228,8 +231,8 @@ class TrackContext extends \Slimpd\Models\Track {
 		// make sure to use identical uids in table:trackindex and table:track
 		$trackIndex = new \Slimpd\Models\Trackindex();
 		$trackIndex->setUid($this->getUid())
-			->setArtist($this->getArtist())
-			->setTitle($this->getTitle()) // TODO: we need vanilla title
+			->setArtist($this->getFullArtistString())
+			->setTitle($this->getFullTitleString())
 			->setAllchunks($indexChunks);
 
 		if($useBatcher === TRUE) {
@@ -274,6 +277,20 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 	public function getAudioBitrateMode() {
 		return $this->audioBitrateMode;
+	}
+	public function setFullArtistString($value) {
+		$this->fullArtistString = $value;
+		return $this;
+	}
+	public function getFullArtistString() {
+		return $this->fullArtistString;
+	}
+	public function setFullTitleString($value) {
+		$this->fullTitleString = $value;
+		return $this;
+	}
+	public function getFullTitleString() {
+		return $this->fullTitleString;
 	}
 	
 	
@@ -514,8 +531,14 @@ class TrackContext extends \Slimpd\Models\Track {
 			cliLog(" feat: " . print_r($featuredArtists,1));
 			cliLog(" remixer: " . print_r($remixerArtists,1));
 			cliLog(" titlePattern: " . $titlePattern);
-			\Slim\Slim::getInstance()->stop();
+			cliLog(" titleString: " . $titleString);
 		}
+		$fullArtistString = join(" & ", $regularArtists);
+		if(count($featuredArtists) > 0) {
+			$fullArtistString .= " (ft. " . join(" & ", $featuredArtists) . ")";
+		}
+		$this->setFullArtistString($fullArtistString);
+		$this->setFullTitleString($titleString);
 		return $this;
 	}
 	
