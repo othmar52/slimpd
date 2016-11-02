@@ -20,7 +20,12 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
  /**
-  * pattern: "Phil - Http://www.myspace.com/philippmller"
+  * patterns:
+  *   "Phil - Http://www.myspace.com/philippmller"
+  *   "Joyce Rooks http://www.myspace.com/joycerooks"
+  *   "Mr. Zu : http://www.deepindub.org/staff/mr-zu/"
+  *   "Mr. Zu - http://www.deepindub.org/staff/mr-zu/"
+  *   "Christoph Schindling - http://www.myspace.com/christophschindling"
   */
 abstract class HasSuffixedUrl extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 
