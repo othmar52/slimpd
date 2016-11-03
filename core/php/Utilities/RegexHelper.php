@@ -81,4 +81,24 @@ class RegexHelper {
 		}
 		return TRUE;
 	}
+
+	public static function isVa($input) {
+		// TODO: convert to regex where those strings also get recognized
+		// Various Artisis
+		// Varioust Artist
+		// Various (unknown) Artists
+		// Varios Artistas
+		// Various Artistes
+		// Artistes Varies
+		$compare = array(
+			'various' => NULL,
+			'variousartist' => NULL,
+			'variousartists' => NULL,
+			'varios' => NULL,
+			'variosartist' => NULL,
+			'variosartists' => NULL,
+			'va' => NULL
+		);
+		return array_key_exists(az09($input), $compare);
+	}
 }

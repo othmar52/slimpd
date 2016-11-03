@@ -39,7 +39,6 @@ trait MigratorContext {
 			cliLog(" invalid config. setter " . $setterName . " does not exists", 10, "red");
 			return;
 		}
-
 		foreach($rawTagPaths as $rawTagPath) {
 			$foundValue = $this->extractTagString(
 				recursiveArrayParser(
@@ -58,6 +57,7 @@ trait MigratorContext {
 			if(strlen($this->$getterName()) === 0) {
 				$this->$setterName($foundValue);
 			}
+			cliLog("configBasedSetter: " . $setterName, 10, "purple");
 
 			// but add to recommendations in any case (higher scoring for real tag attributes)
 			$this->recommend([$setterName => $foundValue], 2);

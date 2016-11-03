@@ -78,6 +78,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 		foreach($jumbleJudge->tests["SchemaTests\Filename\HasSceneSuffix"] as $sceneSuffixTest) {
 			$sceneSuffixes[] = $sceneSuffixTest->result;
 		}
+		#print_r($sceneSuffixes);
 		if(count(array_unique($sceneSuffixes)) === 1) {
 			// downvoting in case scene-suffix had been guessed as artist or title
 			$this->jumbleJudge->albumMigrator->recommendationForAllTracks(

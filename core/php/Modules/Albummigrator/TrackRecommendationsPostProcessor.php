@@ -117,7 +117,7 @@ class TrackRecommendationsPostProcessor {
 	 *
 	 * this test only makes sense AFTER ALL recommentations
 	 */
-	public static function checkRemovalArtistFromTitle(&$contextItem) {
+	public static function removeSuffixedTitleFromArtist(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
 		$artist = $contextItem->getMostScored("setArtist");
 		cliLog("  most scored artist: " . $artist, 10);
@@ -130,5 +130,43 @@ class TrackRecommendationsPostProcessor {
 		$shortenedArtist = trim(str_ireplace($title, "", $artist), " -");
 		cliLog("  shortened artist  : " . $shortenedArtist, 9);
 		$contextItem->recommend(["setArtist" => $shortenedArtist], 5);
+	}
+
+	/**
+	 * in case we have
+	 * 	 most scored artist: "Kenny Dope Feat. Screechy Dan"
+	 *   most scored title : "Kenny Dope Feat. Screechy Dan - Boomin' In Ya Jeep"
+	 * remove artist from title
+	 *
+	 * this test only makes sense AFTER ALL recommentations
+	 */
+	public static function removePrefixedArtistFromTitle(&$contextItem) {
+		cliLog(__FUNCTION__, 9, "purple");
+		$artist = $contextItem->getMostScored("setArtist");
+		cliLog("  most scored artist: " . $artist, 10);
+		$title = $contextItem->getMostScored("setTitle");
+		cliLog("  most scored title : " . $title, 10);
+		if(stripos($title, $artist) !== 0) {
+			cliLog("  artist is not prefixed in title", 9);
+			return;
+		}
+		$shortenedTitle = ltrim(substr($title, strlen($artist)), " -");
+		cliLog("  shortened title  : " . $shortenedTitle, 9);
+		$contextItem->recommend(["setTitle" => $shortenedTitle], 5);
+	}
+
+	/**
+	 * this function checks all artist recommendations for beeing "Various Artists", "v.a."
+	 * to avoid this situation:
+	 * 	 most scored artist: "Various Artists"
+	 *   most scored title : "Tenor Saw - Ring The Alarm (Hip Hop Mix)"
+	 */
+	public static function downVoteVariousArtists(&$contextItem) {
+		cliLog(__FUNCTION__, 9, "purple");
+		foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
+			if(RGX::isVa($artistRecommendation) === TRUE) {
+				$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
+			}
+		}
 	}
 }
