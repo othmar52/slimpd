@@ -132,12 +132,14 @@ class SlimpdTwigExtension extends \Twig_Extension {
 			new \Twig_SimpleFilter("dumpImagestream", function ($input, $mimeType) {
 				$imageinfo = array();
 				if ($imagechunkcheck = \getid3_lib::GetDataImageSize($input, $imageinfo)) {
-					$attributes = [
-						"src='data:" .$mimeType.";base64,".base64_encode($input)."'",
-						"width='". $imagechunkcheck[0] ."'",
-						"height='". $imagechunkcheck[1] ."'"
-					];
-					return "<img " . join(" " , $attributes) . ">";
+					$streamString = "data:" .$mimeType.";base64,".base64_encode($input);
+					$width = $imagechunkcheck[0];
+					$height = $imagechunkcheck[1];
+					$linkTitle = "Open image (".$width."x".$height.") in new tab";
+					return '
+						<a href="'.$streamString.'" width="100" title="'.$linkTitle.'" target="_blank">
+							<img src="'.$streamString.'" width="200" />
+						</a>';
 				}
 				return "<i>invalid image data</i></td></tr>";
 			})
