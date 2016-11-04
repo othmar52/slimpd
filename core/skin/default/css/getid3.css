@@ -30,6 +30,7 @@ td {
 	font-weight: bold;
 	color: rgb(59,187,47);
 	font-family: sans-serif;
+	word-break: break-all;
 }
 
 .dump_integer {
