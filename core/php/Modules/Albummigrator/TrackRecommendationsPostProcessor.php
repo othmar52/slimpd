@@ -146,6 +146,12 @@ class TrackRecommendationsPostProcessor {
 		cliLog("  most scored artist: " . $artist, 10);
 		$title = $contextItem->getMostScored("setTitle");
 		cliLog("  most scored title : " . $title, 10);
+		if(az09($artist) === az09($title)) {
+			cliLog("  very similar. downvoting both", 10);
+			$contextItem->recommend(["setArtist" => $artist], -2);
+			$contextItem->recommend(["setTitle" => $title], -2);
+			return;
+		}
 		if(stripos($title, $artist) !== 0) {
 			cliLog("  artist is not prefixed in title", 9);
 			return;
