@@ -96,7 +96,7 @@
 
 				sourceCategory: "all",
 				minLength: 3,
-				delay: 100, // TODO: delay for up/down/left/right arrow keys should be zero but changing the searchterm should be ~300ms
+				delay: 250, // TODO: delay for up/down/left/right arrow keys should be zero but changing the searchterm should be ~300ms
 
 				focus : function( event, ui ) {
 					$(".ui-helper-hidden-accessible").hide();
