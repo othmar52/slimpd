@@ -75,7 +75,7 @@ class TrackRecommendationsPostProcessor {
 		// "(p) & (c) 2005 Mute Records Ltd"
 		// "(P)+(C) 1998 Elektrolux"
 		if(preg_match("/^(?:℗|\(p\)|\(p\)[ &+]\(c\))" . RGX::YEAR . "\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
-			if(RGX::seemsYeary($value) === TRUE) {
+			if(RGX::seemsYeary($matches[1]) === TRUE) {
 				$contextItem->setRecommendationEntry("setYear", trim($matches[1]), 1);
 				$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), 1);
 				$contextItem->setRecommendationEntry("setLabel", $value, -2);
