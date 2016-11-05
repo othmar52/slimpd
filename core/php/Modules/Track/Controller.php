@@ -85,7 +85,8 @@ class Controller extends \Slimpd\BaseController {
 				$this->container
 			);
 		}
-		$args['renderitems'] = $this->getRenderItems($args['item']);
+		$album = $this->albumRepo->getInstanceByAttributes(['uid' => $args['item']->getAlbumUid()]);
+		$args['renderitems'] = $this->getRenderItems($args['item'], $album);
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}
