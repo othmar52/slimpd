@@ -66,21 +66,25 @@ class Controller extends \Slimpd\BaseController {
 
 	public function editAction(Request $request, Response $response, $args) {
 		$this->completeArgsForDetailView($args['itemParams'], $args);
-	
-		$args['action'] = 'maintainance.trackdebug';
-		// TODO: currently we have a dummy track in every case...
-		// var_dump($args['item']);die;
-		if($args['item'] === NULL) {
-			$args['action'] = '404';
-			$this->view->render($response, 'surrounding.htm', $args);
-			return $response->withStatus(404);
-		}
-		$args['itemraw'] = $this->rawtagdataRepo->getInstanceByAttributes(
-			['relPathHash' => $args['item']->getRelPathHash()]
-		);
 
-		// TODO: complete rawtagdata with rawtagblob and provide
-		// an instance of \Slimpd\Modules\Albummigrator\TrackContext
+		$args['action'] = 'maintainance.trackdebug';
+
+		// nothing to do with non imported tracks
+		if($args['item']->getUid() < 1) {
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response;
+		}
+
+		$query = "SELECT * FROM rawtagdata WHERE uid=".$args['item']->getUid()." LIMIT 1;";
+		$result = $this->db->query($query);
+		while($record = $result->fetch_assoc()) {
+			$args['itemraw'] = new \Slimpd\Modules\Albummigrator\TrackContext(
+				$record,
+				0,
+				\Slimpd\Modules\Albummigrator\AlbumMigrator::parseConfig(),
+				$this->container
+			);
+		}
 		$args['renderitems'] = $this->getRenderItems($args['item']);
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
