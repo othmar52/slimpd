@@ -23,6 +23,7 @@ $ctrlRoutes = [
 	['/hard-reset', 'hardResetAction'],
 	['/remigrate', 'remigrateAction'],
 	['/remigrate/--force', 'remigrateForceAction'],
+	['/remigratealbum/{albumUid}', 'remigratealbumAction'],
 	['/update', 'updateAction'],
 	['/update/--force', 'updateForceAction'],
 	['/builddictsql', 'builddictsqlAction'],

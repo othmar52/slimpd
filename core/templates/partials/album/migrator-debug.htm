@@ -1,0 +1,53 @@
+
+
+<h2>Migrator debug</h2>
+<p>In case sliMpd shows only crap as tag-attributes here is the right place to find out why.</p>
+<hr>
+<div class="tracks_container">
+{% for trackname,data in trackdump %}
+<div class="{{ cycle(['','fw-bg'],loop.index) }}">
+	<div class="row">
+		<div class="col-md-12 vcenter">
+			<div class="vcinner">
+				<button class="btn btn-default toggle-content close-all" data-toggle="#track-coll-{{loop.index}}" data-text1="collect" data-text2="collect" title="collected attributes from real tags">
+					collect
+				</button>&nbsp;
+				<button class="btn btn-default toggle-content close-all" data-toggle="#track-score-{{loop.index}}" data-text1="scoring" data-text2="scoring" title="giving scores for attributes based on various tests">
+					scoring
+				</button>&nbsp;
+				<button class="btn btn-default toggle-content close-all" data-toggle="#track-post-{{loop.index}}" data-text1="postpr." data-text2="postpr." title="post processing">
+					postpr.
+				</button>&nbsp;
+				<button class="btn btn-default toggle-content close-all" data-toggle="#track-rec-{{loop.index}}" data-text1="recomm." data-text2="recomm." title="final recommendations with scorings">
+					recomm.
+				</button>&nbsp;
+				{{trackname}}
+			</div>
+		</div>
+	</div>
+	<pre class="nfo" id="track-rec-{{loop.index}}" style="display:none;">
+{% for line in data.recommendations %}{{line|cli2html|raw}}<br>{% endfor %}
+	</pre>
+	<pre class="nfo" id="track-post-{{loop.index}}" style="display:none;">
+{% for line in data.postprocessing %}{{line|cli2html|raw}}<br>{% endfor %}
+	</pre>
+	<pre class="nfo" id="track-coll-{{loop.index}}" style="display:none;">
+{% for line in data.collecting %}{{line|cli2html|raw}}<br>{% endfor %}
+	</pre>
+	<pre class="nfo" id="track-score-{{loop.index}}" style="display:none;">
+{% for line in data.scoring %}{{line|cli2html|raw}}<br>{% endfor %}
+	</pre>
+	
+	
+</div>
+{% endfor %}
+</div>
+
+{# full cli stdOut #}
+{#
+<pre class="nfo cli">
+{% for line in migratordump %}
+{{line|cli2html|raw}}<br>
+{% endfor %}
+</pre>
+#}

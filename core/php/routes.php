@@ -44,6 +44,7 @@ $ctrlRoutes = [
 		['/markup/widget-album/{itemUid}', 'widgetAlbumAction'],
 		['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
 		['/maintainance/albumdebug/[{itemParams:.*}]', 'editAction'],
+		['/album/remigrate/{itemUid}', 'remigrateAction']
 	],
 	'Systemcheck' => [
 		['/systemcheck', 'runAction']

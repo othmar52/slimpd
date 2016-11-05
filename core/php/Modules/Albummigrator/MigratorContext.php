@@ -57,6 +57,18 @@ trait MigratorContext {
 			if(strlen($this->$getterName()) === 0) {
 				$this->$setterName($foundValue);
 			}
+			if(
+				$setterName === "setMimeType" ||
+				$setterName === "setMiliseconds" ||
+				$setterName === "setAudioDataformat" ||
+				$setterName === "setAudioComprRatio" ||
+				$setterName === "setAudioBitrate" ||
+				$setterName === "setAudioBitrateMode" ||
+				$setterName === "setAudioEncoder" ||
+				$setterName === "setAudioSamplerate"
+			) {
+				continue;
+			}
 			cliLog("configBasedSetter: " . $setterName, 10, "purple");
 
 			// but add to recommendations in any case (higher scoring for real tag attributes)

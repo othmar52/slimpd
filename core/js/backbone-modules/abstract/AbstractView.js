@@ -314,6 +314,16 @@
 			e.preventDefault();
 			var $el = $(e.currentTarget);
 			var $target = $($el.attr("data-toggle"));
+			if($el.hasClass('close-all')) {
+				$('.toggle-content').each(function(index, item){
+					var $item = $(item);
+					if($item.attr("data-toggle") !== $el.attr("data-toggle")) {
+						$($item.attr("data-toggle")).hide();
+						$item.text($item.attr("data-text1"));
+					}
+				});
+			}
+			var $target = $($el.attr("data-toggle"));
 			$target.toggle();
 			$el.text((($target.is(":hidden")) ? $el.attr("data-text1") : $el.attr("data-text2") ) );
 		},

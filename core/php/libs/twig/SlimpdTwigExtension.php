@@ -68,6 +68,10 @@ class SlimpdTwigExtension extends \Twig_Extension {
 				return path2url($mixed);
 			}),
 
+			new \Twig_SimpleFilter('cli2html', function ($string) {
+				return cli2html($string);
+			}),
+
 			new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
 				$format = "G:i:s";
 				$suffix = "h";

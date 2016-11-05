@@ -78,6 +78,40 @@ class Controller extends \Slimpd\BaseController {
 		$this->view->render($response, 'modules/widget-album.htm', $args);
 		return $response;
 	}
+
+	public function remigrateAction(Request $request, Response $response, $args) {
+		$this->completeArgsForDetailView($args['itemUid'], $args);
+		if($args['album'] === NULL) {
+			$args['action'] = '404';
+			$this->view->render($response, 'surrounding.htm', $args);
+			return $response->withStatus(404);
+		}
+		// TODO: move to global exec() wrapper
+		exec(APP_ROOT . 'slimpd remigratealbum ' . $args['album']->getUid(), $cliResponse);
+		$args['migratordump'] = $cliResponse;
+		// separate dump into track specific parts
+		$args['trackdump'] = [];
+		$section = "";
+		$item = "";
+		foreach($cliResponse as $line) {
+			if(preg_match("/===\ (.*)\ begin\ for\ (.*)\ ===/", $line, $matches)) {
+				$section = $matches[1];;
+				$item = $matches[2];
+			}
+			if(preg_match("/===\ (.*)\ end\ for\ (.*)\ ===/", $line)) {
+				$item = "";
+				$section = "";
+			}
+			if($item === "" || $section === "") {
+				continue;
+			}
+			$args['trackdump'][$item][$section][] = $line;
+		}
+
+		$args['action'] = 'album.remigrate';
+		$this->view->render($response, 'surrounding.htm', $args);
+		return $response;
+	}
 	
 	public function editAction(Request $request, Response $response, $args) {
 		$this->completeArgsForDetailView($args['itemParams'], $args);

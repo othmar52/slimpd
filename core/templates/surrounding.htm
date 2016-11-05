@@ -195,6 +195,10 @@
 						{% include 'partials/album/layout-detailview.htm' %}
 					{% endif %}
 
+					{% if action == 'album.remigrate' %}
+						{% include 'partials/album/migrator-debug.htm' %}
+					{% endif %}
+
 					{% if action == 'albumtracks' %}
 						{% for item in itemlist %}
 							{% include 'partials/trackrow-albumview.htm' %}

@@ -214,6 +214,17 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 	ob_flush();
 }
 
+function cli2html($input) {
+	$replace = [
+		" " => "&nbsp;",
+		"\033[35m" => '<span style="color:#db00e5">',	// purple
+		"\033[36m" => '<span style="color:#00e5e5">',	// cyan
+		"\033[1;33m" => '<span style="color:#effe4b">',	// yellow
+		"\033[37m" => '</span>',
+		"\033[0m" => '</span>'
+	];
+	return str_replace(array_keys($replace), $replace, $input);
+}
 
 function fileLog($mixed) {
 	$filename = APP_ROOT . "localdata/cache/log-" . date("Y-M-d") . ".log";

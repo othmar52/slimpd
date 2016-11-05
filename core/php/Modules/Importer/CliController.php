@@ -50,6 +50,18 @@ class CliController extends \Slimpd\BaseController {
 		return $response;
 	}
 
+	public function remigratealbumAction(Request $request, Response $response, $args) {
+		$xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+		if($this->abortOnLockfile($this->ll) === TRUE) {
+			return $response;
+		}
+		self::touchLockFile();
+		$migrator = new \Slimpd\Modules\Importer\Migrator($this->container);
+		$args['migrator'] = $migrator->migrateSingleAlbum($args['albumUid']);
+		self::deleteLockFile();
+		return $response;
+	}
+
 	public function updateForceAction(Request $request, Response $response, $args) {
 		self::deleteLockFile();
 		return $this->updateAction($request, $response, $args);

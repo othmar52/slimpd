@@ -335,10 +335,10 @@ class BaseRepository {
 		if($dummyInstance === NULL && method_exists($instance, 'getAz09') === TRUE) {
 			$dummyInstance = $this->getInstanceByAttributes(array('az09' => $instance->getAz09()));
 		}
-		if($dummyInstance === NULL || $instance->getUid() < 1) {
+		if($dummyInstance === NULL) {
 			return;
 		}
-		$this->setUid($dummyInstance->getUid());
+		$instance->setUid($dummyInstance->getUid());
 	}
 
 	public function delete() {

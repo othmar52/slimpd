@@ -194,4 +194,29 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
 		$this->prevAlb->setRelDirPath($record['relDirPath']);
 		$this->prevAlb->setDirectoryMtime($record['directoryMtime']);
 	}
+
+	public function migrateSingleAlbum($albumUid) {
+		$album = $this->container->albumRepo->getInstanceByAttributes(['uid' => $albumUid]);
+		if($album === NULL) {
+			return FALSE;
+		}
+		$this->migratorConfig = \Slimpd\Modules\Albummigrator\AlbumMigrator::parseConfig();
+
+		// make sure to capture all available information
+		$_SESSION['cliVerbosity'] = '10';
+
+		$query = "SELECT * FROM rawtagdata WHERE relDirPathHash='". $album->getRelPathHash()."';";
+		$result = $this->db->query($query);
+		$counter = 0;
+		while($record = $result->fetch_assoc()) {
+			if($counter === 0) {
+				$this->newPrevAlb($record);
+			}
+			$counter++;
+			$this->prevAlb->addTrack($record);
+		}
+		$this->prevAlb->useBatcher = FALSE;
+		$this->prevAlb->run();
+		return $this->prevAlb;
+	}
 }
