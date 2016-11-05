@@ -2,30 +2,30 @@
 {% block content %}
 {% include 'partials/randomizer.htm' with { subject: 'Track', urlpattern: 'maintainance/trackdebug/%s' } %}
 
-<h3>Track-debug<br>
-<span class="small">
-	{% set dirs = item.relPath|split('/') %}
-	<a href="{{root}}filebrowser/{{ itemraw.relDirPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
-	
-	{% for dir in dirs %}
-		{% if loop.last == true %}
-		   <br />{% include 'partials/button/playtrack.htm' %}{{dir}}
-		{% else %}  
-			{{dir}} / 
-		{% endif %}
-	{% endfor%}
-	<br />
-	<a href="{{root}}maintainance/albumdebug/{{item.albumUid}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i> edit album</a>
-</span>
-{% if not item.uid %}
-{% include 'partials/track/not-imported-badge.htm' %}
-{% endif %}
-</h3>
-<div class="container">
+<h2 class="nomargin">
+	<span class="uc dark">Track-debug</span> {{ item.relPath|split('/')|last }}
+	{% if not item.uid %}
+		{% include 'partials/track/not-imported-badge.htm' %}
+	{% endif %}
+</h2>
+
+<div class="darker-links dark small">
+	<br class="replace-me-with-proper-css">
+	{% include 'partials/filebrowser/breadcrumb.htm' with {
+		hiderootlink: 0,
+		breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
+		skiplast: 1 }
+	%}
+</div>
+
+<hr>
+
 <div class="row">
-	<div class="col-md-2"></div>
-	<div class="col-md-3"><strong>Rawtagdata</strong><br /><span class="dark">real tag attributes</span></div>
-	<div class="col-md-4"><strong>Track-Entry</strong><br /><span class="dark">auto-corrected tag attributes</span></div>
+	<div class="col-md-2">{% include 'partials/button/showtrackwidget.htm' %}</div>
+	<div class="col-md-3"><h2 class="uc nomargin">Raw tag data
+		<a href="{{root}}maintainance/trackid3/{{ item.relPath|path2url }}" target="_blank" title="show meta dump"><i class="fa fa-eye"></i></a>
+		</h2><span class="dark">real tag attributes</span></div>
+	<div class="col-md-4"><h2 class="uc nomargin">Track Entry</h2><span class="dark">auto-corrected tag attributes</span></div>
 	<div class="col-md-3"></div>
 </div>
 <hr />
@@ -126,8 +126,13 @@
 		{{ item.trackNumber }}
 	</div>
 </div>
-<br />
-<br />
-<br />
-<br />
+
+<hr>
+<div class="tracks_container">
+	{% include 'partials/trackrow-1-header.htm' %}
+	<div class="fw-bg">
+		{% include 'partials/trackrow-1.htm'%}
+	</div>
+</div>
+
 {% endblock %}
