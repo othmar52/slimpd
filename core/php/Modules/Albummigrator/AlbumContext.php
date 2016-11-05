@@ -152,6 +152,9 @@ class AlbumContext extends \Slimpd\Models\Album {
 			. " " . join(" ", $this->getAllRecommendations("setLabel"))
 			. " " . join(" ", $this->getAllRecommendations("setCatalogNr"));
 
+		// minimize index entry by removing duplicate phrases
+		$indexChunks = join(" ", array_unique(trimExplode(" ", strtolower($indexChunks))));
+
 		// make sure to use identical uids in table:trackindex and table:track
 		$albumIndex = new \Slimpd\Models\Albumindex();
 		$albumIndex->setUid($this->getUid())

@@ -231,6 +231,9 @@ class TrackContext extends \Slimpd\Models\Track {
 			. " " . join(" ", $this->getAllRecommendations("setCatalogNr"));
 		// TODO: add all recomendations and other missing attributes
 
+		// minimize index entry by removing duplicate phrases
+		$indexChunks = join(" ", array_unique(trimExplode(" ", strtolower($indexChunks))));
+
 		// make sure to use identical uids in table:trackindex and table:track
 		$trackIndex = new \Slimpd\Models\Trackindex();
 		$trackIndex->setUid($this->getUid())
