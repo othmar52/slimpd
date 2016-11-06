@@ -162,24 +162,30 @@ class TrackRecommendationsPostProcessor {
 	}
 
 	/**
-	 * this function checks all artist recommendations for beeing "Various Artists", "v.a."
+	 * this function checks all artist+title recommendations for beeing "Various Artists", "v.a."
 	 * to avoid this situation:
 	 * 	 most scored artist: "Various Artists"
 	 *   most scored title : "Tenor Saw - Ring The Alarm (Hip Hop Mix)"
 	 */
-	public static function downVoteVariousArtists(&$contextItem) {
-		cliLog(__FUNCTION__, 9, "purple");
-		if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
+	public static function downVoteVariousArtists(&$contextItem, $setter = "setArtist") {
+		cliLog(__FUNCTION__ . " for " . $setter, 9, "purple");
+		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
 			cliLog("  no recommendations for setArtist. skipping...", 10);
+			if($setter === "setArtist") {
+				return self::downVoteVariousArtists($contextItem, "setTitle");
+			}
 			return;
 		}
-		foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
+		foreach(array_keys($contextItem->recommendations[$setter]) as $artistRecommendation) {
 			if(RGX::isVa($artistRecommendation) === FALSE) {
 				cliLog("  no need to downvote: " . $artistRecommendation, 10);
 				continue;
 			}
-			cliLog("  found setArtist recommendation for downvoting", 9);
-			$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
+			cliLog("  found ".$setter." recommendation for downvoting", 9);
+			$contextItem->recommend([$setter => $artistRecommendation], -5);
+		}
+		if($setter === "setArtist") {
+			return self::downVoteVariousArtists($contextItem, "setTitle");
 		}
 	}
 }
