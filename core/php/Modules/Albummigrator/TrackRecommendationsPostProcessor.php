@@ -176,13 +176,13 @@ class TrackRecommendationsPostProcessor {
 			}
 			return;
 		}
-		foreach(array_keys($contextItem->recommendations[$setter]) as $artistRecommendation) {
-			if(RGX::isVa($artistRecommendation) === FALSE) {
-				cliLog("  no need to downvote: " . $artistRecommendation, 10);
+		foreach(array_keys($contextItem->recommendations[$setter]) as $itemRecommendation) {
+			if(RGX::isVa($itemRecommendation) === FALSE) {
+				cliLog("  no need to downvote: " . $itemRecommendation, 10);
 				continue;
 			}
 			cliLog("  found ".$setter." recommendation for downvoting", 9);
-			$contextItem->recommend([$setter => $artistRecommendation], -5);
+			$contextItem->recommend([$setter => $itemRecommendation], -5);
 		}
 		if($setter === "setArtist") {
 			return self::downVoteVariousArtists($contextItem, "setTitle");
@@ -207,6 +207,25 @@ class TrackRecommendationsPostProcessor {
 			}
 			cliLog("  found setArtist recommendation for downvoting", 9);
 			$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
+		}
+	}
+
+	/**
+	 * this function checks all title recommendations for beeing "Track 01"
+	 */
+	public static function downVoteGenericTrackTitles(&$contextItem) {
+		cliLog(__FUNCTION__, 9, "purple");
+		if(array_key_exists("setTitle", $contextItem->recommendations) === FALSE) {
+			cliLog("  no recommendations for setTitle. skipping...", 10);
+			return;
+		}
+		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
+			if(preg_match("/^track(?:\d+)$/", az09($titleRecommendation)) === 0) {
+				cliLog("  no need to downvote: " . $titleRecommendation, 10);
+				continue;
+			}
+			cliLog("  found setTitle recommendation for downvoting", 9);
+			$contextItem->recommend(["setTitle" => $titleRecommendation], -5);
 		}
 	}
 }
