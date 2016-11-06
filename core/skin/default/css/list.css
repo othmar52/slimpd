@@ -37,6 +37,16 @@ html, body {
 	background: #252525;
 }
 
+.pos-rel {
+	position: relative;
+}
+
+.tile-btn-wrap {
+	position: absolute;
+	right: -3em;
+	top: 0.5em;
+}
+
 .fw-bg:before, 
 .fw-bg:after {
 	content: "";

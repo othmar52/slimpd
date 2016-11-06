@@ -1,0 +1,31 @@
+
+{% if trackdump %}
+<div class="tile-btn-wrap">
+	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#track-coll-{{item.relPathHash}}" data-text1="C" data-text2="C" title="collected attributes from real tags">
+		C
+	</button>&nbsp;
+	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#track-score-{{item.relPathHash}}" data-text1="S" data-text2="S" title="giving scores for attributes based on various tests">
+		S
+	</button><br>
+	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#track-post-{{item.relPathHash}}" data-text1="P" data-text2="P" title="post processing">
+		P
+	</button>&nbsp;
+	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#track-rec-{{item.relPathHash}}" data-text1="R" data-text2="R" title="final recommendations with scorings">
+		R
+	</button>
+</div>
+
+
+<div class="col-md-12" id="track-rec-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump[item.relPathHash].recommendations %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="col-md-12"id="track-post-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump[item.relPathHash].postprocessing %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="col-md-12" id="track-coll-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump[item.relPathHash].collecting %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="col-md-12" id="track-score-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump[item.relPathHash].scoring %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+{% endif %}

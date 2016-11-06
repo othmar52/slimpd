@@ -120,6 +120,9 @@
 				</div>
 			
 			</div>
+			<div class="col-md-12">
+				{% include 'partials/debug/migrator-log-album-buttons.htm' %}
+			</div>
 		</div>
 		
 	</div>
@@ -128,7 +131,7 @@
 
 
 
-
+{% include 'partials/debug/migrator-log-album-dump.htm' %}
 
 
 <div class="row">
@@ -140,7 +143,7 @@
 {% include 'partials/trackrow-albumview-header.htm' %}
 {% set totalTime = 0 %}
 {% for item in itemlist %}
-<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
+<div class="{{ cycle(['pos-rel','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
 {% include 'partials/trackrow-albumview.htm' %}
 </div>
 {% set totalTime = totalTime+item.miliseconds %}

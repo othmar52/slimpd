@@ -1,0 +1,14 @@
+{% if trackdump %}
+<div class="row" id="album-rec-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump.album.recommendations %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="row"id="album-post-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump.album.postprocessing %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="row" id="album-coll-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump.album.collecting %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+<div class="row" id="album-score-{{item.relPathHash}}" style="display:none;">
+	<pre class="nfo">{% for line in trackdump.album.scoring %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+</div>
+{% endif %}

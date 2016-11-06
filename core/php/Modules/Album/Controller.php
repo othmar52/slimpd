@@ -94,11 +94,11 @@ class Controller extends \Slimpd\BaseController {
 		$section = "";
 		$item = "";
 		foreach($cliResponse as $line) {
-			if(preg_match("/===\ (.*)\ begin\ for\ (.*)\ ===/", $line, $matches)) {
-				$section = $matches[1];;
-				$item = $matches[2];
+			if(preg_match("/===\ (.*)\ begin\ for\ (?:.*)?(\ [a-f0-9]{11}|album)\ ===/", $line, $matches)) {
+				$section = $matches[1];
+				$item = trim($matches[2]);
 			}
-			if(preg_match("/===\ (.*)\ end\ for\ (.*)\ ===/", $line)) {
+			if(preg_match("/===\ (.*)\ end\ for\ (?:.*)?(\ [a-f0-9]{11}|album)\ ===/", $line)) {
 				$item = "";
 				$section = "";
 			}
@@ -107,10 +107,7 @@ class Controller extends \Slimpd\BaseController {
 			}
 			$args['trackdump'][$item][$section][] = $line;
 		}
-
-		$args['action'] = 'album.remigrate';
-		$this->view->render($response, 'surrounding.htm', $args);
-		return $response;
+		return $this->detailAction($request, $response, $args);
 	}
 	
 	public function editAction(Request $request, Response $response, $args) {

@@ -44,11 +44,11 @@ class AlbumMigrator {
 
 		// create TrackContext for each input item
 		foreach($this->rawTagItems as $idx => $rawTagItem) {
-			cliLog("=== collecting begin for " . basename($rawTagItem['relPath']) . " ===", 10, "yellow");
+			cliLog("=== collecting begin for " . basename($rawTagItem['relPath']) . " " . $rawTagItem['relPathHash'] . " ===", 10, "yellow");
 			$this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->migratorConf, $this->container);
 			// do some characteristics analysis for each "track"
 			$this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
-			cliLog("=== collecting end for " . basename($rawTagItem['relPath']) . " ===", 10, "yellow");
+			cliLog("=== collecting end for " . basename($rawTagItem['relPath']) . " " . $rawTagItem['relPathHash'] . " ===", 10, "yellow");
 			$this->handleTrackFilemtime($rawTagItem["added"]);
 		}
 		// decide if bunch should be treated as album or as loose tracks
@@ -82,9 +82,9 @@ class AlbumMigrator {
 
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
-			cliLog("=== recommendations begin for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== recommendations begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			cliLog(print_r($trackContextItem->recommendations, 1), 10);
-			cliLog("=== recommendations end for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== recommendations end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			$trackContextItem->migrate($this->useBatcher);
 		}
 
@@ -192,9 +192,9 @@ class AlbumMigrator {
 
 	private function runAttributeScoring() {
 		foreach($this->trackContextItems as $trackContextItem) {
-			cliLog("=== scoring begin for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== scoring begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
-			cliLog("=== scoring end for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== scoring end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			#$trackContextItem->postProcessProperties();
 		}
 	}
@@ -202,10 +202,10 @@ class AlbumMigrator {
 
 	private function postProcessTrackProperties() {
 		foreach($this->trackContextItems as $trackContextItem) {
-			cliLog("=== postprocessing begin for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== postprocessing begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			#$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
 			$trackContextItem->postProcessProperties();
-			cliLog("=== postprocessing end for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
+			cliLog("=== postprocessing end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 		}
 	}
 
