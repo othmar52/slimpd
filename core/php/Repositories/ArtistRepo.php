@@ -107,7 +107,7 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
 					#var_dump($itemString); die("prefixed-article");
 				}
 				// search for suffixed article
-				if(preg_match("/^(.*)([\ ,]+)".$matchArticle."/i", $itemPart, $matches)) {
+				if(preg_match("/^(.*)([\ ,]+)".$matchArticle."$/i", $itemPart, $matches)) {
 					$artistArticle = $matchArticle." ";
 					$itemPart = remU($matches[1]);
 					$az09 = az09($itemPart);
