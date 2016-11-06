@@ -149,6 +149,7 @@ class TrackContext extends \Slimpd\Models\Track {
 	
 	public function postProcessProperties() {
 		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteVariousArtists($this);
+		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteNumericArtists($this);
 		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removePrefixedArtistFromTitle($this);
 		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removeSuffixedTitleFromArtist($this);
 		$this->setArtist($this->getMostScored('setArtist'));

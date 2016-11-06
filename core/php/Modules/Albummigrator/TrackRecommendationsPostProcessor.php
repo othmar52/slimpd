@@ -170,7 +170,7 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteVariousArtists(&$contextItem, $setter = "setArtist") {
 		cliLog(__FUNCTION__ . " for " . $setter, 9, "purple");
 		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for setArtist. skipping...", 10);
+			cliLog("  no recommendations for ".$setter.". skipping...", 10);
 			if($setter === "setArtist") {
 				return self::downVoteVariousArtists($contextItem, "setTitle");
 			}
@@ -186,6 +186,27 @@ class TrackRecommendationsPostProcessor {
 		}
 		if($setter === "setArtist") {
 			return self::downVoteVariousArtists($contextItem, "setTitle");
+		}
+	}
+
+	/**
+	 * this function checks all artist recommendations for beeing numeric
+	 * to avoid this situation:
+	 * 	 most scored artist: "01"
+	 */
+	public static function downVoteNumericArtists(&$contextItem) {
+		cliLog(__FUNCTION__, 9, "purple");
+		if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
+			cliLog("  no recommendations for setArtist. skipping...", 10);
+			return;
+		}
+		foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
+			if(is_numeric($artistRecommendation) === FALSE) {
+				cliLog("  no need to downvote: " . $artistRecommendation, 10);
+				continue;
+			}
+			cliLog("  found setArtist recommendation for downvoting", 9);
+			$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
 		}
 	}
 }

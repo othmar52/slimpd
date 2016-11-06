@@ -47,5 +47,9 @@ class ArtistTitleYear extends \Slimpd\Modules\Albummigrator\AbstractTests\Abstra
 			'setTitle' => $this->matches[2],
 			'setYear' => $this->matches[3]
 		]);
+		$this->jumbleJudge->albumMigrator->recommendationForAllTracks(
+			['setArtist' => $this->matches[1] ],
+			0.1
+		);
 	}
 }
