@@ -28,8 +28,8 @@ class TrackContext extends \Slimpd\Models\Track {
 	protected $album;
 	protected $remixArtists;
 	protected $featuredArtists;
-	protected $fullArtistString; // this will be displayed in table:trackIndex and visible in autocomplete-widget
-	protected $fullTitleString;  // this will be displayed in table:trackIndex and visible in autocomplete-widget
+	protected $fullArtistString; // this will be written to table:trackIndex and visible in autocomplete-widget
+	protected $fullTitleString;  // this will be written to table:trackIndex and visible in autocomplete-widget
 	
 	public $idx;
 	
@@ -469,10 +469,41 @@ class TrackContext extends \Slimpd\Models\Track {
 			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
 				continue;
 			}
+			// TODO: pretty sure we have to append stripped phrases to tracktitle, right?
 			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
 		}
 		$featuredArtists = $tmp;
 		
+		// sometimes extracted featured artist has a remixer included
+		// example "Danny Byrd - Tonight (feat. Netsky - Cutline Remix)"
+		$tmp = array();
+		foreach($featuredArtists as $featuredArtist) {
+			// compareString does not have braces "Netsky - Cutline Remix"
+			// to use existing remixer regex we have to add braces
+			$compareString = str_replace(" - ", " (", $featuredArtist) . ")";
+
+			if(preg_match("/^". RGX::REMIX1 . "\)$/i" , $compareString, $matches)) {
+				print_r($matches);#die;
+				$tmp[] = trim($matches[1]);
+				if(array_key_exists(strtolower(trim($matches[2])), $remixerBlacklist) === FALSE) {
+					$remixerArtists[] = trim($matches[2]);
+				}
+				// append it to title string
+				// TODO: make sure titlestring does not end up in "Tracktitle (Artist 1 Remix) (Artist 2 Remix)"
+				$titleString .= " (". trim($matches[2]) .$matches[3] . ")";
+				continue;
+			}
+			// clean feat-artists like "Zarif - Instrumental"
+			foreach(array_keys($remixerBlacklist) as $blacklistItem) {
+				if(preg_match("/^" . RGX::ANYTHING . "\ (". $blacklistItem .")$/i", $featuredArtist, $matches)) {
+					$featuredArtist = trim($matches[1], " -");
+					$titleString .= " (". trim($matches[2]) . ")";
+					break;
+				}
+			}
+			$tmp[] = $featuredArtist;
+		}
+		$featuredArtists = $tmp;
 		
 		$regularArtists = array_unique(array_filter($regularArtists));
 		$featuredArtists = array_unique($featuredArtists);
@@ -530,7 +561,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		// remove whitespace before bracket
 		$titlePattern = str_replace(' )', ')', $titlePattern);
 		$this->setTitle($titlePattern);
-		#$performTest = 1;
+		$performTest = 1;
 		if($performTest > 0) {
 			cliLog("----------ARTIST-PARSER---------", 1, "purple");
 			cliLog(" inputArtist: " . $artistStringVanilla);
