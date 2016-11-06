@@ -152,6 +152,7 @@ class TrackRecommendationsPostProcessor {
 	 * remove artist from title
 	 *
 	 * this test only makes sense AFTER ALL recommentations
+	 * unfortunately this fucks up stuff like "Gusto - Gusto's Groove"
 	 */
 	public static function removePrefixedArtistFromTitle(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
