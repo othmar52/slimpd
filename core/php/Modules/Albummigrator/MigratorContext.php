@@ -92,7 +92,7 @@ trait MigratorContext {
 		foreach($properties as $setterName => $value) {
 			$cleanValue = fixCaseSensitivity(trim(flattenWhitespace(remU($value))));
 			$cleanValue = str_ireplace(
-				["&amp;"],
+				["&amp;", "aaeao"],
 				["&"],
 				$cleanValue
 			);
