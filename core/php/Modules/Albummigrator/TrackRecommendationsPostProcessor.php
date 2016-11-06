@@ -55,6 +55,13 @@ class TrackRecommendationsPostProcessor {
 			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
 			$contextItem->setRecommendationEntry("setTitle", $value, -2);
 		}
+		// "Saban Saulic-Mogu Da Te Kunu (BH-Remix)"
+		$chunks = trimExplode("-", $value, TRUE, 2);
+		if(count($chunks) === 2) {
+			$contextItem->setRecommendationEntry("setArtist", $chunks[0], 0.8);
+			$contextItem->setRecommendationEntry("setTitle", $chunks[1], 0.8);
+			$contextItem->setRecommendationEntry("setTitle", $value, -0.2);
+		}
 	}
 
 	public static function setTrackNumber($value, &$contextItem) {
@@ -190,6 +197,33 @@ class TrackRecommendationsPostProcessor {
 	}
 
 	/**
+	 * this function checks all artist+title recommendations for beeing "Unknown Artists", "Unbekannter Künsteler"
+	 * to avoid this situation:
+	 * 	 most scored artist: "Unknown Artists"
+	 */
+	public static function downVoteUnknownArtists(&$contextItem, $setter = "setArtist") {
+		cliLog(__FUNCTION__ . " for " . $setter, 9, "purple");
+		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
+			cliLog("  no recommendations for ".$setter.". skipping...", 10);
+			if($setter === "setArtist") {
+				return self::downVoteUnknownArtists($contextItem, "setTitle");
+			}
+			return;
+		}
+		foreach(array_keys($contextItem->recommendations[$setter]) as $itemRecommendation) {
+			if(RGX::isUnknownArtist($itemRecommendation) === FALSE) {
+				cliLog("  no need to downvote: " . $itemRecommendation, 10);
+				continue;
+			}
+			cliLog("  found ".$setter." recommendation for downvoting", 9);
+			$contextItem->recommend([$setter => $itemRecommendation], -5);
+		}
+		if($setter === "setArtist") {
+			return self::downVoteUnknownArtists($contextItem, "setTitle");
+		}
+	}
+
+	/**
 	 * this function checks all artist recommendations for beeing numeric
 	 * to avoid this situation:
 	 * 	 most scored artist: "01"
@@ -215,6 +249,7 @@ class TrackRecommendationsPostProcessor {
 	 * "Track 01"
 	 * "CD 02 track12"
 	 * "CD 1 track 005"
+	 * "titel 1"
 	 */
 	public static function downVoteGenericTrackTitles(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
@@ -223,7 +258,7 @@ class TrackRecommendationsPostProcessor {
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
-			if(preg_match("/^(cd(?:\d+))?track(?:\d+)$/", az09($titleRecommendation)) === 0) {
+			if(preg_match("/^(cd(?:\d+))?track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
 				cliLog("  no need to downvote: " . $titleRecommendation, 10);
 				continue;
 			}

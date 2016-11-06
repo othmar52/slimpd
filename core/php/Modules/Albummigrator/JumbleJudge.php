@@ -50,6 +50,7 @@ class JumbleJudge {
 			->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\VinylArtistTitleSceneExt", $fileName)
 			->runTest("SchemaTests\\Filename\\ArtistTitleExt", $fileName)
+			->runTest("SchemaTests\\Filename\\ArtistNumberTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\ArtistNumberTitleSceneExt", $fileName)
 			->runTest("SchemaTests\\Filename\\NumberTitleExt", $fileName)
 			->runTest("SchemaTests\\Filename\\BeginsWithVinyl", $fileName)

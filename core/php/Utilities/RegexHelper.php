@@ -93,11 +93,25 @@ class RegexHelper {
 		$compare = array(
 			'various' => NULL,
 			'variousartist' => NULL,
+			'variousartisis' => NULL,
 			'variousartists' => NULL,
 			'varios' => NULL,
 			'variosartist' => NULL,
 			'variosartists' => NULL,
 			'va' => NULL
+		);
+		return array_key_exists(az09($input), $compare);
+	}
+
+	public static function isUnknownArtist($input) {
+		// TODO: convert to regex where those strings also get recognized
+		$compare = array(
+			'unknownartist' => NULL,
+			'unknownartists' => NULL,
+			'unbekannterkuenstler' => NULL,
+			'unbekannterkunstler' => NULL,
+			'unbekannterknstler' => NULL,
+			'inbekannterinterpret' => NULL
 		);
 		return array_key_exists(az09($input), $compare);
 	}

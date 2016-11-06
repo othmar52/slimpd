@@ -34,7 +34,7 @@ class HasYear extends \Slimpd\Modules\Albummigrator\AbstractTests\HasYear {
 				]);
 				$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
 					'setYear' => az09($yearMatch)
-				]);
+				],0.1);
 			}
 		}
 	}

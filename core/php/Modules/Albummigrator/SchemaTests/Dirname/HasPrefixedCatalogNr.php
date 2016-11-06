@@ -53,7 +53,7 @@ class HasPrefixedCatalogNr extends \Slimpd\Modules\Albummigrator\AbstractTests\A
 				]);
 				$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
 					'setCatalogNr' => az09($catNrMatch)
-				]);
+				],0.1);
 			}
 		}
 	}

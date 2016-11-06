@@ -50,6 +50,6 @@ class ArtistYearTitle extends \Slimpd\Modules\Albummigrator\AbstractTests\Abstra
 		$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
 			'setArtist' => $this->matches[1],
 			'setYear' => az09($this->matches[2])
-		]);
+		],0.1);
 	}
 }
