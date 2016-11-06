@@ -65,12 +65,17 @@ class AlbumMigrator {
 		cliLog("=== collecting begin for album ===", 10, "yellow");
 		$this->albumContextItem->collectAlbumStuff($this, $this->jumbleJudge);
 		cliLog("=== collecting end for album ===", 10, "yellow");
-		
+
 		$this->postProcessTrackProperties();
-		
+
+		cliLog("=== postprocessing begin for album ===", 10, "yellow");
+		\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removePrefixedArtistFromTitle($this->albumContextItem);
+		cliLog("=== postprocessing end for album ===", 10, "yellow");
+
 		cliLog("=== recommendations begin for album ===", 10, "yellow");
 		cliLog(print_r($this->albumContextItem->recommendations, 1), 10);
 		cliLog("=== recommendations end for album ===", 10, "yellow");
+
 		$this->albumContextItem->setAdded($this->mostRecentAdded)->migrate($this->trackContextItems, $this->jumbleJudge, $this->useBatcher);
 
 		#print_r($this->jumbleJudge->testResults); die;
@@ -82,10 +87,10 @@ class AlbumMigrator {
 			cliLog("=== recommendations end for " . basename($trackContextItem->getRelPath()) . " ===", 10, "yellow");
 			$trackContextItem->migrate($this->useBatcher);
 		}
-		
+
+		cliLog("=== postprocessing begin for album ===", 10, "yellow");
 		// at this point we have the final artist uids of tracks
 		// lets set the album artist
-		cliLog("=== postprocessing begin for album ===", 10, "yellow");
 		$this->albumArtistViceVersaCorrection();
 		cliLog("=== postprocessing end for album ===", 10, "yellow");
 		// complete embedded bitmaps with albumUid
@@ -98,7 +103,7 @@ class AlbumMigrator {
 	 * example compilation: "Sly & Robbie - LateNightTales"
 	 */
 	private function albumArtistViceVersaCorrection() {
-		cliLog('AlbumArtistViceVersaCheck', 10, "purple");
+		cliLog(__FUNCTION__, 10, "purple");
 		// collect all final artist-uids of each album-track
 		$trackArtistUids = "";
 		foreach($this->trackContextItems as $trackContextItem) {
