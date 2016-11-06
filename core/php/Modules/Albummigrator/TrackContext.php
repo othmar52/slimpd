@@ -483,7 +483,6 @@ class TrackContext extends \Slimpd\Models\Track {
 			$compareString = str_replace(" - ", " (", $featuredArtist) . ")";
 
 			if(preg_match("/^". RGX::REMIX1 . "\)$/i" , $compareString, $matches)) {
-				print_r($matches);#die;
 				$tmp[] = trim($matches[1]);
 				if(array_key_exists(strtolower(trim($matches[2])), $remixerBlacklist) === FALSE) {
 					$remixerArtists[] = trim($matches[2]);
