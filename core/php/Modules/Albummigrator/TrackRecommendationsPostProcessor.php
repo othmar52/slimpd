@@ -32,9 +32,12 @@ class TrackRecommendationsPostProcessor {
 	public static function setArtist($value, &$contextItem) {
 		// "A01. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
-			$contextItem->setRecommendationEntry("setArtist", $value, -2);
+			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
+			if(RGX::seemsVinyly($matches[1]) === TRUE) {
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
+				$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
+				$contextItem->setRecommendationEntry("setArtist", $value, -2);
+			}
 		}
 		// "1. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
@@ -46,9 +49,12 @@ class TrackRecommendationsPostProcessor {
 
 	public static function setTitle($value, &$contextItem) {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
-			$contextItem->setRecommendationEntry("setTitle", $value, -2);
+			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
+			if(RGX::seemsVinyly($matches[1]) === TRUE) {
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
+				$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
+				$contextItem->setRecommendationEntry("setTitle", $value, -2);
+			}
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);

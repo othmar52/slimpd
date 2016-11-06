@@ -115,4 +115,20 @@ class RegexHelper {
 		);
 		return array_key_exists(az09($input), $compare);
 	}
+
+	/**
+	 * TODO: remove this condition as soon as RGX::VINYL is capable of this
+	 * @see: https://regex101.com/r/a1HBxr/3
+	 */
+	public static function seemsVinyly($input) {
+		$blacklist = array(
+			'dj',
+			'mc',
+			'i'
+		);
+		if(isset($blacklist[az09($input)]) === TRUE) {
+			return FALSE;
+		}
+		return TRUE;
+	}
 }

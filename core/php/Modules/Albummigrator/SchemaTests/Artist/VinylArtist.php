@@ -40,7 +40,7 @@ class VinylArtist extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTe
 	public function run() {
 		if(preg_match($this->pattern, $this->input, $matches)) {
 			$this->matches = $matches;
-			$this->result = 'number-artist';
+			$this->result = 'vinyl-artist';
 			return;
 		}
 		$this->result = 0;
