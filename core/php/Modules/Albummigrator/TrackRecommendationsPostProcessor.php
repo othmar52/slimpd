@@ -170,7 +170,7 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteVariousArtists(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
 		if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for setArtist. skipping...", 1);
+			cliLog("  no recommendations for setArtist. skipping...", 10);
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
@@ -178,7 +178,7 @@ class TrackRecommendationsPostProcessor {
 				cliLog("  no need to downvote: " . $artistRecommendation, 10);
 				continue;
 			}
-			cliLog("  found setArtist recommendation for downvoting");
+			cliLog("  found setArtist recommendation for downvoting", 9);
 			$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
 		}
 	}

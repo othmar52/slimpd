@@ -85,8 +85,9 @@ class AlbumMigrator {
 		
 		// at this point we have the final artist uids of tracks
 		// lets set the album artist
+		cliLog("=== postprocessing begin for album ===", 10, "yellow");
 		$this->albumArtistViceVersaCorrection();
-
+		cliLog("=== postprocessing end for album ===", 10, "yellow");
 		// complete embedded bitmaps with albumUid
 		// to make sure extracted images will be referenced to an album
 		$this->container->bitmapRepo->addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
@@ -97,7 +98,7 @@ class AlbumMigrator {
 	 * example compilation: "Sly & Robbie - LateNightTales"
 	 */
 	private function albumArtistViceVersaCorrection() {
-		cliLog('AlbumArtistViceVersaCheck');
+		cliLog('AlbumArtistViceVersaCheck', 10, "purple");
 		// collect all final artist-uids of each album-track
 		$trackArtistUids = "";
 		foreach($this->trackContextItems as $trackContextItem) {
@@ -128,10 +129,13 @@ class AlbumMigrator {
 		// in case we have more than 4 artists use "Various Artists" as album-artist
 		$vaTreshold = 4;
 		if(count($trackArtistUids) <= $vaTreshold) {
+			cliLog('  found <= ' . $vaTreshold . ' artists within all tracks', 10);
+			cliLog('  final album artists uids: ' . join(",", $trackArtistUids), 10);
 			$this->injectAlbumArtistUid($trackArtistUids);
 			return;
 		}
-
+		cliLog('  found > ' . $vaTreshold . ' artists within all tracks', 10);
+		cliLog('  final album artists: Various Artists', 10);
 		// set "various Artists"
 		$this->injectAlbumArtistUid([11]);
 		
