@@ -361,7 +361,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		$titleString = flattenWhitespace(unifyBraces($titleString));
 
 		// assign all string-parts to category
-		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?))\ ";
+		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?)|w(?:.?))\ ";
 		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
 
 		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
