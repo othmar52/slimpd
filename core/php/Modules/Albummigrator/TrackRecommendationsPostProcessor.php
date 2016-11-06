@@ -211,7 +211,10 @@ class TrackRecommendationsPostProcessor {
 	}
 
 	/**
-	 * this function checks all title recommendations for beeing "Track 01"
+	 * this function checks all title recommendations like
+	 * "Track 01"
+	 * "CD 02 track12"
+	 * "CD 1 track 005"
 	 */
 	public static function downVoteGenericTrackTitles(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
@@ -220,12 +223,12 @@ class TrackRecommendationsPostProcessor {
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
-			if(preg_match("/^track(?:\d+)$/", az09($titleRecommendation)) === 0) {
+			if(preg_match("/^(cd(?:\d+))?track(?:\d+)$/", az09($titleRecommendation)) === 0) {
 				cliLog("  no need to downvote: " . $titleRecommendation, 10);
 				continue;
 			}
 			cliLog("  found setTitle recommendation for downvoting", 9);
-			$contextItem->recommend(["setTitle" => $titleRecommendation], -5);
+			$contextItem->recommend(["setTitle" => $titleRecommendation], -2);
 		}
 	}
 }

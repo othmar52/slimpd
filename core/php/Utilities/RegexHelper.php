@@ -25,7 +25,7 @@ class RegexHelper {
 	#TODO: "AB-" should not match at all but currently matches with "B-"
 	const VINYL  = "([A-Ma-m]{1}\2?(?:\d{1,2})?)"; // a1, AA2, but not AB1, N4, 01A
 	const GLUE   = "[ .\-_\|]{1,4}"; // "_-_", ". ", "-",
-	const GLUE_NO_WHITESPACE   = "(?:[.\-_]{1,4})"; // "_-_", ". ", "-",
+	const GLUE_NO_WHITESPACE   = "(?:[\\.\-_]{1,4})"; // "_-_", ". ", "-",
 	const EXT    = "\.([a-zA-Z\d]{2,4})";
 	const SCENE  = "-([^\s\-]+)";
 	const YEAR   = "(?<!\d)(?:\D)?([12]{1}[0-9]{3})(?:\D)?";
