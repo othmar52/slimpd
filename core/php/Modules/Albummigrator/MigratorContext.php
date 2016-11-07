@@ -60,11 +60,14 @@ trait MigratorContext {
 			if(
 				$setterName === "setMimeType" ||
 				$setterName === "setMiliseconds" ||
+				$setterName === "setFingerprint" ||
 				$setterName === "setAudioDataformat" ||
 				$setterName === "setAudioComprRatio" ||
 				$setterName === "setAudioBitrate" ||
 				$setterName === "setAudioBitrateMode" ||
 				$setterName === "setAudioEncoder" ||
+				$setterName === "setAudioBitsPerSample" ||
+				$setterName === "setAudioLossless" ||
 				$setterName === "setAudioSamplerate"
 			) {
 				continue;
@@ -150,5 +153,29 @@ trait MigratorContext {
 		}
 		return array_unique(array_keys($this->recommendations[$setterName]));
 	}
-}
 
+	public function dumpSortedRecommendations() {
+		$setterLength = 14;
+		$scoreLength = 5;
+		cliLog(str_repeat("―", 90), 10, "purple");
+		cliLog("property      | score |  value", 10);
+		cliLog(str_repeat("―", 90), 10, "purple");
+		foreach($this->recommendations as $setterName => $rec) {
+			arsort($rec, SORT_NUMERIC);
+			$innerLoop = 0;
+			foreach($rec as $value => $score) {
+				$innerLoop++;
+				$prefix = str_repeat(" ", $setterLength);
+				$color = "darkgray";
+				if($innerLoop === 1) {
+					$prefix = str_pad($setterName, $setterLength, " ", STR_PAD_RIGHT);
+					$color = "";
+				}
+				$scoreString = str_pad($score, $scoreLength, " ", STR_PAD_LEFT);
+				cliLog($prefix . "| " . $scoreString . " |  " . $value, 10, $color);
+			}
+			cliLog(" ", 10);
+			cliLog(str_repeat("―", 90), 10, "purple");
+		}
+	}
+}

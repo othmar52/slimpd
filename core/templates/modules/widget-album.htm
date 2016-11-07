@@ -1,9 +1,9 @@
 {# TODO: move modalsurrounding to partial #}
 <div class="modal-body">	
-    {% include 'partials/modal/close-button-top.htm' %}
-    <div class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'albumtitle'|ll}}</div>
-    <h3 class="nomargin">{% include 'partials/artist/link.htm' with { 'item': album } %} - {{album.title}}</h3>
-    <div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' %}</div>
+	{% include 'partials/modal/close-button-top.htm' %}
+	<div class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %} - {{'albumtitle'|ll}}</div>
+	<h3 class="nomargin">{% include 'partials/artist/link.htm' with { 'item': album } %} - {{album.title}}</h3>
+	<div class="tinyfont dark darker-links">{% include 'partials/filebrowser/breadcrumb.htm' %}</div>
 	<div class="row">
 		<div class="col-md-12">
 			<br class="row replace-me-with-proper-css" />
@@ -50,7 +50,7 @@
 		</div>
 
 		<div class="col-md-4">
-			<h3>Maintainace</h3>
+			<h3>Maintenance</h3>
 			<a class="ajax-link btn btn-default" href="{{root}}album/remigrate/{{ album.uid }}" title="do all the auto-correction/guessing stuff for tag attributes again" data-dismiss="modal">
 				<i class="fa fa-lg fa-cog"></i> Re-migrate
 			</a>
@@ -60,5 +60,5 @@
 	<br class="row replace-me-with-proper-css" />
 </div>
 <div class="modal-footer">
-    {% include 'partials/modal/close-button-bottom.htm' %}
+	{% include 'partials/modal/close-button-bottom.htm' %}
 </div>

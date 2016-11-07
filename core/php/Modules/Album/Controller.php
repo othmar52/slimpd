@@ -94,13 +94,13 @@ class Controller extends \Slimpd\BaseController {
 		$section = "";
 		$item = "";
 		foreach($cliResponse as $line) {
-			if(preg_match("/===\ (.*)\ begin\ for\ (?:.*)?(\ [a-f0-9]{11}|album)\ ===/", $line, $matches)) {
+			if(preg_match("/===\ (.*)\ (begin|end)\ for\ (?:.*)?(\ [a-f0-9]{11}|album)\ ===/", $line, $matches)) {
 				$section = $matches[1];
-				$item = trim($matches[2]);
-			}
-			if(preg_match("/===\ (.*)\ end\ for\ (?:.*)?(\ [a-f0-9]{11}|album)\ ===/", $line)) {
-				$item = "";
-				$section = "";
+				$item = trim($matches[3]);
+				if($matches[2] === "end") {
+					$item = "";
+					$section = "";
+				}
 			}
 			if($item === "" || $section === "") {
 				continue;

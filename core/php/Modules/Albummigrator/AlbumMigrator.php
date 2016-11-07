@@ -73,7 +73,7 @@ class AlbumMigrator {
 		cliLog("=== postprocessing end for album ===", 10, "yellow");
 
 		cliLog("=== recommendations begin for album ===", 10, "yellow");
-		cliLog(print_r($this->albumContextItem->recommendations, 1), 10);
+		$this->albumContextItem->dumpSortedRecommendations();
 		cliLog("=== recommendations end for album ===", 10, "yellow");
 
 		$this->albumContextItem->setAdded($this->mostRecentAdded)->migrate($this->trackContextItems, $this->jumbleJudge, $this->useBatcher);
@@ -83,7 +83,7 @@ class AlbumMigrator {
 		foreach($this->trackContextItems as $trackContextItem) {
 			$trackContextItem->setAlbumUid($this->albumContextItem->getUid());
 			cliLog("=== recommendations begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
-			cliLog(print_r($trackContextItem->recommendations, 1), 10);
+			$trackContextItem->dumpSortedRecommendations();
 			cliLog("=== recommendations end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			$trackContextItem->migrate($this->useBatcher);
 		}
