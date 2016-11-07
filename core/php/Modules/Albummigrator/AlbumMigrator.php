@@ -86,6 +86,8 @@ class AlbumMigrator {
 			$trackContextItem->dumpSortedRecommendations();
 			cliLog("=== recommendations end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 			$trackContextItem->migrate($this->useBatcher);
+			// add the whole bunch of valid and invalid attributes to trackindex table
+			$trackContextItem->updateTrackIndex($this->useBatcher);
 		}
 
 		cliLog("=== postprocessing begin for album ===", 10, "yellow");
