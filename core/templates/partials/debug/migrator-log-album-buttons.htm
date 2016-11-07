@@ -1,16 +1,19 @@
 {% if trackdump %}
 <div class="">
-	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-coll-{{item.relPathHash}}" data-text1="Collect" data-text2="Collect" title="collected attributes from real tags">
+	<button class="uc btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-coll-{{item.relPathHash}}" data-text1="Collect" data-text2="Collect" title="collected attributes from real tags">
 		Collect
 	</button>&nbsp;
-	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-score-{{item.relPathHash}}" data-text1="Scoring" data-text2="Scoring" title="giving scores for attributes based on various tests">
+	<button class="uc btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-score-{{item.relPathHash}}" data-text1="Scoring" data-text2="Scoring" title="giving scores for attributes based on various tests">
 		Scoring
 	</button>&nbsp;
-	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-post-{{item.relPathHash}}" data-text1="Postprocessing" data-text2="Postprocessing" title="post processing">
-		Postprocessing
+	<button class="uc btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-post-{{item.relPathHash}}" data-text1="Postprocessing" data-text2="Postprocessing" title="post processing">
+		Post-processing
 	</button>&nbsp;
-	<button class="btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-rec-{{item.relPathHash}}" data-text1="Recommendations" data-text2="Recommendations" title="final recommendations with scorings">
+	<button class="uc btn btn-trnsp toggle-content close-all btn-xs btn-bordered col2" data-toggle="#album-rec-{{item.relPathHash}}" data-text1="Recommendations" data-text2="Recommendations" title="final recommendations with scorings">
 		Recommendations
-	</button>
+	</button>&nbsp;
+	<a class="uc btn btn-trnsp btn-xs btn-bordered col2 ajax-link" href="{{root}}album/{{album.uid}}" title="exit migrator">
+		x
+	</a>
 </div>
 {% endif %}

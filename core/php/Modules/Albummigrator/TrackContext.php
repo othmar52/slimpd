@@ -562,7 +562,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		// remove whitespace before bracket
 		$titlePattern = str_replace(' )', ')', $titlePattern);
 		$this->setTitle($titlePattern);
-		$performTest = 1;
+		#$performTest = 1;
 		if($performTest > 0) {
 			cliLog("----------ARTIST-PARSER---------", 1, "purple");
 			cliLog(" inputArtist: " . $artistStringVanilla);

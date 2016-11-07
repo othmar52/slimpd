@@ -204,6 +204,7 @@ function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
 		"cyan"         => ["\033[36m",  "\033[37m"],
 		"purple"       => ["\033[35m",  "\033[37m"],
 		"blue"         => ["\033[34m",  "\033[37m"],
+		"darkgray"     => ["\033[1;30m","\033[0m"],
 		"lightblue"    => ["\033[1;34m","\033[0m" ]
 	];
 
@@ -220,6 +221,7 @@ function cli2html($input) {
 		"\033[35m" => '<span style="color:#db00e5">',	// purple
 		"\033[36m" => '<span style="color:#00e5e5">',	// cyan
 		"\033[1;33m" => '<span style="color:#effe4b">',	// yellow
+		"\033[1;30m" => '<span style="color:#777">',	// darkgray
 		"\033[37m" => '</span>',
 		"\033[0m" => '</span>'
 	];

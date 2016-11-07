@@ -184,7 +184,7 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteVariousArtists(&$contextItem, $setter = "setArtist") {
 		cliLog(__FUNCTION__ . " for " . $setter, 9, "purple");
 		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for ".$setter.". skipping...", 10);
+			cliLog("  no recommendations for ".$setter.". skipping...", 10, "darkgray");
 			if($setter === "setArtist") {
 				return self::downVoteVariousArtists($contextItem, "setTitle");
 			}
@@ -192,7 +192,7 @@ class TrackRecommendationsPostProcessor {
 		}
 		foreach(array_keys($contextItem->recommendations[$setter]) as $itemRecommendation) {
 			if(RGX::isVa($itemRecommendation) === FALSE) {
-				cliLog("  no need to downvote: " . $itemRecommendation, 10);
+				cliLog("  no need to downvote: " . $itemRecommendation, 10, "darkgray");
 				continue;
 			}
 			cliLog("  found ".$setter." recommendation for downvoting", 9);
@@ -211,7 +211,7 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteUnknownArtists(&$contextItem, $setter = "setArtist") {
 		cliLog(__FUNCTION__ . " for " . $setter, 9, "purple");
 		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for ".$setter.". skipping...", 10);
+			cliLog("  no recommendations for ".$setter.". skipping...", 10, "darkgray");
 			if($setter === "setArtist") {
 				return self::downVoteUnknownArtists($contextItem, "setTitle");
 			}
@@ -219,7 +219,7 @@ class TrackRecommendationsPostProcessor {
 		}
 		foreach(array_keys($contextItem->recommendations[$setter]) as $itemRecommendation) {
 			if(RGX::isUnknownArtist($itemRecommendation) === FALSE) {
-				cliLog("  no need to downvote: " . $itemRecommendation, 10);
+				cliLog("  no need to downvote: " . $itemRecommendation, 10, "darkgray");
 				continue;
 			}
 			cliLog("  found ".$setter." recommendation for downvoting", 9);
@@ -238,12 +238,12 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteNumericArtists(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
 		if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for setArtist. skipping...", 10);
+			cliLog("  no recommendations for setArtist. skipping...", 10, "darkgray");
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
 			if(is_numeric($artistRecommendation) === FALSE) {
-				cliLog("  no need to downvote: " . $artistRecommendation, 10);
+				cliLog("  no need to downvote: " . $artistRecommendation, 10, "darkgray");
 				continue;
 			}
 			cliLog("  found setArtist recommendation for downvoting", 9);
@@ -261,12 +261,12 @@ class TrackRecommendationsPostProcessor {
 	public static function downVoteGenericTrackTitles(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
 		if(array_key_exists("setTitle", $contextItem->recommendations) === FALSE) {
-			cliLog("  no recommendations for setTitle. skipping...", 10);
+			cliLog("  no recommendations for setTitle. skipping...", 10, "darkgray");
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
 			if(preg_match("/^(cd(?:\d+))?track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
-				cliLog("  no need to downvote: " . $titleRecommendation, 10);
+				cliLog("  no need to downvote: " . $titleRecommendation, 10, "darkgray");
 				continue;
 			}
 			cliLog("  found setTitle recommendation for downvoting", 9);
