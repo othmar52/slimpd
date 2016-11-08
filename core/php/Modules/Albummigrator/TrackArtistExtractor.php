@@ -143,15 +143,15 @@ trait TrackArtistExtractor {
 		if($this->artistString == "") {
 			$this->regularArtists[] = "Unknown Artist";
 		}
-		
+
 		// parse ARTIST string for featured artists REGEX 1
 		$this->parseStringForFeat("artistString", $this->groupFeat1);
 
 		// parse ARTIST string for featured artists REGEX 2
 		$this->parseStringForFeat("artistString", $this->groupFeat2);
-		
+
 		$this->regularArtists = array_merge($this->regularArtists, preg_split($this->regexArtist, $this->artistString));
-		
+
 		// parse TITLE string for featured artists REGEX 1
 		$this->parseStringForFeat("titleString", $this->groupFeat1);
 
@@ -161,12 +161,50 @@ trait TrackArtistExtractor {
 		if(preg_match($this->regexRemix1, $this->titleString, $matches)) {
 			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[2]));
 		}
-		// parse title string for remixer regex 1
 		if(preg_match($this->regexRemix2, $this->titleString, $matches)) {
-			#print_r($matches); die();
 			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[3]));
 		}
-		
+
+		$this->removeCommonStringsFromArtists();
+
+		$this->regularArtists = array_unique(array_filter($this->regularArtists));
+		$this->featArtists = array_unique($this->featArtists);
+		$this->remixArtists = array_unique($this->remixArtists);
+
+		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
+		$allArtists = array_merge($this->regularArtists, $this->featArtists, $this->remixArtists);
+		usort($allArtists,'sortHelper');
+		$this->titlePattern = str_ireplace($allArtists, "%s", $this->titleString);
+
+		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
+		$this->titlePattern = flattenWhitespace(str_replace("%s", "%s ", $this->titlePattern));
+
+		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
+			// oh no - we have a problem
+			// reset extracted remixers
+			$this->titlePattern = $this->titleString;
+			$this->remixArtists = array();
+		}
+
+		$this->fetchArtistUids();
+
+		// replace multiple whitespace with a single whitespace
+		$this->titlePattern = flattenWhitespace($this->titlePattern);
+		// remove whitespace before bracket
+		$this->titlePattern = str_replace(' )', ')', $this->titlePattern);
+		$this->setTitle($this->titlePattern);
+
+		$this->artistString = join(" & ", $this->regularArtists);
+		if(count($this->featArtists) > 0) {
+			$this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
+		}
+
+		$this->dumpParserResults();
+		return $this;
+	}
+
+	private function removeCommonStringsFromArtists() {
+
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
 		foreach($this->remixArtists as $remixerArtist) {
@@ -194,7 +232,7 @@ trait TrackArtistExtractor {
 			$tmp[] = str_ireplace($this->artistBlacklist, "", $featuredArtist);
 		}
 		$this->featArtists = $tmp;
-		
+
 		// sometimes extracted featured artist has a remixer included
 		// example "Danny Byrd - Tonight (feat. Netsky - Cutline Remix)"
 		$tmp = array();
@@ -224,103 +262,31 @@ trait TrackArtistExtractor {
 			$tmp[] = $featuredArtist;
 		}
 		$this->featArtists = $tmp;
-		
-		$this->regularArtists = array_unique(array_filter($this->regularArtists));
-		$this->featArtists = array_unique($this->featArtists);
-		$this->remixArtists = array_unique($this->remixArtists);
-		
-		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
-		$allArtists = array_merge($this->regularArtists, $this->featArtists, $this->remixArtists);
-		usort($allArtists,'sortHelper');
-		$this->titlePattern = str_ireplace($allArtists, "%s", $this->titleString);
-		
-		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
-		$this->titlePattern = flattenWhitespace(str_replace("%s", "%s ", $this->titlePattern));
-		
+	}
 
-		// remove possible brackets from featuredArtists
-		#$tmp = array();
-		#foreach($this->featArtists as $featuredArtist) {
-		#	$tmp[] = str_replace(array("(", ")"), "", $featuredArtist);
-		#}
-		#$this->featArtists = $tmp;
-		
-		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
-			// oh no - we have a problem
-			// reset extracted remixers
-			$this->titlePattern = $this->titleString;
-			$this->remixArtists = array();
-		}
-		
-		/* TODO: do we need this?
-		// remove " (" from titlepattern in case that are the last 2 chars
-		if(preg_match("/(.*)\ \($/", $this->titlePattern, $matches)) {
-			$this->titlePattern = $matches[1];
-		}
-		*/
-		
-		// clean up artist names
-		// unfortunately there are artist names like "45 Thieves"
-		$this->regularArtists = $this->removeLeadingNumbers($this->regularArtists);
+	private function fetchArtistUids() {
 		$this->setArtistUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $this->regularArtists))));
 
 		$this->setFeaturingUid('');
-		$this->featArtists = $this->removeLeadingNumbers($this->featArtists);
 		if(count($this->featArtists) > 0) {
 			$this->setFeaturingUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $this->featArtists))));
 		}
 
 		$this->setRemixerUid('');
-		$this->remixArtists = $this->removeLeadingNumbers($this->remixArtists);
 		if(count($this->remixArtists) > 0) {
 			$this->setRemixerUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $this->remixArtists))));
 		}
-		
-		// replace multiple whitespace with a single whitespace
-		$this->titlePattern = flattenWhitespace($this->titlePattern);
-		// remove whitespace before bracket
-		$this->titlePattern = str_replace(' )', ')', $this->titlePattern);
-		$this->setTitle($this->titlePattern);
-		#$performTest = 1;
-		if($performTest > 0) {
-			cliLog("----------ARTIST-PARSER---------", 1, "purple");
-			cliLog(" inputArtist: " . $this->artistVanilla);
-			cliLog(" inputTitle: " . $this->titleVanilla);
-			cliLog(" regular: " . print_r($this->regularArtists,1));
-			cliLog(" feat: " . print_r($this->featArtists,1));
-			cliLog(" remixer: " . print_r($this->remixArtists,1));
-			cliLog(" titlePattern: " . $this->titlePattern);
-			cliLog(" titleString: " . $this->titleString);
-		}
-		$this->artistString = join(" & ", $this->regularArtists);
-		if(count($this->featArtists) > 0) {
-			$this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
-		}
-		return $this;
-	}
-	
-	// fix artists names like
-	// 01.Dread Bass
-	// 01 - Cookie Monsters
-	public function removeLeadingNumbers($inputArray) {
-		$out = array();
-		#TODO: move to customizeable config
-		$whitelist = array(
-			"45 thieves",
-			#"60 minute man"
-		);
-		foreach($inputArray as $string) {
-			if(in_array(strtolower($string), $whitelist) === FALSE) {
-				if(preg_match("/^([\d]{2})([\.\-\ ]{1,3})([^\d]{1})(.*)$/", $string, $matches)) {
-					if($matches[1] < 21) {
-						#print_r($matches); die();
-						$string = $matches[3].$matches[4];
-					}
-				}
-			}
-			$out[] = $string;
-		}
-		return $out;
 	}
 
+	private function dumpParserResults() {
+		cliLog("=== artistresult begin for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
+		cliLog(" inputArtist: " . $this->artistVanilla, 10);
+		cliLog(" inputTitle: " . $this->titleVanilla, 10);
+		cliLog(" regular: " . print_r($this->regularArtists,1), 10);
+		cliLog(" feat: " . print_r($this->featArtists,1), 10);
+		cliLog(" remixer: " . print_r($this->remixArtists,1), 10);
+		cliLog(" titleString: " . $this->titleString, 10);
+		cliLog(" titlePattern: " . $this->titlePattern, 10);
+		cliLog("=== artistresult end for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
+	}
 }
