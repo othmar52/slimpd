@@ -29,13 +29,27 @@ trait TrackArtistExtractor {
 	protected $artistVanilla;
 	protected $titleVanilla;
 
-	// those attributes holds string values (track holds relational Uids)
-	protected $regularArtists;
-	protected $featArtists;
-	protected $remixArtists;
+	// string representation which gets modified heavyly during processing
+	// this will be written to table:trackIndex and visible in autocomplete-widget
+	protected $artistString = '';
+	protected $titleString = '';
+	protected $titlePattern = '';
 
-	protected $fullArtistString; // this will be written to table:trackIndex and visible in autocomplete-widget
-	protected $fullTitleString;  // this will be written to table:trackIndex and visible in autocomplete-widget
+	// arrays with string values (track holds relational Uids in artistUid, feauringUid, remixerUid)
+	protected $regularArtists = [];
+	protected $featArtists = [];
+	protected $remixArtists = [];
+
+	// regex stuff which will be applied
+	protected $regexArtist;
+	protected $groupFeat1;
+	protected $groupFeat2;
+	protected $regexRemix1;
+	protected $regexRemix2;
+
+	// blacklists for stuff that should be ignored as remixer like "foo (Original Mix)"
+	protected $artistBlacklist;
+	protected $remixBlacklist;
 
 	public function setRegularArtists($value) {
 		$this->regularArtists = $value;
@@ -61,132 +75,103 @@ trait TrackArtistExtractor {
 		return $this->remixArtists;
 	}
 
-	public function setFullArtistString($value) {
-		$this->fullArtistString = $value;
+	public function setArtistString($value) {
+		$this->artistString = $value;
 		return $this;
 	}
-	public function getFullArtistString() {
-		return $this->fullArtistString;
+	public function getArtistString() {
+		return $this->artistString;
 	}
 
-	public function setFullTitleString($value) {
-		$this->fullTitleString = $value;
+	public function setTitleString($value) {
+		$this->titleString = $value;
 		return $this;
 	}
-	public function getFullTitleString() {
-		return $this->fullTitleString;
+	public function getTitleString() {
+		return $this->titleString;
+	}
+
+	/**
+	 * set class properties which are needed during parsing
+	 */
+	private function init() {
+		$this->artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
+		$this->remixBlacklist = array_merge($GLOBALS["remixer-blacklist"], $this->artistBlacklist);
+
+		$this->artistVanilla = $this->getArtist();
+		$this->titleVanilla = $this->getTitle();
+
+		$this->artistString = $this->getArtist();
+		$this->titleString = $this->getTitle();
+
+		$this->regexArtist = "/".RGX::ARTIST_GLUE."/i";
+
+		// assign all string-parts to category
+		$this->groupFeat1 = "([\ \(])(featuring|ft(?:.?)|feat(?:.?)|w(?:.?))\ ";
+		$this->groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
+
+		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
+		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
+
+		$this->regexRemix1 = "/" . RGX::REMIX1 . "/i";
+		$this->regexRemix2 = "/" . RGX::REMIX2 . "/i";
+	}
+
+	private function parseStringForFeat($artistOrTitle, $regex) {
+		if(preg_match("/(.*)" . $regex . "([^\(]*)(.*)$/i", $this->$artistOrTitle, $matches)) {
+			$sFeat = trim($matches[4]);
+			if(substr($sFeat, -1) == ')') {
+				$sFeat = substr($sFeat,0,-1);
+			}
+			if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
+				return;
+			}
+			$this->$artistOrTitle = str_replace(
+				$matches[2] .$matches[3] . ' ' . $matches[4],
+				" ",
+				$this->$artistOrTitle
+			);
+			$this->featArtists = array_merge($this->featArtists, preg_split($this->regexArtist, $sFeat));
+		}
 	}
 
 	// TODO: refacture!!!
 	// TODO: pretty sure getzFeaturedArtist() from id3 tags is currently not used at all
 	public function setFeaturedArtistsAndRemixers() {
-		$artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
+		$this->init();
 
-		$this->artistVanilla = $this->getArtist();
-		$this->titleVanilla = $this->getTitle();
-		
-		$regexArtist = "/".RGX::ARTIST_GLUE."/i";
-		$regexRemix = "/" . RGX::REMIX1 . "/i";
-		$regexRemix2 = "/" . RGX::REMIX2 . "/i";
-		
-		$this->regularArtists = array();
-		$this->featArtists = array();
-		$this->remixArtists = array();
-		$titlePattern = '';
-
-		$artistString = $this->artistVanilla;
-		$titleString = $this->titleVanilla;
-
-		// assign all string-parts to category
-		$groupFeat = "([\ \(])(featuring|ft(?:.?)|feat(?:.?)|w(?:.?))\ ";
-		$groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
-
-		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
-		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
-
-		if($artistString == "") {
+		if($this->artistString == "") {
 			$this->regularArtists[] = "Unknown Artist";
 		}
 		
 		// parse ARTIST string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $artistString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			$artistString = str_replace(
-				$matches[2] .$matches[3] . ' ' . $matches[4],
-				" ",
-				$artistString
-			);
-			$this->featArtists = array_merge($this->featArtists, preg_split($regexArtist, $sFeat));
-		}
+		$this->parseStringForFeat("artistString", $this->groupFeat1);
+
 		// parse ARTIST string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $artistString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			$artistString = str_replace(
-				$matches[2] .$matches[3] . $matches[4],
-				" ",
-				$artistString
-			);
-			$this->featArtists = array_merge($this->featArtists, preg_split($regexArtist, $sFeat));
-		}
+		$this->parseStringForFeat("artistString", $this->groupFeat2);
 		
-		$this->regularArtists = array_merge($this->regularArtists, preg_split($regexArtist, $artistString));
+		$this->regularArtists = array_merge($this->regularArtists, preg_split($this->regexArtist, $this->artistString));
 		
 		// parse TITLE string for featured artists REGEX 1
-		if(preg_match("/(.*)" . $groupFeat . "([^\(]*)(.*)$/i", $titleString, $matches)) {
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			
-			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
-				$titleString = str_replace(
-					$matches[2] .$matches[3] . ' ' . $matches[4],
-					" ",
-					$titleString
-				);
-				$this->featArtists = array_merge($this->featArtists, preg_split($regexArtist, $sFeat));
-			}
-		}
-		
-		// parse TITLE string for featured artists REGEX 2
-		if(preg_match("/(.*)" . $groupFeat2 . "([^\(]*)(.*)$/i", $titleString, $matches)) {
-			#print_r($matches); die();
-			$sFeat = trim($matches[4]);
-			if(substr($sFeat, -1) == ')') {
-				$sFeat = substr($sFeat,0,-1);
-			}
-			if(isset($artistBlacklist[strtolower($sFeat)]) === FALSE) {
-				$titleString = str_replace(
-					$matches[2] .$matches[3] . $matches[4],
-					" ",
-					$titleString
-				);
-				$this->featArtists = array_merge($this->featArtists, preg_split($regexArtist, $sFeat));
-			}
-		}
+		$this->parseStringForFeat("titleString", $this->groupFeat1);
 
-		// parse title string for remixer regex 1
-		if(preg_match($regexRemix, $titleString, $matches)) {
-			$this->remixArtists = array_merge($this->remixArtists, preg_split($regexArtist, $matches[2]));
+		// parse TITLE string for featured artists REGEX 2
+		$this->parseStringForFeat("titleString", $this->groupFeat2);
+
+		if(preg_match($this->regexRemix1, $this->titleString, $matches)) {
+			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[2]));
 		}
 		// parse title string for remixer regex 1
-		if(preg_match($regexRemix2, $titleString, $matches)) {
+		if(preg_match($this->regexRemix2, $this->titleString, $matches)) {
 			#print_r($matches); die();
-			$this->remixArtists = array_merge($this->remixArtists, preg_split($regexArtist, $matches[3]));
+			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[3]));
 		}
 		
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
-		$remixerBlacklist = array_merge($GLOBALS["remixer-blacklist"], $artistBlacklist);
 		foreach($this->remixArtists as $remixerArtist) {
 			$correction = FALSE;
-			foreach(array_keys($remixerBlacklist) as $chunk) {
+			foreach(array_keys($this->remixBlacklist) as $chunk) {
 				if(preg_match("/(.*)" . $chunk . "$/i", $remixerArtist, $matches)) {
 					$tmp[] = str_ireplace($chunk, "", $remixerArtist);
 					$correction = TRUE;
@@ -198,16 +183,15 @@ trait TrackArtistExtractor {
 			}
 		}
 		$this->remixArtists = $tmp;
-		
-		
+
 		// clean up extracted featuring-names with common strings
 		$tmp = array();
 		foreach($this->featArtists as $featuredArtist) {
-			if(isset($artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
+			if(isset($this->artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
 				continue;
 			}
 			// TODO: pretty sure we have to append stripped phrases to tracktitle, right?
-			$tmp[] = str_ireplace($artistBlacklist, "", $featuredArtist);
+			$tmp[] = str_ireplace($this->artistBlacklist, "", $featuredArtist);
 		}
 		$this->featArtists = $tmp;
 		
@@ -221,19 +205,19 @@ trait TrackArtistExtractor {
 
 			if(preg_match("/^". RGX::REMIX1 . "\)$/i" , $compareString, $matches)) {
 				$tmp[] = trim($matches[1]);
-				if(array_key_exists(strtolower(trim($matches[2])), $remixerBlacklist) === FALSE) {
+				if(array_key_exists(strtolower(trim($matches[2])), $this->remixBlacklist) === FALSE) {
 					$this->remixArtists[] = trim($matches[2]);
 				}
 				// append it to title string
 				// TODO: make sure titlestring does not end up in "Tracktitle (Artist 1 Remix) (Artist 2 Remix)"
-				$titleString .= " (". trim($matches[2]) .$matches[3] . ")";
+				$this->titleString .= " (". trim($matches[2]) .$matches[3] . ")";
 				continue;
 			}
 			// clean feat-artists like "Zarif - Instrumental"
-			foreach(array_keys($remixerBlacklist) as $blacklistItem) {
+			foreach(array_keys($this->remixBlacklist) as $blacklistItem) {
 				if(preg_match("/^" . RGX::ANYTHING . "\ (". $blacklistItem .")$/i", $featuredArtist, $matches)) {
 					$featuredArtist = trim($matches[1], " -");
-					$titleString .= " (". trim($matches[2]) . ")";
+					$this->titleString .= " (". trim($matches[2]) . ")";
 					break;
 				}
 			}
@@ -248,10 +232,10 @@ trait TrackArtistExtractor {
 		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
 		$allArtists = array_merge($this->regularArtists, $this->featArtists, $this->remixArtists);
 		usort($allArtists,'sortHelper');
-		$titlePattern = str_ireplace($allArtists, "%s", $titleString);
+		$this->titlePattern = str_ireplace($allArtists, "%s", $this->titleString);
 		
 		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
-		$titlePattern = flattenWhitespace(str_replace("%s", "%s ", $titlePattern));
+		$this->titlePattern = flattenWhitespace(str_replace("%s", "%s ", $this->titlePattern));
 		
 
 		// remove possible brackets from featuredArtists
@@ -261,17 +245,17 @@ trait TrackArtistExtractor {
 		#}
 		#$this->featArtists = $tmp;
 		
-		if(substr_count($titlePattern, "%s") !== count($this->remixArtists)) {
+		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
 			// oh no - we have a problem
 			// reset extracted remixers
-			$titlePattern = $titleString;
+			$this->titlePattern = $this->titleString;
 			$this->remixArtists = array();
 		}
 		
 		/* TODO: do we need this?
 		// remove " (" from titlepattern in case that are the last 2 chars
-		if(preg_match("/(.*)\ \($/", $titlePattern, $matches)) {
-			$titlePattern = $matches[1];
+		if(preg_match("/(.*)\ \($/", $this->titlePattern, $matches)) {
+			$this->titlePattern = $matches[1];
 		}
 		*/
 		
@@ -293,10 +277,10 @@ trait TrackArtistExtractor {
 		}
 		
 		// replace multiple whitespace with a single whitespace
-		$titlePattern = flattenWhitespace($titlePattern);
+		$this->titlePattern = flattenWhitespace($this->titlePattern);
 		// remove whitespace before bracket
-		$titlePattern = str_replace(' )', ')', $titlePattern);
-		$this->setTitle($titlePattern);
+		$this->titlePattern = str_replace(' )', ')', $this->titlePattern);
+		$this->setTitle($this->titlePattern);
 		#$performTest = 1;
 		if($performTest > 0) {
 			cliLog("----------ARTIST-PARSER---------", 1, "purple");
@@ -305,15 +289,13 @@ trait TrackArtistExtractor {
 			cliLog(" regular: " . print_r($this->regularArtists,1));
 			cliLog(" feat: " . print_r($this->featArtists,1));
 			cliLog(" remixer: " . print_r($this->remixArtists,1));
-			cliLog(" titlePattern: " . $titlePattern);
-			cliLog(" titleString: " . $titleString);
+			cliLog(" titlePattern: " . $this->titlePattern);
+			cliLog(" titleString: " . $this->titleString);
 		}
-		$fullArtistString = join(" & ", $this->regularArtists);
+		$this->artistString = join(" & ", $this->regularArtists);
 		if(count($this->featArtists) > 0) {
-			$fullArtistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
+			$this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
 		}
-		$this->setFullArtistString($fullArtistString);
-		$this->setFullTitleString($titleString);
 		return $this;
 	}
 	

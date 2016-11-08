@@ -22,7 +22,7 @@ use \Slimpd\Utilities\RegexHelper as RGX;
 
 class TrackContext extends \Slimpd\Models\Track {
 	use \Slimpd\Modules\Albummigrator\MigratorContext; // config
-	use \Slimpd\Modules\Albummigrator\TrackArtistExtractor; // regularArtists, featuredArtists, remixArtists, fullArtistString, fullTitleString
+	use \Slimpd\Modules\Albummigrator\TrackArtistExtractor; // regularArtists, featuredArtists, remixArtists, artistString, titleString
 	protected $confKey = "track-tag-mapping-";
 	
 	// those attributes holds string values (track holds relational Uids)
@@ -237,8 +237,8 @@ class TrackContext extends \Slimpd\Models\Track {
 		// make sure to use identical uids in table:trackindex and table:track
 		$trackIndex = new \Slimpd\Models\Trackindex();
 		$trackIndex->setUid($this->getUid())
-			->setArtist($this->getFullArtistString())
-			->setTitle($this->getFullTitleString())
+			->setArtist($this->getArtistString())
+			->setTitle($this->getTitleString())
 			->setAllchunks($indexChunks);
 
 		if($useBatcher === TRUE) {
