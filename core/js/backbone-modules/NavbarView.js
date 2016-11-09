@@ -34,6 +34,8 @@
 
 		searchfield : $("#mainsearch"),
 
+		previousRequest: null,
+
 		initialize : function(options) {
 			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
 		},
@@ -68,18 +70,14 @@
 			this.tabAutocomplete = this.searchfield.autocomplete({
 				source : function( request, response ) {
 					window.NProgress.start();
-					var $this = $(this);
-					var $element = $(this.element);
-					var previousRequest = $element.data( "jqXHR" );
-					if( previousRequest ) {
+					if( that.previousRequest ) {
 						// a previous request has been made.
 						// though we don"t know if it"s concluded
 						// we can try and kill it in case it hasn"t
-						// TODO: not sure if killing request really works
-						previousRequest.abort();
+						that.previousRequest.abort();
 					}
 					// Store new AJAX request
-					$element.data( "jqXHR", $.ajax( {
+					that.previousRequest = $.ajax( {
 						type: "GET",
 						url: window.sliMpd.conf.absRefPrefix + "autocomplete/all/?q=" + decodeURIComponent($("#mainsearch").val()),
 						dataType: "json",
@@ -91,7 +89,7 @@
 							noResults: "",
 							results : function() {}
 						}
-					}));
+					});
 				},
 
 				sourceCategory: "all",
@@ -270,7 +268,14 @@
 			var that = this;
 			this.searchfield.autocomplete("option", "source", function( request, response ) {
 				window.NProgress.start();
-				$.ajax({
+				if( that.previousRequest ) {
+					// a previous request has been made.
+					// though we don"t know if it"s concluded
+					// we can try and kill it in case it hasn"t
+					that.previousRequest.abort();
+				}
+				// Store new AJAX request
+				that.previousRequest = $.ajax({
 					url: window.sliMpd.conf.absRefPrefix + "autocomplete/"+ type+"/?q=" + decodeURIComponent(that.searchfield.val()),
 					dataType: "json",
 					type: "get",
