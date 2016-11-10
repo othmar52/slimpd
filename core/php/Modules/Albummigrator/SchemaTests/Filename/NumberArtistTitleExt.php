@@ -24,7 +24,7 @@ class NumberArtistTitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\A
 	
 	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
 		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
+		$this->pattern = "/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
 		return $this;
 	}
 	

@@ -42,7 +42,8 @@
 			<pre class="nfo">{% for line in trackdump[item.relPathHash].recommendations %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
 		</div>
 		<div class="tab-pane" id="track-artpars-{{item.relPathHash}}">
-			<pre class="nfo">{% for line in trackdump[item.relPathHash].artistresult %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
+			<pre class="nfo">{% for line in trackdump[item.relPathHash].artistresult %}{{line|cli2html|raw}}<br>{% endfor %}
+				<br>{% for line in trackdump[item.relPathHash].artistparsing %}{{line|cli2html|raw}}<br>{% endfor %}</pre>
 		</div>
 	</div>
 </div>

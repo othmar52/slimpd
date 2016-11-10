@@ -118,12 +118,14 @@ trait TrackArtistExtractor {
 	}
 
 	private function parseStringForFeat($artistOrTitle, $regex) {
+		cliLog("  INPUT: " . $this->$artistOrTitle, 10);
 		if(preg_match("/(.*)" . $regex . "([^\(]*)(.*)$/i", $this->$artistOrTitle, $matches)) {
 			$sFeat = trim($matches[4]);
 			if(substr($sFeat, -1) == ')') {
 				$sFeat = substr($sFeat,0,-1);
 			}
 			if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
+				cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
 				return;
 			}
 			$this->$artistOrTitle = str_replace(
@@ -131,39 +133,68 @@ trait TrackArtistExtractor {
 				" ",
 				$this->$artistOrTitle
 			);
-			$this->featArtists = array_merge($this->featArtists, preg_split($this->regexArtist, $sFeat));
+			$foundFeat = preg_split($this->regexArtist, $sFeat);
+			$this->featArtists = array_merge($this->featArtists, $foundFeat);
+			cliLog("  found featured artists:" , 10);
+			cliLog("  " . print_r($foundFeat,1) , 10);
+			cliLog("  continue with ".$artistOrTitle.": " . $this->$artistOrTitle , 10);
+			return;
 		}
+		cliLog("  no matches for featured artists " , 10, "darkgray");
 	}
 
-	// TODO: refacture!!!
+	private function parseStringForRemixer($input, $regex, $matchIndex) {
+		cliLog("  INPUT: " . $input, 10);
+		if(preg_match($regex, $input, $matches)) {
+			$foundRemixer = preg_split($this->regexArtist, $matches[$matchIndex]);
+			$this->remixArtists = array_merge($this->remixArtists, $foundRemixer);
+
+			#if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
+			#	cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
+			#	return;
+			#}
+
+			cliLog("  found remix artists:" , 10);
+			cliLog("  " . print_r($foundRemixer,1) , 10);
+			return;
+		}
+		cliLog("  no matches for remix artists " , 10, "darkgray");
+	}
+
 	// TODO: pretty sure getzFeaturedArtist() from id3 tags is currently not used at all
 	public function setFeaturedArtistsAndRemixers() {
+		cliLog("=== artistparsing begin for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
 		$this->init();
 
 		if($this->artistString == "") {
 			$this->regularArtists[] = "Unknown Artist";
 		}
 
-		// parse ARTIST string for featured artists REGEX 1
+		cliLog("parse ARTIST string for featured artists REGEX 1", 10, "cyan");
 		$this->parseStringForFeat("artistString", $this->groupFeat1);
+		cliLog(" ", 10);
 
-		// parse ARTIST string for featured artists REGEX 2
+		cliLog("parse ARTIST string for featured artists REGEX 2", 10, "cyan");
 		$this->parseStringForFeat("artistString", $this->groupFeat2);
+		cliLog(" ", 10);
 
 		$this->regularArtists = array_merge($this->regularArtists, preg_split($this->regexArtist, $this->artistString));
 
-		// parse TITLE string for featured artists REGEX 1
+		cliLog("parse TITLE string for featured artists REGEX 1", 10, "cyan");
 		$this->parseStringForFeat("titleString", $this->groupFeat1);
+		cliLog(" ", 10);
 
-		// parse TITLE string for featured artists REGEX 2
+		cliLog("parse TITLE string for featured artists REGEX 2", 10, "cyan");
 		$this->parseStringForFeat("titleString", $this->groupFeat2);
+		cliLog(" ", 10);
 
-		if(preg_match($this->regexRemix1, $this->titleString, $matches)) {
-			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[2]));
-		}
-		if(preg_match($this->regexRemix2, $this->titleString, $matches)) {
-			$this->remixArtists = array_merge($this->remixArtists, preg_split($this->regexArtist, $matches[3]));
-		}
+		cliLog("parse TITLE string for remix artists REGEX 1", 10, "cyan");
+		$this->parseStringForRemixer($this->titleString, $this->regexRemix1, 2);
+		cliLog(" ", 10);
+
+		cliLog("parse TITLE string for remix artists REGEX 2", 10, "cyan");
+		$this->parseStringForRemixer($this->titleString, $this->regexRemix2, 3);
+		cliLog(" ", 10);
 
 		$this->removeCommonStringsFromArtists();
 
@@ -198,7 +229,7 @@ trait TrackArtistExtractor {
 		if(count($this->featArtists) > 0) {
 			$this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
 		}
-
+		cliLog("=== artistparsing end for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
 		$this->dumpParserResults();
 		return $this;
 	}
@@ -280,13 +311,39 @@ trait TrackArtistExtractor {
 
 	private function dumpParserResults() {
 		cliLog("=== artistresult begin for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
-		cliLog(" inputArtist: " . $this->artistVanilla, 10);
-		cliLog(" inputTitle: " . $this->titleVanilla, 10);
-		cliLog(" regular: " . print_r($this->regularArtists,1), 10);
-		cliLog(" feat: " . print_r($this->featArtists,1), 10);
-		cliLog(" remixer: " . print_r($this->remixArtists,1), 10);
-		cliLog(" titleString: " . $this->titleString, 10);
-		cliLog(" titlePattern: " . $this->titlePattern, 10);
+		cliLog(str_repeat("―", 90), 10, "purple");
+		cliLog("ARTIST", 10, "cyan");
+		cliLog("  INPUT      | " . $this->artistVanilla, 10);
+		cliLog("  RESULT     | " . $this->artistString, 10);
+		cliLog(str_repeat("―", 90), 10, "purple");
+		cliLog("TITLE", 10, "cyan");
+		cliLog("  INPUT      | " . $this->titleVanilla, 10);
+		cliLog("  RESULT     | " . $this->titleString, 10);
+
+		if(count($this->remixArtists) > 0){
+			cliLog("  PATTERN    | " . $this->titlePattern, 10);
+		}
+		cliLog(str_repeat("―", 90), 10, "purple");
+		if(count($this->remixArtists) > 0){
+			cliLog("REMIXERS", 10, "cyan");
+			foreach ($this->remixArtists as $artist) {
+				cliLog("  " .$artist, 10);
+			}
+			cliLog(" ", 10);
+		}
+		cliLog("ARTISTS", 10, "cyan");
+		foreach ($this->regularArtists as $artist) {
+			cliLog("  " .$artist, 10);
+		}
+		cliLog(" ", 10);
+		if(count($this->featArtists) > 0){
+			cliLog("FEAT. ARTISTS", 10, "cyan");
+			foreach ($this->featArtists as $artist) {
+				cliLog("  " .$artist, 10);
+			}
+			cliLog(" ", 10);
+		}
+		cliLog(str_repeat("―", 90), 10, "purple");
 		cliLog("=== artistresult end for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
 	}
 }
