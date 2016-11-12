@@ -107,6 +107,10 @@ trait MigratorContext {
 	 * checks if array key exists before scoring
 	 */
 	public function setRecommendationEntry($setterName, $value, $score) {
+		if(trim($value) === '') {
+			cliLog("  empty value. skipping", 10, "darkgray");
+			return;
+		}
 		$cleanValue = unifyAll($value);
 		$cleanValue = str_ireplace(
 			["&amp;", "aaeao"],

@@ -291,7 +291,7 @@ class TrackRecommendationsPostProcessor {
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
-			if(preg_match("/^(cd(?:\d+))?audiotrack|track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
+			if(preg_match("/^(cd(?:\d+))?pistaaudio|audiotrack|track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
 				cliLog("  no need to downvote: " . $titleRecommendation, 10, "darkgray");
 				continue;
 			}

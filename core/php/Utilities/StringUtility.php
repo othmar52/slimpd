@@ -52,7 +52,17 @@ function remU($input){
  * "Showdown (Undercover Agent Vip Mix)" should be "... VIP Mix)"
  */
 function fixCaseSensitivity($input){
-	return ucwords(strtolower($input));
+	$tmpGlue = "p³§%8=7 ";
+	// add temporary whitespace after a few chars
+	foreach(["(", ".", "-"] as $char) {
+		$input = str_replace($char, $char . $tmpGlue , $input);
+	}
+	$input = ucwords(strtolower($input));
+	// remove temporary whitespace again
+	foreach(["(", ".", "-"] as $char) {
+		$input = str_replace($char . $tmpGlue , $char, $input);
+	}
+	return $input;
 }
 
 function timeStringToSeconds($time) {

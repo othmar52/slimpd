@@ -146,16 +146,20 @@ trait TrackArtistExtractor {
 	private function parseStringForRemixer($input, $regex, $matchIndex) {
 		cliLog("  INPUT: " . $input, 10);
 		if(preg_match($regex, $input, $matches)) {
-			$foundRemixer = preg_split($this->regexArtist, $matches[$matchIndex]);
-			$this->remixArtists = array_merge($this->remixArtists, $foundRemixer);
+			$foundRemixers = preg_split($this->regexArtist, $matches[$matchIndex]);
+			foreach($foundRemixers as $foundRemixer) {
+				if(preg_match("/^(.*)'s(?:\ )?/", $foundRemixer, $matches2)) {
+					$foundRemixer = $matches2[1];
+				}
+				cliLog("  found remix artists: " . $foundRemixer, 10);
+				$this->remixArtists[] = $foundRemixer;
+			}
 
 			#if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
 			#	cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
 			#	return;
 			#}
 
-			cliLog("  found remix artists:" , 10);
-			cliLog("  " . print_r($foundRemixer,1) , 10);
 			return;
 		}
 		cliLog("  no matches for remix artists " , 10, "darkgray");
@@ -212,6 +216,9 @@ trait TrackArtistExtractor {
 
 		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
 		$this->titlePattern = flattenWhitespace(str_replace("%s", "%s ", $this->titlePattern));
+
+		// but remove whitespace in a special case
+		$this->titlePattern = str_replace("%s 's", "%s's", $this->titlePattern);
 
 		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
 			// oh no - we have a problem

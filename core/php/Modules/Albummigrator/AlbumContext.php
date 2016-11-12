@@ -55,8 +55,8 @@ class AlbumContext extends \Slimpd\Models\Album {
 	
 	public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
 		$this->jumbleJudge = $jumbleJudge;
-		$dirname = unifyHyphens(unifyBraces(basename($this->getRelPath())));
-		// TODO: use parent dir in case dirname is "cd1", "cd01", ???
+		$dirname = unifyAll(basename($this->getRelPath()));
+		// TODO: use parent dir in case dirname is "cd1", "cd01", "Disc_1_(of_4)", ???
 
 		// dirname as album name is better than nothing
 		$this->recommend(["setTitle" => $dirname]);
