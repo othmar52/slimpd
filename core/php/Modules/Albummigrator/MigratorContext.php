@@ -87,7 +87,7 @@ trait MigratorContext {
 		if(is_int($mixed))		{ $out = $mixed; }
 		if(is_float($mixed))	{ $out = $mixed; }
 		if(trim($out) === '')	{ return FALSE; }
-		return trim(flattenWhitespace(unifyHyphens(unifyBraces(remU(strip_tags($out))))));
+		return unifyAll(strip_tags($out));
 	}
 	
 	public function recommend($properties, $score = 1) {
@@ -107,7 +107,7 @@ trait MigratorContext {
 	 * checks if array key exists before scoring
 	 */
 	public function setRecommendationEntry($setterName, $value, $score) {
-		$cleanValue = trim(flattenWhitespace(remU($value)));
+		$cleanValue = unifyAll($value);
 		$cleanValue = str_ireplace(
 			["&amp;", "aaeao"],
 			["&"],

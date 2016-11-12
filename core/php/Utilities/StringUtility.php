@@ -81,6 +81,34 @@ function unifyBraces($input) {
 	);
 }
 
+
+/**
+ * replaces curly+square braces with normal braces
+ */
+function unifyQuotes($input) {
+	return str_replace(
+		["`", "´", "‘", "’", "“", "”"],
+		["'", "'", "'", "'", '"', '"'],
+		$input
+	);
+}
+
+function unifyAll($input) {
+	return trim(
+		flattenWhitespace(
+			unifyBraces(
+				unifyQuotes(
+					unifyHyphens(
+						remU(
+							$input
+						)
+					)
+				)
+			)
+		)
+	);
+}
+
 /**
  * replaces hyphen variations with standard hyphen
  * Thanks to https://www.cs.tut.fi/~jkorpela/dashes.html
