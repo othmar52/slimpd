@@ -26,7 +26,7 @@ class TrackRecommendationsPostProcessor {
 			// we dont have a post processer for this property
 			return;
 		}
-		cliLog("    post-processing " . $setterName, 0 , "purple");
+		cliLog("    post-processing " . $setterName, 10 , "purple");
 		$score = ($score < 0) ? $score*-1 : $score;
 		self::$setterName($value, $contextItem, $score);
 	}
