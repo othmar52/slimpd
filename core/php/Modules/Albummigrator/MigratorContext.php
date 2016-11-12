@@ -93,21 +93,12 @@ trait MigratorContext {
 	public function recommend($properties, $score = 1) {
 		cliLog("  " .get_called_class() . " recommendations", 10, "purple");
 		foreach($properties as $setterName => $value) {
-			$cleanValue = fixCaseSensitivity(trim(flattenWhitespace(remU($value))));
-			$cleanValue = str_ireplace(
-				["&amp;", "aaeao"],
-				["&"],
-				$cleanValue
-			);
-			$caseFunc = ($setterName === "setCatalogNr") ? "strtoupper" : "fixCaseSensitivity";
-			$cleanValue = $caseFunc($cleanValue);
-			if($cleanValue === "") {
+			if(trim($value) === "") {
+				cliLog("  skipping empty value", 10, "darkgray");
 				continue;
 			}
-			cliLog("    [".($score>0?"+":"") .$score. "]" . $setterName . ": " . $cleanValue, 10, "cyan");
-
-			$this->setRecommendationEntry($setterName, $cleanValue, $score);
-			\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $cleanValue, $this);
+			$this->setRecommendationEntry($setterName, $value, $score);
+			\Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $value, $this, $score);
 		}
 		cliLog(" ", 10);
 	}
@@ -116,10 +107,20 @@ trait MigratorContext {
 	 * checks if array key exists before scoring
 	 */
 	public function setRecommendationEntry($setterName, $value, $score) {
-		if(isset($this->recommendations[$setterName][$value]) === FALSE) {
-			$this->recommendations[$setterName][$value] = 0;
+		$cleanValue = trim(flattenWhitespace(remU($value)));
+		$cleanValue = str_ireplace(
+			["&amp;", "aaeao"],
+			["&"],
+			$cleanValue
+		);
+		$cleanValue = str_replace(" & ", " And ", $cleanValue);
+		$caseFunc = ($setterName === "setCatalogNr") ? "strtoupper" : "fixCaseSensitivity";
+		$cleanValue = $caseFunc($cleanValue);
+		if(isset($this->recommendations[$setterName][$cleanValue]) === FALSE) {
+			$this->recommendations[$setterName][$cleanValue] = 0;
 		}
-		$this->recommendations[$setterName][$value] += $score;
+		cliLog("    [".($score>0?"+":"") .$score. "]" . $setterName . ": " . $cleanValue, 10, "cyan");
+		$this->recommendations[$setterName][$cleanValue] += $score;
 	}
 
 	
@@ -163,14 +164,16 @@ trait MigratorContext {
 		foreach($this->recommendations as $setterName => $rec) {
 			arsort($rec, SORT_NUMERIC);
 			$innerLoop = 0;
+			$highscore = 0;
 			foreach($rec as $value => $score) {
 				$innerLoop++;
 				$prefix = str_repeat(" ", $setterLength);
-				$color = "darkgray";
 				if($innerLoop === 1) {
+					$highscore = $score;
 					$prefix = str_pad($setterName, $setterLength, " ", STR_PAD_RIGHT);
-					$color = "";
 				}
+				// also highlight more recommendations with identical highscore
+				$color = ($score === $highscore) ? "" : "darkgray";
 				$scoreString = str_pad($score, $scoreLength, " ", STR_PAD_LEFT);
 				cliLog($prefix . "| " . $scoreString . " |  " . $value, 10, $color);
 			}

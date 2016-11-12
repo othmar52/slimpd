@@ -222,6 +222,7 @@ function cli2html($input) {
 		"\033[36m" => '<span style="color:#00e5e5">',	// cyan
 		"\033[1;33m" => '<span style="color:#effe4b">',	// yellow
 		"\033[1;30m" => '<span style="color:#777">',	// darkgray
+		"\033[1;31m" => '<span style="color:#fd3c3c">',	// red
 		"\033[37m" => '</span>',
 		"\033[0m" => '</span>'
 	];

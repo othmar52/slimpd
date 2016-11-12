@@ -52,7 +52,7 @@ function remU($input){
  * "Showdown (Undercover Agent Vip Mix)" should be "... VIP Mix)"
  */
 function fixCaseSensitivity($input){
-	return ucwords($input);
+	return ucwords(strtolower($input));
 }
 
 function timeStringToSeconds($time) {

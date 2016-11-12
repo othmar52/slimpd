@@ -86,7 +86,7 @@ class AlbumContext extends \Slimpd\Models\Album {
 					'setArtist' => ucfirst($sceneSuffixes[0]),
 					'setTitle' => ucfirst($sceneSuffixes[0])
 				],
-				-1
+				-4
 			);
 		}
 	}

@@ -39,8 +39,8 @@ class RegexHelper {
 	const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 	
 	const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
-	const REMIX1 = "(.*)\((.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ vip|\ remake|\ instrumental|\ radio\ edit)";
-	const REMIX2 = "(.*)\((remix\ by\ |remixed\ by\ |remixedby\ )(.*)?\)";
+	const REMIX1 = "(.*)(?:\(|\ -\ )(.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ vip|\ remake|\ instrumental|\ radio\ edit|\ edit)";
+	const REMIX2 = "(.*)\((remix\ by\ |rmx\ by\ |remixed\ by\ |remixedby\ )(.*)?\)";
 	
 	public static function seemsYeary($input) {
 		return ($input > 1900 && $input < date("Y")+1 )? TRUE : FALSE;

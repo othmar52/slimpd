@@ -21,92 +21,94 @@ use \Slimpd\Utilities\RegexHelper as RGX;
 
 class TrackRecommendationsPostProcessor {
 
-	public static function postProcess($setterName, $value, &$contextItem) {
+	public static function postProcess($setterName, $value, &$contextItem, $score) {
 		if(method_exists(__CLASS__, $setterName) === FALSE) {
 			// we dont have a post processer for this property
 			return;
 		}
-		self::$setterName($value, $contextItem);
+		cliLog("    post-processing " . $setterName, 0 , "purple");
+		$score = ($score < 0) ? $score*-1 : $score;
+		self::$setterName($value, $contextItem, $score);
 	}
 
-	public static function setArtist($value, &$contextItem) {
+	public static function setArtist($value, &$contextItem, $score) {
 		// "A01. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
-				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
-				$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
-				$contextItem->setRecommendationEntry("setArtist", $value, -2);
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score);
+				$contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
+				$contextItem->setRecommendationEntry("setArtist", $value, $score*-2);
 			}
 		}
 		// "1. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setArtist", $matches[2], 1);
-			$contextItem->setRecommendationEntry("setArtist", $value, -2);
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), $score);
+			$contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
+			$contextItem->setRecommendationEntry("setArtist", $value, $score*-2);
 		}
 	}
 
-	public static function setTitle($value, &$contextItem) {
+	public static function setTitle($value, &$contextItem, $score) {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
-				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), 1);
-				$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
-				$contextItem->setRecommendationEntry("setTitle", $value, -2);
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score);
+				$contextItem->setRecommendationEntry("setTitle", $matches[2], $score);
+				$contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
 			}
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setTitle", $matches[2], 1);
-			$contextItem->setRecommendationEntry("setTitle", $value, -2);
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), $score);
+			$contextItem->setRecommendationEntry("setTitle", $matches[2], $score);
+			$contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
 		}
 		// "Saban Saulic-Mogu Da Te Kunu (BH-Remix)"
 		$chunks = trimExplode("-", $value, TRUE, 2);
 		if(count($chunks) === 2) {
-			$contextItem->setRecommendationEntry("setArtist", $chunks[0], 0.8);
-			$contextItem->setRecommendationEntry("setTitle", $chunks[1], 0.8);
-			$contextItem->setRecommendationEntry("setTitle", $value, -0.2);
+			$contextItem->setRecommendationEntry("setArtist", $chunks[0], $score);
+			$contextItem->setRecommendationEntry("setTitle", $chunks[1], $score);
+			$contextItem->setRecommendationEntry("setTitle", $value, $score*-0.2);
 		}
 	}
 
-	public static function setTrackNumber($value, &$contextItem) {
+	public static function setTrackNumber($value, &$contextItem, $score) {
 		if(isset($value[0]) && $value[0] === "0") {
-			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($value), 1);
-			$contextItem->setRecommendationEntry("setTrackNumber", $value, -2);
+			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($value), $score);
+			$contextItem->setRecommendationEntry("setTrackNumber", $value, $score*-2);
 		}
 	}
 
-	public static function setYear($value, &$contextItem) {
-		$score = (RGX::seemsYeary($value) === TRUE) ? 1 : -1;
+	public static function setYear($value, &$contextItem, $score) {
+		$score = (RGX::seemsYeary($value) === TRUE) ? $score : $score*-1;
 		$contextItem->setRecommendationEntry("setYear", $value, $score);
 	}
 
-	public static function setLabel($value, &$contextItem) {
+	public static function setLabel($value, &$contextItem, $score) {
 		// "℗ 2010 Lench Mob Records"
 		// "(p) 2009 Lotus Records"
 		// "(p) & (c) 2005 Mute Records Ltd"
 		// "(P)+(C) 1998 Elektrolux"
 		if(preg_match("/^(?:℗|\(p\)|\(p\)[ &+]\(c\))" . RGX::YEAR . "\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
 			if(RGX::seemsYeary($matches[1]) === TRUE) {
-				$contextItem->setRecommendationEntry("setYear", trim($matches[1]), 1);
-				$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), 1);
-				$contextItem->setRecommendationEntry("setLabel", $value, -2);
+				$contextItem->setRecommendationEntry("setYear", trim($matches[1]), $score);
+				$contextItem->setRecommendationEntry("setLabel", trim($matches[2]), $score);
+				$contextItem->setRecommendationEntry("setLabel", $value, $score*-2);
 				return;
 			}
 		}
 
 		// "(c)Subtitles Music (UK)"
 		if(preg_match("/^\(c\)" . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setLabel", $value, -2);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), $score);
+			$contextItem->setRecommendationEntry("setLabel", $value, $score*-2);
 			return;
 		}
 
 		// "a division of Universal Music GmbH"
 		if(preg_match("/^a\ division\ of\ " . RGX::ANYTHING ."$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setLabel", $value, -2);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), $score);
+			$contextItem->setRecommendationEntry("setLabel", $value, $score*-2);
 			return;
 		}
 
@@ -115,9 +117,9 @@ class TrackRecommendationsPostProcessor {
 		// "Viper Recordings | VPR051" // TODO: make sure glue gets removed
 		// "Jazzman - JMANCD048" // TODO: make sure glue gets removed
 		if(preg_match("/^" . RGX::ANYTHING . RGX::GLUE . RGX::CATNR . "$/", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), 1);
-			$contextItem->setRecommendationEntry("setCatalogNr", trim($matches[2]), 1);
-			$contextItem->setRecommendationEntry("setLabel", $value, -2);
+			$contextItem->setRecommendationEntry("setLabel", trim($matches[1]), $score);
+			$contextItem->setRecommendationEntry("setCatalogNr", trim($matches[2]), $score);
+			$contextItem->setRecommendationEntry("setLabel", $value, $score*-2);
 			return;
 		}
 	}
@@ -151,28 +153,44 @@ class TrackRecommendationsPostProcessor {
 	 *   most scored title : "Kenny Dope Feat. Screechy Dan - Boomin' In Ya Jeep"
 	 * remove artist from title
 	 *
-	 * this test only makes sense AFTER ALL recommentations
+	 * this test only makes sense AFTER ALL recommendations
 	 * unfortunately this fucks up stuff like "Gusto - Gusto's Groove"
 	 */
 	public static function removePrefixedArtistFromTitle(&$contextItem) {
 		cliLog(__FUNCTION__, 9, "purple");
-		$artist = $contextItem->getMostScored("setArtist");
-		cliLog("  most scored artist: " . $artist, 10);
-		$title = $contextItem->getMostScored("setTitle");
-		cliLog("  most scored title : " . $title, 10);
-		if(az09($artist) === az09($title)) {
-			cliLog("  very similar. downvoting both", 10);
-			$contextItem->recommend(["setArtist" => $artist], -2);
-			$contextItem->recommend(["setTitle" => $title], -2);
+		if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
+			cliLog("  no recommendations for setArtist. skipping...", 10, "darkgray");
 			return;
 		}
-		if(stripos($title, $artist) !== 0) {
-			cliLog("  artist is not prefixed in title", 9);
+		if(array_key_exists("setTitle", $contextItem->recommendations) === FALSE) {
+			cliLog("  no recommendations for setTitle. skipping...", 10, "darkgray");
 			return;
 		}
-		$shortenedTitle = ltrim(substr($title, strlen($artist)), " -");
-		cliLog("  shortened title  : " . $shortenedTitle, 9);
-		$contextItem->recommend(["setTitle" => $shortenedTitle], 5);
+		$artistRecommendations = array_keys($contextItem->recommendations['setArtist']);
+		$titleRecommendations = array_keys($contextItem->recommendations['setTitle']);
+
+		// avoid doing useless stuff for "albums" with thousands of tracks
+		if(count($artistRecommendations) > 50 || count($titleRecommendations) > 50) {
+			cliLog("  far too much recommendations. skipping...", 10, "darkgray");
+			return;
+		}
+		foreach($artistRecommendations as $artist) {
+			foreach($titleRecommendations as $title) {
+				cliLog("  artist: " . $artist, 10);
+				cliLog("  title : " . $title, 10);
+				if(az09($title) === az09($artist)) {
+					cliLog("  pretty much the same. skipping", 10, "darkgray");
+					cliLog(" ", 10);
+					continue;
+				}
+				if(stripos(az09($title), az09($artist)) !== 0) {
+					cliLog("  artist is not prefixed in title", 10, "darkgray");
+					cliLog(" ", 10);
+					continue;
+				}
+				$contextItem->recommend(["setTitle" => $title], -0.5);
+			}
+		}
 	}
 
 	/**
@@ -186,6 +204,7 @@ class TrackRecommendationsPostProcessor {
 		if(array_key_exists($setter, $contextItem->recommendations) === FALSE) {
 			cliLog("  no recommendations for ".$setter.". skipping...", 10, "darkgray");
 			if($setter === "setArtist") {
+				//recursion. do the same for title recommendations
 				return self::downVoteVariousArtists($contextItem, "setTitle");
 			}
 			return;
@@ -199,6 +218,7 @@ class TrackRecommendationsPostProcessor {
 			$contextItem->recommend([$setter => $itemRecommendation], -5);
 		}
 		if($setter === "setArtist") {
+			//recursion. do the same for title recommendations
 			return self::downVoteVariousArtists($contextItem, "setTitle");
 		}
 	}

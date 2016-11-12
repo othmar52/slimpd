@@ -107,8 +107,8 @@ trait TrackArtistExtractor {
 		$this->regexArtist = "/".RGX::ARTIST_GLUE."/i";
 
 		// assign all string-parts to category
-		$this->groupFeat1 = "([\ \(])(featuring|ft(?:.?)|feat(?:.?)|w(?:.?))\ ";
-		$this->groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.)"; // without trailing whitespace
+		$this->groupFeat1 = "([\ \(])(featuring|ft(?:\.?)|feat(?:\.?)|w|w\.)\ ";
+		$this->groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.|f\/)"; // without trailing whitespace
 
 		# TODO: verify that this unused variable $groupGlue can be deleted and remove this line
 		#$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
@@ -128,7 +128,7 @@ trait TrackArtistExtractor {
 				cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
 				return;
 			}
-			$this->$artistOrTitle = str_replace(
+			$this->$artistOrTitle = str_ireplace(
 				$matches[2] .$matches[3] . ' ' . $matches[4],
 				" ",
 				$this->$artistOrTitle
@@ -198,9 +198,12 @@ trait TrackArtistExtractor {
 
 		$this->removeCommonStringsFromArtists();
 
-		$this->regularArtists = array_unique(array_filter($this->regularArtists));
-		$this->featArtists = array_unique($this->featArtists);
-		$this->remixArtists = array_unique($this->remixArtists);
+		$this->regularArtists = array_unique(array_filter(array_map('trim', $this->regularArtists)));
+		$this->featArtists = array_unique(array_map('trim', $this->featArtists));
+		$this->remixArtists = array_unique(array_map('trim', $this->remixArtists));
+
+		cliLog("drop duplicates of regularArtists/featArtists", 10, "cyan");
+		$this->removeRegularArtistsBasedOnFeaturedArtists();
 
 		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
 		$allArtists = array_merge($this->regularArtists, $this->featArtists, $this->remixArtists);
@@ -213,6 +216,7 @@ trait TrackArtistExtractor {
 		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
 			// oh no - we have a problem
 			// reset extracted remixers
+			//cliLog("ERROR: amount of remix artists dows not match placeholders. resetting remixers", 10, "red");
 			$this->titlePattern = $this->titleString;
 			$this->remixArtists = array();
 		}
@@ -234,6 +238,24 @@ trait TrackArtistExtractor {
 		return $this;
 	}
 
+	/**
+	 * in case we have the same artist in regular and featured drop the featured artist
+	 * but only if we have a regular artist left after dropping
+	 */
+	private function removeRegularArtistsBasedOnFeaturedArtists() {
+		$dupes =  array_intersect($this->regularArtists, $this->featArtists);
+		if(count($dupes) === 0) {
+			cliLog("  no dupes found.", 10, "darkgray");
+			return;
+		}
+		$dropFrom = (count($this->regularArtists) > count($dupes)) ? 'regularArtists' : 'featArtists';
+		foreach($dupes as $artistString) {
+			if(($key = array_search($artistString, $this->$dropFrom)) !== false) {
+				cliLog("  removing " . $artistString . " from " . $dropFrom, 10);
+				unset($this->$dropFrom[$key]);
+			}
+		}
+	}
 	private function removeCommonStringsFromArtists() {
 
 		// clean up extracted remixer-names with common strings
