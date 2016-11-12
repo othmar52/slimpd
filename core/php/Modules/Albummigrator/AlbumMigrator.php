@@ -214,7 +214,10 @@ class AlbumMigrator {
 	public function recommendationForAllTracks(array $recommendations, $score = 1) {
 		#print_r($recommendations); die;
 		foreach($this->trackContextItems as $trackContextItem) {
+			cliLog("=== scoring begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
+			cliLog(__FUNCTION__, 10, "purple");
 			$trackContextItem->recommend($recommendations, $score);
+			cliLog("=== scoring end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
 		}
 	}
 

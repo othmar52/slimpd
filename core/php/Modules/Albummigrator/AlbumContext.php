@@ -72,7 +72,12 @@ class AlbumContext extends \Slimpd\Models\Album {
 			;
 
 		$this->scoreLabelByLabelDirectory($albumMigrator);
-		
+
+		// do not search for common scene suffix in case there is only one track
+		if($this->jumbleJudge->albumMigrator->getTrackCount() === 1) {
+			return;
+		}
+
 		// check if we have a common scene suffix string
 		$sceneSuffixes = [];
 		foreach($jumbleJudge->tests["SchemaTests\Filename\HasSceneSuffix"] as $sceneSuffixTest) {

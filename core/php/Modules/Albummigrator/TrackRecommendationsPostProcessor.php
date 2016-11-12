@@ -36,9 +36,9 @@ class TrackRecommendationsPostProcessor {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
-				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score);
-				$contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
-				$contextItem->setRecommendationEntry("setArtist", $value, $score*-2);
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
+				$contextItem->setRecommendationEntry("setArtist", $matches[2], $score*0.1);
+				$contextItem->setRecommendationEntry("setArtist", $value, $score*-0.2);
 			}
 		}
 		// "1. Master of Puppets"
@@ -53,9 +53,9 @@ class TrackRecommendationsPostProcessor {
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
-				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score);
-				$contextItem->setRecommendationEntry("setTitle", $matches[2], $score);
-				$contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
+				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
+				$contextItem->setRecommendationEntry("setTitle", $matches[2], $score*0.1);
+				$contextItem->setRecommendationEntry("setTitle", $value, $score*-0.2);
 			}
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
@@ -144,7 +144,8 @@ class TrackRecommendationsPostProcessor {
 		}
 		$shortenedArtist = trim(str_ireplace($title, "", $artist), " -");
 		cliLog("  shortened artist  : " . $shortenedArtist, 9);
-		$contextItem->recommend(["setArtist" => $shortenedArtist], 5);
+		//$contextItem->recommend(["setArtist" => $shortenedArtist], 5);
+		$contextItem->setRecommendationEntry("setArtist", $shortenedArtist, 5);
 	}
 
 	/**
@@ -188,7 +189,9 @@ class TrackRecommendationsPostProcessor {
 					cliLog(" ", 10);
 					continue;
 				}
-				$contextItem->recommend(["setTitle" => $title], -0.5);
+				//$contextItem->recommend(["setTitle" => $title], -0.5);
+				cliLog("  downvoting title which has prefixed artist", 10);
+				$contextItem->setRecommendationEntry("setTitle", $title, -0.5);
 			}
 		}
 	}
@@ -215,7 +218,8 @@ class TrackRecommendationsPostProcessor {
 				continue;
 			}
 			cliLog("  found ".$setter." recommendation for downvoting", 9);
-			$contextItem->recommend([$setter => $itemRecommendation], -5);
+			//$contextItem->recommend([$setter => $itemRecommendation], -5);
+			$contextItem->setRecommendationEntry($setter, $itemRecommendation, -5);
 		}
 		if($setter === "setArtist") {
 			//recursion. do the same for title recommendations
@@ -243,7 +247,8 @@ class TrackRecommendationsPostProcessor {
 				continue;
 			}
 			cliLog("  found ".$setter." recommendation for downvoting", 9);
-			$contextItem->recommend([$setter => $itemRecommendation], -5);
+			//$contextItem->recommend([$setter => $itemRecommendation], -5);
+			$contextItem->setRecommendationEntry($setter, $itemRecommendation, -5);
 		}
 		if($setter === "setArtist") {
 			return self::downVoteUnknownArtists($contextItem, "setTitle");
@@ -267,7 +272,8 @@ class TrackRecommendationsPostProcessor {
 				continue;
 			}
 			cliLog("  found setArtist recommendation for downvoting", 9);
-			$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
+			//$contextItem->recommend(["setArtist" => $artistRecommendation], -5);
+			$contextItem->setRecommendationEntry("setArtist", $artistRecommendation, -5);
 		}
 	}
 
@@ -285,12 +291,13 @@ class TrackRecommendationsPostProcessor {
 			return;
 		}
 		foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
-			if(preg_match("/^(cd(?:\d+))?track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
+			if(preg_match("/^(cd(?:\d+))?audiotrack|track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
 				cliLog("  no need to downvote: " . $titleRecommendation, 10, "darkgray");
 				continue;
 			}
 			cliLog("  found setTitle recommendation for downvoting", 9);
-			$contextItem->recommend(["setTitle" => $titleRecommendation], -2);
+			//$contextItem->recommend(["setTitle" => $titleRecommendation], -2);
+			$contextItem->setRecommendationEntry("setTitle", $titleRecommendation, -2);
 		}
 	}
 }

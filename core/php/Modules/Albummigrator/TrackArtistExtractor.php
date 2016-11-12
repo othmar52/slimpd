@@ -206,9 +206,9 @@ trait TrackArtistExtractor {
 		$this->removeRegularArtistsBasedOnFeaturedArtists();
 
 		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
-		$allArtists = array_merge($this->regularArtists, $this->featArtists, $this->remixArtists);
-		usort($allArtists,'sortHelper');
-		$this->titlePattern = str_ireplace($allArtists, "%s", $this->titleString);
+		$sortedRxArtists = $this->remixArtists;
+		usort($sortedRxArtists,'sortHelper');
+		$this->titlePattern = str_ireplace($sortedRxArtists, "%s", $this->titleString);
 
 		// make sure we have a whitespace on strings like "Bla (%sVIP Mix)"
 		$this->titlePattern = flattenWhitespace(str_replace("%s", "%s ", $this->titlePattern));
@@ -216,7 +216,10 @@ trait TrackArtistExtractor {
 		if(substr_count($this->titlePattern, "%s") !== count($this->remixArtists)) {
 			// oh no - we have a problem
 			// reset extracted remixers
-			//cliLog("ERROR: amount of remix artists dows not match placeholders. resetting remixers", 10, "red");
+			cliLog("ERROR: amount of remix artists dows not match placeholders. resetting remixers", 10, "red");
+			cliLog("  title pattern: " . $this->titlePattern);
+			cliLog("  remixers: " . print_r($this->remixArtists,1), 10);
+			cliLog("  resetting remixers...", 10);
 			$this->titlePattern = $this->titleString;
 			$this->remixArtists = array();
 		}
