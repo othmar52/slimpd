@@ -224,7 +224,7 @@ trait TrackArtistExtractor {
 			// oh no - we have a problem
 			// reset extracted remixers
 			cliLog("ERROR: amount of remix artists dows not match placeholders. resetting remixers", 10, "red");
-			cliLog("  title pattern: " . $this->titlePattern);
+			cliLog("  title pattern: " . $this->titlePattern, 10);
 			cliLog("  remixers: " . print_r($this->remixArtists,1), 10);
 			cliLog("  resetting remixers...", 10);
 			$this->titlePattern = $this->titleString;

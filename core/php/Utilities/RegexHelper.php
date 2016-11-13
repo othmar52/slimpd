@@ -24,6 +24,7 @@ class RegexHelper {
 
 	#TODO: "AB-" should not match at all but currently matches with "B-"
 	const VINYL  = "([A-Ma-m]{1}\2?(?:\d{1,2})?)"; // a1, AA2, but not AB1, N4, 01A
+	const VINYL_STRICT = "((?:[A-Ma-m]){1}(?:\d){1,2})"; // a1, B2,C03, but not A, AA1, C001
 	const GLUE   = "[ .\-_\|]{1,4}"; // "_-_", ". ", "-",
 	const GLUE_NO_WHITESPACE   = "(?:[\\.\-_]{1,4})"; // "_-_", ". ", "-",
 	const EXT    = "\.([a-zA-Z\d]{2,4})";

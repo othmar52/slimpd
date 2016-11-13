@@ -33,16 +33,19 @@ class TrackRecommendationsPostProcessor {
 
 	public static function setArtist($value, &$contextItem, $score) {
 		// "A01. Master of Puppets"
-		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
+		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL_STRICT . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
 				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
-				$contextItem->setRecommendationEntry("setArtist", $matches[2], $score*0.1);
-				$contextItem->setRecommendationEntry("setArtist", $value, $score*-0.2);
+				$contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
+				$contextItem->setRecommendationEntry("setArtist", $value, $score*-1.5);
 			}
 		}
 		// "1. Master of Puppets"
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
+			if(self::hasAdditionalFilenamePrefix($contextItem, $matches[1]) ===TRUE) {
+				return;
+			}
 			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), $score);
 			$contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
 			$contextItem->setRecommendationEntry("setArtist", $value, $score*-2);
@@ -50,7 +53,7 @@ class TrackRecommendationsPostProcessor {
 	}
 
 	public static function setTitle($value, &$contextItem, $score) {
-		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
+		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::VINYL_STRICT . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
 			// TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
 			if(RGX::seemsVinyly($matches[1]) === TRUE) {
 				$contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
@@ -59,16 +62,21 @@ class TrackRecommendationsPostProcessor {
 			}
 		}
 		if(preg_match("/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET . RGX::GLUE . RGX::ANYTHING . "$/i", $value, $matches)) {
-			$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), $score);
-			$contextItem->setRecommendationEntry("setTitle", $matches[2], $score);
-			$contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
+			if(self::hasAdditionalFilenamePrefix($contextItem, $matches[1]) === FALSE) {
+				$contextItem->setRecommendationEntry("setTrackNumber", removeLeadingZeroes($matches[1]), $score);
+				$contextItem->setRecommendationEntry("setTitle", $matches[2], $score);
+				$contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
+			}
 		}
 		// "Saban Saulic-Mogu Da Te Kunu (BH-Remix)"
 		$chunks = trimExplode("-", $value, TRUE, 2);
 		if(count($chunks) === 2) {
-			$contextItem->setRecommendationEntry("setArtist", $chunks[0], $score);
 			$contextItem->setRecommendationEntry("setTitle", $chunks[1], $score);
 			$contextItem->setRecommendationEntry("setTitle", $value, $score*-0.2);
+			if(preg_match("/^" . RGX::VINYL_STRICT . "$/", trim($chunks[0])) || is_numeric(trim($chunks[0]))) {
+				return;
+			}
+			$contextItem->setRecommendationEntry("setArtist", $chunks[0], $score);
 		}
 	}
 
@@ -124,6 +132,16 @@ class TrackRecommendationsPostProcessor {
 		}
 	}
 
+	public static function hasAdditionalFilenamePrefix($contextItem, $input) {
+		$haystack = az09(basename($contextItem->getRelPath()));
+		$needle = az09($input);
+		$result = (stripos($haystack, $needle) === 0) ? FALSE : TRUE;
+		cliLog("      " . __FUNCTION__, 10, "purple");
+		cliLog("        input: " . $needle, 10, "darkgray");
+		cliLog("        filename: " . $haystack, 10, "darkgray");
+		cliLog("        result: ". (($result===TRUE)?"yes":"no"), 10, "darkgray");
+		return $result;
+	}
 	/**
 	 * in case we have
 	 * 	 most scored artist: "Franck Dona & Dan Marciano - Losing My Religion(Chris Kaeser Mix)"

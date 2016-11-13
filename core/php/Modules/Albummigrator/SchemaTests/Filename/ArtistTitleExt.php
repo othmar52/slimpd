@@ -29,12 +29,15 @@ class ArtistTitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\Abstrac
 	}
 	
 	public function run() {
+		$this->result = 0;
 		if(preg_match($this->pattern, $this->input, $matches)) {
+			if(preg_match("/^" . RGX::VINYL_STRICT . "$/", trim($matches[1])) || is_numeric(trim($matches[1]))) {
+				return;
+			}
 			$this->matches = $matches;
 			$this->result = 'artist-title-ext';
 			return;
 		}
-		$this->result = 0;
 	}
 	
 	public function scoreMatches() {
