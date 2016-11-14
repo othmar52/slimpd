@@ -62,6 +62,8 @@ function fixCaseSensitivity($input){
 	foreach(["(", ".", "-"] as $char) {
 		$input = str_replace($char . $tmpGlue , $char, $input);
 	}
+	// lets assume standalone S belongs to previous phrase like "There S Nothing Better", "It S Party Time", "Heart Of Gold (Jaybee S Club Mix)"
+	$input = str_replace(" S ", "'s ", $input);
 	return $input;
 }
 

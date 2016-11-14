@@ -96,7 +96,7 @@ trait TrackArtistExtractor {
 	 */
 	private function init() {
 		$this->artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
-		$this->remixBlacklist = array_merge($GLOBALS["remixer-blacklist"], $this->artistBlacklist);
+		$this->remixBlacklist = $GLOBALS["remixer-blacklist"] + $this->artistBlacklist;
 
 		$this->artistVanilla = $this->getArtist();
 		$this->titleVanilla = $this->getTitle();
@@ -135,7 +135,7 @@ trait TrackArtistExtractor {
 			);
 			$foundFeat = preg_split($this->regexArtist, $sFeat);
 			$this->featArtists = array_merge($this->featArtists, $foundFeat);
-			cliLog("  found featured artists:" , 10);
+			cliLog("  found featured artists:" , 10, "cyan");
 			cliLog("  " . print_r($foundFeat,1) , 10);
 			cliLog("  continue with ".$artistOrTitle.": " . $this->$artistOrTitle , 10);
 			return;
@@ -151,7 +151,7 @@ trait TrackArtistExtractor {
 				if(preg_match("/^(.*)'s(?:\ )?/", $foundRemixer, $matches2)) {
 					$foundRemixer = $matches2[1];
 				}
-				cliLog("  found remix artists: " . $foundRemixer, 10);
+				cliLog("  found remix artists: " . $foundRemixer, 10, "cyan");
 				$this->remixArtists[] = $foundRemixer;
 			}
 
@@ -174,29 +174,29 @@ trait TrackArtistExtractor {
 			$this->regularArtists[] = "Unknown Artist";
 		}
 
-		cliLog("parse ARTIST string for featured artists REGEX 1", 10, "cyan");
+		cliLog("parse ARTIST string for featured artists REGEX 1", 10, "purple");
 		$this->parseStringForFeat("artistString", $this->groupFeat1);
 		cliLog(" ", 10);
 
-		cliLog("parse ARTIST string for featured artists REGEX 2", 10, "cyan");
+		cliLog("parse ARTIST string for featured artists REGEX 2", 10, "purple");
 		$this->parseStringForFeat("artistString", $this->groupFeat2);
 		cliLog(" ", 10);
 
 		$this->regularArtists = array_merge($this->regularArtists, preg_split($this->regexArtist, $this->artistString));
 
-		cliLog("parse TITLE string for featured artists REGEX 1", 10, "cyan");
+		cliLog("parse TITLE string for featured artists REGEX 1", 10, "purple");
 		$this->parseStringForFeat("titleString", $this->groupFeat1);
 		cliLog(" ", 10);
 
-		cliLog("parse TITLE string for featured artists REGEX 2", 10, "cyan");
+		cliLog("parse TITLE string for featured artists REGEX 2", 10, "purple");
 		$this->parseStringForFeat("titleString", $this->groupFeat2);
 		cliLog(" ", 10);
 
-		cliLog("parse TITLE string for remix artists REGEX 1", 10, "cyan");
+		cliLog("parse TITLE string for remix artists REGEX 1", 10, "purple");
 		$this->parseStringForRemixer($this->titleString, $this->regexRemix1, 2);
 		cliLog(" ", 10);
 
-		cliLog("parse TITLE string for remix artists REGEX 2", 10, "cyan");
+		cliLog("parse TITLE string for remix artists REGEX 2", 10, "purple");
 		$this->parseStringForRemixer($this->titleString, $this->regexRemix2, 3);
 		cliLog(" ", 10);
 
@@ -206,7 +206,7 @@ trait TrackArtistExtractor {
 		$this->featArtists = array_unique(array_map('trim', $this->featArtists));
 		$this->remixArtists = array_unique(array_map('trim', $this->remixArtists));
 
-		cliLog("drop duplicates of regularArtists/featArtists", 10, "cyan");
+		cliLog("drop duplicates of regularArtists/featArtists", 10, "purple");
 		$this->removeRegularArtistsBasedOnFeaturedArtists();
 
 		// to avoid incomplete substitution caused by partly artistname-matches sort array by length DESC
@@ -230,13 +230,34 @@ trait TrackArtistExtractor {
 			$this->titlePattern = $this->titleString;
 			$this->remixArtists = array();
 		}
+		$this->mayForceVariousArtists();
 
+		$this->finish();
+		return $this;
+	}
+
+	private function mayForceVariousArtists() {
+		// force Various Artists on Mixes
+		cliLog(__FUNCTION__, 10, "purple");
+		if(az09($this->artistString) === az09($this->titleString) && $this->getMiliseconds() > 1800000) {
+			cliLog("  forcing Various Artists", 10, "cyan");
+			$this->regularArtists = ["Various Artists"];
+			return;
+		}
+		cliLog("  not forcing Various Artists", 10, "darkgray");
+	}
+
+	private function finish() {
 		$this->fetchArtistUids();
 
 		// replace multiple whitespace with a single whitespace
 		$this->titlePattern = flattenWhitespace($this->titlePattern);
 		// remove whitespace before bracket
-		$this->titlePattern = str_replace(' )', ')', $this->titlePattern);
+		$this->titlePattern = trim(str_replace(' )', ')', $this->titlePattern));
+
+		// close possible open brackets
+		$this->titlePattern .= (substr_count($this->titlePattern, "(") > substr_count($this->titlePattern, ")")) ? ")" : "";
+
 		$this->setTitle($this->titlePattern);
 
 		$this->artistString = join(" & ", $this->regularArtists);
@@ -245,7 +266,6 @@ trait TrackArtistExtractor {
 		}
 		cliLog("=== artistparsing end for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
 		$this->dumpParserResults();
-		return $this;
 	}
 
 	/**
@@ -267,14 +287,16 @@ trait TrackArtistExtractor {
 		}
 	}
 	private function removeCommonStringsFromArtists() {
-
+		cliLog(__FUNCTION__, 10, "purple");
 		// clean up extracted remixer-names with common strings
 		$tmp = array();
 		foreach($this->remixArtists as $remixerArtist) {
 			$correction = FALSE;
+			$remixerArtist = trim($remixerArtist, "()- ");
 			foreach(array_keys($this->remixBlacklist) as $chunk) {
 				if(preg_match("/(.*)" . $chunk . "$/i", $remixerArtist, $matches)) {
 					$tmp[] = str_ireplace($chunk, "", $remixerArtist);
+					cliLog("  removing chunk " . $chunk . " from remix-artist", 0, "cyan");
 					$correction = TRUE;
 					break;
 				}
@@ -288,6 +310,7 @@ trait TrackArtistExtractor {
 		// clean up extracted featuring-names with common strings
 		$tmp = array();
 		foreach($this->featArtists as $featuredArtist) {
+			$featuredArtist = trim($featuredArtist, "()- ");
 			if(isset($this->artistBlacklist[ strtolower($featuredArtist)] ) === TRUE) {
 				continue;
 			}
@@ -325,6 +348,7 @@ trait TrackArtistExtractor {
 			$tmp[] = $featuredArtist;
 		}
 		$this->featArtists = $tmp;
+		cliLog(" ", 10);
 	}
 
 	private function fetchArtistUids() {

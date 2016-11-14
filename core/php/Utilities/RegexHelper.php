@@ -41,7 +41,7 @@ class RegexHelper {
 	
 	const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
 	const REMIX1 = "(.*)(?:\(|\ -\ )(.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ vip|\ remake|\ instrumental|\ radio\ edit|\ edit)";
-	const REMIX2 = "(.*)\((remix\ by\ |rmx\ by\ |remixed\ by\ |remixedby\ )(.*)?\)";
+	const REMIX2 = "(.*)(remix\ by\ |rmx\ by\ |remixed\ by\ |remixedby\ |mixed\ by\ |compiled\ by\ |arranged\ by\ )(.*)\)?";
 	
 	public static function seemsYeary($input) {
 		return ($input > 1900 && $input < date("Y")+1 )? TRUE : FALSE;
