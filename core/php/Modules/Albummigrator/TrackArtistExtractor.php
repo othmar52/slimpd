@@ -296,7 +296,7 @@ trait TrackArtistExtractor {
 			foreach(array_keys($this->remixBlacklist) as $chunk) {
 				if(preg_match("/(.*)" . $chunk . "$/i", $remixerArtist, $matches)) {
 					$tmp[] = str_ireplace($chunk, "", $remixerArtist);
-					cliLog("  removing chunk " . $chunk . " from remix-artist", 0, "cyan");
+					cliLog("  removing chunk " . $chunk . " from remix-artist", 10, "cyan");
 					$correction = TRUE;
 					break;
 				}
