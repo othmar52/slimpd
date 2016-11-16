@@ -21,7 +21,8 @@ namespace Slimpd\Repositories;
 class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
 	public static $tableName = 'discogsapicache';
 	public static $classPath = '\Slimpd\Models\Discogsitem';
-	
+	public $trackContexts = array();
+	public $albumContext;
 		
 	public function retrieveAlbum($releaseId = FALSE) {
 		if($releaseId === FALSE) {
@@ -36,80 +37,25 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
 		$instance->setExtid((int)$releaseId);
 		
 		$this->fetch($instance);
-		
-		#var_dump($this);
-		#die('nutte');
-		$this->extractTracknames($instance);
-		$this->extractAlbumAttributes($instance);
+		$this->convertApiResponseToContextItems($instance);
 		
 		return $instance;
 	}
-	
-	public function extractTracknames(&$instance) {
-		$data = $instance->getResponse(TRUE);
-		$counter = 0;
-		foreach($data['tracklist'] as $t) {
-			$counter++;
-			$trackindex = $instance->getExtid() . '-' . $counter; 
-			$trackstring = $t['position'] . '. ';
-			$trackArtists = (isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists'];
-			foreach($trackArtists as $a) {
-				$trackstring .= $a['name'];
-			}
-			
-			$trackstring .= ' - ' . $t['title'];#
-			if(strlen($t['duration']) > 0) {
-				$trackstring .= ' [' . $t['duration'] . ']';
-			}
-			$this->trackstrings[$trackindex] = $trackstring;
+
+	public function convertApiResponseToContextItems(&$instance) {
+		// create DiscogsAlbumContext based on api response
+		$this->albumContext = new \Slimpd\Modules\Albummigrator\DiscogsAlbumContext($instance, $this->container);
+
+		// create DiscogsTrackContext instances for each provided track
+		for($idx=0; $idx < count($instance->getResponse(TRUE)['tracklist']); $idx++) {
+			$this->trackContexts[$idx] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $idx, $this->container);
 		}
 	}
-	
-	public function extractAlbumAttributes(&$instance) {
-		$data = $instance->getResponse(TRUE);
-		#echo "<pre>" . print_r($data,1); die();
-		$this->albumAttributes['artist'] = '';
-		foreach($data['artists'] as $a) {
-			$this->albumAttributes['artist'] .= $a['name'] . ",";
-		}
-		
-		$data['styles'] = (isset($data['styles']) === TRUE) ? $data['styles'] : array();
-		$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
-		$this->albumAttributes['title'] = isset($data['title']) ? $data['title'] : "";
-		$this->albumAttributes['genre'] = join(",", array_merge($data['genres'], $data['styles']));
-		$this->albumAttributes['year'] = isset($data['released']) ? $data['released'] : "";
-		
-		// only take the first label/CatNo - no matter how many are provided by discogs
-		if(isset($data['labels'][0]) === TRUE) {
-			$this->albumAttributes['label'] = $data['labels'][0]['name'];
-			$this->albumAttributes['catalogNr'] = $data['labels'][0]['catno'];
-		}
-		return;
-		
-		#echo "<pre>" . print_r($data,1); die();
-		$counter = 0;
-		foreach($data['tracklist'] as $t) {
-			$counter++;
-			$trackindex = $instance->getExtid() . '-' . $counter; 
-			$trackstring = $t['position'] . '. ';
-			$trackArtists = (isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists'];
-			foreach($trackArtists as $a) {
-				$trackstring .= $a['name'];
-			}
-			
-			$trackstring .= ' - ' . $t['title'];#
-			if(strlen($t['duration']) > 0) {
-				$trackstring .= ' [' . $t['duration'] . ']';
-			}
-			$this->trackstrings[$trackindex] = $trackstring;
-		}
-	}
-	
+
 	public function fetch(&$instance) {
 		if($instance->getExtid() < 1 || !$instance->getType()) {
 			return FALSE;
 		}
-		
 		$item = $this->getInstanceByAttributes(
 			['extid' => $instance->getExtid(), 'type' => $instance->getType()]
 		);
@@ -118,9 +64,9 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
 			return;	
 		}
 		$client = \Discogs\ClientFactory::factory([
-		    'defaults' => [
-		        'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
-		    ]
+			'defaults' => [
+				'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
+			]
 		]);
 		
 		$getter = 'get' . ucfirst($instance->getType());

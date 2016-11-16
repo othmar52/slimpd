@@ -104,22 +104,21 @@
 <div class="tab-content">
 	<br />
 	<div class="tab-pane active" id="filenames">
-	
-		
 		<div class="row">
-			
 			<div class="col-md-6">
 				{% for idx,item in itemlist %}	
 					{% set dirs = item.relPath|split('/') %}
-		  			{% for dir in dirs %}
-						{% if loop.last == true %}<div class="well well-sm">{{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
+					{% for dir in dirs %}
+						{% if loop.last == true %}<div class="well well-sm">{{item.uid}} {{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
 					{% endfor %}
 				{% endfor %}
 			</div>
 			<div class="col-md-6 grid">
-				
-				{% for idx,item in itemlist %}
-					<div class="well well-sm">{{ discogstracks[ matchmapping[idx]|keys|first] }}</div>
+				{% for idx,item in discogstracks %}
+					<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
+					<div class="well well-sm">
+						{% if item.miliseconds %}({{ item.miliseconds|formatMiliseconds }}){% endif %}
+						{{ item.artistString }} - {{ item.titleString }}</div>
 				{% endfor %}
 		
 			</div>
@@ -127,23 +126,18 @@
 		
 	</div>
 	<div class="tab-pane" id="tagdata">
-
 		{% for idx,item in itemlist %}
 		<div class="row">
 			<div class="col-md-12">	
-		
-			{{ item.artist }} - {{ item.title }}
-		
-			<a href="{{root}}maintainance/trackdebug/{{ item.uid }}" class="ajax-link"><i class="fa fa-pencil"></i></a>
-		  	</div>
-		  	<div class="col-md-4">
-		  	</div>
+				{{ item.artist }} - {{ item.title }}
+				<a href="{{root}}maintainance/trackdebug/{{ item.uid }}" class="ajax-link"><i class="fa fa-pencil"></i></a>
+			</div>
+			<div class="col-md-4"> </div>
 		</div>
 		{% endfor %}
 	</div>
 	<div class="tab-pane active" id="rawtagdata">
-	
-	
+
 	</div>
 	<div class="tab-pane" id="editall">
 		

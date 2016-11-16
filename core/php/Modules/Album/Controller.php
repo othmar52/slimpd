@@ -118,22 +118,18 @@ class Controller extends \Slimpd\BaseController {
 			return $response->withStatus(404);
 		}
 		$args['action'] = 'maintainance.albumdebug';
-
-	
-		$tracks = $this->trackRepo->getInstancesByAttributes(array('albumUid' => $args['album']->getUid()));
-		$trackInstances = array();
+		$trackInstances = $args['itemlist'];
+		$args['itemlist'] = [];
 		$rawTagDataInstances = array();
-		foreach($tracks as $track) {
+		foreach($trackInstances as $track) {
 			$args['itemlist'][$track->getUid()] = $track;
-			$args['itemlistraw'][$track->getUid()] = $this->rawtagdataRepo->getInstanceByAttributes(array('uid' => (int)$track->getUid()));
+			//$args['itemlistraw'][$track->getUid()] = $this->rawtagdataRepo->getInstanceByAttributes(array('uid' => (int)$track->getUid()));
 		}
-		#echo "<pre>" . print_r(array_keys($trackInstances),1) . "</pre>";
-		
 		$args['discogstracks'] = array();
 		$args['matchmapping'] = array();
 		
 		$discogsId = $request->getParam('discogsid');
-		if($discogsId !== NULL) {
+		if($discogsId > 0) {
 			
 			/* possible usecases:
 			 * we have same track amount on local side and discogs side
@@ -152,11 +148,10 @@ class Controller extends \Slimpd\BaseController {
 			 * 
 			 */
 			
-			$discogsItem = $this->discogsitemRepo->retrieveAlbum($discogsId);
-			$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
-			#$args['matchmapping'] = $discogsItem->guessTrackMatch($discogsItem, $vars['itemlistraw']);
-			$args['discogstracks'] = $discogsItem->trackstrings;
-			$args['discogsalbum'] = $discogsItem->albumAttributes;
+			$this->discogsitemRepo->retrieveAlbum($discogsId);
+			#$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
+			$args['discogstracks'] = $this->discogsitemRepo->trackContexts;
+			$args['discogsalbum'] = $this->discogsitemRepo->albumContext;
 		}
 
 		$args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
