@@ -293,7 +293,8 @@ class Mpd {
 			case 'replacePlaylist':
 			case 'replacePlaylistAndPlay':
 			case 'softreplacePlaylist':
-				$playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
+				$playlist = new \Slimpd\Models\PlaylistFilesystem($this->container);
+				$playlist->load($itemPath);
 
 				$playlist->fetchTrackRange(0,1000, TRUE);
 				$counter = $this->appendPlaylist($playlist);
