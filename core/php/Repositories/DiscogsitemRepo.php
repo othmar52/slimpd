@@ -47,7 +47,11 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
 		$this->albumContext = new \Slimpd\Modules\Albummigrator\DiscogsAlbumContext($instance, $this->container);
 
 		// create DiscogsTrackContext instances for each provided track
-		for($idx=0; $idx < count($instance->getResponse(TRUE)['tracklist']); $idx++) {
+		foreach($instance->getResponse(TRUE)['tracklist'] as $idx => $trackData) {
+			if($trackData['type_'] !== 'track') {
+				// skip stuff like type:heading @see: discogs-id: 1008775
+				continue;
+			}
 			$this->trackContexts[$idx] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $idx, $this->container);
 		}
 	}

@@ -1,17 +1,45 @@
 
 {% include 'partials/randomizer.htm' with { subject: 'Album', urlpattern: 'maintainance/albumdebug/%s' } %}
 
-<h3>Album editor<br>
-<span class="small">
-	{% set dirs = album.relPath|split('/') %}
-	<a href="{{root}}filebrowser/{{ album.relPath|path2url }}" class="ajax-link"><i class="fa fa-folder-open fa-lg"></i></a>
-	
-	{% for dir in dirs %}
-		{{dir}}
-		{% if loop.last == false %} / {% endif %}
-	{% endfor%}
-</span>
-</h3>
+<div class="row">
+	<div class="col-md-12">
+		<h3 class="nomargin">
+			Album-Editor <button
+			  role="control"
+			  data-href="{{root}}markup/widget-album/{{ album.uid }}"
+			  title="show album widget TRNSL"
+			  class="btn btn-default trigger-modal">
+				<i class="fa fa-plus fa-lg"></i>
+			</button>
+			
+		</button>{% include 'partials/artist/link.htm' with { 'item': album } %} - {% if album.isJumble %}<span class="col2" title="no album but jumble">*</span>{% endif %}{{album.title}}
+		</h3>
+
+		<div class="small darker-links">
+		{% include 'partials/filebrowser/breadcrumb.htm' %}
+		</div>
+		<div class="row replace-me-with-proper-css"><br></div>
+</div>
+
+<div class="row">
+	<div class="col-md-12">
+		<ul class="nav nav-tabs inline-tab-nav">
+			<li class="active"> 
+				<a href="#editall">Edit all</a>
+			</li>
+			<li class=""> 
+				<a href="#filenames">Filenames</a>
+			</li>
+			<li class=""> 
+				<a href="#tagdata">Tagdata</a>
+			</li>
+			<li class=""> 
+				<a href="#rawtagdata">Raw tagdata</a>
+			</li>
+		</ul>
+	</div>
+</div>
+
 
 
 <div class="row">
@@ -32,78 +60,52 @@
 
 
 <div class="row">
-	<div class="col-md-2"><strong>{{'album'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/album/link.htm' with { 'item': album } %}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
+	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
-	<div class="col-md-2"><strong>{{'artist'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/artist/link.htm' with { 'item': album } %}</div>
+	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
 	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
-	<div class="col-md-3">{{ album.year }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.year ? album.year : discogsalbum.year }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.year ? album.year : discogsalbum.year }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	<div class="col-md-3">{% include 'partials/genre/link.htm' with { 'genreUids': album.genreUid } %}</div>
 	{% set value %}{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}{% endset %}
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.genre ? value : discogsalbum.genre }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.genre ? value : discogsalbum.genre }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
-	<div class="col-md-3">{{ album.label }}</div>
 	{% set value %}{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}{% endset %}
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-3">{{ album.ctalogNr }}</div>
-	<div class="col-md-4"><input name="title" type="text" value="{{ not discogsalbum.catalogNr ? album.catalogNr : discogsalbum.catalogNr }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.catalogNr ? album.catalogNr : discogsalbum.catalogNr }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 
 
-<div class="row">
-	<div class="col-md-12">
-		<hr/>
-		<ul class="nav nav-tabs inline-tab-nav">
-			<li class="active"> 
-				<a href="#filenames">Filenames</a>
-			</li>
-			<li class=""> 
-				<a href="#tagdata">Tagdata</a>
-			</li>
-			<li class=""> 
-				<a href="#rawtagdata">Raw tagdata</a>
-			</li>
-			<li class=""> 
-				<a href="#editall">Edit all</a>
-			</li>
-			
-		</ul>
-	</div>
-</div>
 
 <div class="tab-content">
 	<br />
-	<div class="tab-pane active" id="filenames">
+	<div class="tab-pane" id="filenames">
 		<div class="row">
 			<div class="col-md-6">
 				{% for idx,item in itemlist %}	
@@ -139,15 +141,15 @@
 	<div class="tab-pane active" id="rawtagdata">
 
 	</div>
-	<div class="tab-pane" id="editall">
+	<div class="tab-pane active" id="editall">
 		
-		<div class="row">
+		<div class="row uc small dark">
 			<div class="col-md-1">{{'number'|ll}}</div>
-			<div class="col-md-2">{{'artist'|ll}}</div>
-			<div class="col-md-3">{{'title'|ll}}</div>
-			<div class="col-md-2">{{'remix.artist'|ll}}</div>
-			<div class="col-md-2">{{'featured.artist'|ll}}</div>
+			<div class="col-md-4">{{'artist'|ll}} &amp; {{'featured.artist'|ll}}</div>
+			<div class="col-md-4">{{'title'|ll}} &amp; {{'remix.artist'|ll}}</div>
 			<div class="col-md-2">{{'genre'|ll}}</div>
+			<div class="col-md-1">{{'year'|ll}}</div>
+			<div class="col-md-12"><hr /></div>
 		</div>
 			
 		{% for idx,item in itemlist %}
@@ -157,25 +159,19 @@
 			<div class="col-md-1">
 				<input name="trackNumber[{{item.fingerprint}}]" type="text" value="{{ item.trackNumber}}" class="form-control" />
 			</div>
-			<div class="col-md-2">
+			<div class="col-md-4">
 				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' %}" class="form-control" />
 			</div>
-			<div class="col-md-3">
-				<input name="title[{{item.fingerprint}}]" type="text" value="{{ item.title}}" class="form-control" />
-			</div>
-			<div class="col-md-2">
-				{% set rmxItem = { 'artistUid' : item.remixerUid }%}
-				<input name="remixer[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': rmxItem } %}" class="form-control" />
-			</div>
-			<div class="col-md-2">
-				{% set ftItem = { 'artistUid' : item.featuringUid }%}
-				<input name="feat[{{item.fingerprint}}]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': ftItem } %}" class="form-control" />
+			<div class="col-md-4">
+				<input name="title[{{item.fingerprint}}]" type="text" value="{% include 'partials/track/titlestring.htm' with { 'titlestring': item.title } %}" class="form-control" />
 			</div>
 			<div class="col-md-2">
 				<input name="artist[{{item.fingerprint}}]" type="text" value="{% include 'partials/genre/string.htm' with {'genreUids': item.genreUid} %}" class="form-control" />
 			</div>
+			<div class="col-md-1">
+				<input name="year[{{item.fingerprint}}]" type="text" value="{{ item.year}}" class="form-control" />
+			</div>
 		</div>
-		
 		{% endfor %}
 	</div>
 	

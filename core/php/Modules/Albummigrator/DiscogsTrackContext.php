@@ -35,6 +35,7 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
 	}
 
 	private function setPropertiesByApiResponse($apiResponse) {
+		#echo "<pre>";print_r($apiResponse);die;
 		foreach($apiResponse['tracklist'] as $idx => $trackData) {
 			if($idx !== $this->idx) {
 				continue;

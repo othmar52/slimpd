@@ -1,0 +1,15 @@
+{# no indentation to avoid unwanted whitespace in frontend #}
+{# possible remixers does not get linked #}
+{% if titlestring %}
+{% if item.remixerUid %}
+{% set titleparts = titlestring|split('%s') %}
+{% set remixerUids = item.remixerUid|split(',') %}
+{% for index,titlepart in titleparts %}
+{% if not loop.first and not loop.last %}
+{% endif %}{{ titlepart }}{% if not loop.first and not loop.last %}{% endif %}
+{% if loop.last == false %}{% include 'partials/artist/single-string.htm' with { 'itemUid': remixerUids[index] }  %}{% endif %}
+{% endfor %}
+{% else %}
+{{titlestring}}
+{% endif %}
+{% endif %}
