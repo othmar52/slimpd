@@ -258,6 +258,9 @@ $container['discogsitemRepo'] = function($cont) {
 $container['pollcacheRepo'] = function($cont) {
 	return new \Slimpd\Repositories\PollcacheRepo($cont);
 };
+$container['editorialRepo'] = function($cont) {
+	return new \Slimpd\Repositories\EditorialRepo($cont);
+};
 $container['filesystemUtility'] = function($cont) {
 	return new \Slimpd\Utilities\FilesystemUtility($cont);
 };

@@ -191,8 +191,28 @@ class Controller extends \Slimpd\BaseController {
 					break;
 			}
 		}
-		
 		$args['breadcrumb'] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($args['album']->getRelPath());
 		return;
+	}
+
+	public function updateAction(Request $request, Response $response, $args) {
+		$postParams = $request->getParsedBody();
+		foreach($postParams['track'] as $trackUid => $properties) {
+			foreach($properties as $setterName => $value) {
+				$track = $this->container->trackRepo->getInstanceByAttributes(['uid' => $trackUid]);
+				$editorial = new \Slimpd\Models\Editorial();
+				$editorial->setItemUid($track->getUid())
+					->setItemType('track')
+					->setRelPath($track->getRelPath())
+					->setRelPathHash($track->getRelPathHash())
+					->setFingerprint($track->getFingerprint())
+					->setColumn($setterName)
+					->setValue($value)
+					->setCrdate(time())
+					->setTstamp(time());
+				$this->container->editorialRepo->update($editorial);
+			}
+		}
+		return $this->remigrateAction($request, $response, $args);
 	}
 }

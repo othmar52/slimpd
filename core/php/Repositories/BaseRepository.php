@@ -40,9 +40,9 @@ class BaseRepository {
 			return $instances;
 		}
 
-		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT * FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
+			$query .= '`' . $this->db->real_escape_string($key) . '`="' . $this->db->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 
@@ -91,7 +91,7 @@ class BaseRepository {
 			return $instances;
 		}
 
-		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT * FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= ' FIND_IN_SET('. (int)$value .',' .$this->db->real_escape_string($key) . ') OR ';
 		}
@@ -126,7 +126,7 @@ class BaseRepository {
 			return $instances;
 		}
 
-		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(uid) AS itemsTotal FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= ' FIND_IN_SET('. (int)$value .',' .$this->db->real_escape_string($key) . ') OR ';
 		}
@@ -144,9 +144,9 @@ class BaseRepository {
 			return $instances;
 		}
 
-		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT * FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $this->db->real_escape_string($key) . ' LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
+			$query .= '`' . $this->db->real_escape_string($key) . '` LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
@@ -175,9 +175,9 @@ class BaseRepository {
 			return $instances;
 		}
 
-		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(uid) AS itemsTotal FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $this->db->real_escape_string($key) . ' LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
+			$query .= '`' . $this->db->real_escape_string($key) . '` LIKE "%'. $this->db->real_escape_string($value) .'%" OR ';
 		}
 		$query = substr($query, 0, -6); // remove suffixed '%" OR '
 		$query .= '%"'; // close bracket
@@ -194,9 +194,9 @@ class BaseRepository {
 		}
 		
 		#$database = $this->db;
-		$query = "SELECT * FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT * FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
-			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
+			$query .= '`' . $this->db->real_escape_string($key) . '`="' . $this->db->real_escape_string($value) . '" AND ';
 		}
 		$query = substr($query, 0, -5); // remove suffixed ' AND '
 		
@@ -231,7 +231,7 @@ class BaseRepository {
 			return $count;
 		}
 
-		$query = "SELECT count(*) AS itemsTotal FROM ". self::getTableName() ." WHERE ";
+		$query = "SELECT count(*) AS itemsTotal FROM `". self::getTableName() ."` WHERE ";
 		foreach($attributeArray as $key => $value) {
 			$query .= $this->db->real_escape_string($key) . '="' . $this->db->real_escape_string($value) . '" AND ';
 		}
@@ -294,30 +294,33 @@ class BaseRepository {
 			}
 		}
 		$mapped = $instance->mapInstancePropertiesToDatabaseKeys();
-		$query = 'INSERT INTO '. self::getTableName().' (' . join(",", array_keys($mapped)) . ') VALUES (';
+		$query = 'INSERT INTO `'. self::getTableName().'` (`' . join("`,`", array_keys($mapped)) . '`) VALUES (';
 		foreach($mapped as $value) {
 			$query .= "\"" . $this->db->real_escape_string($value) . "\",";
 		}
 		$query = substr($query,0,-1) . ");";
+		#echo $query;die;
 		$this->db->query($query);
 		$instance->setUid($this->db->insert_id);
 	}
 
 	public function update(&$instance) {
-		$this->searchExistingUid($instance);
+		$repoName = get_called_class();
+		$repo = new $repoName($this->container);
+		$repo->searchExistingUid($instance);
 		// we can't update. lets insert new record
 		if($instance->getUid() < 1) {
 			return $this->insert($instance);
 		}
-		$query = 'UPDATE '. self::getTableName() . ' SET ';
+		$query = 'UPDATE `'. self::getTableName() . '` SET ';
 		foreach($instance->mapInstancePropertiesToDatabaseKeys() as $dbField => $value) {
-			$query .= $dbField . '="' . $this->db->real_escape_string($value) . '",';
+			$query .= '`' . $dbField . '`="' . $this->db->real_escape_string($value) . '",';
 		}
 		$query = substr($query,0,-1) . ' WHERE uid=' . (int)$instance->getUid() . ";";
 		$this->db->query($query);
 	}
 
-	private function searchExistingUid(&$instance) {
+	protected function searchExistingUid(&$instance) {
 		if($instance->getUid() > 0) {
 			return;
 		}
@@ -364,7 +367,7 @@ class BaseRepository {
 			}
 		}
 		$this->db->query(
-			'DELETE FROM '. self::getTableName() . ' WHERE uid=' . (int)$this->getUid()
+			'DELETE FROM `'. self::getTableName() . '` WHERE uid=' . (int)$this->getUid()
 		);
 	}
 
@@ -409,7 +412,7 @@ class BaseRepository {
 				continue;
 			}
 
-			$query = "SELECT uid FROM ". self::getTableName() ." WHERE az09=\"" . $az09 . "\" LIMIT 1;";
+			$query = "SELECT uid FROM `". self::getTableName() ."` WHERE `az09`=\"" . $az09 . "\" LIMIT 1;";
 			$result = $this->db->query($query);
 			$record = $result->fetch_assoc();
 
@@ -485,11 +488,11 @@ class BaseRepository {
 		}
 		$currentPage = ($currentPage < 1) ? 1 : $currentPage;
 		
-		$query = "SELECT * FROM ". self::getTableName();
+		$query = "SELECT * FROM `". self::getTableName() . '`';
 		// IMPORTANT TODO: validate orderBy to avoid sql injection
 		switch($orderBy) {
 			case "":
-				$orderBy = " ORDER BY title ASC ";
+				$orderBy = " ORDER BY `title` ASC ";
 				break;
 			default:
 				$orderBy = " ORDER BY " . $orderBy . " ";
@@ -512,7 +515,7 @@ class BaseRepository {
 	}
 
 	public function getCountAll() {
-		$query = "SELECT count(uid) AS itemsTotal FROM ". self::getTableName();
+		$query = "SELECT count(uid) AS itemsTotal FROM `". self::getTableName() . '`';
 		$result = $this->db->query($query);
 		if($result === FALSE) {
 			throw new \Exception("Error getCountAll() - please check if table \"".self::getTableName()."\" exists", 1);
@@ -525,14 +528,14 @@ class BaseRepository {
 
 		// ORDER BY RAND is the killer on huge tables
 		// lets try a different approach
-		$highestUid = $this->db->query("SELECT uid FROM ". self::getTableName() ." ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
+		$highestUid = $this->db->query("SELECT uid FROM `". self::getTableName() ."` ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
 
 		$maxAttempts = 1000;
 		$counter = 0;
 		try {
 			while (TRUE) {
 				$try = $this->db->query(
-					"SELECT uid FROM ". self::getTableName() ." WHERE uid = " . mt_rand(1, $highestUid)
+					"SELECT uid FROM `". self::getTableName() ."` WHERE uid = " . mt_rand(1, $highestUid)
 				)->fetch_assoc()['uid'];
 				if($try !== NULL) {
 					return $this->getInstanceByAttributes(['uid' => $try] );
@@ -551,15 +554,15 @@ class BaseRepository {
 		if(count($uidArray) === 0) {
 			return;
 		}
-		$query = "DELETE FROM " . self::getTableName() . " WHERE uid IN (" . join(',', $uidArray) . ");";
+		$query = "DELETE FROM `" . self::getTableName() . "` WHERE uid IN (" . join(',', $uidArray) . ");";
 		$this->db->query($query);
 	}
 
 	public function ensureRecordUidExists($itemUid) {
-		if($this->db->query("SELECT uid FROM " . self::getTableName() . " WHERE uid=" . (int)$itemUid)->num_rows == $itemUid) {
+		if($this->db->query("SELECT uid FROM `" . self::getTableName() . "` WHERE uid=" . (int)$itemUid)->num_rows == $itemUid) {
 			return;
 		}
-		$this->db->query("INSERT INTO " . self::getTableName() . " (uid) VALUES (".(int)$itemUid.")");
+		$this->db->query("INSERT INTO `" . self::getTableName() . "` (uid) VALUES (".(int)$itemUid.")");
 		return;
 	}
 }

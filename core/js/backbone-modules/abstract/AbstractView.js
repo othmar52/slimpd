@@ -82,6 +82,20 @@
 				//that.searchfield.autocomplete("close");
 			});
 
+			// TODO: move to separate edit-album-backbone-view
+			$("#edit-album", this.$el).on("submit", function(e) {
+				e.preventDefault();
+				window.NProgress.start();
+				$.ajax({
+					type: $(this).attr("method"),
+					url: $(this).attr("action"),
+					data: $(this).serialize(), // serializes the form's elements.
+					success: function(response) {
+						window.sliMpd.checkNotify(response);
+						window.NProgress.done();
+					}
+				});
+			});
 
 			$(".dropdown-toggle", this.$el).dropdown();
 			$(".toggle-tooltip", this.$el).tooltip();

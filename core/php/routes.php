@@ -44,6 +44,7 @@ $ctrlRoutes = [
 		['/markup/widget-album/{itemUid}', 'widgetAlbumAction'],
 		['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
 		['/maintainance/albumdebug/[{itemParams:.*}]', 'editAction'],
+		['/maintainance/updatealbum/{itemUid}', 'updateAction', '', 'post'],
 		['/album/remigrate/{itemUid}', 'remigrateAction']
 	],
 	'Systemcheck' => [
@@ -122,7 +123,8 @@ $ctrlRoutes = [
 foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
 	foreach($ctrlRoutes as $ctrlRoute) {
 		$routeName = (isset($ctrlRoute[2]) === TRUE) ? $ctrlRoute[2] : '';
-		$app->get(
+		$routeMethod = (isset($ctrlRoute[3]) === TRUE) ? $ctrlRoute[3] : 'get';
+		$app->$routeMethod(
 			$ctrlRoute[0],
 			'Slimpd\Modules\\'. $ctrlName .'\Controller' . ':' . $ctrlRoute[1]
 		)->setName($routeName);

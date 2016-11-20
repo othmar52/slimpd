@@ -63,6 +63,7 @@ class TrackContext extends \Slimpd\Models\Track {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
 		$this->postProcessAudioProperties();
+		$this->fetchEditorials();
 	}
 
 	private function postProcessAudioProperties() {
@@ -121,6 +122,24 @@ class TrackContext extends \Slimpd\Models\Track {
 	}
 
 	/**
+	 * maybe manually edited properties exists for this track
+	 */
+	private function fetchEditorials() {
+		$editorials = $this->container->editorialRepo->getInstancesByAttributes([
+			'relPathHash' => $this->getRelPathHash(),
+			'itemType' => 'track'
+		]);
+		foreach($editorials as $editorial) {
+			$setter = $editorial->getColumn();
+			$this->setRecommendationEntry(
+				$editorial->getColumn(),
+				$editorial->getValue(),
+				1000
+			);
+		}
+	}
+
+	/**
 	 * most rawTagData-fields are identical to track fields 
 	 */
 	private function copyBaseProperties() {
@@ -137,7 +156,7 @@ class TrackContext extends \Slimpd\Models\Track {
 			->setFingerprint($this->rawTagRecord['fingerprint'])
 			->setError($this->rawTagRecord['error']);
 	}
-	
+
 	public function initScorer(&$albumContext, $jumbleJudge) {
 		foreach($jumbleJudge->tests as $tests) {
 			$tests[$this->idx]->scoreMatches($this, $albumContext, $jumbleJudge);
