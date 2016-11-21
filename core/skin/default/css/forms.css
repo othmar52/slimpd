@@ -19,3 +19,8 @@
 	color: #666;
 	display: none;
 }
+
+/* edit album route may has highlighted inputfields to indicate manually edited properties */
+.form-control.highlight {
+	border: 1px solid #6b1f1f;
+}

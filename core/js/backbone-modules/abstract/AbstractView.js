@@ -83,6 +83,8 @@
 			});
 
 			// TODO: move to separate edit-album-backbone-view
+			// TODO: only submit modified values instead of all. @see http://stackoverflow.com/questions/5221633/select-submit-only-changed-form-fields-with-jquery
+			// TODO: add event listener for return-key to submit only a single input field
 			$("#edit-album", this.$el).on("submit", function(e) {
 				e.preventDefault();
 				window.NProgress.start();

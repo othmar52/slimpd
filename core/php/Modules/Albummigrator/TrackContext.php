@@ -125,18 +125,19 @@ class TrackContext extends \Slimpd\Models\Track {
 	 * maybe manually edited properties exists for this track
 	 */
 	private function fetchEditorials() {
+		cliLog(__FUNCTION__, 10, 'purple');
 		$editorials = $this->container->editorialRepo->getInstancesByAttributes([
 			'relPathHash' => $this->getRelPathHash(),
 			'itemType' => 'track'
 		]);
 		foreach($editorials as $editorial) {
-			$setter = $editorial->getColumn();
 			$this->setRecommendationEntry(
 				$editorial->getColumn(),
 				$editorial->getValue(),
 				1000
 			);
 		}
+		cliLog(' ', 10);
 	}
 
 	/**

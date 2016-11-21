@@ -117,7 +117,9 @@ a {
 }
 
 .well {
-	color: #000;
+	c!olor: #000;
+	background:none;
+	border: 1px solid #888;
 }
 
 
@@ -141,6 +143,26 @@ a {
 	font-weight: normal;
 }
 
+.heading {
+	background: #252525;
+	position: relative;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.heading h3 {
+	display: inline-block;
+	padding: 0 20px;
+	margin: -4px 0 -7px;
+	color: #252525;
+	font-size: 26px;
+	font-weight: bold;
+	line-height: 1em;
+	text-transform: uppercase;
+	vertical-align: top;
+	background-color: #1A1A1A;
+}
+
 .item-link {
 	border-bottom: 1px solid #333;
 }
@@ -159,7 +181,7 @@ a .article {
 
 
 .rotate2 {
-  -webkit-transform: rotate(-2deg);
+	-webkit-transform: rotate(-2deg);
 	-moz-transform: rotate(-2deg);
 	-o-transform: rotate(-2deg);
 	-ms-transform: rotate(-2deg);

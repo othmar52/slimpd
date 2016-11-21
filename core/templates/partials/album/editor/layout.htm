@@ -2,8 +2,28 @@
 {% include 'partials/randomizer.htm' with { subject: 'Album', urlpattern: 'maintainance/albumdebug/%s' } %}
 <form action="{{root}}maintainance/updatealbum/{{ album.uid }}" method="post" id="edit-album">
 <div class="row">
+	<div class="col-md-6">
+		<ul class="nav nav-tabs inline-tab-nav">
+			<li class="active">
+				<a href="#editall">Edit all</a>
+			</li>
+			<li class="">
+				<a href="#discogs">Populate from Discogs</a>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-6">
+		<div class="pull-right">
+			<button type="submit" class="btn btn-default btn-trnsp btn-bordered col2">Discard Changes</button>
+			<button type="submit" class="btn btn-default">Save all</button>
+			<a href="{{root}}album/remigrate/{{album.uid}}" type="submit" class="btn btn-default ajax-link">Apply Changes</a>
+		</div>
+	</div>
+</div>
+
+<div class="row">
 	<div class="col-md-12">
-		<h3 class="nomargin">
+		<h3>
 			Album-Editor <button
 			  role="control"
 			  data-href="{{root}}markup/widget-album/{{ album.uid }}"
@@ -18,163 +38,17 @@
 		{% include 'partials/filebrowser/breadcrumb.htm' %}
 		</div>
 		<div class="row replace-me-with-proper-css"><br></div>
-</div>
-
-<div class="row">
-	<div class="col-md-12">
-		<ul class="nav nav-tabs inline-tab-nav">
-			<li class="active"> 
-				<a href="#editall">Edit all</a>
-			</li>
-			<li class=""> 
-				<a href="#filenames">Filenames</a>
-			</li>
-			<li class=""> 
-				<a href="#tagdata">Tagdata</a>
-			</li>
-			<li class=""> 
-				<a href="#rawtagdata">Raw tagdata</a>
-			</li>
-		</ul>
 	</div>
 </div>
-
-
-
-<div class="row">
-	<div class="col-md-9">
-	
-	</div>
-	<div class="col-md-2">
-		<form action="" method="get">
-			<input name="discogsid" type="text" placeholder="submit Discogs-release-ID" class="form-control"/>
-			
-		</form>
-	</div>
-	<div class="col-md-1">
-		{% include 'partials/extlink-discogs.htm' %}
-		<br />
-		<button type="submit" class="btn btn-default">save</button>
-	</div>
-</div>
-
-
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
-	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.year ? album.year : discogsalbum.year }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	{% set value %}{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}{% endset %}
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.genre ? value : discogsalbum.genre }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
-	{% set value %}{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}{% endset %}
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-<div class="row">
-	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-6"><input name="title" type="text" value="{{ not discogsalbum.catalogNr ? album.catalogNr : discogsalbum.catalogNr }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
-</div>
-
-
-
 
 <div class="tab-content">
-	<br />
-	<div class="tab-pane" id="filenames">
-		<div class="row">
-			<div class="col-md-6">
-				{% for idx,item in itemlist %}	
-					{% set dirs = item.relPath|split('/') %}
-					{% for dir in dirs %}
-						{% if loop.last == true %}<div class="well well-sm">{{item.uid}} {{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
-					{% endfor %}
-				{% endfor %}
-			</div>
-			<div class="col-md-6 grid">
-				{% for idx,item in discogstracks %}
-					<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
-					<div class="well well-sm">
-						{% if item.miliseconds %}({{ item.miliseconds|formatMiliseconds }}){% endif %}
-						{{ item.artistString }} - {{ item.titleString }}</div>
-				{% endfor %}
-		
-			</div>
-		</div>
-		
-	</div>
-	<div class="tab-pane" id="tagdata">
-		{% for idx,item in itemlist %}
-		<div class="row">
-			<div class="col-md-12">	
-				{{ item.artist }} - {{ item.title }}
-				<a href="{{root}}maintainance/trackdebug/{{ item.uid }}" class="ajax-link"><i class="fa fa-pencil"></i></a>
-			</div>
-			<div class="col-md-4"> </div>
-		</div>
-		{% endfor %}
-	</div>
-	<div class="tab-pane active" id="rawtagdata">
-
-	</div>
 	<div class="tab-pane active" id="editall">
-		
-		<div class="row uc small dark">
-			<div class="col-md-1">{{'number'|ll}}</div>
-			<div class="col-md-4">{{'artist'|ll}} &amp; {{'featured.artist'|ll}}</div>
-			<div class="col-md-4">{{'title'|ll}} &amp; {{'remix.artist'|ll}}</div>
-			<div class="col-md-2">{{'genre'|ll}}</div>
-			<div class="col-md-1">{{'year'|ll}}</div>
-			<div class="col-md-12"><hr /></div>
-		</div>
-			
-		{% for idx,item in itemlist %}
-			
-			
-		<div class="row">
-			<div class="col-md-1">
-				<input name="track[{{item.uid}}][setTrackNumber]" type="text" value="{{ item.trackNumber}}" class="form-control" />
-			</div>
-			<div class="col-md-4">
-				<input name="track[{{item.uid}}][setArtist]" type="text" value="{% include 'partials/artist/string.htm' %}" class="form-control" />
-			</div>
-			<div class="col-md-4">
-				<input name="track[{{item.uid}}][setTitle]" type="text" value="{% include 'partials/track/titlestring.htm' with { 'titlestring': item.title } %}" class="form-control" />
-			</div>
-			<div class="col-md-2">
-				<input name="track[{{item.uid}}][setGenre]" type="text" value="{% include 'partials/genre/string.htm' with {'genreUids': item.genreUid} %}" class="form-control" />
-			</div>
-			<div class="col-md-1">
-				<input name="track[{{item.uid}}][setYear]" type="text" value="{{ item.year}}" class="form-control" />
-			</div>
-		</div>
-		{% endfor %}
+		{% include 'partials/album/editor/tab-editall.htm' %}
 	</div>
+	<div class="tab-pane" id="discogs">
+		{% include 'partials/album/editor/tab-discogs.htm' %}
+	</div>
+</div>
 </form>
 	<hr /><br /><br />
 

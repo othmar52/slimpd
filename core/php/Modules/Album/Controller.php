@@ -155,6 +155,18 @@ class Controller extends \Slimpd\BaseController {
 		}
 
 		$args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
+
+		// fetch manually edited properties for highlighting input fields
+		$args['editorials'] = array();
+		foreach($args['itemlist'] as $trackInstance) {
+			$editorials = $this->container->editorialRepo->getInstancesByAttributes([
+				'relPathHash' => $trackInstance->getRelPathHash(),
+				'itemType' => 'track'
+			]);
+			foreach($editorials as $editorial) {
+				$args['editorials'][$editorial->getRelPathHash()][$editorial->getColumn()] = $editorial->getValue();
+			}
+		}
 		$this->view->render($response, 'surrounding.htm', $args);
 		return $response;
 	}
@@ -213,6 +225,9 @@ class Controller extends \Slimpd\BaseController {
 				$this->container->editorialRepo->update($editorial);
 			}
 		}
-		return $this->remigrateAction($request, $response, $args);
+		// TODO: highlight all input fields that already has an editorial value
+		$newResponse = $response;
+		return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to remigrate album", 'success'));
+		//return $this->remigrateAction($request, $response, $args);
 	}
 }
