@@ -10,6 +10,9 @@
 			<li class="">
 				<a href="#discogs">Populate from Discogs</a>
 			</li>
+			<li class="">
+				<a href="#images">Images</a>
+			</li>
 		</ul>
 	</div>
 	<div class="col-md-6">
@@ -45,11 +48,15 @@
 	<div class="tab-pane active" id="editall">
 		{% include 'partials/album/editor/tab-editall.htm' %}
 	</div>
+	{# TODO: whats best practice for this improper nesting of forms? 2nd tab has a separate form. #}
+	</form>
 	<div class="tab-pane" id="discogs">
 		{% include 'partials/album/editor/tab-discogs.htm' %}
 	</div>
+	<div class="tab-pane" id="images">
+		{% include 'partials/album/editor/tab-images.htm' %}
+	</div>
 </div>
-</form>
 	<hr /><br /><br />
 
 	<style type="text/css">

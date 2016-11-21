@@ -82,7 +82,7 @@
 				//that.searchfield.autocomplete("close");
 			});
 
-			// TODO: move to separate edit-album-backbone-view
+			// TODO: move to separate edit-album-backbone-view  begin
 			// TODO: only submit modified values instead of all. @see http://stackoverflow.com/questions/5221633/select-submit-only-changed-form-fields-with-jquery
 			// TODO: add event listener for return-key to submit only a single input field
 			$("#edit-album", this.$el).on("submit", function(e) {
@@ -90,14 +90,25 @@
 				window.NProgress.start();
 				$.ajax({
 					type: $(this).attr("method"),
-					url: $(this).attr("action"),
+					url: window.sliMpd.router.setGetParameter($(this).attr("action"), "nosurrounding", "1"),
 					data: $(this).serialize(), // serializes the form's elements.
 					success: function(response) {
-						window.sliMpd.checkNotify(response);
 						window.NProgress.done();
+						window.sliMpd.checkNotify(response);
 					}
 				});
 			});
+			$(".inline-tab-nav a", this.$el).click(function (e) {
+				e.preventDefault();
+				$(this).tab("show");
+			});
+			$(".grid", this.$el).sortable({
+				tolerance: "pointer",
+				revert: "invalid",
+				placeholder: "span2 well placeholder tile",
+				forceHelperSize: true
+			});
+			// TODO: move to separate edit-album-backbone-view end
 
 			$(".dropdown-toggle", this.$el).dropdown();
 			$(".toggle-tooltip", this.$el).tooltip();
@@ -109,18 +120,6 @@
 						? "<img class=\"popover-image\" src=\""+$(this).data("imageUrl")+"\">"
 						: $(this).attr("title");
 				}
-			});
-
-			/* route /maintainance/albumdebug */
-			$(".inline-tab-nav a", this.$el).click(function (e) {
-				e.preventDefault();
-				$(this).tab("show");
-			});
-			$(".grid", this.$el).sortable({
-				tolerance: "pointer",
-				revert: "invalid",
-				placeholder: "span2 well placeholder tile",
-				forceHelperSize: true
 			});
 
 			// TODO : remove this as soon as all svg-waveforms have been replaced by canvas-waveforms (widget-trackcontrol, xwaxPlayer)

@@ -1,35 +1,47 @@
+<form class="ajax-form" action="{{root}}maintainance/albumdebug/{{album.uid}}" method="get">
+<div class="row">
+	<hr>
+	<div class="col-md-4 ">Insert {% include 'partials/extlink-discogs.htm' %} release-id and submit.<br>
+		<span class="dark small">Make sure its not a master-id</span>
+	</div>
+	<div class="col-md-2">
+		<input name="discogsid" type="text" id="discogsid" placeholder="" class="form-control"/>
+	</div>
+	<div class="col-md-6">
+		<button name="submit-discogs-id" value="1" class="btn btn-default">submit</button>
+	</div>
+</div>
+<div class="row">
+	<hr />
+</div>
 <div class="row heading">
 	<div class="col-md-1"></div>
-	<div class="col-md-4"><h3>Local Tracks</h3></div>
+	<div class="col-md-4"><h3>Discogs Tracks</h3></div>
 	<div class="col-md-2"><h3>|</h3></div>
-	<div class="col-md-4"><h3>Virtual Tracks</h3></div>
+	<div class="col-md-4"><h3>Local Tracks</h3></div>
 	<div class="col-md-1"></div>
 </div>
 <div class="row">
 	<div class="col-md-6">
-		{% for idx,item in itemlist %}	
-			{% set dirs = item.relPath|split('/') %}
-			{% for dir in dirs %}
-				{% if loop.last == true %}<div class="well well-sm">{{item.uid}} {{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
-			{% endfor %}
-		{% endfor %}
-	</div>
-	{% if discogstracks|length %}
-	<div class="col-md-6 grid">
+		{% if discogstracks|length %}
 		{% for idx,item in discogstracks %}
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
 			<div class="well well-sm">
 				{% if item.miliseconds %}({{ item.miliseconds|formatMiliseconds }}){% endif %}
 				{{ item.artistString }} - {{ item.titleString }}</div>
 		{% endfor %}
+		{% else %}
+		<div class="centered-text dark">no discogs - id given</div>
+		{% endif %}
 	</div>
-	{% else %}
-	<div class="col-md-6 dark"><br><br>search release-id (not master) on {% include 'partials/extlink-discogs.htm' %} and insert below.<br><br></div>
-	<div class="col-md-2">
-		<label for="discogsid">Discogs-ID</label>
+
+	<div class="col-md-6 grid">
+		{% for idx,item in itemlist %}
+			{% set dirs = item.relPath|split('/') %}
+			{% for dir in dirs %}
+				{% if loop.last == true %}<div class="well well-sm">{{item.uid}} {{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
+			{% endfor %}
+		{% endfor %}
 	</div>
-	<div class="col-md-4">
-		<input name="discogsid" type="text" id="discogsid" placeholder="" class="form-control"/>
-	</div>
-	{% endif %}
 </div>
+</form>

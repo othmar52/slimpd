@@ -144,7 +144,7 @@ a {
 }
 
 .heading {
-	background: #252525;
+	background: #2D2D2D;
 	position: relative;
 	margin-bottom: 20px;
 	text-align: center;
@@ -154,7 +154,7 @@ a {
 	display: inline-block;
 	padding: 0 20px;
 	margin: -4px 0 -7px;
-	color: #252525;
+	color: #2D2D2D;
 	font-size: 26px;
 	font-weight: bold;
 	line-height: 1em;
