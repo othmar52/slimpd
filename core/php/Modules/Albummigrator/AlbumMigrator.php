@@ -53,7 +53,10 @@ class AlbumMigrator {
 		}
 		// decide if bunch should be treated as album or as loose tracks
 		$this->jumbleJudge->judge();
-		
+
+		// make sure manually edited track+album-properties gets applied
+		$this->fetchEditorials();
+
 		if($this->conf["modules"]["enable_guessing"] == "1") {
 			// do some voting for each attribute
 			$this->runAttributeScoring();
@@ -100,6 +103,41 @@ class AlbumMigrator {
 		$this->container->bitmapRepo->addAlbumUidToRelDirPathHash($this->getRelDirPathHash(), $this->albumContextItem->getUid());
 	}
 
+	/**
+	 * maybe manually edited properties exists for this tracks or album
+	 */
+	private function fetchEditorials() {
+		foreach($this->trackContextItems as $trackContext) {
+			cliLog("=== collecting begin for " . basename($trackContext->getRelPath()) . " " . $trackContext->getRelPathHash() . " ===", 10, "yellow");
+			cliLog(__FUNCTION__, 10, 'purple');
+			$editorials = $this->container->editorialRepo->getInstancesByAttributes([
+				'relPathHash' => $trackContext->getRelPathHash(),
+				'itemType' => 'track'
+			]);
+			foreach($editorials as $editorial) {
+				$trackContext->setRecommendationEntry(
+					$editorial->getColumn(),
+					$editorial->getValue(),
+					100
+				);
+			}
+			cliLog(' ', 10);
+			cliLog("=== collecting end for " . basename($trackContext->getRelPath()) . " " . $trackContext->getRelPathHash() . " ===", 10, "yellow");
+			cliLog("=== collecting begin for album ===", 10, "yellow");
+			foreach($editorials as $editorial) {
+				if(in_array($editorial->getColumn(), ['setAlbum', 'setYear', 'setLabel', 'setCatalogNr']) === FALSE) {
+					continue;
+				}
+				$setter = ($editorial->getColumn() === 'setAlbum') ? 'setTitle' : $editorial->getColumn();
+				$this->albumContextItem->setRecommendationEntry(
+					$setter,
+					$editorial->getValue(),
+					100
+				);
+			}
+			cliLog("=== collecting end for album ===", 10, "yellow");
+		}
+	}
 	/**
 	 * TODO: how to handle albums/compilations where album artist does not appear on any track?
 	 * example compilation: "Sly & Robbie - LateNightTales"

@@ -209,9 +209,40 @@ class Controller extends \Slimpd\BaseController {
 
 	public function updateAction(Request $request, Response $response, $args) {
 		$postParams = $request->getParsedBody();
+		if($postParams === NULL) {
+			$postParams = array();
+		}
+		$albumEditorials = array();
+		if(array_key_exists('album', $postParams) === FALSE) {
+			$postParams['album'] = array();
+		}
+		// NOTE: the form submissions is limited on changed input-fields on the client-side
+		// so if we do have only album attributes we have to fetch all track-uids
+		foreach($this->albumRepo->getTrackUidsForAlbumUid($args['itemUid']) as $trackUid){
+			if(isset($postParams['track'][$trackUid]) === FALSE) {
+				$postParams['track'][$trackUid] = array();
+			}
+		}
 		foreach($postParams['track'] as $trackUid => $properties) {
+			$track = $this->container->trackRepo->getInstanceByAttributes(['uid' => $trackUid]);
+
+			// set album properties for all tracks
+			foreach($postParams['album'] as $setterName => $value) {
+				$editorial = new \Slimpd\Models\Editorial();
+				$editorial->setItemUid($track->getUid())
+					->setItemType('track')
+					->setRelPath($track->getRelPath())
+					->setRelPathHash($track->getRelPathHash())
+					->setFingerprint($track->getFingerprint())
+					->setColumn($setterName)
+					->setValue($value)
+					->setCrdate(time())
+					->setTstamp(time());
+				$this->container->editorialRepo->update($editorial);
+			}
+
+			// set track properties
 			foreach($properties as $setterName => $value) {
-				$track = $this->container->trackRepo->getInstanceByAttributes(['uid' => $trackUid]);
 				$editorial = new \Slimpd\Models\Editorial();
 				$editorial->setItemUid($track->getUid())
 					->setItemType('track')
@@ -227,7 +258,7 @@ class Controller extends \Slimpd\BaseController {
 		}
 		// TODO: highlight all input fields that already has an editorial value
 		$newResponse = $response;
-		return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to remigrate album", 'success'));
+		return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to apply changes for taking effect", 'success'));
 		//return $this->remigrateAction($request, $response, $args);
 	}
 }

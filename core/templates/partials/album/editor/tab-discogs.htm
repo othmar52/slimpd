@@ -1,8 +1,11 @@
 <form class="ajax-form" action="{{root}}maintainance/albumdebug/{{album.uid}}" method="get">
 <div class="row">
 	<hr>
-	<div class="col-md-4 ">Insert {% include 'partials/extlink-discogs.htm' %} release-id and submit.<br>
-		<span class="dark small">Make sure its not a master-id</span>
+	{# TODO: optionally accept full discogs url and not only numeric release id #}
+	{# TODO: provide discogs album list within sliMpd fetched via discogs-API #}
+	{# TODO: display message in case required discogs api key+secret are not configured (plus extending systemcheck) #}
+	<div class="col-md-4">Insert {% include 'partials/extlink-discogs.htm' %} Release-ID and submit.<br>
+		<span class="dark small">Make sure its not a Master-ID</span>
 	</div>
 	<div class="col-md-2">
 		<input name="discogsid" type="text" id="discogsid" placeholder="" class="form-control"/>

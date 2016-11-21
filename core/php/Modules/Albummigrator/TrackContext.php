@@ -63,7 +63,6 @@ class TrackContext extends \Slimpd\Models\Track {
 		$this->copyBaseProperties();
 		$this->configBasedSetters();
 		$this->postProcessAudioProperties();
-		$this->fetchEditorials();
 	}
 
 	private function postProcessAudioProperties() {
@@ -119,25 +118,6 @@ class TrackContext extends \Slimpd\Models\Track {
 			$this->setMimeType('audio/aac');
 			$this->setAudioDataformat('aac');
 		}
-	}
-
-	/**
-	 * maybe manually edited properties exists for this track
-	 */
-	private function fetchEditorials() {
-		cliLog(__FUNCTION__, 10, 'purple');
-		$editorials = $this->container->editorialRepo->getInstancesByAttributes([
-			'relPathHash' => $this->getRelPathHash(),
-			'itemType' => 'track'
-		]);
-		foreach($editorials as $editorial) {
-			$this->setRecommendationEntry(
-				$editorial->getColumn(),
-				$editorial->getValue(),
-				1000
-			);
-		}
-		cliLog(' ', 10);
 	}
 
 	/**

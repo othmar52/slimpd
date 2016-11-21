@@ -67,4 +67,17 @@ class AlbumRepo extends \Slimpd\Repositories\BaseRepository {
 		
 		return;
 	}
+
+	public function getTrackUidsForAlbumUid($albumUid) {
+		$return = array();
+		$query = "
+			SELECT uid
+			FROM track
+			WHERE albumUid=" . intval($albumUid);
+		$result = $this->db->query($query);
+		while($record = $result->fetch_assoc()) {
+			$return[] = $record['uid'];
+		}
+		return $return;
+	}
 }
