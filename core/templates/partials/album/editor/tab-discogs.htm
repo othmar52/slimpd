@@ -4,13 +4,13 @@
 	{# TODO: optionally accept full discogs url and not only numeric release id #}
 	{# TODO: provide discogs album list within sliMpd fetched via discogs-API #}
 	{# TODO: display message in case required discogs api key+secret are not configured (plus extending systemcheck) #}
-	<div class="col-md-4">Insert {% include 'partials/extlink-discogs.htm' %} Release-ID and submit.<br>
+	<div class="col-md-3">Insert {% include 'partials/extlink-discogs.htm' %} Release-ID and submit.<br>
 		<span class="dark small">Make sure its not a Master-ID</span>
 	</div>
 	<div class="col-md-2">
-		<input name="discogsid" type="text" id="discogsid" placeholder="" class="form-control"/>
+		<input name="discogsid" type="text" id="discogsid" placeholder="" value="{{discogsid}}" class="form-control"/>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-7">
 		<button name="submit-discogs-id" value="1" class="btn btn-default">submit</button>
 	</div>
 </div>
@@ -30,8 +30,8 @@
 		{% for idx,item in discogstracks %}
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
 			<div class="well well-sm">
-				{% if item.miliseconds %}({{ item.miliseconds|formatMiliseconds }}){% endif %}
-				{{ item.artistString }} - {{ item.titleString }}</div>
+				<span class="dark">{{ item.artistString }} - </span>{{ item.titleString }}
+				{% if item.miliseconds %}<span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}</div>
 		{% endfor %}
 		{% else %}
 		<div class="centered-text dark">no discogs - id given</div>
@@ -42,7 +42,7 @@
 		{% for idx,item in itemlist %}
 			{% set dirs = item.relPath|split('/') %}
 			{% for dir in dirs %}
-				{% if loop.last == true %}<div class="well well-sm">{{item.uid}} {{ dir }} ({{ item.miliseconds|formatMiliseconds }})</div>{% endif %}
+				{% if loop.last == true %}<div class="well well-sm">{{ dir }} <span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span></div>{% endif %}
 			{% endfor %}
 		{% endfor %}
 	</div>

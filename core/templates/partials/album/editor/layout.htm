@@ -45,15 +45,15 @@
 </div>
 
 <div class="tab-content">
-	<div class="tab-pane active" id="editall">
+	<div class="tab-pane {{ (activeTab == 'editall' ? 'active' : '') }}" id="editall">
 		{% include 'partials/album/editor/tab-editall.htm' %}
 	</div>
 	{# TODO: whats best practice for this improper nesting of forms? 2nd tab has a separate form. #}
 	</form>
-	<div class="tab-pane" id="discogs">
+	<div class="tab-pane {{ (activeTab == 'discogs' ? 'active' : '') }}" id="discogs">
 		{% include 'partials/album/editor/tab-discogs.htm' %}
 	</div>
-	<div class="tab-pane" id="images">
+	<div class="tab-pane {{ (activeTab == 'images' ? 'active' : '') }}" id="images">
 		{% include 'partials/album/editor/tab-images.htm' %}
 	</div>
 </div>

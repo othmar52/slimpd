@@ -118,6 +118,7 @@ class Controller extends \Slimpd\BaseController {
 			return $response->withStatus(404);
 		}
 		$args['action'] = 'maintainance.albumdebug';
+		$args['activeTab'] = 'editall';
 		$trackInstances = $args['itemlist'];
 		$args['itemlist'] = [];
 		$rawTagDataInstances = array();
@@ -148,10 +149,13 @@ class Controller extends \Slimpd\BaseController {
 			 * 
 			 */
 			
+			// TODO: catch error in case we cant retrieve release informations (example discogsID : 777655 )
 			$this->discogsitemRepo->retrieveAlbum($discogsId);
 			#$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
 			$args['discogstracks'] = $this->discogsitemRepo->trackContexts;
 			$args['discogsalbum'] = $this->discogsitemRepo->albumContext;
+			$args['activeTab'] = 'discogs';
+			$args['discogsid'] = $discogsId;
 		}
 
 		$args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
