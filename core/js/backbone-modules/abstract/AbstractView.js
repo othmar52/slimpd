@@ -93,6 +93,11 @@
 				}
 			});
 
+			$(".inline-tab-nav a", this.$el).click(function (e) {
+				e.preventDefault();
+				$(this).tab("show");
+			});
+
 			// TODO : remove this as soon as all svg-waveforms have been replaced by canvas-waveforms (widget-trackcontrol, xwaxPlayer)
 			$("object.svg-ajax-object", that.$el).each(function(index, item){
 				var obj = item;

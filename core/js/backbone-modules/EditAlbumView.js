@@ -39,14 +39,13 @@
 			if (this.rendered) {
 				return;
 			}
-            window.sliMpd.modules.PageView.prototype.render.call(this, renderMarkup);
+			window.sliMpd.modules.PageView.prototype.render.call(this, renderMarkup);
 
-			// TODO: only submit modified values instead of all. @see http://stackoverflow.com/questions/5221633/select-submit-only-changed-form-fields-with-jquery
-			// TODO: add event listener for return-key to submit only a single input field
+			// record all form values before user-input modifies values
 			this.formSnapshot("#edit-album");
-			
+
 			var that = this;
-			
+
 			$("#edit-album", this.$el).on("submit", function(e) {
 				e.preventDefault();
 				window.NProgress.start();
@@ -61,11 +60,6 @@
 						window.sliMpd.checkNotify(response);
 					}
 				});
-			});
-
-			$(".inline-tab-nav a", this.$el).click(function (e) {
-				e.preventDefault();
-				$(this).tab("show");
 			});
 
 			$(".grid", this.$el).sortable({
