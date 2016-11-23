@@ -38,7 +38,7 @@
 
 		routes : {
 			"" : "generic",
-			"maintainance/albumdebug/:albumUid" : "editAlbum",
+			[window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/:albumUid"] : "editAlbum",
 			"*generic" : "generic",
 		},
 
@@ -83,7 +83,7 @@
 		},
 		editAlbum : function(albumUid, queryString) {
 			console.log('Router::editAlbum');
-			this.generic("maintainance/albumdebug/" + albumUid, queryString, window.sliMpd.modules.EditAlbumView);
+			this.generic(window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/" + albumUid, queryString, window.sliMpd.modules.EditAlbumView);
 		},
 
 		generic : function(route, queryString, ViewClass) {

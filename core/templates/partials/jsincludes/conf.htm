@@ -21,6 +21,7 @@
 			mirrored: {{ config.waveform.mirrored }}
 		},
 		absRefPrefix: '{{ config.config.absRefPrefix }}',
-		absFilePrefix: '{{ config.config.absFilePrefix }}'
+		absFilePrefix: '{{ config.config.absFilePrefix }}',
+		backboneRoot: '{{ config.config.absRefPrefix|slice(1) }}'
 	};
 </script>
