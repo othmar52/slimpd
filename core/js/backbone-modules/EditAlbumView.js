@@ -29,7 +29,7 @@
 
 		name : null,
 		rendered : false,
-		initialFormValues : '',
+		initialFormValues : "",
 
 		initialize : function(options) {
 			window.sliMpd.modules.PageView.prototype.initialize.call(this, options);

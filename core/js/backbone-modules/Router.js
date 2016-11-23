@@ -82,7 +82,6 @@
 			window.Backbone.Router.prototype.navigate.call(this, fragment, options);
 		},
 		editAlbum : function(albumUid, queryString) {
-			console.log('Router::editAlbum');
 			this.generic(window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/" + albumUid, queryString, window.sliMpd.modules.EditAlbumView);
 		},
 
