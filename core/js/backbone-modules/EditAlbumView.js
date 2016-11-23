@@ -35,10 +35,11 @@
 			window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
 		},
 
-		render : function() {
+		render : function(renderMarkup) {
 			if (this.rendered) {
 				return;
 			}
+            window.sliMpd.modules.PageView.prototype.render.call(this, renderMarkup);
 
 			// TODO: only submit modified values instead of all. @see http://stackoverflow.com/questions/5221633/select-submit-only-changed-form-fields-with-jquery
 			// TODO: add event listener for return-key to submit only a single input field
@@ -74,7 +75,6 @@
 				forceHelperSize: true
 			});
 
-			window.sliMpd.modules.PageView.prototype.render.call(this);
 			this.rendered = true;
 		},
 

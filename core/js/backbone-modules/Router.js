@@ -38,7 +38,7 @@
 
 		routes : {
 			"" : "generic",
-			"*maintainance/albumdebug/:albumUid" : "editAlbum",
+			"maintainance/albumdebug/:albumUid" : "editAlbum",
 			"*generic" : "generic",
 		},
 
