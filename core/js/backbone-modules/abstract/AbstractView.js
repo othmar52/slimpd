@@ -31,10 +31,6 @@
 
 		rendered : false,
 
-		// TODO: move to separate edit-album-backbone-view  begin
-		initialFormValues : '',
-		// TODO: move to separate edit-album-backbone-view  end
-
 		initialize : function(options) {
 			window.Backbone.View.prototype.initialize.call(this, options);
 			_.bindAll.apply(_, [this].concat(_.functions(this)));
@@ -140,76 +136,9 @@
 				prevEl : ".bb-nav-prev"
 			});
 
-			// TODO: move to separate edit-album-backbone-view  begin
-			// TODO: only submit modified values instead of all. @see http://stackoverflow.com/questions/5221633/select-submit-only-changed-form-fields-with-jquery
-			// TODO: add event listener for return-key to submit only a single input field
-			this.formSnapshot("#edit-album");
-			$("#edit-album", this.$el).on("submit", function(e) {
-				e.preventDefault();
-				window.NProgress.start();
-				var currentItems = that.convertSerializedArrayToHash($(this).serializeArray());
-				var itemsToSubmit = that.hashDiff(that.initialFormValues, currentItems);
-				$.ajax({
-					type: $(this).attr("method"),
-					url: window.sliMpd.router.setGetParameter($(this).attr("action"), "nosurrounding", "1"),
-					data: itemsToSubmit,
-					success: function(response) {
-						window.NProgress.done();
-						window.sliMpd.checkNotify(response);
-					}
-				});
-			});
-			$(".inline-tab-nav a", this.$el).click(function (e) {
-				e.preventDefault();
-				$(this).tab("show");
-			});
-			$(".grid", this.$el).sortable({
-				tolerance: "pointer",
-				revert: "invalid",
-				placeholder: "span2 well placeholder tile",
-				forceHelperSize: true
-			});
-			// TODO: move to separate edit-album-backbone-view end
-
 			window.Backbone.View.prototype.render.call(this);
 			this.rendered = true;
 		},
-
-		// TODO: move to separate edit-album-backbone-view  begin
-		formSnapshot : function(selectorx) {
-			// TODO: remove route condition as soon as we have this route in separate view
-			if(typeof this.name === 'undefined' || this.name === null) {
-				return
-			}
-			var urlRegex = new RegExp("^" + window.sliMpd.conf.absRefPrefix.replace("/", "\\/") + "maintainance\\/albumdebug\\/");
-			if(urlRegex.test("/"+this.name) === false) {
-				return;
-			}
-			var $form = $(selectorx, this.$el);
-			if(!$form.length) {
-				return;
-			}
-			// store all initial form values in variable
-			this.initialFormValues = this.convertSerializedArrayToHash($form.serializeArray());
-		},
-		hashDiff : function (startItems, currentItems) {
-			var finalItems = {};
-			for (var itemKey in currentItems) {
-				if (startItems[itemKey] === currentItems[itemKey]) {
-					continue;
-				}
-				finalItems[itemKey] = currentItems[itemKey];
-			}
-			return finalItems;
-		},
-		convertSerializedArrayToHash : function (a) {
-			var r = {};
-			for (var i = 0;i<a.length;i++) {
-				r[a[i].name] = a[i].value;
-			}
-			return r;
-		},
-		// TODO: move to separate edit-album-backbone-view  end
 
 		remove : function() {
 			$("a.ajax-link", this.$el).off("click", this.genericClickListener);

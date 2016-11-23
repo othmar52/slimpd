@@ -38,8 +38,8 @@
 
 		routes : {
 			"" : "generic",
+			"*maintainance/albumdebug/:albumUid" : "editAlbum",
 			"*generic" : "generic",
-			// "albums/(*generic)" : "album"
 		},
 
 		initialize : function(options) {
@@ -81,17 +81,22 @@
 
 			window.Backbone.Router.prototype.navigate.call(this, fragment, options);
 		},
+		editAlbum : function(albumUid, queryString) {
+			console.log('Router::editAlbum');
+			this.generic("maintainance/albumdebug/" + albumUid, queryString, window.sliMpd.modules.EditAlbumView);
+		},
 
-		generic : function(route, queryString) {
+		generic : function(route, queryString, ViewClass) {
 			var name = ((route === null) ? "home" : route + "?" + queryString),
-				url = "/" + ((route === null) ? "" : route + "?" + queryString);
+				url = "/" + ((route === null) ? "" : route + "?" + queryString),
+				View = ViewClass || window.sliMpd.modules.PageView;
 
 			// remove view on ajax-done
 			this.previousView = (this.currentView) ? this.currentView : null;
 
 			// first time page loaded markup is delivered by backend, no need for ajax call!
 			if (!this.rendered) {
-				this.currentView = new window.sliMpd.modules.PageView({
+				this.currentView = new View({
 					name: name,
 					templateString : "",
 					el : "#main>.main-content"
@@ -111,7 +116,7 @@
 				if(this.previousView) {
 					this.previousView.remove();
 				}
-				this.currentView = new window.sliMpd.modules.PageView({
+				this.currentView = new View({
 					name: name,
 					templateString : response
 				});
