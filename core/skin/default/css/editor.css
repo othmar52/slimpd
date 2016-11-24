@@ -1,0 +1,20 @@
+.marry {
+	position: absolute;
+	right: -1.5em;
+}
+
+.marry-all {
+	position: absolute;
+	right: 5.5em;
+	top: -0.5em;
+}
+
+.external-items .is-married {
+	left: 1em;
+	position: relative;
+}
+
+.local-items .is-married {
+	right: 1em;
+	position: relative;
+}

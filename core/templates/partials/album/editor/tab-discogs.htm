@@ -20,25 +20,33 @@
 <div class="row heading">
 	<div class="col-md-1"></div>
 	<div class="col-md-4"><h3>Discogs Tracks</h3></div>
-	<div class="col-md-2"><h3>|</h3></div>
+	<div class="col-md-2">
+		<h3>|
+		{% if discogstracks|length %}
+			<button class="marry-all btn btn-trnsp" data-index="all"><i class="fa fa-link fa-lg" aria-hidden="true"></i></button>
+		{% endif %}
+		</h3>
+	</div>
 	<div class="col-md-4"><h3>Local Tracks</h3></div>
 	<div class="col-md-1"></div>
 </div>
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-6 external-items">
 		{% if discogstracks|length %}
 		{% for idx,item in discogstracks %}
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
-			<div class="well well-sm">
+			<div class="well well-sm" id="ext-item-{{idx}}">
 				<span class="dark">{{ item.artistString }} - </span>{{ item.titleString }}
-				{% if item.miliseconds %}<span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}</div>
+				{% if item.miliseconds %}<span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}
+				<button class="marry btn btn-trnsp" data-index="{{idx}}"><i class="fa fa-link fa-lg" aria-hidden="true"></i></button>
+			</div>
 		{% endfor %}
 		{% else %}
 		<div class="centered-text dark">no discogs - id given</div>
 		{% endif %}
 	</div>
 
-	<div class="col-md-6 grid">
+	<div class="col-md-6 grid local-items">
 		{% for idx,item in itemlist %}
 			{% set dirs = item.relPath|split('/') %}
 			{% for dir in dirs %}

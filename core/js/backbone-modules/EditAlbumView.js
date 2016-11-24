@@ -46,6 +46,8 @@
 
 			var that = this;
 
+			$(".marry", this.$el).off("click", this.marryClickListener).on("click", this.marryClickListener);
+
 			$("#edit-album", this.$el).on("submit", function(e) {
 				e.preventDefault();
 				window.NProgress.start();
@@ -70,6 +72,18 @@
 			});
 
 			this.rendered = true;
+		},
+
+		marryClickListener : function(e) {
+			//console.log("marryClickListener");
+			e.preventDefault();
+			var $el = $(e.currentTarget);
+			// add class to external item
+			$("#ext-item-" + $el.attr("data-index")).toggleClass("is-married");
+
+			// search local item of same position
+			$(".local-items div.well:eq("+ ($el.attr("data-index")) +")").toggleClass("is-married");
+
 		},
 
 		formSnapshot : function(selectorx) {
