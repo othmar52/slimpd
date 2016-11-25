@@ -18,3 +18,15 @@
 	right: 1em;
 	position: relative;
 }
+
+.ul-red {
+	color: #d9534f;
+}
+
+.ul-green {
+	color: #9bef9b;
+}
+
+.ul-orange {
+	color: #f0ad4e;
+}

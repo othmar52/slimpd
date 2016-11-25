@@ -5,20 +5,20 @@
 </div>
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setAlbum]" type="text" value="{{ not discogsalbum.title ? album.title : discogsalbum.title }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="album[setAlbum]" type="text" value="{{ album.title }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
 	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
-	<div class="col-md-6"><input name="album[setAlbumArtist]" type="text" value="{{ not discogsalbum.artist ? value : discogsalbum.artist }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="album[setAlbumArtist]" type="text" value="{{ value }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setYear]" type="text" value="{{ not discogsalbum.year ? album.year : discogsalbum.year }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="album[setYear]" type="text" value="{{ album.year }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
@@ -35,13 +35,13 @@
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
 	{% set value %}{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}{% endset %}
-	<div class="col-md-6"><input name="album[setLabel]" type="text" value="{{ not discogsalbum.label ? value : discogsalbum.label }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="album[setLabel]" type="text" value="{{ value }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setCatalogNr]" type="text" value="{{ not discogsalbum.catalogNr ? album.catalogNr : discogsalbum.catalogNr }}" class="form-control" /></div>
+	<div class="col-md-6"><input name="album[setCatalogNr]" type="text" value="{{ album.catalogNr }}" class="form-control" /></div>
 	<div class="col-md-3"></div>
 </div>
 

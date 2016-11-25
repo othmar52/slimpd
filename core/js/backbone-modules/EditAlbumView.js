@@ -49,6 +49,7 @@
 			$(".marry", this.$el).off("click", this.marryTrackClickListener).on("click", this.marryTrackClickListener);
 			$(".marry-all", this.$el).off("click", this.marryAllTracksClickListener).on("click", this.marryAllTracksClickListener);
 
+			this.highlightPhrases();
 			$("#edit-album", this.$el).on("submit", function(e) {
 				e.preventDefault();
 				window.NProgress.start();
@@ -69,7 +70,10 @@
 				tolerance: "pointer",
 				revert: "invalid",
 				placeholder: "span2 well placeholder tile",
-				forceHelperSize: true
+				forceHelperSize: true,
+				change: function( event, ui ) {
+					that.highlightPhrases();
+				}
 			});
 
 			this.rendered = true;
@@ -125,19 +129,20 @@
 			var $countMarried = $(".local-items .is-married").length;
 
 			// count total of shorter list for comparison
-			var $compareWith = ($(".local-items .well").length > $(".external-items .well").length)
+			var longerLength = ($(".local-items .well").length > $(".external-items .well").length)
 				? $(".external-items .well").length
 				: $(".local-items .well").length;
 			
 			// in case we have more married than unmarried -> unmarry all and vice versa
 			//var $action = "unmarryAllTracks";
-			if($compareWith - $countMarried > $countMarried) {
-				this.marryAllTracks($compareWith);
+			if(longerLength - $countMarried > $countMarried) {
+				this.marryAllTracks(longerLength);
 				return;
 			}
-			this.unmarryAllTracks($compareWith);
+			this.unmarryAllTracks(longerLength);
 		},
 
+		// TODO: move to separate file "formSnaphot.js" begin
 		formSnapshot : function(selectorx) {
 			var $form = $(selectorx, this.$el);
 			if(!$form.length) {
@@ -158,12 +163,149 @@
 			return finalItems;
 		},
 
-		convertSerializedArrayToHash : function (a) {
-			var r = {};
-			for (var i = 0;i<a.length;i++) {
-				r[a[i].name] = a[i].value;
+		convertSerializedArrayToHash : function (itemsArray) {
+			var returnItems = {};
+			for (var index = 0; index<itemsArray.length; index++) {
+				returnItems[itemsArray[index].name] = itemsArray[index].value;
 			}
-			return r;
+			return returnItems;
+		},
+		// TODO: move to separate file "formSnaphot.js" end
+
+		// TODO: move to separate file "stringCompareTool.js" begin
+		// thanks to http://stackoverflow.com/questions/10473745/compare-strings-javascript-return-of-likely#answer-36566052
+		similarity : function (string1, string2) {
+			var longer = string1;
+			var shorter = string2;
+			if (string1.length < string2.length) {
+				longer = string2;
+				shorter = string1;
+			}
+			var longerLength = longer.length;
+			if (longerLength == 0) {
+				return 1.0;
+			}
+			return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
+		},
+
+		editDistance : function (string1, string2) {
+			string1 = string1.toLowerCase();
+			string2 = string2.toLowerCase();
+			var costs = new Array();
+			for (var idx = 0; idx <= string1.length; idx++) {
+				var lastValue = idx;
+				for (var iidx = 0; iidx <= string2.length; iidx++) {
+					if (idx == 0) {
+						costs[iidx] = iidx;
+						continue;
+					}
+					if (iidx > 0) {
+						var newValue = costs[iidx - 1];
+						if (string1.charAt(idx - 1) != string2.charAt(iidx - 1)) {
+							newValue = Math.min(Math.min(newValue, lastValue), costs[iidx]) + 1;
+						}
+						costs[iidx - 1] = lastValue;
+						lastValue = newValue;
+					}
+				}
+				if (idx > 0) {
+					costs[string2.length] = lastValue;
+				}
+			}
+			return costs[string2.length];
+		},
+
+		// TODO: move to separate file "stringCompareTool.js" end
+		highlightPhrases : function() {
+			this.highlightSide("external", "local");
+			this.highlightSide("local", "external");
+		},
+
+		spanIt : function(input, className) {
+			var darkList = ["ft", "feat", "and", "mp3", "flac", "mp4", "m4a"];
+			if(darkList.indexOf(input.toLowerCase()) > -1) {
+				className = "dark";
+			}
+			return "<span class=\""+ className +"\">" + input + "</span>";
+		},
+
+		highlightSide : function(side1, side2) {
+			var that = this;
+			$("."+ side1 +"-items .well").each(function(idx, item){
+				//console.log($(item).find(".highlight").text());
+				var $currentPartner = $("."+ side2 +"-items div.well:eq("+ idx +")");
+				var $itemChunks = that.extractChunks($(item).find(".highlight").text());
+				var $partnerChunks = that.extractChunks($currentPartner.find(".highlight").text());
+				var alNumRegEx  = /[^a-z\d]/i;
+				var $itemMarkup = "";
+				var $partnerMarkup = "";
+				var $chunkHighScore = 0;
+				var $chunkScore = 0;
+
+				//console.log($itemChunks);
+				for (var idx2 = 0; idx2 < $itemChunks.length; idx2++) {
+					if(alNumRegEx.test($itemChunks[idx2])) {
+						$itemMarkup = $itemMarkup.concat(that.spanIt($itemChunks[idx2], "dark"));
+						continue;
+					}
+					$chunkHighScore = 0;
+					for (var idx3 = 0; idx3 < $partnerChunks.length; idx3++) {
+						if(alNumRegEx.test($partnerChunks[idx3])) {
+							continue;
+						}
+						$chunkScore = that.similarity($itemChunks[idx2], $partnerChunks[idx3]);
+						$chunkHighScore = ($chunkHighScore > $chunkScore) ? $chunkHighScore : $chunkScore;
+
+						// remove leading zeroes to green "05" and "5"
+						$chunkScore = that.similarity($itemChunks[idx2].replace(/^0+/, ''), $partnerChunks[idx3].replace(/^0+/, ''));
+						$chunkHighScore = ($chunkHighScore > $chunkScore) ? $chunkHighScore : $chunkScore;
+					}
+					if($chunkHighScore > 0.9) {
+						$itemMarkup = $itemMarkup.concat(that.spanIt($itemChunks[idx2], "ul-green"));
+						continue;
+					}
+					if($chunkHighScore >= 0.5) {
+						$itemMarkup = $itemMarkup.concat(that.spanIt($itemChunks[idx2], "ul-orange"));
+						continue;
+					}
+					$itemMarkup = $itemMarkup.concat(that.spanIt($itemChunks[idx2], "ul-red"));
+				}
+				//console.log("itemMarkup", $itemMarkup);
+				$(item).find(".highlight").html($itemMarkup);
+				$itemMarkup = "";
+			});
+		},
+		/**
+		 * converts a string to an array with groups of alphanumeric and non-alphanumeric phrases
+		 *
+		 * @param string inputString
+		 * @return array string-chunks
+		 */
+		extractChunks : function(inputString) {
+			var returnArray = new Array();
+			//var isAlNum = false;
+			var chunk = "";
+			var alNumRegEx  = /[^a-z\d]/i;
+			for (var i = 0, len = inputString.length; i < len; i++) {
+				//console.log(inputString[i]);
+				if(i === 0) {
+					var isAlNum = alNumRegEx.test(inputString[i]);
+				}
+				if(alNumRegEx.test(inputString[i]) === isAlNum) {
+					chunk = chunk.concat(inputString[i]);
+					if(i === (len -1)) {
+						returnArray.push(chunk);
+					}
+					continue;
+				}
+				returnArray.push(chunk);
+				chunk = inputString[i];
+				isAlNum = alNumRegEx.test(inputString[i]);
+				if(i === (len -1)) {
+					returnArray.push(chunk);
+				}
+			}
+			return returnArray;
 		}
 	});
 }());
