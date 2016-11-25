@@ -46,7 +46,8 @@
 
 			var that = this;
 
-			$(".marry", this.$el).off("click", this.marryClickListener).on("click", this.marryClickListener);
+			$(".marry", this.$el).off("click", this.marryTrackClickListener).on("click", this.marryTrackClickListener);
+			$(".marry-all", this.$el).off("click", this.marryAllTracksClickListener).on("click", this.marryAllTracksClickListener);
 
 			$("#edit-album", this.$el).on("submit", function(e) {
 				e.preventDefault();
@@ -74,16 +75,67 @@
 			this.rendered = true;
 		},
 
-		marryClickListener : function(e) {
-			//console.log("marryClickListener");
-			e.preventDefault();
-			var $el = $(e.currentTarget);
+		remove : function() {
+			$(".marry", this.$el).off("click", this.marryTrackClickListener);
+			$(".marry-all", this.$el).off("click", this.marryAllTracksClickListener);
+			window.sliMpd.modules.PageView.prototype.remove.call(this);
+		},
+
+		marryTrack : function(index) {
 			// add class to external item
-			$("#ext-item-" + $el.attr("data-index")).toggleClass("is-married");
+			$("#ext-item-" + index).addClass("is-married");
 
 			// search local item of same position
-			$(".local-items div.well:eq("+ ($el.attr("data-index")) +")").toggleClass("is-married");
+			$(".local-items div.well:eq("+ index +")").addClass("is-married");
+		},
 
+		unmarryTrack : function(index) {
+			// add class to external item
+			$("#ext-item-" + index).removeClass("is-married");
+
+			// search local item of same position
+			$(".local-items div.well:eq("+ index +")").removeClass("is-married");
+		},
+
+		marryAllTracks : function(maxIndex) {
+			for(var index=0; index<maxIndex; index++) {
+				this.marryTrack(index);
+			}
+		},
+
+		unmarryAllTracks : function(maxIndex) {
+			for(var index=0; index<maxIndex; index++) {
+				this.unmarryTrack(index);
+			}
+		},
+
+		marryTrackClickListener : function(e) {
+			e.preventDefault();
+			var index = $(e.currentTarget).attr("data-index");
+			if($("#ext-item-" + index).hasClass("is-married")) {
+				this.unmarryTrack(index);
+				return;
+			}
+			this.marryTrack(index);
+		},
+
+		marryAllTracksClickListener : function(e) {
+			e.preventDefault();
+			// count married items
+			var $countMarried = $(".local-items .is-married").length;
+
+			// count total of shorter list for comparison
+			var $compareWith = ($(".local-items .well").length > $(".external-items .well").length)
+				? $(".external-items .well").length
+				: $(".local-items .well").length;
+			
+			// in case we have more married than unmarried -> unmarry all and vice versa
+			//var $action = "unmarryAllTracks";
+			if($compareWith - $countMarried > $countMarried) {
+				this.marryAllTracks($compareWith);
+				return;
+			}
+			this.unmarryAllTracks($compareWith);
 		},
 
 		formSnapshot : function(selectorx) {
