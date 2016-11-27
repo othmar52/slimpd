@@ -14,11 +14,70 @@
 		<button name="submit-discogs-id" value="1" class="btn btn-default">submit</button>
 	</div>
 </div>
+</form>
 <div class="row">
 	<hr />
 </div>
 
 
+
+<div class="row heading">
+	<div class="col-md-12">
+		<h3>Album properties</h3>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
+	<div class="col-md-6"><input name="album[setAlbum]" type="text" value="{{ discogsalbum.title }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
+	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
+	<div class="col-md-6"><input name="album[setAlbumArtist]" type="text" value="{{ discogsalbum.artist }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
+	<div class="col-md-6"><input name="album[setYear]" type="text" value="{{ discogsalbum.year }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
+	{% set value %}{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}{% endset %}
+	<div class="col-md-6">
+		<input name="title" disabled="disabled" type="text" value="{{ discogsalbum.genre }} (collected from tracks)" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
+	{% set value %}{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}{% endset %}
+	<div class="col-md-6"><input name="album[setLabel]" type="text" value="{{ discogsalbum.label }}" class="form-control" /></div>
+	<div class="col-md-3"></div>
+</div>
+
+<div class="row">
+	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
+	<div class="col-md-6"><input name="album[setCatalogNr]" type="text" value="{{ discogsalbum.catalogNr }}" class="form-control" /></div>
+	<div class="col-md-3">
+		
+		<form action="{{root}}maintainance/marrytracks/{{ album.uid }}" method="post" id="submit-marriage">
+			<button name="submit-marriage" value="1" class="btn btn-default">submit marriage</button>
+		</form>
+	</div>
+</div>
+
+
+
+<div class="row">
+	<hr />
+</div>
 
 <div class="row heading">
 	<div class="col-md-1"></div>
@@ -34,7 +93,7 @@
 	<div class="col-md-1"></div>
 </div>
 <div class="row">
-	<div class="col-md-6 external-items">
+	<div class="col-md-6 external-items" id="ext-items-container" data-release-id="{{discogsid}}">
 		{% if discogstracks|length %}
 		{% for idx,item in discogstracks %}
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
@@ -53,9 +112,8 @@
 		{% for idx,item in itemlist %}
 			{% set dirs = item.relPath|split('/') %}
 			{% for dir in dirs %}
-				{% if loop.last == true %}<div class="well well-sm"><span class="highlight">{{ dir }}</span> <span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span></div>{% endif %}
+				{% if loop.last == true %}<div class="well well-sm" data-uid="{{item.uid}}"><span class="highlight">{{ dir }}</span> <span class="pull-right"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span></div>{% endif %}
 			{% endfor %}
 		{% endfor %}
 	</div>
 </div>
-</form>

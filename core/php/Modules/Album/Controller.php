@@ -232,37 +232,40 @@ class Controller extends \Slimpd\BaseController {
 
 			// set album properties for all tracks
 			foreach($postParams['album'] as $setterName => $value) {
-				$editorial = new \Slimpd\Models\Editorial();
-				$editorial->setItemUid($track->getUid())
-					->setItemType('track')
-					->setRelPath($track->getRelPath())
-					->setRelPathHash($track->getRelPathHash())
-					->setFingerprint($track->getFingerprint())
-					->setColumn($setterName)
-					->setValue($value)
-					->setCrdate(time())
-					->setTstamp(time());
-				$this->container->editorialRepo->update($editorial);
+				$this->container->editorialRepo->insertTrackBasedInstance($track, $setterName, $value);
 			}
 
 			// set track properties
 			foreach($properties as $setterName => $value) {
-				$editorial = new \Slimpd\Models\Editorial();
-				$editorial->setItemUid($track->getUid())
-					->setItemType('track')
-					->setRelPath($track->getRelPath())
-					->setRelPathHash($track->getRelPathHash())
-					->setFingerprint($track->getFingerprint())
-					->setColumn($setterName)
-					->setValue($value)
-					->setCrdate(time())
-					->setTstamp(time());
-				$this->container->editorialRepo->update($editorial);
+				$this->container->editorialRepo->insertTrackBasedInstance($track, $setterName, $value);
 			}
 		}
 		// TODO: highlight all input fields that already has an editorial value
 		$newResponse = $response;
 		return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to apply changes for taking effect", 'success'));
 		//return $this->remigrateAction($request, $response, $args);
+	}
+
+	public function marrytracksAction(Request $request, Response $response, $args) {
+		$postParams = $request->getParsedBody();
+		$this->discogsitemRepo->retrieveAlbum($postParams['discogsid']);
+		foreach($postParams['track'] as $trackUid => $properties) {
+			// fetch track for retrieving fingerprint
+			$track = $this->container->trackRepo->getInstanceByAttributes(['uid' => $trackUid]);
+
+			// fetch discogsTrack for retrieving number+artist+title
+			$discogsItem = $this->discogsitemRepo->trackContexts[$properties['setDiscogsTrackIndex']];
+
+			// set track properties
+			foreach($properties as $setterName => $value) {
+				$this->container->editorialRepo->insertTrackBasedInstance($track, $setterName, $value);
+			}
+			$this->container->editorialRepo->insertTrackBasedInstance($track, "setArtist", $discogsItem->getArtistString());
+			$this->container->editorialRepo->insertTrackBasedInstance($track, "setTitle", $discogsItem->getTitleString());
+			$this->container->editorialRepo->insertTrackBasedInstance($track, "setTrackNumber", $discogsItem->getTrackNumber());
+		}
+		#print_r($postParams);die;
+		$newResponse = $response;
+		return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to apply changes for taking effect", 'success'));
 	}
 }

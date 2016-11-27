@@ -38,4 +38,19 @@ class EditorialRepo extends \Slimpd\Repositories\BaseRepository {
 		}
 		$instance->setUid($dummyInstance->getUid());
 	}
+
+	public function insertTrackBasedInstance(\Slimpd\Models\Track $track, $setterName, $value) {
+		$editorial = new \Slimpd\Models\Editorial();
+		$editorial->setItemUid($track->getUid())
+			->setItemType('track')
+			->setRelPath($track->getRelPath())
+			->setRelPathHash($track->getRelPathHash())
+			->setFingerprint($track->getFingerprint())
+			->setCrdate(time())
+			->setTstamp(time())
+			->setColumn($setterName)
+			->setValue($value);
+
+		$this->update($editorial);
+	}
 }

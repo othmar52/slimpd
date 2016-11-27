@@ -66,15 +66,50 @@
 				});
 			});
 
+			$("#submit-marriage", this.$el).on("submit", function(e) {
+				e.preventDefault();
+				window.NProgress.start();
+				var that = this;
+				var discogsId = $("#ext-items-container").attr("data-release-id");
+				var data = { discogsid: discogsId, track: { } };
+				$(".local-items .well").each(function(idx,item){
+					if($(item).hasClass("is-married")) {
+						//var trackProperties = { [$(this).attr("data-uid")]: { "setDiscogsId": discogsId, "setDiscogsTrackIndex": 44}};
+						data.track[$(item).attr("data-uid")] = {
+							"setDiscogsId": discogsId,
+							"setDiscogsTrackIndex": idx
+						};
+						//console.log("married", $(item).attr("data-uid"), discogsId);
+					}
+				});
+				$.ajax({
+					type: $(this).attr("method"),
+					url: window.sliMpd.router.setGetParameter($(this).attr("action"), "nosurrounding", "1"),
+					data: data,
+					success: function(response) {
+						window.NProgress.done();
+						window.sliMpd.checkNotify(response);
+					}
+				});
+			});
+
 			$(".grid", this.$el).sortable({
 				tolerance: "pointer",
-				revert: "invalid",
-				placeholder: "span2 well placeholder tile",
+				placeholder: "well placeholder",
+				helper: function(event, ui){
+					var $clone =  $(ui).clone();
+					$clone .css('position','absolute');
+					return $clone.get(0);
+				},
 				forceHelperSize: true,
-				change: function( event, ui ) {
+				axis: "y",
+				cancel: ".is-married",
+				items: ".well:not(.is_married)",
+				stop: function( event, ui ) {
 					that.highlightPhrases();
 				}
 			});
+			$(".grid", this.$el).disableSelection();
 
 			this.rendered = true;
 		},
@@ -182,7 +217,7 @@
 				shorter = string1;
 			}
 			var longerLength = longer.length;
-			if (longerLength == 0) {
+			if (longerLength === 0) {
 				return 1.0;
 			}
 			return (longerLength - this.editDistance(longer, shorter)) / parseFloat(longerLength);
@@ -195,13 +230,13 @@
 			for (var idx = 0; idx <= string1.length; idx++) {
 				var lastValue = idx;
 				for (var iidx = 0; iidx <= string2.length; iidx++) {
-					if (idx == 0) {
+					if (idx === 0) {
 						costs[iidx] = iidx;
 						continue;
 					}
 					if (iidx > 0) {
 						var newValue = costs[iidx - 1];
-						if (string1.charAt(idx - 1) != string2.charAt(iidx - 1)) {
+						if (string1.charAt(idx - 1) !== string2.charAt(iidx - 1)) {
 							newValue = Math.min(Math.min(newValue, lastValue), costs[iidx]) + 1;
 						}
 						costs[iidx - 1] = lastValue;
@@ -231,9 +266,8 @@
 
 		highlightSide : function(side1, side2) {
 			var that = this;
-			$("."+ side1 +"-items .well").each(function(idx, item){
-				//console.log($(item).find(".highlight").text());
-				var $currentPartner = $("."+ side2 +"-items div.well:eq("+ idx +")");
+			$("."+ side1 +"-items .well", that.$el).each(function(idx, item){
+				var $currentPartner = $("."+ side2 +"-items div.well:eq("+ idx +")", that.$el);
 				var $itemChunks = that.extractChunks($(item).find(".highlight").text());
 				var $partnerChunks = that.extractChunks($currentPartner.find(".highlight").text());
 				var alNumRegEx  = /[^a-z\d]/i;
@@ -257,7 +291,7 @@
 						$chunkHighScore = ($chunkHighScore > $chunkScore) ? $chunkHighScore : $chunkScore;
 
 						// remove leading zeroes to green "05" and "5"
-						$chunkScore = that.similarity($itemChunks[idx2].replace(/^0+/, ''), $partnerChunks[idx3].replace(/^0+/, ''));
+						$chunkScore = that.similarity($itemChunks[idx2].replace(/^0+/, ""), $partnerChunks[idx3].replace(/^0+/, ""));
 						$chunkHighScore = ($chunkHighScore > $chunkScore) ? $chunkHighScore : $chunkScore;
 					}
 					if($chunkHighScore > 0.9) {
@@ -283,27 +317,26 @@
 		 */
 		extractChunks : function(inputString) {
 			var returnArray = new Array();
-			//var isAlNum = false;
 			var chunk = "";
 			var alNumRegEx  = /[^a-z\d]/i;
-			for (var i = 0, len = inputString.length; i < len; i++) {
-				//console.log(inputString[i]);
-				if(i === 0) {
-					var isAlNum = alNumRegEx.test(inputString[i]);
-				}
-				if(alNumRegEx.test(inputString[i]) === isAlNum) {
-					chunk = chunk.concat(inputString[i]);
-					if(i === (len -1)) {
-						returnArray.push(chunk);
-					}
+			var isAlNum = alNumRegEx.test(inputString[0])
+			for (var idx = 0, len = inputString.length; idx < len; idx++) {
+				if(alNumRegEx.test(inputString[idx]) === isAlNum) {
+					chunk = chunk.concat(inputString[idx]);
+					returnArray = this.mayPushChunkHelper(idx, len, chunk, returnArray);
 					continue;
 				}
 				returnArray.push(chunk);
-				chunk = inputString[i];
-				isAlNum = alNumRegEx.test(inputString[i]);
-				if(i === (len -1)) {
-					returnArray.push(chunk);
-				}
+				chunk = inputString[idx];
+				isAlNum = alNumRegEx.test(inputString[idx]);
+				returnArray = this.mayPushChunkHelper(idx, len, chunk, returnArray);
+			}
+			return returnArray;
+		},
+
+		mayPushChunkHelper : function(idx, len, chunk, returnArray) {
+			if(idx === (len -1)) {
+				returnArray.push(chunk);
 			}
 			return returnArray;
 		}
