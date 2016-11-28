@@ -97,10 +97,10 @@
 		{% if discogstracks|length %}
 		{% for idx,item in discogstracks %}
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
-			<div class="well well-sm" id="ext-item-{{idx}}">
-				<span class="highlight">{{ item.trackNumber }} - {{ item.artistString }} - {{ item.titleString }}</span>
-				{% if item.miliseconds %}<span class="pull-right duration" data-miliseconds="{{ item.miliseconds }}"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}
+			<div class="well well-sm" id="ext-item-{{idx}}" title="{{ item.trackNumber }} - {{ item.artistString }} - {{ item.titleString }}">
+				{% if item.miliseconds %}<span class="duration" data-miliseconds="{{ item.miliseconds }}"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}
 				<button class="marry btn btn-trnsp" data-index="{{idx}}"><i class="fa fa-link fa-lg" aria-hidden="true"></i></button>
+				<span class="highlight shorten">{{ item.trackNumber }} - {{ item.artistString }} - {{ item.titleString }}</span>
 			</div>
 		{% endfor %}
 		{% else %}
@@ -112,7 +112,14 @@
 		{% for idx,item in itemlist %}
 			{% set dirs = item.relPath|split('/') %}
 			{% for dir in dirs %}
-				{% if loop.last == true %}<div class="well well-sm" data-uid="{{item.uid}}"><span class="highlight">{{ dir }}</span> <span class="pull-right duration" data-miliseconds="{{ item.miliseconds }}"><span class="dark">[{{ item.miliseconds|formatMiliseconds }}]</span></span></div>{% endif %}
+				{% if loop.last == true %}
+				<div class="well well-sm" data-uid="{{item.uid}}" title="{{ dir }}">
+					<span class="duration" data-miliseconds="{{ item.miliseconds }}">
+						<span class="dark">[{{ item.miliseconds|formatMiliseconds }}]</span>
+					</span>
+					<span class="highlight shorten">{{ dir }}</span>
+				</div>
+				{% endif %}
 			{% endfor %}
 		{% endfor %}
 	</div>

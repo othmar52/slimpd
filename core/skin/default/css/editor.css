@@ -30,3 +30,12 @@
 .ul-orange {
 	color: #f0ad4e;
 }
+
+.shorten.highlight {
+	width: 92%;
+}
+
+.well .duration {
+	position: absolute;
+	right: 2em;
+}
