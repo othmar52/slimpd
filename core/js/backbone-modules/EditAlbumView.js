@@ -30,6 +30,7 @@
 		name : null,
 		rendered : false,
 		initialFormValues : "",
+		alNumRegEx : /[^a-zêéäöüí\d]/i,
 
 		initialize : function(options) {
 			window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
@@ -98,7 +99,7 @@
 				placeholder: "well placeholder",
 				helper: function(event, ui){
 					var $clone =  $(ui).clone();
-					$clone .css('position','absolute');
+					$clone .css("position", "absolute");
 					return $clone.get(0);
 				},
 				forceHelperSize: true,
@@ -254,6 +255,7 @@
 		highlightPhrases : function() {
 			this.highlightSide("external", "local");
 			this.highlightSide("local", "external");
+			this.highlightDuration("external", "local");
 		},
 
 		spanIt : function(input, className) {
@@ -270,7 +272,6 @@
 				var $currentPartner = $("."+ side2 +"-items div.well:eq("+ idx +")", that.$el);
 				var $itemChunks = that.extractChunks($(item).find(".highlight").text());
 				var $partnerChunks = that.extractChunks($currentPartner.find(".highlight").text());
-				var alNumRegEx  = /[^a-z\d]/i;
 				var $itemMarkup = "";
 				var $partnerMarkup = "";
 				var $chunkHighScore = 0;
@@ -278,13 +279,13 @@
 
 				//console.log($itemChunks);
 				for (var idx2 = 0; idx2 < $itemChunks.length; idx2++) {
-					if(alNumRegEx.test($itemChunks[idx2])) {
+					if(that.alNumRegEx.test($itemChunks[idx2])) {
 						$itemMarkup = $itemMarkup.concat(that.spanIt($itemChunks[idx2], "dark"));
 						continue;
 					}
 					$chunkHighScore = 0;
 					for (var idx3 = 0; idx3 < $partnerChunks.length; idx3++) {
-						if(alNumRegEx.test($partnerChunks[idx3])) {
+						if(that.alNumRegEx.test($partnerChunks[idx3])) {
 							continue;
 						}
 						$chunkScore = that.similarity($itemChunks[idx2], $partnerChunks[idx3]);
@@ -309,6 +310,39 @@
 				$itemMarkup = "";
 			});
 		},
+
+		highlightDuration : function(side1, side2) {
+			var that = this;
+			$("."+ side1 +"-items .well", that.$el).each(function(idx, item){
+				var $extDuration = $(item).find(".duration").attr("data-miliseconds");
+				if($extDuration === "" || typeof $extDuration === "undefined") {
+					// no duration provided by external data-source
+					return;
+				}
+				var $localPartner = $("."+ side2 +"-items div.well:eq("+ idx +")", that.$el);
+				var $localDuration = $localPartner.find(".duration").attr("data-miliseconds");
+				var $difference =  Math.abs($extDuration - $localDuration);
+				var $itemMarkup = "";
+				var $cssClass = "";
+				switch(true) {
+					case ($difference < 2000): $cssClass = "ul-green"; break;
+					case ($difference < 4000): $cssClass = "ul-orange"; break;
+					default: $cssClass = "ul-red"; break;
+				}
+
+				// duration markup for external side
+				$itemMarkup = that.spanIt("[", "dark")
+					+ that.spanIt(window.sliMpd.currentPlayer.formatTime($extDuration/1000), $cssClass)
+					+ that.spanIt("]", "dark");
+				$(item).find(".duration").html($itemMarkup);
+
+				// duration markup for local side
+				$itemMarkup = that.spanIt("[", "dark")
+					+ that.spanIt(window.sliMpd.currentPlayer.formatTime($localDuration/1000), $cssClass)
+					+ that.spanIt("]", "dark");
+				$localPartner.find(".duration").html($itemMarkup);
+			});
+		},
 		/**
 		 * converts a string to an array with groups of alphanumeric and non-alphanumeric phrases
 		 *
@@ -318,17 +352,16 @@
 		extractChunks : function(inputString) {
 			var returnArray = new Array();
 			var chunk = "";
-			var alNumRegEx  = /[^a-z\d]/i;
-			var isAlNum = alNumRegEx.test(inputString[0])
+			var isAlNum = this.alNumRegEx.test(inputString[0]);
 			for (var idx = 0, len = inputString.length; idx < len; idx++) {
-				if(alNumRegEx.test(inputString[idx]) === isAlNum) {
+				if(this.alNumRegEx.test(inputString[idx]) === isAlNum) {
 					chunk = chunk.concat(inputString[idx]);
 					returnArray = this.mayPushChunkHelper(idx, len, chunk, returnArray);
 					continue;
 				}
 				returnArray.push(chunk);
 				chunk = inputString[idx];
-				isAlNum = alNumRegEx.test(inputString[idx]);
+				isAlNum = this.alNumRegEx.test(inputString[idx]);
 				returnArray = this.mayPushChunkHelper(idx, len, chunk, returnArray);
 			}
 			return returnArray;

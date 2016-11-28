@@ -350,6 +350,14 @@
 			return minutes + ":" + this.zeroPad(seconds, 2);
 		},
 
+		zeroPad : function(number, n) {
+			var zeroPad = "" + number;
+			while(zeroPad.length < n) {
+				zeroPad = "0" + zeroPad;
+			}
+			return zeroPad;
+		},
+
 		/* only for polled mpd player implementation - begin */
 		refreshInterval : function() {
 			this.pollWorker.postMessage({

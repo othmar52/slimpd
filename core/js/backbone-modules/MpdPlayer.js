@@ -404,14 +404,6 @@
 			window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
 		},
 
-		zeroPad : function(number, n) {
-			var zeroPad = "" + number;
-			while(zeroPad.length < n) {
-				zeroPad = "0" + zeroPad;
-			}
-			return zeroPad;
-		},
-
 		timelineSetValue : function(value) {
 			this.timeLineLight.progress(value/100);
 			window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
