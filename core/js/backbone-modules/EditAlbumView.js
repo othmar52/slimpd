@@ -32,6 +32,10 @@
 		initialFormValues : "",
 		alNumRegEx : /[^a-zêéäöüí\d]/i,
 
+		// helpers for locked(married) items in sortable()
+		lockedSortableItems : null,
+		lockedSortableIndex : null,
+
 		initialize : function(options) {
 			window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
 		},
@@ -94,6 +98,7 @@
 				});
 			});
 
+			this.updateLockedSortables();
 			$(".grid", this.$el).sortable({
 				tolerance: "pointer",
 				placeholder: "well placeholder",
@@ -104,15 +109,45 @@
 				},
 				forceHelperSize: true,
 				axis: "y",
-				cancel: ".is-married",
-				items: ".well:not(.is_married)",
+				cancel: ".locked",
+				items: ".well:not(.locked)",
 				stop: function( event, ui ) {
 					that.highlightPhrases();
+				},
+				change: function(event,ui) {
+					for(var i=0; i<that.lockedSortableItems.length; i++){
+						var lockto = that.lockedSortableIndex[i];
+						var thisindex = $(ui.helper).index(fixed);
+						var fixed = $(that.lockedSortableItems[i]);
+						var index = $(".grid .well", that.$el).index(fixed);
+						var targetindex = lockto+1;
+
+						if(index !== targetindex) {
+							if(index > targetindex ) {
+								fixed.prev().insertAfter(fixed); //move it up by one position
+							} else if(index==(targetindex-1) && thisindex>targetindex) {
+								//don't move it at all
+							} else {
+								fixed.next().insertBefore(fixed); //move it down by one position
+							}
+						} else if(index==targetindex && thisindex>targetindex) {
+							fixed.prev().insertAfter(fixed); //move it up by one position
+						}
+					}
+
 				}
 			});
 			$(".grid", this.$el).disableSelection();
 
 			this.rendered = true;
+		},
+
+		updateLockedSortables : function() {
+			this.lockedSortableItems = $(".locked", this.$el);
+			this.lockedSortableIndex = [];
+			for(var i=0; i<this.lockedSortableItems.length; i++){
+				this.lockedSortableIndex[i] = $(".grid .well", this.$el).index(this.lockedSortableItems[i]);
+			}
 		},
 
 		remove : function() {
@@ -126,7 +161,8 @@
 			$("#ext-item-" + index).addClass("is-married");
 
 			// search local item of same position
-			$(".local-items div.well:eq("+ index +")").addClass("is-married");
+			$(".local-items div.well:eq("+ index +")").addClass("is-married locked");
+			this.updateLockedSortables();
 		},
 
 		unmarryTrack : function(index) {
@@ -134,7 +170,8 @@
 			$("#ext-item-" + index).removeClass("is-married");
 
 			// search local item of same position
-			$(".local-items div.well:eq("+ index +")").removeClass("is-married");
+			$(".local-items div.well:eq("+ index +")").removeClass("is-married locked");
+			this.updateLockedSortables();
 		},
 
 		marryAllTracks : function(maxIndex) {
