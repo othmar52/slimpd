@@ -36,8 +36,14 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
 
 	private function setPropertiesByApiResponse($apiResponse) {
 		#echo "<pre>";print_r($apiResponse);die;
-		foreach($apiResponse['tracklist'] as $idx => $trackData) {
-			if($idx !== $this->idx) {
+		$counter = -1;
+		foreach($apiResponse['tracklist'] as $trackData) {
+			if($trackData['type_'] !== 'track') {
+				// skip stuff like type:heading @see: discogs-id: 1008775
+				continue;
+			}
+			$counter++;
+			if($counter !== $this->idx) {
 				continue;
 			}
 			if(isset($trackData['extraartists'])) {

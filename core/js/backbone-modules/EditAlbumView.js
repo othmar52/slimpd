@@ -111,28 +111,81 @@
 				axis: "y",
 				cancel: ".locked",
 				items: ".well:not(.locked)",
+				start: function(event, ui) {
+					ui.item.data('startPos', ui.item.index());
+				},
 				stop: function( event, ui ) {
 					that.highlightPhrases();
+					that.updateLockedSortables();
 				},
 				change: function(event,ui) {
+					//console.log(that.lockedSortableIndex);
+					var startPos = ui.item.data('startPos');
+					//console.log("startPos", startPos);
+					
 					for(var i=0; i<that.lockedSortableItems.length; i++){
 						var lockto = that.lockedSortableIndex[i];
-						var thisindex = $(ui.helper).index(fixed);
+					
+						
+						
 						var fixed = $(that.lockedSortableItems[i]);
+						
+						var thisindex = $(ui.helper).index(fixed);
+						//console.log("thisindex", thisindex);
+						
+						
 						var index = $(".grid .well", that.$el).index(fixed);
 						var targetindex = lockto+1;
+						
+						//var fixedItemsBehind = that.lockedSortableIndex.length - index;
 
-						if(index !== targetindex) {
-							if(index > targetindex ) {
-								fixed.prev().insertAfter(fixed); //move it up by one position
-							} else if(index==(targetindex-1) && thisindex>targetindex) {
-								//don't move it at all
-							} else {
-								fixed.next().insertBefore(fixed); //move it down by one position
-							}
-						} else if(index==targetindex && thisindex>targetindex) {
-							fixed.prev().insertAfter(fixed); //move it up by one position
+						//console.log("-------- begin");
+						//console.log("event", event);
+						//console.log("ui", ui);
+						//console.log("index", index);
+						//console.log("targetindex", targetindex);
+						//console.log("i", i);
+						//console.log("fixed", fixed);
+						//console.log("fixedItemsBehind", fixedItemsBehind);
+						//console.log("-------- end");
+						if(targetindex >= startPos && targetindex < index) {
+							// do nothing
+							//console.log("AA1");
+							continue;
 						}
+						
+						if(index===targetindex) {
+							console.log("that.lockedSortableIndex", that.lockedSortableIndex);
+							if(typeof that.lockedSortableIndex[targetindex] !== "undefined") {
+								//console.log("A1");
+								continue;
+							}
+							
+							if(targetindex > startPos) {
+								// do nothing
+								//console.log("AA2");
+								continue;
+							}
+							
+							
+							//console.log("A");
+							fixed.prev().insertAfter(fixed); //move it up by one position
+							continue;
+						}
+						if(index > targetindex ) {
+							//console.log("B");
+							fixed.prev().insertAfter(fixed); //move it up by one position
+							continue;
+						}
+						if(index==(targetindex-1)) {
+							//console.log("C");
+							//don't move it at all
+							continue;
+						}
+
+						
+						//console.log("D");
+						fixed.next().insertBefore(fixed); //move it down by one position
 					}
 
 				}

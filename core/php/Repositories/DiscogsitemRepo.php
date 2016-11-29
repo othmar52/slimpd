@@ -45,14 +45,16 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
 	public function convertApiResponseToContextItems(&$instance) {
 		// create DiscogsAlbumContext based on api response
 		$this->albumContext = new \Slimpd\Modules\Albummigrator\DiscogsAlbumContext($instance, $this->container);
-
+		//echo "<pre>" . print_r($data = $instance->getResponse(TRUE));die;
 		// create DiscogsTrackContext instances for each provided track
+		$counter = 0;
 		foreach($instance->getResponse(TRUE)['tracklist'] as $idx => $trackData) {
 			if($trackData['type_'] !== 'track') {
 				// skip stuff like type:heading @see: discogs-id: 1008775
 				continue;
 			}
-			$this->trackContexts[$idx] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $idx, $this->container);
+			$this->trackContexts[$counter] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $counter, $this->container);
+			$counter++;
 		}
 	}
 
