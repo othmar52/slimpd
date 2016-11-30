@@ -22,23 +22,27 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function spotcolorsCssAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->view->render($response, 'css/spotcolors.css', $args);
         return $response->withHeader('Content-Type', 'text/css');
     }
 
     public function localPlayerCssAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['local'] ]['1st'];
         $this->view->render($response, 'css/nowplaying.css', $args);
         return $response->withHeader('Content-Type', 'text/css');
     }
 
     public function mpdPlayerCssAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['mpd'] ]['1st'];
         $this->view->render($response, 'css/nowplaying.css', $args);
         return $response->withHeader('Content-Type', 'text/css');
     }
 
     public function xwaxPlayerCssAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['color'] = $this->conf['colors'][ $this->conf['spotcolor']['xwax'] ]['1st'];
         $args['deck'] = $request->getParam('deck');
         $this->view->render($response, 'css/nowplaying.css', $args);
@@ -46,6 +50,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function showplaintextAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = "showplaintext";
         $relPath = $args['itemParams'];
         $validPath = $this->container->filesystemUtility->getFileRealPath($relPath);
@@ -61,6 +66,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cleanRenameConfirmAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         if($this->conf['destructiveness']['clean-rename'] !== '1') {
             $this->view->render($response, 'modules/widget-cleanrename.htm', $args);
             return $response;
@@ -74,6 +80,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cleanRenameAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         if($this->conf['destructiveness']['clean-rename'] !== '1') {
             $this->view->render($response, 'modules/widget-cleanrename.htm', $args);
             return $response;

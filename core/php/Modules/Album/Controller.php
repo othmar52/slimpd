@@ -22,6 +22,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function listAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
+        useArguments($request, $response, $args);
         $args["action"] = "albums";
         $args["itemlist"] = [];
         $itemsPerPage = 18;
@@ -44,6 +46,8 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function detailAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -56,6 +60,7 @@ class Controller extends \Slimpd\BaseController {
     }
     
     public function albumTracksAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -68,6 +73,7 @@ class Controller extends \Slimpd\BaseController {
     }
     
     public function widgetAlbumAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -80,6 +86,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function remigrateAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -111,6 +118,7 @@ class Controller extends \Slimpd\BaseController {
     }
     
     public function editAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemParams'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -212,6 +220,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function updateAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $postParams = $request->getParsedBody();
         if($postParams === NULL) {
             $postParams = array();
@@ -247,6 +256,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function marrytracksAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $postParams = $request->getParsedBody();
         $this->discogsitemRepo->retrieveAlbum($postParams['discogsid']);
         foreach($postParams['track'] as $trackUid => $properties) {

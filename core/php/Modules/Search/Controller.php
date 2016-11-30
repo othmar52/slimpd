@@ -47,6 +47,7 @@ class Controller extends \Slimpd\BaseController {
 
     // albumlist+tracklist of artist|genre|label
     public function listAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         #echo "<pre>" . print_r($args,1); die();
 
         $args["action"] = $args['className']."." . $args['show']."s";
@@ -375,6 +376,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function autocompleteAction(Request $request, Response $response, $args) {
+        useArguments($args);
         $term = $request->getParam("q");
 
         $originalTerm = ($request->getParam("qo")) ? $request->getParam("qo") : $term;
@@ -511,6 +513,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function directoryAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
 
         // validate directory
         $directory = $this->directoryRepo->create($args['itemParams']);
@@ -581,6 +584,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function alphasearchAction(Request $request, Response $response, $args) {
+        useArguments($args);
         $type = $request->getParam("searchtype");
         $term = $request->getParam("searchterm");
         $uri = $this->conf['config']['absRefPrefix'] . $type."s/searchterm/".rawurlencode($term)."/page/1" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);

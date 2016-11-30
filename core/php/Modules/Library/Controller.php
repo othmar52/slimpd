@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 
     public function indexAction(Request $request, Response $response, $args) {
+        useArguments($request);
         $args['action'] = "landing";
         $args['itemlist'] = $this->albumRepo->getAll(11, 0, "added desc");
         $args['totalAlbums'] = $this->albumRepo->getCountAll();

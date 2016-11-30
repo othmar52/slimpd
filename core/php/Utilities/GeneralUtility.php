@@ -16,6 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+function useArguments(){
+    // do nothing - codacity's review does not like unused arguments which makes totaly sense.
+    // but slim-framwork passes (Request, Response, Args) to each controller function 
+    // calling this function makes it possible for codacity to find really unused arguments
+    return;
+}
+
 function sortHelper($string1, $string2){
     return strlen($string2) - strlen($string1);
 }

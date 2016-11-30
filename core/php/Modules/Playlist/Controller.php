@@ -22,12 +22,14 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function indexAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = "playlists";
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;
     }
 
     public function showAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = "showplaylist";
         $playlist = new \Slimpd\Models\PlaylistFilesystem($this->container);
         $playlist->load($args['itemParams']);
@@ -65,6 +67,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'widget-playlist';
         $args['playlist'] = new \Slimpd\Models\PlaylistFilesystem($this->container);
         $args['playlist']->load($args['itemParams']);

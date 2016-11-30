@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 
     public function svgAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
         $valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
         if(($valid) === FALSE) {
@@ -49,6 +50,7 @@ class Controller extends \Slimpd\BaseController {
     }
     
     public function jsonAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
         $valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
         if(($valid) === FALSE) {

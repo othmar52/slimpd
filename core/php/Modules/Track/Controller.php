@@ -22,6 +22,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function widgetTrackcontrolAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $itemParam = $request->getParam('item');
         $this->completeArgsForDetailView($itemParam, $args);
         $this->view->render($response, 'modules/widget-trackcontrol.htm', $args);
@@ -29,6 +30,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function localplayerAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $itemParam = $request->getParam('item');
         $this->completeArgsForDetailView($itemParam, $args);
         $args['player'] = 'local';
@@ -37,6 +39,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetDeckselectorAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $itemParam = $request->getParam('item');
         $this->completeArgsForDetailView($itemParam, $args);
         $this->view->render($response, 'modules/widget-deckselector.htm', $args);
@@ -44,6 +47,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function mpdplayerAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $item = $this->mpd->getCurrentlyPlayedTrack();
         $itemRelPath = ($item !== NULL) ? $item->getRelPath() : 0;
         $this->completeArgsForDetailView($itemRelPath, $args);
@@ -53,6 +57,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function dumpid3Action(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'trackid3';
         $getID3 = new \getID3;
         $tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $args['itemParams']);
@@ -65,6 +70,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function editAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemParams'], $args);
 
         $args['action'] = 'maintainance.trackdebug';

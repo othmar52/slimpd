@@ -22,6 +22,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function cmdAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'mpdctrl.' . $args['cmd'];
         if(isset($args['item']) === FALSE) {
             $args['item'] = '';
@@ -35,6 +36,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function playlistAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'playlist';
         $args['item'] = $this->mpd->getCurrentlyPlayedTrack();
         $args['nowplaying_album'] = NULL;
@@ -73,6 +75,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function mpdstatusAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         # TODO: mpd-version check, v 0.20 has 'duration' included in status()
         # @see: http://www.musicpd.org/doc/protocol/command_reference.html#status_commands
         $args['mpd']['status'] = $this->mpd->cmd('status');

@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
     use \Slimpd\Traits\MethodTypeListAction;
     public function listAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $this->completeArgsForTypelist('genre', $args);
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;

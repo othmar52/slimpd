@@ -22,6 +22,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function indexAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'importer';
         $args['servertime'] = time();
         

@@ -23,6 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 
     public function index(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['itemParams'] = $this->conf['mpd']['musicdir'];
         $args['hotlinks'] = array();
         #$args['hideQuicknav'] = 1;
@@ -33,6 +34,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function dircontent(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $args['action'] = 'filebrowser';
         $fileBrowser = $this->filebrowser;
         $fileBrowser->itemsPerPage = $this->conf['filebrowser']['max-items'];
@@ -112,6 +114,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetDirectory(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $fileBrowser = $this->filebrowser;
         $fileBrowser->getDirectoryContent($args['itemParams']);
         $args['directory'] = $fileBrowser->directory;
@@ -129,6 +132,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function deliverAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $path = $args['itemParams'];
         if(is_numeric($path)) {
             $track = $this->trackRepo->getInstanceByAttributes(array('uid' => (int)$args['itemParams']));

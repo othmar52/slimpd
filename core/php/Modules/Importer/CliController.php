@@ -28,17 +28,20 @@ class CliController extends \Slimpd\BaseController {
     private $startTime = 0;
 
     public function indexAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         renderCliHelp($this->ll);
         return $response;
     }
 
     public function remigrateForceAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         self::deleteLockFile();
         return $this->remigrateAction($request, $response, $args);
     }
 
     public function remigrateAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
@@ -51,6 +54,7 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function remigratealbumAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
@@ -63,11 +67,13 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function updateForceAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         self::deleteLockFile();
         return $this->updateAction($request, $response, $args);
     }
 
     public function updateAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
@@ -80,6 +86,7 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function builddictsqlAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         $importer = new \Slimpd\Modules\Importer\DatabaseStuff($this->container);
         $importer->buildDictionarySql();
@@ -87,6 +94,7 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function updateDbSchemeAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         $action = 'migrate';
 
@@ -134,6 +142,7 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function databaseCleanerAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         die('TODO: not implemented yet '. __FUNCTION__ );
         $importer = new \Slimpd\Modules\Importer\Importer($this->container);
@@ -149,6 +158,7 @@ class CliController extends \Slimpd\BaseController {
      * start from scratch by dropping and recreating database
      */
     public function hardResetAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
         }
@@ -237,6 +247,7 @@ class CliController extends \Slimpd\BaseController {
      * TODO: add support for "remigrate" trigger
      */
     public function checkQueAction(Request $request, Response $response, $args) {
+        useArguments($request, $response, $args);
         $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         self::heartBeat();
         if($this->startTime === 0) {
