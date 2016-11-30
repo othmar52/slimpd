@@ -61,7 +61,7 @@ class WaveformGenerator {
 		return ($byte1 + ($byte2*256));
 	}
 
-	public function getSvgValues($pixel=300, $half, &$response) {
+	public function getSvgValues($pixel = 300, $half, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
 			$uri = $this->container->router->pathFor(
 				'imagefallback',
@@ -117,7 +117,7 @@ class WaveformGenerator {
 		return $renderValues;
 	}
 
-	public function generateJson($resolution=300, &$response) {
+	public function generateJson($resolution = 300, &$response) {
 		if(is_file($this->peakValuesFilePath) === FALSE) {
 			// TODO: deliver something like a broken-waveform-json :P 
 			$uri = $this->container->router->pathFor(

@@ -151,7 +151,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
 	 * 
 	 * @return (array) : filename-strings
 	 */
-	public function getDirectoryFiles($dir, $ext="images", $addFilePath = TRUE, $checkMimeType = TRUE) {
+	public function getDirectoryFiles($dir, $ext = "images", $addFilePath = TRUE, $checkMimeType = TRUE) {
 		$foundFiles = array();
 		if(is_dir($dir) == FALSE) {
 			return $foundFiles;

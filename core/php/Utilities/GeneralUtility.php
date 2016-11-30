@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function sortHelper($string1,$string2){
+function sortHelper($string1, $string2){
 	return strlen($string2) - strlen($string1);
 }
 
@@ -133,7 +133,7 @@ function getNoSurSuffix($append, $prefixQuestionmark = TRUE) {
 		: "";
 }
 
-function notifyJson($message, $type="info") {
+function notifyJson($message, $type = "info") {
 	$out = new stdClass();
 	$out->notify = 1;
 	$out->message = $message;
@@ -170,7 +170,7 @@ function recursiveArrayParser($pathChunks, $inputArray) {
 	return recursiveArrayParser($pathChunks, $inputArray[$currentChunk]);
 }
 
-function cliLog($msg, $verbosity=1, $color="default", $fatal = FALSE) {
+function cliLog($msg, $verbosity = 1, $color = "default", $fatal = FALSE) {
 	if(PHP_SAPI !== "cli") {
 		return;
 	}

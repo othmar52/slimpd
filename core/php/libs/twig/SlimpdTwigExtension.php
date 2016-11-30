@@ -104,7 +104,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
 				return number_format($number/1000000,1) . " M";
 			}),
 
-			new \Twig_SimpleFilter('fingerprintshorty', function ($mixed, $length=2, $separator='...') {
+			new \Twig_SimpleFilter('fingerprintshorty', function ($mixed, $length = 2, $separator = '...') {
 				if(is_object($mixed) === TRUE) {
 					if(method_exists($mixed, 'getFingerprint') === TRUE) {
 						$fingerPrint = $mixed->getFingerprint();

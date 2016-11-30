@@ -82,7 +82,7 @@ class BaseRepository {
 		return $instances;
 	}
 
-	public function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy=NULL, $sortDirection='desc') {
+	public function getInstancesByFindInSetAttributes(array $attributeArray, $itemsperPage = 50, $currentPage = 1, $sortBy = NULL, $sortDirection = 'desc') {
 		$instances = array();
 		if(is_array($attributeArray) === FALSE) {
 			return $instances;
