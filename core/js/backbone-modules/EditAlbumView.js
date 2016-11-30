@@ -108,19 +108,19 @@
 					return $clone.get(0);
 				},
 				start: function(){
-					$('.locked', this).each(function(){
+					$(".locked", this).each(function(){
 						var $this = $(this);
-						$this.data('pos', $this.index());
+						$this.data("pos", $this.index());
 					});
 				},
 				change: function(){
 					var $sortable = $(this);
-					var $statics = $('.locked', this).detach();
-					var $helper = $('<div class="well"></div>').prependTo(this);
+					var $statics = $(".locked", this).detach();
+					var $helper = $("<div class='well'></div>").prependTo(this);
 					$statics.each(function(){
 						var $this = $(this);
-						var target = $this.data('pos');
-						$this.insertAfter($('.well', $sortable).eq(target));
+						var target = $this.data("pos");
+						$this.insertAfter($(".well", $sortable).eq(target));
 					});
 					$helper.remove();
 				},
