@@ -32,10 +32,6 @@
 		initialFormValues : "",
 		alNumRegEx : /[^a-zêéäöüí\d]/i,
 
-		// helpers for locked(married) items in sortable()
-		lockedSortableItems : null,
-		lockedSortableIndex : null,
-
 		initialize : function(options) {
 			window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
 		},
@@ -98,109 +94,41 @@
 				});
 			});
 
-			this.updateLockedSortables();
+			// thanks to http://stackoverflow.com/questions/4299241/jquery-sortable-lists-and-fixed-locked-items#answer-6131590
 			$(".grid", this.$el).sortable({
-				tolerance: "pointer",
+				items: ".well:not(.locked)",
 				placeholder: "well placeholder",
+				tolerance: "pointer",
+				forceHelperSize: true,
+				axis: "y",
+				cancel: ".locked",
 				helper: function(event, ui){
 					var $clone =  $(ui).clone();
 					$clone .css("position", "absolute");
 					return $clone.get(0);
 				},
-				forceHelperSize: true,
-				axis: "y",
-				cancel: ".locked",
-				items: ".well:not(.locked)",
-				start: function(event, ui) {
-					ui.item.data('startPos', ui.item.index());
+				start: function(){
+					$('.locked', this).each(function(){
+						var $this = $(this);
+						$this.data('pos', $this.index());
+					});
+				},
+				change: function(){
+					var $sortable = $(this);
+					var $statics = $('.locked', this).detach();
+					var $helper = $('<div class="well"></div>').prependTo(this);
+					$statics.each(function(){
+						var $this = $(this);
+						var target = $this.data('pos');
+						$this.insertAfter($('.well', $sortable).eq(target));
+					});
+					$helper.remove();
 				},
 				stop: function( event, ui ) {
 					that.highlightPhrases();
-					that.updateLockedSortables();
-				},
-				change: function(event,ui) {
-					//console.log(that.lockedSortableIndex);
-					var startPos = ui.item.data('startPos');
-					//console.log("startPos", startPos);
-					
-					for(var i=0; i<that.lockedSortableItems.length; i++){
-						var lockto = that.lockedSortableIndex[i];
-					
-						
-						
-						var fixed = $(that.lockedSortableItems[i]);
-						
-						var thisindex = $(ui.helper).index(fixed);
-						//console.log("thisindex", thisindex);
-						
-						
-						var index = $(".grid .well", that.$el).index(fixed);
-						var targetindex = lockto+1;
-						
-						//var fixedItemsBehind = that.lockedSortableIndex.length - index;
-
-						//console.log("-------- begin");
-						//console.log("event", event);
-						//console.log("ui", ui);
-						//console.log("index", index);
-						//console.log("targetindex", targetindex);
-						//console.log("i", i);
-						//console.log("fixed", fixed);
-						//console.log("fixedItemsBehind", fixedItemsBehind);
-						//console.log("-------- end");
-						if(targetindex >= startPos && targetindex < index) {
-							// do nothing
-							//console.log("AA1");
-							continue;
-						}
-						
-						if(index===targetindex) {
-							console.log("that.lockedSortableIndex", that.lockedSortableIndex);
-							if(typeof that.lockedSortableIndex[targetindex] !== "undefined") {
-								//console.log("A1");
-								continue;
-							}
-							
-							if(targetindex > startPos) {
-								// do nothing
-								//console.log("AA2");
-								continue;
-							}
-							
-							
-							//console.log("A");
-							fixed.prev().insertAfter(fixed); //move it up by one position
-							continue;
-						}
-						if(index > targetindex ) {
-							//console.log("B");
-							fixed.prev().insertAfter(fixed); //move it up by one position
-							continue;
-						}
-						if(index==(targetindex-1)) {
-							//console.log("C");
-							//don't move it at all
-							continue;
-						}
-
-						
-						//console.log("D");
-						fixed.next().insertBefore(fixed); //move it down by one position
-					}
-
 				}
-			});
-			$(".grid", this.$el).disableSelection();
-
+			}).disableSelection();
 			this.rendered = true;
-		},
-
-		updateLockedSortables : function() {
-			this.lockedSortableItems = $(".locked", this.$el);
-			this.lockedSortableIndex = [];
-			for(var i=0; i<this.lockedSortableItems.length; i++){
-				this.lockedSortableIndex[i] = $(".grid .well", this.$el).index(this.lockedSortableItems[i]);
-			}
 		},
 
 		remove : function() {
@@ -215,7 +143,6 @@
 
 			// search local item of same position
 			$(".local-items div.well:eq("+ index +")").addClass("is-married locked");
-			this.updateLockedSortables();
 		},
 
 		unmarryTrack : function(index) {
@@ -224,7 +151,6 @@
 
 			// search local item of same position
 			$(".local-items div.well:eq("+ index +")").removeClass("is-married locked");
-			this.updateLockedSortables();
 		},
 
 		marryAllTracks : function(maxIndex) {

@@ -99,7 +99,10 @@
 			<!--div class="well well-sm">{{ discogstrXacks[ matchmapping[idx]|keys|first] }}</div-->
 			<div class="well well-sm" id="ext-item-{{idx}}" title="{{ item.trackNumber }} - {{ item.artistString }} - {{ item.titleString }}">
 				{% if item.miliseconds %}<span class="duration" data-miliseconds="{{ item.miliseconds }}"><span class="dark">[</span>{{ item.miliseconds|formatMiliseconds }}<span class="dark">]</span></span>{% endif %}
-				<button class="marry btn btn-trnsp" data-index="{{idx}}"><i class="fa fa-link fa-lg" aria-hidden="true"></i></button>
+				<button class="marry btn btn-trnsp" data-index="{{idx}}">
+					<i class="fa fa-link fa-lg unchecked" aria-hidden="true"></i>
+					<i class="fa fa-check-square-o fa-lg checked" aria-hidden="true"></i>
+				</button>
 				<span class="highlight shorten">{{ item.trackNumber }} - {{ item.artistString }} - {{ item.titleString }}</span>
 			</div>
 		{% endfor %}
