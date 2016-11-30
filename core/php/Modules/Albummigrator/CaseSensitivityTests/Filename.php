@@ -19,5 +19,5 @@ namespace Slimpd\Modules\Albummigrator\CaseSensitivityTests;
  */
 
 class Filename extends \Slimpd\Modules\Albummigrator\AbstractTests\CaseSensitivity {
-	public $isAlbumWeight = 0.8;
+    public $isAlbumWeight = 0.8;
 }

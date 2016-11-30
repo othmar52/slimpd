@@ -18,32 +18,32 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropGroupTypeIds {
-	protected $artistUid;
-	protected $genreUid;
-	protected $labelUid;
+    protected $artistUid;
+    protected $genreUid;
+    protected $labelUid;
 
-	// getter
-	public function getArtistUid() {
-		return $this->artistUid;
-	}
-	public function getGenreUid() {
-		return $this->genreUid;
-	}
-	public function getLabelUid() {
-		return $this->labelUid;
-	}
+    // getter
+    public function getArtistUid() {
+        return $this->artistUid;
+    }
+    public function getGenreUid() {
+        return $this->genreUid;
+    }
+    public function getLabelUid() {
+        return $this->labelUid;
+    }
 
-	// setter
-	public function setArtistUid($value) {
-		$this->artistUid = $value;
-		return $this;
-	}
-	public function setGenreUid($value) {
-		$this->genreUid = $value;
-		return $this;
-	}
-	public function setLabelUid($value) {
-		$this->labelUid = $value;
-		return $this;
-	}
+    // setter
+    public function setArtistUid($value) {
+        $this->artistUid = $value;
+        return $this;
+    }
+    public function setGenreUid($value) {
+        $this->genreUid = $value;
+        return $this;
+    }
+    public function setLabelUid($value) {
+        $this->labelUid = $value;
+        return $this;
+    }
 }

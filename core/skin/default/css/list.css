@@ -1,109 +1,124 @@
-/* Copyright
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.    See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
-/*	bootstrap vertically centering of row content - begin */
+
+/*    bootstrap vertically centering of row content - begin */
 .vcenter {
-	min-height: 4em;
-	display: flex;
-	align-items: center;
+    min-height: 4em;
+    display: flex;
+    align-items: center;
 }
 
 .filebrowser .vcenter,
 .vcenter3 {
-	min-height: 3em;
+    min-height: 3em;
 }
 
 .vcinner {
-	display: inline-table;
+    display: inline-table;
 }
-/*	bootstrap vertically centering of row content - end */
+/*    bootstrap vertically centering of row content - end */
 
 
 
-/*	bootstrap full width row background - begin */
+/*    bootstrap full width row background - begin */
 html, body {
-	overflow-x: hidden;
+    overflow-x: hidden;
 }
 .container {
-	margin: 0 auto;
+    margin: 0 auto;
 }
 .level {
-	height:100px;
-	background: #bada55;
+    height:100px;
+    background: #bada55;
 }
 
 .fw-bg {
-	position: relative;
-	background: #252525;
+    position: relative;
+    background: #252525;
 }
 
 .pos-rel {
-	position: relative;
+    position: relative;
 }
 
 .tile-btn-wrap {
-	position: absolute;
-	right: -3em;
-	top: 0.5em;
+    position: absolute;
+    right: -3em;
+    top: 0.5em;
 }
 
 .fw-bg:before, 
 .fw-bg:after {
-	content: "";
-	position: absolute;
-	background: #252525;	/* Match the background */
-	top: 0;
-	bottom: 0;
-	width: 9999px;	 /* some huge width */
-	z-index:-1; /* dont hide border of row which indicates current playing */
+    content: "";
+    position: absolute;
+    background: #252525;    /* Match the background */
+    top: 0;
+    bottom: 0;
+    width: 9999px;     /* some huge width */
+    z-index:-1; /* dont hide border of row which indicates current playing */
 } 
 .fw-bg:before {
-	right: 100%;
+    right: 100%;
 }
 .fw-bg:after {
-	left: 100%;
+    left: 100%;
 }
 
 .fw-bg.bg-col5 {
-	background: #373737;
+    background: #373737;
 }
 
 .fw-bg.bg-col5:before, 
 .fw-bg.bg-col5:after {
-	background: #373737;	/* Match the background */
+    background: #373737;    /* Match the background */
 } 
-/*	bootstrap full width row background - end */
+/*    bootstrap full width row background - end */
 
 
 
 .missing-track-row {
-	margin-bottom: 0.3em;
+    margin-bottom: 0.3em;
 }
 
 
 .thumbnail {
-	padding: 0;
-	border: none;
-	border-radius: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
 }
 
 .thumbnail .caption {
-	color: inherit;
+    color: inherit;
 }
 
 .img-placeholder,
 .album-tiles .ffn-show {
-	width: 100%;
-	padding-bottom: 100%;
+    width: 100%;
+    padding-bottom: 100%;
 }
 
 /* active force-file-name should keep the boxes in same size */
 .album-tiles .ffn-show {
-	padding-top: 4em;
-	word-break: break-all;
+    padding-top: 4em;
+    word-break: break-all;
 }
 
 .tile-content {
-	position: absolute;
-	margin: 0 20px 0 10px;
+    position: absolute;
+    margin: 0 20px 0 10px;
 }

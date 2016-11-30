@@ -26,32 +26,32 @@ use Slimpd\Utilities\RegexHelper as RGX;
  * scoring for albumweight and extracted "title-string" is very little 
  */
 class TitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.01;
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::ANYTHING . RGX::EXT . "$/";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'title-ext';
-			return;
-		}
-		$this->result = 0;
-	}
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		// add very little score because this test is an every time winner
-		$this->trackContext->recommend([
-			'setTitle' => $this->matches[1]
-		], 0.1);
-	}
+    public $isAlbumWeight = 0.01;
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::ANYTHING . RGX::EXT . "$/";
+        return $this;
+    }
+    
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->matches = $matches;
+            $this->result = 'title-ext';
+            return;
+        }
+        $this->result = 0;
+    }
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        // add very little score because this test is an every time winner
+        $this->trackContext->recommend([
+            'setTitle' => $this->matches[1]
+        ], 0.1);
+    }
 }

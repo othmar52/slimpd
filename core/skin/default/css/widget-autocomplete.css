@@ -1,101 +1,115 @@
-/* Copyright
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.    See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
+
 /* https://gist.github.com/daz/2168334 begin */
 .ui-autocomplete {
-	position: absolute;
-	top: 100%;
-	left: 0;
-	z-index: 1000;
-	float: left;
-	display: none;
-	min-width: 160px;
-	padding: 4px 0;
-	margin: 2px 0 0 0;
-	list-style: none;
-	background-color: #ffffff;
-	border-color: #ccc;
-	border-color: rgba(0, 0, 0, 0.2);
-	border-style: solid;
-	border-width: 1px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-	background-clip: padding-box;
-	*border-right-width: 2px;
-	*border-bottom-width: 2px;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;
+    padding: 4px 0;
+    margin: 2px 0 0 0;
+    list-style: none;
+    background-color: #ffffff;
+    border-color: #ccc;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
 }
 
 .ui-autocomplete .ui-menu-item > a.ui-corner-all {
-	display: block;
-	padding: 3px 15px;
-	clear: both;
-	font-weight: normal;
-	line-height: 18px;
-	color: #555555;
-	white-space: nowrap;
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
 }
 
 .ui-corner-all .ui-state-hover,
 .ui-corner-all .ui-state-active {
-	color: #ffffff;
-	text-decoration: none;
-	background-color: #0088cc;
-	border-radius: 0;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	background-image: none;
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    background-image: none;
 }
 /* https://gist.github.com/daz/2168334 end */
 
 /* few additions ... */
 .ui-autocomplete {
-	background-color: #2D2D2D;
-	padding: 1em;
+    background-color: #2D2D2D;
+    padding: 1em;
 }
 
 .ui-autocomplete .ui-state-active {
-	background-color: #353535;
-	outline: 1px solid #AAA;
+    background-color: #353535;
+    outline: 1px solid #AAA;
 }
 
 .ui-autocomplete .ui-menu-item {
-	border-bottom: 1px solid #AAA;
+    border-bottom: 1px solid #AAA;
 }
 
 .ui-autocomplete li.ui-menu-item .ui-state-active {
-	border: none;
-	background-color: #1A1A1A;
-	outline: none;
-	border-bottom: 1px solid #444;
+    border: none;
+    background-color: #1A1A1A;
+    outline: none;
+    border-bottom: 1px solid #444;
 }
 
 .ui-autocomplete .ui-menu-item {
-	border-bottom: 1px solid #444;
+    border-bottom: 1px solid #444;
 }
-
 
 
 .ac-nav button {
-	color: #fff;
-	background-color: inherit;
-	border-radius: 0;
-	border: 3px solid transparent;
-	border-width:0 0 3px 0;
-	outline: none;
+    color: #fff;
+    background-color: inherit;
+    border-radius: 0;
+    border: 3px solid transparent;
+    border-width:0 0 3px 0;
+    outline: none;
 }
 
 .ui-helper-hidden-accessible {
-	position: absolute;
-	left:-999em;
-	display: none;
+    position: absolute;
+    left:-999em;
+    display: none;
 }
 
 .ac-nav {
-	padding-bottom: 0.5em;
+    padding-bottom: 0.5em;
 }

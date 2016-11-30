@@ -18,24 +18,24 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropGroupCounters {
-	protected $trackCount;
-	protected $albumCount;
+    protected $trackCount;
+    protected $albumCount;
 
-	// getter
-	public function getTrackCount() {
-		return $this->trackCount;
-	}
-	public function getAlbumCount() {
-		return $this->albumCount;
-	}
+    // getter
+    public function getTrackCount() {
+        return $this->trackCount;
+    }
+    public function getAlbumCount() {
+        return $this->albumCount;
+    }
 
-	// setter
-	public function setTrackCount($value) {
-		$this->trackCount = $value;
-		return $this;
-	}
-	public function setAlbumCount($value) {
-		$this->albumCount = $value;
-		return $this;
-	}
+    // setter
+    public function setTrackCount($value) {
+        $this->trackCount = $value;
+        return $this;
+    }
+    public function setAlbumCount($value) {
+        $this->albumCount = $value;
+        return $this;
+    }
 }

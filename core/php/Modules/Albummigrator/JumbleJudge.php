@@ -26,91 +26,91 @@ namespace Slimpd\Modules\Albummigrator;
 
 class JumbleJudge {
 
-	private $isAlbumTreshold = 0.7;
-	public $handleAsAlbum;
-	public $tests;
-	public $testResults;
-	private $trackContext;
-	private $albumContext;
-	public $albumMigrator;
+    private $isAlbumTreshold = 0.7;
+    public $handleAsAlbum;
+    public $tests;
+    public $testResults;
+    private $trackContext;
+    private $albumContext;
+    public $albumMigrator;
 
-	public function __construct(\Slimpd\Modules\Albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
-		$this->albumContext = $albumContextItem;
-		$this->albumMigrator = $albumMigrator;
-	}
+    public function __construct(\Slimpd\Modules\Albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
+        $this->albumContext = $albumContextItem;
+        $this->albumMigrator = $albumMigrator;
+    }
 
-	public function collect(\Slimpd\Modules\Albummigrator\TrackContext &$trackContext) {
-		$this->trackContext = $trackContext;
-		$fileName = unifyHyphens(unifyBraces(basename($trackContext->getRelPath())));
-		$this->runTest("SchemaTests\\Filename\\HasYear", $fileName)
-			->runTest("CaseSensitivityTests\\Filename", $fileName)
-			->runTest("SchemaTests\\Filename\\NumberArtistTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\NumberTitleArtistExt", $fileName)
-			->runTest("SchemaTests\\Filename\\NumberArtistTitleSceneExt", $fileName)
-			->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\VinylArtistTitleSceneExt", $fileName)
-			->runTest("SchemaTests\\Filename\\ArtistTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\ArtistNumberTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\ArtistNumberTitleSceneExt", $fileName)
-			->runTest("SchemaTests\\Filename\\NumberTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\BeginsWithVinyl", $fileName)
-			->runTest("SchemaTests\\Filename\\BeginsWithNumber", $fileName)
-			->runTest("SchemaTests\\Filename\\HasSceneSuffix", $fileName)
-			->runTest("SchemaTests\\Filename\\ArtistAlbumYearNumberTitleExt", $fileName)
-			->runTest("SchemaTests\\Filename\\TitleExt", $fileName)
-			->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
-			->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
-			->runTest("EqualTagTests\\Album", $trackContext->getAlbum())
-			->runTest("EqualTagTests\\Year", $trackContext->getYear())
-			->runTest("EqualTagTests\\Label", $trackContext->getLabel())
-			->runTest("SchemaTests\\Artist\\NumberArtist", $trackContext->getArtist())
-			->runTest("SchemaTests\\Artist\\VinylArtist", $trackContext->getArtist())
-			->runTest("SchemaTests\\Artist\\NumberArtistTitle", $trackContext->getArtist())
-			->runTest("SchemaTests\\Artist\\VinylArtistTitle", $trackContext->getArtist())
-			->runTest("SchemaTests\\Artist\\HasSuffixedUrl", $trackContext->getArtist())
-			->runTest("SchemaTests\\Title\\ArtistTitle", $trackContext->getTitle())
-			->runTest("SchemaTests\\TrackNumber\\Numeric", $trackContext->getTrackNumber())
-			->runTest("SchemaTests\\TrackNumber\\Vinyl", $trackContext->getTrackNumber())
-			->runTest("SchemaTests\\TrackNumber\\LeadingZero", $trackContext->getTrackNumber())
-			->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber())
-			->runTest("SchemaTests\\Album\\HasCatalogNr", $trackContext->getAlbum());
-	}
+    public function collect(\Slimpd\Modules\Albummigrator\TrackContext &$trackContext) {
+        $this->trackContext = $trackContext;
+        $fileName = unifyHyphens(unifyBraces(basename($trackContext->getRelPath())));
+        $this->runTest("SchemaTests\\Filename\\HasYear", $fileName)
+            ->runTest("CaseSensitivityTests\\Filename", $fileName)
+            ->runTest("SchemaTests\\Filename\\NumberArtistTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\NumberTitleArtistExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\NumberArtistTitleSceneExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\VinylArtistTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\VinylArtistTitleSceneExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\ArtistTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\ArtistNumberTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\ArtistNumberTitleSceneExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\NumberTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\BeginsWithVinyl", $fileName)
+            ->runTest("SchemaTests\\Filename\\BeginsWithNumber", $fileName)
+            ->runTest("SchemaTests\\Filename\\HasSceneSuffix", $fileName)
+            ->runTest("SchemaTests\\Filename\\ArtistAlbumYearNumberTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\TitleExt", $fileName)
+            ->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
+            ->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
+            ->runTest("EqualTagTests\\Album", $trackContext->getAlbum())
+            ->runTest("EqualTagTests\\Year", $trackContext->getYear())
+            ->runTest("EqualTagTests\\Label", $trackContext->getLabel())
+            ->runTest("SchemaTests\\Artist\\NumberArtist", $trackContext->getArtist())
+            ->runTest("SchemaTests\\Artist\\VinylArtist", $trackContext->getArtist())
+            ->runTest("SchemaTests\\Artist\\NumberArtistTitle", $trackContext->getArtist())
+            ->runTest("SchemaTests\\Artist\\VinylArtistTitle", $trackContext->getArtist())
+            ->runTest("SchemaTests\\Artist\\HasSuffixedUrl", $trackContext->getArtist())
+            ->runTest("SchemaTests\\Title\\ArtistTitle", $trackContext->getTitle())
+            ->runTest("SchemaTests\\TrackNumber\\Numeric", $trackContext->getTrackNumber())
+            ->runTest("SchemaTests\\TrackNumber\\Vinyl", $trackContext->getTrackNumber())
+            ->runTest("SchemaTests\\TrackNumber\\LeadingZero", $trackContext->getTrackNumber())
+            ->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber())
+            ->runTest("SchemaTests\\Album\\HasCatalogNr", $trackContext->getAlbum());
+    }
 
-	private function runTest($className, $input) {
-		$classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
-		$test = new $classPath($input, $this->trackContext, $this->albumContext, $this);
-		$test->run();
-		$this->tests[$className][] = $test;
-		return $this;
-	}
+    private function runTest($className, $input) {
+        $classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
+        $test = new $classPath($input, $this->trackContext, $this->albumContext, $this);
+        $test->run();
+        $this->tests[$className][] = $test;
+        return $this;
+    }
 
-	public function judge() {
-		// get decisions for each single test
-		foreach($this->tests as $testname => $tests) {
-			$result = array();
-			foreach($tests as $test) {
-				$result[] = $test->result;
-			}
+    public function judge() {
+        // get decisions for each single test
+        foreach($this->tests as $testname => $tests) {
+            $result = array();
+            foreach($tests as $test) {
+                $result[] = $test->result;
+            }
 
-			// get the most occuring testresult
-			$relevant = uniqueArrayOrderedByRelevance($result);
-			$mostSimilarity = array_shift($relevant);
-			
-			// count items which has this most occuring result
-			$counter = 0;
-			foreach($tests as $test) {
-				$result[] = $test->result;
-				if($test->result === $mostSimilarity) {
-					$counter++;
-				}
-			}
-			// store result as number in property
-			$this->testResults[$testname] = ($counter*$tests[0]->isAlbumWeight)/count($tests);
-		}
-		// use each single test result to get the final decision;
-		$finalValue = array_sum($this->testResults)/count($this->testResults);
-		#var_dump($finalValue); die;
-		$this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? 1 : 0;
-		//var_dump($this->handleAsAlbum); die;
-	}
+            // get the most occuring testresult
+            $relevant = uniqueArrayOrderedByRelevance($result);
+            $mostSimilarity = array_shift($relevant);
+            
+            // count items which has this most occuring result
+            $counter = 0;
+            foreach($tests as $test) {
+                $result[] = $test->result;
+                if($test->result === $mostSimilarity) {
+                    $counter++;
+                }
+            }
+            // store result as number in property
+            $this->testResults[$testname] = ($counter*$tests[0]->isAlbumWeight)/count($tests);
+        }
+        // use each single test result to get the final decision;
+        $finalValue = array_sum($this->testResults)/count($this->testResults);
+        #var_dump($finalValue); die;
+        $this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? 1 : 0;
+        //var_dump($this->handleAsAlbum); die;
+    }
 }

@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyYearRange {
-	protected $yearRange;
+    protected $yearRange;
 
-	public function getYearRange() {
-		return $this->yearRange;
-	}
+    public function getYearRange() {
+        return $this->yearRange;
+    }
 
-	public function setYearRange($value) {
-		$this->yearRange = $value;
-		return $this;
-	}
+    public function setYearRange($value) {
+        $this->yearRange = $value;
+        return $this;
+    }
 }

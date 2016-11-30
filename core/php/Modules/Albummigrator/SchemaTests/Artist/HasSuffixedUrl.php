@@ -20,24 +20,24 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class HasSuffixedUrl extends \Slimpd\Modules\Albummigrator\AbstractTests\HasSuffixedUrl {
-	public $isAlbumWeight = 0.1;
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		// upvote artist without url
-		$this->trackContext->recommend([
-			'setArtist' => $this->matches[1]
-		]);
-		// downvote artist with url
-		$this->trackContext->recommend(
-			[
-				'setArtist' => $this->input
-			],
-			-2
-		);
-	}
+    public $isAlbumWeight = 0.1;
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        // upvote artist without url
+        $this->trackContext->recommend([
+            'setArtist' => $this->matches[1]
+        ]);
+        // downvote artist with url
+        $this->trackContext->recommend(
+            [
+                'setArtist' => $this->input
+            ],
+            -2
+        );
+    }
 }

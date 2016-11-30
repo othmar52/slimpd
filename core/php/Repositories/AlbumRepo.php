@@ -18,66 +18,66 @@ namespace Slimpd\Repositories;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class AlbumRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'album';
-	public static $classPath = '\Slimpd\Models\Album';
-	
-	#public function __construct($container) {
-	#	parent::__construct($container);
-	#}
-	
-	public function getAlbumByRelPath($relPath) {
-		$query = "
-			SELECT * 
-			FROM album
-			WHERE relPathHash=\"" . getFilePathHash($relPath) . "\"";
-		$result = $this->db->query($query);
-		$record = $result->fetch_assoc();
-		if($record === NULL) {
-			return NULL;
-		}
-		$this->mapArrayToInstance($record);
-	}
+    public static $tableName = 'album';
+    public static $classPath = '\Slimpd\Models\Album';
+    
+    #public function __construct($container) {
+    #    parent::__construct($container);
+    #}
+    
+    public function getAlbumByRelPath($relPath) {
+        $query = "
+            SELECT * 
+            FROM album
+            WHERE relPathHash=\"" . getFilePathHash($relPath) . "\"";
+        $result = $this->db->query($query);
+        $record = $result->fetch_assoc();
+        if($record === NULL) {
+            return NULL;
+        }
+        $this->mapArrayToInstance($record);
+    }
 
-	public function fetchRenderItems(&$renderItems, $albumInstance) {
-		$renderItems["albums"][$albumInstance->getUid()] = $albumInstance;
-		if(isset($renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()]) === FALSE) {
-			$renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($albumInstance->getRelPath());
-		}
+    public function fetchRenderItems(&$renderItems, $albumInstance) {
+        $renderItems["albums"][$albumInstance->getUid()] = $albumInstance;
+        if(isset($renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()]) === FALSE) {
+            $renderItems["itembreadcrumbs"][$albumInstance->getRelPathHash()] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($albumInstance->getRelPath());
+        }
 
-		foreach(trimExplode(",", $albumInstance->getArtistUid(), TRUE) as $artistUid) {
-			if(isset($renderItems["artists"][$artistUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
-		}
-		
-		foreach(trimExplode(",", $albumInstance->getGenreUid(), TRUE) as $genreUid) {
-			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
-		}
-		
-		foreach(trimExplode(",", $albumInstance->getLabelUid(), TRUE) as $labelUid) {
-			if(isset($renderItems["labels"][$labelUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["labels"][$labelUid] = $this->container->labelRepo->getInstanceByAttributes(["uid" => $labelUid]);
-		}
-		
-		return;
-	}
+        foreach(trimExplode(",", $albumInstance->getArtistUid(), TRUE) as $artistUid) {
+            if(isset($renderItems["artists"][$artistUid]) === TRUE) {
+                continue;
+            }
+            $renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
+        }
+        
+        foreach(trimExplode(",", $albumInstance->getGenreUid(), TRUE) as $genreUid) {
+            if(isset($renderItems["genres"][$genreUid]) === TRUE) {
+                continue;
+            }
+            $renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
+        }
+        
+        foreach(trimExplode(",", $albumInstance->getLabelUid(), TRUE) as $labelUid) {
+            if(isset($renderItems["labels"][$labelUid]) === TRUE) {
+                continue;
+            }
+            $renderItems["labels"][$labelUid] = $this->container->labelRepo->getInstanceByAttributes(["uid" => $labelUid]);
+        }
+        
+        return;
+    }
 
-	public function getTrackUidsForAlbumUid($albumUid) {
-		$return = array();
-		$query = "
-			SELECT uid
-			FROM track
-			WHERE albumUid=" . intval($albumUid);
-		$result = $this->db->query($query);
-		while($record = $result->fetch_assoc()) {
-			$return[] = $record['uid'];
-		}
-		return $return;
-	}
+    public function getTrackUidsForAlbumUid($albumUid) {
+        $return = array();
+        $query = "
+            SELECT uid
+            FROM track
+            WHERE albumUid=" . intval($albumUid);
+        $result = $this->db->query($query);
+        while($record = $result->fetch_assoc()) {
+            $return[] = $record['uid'];
+        }
+        return $return;
+    }
 }

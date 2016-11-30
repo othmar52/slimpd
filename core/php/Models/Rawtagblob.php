@@ -19,18 +19,18 @@ namespace Slimpd\Models;
  */
 
 class Rawtagblob extends \Slimpd\Models\AbstractModel {
-	protected $tagData;
-	public static $tableName = 'rawtagblob';
-	public static $repoKey = 'rawtagblobRepo';
+    protected $tagData;
+    public static $tableName = 'rawtagblob';
+    public static $repoKey = 'rawtagblobRepo';
 
-	//setter
-	public function setTagData($value) {
-		$this->tagData = $value;
-		return $this;
-	}
+    //setter
+    public function setTagData($value) {
+        $this->tagData = $value;
+        return $this;
+    }
 
-	// getter
-	public function getTagData() {
-		return $this->tagData;
-	}
+    // getter
+    public function getTagData() {
+        return $this->tagData;
+    }
 }

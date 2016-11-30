@@ -18,39 +18,39 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Artist extends \Slimpd\Models\AbstractModel {
-	use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
-	use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
-	use \Slimpd\Traits\PropertyTopLabel; // topLabelUids
-	use \Slimpd\Traits\PropertyYearRange; // yearRange
-	protected $title;
-	protected $article;
-	protected $az09;
+    use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
+    use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
+    use \Slimpd\Traits\PropertyTopLabel; // topLabelUids
+    use \Slimpd\Traits\PropertyYearRange; // yearRange
+    protected $title;
+    protected $article;
+    protected $az09;
 
-	public static $tableName = "artist";
-	public static $repoKey = 'artistRepo';
+    public static $tableName = "artist";
+    public static $repoKey = 'artistRepo';
 
-	//setter
-	public function setTitle($value) {
-		$this->title = $value;
-		return $this;
-	}
-	public function setArticle($value) {
-		$this->article = $value;
-		return $this;
-	}
-	public function setAz09($value) {
-		$this->az09 = $value;
-		return $this;
-	}
+    //setter
+    public function setTitle($value) {
+        $this->title = $value;
+        return $this;
+    }
+    public function setArticle($value) {
+        $this->article = $value;
+        return $this;
+    }
+    public function setAz09($value) {
+        $this->az09 = $value;
+        return $this;
+    }
 
-	// getter
-	public function getTitle() {
-		return $this->title;
-	}
-	public function getArticle() {
-		return $this->article;
-	}
-	public function getAz09() {
-		return $this->az09;
-	}
+    // getter
+    public function getTitle() {
+        return $this->title;
+    }
+    public function getArticle() {
+        return $this->article;
+    }
+    public function getAz09() {
+        return $this->az09;
+    }
 }

@@ -18,24 +18,24 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropGroupRelPath {
-	protected $relPath;
-	protected $relPathHash;
+    protected $relPath;
+    protected $relPathHash;
 
-	// getter
-	public function getRelPath() {
-		return $this->relPath;
-	}
-	public function getRelPathHash() {
-		return $this->relPathHash;
-	}
+    // getter
+    public function getRelPath() {
+        return $this->relPath;
+    }
+    public function getRelPathHash() {
+        return $this->relPathHash;
+    }
 
-	// setter
-	public function setRelPath($value) {
-		$this->relPath = $value;
-		return $this;
-	}
-	public function setRelPathHash($value) {
-		$this->relPathHash = $value;
-		return $this;
-	}
+    // setter
+    public function setRelPath($value) {
+        $this->relPath = $value;
+        return $this;
+    }
+    public function setRelPathHash($value) {
+        $this->relPathHash = $value;
+        return $this;
+    }
 }

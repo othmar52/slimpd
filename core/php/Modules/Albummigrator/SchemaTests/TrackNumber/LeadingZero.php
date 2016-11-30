@@ -20,28 +20,28 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class LeadingZero extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	// TODO: this test does return misleading result in case we have more than 9 tracks ...09, 10, 11,...
-	// for now keep isAlbumWeight low
-	public $isAlbumWeight = 0.5;
+    // TODO: this test does return misleading result in case we have more than 9 tracks ...09, 10, 11,...
+    // for now keep isAlbumWeight low
+    public $isAlbumWeight = 0.5;
 
-	public function run() {
-		if(removeLeadingZeroes($this->input) !== strval($this->input)) {
-			$this->result = 'leadingzero';	// 01, 02, 001, 002
-			$this->matches = intval($this->input);
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        if(removeLeadingZeroes($this->input) !== strval($this->input)) {
+            $this->result = 'leadingzero';    // 01, 02, 001, 002
+            $this->matches = intval($this->input);
+            return;
+        }
+        $this->result = 0;
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
 
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[0]
-		]);
-	}
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[0]
+        ]);
+    }
 }

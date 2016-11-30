@@ -20,34 +20,34 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class CombinedWithTotal extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 1;
+    public $isAlbumWeight = 1;
 
-	public function run() {
-		$value = str_replace(array("of", " ", ".", ","), "/", $this->input);
-		$matches = trimExplode("/", $value, TRUE);
-		if(count($matches) < 2) {
-			$this->result = 0;
-			return;
-		}
-		$matches = array_map("removeLeadingZeroes", $matches);
-		$this->matches = $matches;
-		$this->result = "combined-with-total";
-	}
+    public function run() {
+        $value = str_replace(array("of", " ", ".", ","), "/", $this->input);
+        $matches = trimExplode("/", $value, TRUE);
+        if(count($matches) < 2) {
+            $this->result = 0;
+            return;
+        }
+        $matches = array_map("removeLeadingZeroes", $matches);
+        $this->matches = $matches;
+        $this->result = "combined-with-total";
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		// upvoting vor separated tracknumber
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[0],
-			'setTotalTracks' => $this->matches[1]
-		]);
-		// downvoting for combined tracknumber
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->input
-		], -2);
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        // upvoting vor separated tracknumber
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[0],
+            'setTotalTracks' => $this->matches[1]
+        ]);
+        // downvoting for combined tracknumber
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->input
+        ], -2);
+    }
 }

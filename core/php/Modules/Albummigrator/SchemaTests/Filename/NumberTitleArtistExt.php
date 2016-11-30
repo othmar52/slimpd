@@ -20,36 +20,36 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class NumberTitleArtistExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.8;
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'number-title-artist-ext';
-			return;
-		}
-		$this->result = 0;
-	}
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[1],
-			'setTitle' => $this->matches[2],
-			'setArtist' => $this->matches[3]
-		]);
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[3]
-		]);
-	}
+    public $isAlbumWeight = 0.8;
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::EXT . "$/";
+        return $this;
+    }
+    
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->matches = $matches;
+            $this->result = 'number-title-artist-ext';
+            return;
+        }
+        $this->result = 0;
+    }
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[1],
+            'setTitle' => $this->matches[2],
+            'setArtist' => $this->matches[3]
+        ]);
+        $this->albumContext->recommend([
+            'setArtist' => $this->matches[3]
+        ]);
+    }
 }

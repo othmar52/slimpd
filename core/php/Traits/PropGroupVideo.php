@@ -18,48 +18,48 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropGroupVideo {
-	protected $videoDataformat;
-	protected $videoCodec;
-	protected $videoResolutionX;
-	protected $videoResolutionY;
-	protected $videoFramerate;
+    protected $videoDataformat;
+    protected $videoCodec;
+    protected $videoResolutionX;
+    protected $videoResolutionY;
+    protected $videoFramerate;
 
-	// getter
-	public function getVideoDataformat() {
-		return $this->videoDataformat;
-	}
-	public function getVideoCodec() {
-		return $this->videoCodec;
-	}
-	public function getVideoResolutionX() {
-		return $this->videoResolutionX;
-	}
-	public function getVideoResolutionY() {
-		return $this->videoResolutionY;
-	}
-	public function getVideoFramerate() {
-		return $this->videoFramerate;
-	}
+    // getter
+    public function getVideoDataformat() {
+        return $this->videoDataformat;
+    }
+    public function getVideoCodec() {
+        return $this->videoCodec;
+    }
+    public function getVideoResolutionX() {
+        return $this->videoResolutionX;
+    }
+    public function getVideoResolutionY() {
+        return $this->videoResolutionY;
+    }
+    public function getVideoFramerate() {
+        return $this->videoFramerate;
+    }
 
-	// setter
-	public function setVideoDataformat($value) {
-		$this->videoDataformat = $value;
-		return $this;
-	}
-	public function setVideoCodec($value) {
-		$this->videoCodec = $value;
-		return $this;
-	}
-	public function setVideoResolutionX($value) {
-		$this->videoResolutionX = $value;
-		return $this;
-	}
-	public function setVideoResolutionY($value) {
-		$this->videoResolutionY = $value;
-		return $this;
-	}
-	public function setVideoFramerate($value) {
-		$this->videoFramerate = $value;
-		return $this;
-	}
+    // setter
+    public function setVideoDataformat($value) {
+        $this->videoDataformat = $value;
+        return $this;
+    }
+    public function setVideoCodec($value) {
+        $this->videoCodec = $value;
+        return $this;
+    }
+    public function setVideoResolutionX($value) {
+        $this->videoResolutionX = $value;
+        return $this;
+    }
+    public function setVideoResolutionY($value) {
+        $this->videoResolutionY = $value;
+        return $this;
+    }
+    public function setVideoFramerate($value) {
+        $this->videoFramerate = $value;
+        return $this;
+    }
 }

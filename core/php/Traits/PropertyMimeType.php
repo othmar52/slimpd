@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyMimeType {
-	protected $mimeType;
+    protected $mimeType;
 
-	public function getMimeType() {
-		return $this->mimeType;
-	}
+    public function getMimeType() {
+        return $this->mimeType;
+    }
 
-	public function setMimeType($value) {
-		$this->mimeType = $value;
-		return $this;
-	}
+    public function setMimeType($value) {
+        $this->mimeType = $value;
+        return $this;
+    }
 }

@@ -25,36 +25,36 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 class HasPrefixedCatalogNr extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^([a-z0-9_]{1,15})\-\-/";
-		return $this;
-	}
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^([a-z0-9_]{1,15})\-\-/";
+        return $this;
+    }
 
-	public function run() {
-		if(preg_match_all($this->pattern, $this->input, $matches)) {
-			$this->result = 1;
-			$this->matches = $matches;
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        if(preg_match_all($this->pattern, $this->input, $matches)) {
+            $this->result = 1;
+            $this->matches = $matches;
+            return;
+        }
+        $this->result = 0;
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(), 10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		foreach($this->matches as $group) {
-			foreach($group as $catNrMatch) {
-				$this->albumContext->recommend([
-					'setCatalogNr' => az09($catNrMatch)
-				]);
-				$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
-					'setCatalogNr' => az09($catNrMatch)
-				],0.1);
-			}
-		}
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(), 10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        foreach($this->matches as $group) {
+            foreach($group as $catNrMatch) {
+                $this->albumContext->recommend([
+                    'setCatalogNr' => az09($catNrMatch)
+                ]);
+                $this->jumbleJudge->albumMigrator->recommendationForAllTracks([
+                    'setCatalogNr' => az09($catNrMatch)
+                ],0.1);
+            }
+        }
+    }
 }

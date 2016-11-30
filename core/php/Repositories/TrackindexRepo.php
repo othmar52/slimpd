@@ -19,6 +19,6 @@ namespace Slimpd\Repositories;
  */
 
 class TrackindexRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'trackindex';
-	public static $classPath = '\Slimpd\Models\Trackindex';
+    public static $tableName = 'trackindex';
+    public static $classPath = '\Slimpd\Models\Trackindex';
 }

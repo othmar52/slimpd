@@ -20,38 +20,38 @@
  * dependencies: jquery, backbonejs, underscorejs, window.sliMpd.router, window.sliMpd.modules.AbstractView
  */
 (function() {
-	"use strict";
-	var $ = window.jQuery,
-		_ = window._;
-	window.sliMpd = $.extend(true, window.sliMpd, {
-		modules : {}
-	});
-	window.sliMpd.modules.ModalView = window.sliMpd.modules.AbstractView.extend({
+    "use strict";
+    var $ = window.jQuery,
+        _ = window._;
+    window.sliMpd = $.extend(true, window.sliMpd, {
+        modules : {}
+    });
+    window.sliMpd.modules.ModalView = window.sliMpd.modules.AbstractView.extend({
 
-		rendered : false,
+        rendered : false,
 
-		$modal : null,
+        $modal : null,
 
-		initialize : function(options) {
-			//console.log(options);
-			this.$modal = $("#global-modal");
-			window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
-		},
+        initialize : function(options) {
+            //console.log(options);
+            this.$modal = $("#global-modal");
+            window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
+        },
 
-		render : function() {
-			window.sliMpd.modules.AbstractView.prototype.render.call(this);
-			this.rendered = true;
-		},
+        render : function() {
+            window.sliMpd.modules.AbstractView.prototype.render.call(this);
+            this.rendered = true;
+        },
 
-		renderModalContent : function(markup) {
-			this.$modal.find(".modal-content").html(markup);
-			this.rendered = false;
-			this.render();
-			this.$modal.modal("show");
-		},
+        renderModalContent : function(markup) {
+            this.$modal.find(".modal-content").html(markup);
+            this.rendered = false;
+            this.render();
+            this.$modal.modal("show");
+        },
 
-		addMarkupToModal : function(markup) {
+        addMarkupToModal : function(markup) {
 
-		}
-	});
+        }
+    });
 }());

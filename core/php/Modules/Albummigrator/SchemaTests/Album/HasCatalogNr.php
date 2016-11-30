@@ -19,5 +19,5 @@ namespace Slimpd\Modules\Albummigrator\SchemaTests\Album;
  */
 
 class HasCatalogNr extends \Slimpd\Modules\Albummigrator\AbstractTests\HasCatalogNr {
-	public $isAlbumWeight = 0.8;
+    public $isAlbumWeight = 0.8;
 }

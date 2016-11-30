@@ -18,62 +18,62 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Editorial extends \Slimpd\Models\AbstractModel {
-	protected $crdate;
-	protected $tstamp;
-	protected $itemType;
-	protected $itemUid;
-	protected $column;
-	protected $value;
-	
-	use \Slimpd\Traits\PropGroupRelPath; // $relPath, $relPathHash
-	use \Slimpd\Traits\PropertyFingerprint; // $fingerprint
+    protected $crdate;
+    protected $tstamp;
+    protected $itemType;
+    protected $itemUid;
+    protected $column;
+    protected $value;
+    
+    use \Slimpd\Traits\PropGroupRelPath; // $relPath, $relPathHash
+    use \Slimpd\Traits\PropertyFingerprint; // $fingerprint
 
-	public static $tableName = "editorial";
-	public static $repoKey = 'editorialRepo';
+    public static $tableName = "editorial";
+    public static $repoKey = 'editorialRepo';
 
-	//setter
-	public function setCrdate($value) {
-		$this->crdate = $value;
-		return $this;
-	}
-	public function setTstamp($value) {
-		$this->tstamp = $value;
-		return $this;
-	}
-	public function setItemType($value) {
-		$this->itemType = $value;
-		return $this;
-	}
-	public function setItemUid($value) {
-		$this->itemUid = $value;
-		return $this;
-	}
-	public function setColumn($value) {
-		$this->column = $value;
-		return $this;
-	}
-	public function setValue($value) {
-		$this->value = $value;
-		return $this;
-	}
+    //setter
+    public function setCrdate($value) {
+        $this->crdate = $value;
+        return $this;
+    }
+    public function setTstamp($value) {
+        $this->tstamp = $value;
+        return $this;
+    }
+    public function setItemType($value) {
+        $this->itemType = $value;
+        return $this;
+    }
+    public function setItemUid($value) {
+        $this->itemUid = $value;
+        return $this;
+    }
+    public function setColumn($value) {
+        $this->column = $value;
+        return $this;
+    }
+    public function setValue($value) {
+        $this->value = $value;
+        return $this;
+    }
 
-	// getter
-	public function getCrdate() {
-		return $this->crdate;
-	}
-	public function getTstamp() {
-		return $this->tstamp;
-	}
-	public function getItemType() {
-		return $this->itemType;
-	}
-	public function getItemUid() {
-		return $this->itemUid;
-	}
-	public function getColumn() {
-		return $this->column;
-	}
-	public function getValue() {
-		return $this->value;
-	}
+    // getter
+    public function getCrdate() {
+        return $this->crdate;
+    }
+    public function getTstamp() {
+        return $this->tstamp;
+    }
+    public function getItemType() {
+        return $this->itemType;
+    }
+    public function getItemUid() {
+        return $this->itemUid;
+    }
+    public function getColumn() {
+        return $this->column;
+    }
+    public function getValue() {
+        return $this->value;
+    }
 }

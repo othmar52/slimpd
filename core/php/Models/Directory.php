@@ -19,35 +19,35 @@ namespace Slimpd\Models;
  */
 
 class Directory extends \Slimpd\Models\AbstractFilesystemItem {
-	protected $exists = FALSE;
-	protected $breadcrumb;
-	public function __construct($dirPath) {
-		try {
-			$this->relPath = $dirPath;
-			$this->title = basename($dirPath);
-			$this->relPathHash = getFilePathHash($this->relPath);
-		} catch (Exception $e) {}
-	}
+    protected $exists = FALSE;
+    protected $breadcrumb;
+    public function __construct($dirPath) {
+        try {
+            $this->relPath = $dirPath;
+            $this->title = basename($dirPath);
+            $this->relPathHash = getFilePathHash($this->relPath);
+        } catch (Exception $e) {}
+    }
 
-	public function fetchRenderItems() {
-		// nothing to fetch for directories but called by GenrealUtility
-	}
+    public function fetchRenderItems() {
+        // nothing to fetch for directories but called by GenrealUtility
+    }
 
-	public function getExists() {
-		return $this->exists;
-	}
+    public function getExists() {
+        return $this->exists;
+    }
 
-	public function setExists($value) {
-		$this->exists = $value;
-		return $this;
-	}
+    public function setExists($value) {
+        $this->exists = $value;
+        return $this;
+    }
 
-	public function getBreadcrumb() {
-		return $this->breadcrumb;
-	}
+    public function getBreadcrumb() {
+        return $this->breadcrumb;
+    }
 
-	public function setBreadcrumb($value) {
-		$this->breadcrumb = $value;
-		return $this;
-	}
+    public function setBreadcrumb($value) {
+        $this->breadcrumb = $value;
+        return $this;
+    }
 }

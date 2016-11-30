@@ -20,79 +20,79 @@ use \Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class DiscogsTrackContext extends \Slimpd\Models\Track {
-	use \Slimpd\Modules\Albummigrator\TrackArtistExtractor; // regularArtists, featArtists, remixArtists, artistString, titleString
+    use \Slimpd\Modules\Albummigrator\TrackArtistExtractor; // regularArtists, featArtists, remixArtists, artistString, titleString
 
-	protected $album;
+    protected $album;
 
-	public $idx;
+    public $idx;
 
-	public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $idx, $container) {
-		$this->idx = $idx;		
-		$this->container = $container;
-		$this->db = $container->db;
-		$this->ll = $container->ll;
-		$this->setPropertiesByApiResponse($discogsItem->getResponse(TRUE));
-	}
+    public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $idx, $container) {
+        $this->idx = $idx;        
+        $this->container = $container;
+        $this->db = $container->db;
+        $this->ll = $container->ll;
+        $this->setPropertiesByApiResponse($discogsItem->getResponse(TRUE));
+    }
 
-	private function setPropertiesByApiResponse($apiResponse) {
-		#echo "<pre>";print_r($apiResponse);die;
-		$counter = -1;
-		foreach($apiResponse['tracklist'] as $trackData) {
-			if($trackData['type_'] !== 'track') {
-				// skip stuff like type:heading @see: discogs-id: 1008775
-				continue;
-			}
-			$counter++;
-			if($counter !== $this->idx) {
-				continue;
-			}
-			if(isset($trackData['extraartists'])) {
-				foreach($trackData['extraartists'] as $artist) {
-					switch($artist['role']) {
-						case 'Featuring':
-							$this->featArtists[ $artist['id'] ] = $artist['name'];
-							break;
-						default:
-							// TODO: lets see what other possibilities discogs-API-response is returning...
-							break;
-					}
-				}
-			}
+    private function setPropertiesByApiResponse($apiResponse) {
+        #echo "<pre>";print_r($apiResponse);die;
+        $counter = -1;
+        foreach($apiResponse['tracklist'] as $trackData) {
+            if($trackData['type_'] !== 'track') {
+                // skip stuff like type:heading @see: discogs-id: 1008775
+                continue;
+            }
+            $counter++;
+            if($counter !== $this->idx) {
+                continue;
+            }
+            if(isset($trackData['extraartists'])) {
+                foreach($trackData['extraartists'] as $artist) {
+                    switch($artist['role']) {
+                        case 'Featuring':
+                            $this->featArtists[ $artist['id'] ] = $artist['name'];
+                            break;
+                        default:
+                            // TODO: lets see what other possibilities discogs-API-response is returning...
+                            break;
+                    }
+                }
+            }
 
-			$this->setTrackNumber($trackData['position']);
-			// use track artists or album artist?
-			$trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $apiResponse['artists'];
-			foreach($trackArtists as $artist) {#
-				if(array_key_exists($artist['id'], $this->featArtists) === TRUE) {
-					// skip already provided featured artists
-					continue;
-				}
-				$this->regularArtists[] = $artist['name'];
-			}
-			// TODO: move this to class TrackArtistExtractor
-			$this->artistString = join(" & ", $this->regularArtists);
-			if(count($this->featArtists) > 0) {
-				$this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
-			}
-			$this->setTitleString($trackData['title']);
-			if(strlen($trackData['duration']) > 0) {
-				$this->setMiliseconds(timeStringToSeconds($trackData['duration'])*1000);
-			}
-		}
-	}
-	
-	public function setIdx($value) {
-		$this->idx = $value;
-		return $this;
-	}
-	public function getIdx() {
-		return $this->idx;
-	}
-	public function setAlbum($value) {
-		$this->album = $value;
-		return $this;
-	}
-	public function getAlbum() {
-		return $this->album;
-	}
+            $this->setTrackNumber($trackData['position']);
+            // use track artists or album artist?
+            $trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $apiResponse['artists'];
+            foreach($trackArtists as $artist) {#
+                if(array_key_exists($artist['id'], $this->featArtists) === TRUE) {
+                    // skip already provided featured artists
+                    continue;
+                }
+                $this->regularArtists[] = $artist['name'];
+            }
+            // TODO: move this to class TrackArtistExtractor
+            $this->artistString = join(" & ", $this->regularArtists);
+            if(count($this->featArtists) > 0) {
+                $this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
+            }
+            $this->setTitleString($trackData['title']);
+            if(strlen($trackData['duration']) > 0) {
+                $this->setMiliseconds(timeStringToSeconds($trackData['duration'])*1000);
+            }
+        }
+    }
+    
+    public function setIdx($value) {
+        $this->idx = $value;
+        return $this;
+    }
+    public function getIdx() {
+        return $this->idx;
+    }
+    public function setAlbum($value) {
+        $this->album = $value;
+        return $this;
+    }
+    public function getAlbum() {
+        return $this->album;
+    }
 }

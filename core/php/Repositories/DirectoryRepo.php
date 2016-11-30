@@ -19,28 +19,28 @@ namespace Slimpd\Repositories;
  */
 
 class DirectoryRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'noDatabaseTable';
-	public static $classPath = '\Slimpd\Models\Directory';
-	
-	public function create($dirPath) {
-		#$classPath = self::getClassPath();
-		return new \Slimpd\Models\Directory($dirPath);
-	}
+    public static $tableName = 'noDatabaseTable';
+    public static $classPath = '\Slimpd\Models\Directory';
+    
+    public function create($dirPath) {
+        #$classPath = self::getClassPath();
+        return new \Slimpd\Models\Directory($dirPath);
+    }
 
-	public function validate(\Slimpd\Models\Directory $dirInstance) {
-		$realPath = $this->container->filesystemUtility->getFileRealPath($dirInstance->getRelPath());
-		if($this->container->filesystemUtility->isInAllowedPath($dirInstance->getRelPath()) === FALSE || $realPath === FALSE) {
-			return FALSE;
-		}
+    public function validate(\Slimpd\Models\Directory $dirInstance) {
+        $realPath = $this->container->filesystemUtility->getFileRealPath($dirInstance->getRelPath());
+        if($this->container->filesystemUtility->isInAllowedPath($dirInstance->getRelPath()) === FALSE || $realPath === FALSE) {
+            return FALSE;
+        }
 
-		// check if it is really a directory because getFileRealPath() also works for files
-		if(is_dir($realPath) === FALSE) {
-			return FALSE;
-		}
-		$dirInstance->setExists(TRUE);
-		return TRUE;
-	}
-	public function fetchRenderItems(&$renderItems, $directoryInstance) {
-		return;
-	}
+        // check if it is really a directory because getFileRealPath() also works for files
+        if(is_dir($realPath) === FALSE) {
+            return FALSE;
+        }
+        $dirInstance->setExists(TRUE);
+        return TRUE;
+    }
+    public function fetchRenderItems(&$renderItems, $directoryInstance) {
+        return;
+    }
 }

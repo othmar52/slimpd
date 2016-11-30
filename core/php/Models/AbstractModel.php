@@ -18,62 +18,62 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 abstract class AbstractModel {
-	public static $tableName;
-	public static $repoKey;
-	protected $uid;
+    public static $tableName;
+    public static $repoKey;
+    protected $uid;
 
 
-	private static function getTableName() {
-		$class = get_called_class();
-		return $class::$tableName;
-	}
-	
-	public static function getRepoKey() {
-		$class = get_called_class();
-		return $class::$repoKey;
-	}
-	
-	public function mapArrayToInstance($array) {
-		foreach($array as $dbField => $value) {
-			$setter = 'set'.ucfirst($dbField);
-			if(method_exists(get_called_class(), $setter)) {
-				#echo $setter . $value ."<br>";
-				$this->$setter($value);
-			}
-		}
-	}
+    private static function getTableName() {
+        $class = get_called_class();
+        return $class::$tableName;
+    }
+    
+    public static function getRepoKey() {
+        $class = get_called_class();
+        return $class::$repoKey;
+    }
+    
+    public function mapArrayToInstance($array) {
+        foreach($array as $dbField => $value) {
+            $setter = 'set'.ucfirst($dbField);
+            if(method_exists(get_called_class(), $setter)) {
+                #echo $setter . $value ."<br>";
+                $this->$setter($value);
+            }
+        }
+    }
 
-	/**
-	 * @return array  - keys named like databasefields
-	 * 
-	 */
-	public function mapInstancePropertiesToDatabaseKeys($ignoreEmpty = TRUE) {
-		$return = array();
-		$calledClass = get_called_class();
-		#echo $calledClass; die();
-		foreach(array_keys(get_class_vars($calledClass)) as $classVar) {
-			$getter = 'get'.ucfirst($classVar);
-			if(in_array($classVar, ['tableName', 'repoKey']) === TRUE) {
-				continue;
-			}
-			if(method_exists($calledClass, $getter)) {
-				$instancePropertyValue = $this->$getter();
-				if($ignoreEmpty === TRUE && !$instancePropertyValue) {
-					continue;
-				}
-				$return[$classVar] = $instancePropertyValue;
-			}
-		}
-		return $return;
-	}
+    /**
+     * @return array  - keys named like databasefields
+     * 
+     */
+    public function mapInstancePropertiesToDatabaseKeys($ignoreEmpty = TRUE) {
+        $return = array();
+        $calledClass = get_called_class();
+        #echo $calledClass; die();
+        foreach(array_keys(get_class_vars($calledClass)) as $classVar) {
+            $getter = 'get'.ucfirst($classVar);
+            if(in_array($classVar, ['tableName', 'repoKey']) === TRUE) {
+                continue;
+            }
+            if(method_exists($calledClass, $getter)) {
+                $instancePropertyValue = $this->$getter();
+                if($ignoreEmpty === TRUE && !$instancePropertyValue) {
+                    continue;
+                }
+                $return[$classVar] = $instancePropertyValue;
+            }
+        }
+        return $return;
+    }
 
 
 
-	public function getUid() {
-		return $this->uid;
-	}
-	public function setUid($value) {
-		$this->uid = $value;
-		return $this;
-	}
+    public function getUid() {
+        return $this->uid;
+    }
+    public function setUid($value) {
+        $this->uid = $value;
+        return $this;
+    }
 }

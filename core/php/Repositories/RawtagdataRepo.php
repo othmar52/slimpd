@@ -19,6 +19,6 @@ namespace Slimpd\Repositories;
  */
 
 class RawtagdataRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'rawtagdata';
-	public static $classPath = '\Slimpd\Models\Rawtagdata';
+    public static $tableName = 'rawtagdata';
+    public static $classPath = '\Slimpd\Models\Rawtagdata';
 }

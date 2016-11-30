@@ -24,36 +24,36 @@ use Slimpd\Utilities\RegexHelper as RGX;
  * "
  */
 class ArtistNumberTitleSceneExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.8;
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NUM . "-" . RGX::NO_MINUS . RGX::SCENE . RGX::EXT . "$/i";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'artist-number-title-scene-ext';
-			return;
-		}
-		$this->result = 0;
-	}
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setArtist' => $this->matches[1],
-			'setTrackNumber' => removeLeadingZeroes($this->matches[2]),
-			'setTitle' => $this->matches[3]
-		]);
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[1]
-		]);
-	}
+    public $isAlbumWeight = 0.8;
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NUM . "-" . RGX::NO_MINUS . RGX::SCENE . RGX::EXT . "$/i";
+        return $this;
+    }
+    
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->matches = $matches;
+            $this->result = 'artist-number-title-scene-ext';
+            return;
+        }
+        $this->result = 0;
+    }
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setArtist' => $this->matches[1],
+            'setTrackNumber' => removeLeadingZeroes($this->matches[2]),
+            'setTitle' => $this->matches[3]
+        ]);
+        $this->albumContext->recommend([
+            'setArtist' => $this->matches[1]
+        ]);
+    }
 }

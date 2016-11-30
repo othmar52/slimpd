@@ -21,36 +21,36 @@ use Slimpd\Utilities\RegexHelper as RGX;
 # TODO: use preg_match_all to fetch multiple matches
 abstract class HasCatalogNr extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/" . RGX::CATNR . "/";
-		return $this;
-	}
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/" . RGX::CATNR . "/";
+        return $this;
+    }
 
-	public function run() {
-		if(preg_match_all($this->pattern, $this->input, $matches)) {
-			$this->result = 1;
-			$this->matches = $matches;
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        if(preg_match_all($this->pattern, $this->input, $matches)) {
+            $this->result = 1;
+            $this->matches = $matches;
+            return;
+        }
+        $this->result = 0;
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		foreach($this->matches as $group) {
-			foreach($group as $catNrMatch) {
-				$this->trackContext->recommend([
-					'setCatalogNr' => az09($catNrMatch)
-				]);
-				$this->albumContext->recommend([
-					'setCatalogNr' => az09($catNrMatch)
-				]);
-			}
-		}
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        foreach($this->matches as $group) {
+            foreach($group as $catNrMatch) {
+                $this->trackContext->recommend([
+                    'setCatalogNr' => az09($catNrMatch)
+                ]);
+                $this->albumContext->recommend([
+                    'setCatalogNr' => az09($catNrMatch)
+                ]);
+            }
+        }
+    }
 }

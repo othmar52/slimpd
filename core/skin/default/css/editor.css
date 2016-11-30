@@ -1,71 +1,88 @@
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
+ *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.    See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.    If not, see <http://www.gnu.org/licenses/>.
+ */
 .marry {
-	position: absolute;
-	right: -1.5em;
-	z-index: 10;
+    position: absolute;
+    right: -1.5em;
+    z-index: 10;
 }
 
 .marry-all {
-	position: absolute;
-	right: 5.5em;
-	top: -0.5em;
+    position: absolute;
+    right: 5.5em;
+    top: -0.5em;
 }
 
 .is-married {
-	background-color: #0a0a0a;
-	border-color: #0a0a0a;
+    background-color: #0a0a0a;
+    border-color: #0a0a0a;
 }
 .external-items .is-married {
-	left: 1em;
-	position: relative;
-	transition: all .6s ease-out;
+    left: 1em;
+    position: relative;
+    transition: all .6s ease-out;
 }
 
 .local-items .is-married {
-	right: 1em;
-	position: relative;
-	transition: all .6s ease-out;
+    right: 1em;
+    position: relative;
+    transition: all .6s ease-out;
 }
 
 .ul-red {
-	color: #d9534f;
+    color: #d9534f;
 }
 
 .ul-green {
-	color: #9bef9b;
+    color: #9bef9b;
 }
 
 .ul-orange {
-	color: #f0ad4e;
+    color: #f0ad4e;
 }
 .is-married .ul-red,
 .is-married .ul-green,
 .is-married .ul-orange,
 .is-married .dark {
-	color: #696969;
-	transition: all .25s ease-out;
+    color: #696969;
+    transition: all .25s ease-out;
 }
 
 .shorten.highlight {
-	width: 92%;
+    width: 92%;
 }
 
 .well .duration {
-	position: absolute;
-	right: 2em;
+    position: absolute;
+    right: 2em;
 }
 
 .unchecked {
-	display: inline-block;
+    display: inline-block;
 }
 
 .checked {
-	display: none;
+    display: none;
 }
 
 .is-married .unchecked {
-	display: none;
+    display: none;
 }
 
 .is-married .checked {
-	display: inline-block;
+    display: inline-block;
 }

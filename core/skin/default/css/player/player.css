@@ -1,35 +1,49 @@
-/* Copyright
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.    See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
 
 /* player mode toggler */
 /* @see: templates/css/spotcolors.css for overrides */
 
 .permaplayer .toggle-player {
-	margin-left: 2em;
+    margin-left: 2em;
 }
 
 .permaplayer {
-	box-shadow: 0 -3px 30px 0 rgba(0, 0, 0, 0.6);
-	backface-visibility: hidden;
+    box-shadow: 0 -3px 30px 0 rgba(0, 0, 0, 0.6);
+    backface-visibility: hidden;
 }
 
 
 .slimplayer-show,
 .slimplayer-show-tc {
-	display: none;
+    display: none;
 }
 
 .slimplayer .slimplayer-show {
-	display: inline-block;
+    display: inline-block;
 }
 
 .slimplayer .slimplayer-show-tc {
-	display: table-cell;
+    display: table-cell;
 }
 
 .slimplayer .slimplayer-hidden {
-	display: none;
+    display: none;
 }
 
 
@@ -39,29 +53,29 @@
 .mpd-status-progressbar,
 .jp-play-bar,
 .xwax-deck-progressbar {
-	position: absolute;
-	background: rgba(255,156,1,0.3);
-	background: rgba(0,0,0,0.7);
-	width: 0;
-	border-right: 2px solid rgba(255, 255, 255, 1);
-	top: 0;
-	left: 0;
+    position: absolute;
+    background: rgba(255,156,1,0.3);
+    background: rgba(0,0,0,0.7);
+    width: 0;
+    border-right: 2px solid rgba(255, 255, 255, 1);
+    top: 0;
+    left: 0;
 }
 
 .mpd-ctrl-seekbar,
 .jp-seek-bar,
 .local-ctrl-seekzero,
 .mpd-ctrl-seekzero {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    opacity: 0;
 }
 
 .local-ctrl-seekzero,
 .mpd-ctrl-seekzero {
-	width: 1em;
-	left: -1em;
+    width: 1em;
+    left: -1em;
 }
 
 .mpd-ctrl-seekbar,
@@ -74,7 +88,7 @@
 .mpd-ctrl-seekzero,
 .waveform-wrapper,
 .waveform-wrapper canvas {
-	height: 41px;
+    height: 41px;
 }
 
 
@@ -90,105 +104,105 @@
 .slimplayer .mpd-ctrl-seekzero,
 .slimplayer .waveform-wrapper,
 .slimplayer .waveform-wrapper canvas {
-	height: 20px;
+    height: 20px;
 }
 
 .player-divider {
-	margin: 0 0 0.3em 0;
-	width: 110%; /* TODO: best practice for full width border */
+    margin: 0 0 0.3em 0;
+    width: 110%; /* TODO: best practice for full width border */
 }
 
 /* TODO: best practice for conditional margin (xwax yes/no) */
 .slimplayer .seekbar-wrapper {
-	margin-left: 11em;
+    margin-left: 11em;
 }
 
 .seekbar-wrapper {
-	position:relative;
-	margin-left: 30px;
-	margin-right: 136px;
+    position:relative;
+    margin-left: 30px;
+    margin-right: 136px;
 }
 
 .seekbar-inner-wrapper {
-	position:relative;
+    position:relative;
 }
 
 .slimplayer .xwax-gui-toggler {
-	left: 50px;
+    left: 50px;
 }
 
 .waveform-wrapper,
 .waveform-wrapper canvas,
 .waveform {
-	width: 100%;
-	margin-bottom:10px;
-	text-align: center;
-	color: #666;
+    width: 100%;
+    margin-bottom:10px;
+    text-align: center;
+    color: #666;
 }
 
 .timegrid-wrapper {
-	height: 10px;
+    height: 10px;
 }
 
 .timegrid {
-	width: 100%;
-	height:10px;
-	display: block;
+    width: 100%;
+    height:10px;
+    display: block;
 }
 
 .media-body-container {
-	width: 2em;
-	padding-right: 1.6em;
-	padding-left: 1em;
-	height: 100px;
-	display: table-cell;
+    width: 2em;
+    padding-right: 1.6em;
+    padding-left: 1em;
+    height: 100px;
+    display: table-cell;
 }
 
 .slimplayer .media-body-container {
-	height: 40px;
+    height: 40px;
 }
 
 .media-body-inner-table {
-	
-	height: 100%;
-	display: table;
-	text-align: center;
-	margin-top: 5px;
-	
+    
+    height: 100%;
+    display: table;
+    text-align: center;
+    margin-top: 5px;
+    
 }
 .media-body-inner-row {
-	
-	height: 33%;
-	vertical-align: middle;
-	display: table-row;
-	width: 2em;
-	
+    
+    height: 33%;
+    vertical-align: middle;
+    display: table-row;
+    width: 2em;
+    
 }
 
 .permaplayer-artwork {
-	width: 100px;
-	height: 100px;
+    width: 100px;
+    height: 100px;
 }
 
 .slimplayer .permaplayer-artwork {
-	width: 40px;
-	height: 40px;
+    width: 40px;
+    height: 40px;
 }
 
 .permaplayer-trackmeta {
-	display: table-cell;
-	width: 100%;
-	padding-right: 4em; /* TODO: remove this ugly hack */
+    display: table-cell;
+    width: 100%;
+    padding-right: 4em; /* TODO: remove this ugly hack */
 }
 
 .toggle-player-size-wrapper {
-	position: absolute;
-	right: 1em;
-	bottom: 0.5em;
+    position: absolute;
+    right: 1em;
+    bottom: 0.5em;
 }
 
 .status-timestring {
-	text-align: center;
+    text-align: center;
 }
 
 
@@ -196,92 +210,92 @@
 
 
 .navbar-xwax {
-	bottom: 53px;
+    bottom: 53px;
 }
 
 .xwax-mode-show {
-	display: none;
+    display: none;
 }
 
 .xwax-enabled .xwax-mode-show {
-	display: inline-block;
+    display: inline-block;
 }
 
 .xwax-enabled .xwax-mode-hide {
-	display: none;
+    display: none;
 }
 
 .xwax-error .alert {
-	padding: 0.2em 1em;
+    padding: 0.2em 1em;
 } 
 
 
 .show-no-connection {
-	display: none;
+    display: none;
 }
 
 .no-connection .show-no-connection {
-	display: flex;
-	justify-content: center; /* align horizontal */
-	text-align: center;
-	font-size: 2em;
-	background: #333;
-	height: 100%;
-	line-height: 100%;
-	width: 100%;
-	top: 0;
-	left: 0;
-	position: absolute;
-	padding: 0;
-	opacity: 0.6;
+    display: flex;
+    justify-content: center; /* align horizontal */
+    text-align: center;
+    font-size: 2em;
+    background: #333;
+    height: 100%;
+    line-height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    padding: 0;
+    opacity: 0.6;
 }
 
 .no-connection .hide-no-connection {
-	display: none;
+    display: none;
 }
 
 .standalone .no-connection .show-no-connection {
-	align-items: flex-end;
+    align-items: flex-end;
 }
 
 
 .standalone .xwax-row {
-	height: 100%;
+    height: 100%;
 }
 
 .primary-controls { /* prev - play - next */
-	position: absolute;
-	right: 0;
-	top: 0;
-	padding-top: 5px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding-top: 5px;
 }
 
 /* clown icon for playing a random track */
 .fa-clown {
-	background: url(../../img/clown.svg) center center no-repeat;
-	background-size: cover;
-	width: 1em;
-	height: 1em;
-	display: inline-block;
+    background: url(../../img/clown.svg) center center no-repeat;
+    background-size: cover;
+    width: 1em;
+    height: 1em;
+    display: inline-block;
 }
 
 /* different player height for mobile view */
 @media(max-width:991px){
-	.permaplayer {
-		height: 130px;
-		padding-top: 2em;
-	}
+    .permaplayer {
+        height: 130px;
+        padding-top: 2em;
+    }
 
-	.status-timestring {
-		width: 136px;
-	}
+    .status-timestring {
+        width: 136px;
+    }
 
-	.timegrid-wrapper {
-		display: none;
-	}
+    .timegrid-wrapper {
+        display: none;
+    }
 
-	.trackmeta-xs {
-		padding-top: 1em;
-		padding-bottom: 2em;
-	}
+    .trackmeta-xs {
+        padding-top: 1em;
+        padding-bottom: 2em;
+    }
 }

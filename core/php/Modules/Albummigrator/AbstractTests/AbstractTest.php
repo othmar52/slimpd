@@ -19,24 +19,24 @@ namespace Slimpd\Modules\Albummigrator\AbstractTests;
  */
 
 abstract class AbstractTest {
-	public $isAlbumWeight = 1;
-	public $matches = array();
-	public $pattern;
-	public $result;
-	public $input;
-	public $trackContext;
-	public $albumContext;
-	public $jumbleJudge;
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		$this->input = $input;
-		$this->trackContext = $trackContext;
-		$this->albumContext = $albumContext;
-		$this->jumbleJudge = $jumbleJudge;
-		return $this;
-	}
-	
-	public function run() { }
-	
-	public function scoreMatches() { }
+    public $isAlbumWeight = 1;
+    public $matches = array();
+    public $pattern;
+    public $result;
+    public $input;
+    public $trackContext;
+    public $albumContext;
+    public $jumbleJudge;
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        $this->input = $input;
+        $this->trackContext = $trackContext;
+        $this->albumContext = $albumContext;
+        $this->jumbleJudge = $jumbleJudge;
+        return $this;
+    }
+    
+    public function run() { }
+    
+    public function scoreMatches() { }
 }

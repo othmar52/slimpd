@@ -19,46 +19,46 @@ namespace Slimpd\Modules\Localization;
  */
 
 class Localization {
-	private $lang = array();
-	private $preferedLang;
+    private $lang = array();
+    private $preferedLang;
 
-	public function __construct($preferedLang) {
-		$this->preferedLang = $preferedLang;
-		// TODO: caching of parsed ll-config
-		// TODO: check if file is readable
-		// read config stuff
-		$this->lang = parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE);
-	}
+    public function __construct($preferedLang) {
+        $this->preferedLang = $preferedLang;
+        // TODO: caching of parsed ll-config
+        // TODO: check if file is readable
+        // read config stuff
+        $this->lang = parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE);
+    }
 
-	public function str($itemkey, $vars = array()) {
-		$checkLanguages = array(
-			$this->preferedLang,
-			'en' // fallback language
-		);
-		foreach($checkLanguages as $langkey) {
-			if(isset($this->lang[$langkey . '.' . $itemkey])) {
-				if(count($vars) === 0) {
-					return $this->lang[$langkey . '.' . $itemkey];
-				}
-				return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
-			}
-		}
-		return 'TRNSLT:' . $itemkey;
-	}
+    public function str($itemkey, $vars = array()) {
+        $checkLanguages = array(
+            $this->preferedLang,
+            'en' // fallback language
+        );
+        foreach($checkLanguages as $langkey) {
+            if(isset($this->lang[$langkey . '.' . $itemkey])) {
+                if(count($vars) === 0) {
+                    return $this->lang[$langkey . '.' . $itemkey];
+                }
+                return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
+            }
+        }
+        return 'TRNSLT:' . $itemkey;
+    }
 
-	public static function setLocaleByLangKey($languageKey) {
-		switch($languageKey) {
-			case 'de':
-				setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
-				break;
-			default:
-				// TODO: what is the correct locale-setting for en?
-				// make sure this works correctly:
-				//   var_dump(basename('musicfiles/testdirectory/Ænima-bla')); die();
-				// for now force DE...
-				// setlocale(LC_ALL, array('en_EN.UTF-8','en_EN','en_EN'))
-				setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
-				break;
-		}
-	}
+    public static function setLocaleByLangKey($languageKey) {
+        switch($languageKey) {
+            case 'de':
+                setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
+                break;
+            default:
+                // TODO: what is the correct locale-setting for en?
+                // make sure this works correctly:
+                //   var_dump(basename('musicfiles/testdirectory/Ænima-bla')); die();
+                // for now force DE...
+                // setlocale(LC_ALL, array('en_EN.UTF-8','en_EN','en_EN'))
+                setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
+                break;
+        }
+    }
 }

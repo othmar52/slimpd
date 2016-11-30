@@ -19,5 +19,5 @@ namespace Slimpd\Modules\Albummigrator\SchemaTests\Filename;
  */
 
 class HasYear extends \Slimpd\Modules\Albummigrator\AbstractTests\HasYear {
-	public $isAlbumWeight = 0.6;
+    public $isAlbumWeight = 0.6;
 }

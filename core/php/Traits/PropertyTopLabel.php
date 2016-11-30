@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyTopLabel {
-	protected $topLabelUids;
+    protected $topLabelUids;
 
-	public function getTopLabelUids() {
-		return $this->topLabelUids;
-	}
+    public function getTopLabelUids() {
+        return $this->topLabelUids;
+    }
 
-	public function setTopLabelUids($value) {
-		$this->topLabelUids = $value;
-		return $this;
-	}
+    public function setTopLabelUids($value) {
+        $this->topLabelUids = $value;
+        return $this;
+    }
 }

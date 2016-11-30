@@ -1,61 +1,75 @@
-/* Copyright
+/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
  *
+ * This file is part of sliMpd - a php based mpd web client
+ *
+ * This program is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.    See the GNU Affero General Public License
+ * for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
 
 .btn-default {
-	transition: all .25s ease-out;
-	background-color: #353535;
-	border: none;
-	border-radius: 0;
-	color: #888;
+    transition: all .25s ease-out;
+    background-color: #353535;
+    border: none;
+    border-radius: 0;
+    color: #888;
 }
 
 .bg-col2 .btn-default,
 .bg-col3 .btn-default {
-	background-color: #191919;
+    background-color: #191919;
 }
 
 .btn-trnsp,
 .bg-col2 .btn-trnsp,
 .bg-col2 .btn-trnsp {
-	background-color: transparent;
-	background-repeat:no-repeat;
-	border: none;
-	cursor:pointer;
-	overflow: hidden;
-	outline:none;
+    background-color: transparent;
+    background-repeat:no-repeat;
+    border: none;
+    cursor:pointer;
+    overflow: hidden;
+    outline:none;
 }
 
 
 .btn-spacy {
-	padding: 0.3em 1em;
+    padding: 0.3em 1em;
 }
 
 .btn-spacy .glyphicon{
-	padding-right: 1em;
+    padding-right: 1em;
 }
 
 /* to-top link */
 #top-link-block.affix-top {
-	position: absolute; /* allows it to "slide" up into view */
-	bottom: -82px; /* negative of the offset - height of link element */
-	left: 10px; /* padding from the left side of the window */
+    position: absolute; /* allows it to "slide" up into view */
+    bottom: -82px; /* negative of the offset - height of link element */
+    left: 10px; /* padding from the left side of the window */
 }
 #top-link-block.affix {
-	position: fixed; /* keeps it on the bottom once in view */
-	bottom: 130px; /* height of link element */
-	left: 10px; /* padding from the left side of the window */
+    position: fixed; /* keeps it on the bottom once in view */
+    bottom: 130px; /* height of link element */
+    left: 10px; /* padding from the left side of the window */
 }
 
 .discogs-link {
-	background: url(../img/discogs-white.png) top left no-repeat;
-	background-size: 40px 16px;
-	width: 40px;
-	height: 16px;
-	display:inline-block;
-	opacity: 0.2;
+    background: url(../img/discogs-white.png) top left no-repeat;
+    background-size: 40px 16px;
+    width: 40px;
+    height: 16px;
+    display:inline-block;
+    opacity: 0.2;
 }
 
 button:focus {
-	outline:0 !important;
+    outline:0 !important;
 }

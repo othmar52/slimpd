@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyCopyright {
-	protected $copyright;
+    protected $copyright;
 
-	public function getCopyright() {
-		return $this->copyright;
-	}
+    public function getCopyright() {
+        return $this->copyright;
+    }
 
-	public function setCopyright($value) {
-		$this->copyright = $value;
-		return $this;
-	}
+    public function setCopyright($value) {
+        $this->copyright = $value;
+        return $this;
+    }
 }

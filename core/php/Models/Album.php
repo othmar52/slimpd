@@ -18,149 +18,149 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Album extends \Slimpd\Models\AbstractFilesystemItem {
-	use \Slimpd\Traits\PropertyLastScan; // lastScan
-	use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
+    use \Slimpd\Traits\PropertyLastScan; // lastScan
+    use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
 
-	
-	protected $title;
-	protected $year;
-	protected $month;
-	
-	protected $catalogNr;
+    
+    protected $title;
+    protected $year;
+    protected $month;
+    
+    protected $catalogNr;
 
-	protected $added;
-	protected $discs;
+    protected $added;
+    protected $discs;
 
-	protected $albumDr;
-	protected $trackCount;
+    protected $albumDr;
+    protected $trackCount;
 
-	protected $isMixed;
-	protected $isJumble;
-	protected $isLive;
+    protected $isMixed;
+    protected $isJumble;
+    protected $isLive;
 
-	protected $discogsId;
-	protected $rolldabeatsId;
-	protected $beatportId;
-	protected $junoId;
+    protected $discogsId;
+    protected $rolldabeatsId;
+    protected $beatportId;
+    protected $junoId;
 
-	public static $tableName = 'album'; // TODO remove this as its part of the repo
-	public static $repoKey = 'albumRepo';
+    public static $tableName = 'album'; // TODO remove this as its part of the repo
+    public static $repoKey = 'albumRepo';
 
-	//setter
-	public function setTitle($value) {
-		$this->title = $value;
-		return $this;
-	}
-	public function setYear($value) {
-		$this->year = $value;
-		return $this;
-	}
-	public function setMonth($value) {
-		$this->month = $value;
-		return $this;
-	}
-	public function setCatalogNr($value) {
-		$this->catalogNr = $value;
-		return $this;
-	}
-	public function setAdded($value) {
-		$this->added = $value;
-		return $this;
-	}
-	public function setDiscs($value) {
-		$this->discs = $value;
-		return $this;
-	}
-	public function setAlbumDr($value) {
-		$this->albumDr = $value;
-		return $this;
-	}
-	public function setTrackCount($value) {
-		$this->trackCount = $value;
-		return $this;
-	}
-
-
-	public function setIsMixed($value) {
-		$this->isMixed = $value;
-		return $this;
-	}
-	public function setIsJumble($value) {
-		$this->isJumble = $value;
-		return $this;
-	}
-	public function setIsLive($value) {
-		$this->isLive = $value;
-		return $this;
-	}
+    //setter
+    public function setTitle($value) {
+        $this->title = $value;
+        return $this;
+    }
+    public function setYear($value) {
+        $this->year = $value;
+        return $this;
+    }
+    public function setMonth($value) {
+        $this->month = $value;
+        return $this;
+    }
+    public function setCatalogNr($value) {
+        $this->catalogNr = $value;
+        return $this;
+    }
+    public function setAdded($value) {
+        $this->added = $value;
+        return $this;
+    }
+    public function setDiscs($value) {
+        $this->discs = $value;
+        return $this;
+    }
+    public function setAlbumDr($value) {
+        $this->albumDr = $value;
+        return $this;
+    }
+    public function setTrackCount($value) {
+        $this->trackCount = $value;
+        return $this;
+    }
 
 
-	public function setDiscogsId($value) {
-		$this->discogsId = $value;
-		return $this;
-	}
-	public function setRolldabeatsId($value) {
-		$this->rolldabeatsId = $value;
-		return $this;
-	}
-	public function setBeatportId($value) {
-		$this->beatportId = $value;
-		return $this;
-	}
-	public function setJunoId($value) {
-		$this->junoId = $value;
-		return $this;
-	}
+    public function setIsMixed($value) {
+        $this->isMixed = $value;
+        return $this;
+    }
+    public function setIsJumble($value) {
+        $this->isJumble = $value;
+        return $this;
+    }
+    public function setIsLive($value) {
+        $this->isLive = $value;
+        return $this;
+    }
+
+
+    public function setDiscogsId($value) {
+        $this->discogsId = $value;
+        return $this;
+    }
+    public function setRolldabeatsId($value) {
+        $this->rolldabeatsId = $value;
+        return $this;
+    }
+    public function setBeatportId($value) {
+        $this->beatportId = $value;
+        return $this;
+    }
+    public function setJunoId($value) {
+        $this->junoId = $value;
+        return $this;
+    }
 
 
 
-	// getter
+    // getter
 
-	public function getTitle() {
-		return $this->title;
-	}
-	public function getYear() {
-		return $this->year;
-	}
-	public function getMonth() {
-		return $this->month;
-	}
-	public function getCatalogNr() {
-		return $this->catalogNr;
-	}
-	public function getAdded() {
-		return $this->added;
-	}
-	public function getDiscs() {
-		return $this->discs;
-	}
-	public function getAlbumDr() {
-		return $this->albumDr;
-	}
-	public function getTrackCount() {
-		return $this->trackCount;
-	}
+    public function getTitle() {
+        return $this->title;
+    }
+    public function getYear() {
+        return $this->year;
+    }
+    public function getMonth() {
+        return $this->month;
+    }
+    public function getCatalogNr() {
+        return $this->catalogNr;
+    }
+    public function getAdded() {
+        return $this->added;
+    }
+    public function getDiscs() {
+        return $this->discs;
+    }
+    public function getAlbumDr() {
+        return $this->albumDr;
+    }
+    public function getTrackCount() {
+        return $this->trackCount;
+    }
 
-	public function getIsMixed() {
-		return $this->isMixed;
-	}
-	public function getIsJumble() {
-		return $this->isJumble;
-	}
-	public function getIsLive() {
-		return $this->isLive;
-	}
+    public function getIsMixed() {
+        return $this->isMixed;
+    }
+    public function getIsJumble() {
+        return $this->isJumble;
+    }
+    public function getIsLive() {
+        return $this->isLive;
+    }
 
-	public function getDiscogsId() {
-		return $this->discogsId;
-	}
-	public function getRolldabeatsId() {
-		return $this->rolldabeatsId;
-	}
-	public function getBeatportId() {
-		return $this->beatportId;
-	}
-	public function getJunoId() {
-		return $this->junoId;
-	}
+    public function getDiscogsId() {
+        return $this->discogsId;
+    }
+    public function getRolldabeatsId() {
+        return $this->rolldabeatsId;
+    }
+    public function getBeatportId() {
+        return $this->beatportId;
+    }
+    public function getJunoId() {
+        return $this->junoId;
+    }
 }

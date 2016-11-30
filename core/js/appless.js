@@ -16,13 +16,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 $(document).ready(function() {
-	"use strict";
-	var $ = window.jQuery;
-	window.sliMpd = $.extend(true, window.sliMpd, {
-		modules : {},
-	});
-	window.sliMpd.router = new window.sliMpd.modules.Router();
-	window.Backbone.history.start({
-		pushState : true
-	});
+    "use strict";
+    var $ = window.jQuery;
+    window.sliMpd = $.extend(true, window.sliMpd, {
+        modules : {},
+    });
+    window.sliMpd.router = new window.sliMpd.modules.Router();
+    window.Backbone.history.start({
+        pushState : true
+    });
 });

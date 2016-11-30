@@ -19,19 +19,19 @@ namespace Slimpd\Modules\Albummigrator\EqualTagTests;
  */
 
 class Label extends \Slimpd\Modules\Albummigrator\AbstractTests\EqualValue {
-	public $isAlbumWeight = 0.7;
+    public $isAlbumWeight = 0.7;
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setLabel' => $this->matches[0]
-		]);
-		$this->albumContext->recommend([
-			'setLabel' => $this->matches[0]
-		]);
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setLabel' => $this->matches[0]
+        ]);
+        $this->albumContext->recommend([
+            'setLabel' => $this->matches[0]
+        ]);
+    }
 }

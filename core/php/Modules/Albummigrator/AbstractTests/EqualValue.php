@@ -19,10 +19,10 @@ namespace Slimpd\Modules\Albummigrator\AbstractTests;
  */
 
 abstract class EqualValue extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public function run() {
-		$this->result = (strlen($this->input)) ? $this->input : "";
-		if($this->result !== "") {
-			$this->matches = [$this->result];
-		}
-	}
+    public function run() {
+        $this->result = (strlen($this->input)) ? $this->input : "";
+        if($this->result !== "") {
+            $this->matches = [$this->result];
+        }
+    }
 }

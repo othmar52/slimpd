@@ -29,20 +29,20 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class NumberArtist extends \Slimpd\Modules\Albummigrator\AbstractTests\NumberGlueNoMinus {
-	public $isAlbumWeight = 0.8;
+    public $isAlbumWeight = 0.8;
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[1],
-			'setArtist' => $this->matches[2]
-		]);
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[2]
-		]);
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[1],
+            'setArtist' => $this->matches[2]
+        ]);
+        $this->albumContext->recommend([
+            'setArtist' => $this->matches[2]
+        ]);
+    }
 }

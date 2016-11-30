@@ -19,8 +19,8 @@
 
 $debug = isset($_REQUEST['debug']) ? true : false;
 if($debug){
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 }
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -32,10 +32,10 @@ require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
 
 // include some additional files
 foreach([
-    'Utilities' . DS . 'GeneralUtility.php',
-    'Utilities' . DS . 'StringUtility.php',
-    'libs' . DS . 'twig' . DS . 'SlimpdTwigExtension.php'] as $filePath) {
-    require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
+	'Utilities' . DS . 'GeneralUtility.php',
+	'Utilities' . DS . 'StringUtility.php',
+	'libs' . DS . 'twig'  . DS . 'SlimpdTwigExtension.php'] as $filePath) {
+	require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
 }
 
 date_default_timezone_set('Europe/Vienna');

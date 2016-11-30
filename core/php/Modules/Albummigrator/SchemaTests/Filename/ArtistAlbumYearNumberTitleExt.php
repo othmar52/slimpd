@@ -23,40 +23,40 @@ use Slimpd\Utilities\RegexHelper as RGX;
  * example filename: "Alvin_Curran-Songs_and_Views_of_the_Magnetic_Garden-1973-1.From_a_Room_on_the_Piazza.mp3"
  */
 class ArtistAlbumYearNumberTitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.6;
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NO_MINUS . RGX::GLUE .
-			RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . RGX::EXT . "$/";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'artist-album-year-number-title-ext';
-			return;
-		}
-		$this->result = 0;
-	}
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setArtist' => $this->matches[1],
-			'setAlbum' => $this->matches[2],
-			'setYear' => $this->matches[3],
-			'setTrackNumber' => $this->matches[4],
-			'setTitle' => $this->matches[5]
-		]);
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[1],
-			'setTitle' => $this->matches[2]
-		]);
-	}
+    public $isAlbumWeight = 0.6;
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NO_MINUS . RGX::GLUE .
+            RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . RGX::EXT . "$/";
+        return $this;
+    }
+    
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->matches = $matches;
+            $this->result = 'artist-album-year-number-title-ext';
+            return;
+        }
+        $this->result = 0;
+    }
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setArtist' => $this->matches[1],
+            'setAlbum' => $this->matches[2],
+            'setYear' => $this->matches[3],
+            'setTrackNumber' => $this->matches[4],
+            'setTitle' => $this->matches[5]
+        ]);
+        $this->albumContext->recommend([
+            'setArtist' => $this->matches[1],
+            'setTitle' => $this->matches[2]
+        ]);
+    }
 }

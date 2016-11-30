@@ -19,23 +19,23 @@ namespace Slimpd\Repositories;
  */
 
 class LabelRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'label';
-	public static $classPath = '\Slimpd\Models\Label';
-	
-	public function fetchRenderItems(&$renderItems, $labelInstance) {
-		$renderItems["labels"][$labelInstance->getUid()] = $labelInstance;
-		foreach(trimExplode(",", $labelInstance->getTopArtistUids(), TRUE) as $artistUid) {
-			if(isset($renderItems["artists"][$artistUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
-		}
-		foreach(trimExplode(",", $labelInstance->getTopGenreUids(), TRUE) as $genreUid) {
-			if(isset($renderItems["genres"][$genreUid]) === TRUE) {
-				continue;
-			}
-			$renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
-		}
-		return;
-	}
+    public static $tableName = 'label';
+    public static $classPath = '\Slimpd\Models\Label';
+    
+    public function fetchRenderItems(&$renderItems, $labelInstance) {
+        $renderItems["labels"][$labelInstance->getUid()] = $labelInstance;
+        foreach(trimExplode(",", $labelInstance->getTopArtistUids(), TRUE) as $artistUid) {
+            if(isset($renderItems["artists"][$artistUid]) === TRUE) {
+                continue;
+            }
+            $renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
+        }
+        foreach(trimExplode(",", $labelInstance->getTopGenreUids(), TRUE) as $genreUid) {
+            if(isset($renderItems["genres"][$genreUid]) === TRUE) {
+                continue;
+            }
+            $renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
+        }
+        return;
+    }
 }

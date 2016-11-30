@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyFingerprint {
-	protected $fingerprint;
+    protected $fingerprint;
 
-	public function getFingerprint() {
-		return $this->fingerprint;
-	}
+    public function getFingerprint() {
+        return $this->fingerprint;
+    }
 
-	public function setFingerprint($value) {
-		$this->fingerprint = $value;
-		return $this;
-	}
+    public function setFingerprint($value) {
+        $this->fingerprint = $value;
+        return $this;
+    }
 }

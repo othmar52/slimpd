@@ -19,18 +19,18 @@ namespace Slimpd\Modules\Albummigrator\SchemaTests\Dirname;
  */
 
 class HasCatalogNr extends \Slimpd\Modules\Albummigrator\AbstractTests\HasCatalogNr {
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		foreach($this->matches as $group) {
-			foreach($group as $catNrMatch) {
-				$this->albumContext->recommend([
-					'setCatalogNr' => az09($catNrMatch)
-				]);
-			}
-		}
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        foreach($this->matches as $group) {
+            foreach($group as $catNrMatch) {
+                $this->albumContext->recommend([
+                    'setCatalogNr' => az09($catNrMatch)
+                ]);
+            }
+        }
+    }
 }

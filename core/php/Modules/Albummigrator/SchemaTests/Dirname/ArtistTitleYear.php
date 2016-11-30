@@ -20,36 +20,36 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class ArtistTitleYear extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . "$/";
-		return $this;
-	}
-	
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->matches = $matches;
-			$this->result = 'artist-title-year';
-			return;
-		}
-		$this->result = 0;
-	}
-	
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->albumContext->recommend([
-			'setArtist' => $this->matches[1],
-			'setTitle' => $this->matches[2],
-			'setYear' => $this->matches[3]
-		]);
-		$this->jumbleJudge->albumMigrator->recommendationForAllTracks(
-			['setArtist' => $this->matches[1] ],
-			0.1
-		);
-	}
+    
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::NO_MINUS . "-" . RGX::NO_MINUS . RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . "$/";
+        return $this;
+    }
+    
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->matches = $matches;
+            $this->result = 'artist-title-year';
+            return;
+        }
+        $this->result = 0;
+    }
+    
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->albumContext->recommend([
+            'setArtist' => $this->matches[1],
+            'setTitle' => $this->matches[2],
+            'setYear' => $this->matches[3]
+        ]);
+        $this->jumbleJudge->albumMigrator->recommendationForAllTracks(
+            ['setArtist' => $this->matches[1] ],
+            0.1
+        );
+    }
 }

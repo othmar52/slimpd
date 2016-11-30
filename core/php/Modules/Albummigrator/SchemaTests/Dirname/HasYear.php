@@ -19,23 +19,23 @@ namespace Slimpd\Modules\Albummigrator\SchemaTests\Dirname;
  */
 
 class HasYear extends \Slimpd\Modules\Albummigrator\AbstractTests\HasYear {
-	public $isAlbumWeight = 0.1;
+    public $isAlbumWeight = 0.1;
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		foreach($this->matches as $group) {
-			foreach($group as $yearMatch) {
-				$this->albumContext->recommend([
-					'setYear' => az09($yearMatch)
-				]);
-				$this->jumbleJudge->albumMigrator->recommendationForAllTracks([
-					'setYear' => az09($yearMatch)
-				],0.1);
-			}
-		}
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        foreach($this->matches as $group) {
+            foreach($group as $yearMatch) {
+                $this->albumContext->recommend([
+                    'setYear' => az09($yearMatch)
+                ]);
+                $this->jumbleJudge->albumMigrator->recommendationForAllTracks([
+                    'setYear' => az09($yearMatch)
+                ],0.1);
+            }
+        }
+    }
 }

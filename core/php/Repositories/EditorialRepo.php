@@ -19,38 +19,38 @@ namespace Slimpd\Repositories;
  */
 
 class EditorialRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'editorial';
-	public static $classPath = '\Slimpd\Models\Editorial';
+    public static $tableName = 'editorial';
+    public static $classPath = '\Slimpd\Models\Editorial';
 
-	protected function searchExistingUid(&$instance) {
-		if($instance->getUid() > 0) {
-			return;
-		}
-		$dummyInstance = NULL;
-		// check if we have a record with this path and property
-		$dummyInstance = $this->getInstanceByAttributes([
-			'itemType' => $instance->getItemType(),
-			'relPathHash' => $instance->getRelPathHash(),
-			'column' => $instance->getColumn(),
-		]);
-		if($dummyInstance === NULL) {
-			return;
-		}
-		$instance->setUid($dummyInstance->getUid());
-	}
+    protected function searchExistingUid(&$instance) {
+        if($instance->getUid() > 0) {
+            return;
+        }
+        $dummyInstance = NULL;
+        // check if we have a record with this path and property
+        $dummyInstance = $this->getInstanceByAttributes([
+            'itemType' => $instance->getItemType(),
+            'relPathHash' => $instance->getRelPathHash(),
+            'column' => $instance->getColumn(),
+        ]);
+        if($dummyInstance === NULL) {
+            return;
+        }
+        $instance->setUid($dummyInstance->getUid());
+    }
 
-	public function insertTrackBasedInstance(\Slimpd\Models\Track $track, $setterName, $value) {
-		$editorial = new \Slimpd\Models\Editorial();
-		$editorial->setItemUid($track->getUid())
-			->setItemType('track')
-			->setRelPath($track->getRelPath())
-			->setRelPathHash($track->getRelPathHash())
-			->setFingerprint($track->getFingerprint())
-			->setCrdate(time())
-			->setTstamp(time())
-			->setColumn($setterName)
-			->setValue($value);
+    public function insertTrackBasedInstance(\Slimpd\Models\Track $track, $setterName, $value) {
+        $editorial = new \Slimpd\Models\Editorial();
+        $editorial->setItemUid($track->getUid())
+            ->setItemType('track')
+            ->setRelPath($track->getRelPath())
+            ->setRelPathHash($track->getRelPathHash())
+            ->setFingerprint($track->getFingerprint())
+            ->setCrdate(time())
+            ->setTstamp(time())
+            ->setColumn($setterName)
+            ->setValue($value);
 
-		$this->update($editorial);
-	}
+        $this->update($editorial);
+    }
 }

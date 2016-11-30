@@ -18,155 +18,155 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
-	protected $errorPath = TRUE; // TODO: consider to remove and use $error instead
-	protected $title;
-	protected $ext;
-	protected $length;
-	protected $itemPaths = [];	// pathstrings
-	protected $tracks = [];		// track-instances
-	private $fetchedLength = FALSE;
+    protected $errorPath = TRUE; // TODO: consider to remove and use $error instead
+    protected $title;
+    protected $ext;
+    protected $length;
+    protected $itemPaths = [];    // pathstrings
+    protected $tracks = [];        // track-instances
+    private $fetchedLength = FALSE;
 
-	public function __construct(\Slim\Container $container) {
-		#$this->container = $container;
-		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
-		#$this->db = $container->db;
-		#$this->conf = $container->conf;
-		$this->fsUtil = $container->filesystemUtility;
-		$this->trackRepo = $container->trackRepo;
-		$this->flash = $container->flash;
-	}
-	
-	public function load($relPath) {
-		if($this->fsUtil->isInAllowedPath($relPath) === TRUE) {
-			$this->setRelPath($relPath);
-			$this->setErrorPath(FALSE);
-		}
+    public function __construct(\Slim\Container $container) {
+        #$this->container = $container;
+        #echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
+        #$this->db = $container->db;
+        #$this->conf = $container->conf;
+        $this->fsUtil = $container->filesystemUtility;
+        $this->trackRepo = $container->trackRepo;
+        $this->flash = $container->flash;
+    }
+    
+    public function load($relPath) {
+        if($this->fsUtil->isInAllowedPath($relPath) === TRUE) {
+            $this->setRelPath($relPath);
+            $this->setErrorPath(FALSE);
+        }
 
-		if($this->getErrorPath() === TRUE) {
-			$this->flash->AddMessage('error', 'playlist file ' . $relPath . ' does not exist');
-			return $this;
-		}
-		$this->setTitle(basename($this->getRelPath()));
-		$this->setExt($this->fsUtil->getFileExt($this->getRelPath()));
-	}
+        if($this->getErrorPath() === TRUE) {
+            $this->flash->AddMessage('error', 'playlist file ' . $relPath . ' does not exist');
+            return $this;
+        }
+        $this->setTitle(basename($this->getRelPath()));
+        $this->setExt($this->fsUtil->getFileExt($this->getRelPath()));
+    }
 
-	public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
-		$raw = file_get_contents($this->fsUtil->getFileRealPath($this->relPath));
-		switch($this->getExt()) {
-			case 'm3u':
-			case 'pls':
-			case 'txt':
-				$this->parsePlaintext($raw, $minIndex, $maxIndex);
-				break;
-			case 'nml':
-				$this->parseNml($raw, $minIndex, $maxIndex);
-				break;
-			default :
-				$this->flash->AddMessage('error', 'playlist extension ' . $this->getExt() . ' is not supported');
-				return;
-		}
-		$this->fetchedLength === TRUE;
+    public function fetchTrackRange($minIndex, $maxIndex, $pathOnly = FALSE) {
+        $raw = file_get_contents($this->fsUtil->getFileRealPath($this->relPath));
+        switch($this->getExt()) {
+            case 'm3u':
+            case 'pls':
+            case 'txt':
+                $this->parsePlaintext($raw, $minIndex, $maxIndex);
+                break;
+            case 'nml':
+                $this->parseNml($raw, $minIndex, $maxIndex);
+                break;
+            default :
+                $this->flash->AddMessage('error', 'playlist extension ' . $this->getExt() . ' is not supported');
+                return;
+        }
+        $this->fetchedLength === TRUE;
 
-		if($pathOnly === FALSE) {
-			$this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths);
-			return;
-		}
-		$this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
-	}
+        if($pathOnly === FALSE) {
+            $this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths);
+            return;
+        }
+        $this->tracks = $this->pathStringsToTrackInstancesArray($this->itemPaths, TRUE);
+    }
 
-	public function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
-		$return = array();
-		foreach($pathStringArray as $itemPath) {
-			// increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
-			$track = ($noDatabaseQueries === FALSE)
-				? $this->trackRepo->getInstanceByPath($itemPath, TRUE)
-				: $this->trackRepo->getNewInstanceWithoutDbQueries($this->fsUtil->trimAltMusicDirPrefix($itemPath));
+    public function pathStringsToTrackInstancesArray($pathStringArray, $noDatabaseQueries = FALSE) {
+        $return = array();
+        foreach($pathStringArray as $itemPath) {
+            // increase performance by avoiding any database queries when adding tenthousands of tracks to mpd-playlist
+            $track = ($noDatabaseQueries === FALSE)
+                ? $this->trackRepo->getInstanceByPath($itemPath, TRUE)
+                : $this->trackRepo->getNewInstanceWithoutDbQueries($this->fsUtil->trimAltMusicDirPrefix($itemPath));
 
-			if($this->fsUtil->getFileRealPath($track->getRelPath()) === FALSE) {
-				$track->setError('notfound');
-			}
-			$return[] = $track;
-		}
-		return $return;
-	}
+            if($this->fsUtil->getFileRealPath($track->getRelPath()) === FALSE) {
+                $track->setError('notfound');
+            }
+            $return[] = $track;
+        }
+        return $return;
+    }
 
-	private function parsePlaintext($rawFileContent, $minIndex, $maxIndex) {
-		// windows generated playlists are not supported yet
-		$playlistContent = str_replace("\\", "/", $rawFileContent);
-		$playlistContent = trimExplode("\n", $playlistContent, TRUE);
-		$this->setLength(count($playlistContent));
-		foreach($playlistContent as $idx => $itemPath) {
-			if($idx < $minIndex || $idx >= $maxIndex) {
-				continue;
-			}
-			$this->itemPaths[] = $itemPath;
-		}
-	}
+    private function parsePlaintext($rawFileContent, $minIndex, $maxIndex) {
+        // windows generated playlists are not supported yet
+        $playlistContent = str_replace("\\", "/", $rawFileContent);
+        $playlistContent = trimExplode("\n", $playlistContent, TRUE);
+        $this->setLength(count($playlistContent));
+        foreach($playlistContent as $idx => $itemPath) {
+            if($idx < $minIndex || $idx >= $maxIndex) {
+                continue;
+            }
+            $this->itemPaths[] = $itemPath;
+        }
+    }
 
-	private function parseNml($rawFileContent, $minIndex, $maxIndex) {
-		if(isValidXml($rawFileContent) === FALSE) {
-			$this->container->flash->AddMessage('error', 'invalid XML ' . $this->getTitle());
-			return;
-		}
-		$playlistContent = new \SimpleXMLElement($rawFileContent);
-		$trackEntries = $playlistContent->xpath("//PLAYLIST/ENTRY/LOCATION");
-		$this->setLength(count($trackEntries));
-		foreach($trackEntries as $idx => $trackEntry) {
-			if($idx < $minIndex || $idx >= $maxIndex) {
-				continue;
-			}
-			$this->itemPaths[] = $trackEntry->attributes()->DIR->__toString() . $trackEntry->attributes()->FILE->__toString();
-		}
-	}
+    private function parseNml($rawFileContent, $minIndex, $maxIndex) {
+        if(isValidXml($rawFileContent) === FALSE) {
+            $this->container->flash->AddMessage('error', 'invalid XML ' . $this->getTitle());
+            return;
+        }
+        $playlistContent = new \SimpleXMLElement($rawFileContent);
+        $trackEntries = $playlistContent->xpath("//PLAYLIST/ENTRY/LOCATION");
+        $this->setLength(count($trackEntries));
+        foreach($trackEntries as $idx => $trackEntry) {
+            if($idx < $minIndex || $idx >= $maxIndex) {
+                continue;
+            }
+            $this->itemPaths[] = $trackEntry->attributes()->DIR->__toString() . $trackEntry->attributes()->FILE->__toString();
+        }
+    }
 
-	public function setErrorPath($errorPath) {
-		$this->errorPath = $errorPath;
-		return $this;
-	}
+    public function setErrorPath($errorPath) {
+        $this->errorPath = $errorPath;
+        return $this;
+    }
 
-	public function getErrorPath() {
-		return $this->errorPath;
-	}
+    public function getErrorPath() {
+        return $this->errorPath;
+    }
 
-	public function setTitle($value) {
-		$this->title = $value;
-		return $this;
-	}
+    public function setTitle($value) {
+        $this->title = $value;
+        return $this;
+    }
 
-	public function getTitle() {
-		return $this->title;
-	}
+    public function getTitle() {
+        return $this->title;
+    }
 
-	public function setExt($ext) {
-		$this->ext = $ext;
-		return $this;
-	}
+    public function setExt($ext) {
+        $this->ext = $ext;
+        return $this;
+    }
 
-	public function getExt() {
-		return $this->ext;
-	}
+    public function getExt() {
+        return $this->ext;
+    }
 
-	public function setLength($length) {
-		$this->length = $length;
-		return $this;
-	}
+    public function setLength($length) {
+        $this->length = $length;
+        return $this;
+    }
 
-	public function getLength() {
-		if($this->fetchedLength === FALSE) {
-			// we have to process to get the total length
-			$this->fetchTrackRange(0,1, TRUE);
-			$this->tracks = [];
-			$this->itemPaths = [];
-		}
-		return $this->length;
-	}
+    public function getLength() {
+        if($this->fetchedLength === FALSE) {
+            // we have to process to get the total length
+            $this->fetchTrackRange(0,1, TRUE);
+            $this->tracks = [];
+            $this->itemPaths = [];
+        }
+        return $this->length;
+    }
 
-	public function appendTrack(\Slimpd\Models\Track $track) {
-		$this->tracks[] = $track;
-		return $this;
-	}
+    public function appendTrack(\Slimpd\Models\Track $track) {
+        $this->tracks[] = $track;
+        return $this;
+    }
 
-	public function getTracks() {
-		return $this->tracks;
-	}
+    public function getTracks() {
+        return $this->tracks;
+    }
 }

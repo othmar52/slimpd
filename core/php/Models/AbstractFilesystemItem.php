@@ -19,49 +19,49 @@ namespace Slimpd\Models;
  */
 
 abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
-	use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
-	protected $relDirPath;
-	protected $relDirPathHash;
-	protected $filesize;
-	protected $filemtime = 0;
-	protected $importStatus;
+    use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
+    protected $relDirPath;
+    protected $relDirPathHash;
+    protected $filesize;
+    protected $filemtime = 0;
+    protected $importStatus;
 
-	// getter
-	public function getRelDirPath() {
-		return $this->relDirPath;
-	}
-	public function getRelDirPathHash() {
-		return $this->relDirPathHash;
-	}
-	public function getFilesize() {
-		return $this->filesize;
-	}
-	public function getFilemtime() {
-		return $this->filemtime;
-	}
-	public function getImportStatus() {
-		return $this->importStatus;
-	}
+    // getter
+    public function getRelDirPath() {
+        return $this->relDirPath;
+    }
+    public function getRelDirPathHash() {
+        return $this->relDirPathHash;
+    }
+    public function getFilesize() {
+        return $this->filesize;
+    }
+    public function getFilemtime() {
+        return $this->filemtime;
+    }
+    public function getImportStatus() {
+        return $this->importStatus;
+    }
 
-	// setter
-	public function setRelDirPath($value) {
-		$this->relDirPath = $value;
-		return $this;
-	}
-	public function setRelDirPathHash($value) {
-		$this->relDirPathHash = $value;
-		return $this;
-	}
-	public function setFilesize($value) {
-		$this->filesize = $value;
-		return $this;
-	}
-	public function setFilemtime($value) {
-		$this->filemtime = $value;
-		return $this;
-	}
-	public function setImportStatus($value) {
-		$this->importStatus = $value;
-		return $this;
-	}
+    // setter
+    public function setRelDirPath($value) {
+        $this->relDirPath = $value;
+        return $this;
+    }
+    public function setRelDirPathHash($value) {
+        $this->relDirPathHash = $value;
+        return $this;
+    }
+    public function setFilesize($value) {
+        $this->filesize = $value;
+        return $this;
+    }
+    public function setFilemtime($value) {
+        $this->filemtime = $value;
+        return $this;
+    }
+    public function setImportStatus($value) {
+        $this->importStatus = $value;
+        return $this;
+    }
 }

@@ -19,47 +19,47 @@ namespace Slimpd\Modules\Albummigrator;
  */
 
 class DiscogsAlbumContext extends \Slimpd\Models\Album {
-	protected $artistString;
-	protected $labelString;
-	public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $container) {
-		$this->container = $container;
-		$this->db = $container->db;
-		$this->ll = $container->ll;
-		$this->conf = $container->conf;
-		$this->setPropertiesByApiResponse($discogsItem->getResponse(TRUE));
-	}
+    protected $artistString;
+    protected $labelString;
+    public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $container) {
+        $this->container = $container;
+        $this->db = $container->db;
+        $this->ll = $container->ll;
+        $this->conf = $container->conf;
+        $this->setPropertiesByApiResponse($discogsItem->getResponse(TRUE));
+    }
 
-	public function setPropertiesByApiResponse($apiResponse) {
-		foreach($apiResponse['artists'] as $artist) {
-			$this->artistString .= $artist['name'] . ",";
-		}
-		
-		$apiResponse['styles'] = (isset($apiResponse['styles']) === TRUE) ? $apiResponse['styles'] : array();
-		#$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
-		$this->setTitle(isset($apiResponse['title']) ? $apiResponse['title'] : "");
-		#$this->albumAttributes['genre'] = join(",", array_merge($apiResponse['genres'], $apiResponse['styles']));
-		$this->setYear(isset($apiResponse['released']) ? $apiResponse['released'] : "");
-		
-		// only take the first label/CatNo - no matter how many are provided by discogs
-		if(isset($apiResponse['labels'][0]) === TRUE) {
-			$this->setLabelString($apiResponse['labels'][0]['name']);
-			$this->setCatalogNr($apiResponse['labels'][0]['catno']);
-		}
-	}
-	
-	public function setArtistString($value) {
-		$this->artistString = $value;
-		return $this;
-	}
-	public function getArtistString() {
-		return $this->artistString;
-	}
-	
-	public function setLabelString($value) {
-		$this->labelString = $value;
-		return $this;
-	}
-	public function getLabelString() {
-		return $this->labelString;
-	}
+    public function setPropertiesByApiResponse($apiResponse) {
+        foreach($apiResponse['artists'] as $artist) {
+            $this->artistString .= $artist['name'] . ",";
+        }
+        
+        $apiResponse['styles'] = (isset($apiResponse['styles']) === TRUE) ? $apiResponse['styles'] : array();
+        #$this->albumAttributes['artist'] = substr($this->albumAttributes['artist'],0,-1);
+        $this->setTitle(isset($apiResponse['title']) ? $apiResponse['title'] : "");
+        #$this->albumAttributes['genre'] = join(",", array_merge($apiResponse['genres'], $apiResponse['styles']));
+        $this->setYear(isset($apiResponse['released']) ? $apiResponse['released'] : "");
+        
+        // only take the first label/CatNo - no matter how many are provided by discogs
+        if(isset($apiResponse['labels'][0]) === TRUE) {
+            $this->setLabelString($apiResponse['labels'][0]['name']);
+            $this->setCatalogNr($apiResponse['labels'][0]['catno']);
+        }
+    }
+    
+    public function setArtistString($value) {
+        $this->artistString = $value;
+        return $this;
+    }
+    public function getArtistString() {
+        return $this->artistString;
+    }
+    
+    public function setLabelString($value) {
+        $this->labelString = $value;
+        return $this;
+    }
+    public function getLabelString() {
+        return $this->labelString;
+    }
 }

@@ -19,530 +19,530 @@ namespace Slimpd\Modules\Mpd;
  */
 
 class Mpd {
-	public $notifyJson = NULL;
-	public function __construct(\Slim\Container $container) {
-		$this->container = $container;
-		#echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
-		$this->conf = $container->conf;
-		$this->trackRepo = $container->trackRepo;
-	}
-	public function getCurrentlyPlayedTrack() {
-		$status 		= $this->mpd('status');
-		$listpos		= isset($status['song']) ? $status['song'] : 0;
-		$files			= $this->mpd('playlist');
-		$listlength		= $status['playlistlength'];
-		if($listlength < 1) {
-			return NULL;
-		}
-		return $this->trackRepo->getInstanceByPath($files[$listpos], TRUE);
-	}
+    public $notifyJson = NULL;
+    public function __construct(\Slim\Container $container) {
+        $this->container = $container;
+        #echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
+        $this->conf = $container->conf;
+        $this->trackRepo = $container->trackRepo;
+    }
+    public function getCurrentlyPlayedTrack() {
+        $status         = $this->mpd('status');
+        $listpos        = isset($status['song']) ? $status['song'] : 0;
+        $files            = $this->mpd('playlist');
+        $listlength        = $status['playlistlength'];
+        if($listlength < 1) {
+            return NULL;
+        }
+        return $this->trackRepo->getInstanceByPath($files[$listpos], TRUE);
+    }
 
-	public function getCurrentPlaylist($pageNum = 1) {
-		$playlist = array();
-		$filePaths = $this->mpd('playlist');
-		if($filePaths === FALSE) {
-			return $playlist;
-		}
-		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
-		$minIndex = (($pageNum-1) * $itemsPerPage);
-		$maxIndex = $minIndex +  $itemsPerPage;
+    public function getCurrentPlaylist($pageNum = 1) {
+        $playlist = array();
+        $filePaths = $this->mpd('playlist');
+        if($filePaths === FALSE) {
+            return $playlist;
+        }
+        $itemsPerPage = $this->conf['mpd-playlist']['max-items'];
+        $minIndex = (($pageNum-1) * $itemsPerPage);
+        $maxIndex = $minIndex +  $itemsPerPage;
 
-		foreach($filePaths as $idx => $filePath) {
-			if($idx < $minIndex || $idx >= $maxIndex) {
-				continue;
-			}
-			$playlist[$idx] = $this->trackRepo->getInstanceByPath($filePath, TRUE);
-		}
-		return $playlist;
-	}
+        foreach($filePaths as $idx => $filePath) {
+            if($idx < $minIndex || $idx >= $maxIndex) {
+                continue;
+            }
+            $playlist[$idx] = $this->trackRepo->getInstanceByPath($filePath, TRUE);
+        }
+        return $playlist;
+    }
 
-	public function getCurrentPlaylistLength() {
-		$status = $this->mpd('status');
-		return (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
-	}
+    public function getCurrentPlaylistLength() {
+        $status = $this->mpd('status');
+        return (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
+    }
 
-	public function getCurrentPlaylistTotalPages() {
-		$status = $this->mpd('status');
-		$listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
-		$totalPages = floor($listLength/$itemsPerPage)+1;
-		return $totalPages;
-	}
+    public function getCurrentPlaylistTotalPages() {
+        $status = $this->mpd('status');
+        $listLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+        $itemsPerPage = $this->conf['mpd-playlist']['max-items'];
+        $totalPages = floor($listLength/$itemsPerPage)+1;
+        return $totalPages;
+    }
 
-	public function getCurrentPlaylistCurrentPage() {
-		$status = $this->mpd('status');
-		$listPos = isset($status['song']) ? $status['song'] : 0;
-		$itemsPerPage = $this->conf['mpd-playlist']['max-items'];
-		$currentPage = floor($listPos/$itemsPerPage)+1;
-		return $currentPage;
-	}
+    public function getCurrentPlaylistCurrentPage() {
+        $status = $this->mpd('status');
+        $listPos = isset($status['song']) ? $status['song'] : 0;
+        $itemsPerPage = $this->conf['mpd-playlist']['max-items'];
+        $currentPage = floor($listPos/$itemsPerPage)+1;
+        return $currentPage;
+    }
 
-	private function getFirePlay($cmd) {
-		$commandList = [
-			"appendTrackAndPlay",
-			"injectTrackAndPlay",
-			"appendDirAndPlay",
-			"injectDirAndPlay",
-			"appendPlaylistAndPlay",
-			"injectPlaylistAndPlay",
-			"replaceTrack",
-			"replaceDir",
-			"replacePlaylist"
-		];
-		return in_array($cmd, $commandList);
-	}
+    private function getFirePlay($cmd) {
+        $commandList = [
+            "appendTrackAndPlay",
+            "injectTrackAndPlay",
+            "appendDirAndPlay",
+            "injectDirAndPlay",
+            "appendPlaylistAndPlay",
+            "injectPlaylistAndPlay",
+            "replaceTrack",
+            "replaceDir",
+            "replacePlaylist"
+        ];
+        return in_array($cmd, $commandList);
+    }
 
-	private function getTargetPosition($cmd) {
-		$status = $this->mpd('status');
-		$appendPos = (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
-		$injectPos = (isset($status['song'])) ? $status['song']+1 : 0;
+    private function getTargetPosition($cmd) {
+        $status = $this->mpd('status');
+        $appendPos = (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
+        $injectPos = (isset($status['song'])) ? $status['song']+1 : 0;
 
-		$commandList = [
-			"replaceTrack" => 0,
-			"replaceDir" => 0,
-			"replacePlaylist" => 0,
+        $commandList = [
+            "replaceTrack" => 0,
+            "replaceDir" => 0,
+            "replacePlaylist" => 0,
 
-			"softreplaceTrack" => 1,
-			"softreplaceDir" => 1,
-			"softreplacePlaylist" => 1,
+            "softreplaceTrack" => 1,
+            "softreplaceDir" => 1,
+            "softreplacePlaylist" => 1,
 
-			"appendTrack" => $appendPos,
-			"appendTrackAndPlay" => $appendPos,
-			"appendDir" => $appendPos,
-			"appendDirAndPlay" => $appendPos,
-			"appendPlaylist" => $appendPos,
-			"appendPlaylistAndPlay" => $appendPos,
+            "appendTrack" => $appendPos,
+            "appendTrackAndPlay" => $appendPos,
+            "appendDir" => $appendPos,
+            "appendDirAndPlay" => $appendPos,
+            "appendPlaylist" => $appendPos,
+            "appendPlaylistAndPlay" => $appendPos,
 
-			"injectTrack" => $injectPos,
-			"injectTrackAndPlay" => $injectPos,
-			"injectDir" => $injectPos,
-			"injectDirAndPlay" => $injectPos,
-			"injectPlaylist" => $injectPos,
-			"injectPlaylistAndPlay" => $injectPos,
-		];
-		if(array_key_exists($cmd, $commandList) === TRUE) {
-			return $commandList[$cmd];
-		}
-		return FALSE;
-	}
+            "injectTrack" => $injectPos,
+            "injectTrackAndPlay" => $injectPos,
+            "injectDir" => $injectPos,
+            "injectDirAndPlay" => $injectPos,
+            "injectPlaylist" => $injectPos,
+            "injectPlaylistAndPlay" => $injectPos,
+        ];
+        if(array_key_exists($cmd, $commandList) === TRUE) {
+            return $commandList[$cmd];
+        }
+        return FALSE;
+    }
 
-	private function getClearPlaylist($cmd) {
-		$commandList = [
-			"replaceTrack",
-			"replaceDir",
-			"replacePlaylist"
-		];
-		return in_array($cmd, $commandList);
-	}
+    private function getClearPlaylist($cmd) {
+        $commandList = [
+            "replaceTrack",
+            "replaceDir",
+            "replacePlaylist"
+        ];
+        return in_array($cmd, $commandList);
+    }
 
-	private function getSoftClear($cmd) {
-		$commandList = [
-			"softreplaceTrack",
-			"softreplaceDir",
-			"softreplacePlaylist"
-		];
-		return in_array($cmd, $commandList);
-	}
+    private function getSoftClear($cmd) {
+        $commandList = [
+            "softreplaceTrack",
+            "softreplaceDir",
+            "softreplacePlaylist"
+        ];
+        return in_array($cmd, $commandList);
+    }
 
-	/*
-	private function getIsPlaylist($cmd) {
-		$commandList = [
-			"appendPlaylist",
-			"appendPlaylistAndPlay",
-			"injectPlaylist",
-			"injectPlaylistAndPlay",
-			"replacePlaylist",
-			"softreplacePlaylist"
-		];
-		return in_array($cmd, $commandList);
-	}
-	*/
+    /*
+    private function getIsPlaylist($cmd) {
+        $commandList = [
+            "appendPlaylist",
+            "appendPlaylistAndPlay",
+            "injectPlaylist",
+            "injectPlaylistAndPlay",
+            "replacePlaylist",
+            "softreplacePlaylist"
+        ];
+        return in_array($cmd, $commandList);
+    }
+    */
 
-	private function getItemPath($item) {
-		if(is_numeric($item) === TRUE) {
-			$instance = $this->trackRepo->getInstanceByAttributes(array('uid' => $item));
-			if($instance === NULL) {
-				return FALSE;
-			}
-			return $instance->getRelPath();
-		}
-		if(is_string($item) === TRUE) {
-			return $item;
-		}
-		if(is_array($item) === TRUE) {
-			return join(DS, $item);
-		}
-		return FALSE;
-	}
+    private function getItemPath($item) {
+        if(is_numeric($item) === TRUE) {
+            $instance = $this->trackRepo->getInstanceByAttributes(array('uid' => $item));
+            if($instance === NULL) {
+                return FALSE;
+            }
+            return $instance->getRelPath();
+        }
+        if(is_string($item) === TRUE) {
+            return $item;
+        }
+        if(is_array($item) === TRUE) {
+            return join(DS, $item);
+        }
+        return FALSE;
+    }
 
-	private function getItemType($itemPath) {
-		$musicDir = $this->conf['mpd']['musicdir'];
-		if(is_file($musicDir.$itemPath) === TRUE) {
-			return 'file';
-		}
-		if(is_dir($musicDir.$itemPath) === TRUE) {
-			return 'dir';
-		}
-		return FALSE;
-	}
+    private function getItemType($itemPath) {
+        $musicDir = $this->conf['mpd']['musicdir'];
+        if(is_file($musicDir.$itemPath) === TRUE) {
+            return 'file';
+        }
+        if(is_dir($musicDir.$itemPath) === TRUE) {
+            return 'dir';
+        }
+        return FALSE;
+    }
 
-	public function cmd($cmd, $item = NULL) {
-		// TODO: check access
-		// @see: http://www.musicpd.org/doc/protocol/playback_commands.html
+    public function cmd($cmd, $item = NULL) {
+        // TODO: check access
+        // @see: http://www.musicpd.org/doc/protocol/playback_commands.html
 
-		// validate commands
+        // validate commands
 
-		
-		$firePlay = $this->getFirePlay($cmd);
-		$targetPosition = $this->getTargetPosition($cmd);
-		$itemPath = $this->getItemPath($item);
-		$itemType = $this->getItemType($itemPath);
-		//$isPlaylist = $this->getIsPlaylist($cmd);
-		$clearPlaylist = $this->getClearPlaylist($cmd);
-		$softclearPlaylist = $this->getSoftClear($cmd);
+        
+        $firePlay = $this->getFirePlay($cmd);
+        $targetPosition = $this->getTargetPosition($cmd);
+        $itemPath = $this->getItemPath($item);
+        $itemType = $this->getItemType($itemPath);
+        //$isPlaylist = $this->getIsPlaylist($cmd);
+        $clearPlaylist = $this->getClearPlaylist($cmd);
+        $softclearPlaylist = $this->getSoftClear($cmd);
 
 
-		$config = $this->conf['mpd'];
+        $config = $this->conf['mpd'];
 
-		// don't clear playlist in case we have nothing to add
-		if($clearPlaylist === TRUE) {
-			if($itemType === FALSE) {
-				$this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
-				return;
-			}
-			$this->mpd('clear');
-		}
-		// don't softclear playlist in case we have nothing to add
-		if($softclearPlaylist === TRUE) {
-			if($itemType === FALSE) {
-				$this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
-				return;
-			}
-			$this->softclearPlaylist();
-		}
+        // don't clear playlist in case we have nothing to add
+        if($clearPlaylist === TRUE) {
+            if($itemType === FALSE) {
+                $this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+                return;
+            }
+            $this->mpd('clear');
+        }
+        // don't softclear playlist in case we have nothing to add
+        if($softclearPlaylist === TRUE) {
+            if($itemType === FALSE) {
+                $this->notifyJson = notifyJson("ERROR: " . $itemPath . " not found", 'mpd');
+                return;
+            }
+            $this->softclearPlaylist();
+        }
 
-		switch($cmd) {
-			case 'injectTrack':
-			case 'injectTrackAndPlay':
-				if($itemType !== 'file') {
-					$this->notifyJson = notifyJson("ERROR: invalid file", 'mpd');
-					return;
-				}
-				$this->mpd('addid "' . str_replace("\"", "\\\"", $itemPath) . '" ' . $targetPosition);
-				if($firePlay === TRUE) {
-					$this->mpd('play ' . intval($targetPosition));
-				}
-				$this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
-				return;
-			case 'injectDir':
-			case 'injectDirAndPlay':
-				// this is not supported by mpd so we have to add each track manually
-				// TODO: how to fetch possibly millions of tracks recursively?
-				$this->notifyJson = notifyJson("ERROR: injecting dirs is not supported yet. please append it to playlist", 'mpd');
-				return;
-				if($itemType !== 'dir') {
-					$this->notifyJson = notifyJson("ERROR: invalid dir " . $itemPath, 'mpd');
-					return;
-				}
-				break;
-			case 'injectPlaylist':
-			case 'injectPlaylistAndPlay':
-				$playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
-				$playlist->fetchTrackRange(0,1000, TRUE);
-				$counter = $this->appendPlaylist($playlist, $targetPosition);
-				if($firePlay === TRUE) {
-					$this->mpd('play ' . intval($targetPosition));
-				}
-				$this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
-				return;
-			case 'appendTrack':
-			case 'appendTrackAndPlay':
-			case 'replaceTrack':
-			case 'replaceTrackAndPlay':
-			case 'softreplaceTrack':
+        switch($cmd) {
+            case 'injectTrack':
+            case 'injectTrackAndPlay':
+                if($itemType !== 'file') {
+                    $this->notifyJson = notifyJson("ERROR: invalid file", 'mpd');
+                    return;
+                }
+                $this->mpd('addid "' . str_replace("\"", "\\\"", $itemPath) . '" ' . $targetPosition);
+                if($firePlay === TRUE) {
+                    $this->mpd('play ' . intval($targetPosition));
+                }
+                $this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+                return;
+            case 'injectDir':
+            case 'injectDirAndPlay':
+                // this is not supported by mpd so we have to add each track manually
+                // TODO: how to fetch possibly millions of tracks recursively?
+                $this->notifyJson = notifyJson("ERROR: injecting dirs is not supported yet. please append it to playlist", 'mpd');
+                return;
+                if($itemType !== 'dir') {
+                    $this->notifyJson = notifyJson("ERROR: invalid dir " . $itemPath, 'mpd');
+                    return;
+                }
+                break;
+            case 'injectPlaylist':
+            case 'injectPlaylistAndPlay':
+                $playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
+                $playlist->fetchTrackRange(0,1000, TRUE);
+                $counter = $this->appendPlaylist($playlist, $targetPosition);
+                if($firePlay === TRUE) {
+                    $this->mpd('play ' . intval($targetPosition));
+                }
+                $this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
+                return;
+            case 'appendTrack':
+            case 'appendTrackAndPlay':
+            case 'replaceTrack':
+            case 'replaceTrackAndPlay':
+            case 'softreplaceTrack':
 
-			case 'appendDir':
-			case 'appendDirAndPlay':
-			case 'replaceDir':
-			case 'replaceDirAndPlay':
-			case 'softreplaceDir':
-				// check if item exists in MPD database
-				$closest = $this->findClosestExistingItem($itemPath);
-				if(removeTrailingSlash($itemPath) !== $closest) {
-					$this->mpd('update "' . str_replace("\"", "\\\"", $closest) . '"');
-					$this->notifyJson = notifyJson(
-						"OH Snap!<br>
-						" . $itemPath . " does not exist in MPD-database.<br>
-						updating " . $closest,
-						'mpd'
-					);
-					return;
-				}
+            case 'appendDir':
+            case 'appendDirAndPlay':
+            case 'replaceDir':
+            case 'replaceDirAndPlay':
+            case 'softreplaceDir':
+                // check if item exists in MPD database
+                $closest = $this->findClosestExistingItem($itemPath);
+                if(removeTrailingSlash($itemPath) !== $closest) {
+                    $this->mpd('update "' . str_replace("\"", "\\\"", $closest) . '"');
+                    $this->notifyJson = notifyJson(
+                        "OH Snap!<br>
+                        " . $itemPath . " does not exist in MPD-database.<br>
+                        updating " . $closest,
+                        'mpd'
+                    );
+                    return;
+                }
 
-				// trailing slash on directories does not work - lets remove it
-				$this->mpd('add "' . str_replace("\"", "\\\"", removeTrailingSlash($itemPath) ) . '"');
-				if($firePlay === TRUE) {
-					$this->mpd('play ' . intval($targetPosition));
-				}
+                // trailing slash on directories does not work - lets remove it
+                $this->mpd('add "' . str_replace("\"", "\\\"", removeTrailingSlash($itemPath) ) . '"');
+                if($firePlay === TRUE) {
+                    $this->mpd('play ' . intval($targetPosition));
+                }
 
-				$this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
-				return;
+                $this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
+                return;
 
-			case 'appendPlaylist':
-			case 'appendPlaylistAndPlay':
-			case 'replacePlaylist':
-			case 'replacePlaylistAndPlay':
-			case 'softreplacePlaylist':
-				$playlist = new \Slimpd\Models\PlaylistFilesystem($this->container);
-				$playlist->load($itemPath);
+            case 'appendPlaylist':
+            case 'appendPlaylistAndPlay':
+            case 'replacePlaylist':
+            case 'replacePlaylistAndPlay':
+            case 'softreplacePlaylist':
+                $playlist = new \Slimpd\Models\PlaylistFilesystem($this->container);
+                $playlist->load($itemPath);
 
-				$playlist->fetchTrackRange(0,1000, TRUE);
-				$counter = $this->appendPlaylist($playlist);
-				if($firePlay === TRUE) {
-					$this->mpd('play ' . intval($targetPosition));
-				}
-				$this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
-				return;
+                $playlist->fetchTrackRange(0,1000, TRUE);
+                $counter = $this->appendPlaylist($playlist);
+                if($firePlay === TRUE) {
+                    $this->mpd('play ' . intval($targetPosition));
+                }
+                $this->notifyJson = notifyJson("MPD: added " . $playlist->getRelPath() . " (". $counter ." tracks) to playlist", 'mpd');
+                return;
 
-			case 'update':
+            case 'update':
 
-				// now we have to find the nearest parent directory that already exists in mpd-database
-				$closestMpdItem = ($itemPath === "") ? "" : $this->findClosestExistingItem($itemPath);
+                // now we have to find the nearest parent directory that already exists in mpd-database
+                $closestMpdItem = ($itemPath === "") ? "" : $this->findClosestExistingItem($itemPath);
 
-				if($closestMpdItem === "" && $config['disallow_full_database_update'] == '1') {
-					$this->notifyJson = notifyJson("full db update is disabled by config", 'error');
-					return;
-				}
+                if($closestMpdItem === "" && $config['disallow_full_database_update'] == '1') {
+                    $this->notifyJson = notifyJson("full db update is disabled by config", 'error');
+                    return;
+                }
 
-				$mpdUpdateArg = "";
-				$mpdNotifyMsg = "MPD: running full database update";
+                $mpdUpdateArg = "";
+                $mpdNotifyMsg = "MPD: running full database update";
 
-				if($closestMpdItem !== "") {
-					// trailing slash on directories does not work - lets remove it
-					$mpdUpdateArg = ' "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"';
-					$mpdNotifyMsg = "MPD: updating directory " . $closestMpdItem;
-				}
+                if($closestMpdItem !== "") {
+                    // trailing slash on directories does not work - lets remove it
+                    $mpdUpdateArg = ' "' . str_replace("\"", "\\\"", removeTrailingSlash($closestMpdItem)) . '"';
+                    $mpdNotifyMsg = "MPD: updating directory " . $closestMpdItem;
+                }
 
-				// trigger MPD's internal update process
-				$this->mpd('update' . $mpdUpdateArg);
+                // trigger MPD's internal update process
+                $this->mpd('update' . $mpdUpdateArg);
 
-				// insert database record which will be processed on next CLI run for sliMpd database update
-				$importer = new \Slimpd\Modules\Importer\Importer($this->container);
-				$importer->queUpdate();
+                // insert database record which will be processed on next CLI run for sliMpd database update
+                $importer = new \Slimpd\Modules\Importer\Importer($this->container);
+                $importer->queUpdate();
 
-				$this->notifyJson = notifyJson($mpdNotifyMsg, 'mpd');
-				return;
-			case 'seekPercent':
-				$currentSong = $this->mpd('currentsong');
-				$cmd = 'seek ' .$currentSong['Pos'] . ' ' . round($item * ($currentSong['Time']/100)) . '';
-				$this->mpd($cmd);
-			case 'status':
-			case 'stats':
-			case 'currentsong':
-				return $this->mpd($cmd);
+                $this->notifyJson = notifyJson($mpdNotifyMsg, 'mpd');
+                return;
+            case 'seekPercent':
+                $currentSong = $this->mpd('currentsong');
+                $cmd = 'seek ' .$currentSong['Pos'] . ' ' . round($item * ($currentSong['Time']/100)) . '';
+                $this->mpd($cmd);
+            case 'status':
+            case 'stats':
+            case 'currentsong':
+                return $this->mpd($cmd);
 
-			case 'play':
-			case 'pause':
-			case 'stop':
-			case 'previous':
-			case 'next':
-			case 'playlistid':
-			case 'playlistinfo':
-				$this->mpd($cmd);
-				break;
-			case 'toggleRepeat':
-				$status = $this->mpd('status');
-				$this->mpd('repeat ' . (int)($status['repeat'] xor 1));
-				break;
-			case 'toggleRandom':
-				$status = $this->mpd('status');
-				$this->mpd('random ' . (int)($status['random'] xor 1));
-				break;
-			case 'toggleConsume':
-				$status = $this->mpd('status');
-				$this->mpd('consume ' . (int)($status['consume'] xor 1));
-				break;
+            case 'play':
+            case 'pause':
+            case 'stop':
+            case 'previous':
+            case 'next':
+            case 'playlistid':
+            case 'playlistinfo':
+                $this->mpd($cmd);
+                break;
+            case 'toggleRepeat':
+                $status = $this->mpd('status');
+                $this->mpd('repeat ' . (int)($status['repeat'] xor 1));
+                break;
+            case 'toggleRandom':
+                $status = $this->mpd('status');
+                $this->mpd('random ' . (int)($status['random'] xor 1));
+                break;
+            case 'toggleConsume':
+                $status = $this->mpd('status');
+                $this->mpd('consume ' . (int)($status['consume'] xor 1));
+                break;
 
-			case 'playIndex':
-				$this->mpd('play ' . $item);
-				break;
+            case 'playIndex':
+                $this->mpd('play ' . $item);
+                break;
 
-			case 'deleteIndex':
-				$this->mpd('delete ' . $item);
-				break;
+            case 'deleteIndex':
+                $this->mpd('delete ' . $item);
+                break;
 
-			case 'clearPlaylist':
-				$this->mpd('clear');
-				$this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
-				return;
+            case 'clearPlaylist':
+                $this->mpd('clear');
+                $this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
+                return;
 
-			case 'softclearPlaylist':
-				$this->softclearPlaylist();
-				$this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
-				return;
+            case 'softclearPlaylist':
+                $this->softclearPlaylist();
+                $this->notifyJson = notifyJson("MPD: cleared playlist", 'mpd');
+                return;
 
-			case 'removeDupes':
-				// TODO: remove requirement of having mpc installed
-				$cmd = APP_ROOT . 'core/vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
-				exec($cmd);
-				// TODO: count removed dupes and display result
-				$this->notifyJson = notifyJson("MPD: removed dupes in current playlist", 'mpd');
-				return;
+            case 'removeDupes':
+                // TODO: remove requirement of having mpc installed
+                $cmd = APP_ROOT . 'core/vendor-dist/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh';
+                exec($cmd);
+                // TODO: count removed dupes and display result
+                $this->notifyJson = notifyJson("MPD: removed dupes in current playlist", 'mpd');
+                return;
 
-			case 'playSelect': //		playSelect();
-			case 'deleteIndexAjax'://	deleteIndexAjax();
-			case 'deletePlayed'://		deletePlayed();
-			case 'volumeImageMap'://	volumeImageMap();
-			case 'toggleMute'://		toggleMute();
-			case 'loopGain'://			loopGain();
+            case 'playSelect': //        playSelect();
+            case 'deleteIndexAjax'://    deleteIndexAjax();
+            case 'deletePlayed'://        deletePlayed();
+            case 'volumeImageMap'://    volumeImageMap();
+            case 'toggleMute'://        toggleMute();
+            case 'loopGain'://            loopGain();
 
-			case 'playlistTrack'://	playlistTrack();
-			default:
-				$this->notifyJson = notifyJson("sorry, not implemented yet", "mpd");
-				return;
-		}
-	}
+            case 'playlistTrack'://    playlistTrack();
+            default:
+                $this->notifyJson = notifyJson("sorry, not implemented yet", "mpd");
+                return;
+        }
+    }
 
-	/*
-	 * function findClosestExistingDirectory
-	 * play() file, that does not exist in mpd database does not work
-	 * so we have to update the mpd db
-	 * update() with a path as argument whichs parent does not exist in mpd db will also not work
-	 * with this function we search for the closest directory that exists in mpd-db
-	 */
-	private function findClosestExistingItem($item) {
-		if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
-			return $item;
-		}
-		if(is_file($this->conf['mpd']['musicdir'] .$item ) === TRUE) {
-			$item = dirname($item);
-		}
+    /*
+     * function findClosestExistingDirectory
+     * play() file, that does not exist in mpd database does not work
+     * so we have to update the mpd db
+     * update() with a path as argument whichs parent does not exist in mpd db will also not work
+     * with this function we search for the closest directory that exists in mpd-db
+     */
+    private function findClosestExistingItem($item) {
+        if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
+            return $item;
+        }
+        if(is_file($this->conf['mpd']['musicdir'] .$item ) === TRUE) {
+            $item = dirname($item);
+        }
 
-		$item = explode(DS, removeTrailingSlash($item));
+        $item = explode(DS, removeTrailingSlash($item));
 
-		// single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
-		if(count($item) === 1 && is_file($this->conf['mpd']['musicdir'] . $item[0])) {
-			return NULL;
-		}
+        // single files (without a directory) added in mpd-root-directories requires a full mpd-database update :/
+        if(count($item) === 1 && is_file($this->conf['mpd']['musicdir'] . $item[0])) {
+            return NULL;
+        }
 
-		$itemCopy = $item;
-		for($i=count($item); $i>=0; $i--) {
-			if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", join(DS, $itemCopy)) . '"') !== FALSE) {
-				// we found the closest existing directory
-				return join(DS, $itemCopy);
-			}
+        $itemCopy = $item;
+        for($i=count($item); $i>=0; $i--) {
+            if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", join(DS, $itemCopy)) . '"') !== FALSE) {
+                // we found the closest existing directory
+                return join(DS, $itemCopy);
+            }
 
-			// shorten path by one level in every loop
-			array_pop($itemCopy);
-		}
-		return NULL;
-	}
+            // shorten path by one level in every loop
+            array_pop($itemCopy);
+        }
+        return NULL;
+    }
 
-	public function softclearPlaylist() {
-		$status = $this->mpd('status');
-		$currentSongId = isset($status['songid']) ? $status['songid'] : 0;
-		if($currentSongId < 1) {
-			$this->mpd('clear');
-			return;
-		}
+    public function softclearPlaylist() {
+        $status = $this->mpd('status');
+        $currentSongId = isset($status['songid']) ? $status['songid'] : 0;
+        if($currentSongId < 1) {
+            $this->mpd('clear');
+            return;
+        }
 
-		// move current song to first position
-		$this->mpd('moveid ' . $currentSongId . ' 0');
-		$playlistLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
-		if($playlistLength > 1) {
-			$this->mpd('delete 1:' . $playlistLength);
-		}
-	}
+        // move current song to first position
+        $this->mpd('moveid ' . $currentSongId . ' 0');
+        $playlistLength = isset($status['playlistlength']) ? $status['playlistlength'] : 0;
+        if($playlistLength > 1) {
+            $this->mpd('delete 1:' . $playlistLength);
+        }
+    }
 
-	public function appendPlaylist($playlist, $targetPosition = FALSE) {
-		$counter = 0;
-		foreach($playlist->getTracks() as $t) {
-			if($t->getError() === 'notfound') {
-				continue;
-			}
-			$trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelPath()) . "\""; 
-			$cmd = "add " . $trackPath;
-			if($targetPosition !== FALSE) {
-				$cmd = "addid " . $trackPath . " " . ($targetPosition+$counter);
-			}
-			$this->mpd($cmd);
-			$counter ++;
-		}
-		return $counter;
-	}
+    public function appendPlaylist($playlist, $targetPosition = FALSE) {
+        $counter = 0;
+        foreach($playlist->getTracks() as $t) {
+            if($t->getError() === 'notfound') {
+                continue;
+            }
+            $trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelPath()) . "\""; 
+            $cmd = "add " . $trackPath;
+            if($targetPosition !== FALSE) {
+                $cmd = "addid " . $trackPath . " " . ($targetPosition+$counter);
+            }
+            $this->mpd($cmd);
+            $counter ++;
+        }
+        return $counter;
+    }
 
-		
+        
 
-	//  +------------------------------------------------------------------------+
-	//  | Music Player Daemon                                                    |
-	//  +------------------------------------------------------------------------+
-	public function mpd($command) {
-		try {
-			$socket = fsockopen(
-				$this->conf['mpd']['host'],
-				$this->conf['mpd']['port'],
-				$errorNo,
-				$errorString,
-				3
-			);
-			if($socket === FALSE) {
-				$this->container->flash->AddMessage('error', $errorString . "(" . $errorNo . ")");
-				return FALSE;
-			}
-		} catch (\Exception $e) {
-			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnect'));
-			return FALSE;
-		}
+    //  +------------------------------------------------------------------------+
+    //  | Music Player Daemon                                                    |
+    //  +------------------------------------------------------------------------+
+    public function mpd($command) {
+        try {
+            $socket = fsockopen(
+                $this->conf['mpd']['host'],
+                $this->conf['mpd']['port'],
+                $errorNo,
+                $errorString,
+                3
+            );
+            if($socket === FALSE) {
+                $this->container->flash->AddMessage('error', $errorString . "(" . $errorNo . ")");
+                return FALSE;
+            }
+        } catch (\Exception $e) {
+            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnect'));
+            return FALSE;
+        }
 
-		try {
-			fwrite($socket, $command . "\n");
-		} catch (\Exception $e) {
-			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdwrite'));
-			return FALSE;
-		}
+        try {
+            fwrite($socket, $command . "\n");
+        } catch (\Exception $e) {
+            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdwrite'));
+            return FALSE;
+        }
 
-		
+        
 
-		$line = trim(fgets($socket, 1024));
-		if (substr($line, 0, 3) === 'ACK') {
-			fclose($socket);
-			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-			return FALSE;
-		}
+        $line = trim(fgets($socket, 1024));
+        if (substr($line, 0, 3) === 'ACK') {
+            fclose($socket);
+            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            return FALSE;
+        }
 
-		if (substr($line, 0, 6) !== 'OK MPD') {
-			fclose($socket);
-			$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-			return FALSE;
-		}
+        if (substr($line, 0, 6) !== 'OK MPD') {
+            fclose($socket);
+            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            return FALSE;
+        }
 
-		$array = array();
-		while (!feof($socket)) {
-			$line = trim(@fgets($socket, 1024));
-			if (substr($line, 0, 3) == 'ACK') {
-				fclose($socket);
-				$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-				return FALSE;
-			}
-			if (substr($line, 0, 2) == 'OK') {
-				fclose($socket);
-				return $array;
-			}
-			try {
-				list($key, $value) = explode(': ', $line, 2);
-			} catch(\Exception $e) {
-				continue;
-			}
+        $array = array();
+        while (!feof($socket)) {
+            $line = trim(@fgets($socket, 1024));
+            if (substr($line, 0, 3) == 'ACK') {
+                fclose($socket);
+                $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+                return FALSE;
+            }
+            if (substr($line, 0, 2) == 'OK') {
+                fclose($socket);
+                return $array;
+            }
+            try {
+                list($key, $value) = explode(': ', $line, 2);
+            } catch(\Exception $e) {
+                continue;
+            }
 
-			if ($command == 'playlist' || $command == 'playlistinfo') {
-				$array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
-				continue;
-			}
-			// name: value
-			$array[$key] = $value;
-		}
-		fclose($socket);
-		$this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
-		return FALSE;
-	}
+            if ($command == 'playlist' || $command == 'playlistinfo') {
+                $array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
+                continue;
+            }
+            // name: value
+            $array[$key] = $value;
+        }
+        fclose($socket);
+        $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
+        return FALSE;
+    }
 }

@@ -20,25 +20,25 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class Numeric extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 0.9;
+    public $isAlbumWeight = 0.9;
 
-	public function run() {
-		if(is_numeric($this->input)) {
-			$this->result = 'numeric';	// 1, 01, 22
-			$this->matches = intval($this->input);
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        if(is_numeric($this->input)) {
+            $this->result = 'numeric';    // 1, 01, 22
+            $this->matches = intval($this->input);
+            return;
+        }
+        $this->result = 0;
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[0]
-		]);
-	}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[0]
+        ]);
+    }
 }

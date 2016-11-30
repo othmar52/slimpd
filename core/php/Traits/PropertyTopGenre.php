@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyTopGenre {
-	protected $topGenreUids;
+    protected $topGenreUids;
 
-	public function getTopGenreUids() {
-		return $this->topGenreUids;
-	}
+    public function getTopGenreUids() {
+        return $this->topGenreUids;
+    }
 
-	public function setTopGenreUids($value) {
-		$this->topGenreUids = $value;
-		return $this;
-	}
+    public function setTopGenreUids($value) {
+        $this->topGenreUids = $value;
+        return $this;
+    }
 }

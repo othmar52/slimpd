@@ -19,6 +19,6 @@ namespace Slimpd\Repositories;
  */
 
 class AlbumindexRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'albumindex';
-	public static $classPath = '\Slimpd\Models\Albumindex';
+    public static $tableName = 'albumindex';
+    public static $classPath = '\Slimpd\Models\Albumindex';
 }

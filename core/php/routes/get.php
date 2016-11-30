@@ -20,13 +20,13 @@
 
 
 $app->get('/library/year/:itemString', function($itemString) use ($app, $vars){
-	$vars['action'] = 'library.year';
+    $vars['action'] = 'library.year';
 
-	$vars['albumlist'] = \Slimpd\Models\Album::getInstancesByAttributes(
-		array('year' => $itemString)
-	);
+    $vars['albumlist'] = \Slimpd\Models\Album::getInstancesByAttributes(
+        array('year' => $itemString)
+    );
 
-	// get all relational items we need for rendering
-	$vars['renderitems'] = getRenderItems($vars['albumlist']);
-	$app->render('surrounding.htm', $vars);
+    // get all relational items we need for rendering
+    $vars['renderitems'] = getRenderItems($vars['albumlist']);
+    $app->render('surrounding.htm', $vars);
 });

@@ -29,19 +29,19 @@ use Slimpd\Utilities\RegexHelper as RGX;
   */
 abstract class HasSuffixedUrl extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^" . RGX::ANYTHING . "(?:[^ ])(?:\ [-:])?" . RGX::GLUE . RGX::URL . "$/";
-		return $this;
-	}
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^" . RGX::ANYTHING . "(?:[^ ])(?:\ [-:])?" . RGX::GLUE . RGX::URL . "$/";
+        return $this;
+    }
 
-	public function run() {
-		if(preg_match($this->pattern, $this->input, $matches)) {
-			$this->result = "has-suffixed-url";
-			$this->matches = $matches;
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        if(preg_match($this->pattern, $this->input, $matches)) {
+            $this->result = "has-suffixed-url";
+            $this->matches = $matches;
+            return;
+        }
+        $this->result = 0;
+    }
 }

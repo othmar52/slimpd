@@ -19,15 +19,15 @@ namespace Slimpd\Modules\Albummigrator\AbstractTests;
  */
 
 abstract class CaseSensitivity extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public function run() {
-		if(strtolower($this->input) === $this->input) {
-			$this->result = "lower";
-			return;
-		}
-		if(strtoupper($this->input) === $this->input) {
-			$this->result = "upper";
-			return;
-		}
-		$this->result = "mixed";
-	}
+    public function run() {
+        if(strtolower($this->input) === $this->input) {
+            $this->result = "lower";
+            return;
+        }
+        if(strtoupper($this->input) === $this->input) {
+            $this->result = "upper";
+            return;
+        }
+        $this->result = "mixed";
+    }
 }

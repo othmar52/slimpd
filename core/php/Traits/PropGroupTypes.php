@@ -19,32 +19,32 @@ namespace Slimpd\Traits;
  */
 
 trait PropGroupTypes {
-	protected $artist;
-	protected $genre;
-	protected $label;
+    protected $artist;
+    protected $genre;
+    protected $label;
 
-	// getter
-	public function getArtist() {
-		return $this->artist;
-	}
-	public function getGenre() {
-		return $this->genre;
-	}
-	public function getLabel() {
-		return $this->label;
-	}
+    // getter
+    public function getArtist() {
+        return $this->artist;
+    }
+    public function getGenre() {
+        return $this->genre;
+    }
+    public function getLabel() {
+        return $this->label;
+    }
 
-	// setter
-	public function setArtist($value) {
-		$this->artist = $value;
-		return $this;
-	}
-	public function setGenre($value) {
-		$this->genre = $value;
-		return $this;
-	}
-	public function setLabel($value) {
-		$this->label = $value;
-		return $this;
-	}
+    // setter
+    public function setArtist($value) {
+        $this->artist = $value;
+        return $this;
+    }
+    public function setGenre($value) {
+        $this->genre = $value;
+        return $this;
+    }
+    public function setLabel($value) {
+        $this->label = $value;
+        return $this;
+    }
 }

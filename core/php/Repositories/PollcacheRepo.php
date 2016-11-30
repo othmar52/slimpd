@@ -19,6 +19,6 @@ namespace Slimpd\Repositories;
  */
 
 class PollcacheRepo extends \Slimpd\Repositories\BaseRepository {
-	public static $tableName = 'pollcache';
-	public static $classPath = '\Slimpd\Models\Pollcache';
+    public static $tableName = 'pollcache';
+    public static $classPath = '\Slimpd\Models\Pollcache';
 }

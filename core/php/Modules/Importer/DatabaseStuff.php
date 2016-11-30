@@ -23,108 +23,108 @@ namespace Slimpd\Modules\Importer;
  */
 class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
 
-	public static function getInitialDatabaseQueries($ll) {
-		$queries = array(
-			"TRUNCATE artist;",
-			"TRUNCATE genre;",
-			"TRUNCATE track;",
-			"TRUNCATE label;",
-			"TRUNCATE album;",
-			"TRUNCATE albumindex;",
-			"TRUNCATE trackindex;",
-			"ALTER TABLE `artist` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `genre` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `label` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `album` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `albumindex` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `track` AUTO_INCREMENT = 10;",
-			"ALTER TABLE `trackindex` AUTO_INCREMENT = 10;",
-		);
-		foreach([
-			'unknownartist' => 'artist',
-			'variousartists' => 'artist',
-			'unknowngenre' => 'genre'] as $llKey => $table) {
-			$queries[] =
-				"INSERT INTO `".$table."` ".
-				"VALUES (
-					NULL,
-					'".$ll->str('importer.' . $llKey)."',
-					'',
-					'".az09($ll->str('importer.' . $llKey))."',
-					0,
-					0,
-					'',
-					'',
-					''
-				);";
-		}
-		$queries[] =
-			"INSERT INTO `label` ".
-			"VALUES (
-				NULL,
-				'".$ll->str('importer.unknownlabel')."',
-				'".az09($ll->str('importer.unknownlabel'))."',
-				0,
-				0,
-				'',
-				'',
-				''
-			);";
-		return $queries;
-	}
+    public static function getInitialDatabaseQueries($ll) {
+        $queries = array(
+            "TRUNCATE artist;",
+            "TRUNCATE genre;",
+            "TRUNCATE track;",
+            "TRUNCATE label;",
+            "TRUNCATE album;",
+            "TRUNCATE albumindex;",
+            "TRUNCATE trackindex;",
+            "ALTER TABLE `artist` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `genre` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `label` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `album` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `albumindex` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `track` AUTO_INCREMENT = 10;",
+            "ALTER TABLE `trackindex` AUTO_INCREMENT = 10;",
+        );
+        foreach([
+            'unknownartist' => 'artist',
+            'variousartists' => 'artist',
+            'unknowngenre' => 'genre'] as $llKey => $table) {
+            $queries[] =
+                "INSERT INTO `".$table."` ".
+                "VALUES (
+                    NULL,
+                    '".$ll->str('importer.' . $llKey)."',
+                    '',
+                    '".az09($ll->str('importer.' . $llKey))."',
+                    0,
+                    0,
+                    '',
+                    '',
+                    ''
+                );";
+        }
+        $queries[] =
+            "INSERT INTO `label` ".
+            "VALUES (
+                NULL,
+                '".$ll->str('importer.unknownlabel')."',
+                '".az09($ll->str('importer.unknownlabel'))."',
+                0,
+                0,
+                '',
+                '',
+                ''
+            );";
+        return $queries;
+    }
 
 
-	public function buildDictionarySql() {
-		\Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($this->conf['sphinx']);
+    public function buildDictionarySql() {
+        \Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($this->conf['sphinx']);
 
-		$input  = fopen ("php://stdin", "r");
-		$output = fopen ("php://stdout", "w+");
-		$usedKeywords = array();
-		$sectionCounter = 0;
-		fwrite ($output, "TRUNCATE suggest;\n");
-		while ($line = fgets($input, 1024)) {
-			list($keyword, $freq ) = explode(" ", trim($line));
-			$keyword = trim($keyword);
-			if (self::addKeywordToSql($keyword, $freq, $usedKeywords) === FALSE) {
-				continue;
-			}
-			
-			$trigrams = buildTrigrams($keyword);
-			$usedKeywords[$keyword] = NULL;
-			fwrite($output, (($sectionCounter === 0) ? "INSERT INTO suggest VALUES\n" : ",\n"));
-			fwrite($output, "( 0, '".$keyword."', '".$trigrams.".', ".$freq.")");
-			$sectionCounter++;
-			if (($sectionCounter % 10000) == 0) {
-				fwrite ($output, ";\n");
-				$sectionCounter = 0;
-			}
-		}
-		if ($sectionCounter > 0) {
-			fwrite ( $output, ";" );
-		}
-		fwrite ( $output,  "\n");
-	}
+        $input  = fopen ("php://stdin", "r");
+        $output = fopen ("php://stdout", "w+");
+        $usedKeywords = array();
+        $sectionCounter = 0;
+        fwrite ($output, "TRUNCATE suggest;\n");
+        while ($line = fgets($input, 1024)) {
+            list($keyword, $freq ) = explode(" ", trim($line));
+            $keyword = trim($keyword);
+            if (self::addKeywordToSql($keyword, $freq, $usedKeywords) === FALSE) {
+                continue;
+            }
+            
+            $trigrams = buildTrigrams($keyword);
+            $usedKeywords[$keyword] = NULL;
+            fwrite($output, (($sectionCounter === 0) ? "INSERT INTO suggest VALUES\n" : ",\n"));
+            fwrite($output, "( 0, '".$keyword."', '".$trigrams.".', ".$freq.")");
+            $sectionCounter++;
+            if (($sectionCounter % 10000) == 0) {
+                fwrite ($output, ";\n");
+                $sectionCounter = 0;
+            }
+        }
+        if ($sectionCounter > 0) {
+            fwrite ( $output, ";" );
+        }
+        fwrite ( $output,  "\n");
+    }
 
-	private static function addKeywordToSql($keyword, $freq, $usedKeywords) {
-		if($keyword === "") {
-			return FALSE;
-		}
-		if($freq < FREQ_THRESHOLD) {
-			return FALSE;
-		}
-		if(strlen($keyword) < 2) {
-			return FALSE;
-		}
-		if(isset($usedKeywords[$keyword]) === TRUE ) {
-			return FALSE;
-		}
-		if(strstr($keyword, "_") !== FALSE) {
-			return FALSE;
-		}
-		if(strstr($keyword, "'") !== FALSE) {
-			return FALSE;
-		}
-		return TRUE;
-	}
-	
+    private static function addKeywordToSql($keyword, $freq, $usedKeywords) {
+        if($keyword === "") {
+            return FALSE;
+        }
+        if($freq < FREQ_THRESHOLD) {
+            return FALSE;
+        }
+        if(strlen($keyword) < 2) {
+            return FALSE;
+        }
+        if(isset($usedKeywords[$keyword]) === TRUE ) {
+            return FALSE;
+        }
+        if(strstr($keyword, "_") !== FALSE) {
+            return FALSE;
+        }
+        if(strstr($keyword, "'") !== FALSE) {
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
 }

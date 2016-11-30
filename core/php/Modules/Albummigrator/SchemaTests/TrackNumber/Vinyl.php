@@ -20,34 +20,34 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 
 class Vinyl extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
-	public $isAlbumWeight = 1;
+    public $isAlbumWeight = 1;
 
-	public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-		parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
-		$this->pattern = "/^([a-zA-Z]{1,2})(?:[\/-]{1})(\d*)$/"; // AA1, B2, C34, A-1, A/4
-		return $this;
-	}
+    public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
+        parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
+        $this->pattern = "/^([a-zA-Z]{1,2})(?:[\/-]{1})(\d*)$/"; // AA1, B2, C34, A-1, A/4
+        return $this;
+    }
 
-	public function run() {
-		$value = str_replace(array("of", " ", ".", ","), "/", $this->input);
-		if(preg_match($this->pattern, $value)) {
-			$this->matches = [strtoupper($this->input)];
-			$this->result = "vinyl";
-			return;
-		}
-		$this->result = 0;
-	}
+    public function run() {
+        $value = str_replace(array("of", " ", ".", ","), "/", $this->input);
+        if(preg_match($this->pattern, $value)) {
+            $this->matches = [strtoupper($this->input)];
+            $this->result = "vinyl";
+            return;
+        }
+        $this->result = 0;
+    }
 
-	public function scoreMatches() {
-		cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
-		if(count($this->matches) === 0) {
-			cliLog("  no matches\n ", 10);
-			return;
-		}
+    public function scoreMatches() {
+        cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
+        if(count($this->matches) === 0) {
+            cliLog("  no matches\n ", 10);
+            return;
+        }
 
-		$this->trackContext->recommend([
-			'setTrackNumber' => $this->matches[0]
-		]);
-		// TODO: consider to recommend setSource => "Vinyl" for track and album
-	}
+        $this->trackContext->recommend([
+            'setTrackNumber' => $this->matches[0]
+        ]);
+        // TODO: consider to recommend setSource => "Vinyl" for track and album
+    }
 }

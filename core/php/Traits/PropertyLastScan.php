@@ -18,14 +18,14 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyLastScan {
-	protected $lastScan;
+    protected $lastScan;
 
-	public function getLastScan() {
-		return $this->lastScan;
-	}
+    public function getLastScan() {
+        return $this->lastScan;
+    }
 
-	public function setLastScan($value) {
-		$this->lastScan = $value;
-		return $this;
-	}
+    public function setLastScan($value) {
+        $this->lastScan = $value;
+        return $this;
+    }
 }
