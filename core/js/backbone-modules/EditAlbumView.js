@@ -30,7 +30,8 @@
         name : null,
         rendered : false,
         initialFormValues : "",
-        alNumRegEx : /[^a-zêéäöüí\d]/i,
+        alNumRegEx : /[^a-zêèéäöüí\d]/i,
+        localSortable : null,
 
         initialize : function(options) {
             window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
@@ -95,7 +96,7 @@
             });
 
             // thanks to http://stackoverflow.com/questions/4299241/jquery-sortable-lists-and-fixed-locked-items#answer-6131590
-            $(".grid", this.$el).sortable({
+           this.localSortable = $(".grid", this.$el).sortable({
                 items: ".well:not(.locked)",
                 placeholder: "well placeholder",
                 tolerance: "pointer",

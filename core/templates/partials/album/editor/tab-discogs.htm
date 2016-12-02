@@ -19,58 +19,68 @@
 	<hr />
 </div>
 
-
-
-<div class="row heading">
+<!--div class="row heading">
 	<div class="col-md-12">
 		<h3>Album properties</h3>
 	</div>
+</div-->
+<div class="row heading">
+	<div class="col-md-1"><h3></h3></div>
+	<div class="col-md-2"><h3>|</h3></div>
+	<div class="col-md-3"><h3>Discogs Album</h3></div>
+	<div class="col-md-2"><h3>|</h3></div>
+	<div class="col-md-3"><h3>Local Album</h3></div>
+	<div class="col-md-1"><h3></h3></div>
 </div>
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setAlbum]" type="text" value="{{ discogsalbum.title }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-5">{{ discogsalbum.title }}</div>
+	<div class="col-md-5"><input name="album[setAlbum]" type="text" value="{{ album.title }}" class="form-control" /></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
-	{% set value %}{% include 'partials/artist/string.htm' with { 'item': album } %}{% endset %}
-	<div class="col-md-6"><input name="album[setAlbumArtist]" type="text" value="{{ discogsalbum.artist }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-5">{{ discogsalbum.artistString }}</div>
+	<div class="col-md-5"><input name="album[setAlbumArtist]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': album } %}" class="form-control" /></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setYear]" type="text" value="{{ discogsalbum.year }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-5">{{ discogsalbum.year }}</div>
+	<div class="col-md-5"><input name="album[setYear]" type="text" value="{{ album.year }}" class="form-control" /></div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	{% set value %}{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}{% endset %}
-	<div class="col-md-6">
-		<input name="title" disabled="disabled" type="text" value="{{ discogsalbum.genre }} (collected from tracks)" class="form-control" /></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-5">{{ discogsalbum.genreString }}</div>
+	<div class="col-md-5">
+		<input name="title" disabled="disabled" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}" class="form-control" />
+	</div>
 </div>
-
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
-	{% set value %}{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}{% endset %}
-	<div class="col-md-6"><input name="album[setLabel]" type="text" value="{{ discogsalbum.label }}" class="form-control" /></div>
-	<div class="col-md-3"></div>
+	<div class="col-md-5">{{ discogsalbum.labelString }}</div>
+	<div class="col-md-5"><input name="album[setLabel]" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}" class="form-control" /></div>
 </div>
+
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-6"><input name="album[setCatalogNr]" type="text" value="{{ discogsalbum.catalogNr }}" class="form-control" /></div>
-	<div class="col-md-3">
-		
+	<div class="col-md-5">{{ discogsalbum.catalogNr }}</div>
+	<div class="col-md-5"><input name="album[setCatalogNr]" type="text" value="{{ album.catalogNr }}" class="form-control" /></div>
+</div>
+
+
+<div class="row">
+	<div class="col-md-5"></div>
+	<div class="col-md-2">
 		<form action="{{root}}maintainance/marrytracks/{{ album.uid }}" method="post" id="submit-marriage">
 			<button name="submit-marriage" value="1" class="btn btn-default">submit marriage</button>
 		</form>
 	</div>
+	<div class="col-md-5"></div>
 </div>
 
 
@@ -125,5 +135,13 @@
 				{% endif %}
 			{% endfor %}
 		{% endfor %}
+		{% if itemlist|length < discogstracks|length %}
+			{% set diff = discogstracks|length - itemlist|length %}
+			{% for i in 1..diff %}
+			<div class='well well-sm empty-placeholder centered-text' title='placeholder'>
+				<span class='dark'>placeholder</span>
+			</div>
+			{% endfor %}
+		{% endif %}
 	</div>
 </div>

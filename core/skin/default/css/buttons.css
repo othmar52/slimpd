@@ -63,11 +63,13 @@
 
 .discogs-link {
     background: url(../img/discogs-white.png) top left no-repeat;
-    background-size: 40px 16px;
-    width: 40px;
-    height: 16px;
+    background-size: 45px 15px;
+    width: 45px;
+    height: 15px;
     display:inline-block;
-    opacity: 0.2;
+    opacity: 0.3;
+    position: relative;
+    top: 3px;
 }
 
 button:focus {
