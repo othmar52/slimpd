@@ -50,6 +50,8 @@
 
             $(".marry", this.$el).off("click", this.marryTrackClickListener).on("click", this.marryTrackClickListener);
             $(".marry-all", this.$el).off("click", this.marryAllTracksClickListener).on("click", this.marryAllTracksClickListener);
+            $(".marry-property", this.$el).off("click", this.marryPropertyClickListener).on("click", this.marryPropertyClickListener);
+            $(".marry-all-properties", this.$el).off("click", this.marryAllPropertiesClickListener).on("click", this.marryAllPropertiesClickListener);
 
             this.highlightPhrases();
             $("#edit-album", this.$el).on("submit", function(e) {
@@ -135,6 +137,7 @@
         remove : function() {
             $(".marry", this.$el).off("click", this.marryTrackClickListener);
             $(".marry-all", this.$el).off("click", this.marryAllTracksClickListener);
+            $(".marry-property", this.$el).off("click", this.marryPropertyClickListener);
             window.sliMpd.modules.PageView.prototype.remove.call(this);
         },
 
@@ -193,6 +196,55 @@
                 return;
             }
             this.unmarryAllTracks(longerLength);
+        },
+
+        marryProperty : function($triggerElement) {
+            $( $triggerElement.attr("data-target"), this.$el).val($( $triggerElement.attr("data-source"), this.$el).text());
+            $triggerElement.addClass("use-property");
+        },
+
+        unmarryProperty : function($triggerElement) {
+            var $targetElement = $( $triggerElement.attr("data-target"), this.$el);
+            $targetElement.val($targetElement.attr("data-initvalue"));
+            $triggerElement.removeClass("use-property");
+        },
+
+        marryAllProperties : function($allTriggers) {
+            var that = this;
+            $allTriggers.each(function(){
+                that.marryProperty($(this));
+            });
+        },
+
+        unmarryAllProperties : function($allTriggers) {
+            var that = this;
+            $allTriggers.each(function(){
+                that.unmarryProperty($(this));
+            });
+        },
+
+        marryPropertyClickListener : function(e) {
+            e.preventDefault();
+            var $triggerElement = $(e.currentTarget);
+            if($triggerElement.hasClass("use-property")) {
+                this.unmarryProperty($triggerElement);
+                return;
+            }
+            this.marryProperty($triggerElement);
+        },
+
+        marryAllPropertiesClickListener : function(e) {
+            e.preventDefault();
+            // count total and married properties
+            var $allTriggers = $(".marry-property");
+            var $countMarried = $(".marry-property.use-property").length;
+
+            // in case we have more married than unmarried -> unmarry all and vice versa
+            if($countMarried >= $allTriggers.length) {
+                this.unmarryAllProperties($allTriggers);
+                return;
+            }
+            this.marryAllProperties($allTriggers);
         },
 
         // TODO: move to separate file "formSnaphot.js" begin

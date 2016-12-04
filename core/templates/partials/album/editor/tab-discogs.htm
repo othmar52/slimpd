@@ -28,48 +28,89 @@
 	<div class="col-md-1"><h3></h3></div>
 	<div class="col-md-2"><h3>|</h3></div>
 	<div class="col-md-3"><h3>Discogs Album</h3></div>
-	<div class="col-md-2"><h3>|</h3></div>
+	<div class="col-md-2"><h3>|
+		{% if discogstracks|length %}
+		<button class="marry-all-properties btn btn-trnsp" data-target="#targetAlbum" data-source="#sourceAlbum">
+			<i class="fa fa-check-square-o fa-2x unchecked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x checked" aria-hidden="true"></i>
+		</button>
+		{% endif %}
+		</h3></div>
 	<div class="col-md-3"><h3>Local Album</h3></div>
 	<div class="col-md-1"><h3></h3></div>
 </div>
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumtitle'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.title }}</div>
-	<div class="col-md-5"><input name="album[setAlbum]" type="text" value="{{ album.title }}" class="form-control" /></div>
+	<div class="col-md-5"><span id="sourceAlbum">{{ discogsalbum.title }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetAlbum" data-source="#sourceAlbum">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="col-md-5"><input name="album[setAlbum]" id="targetAlbum" type="text" value="{{ album.title }}" class="form-control" data-initvalue="{{ album.title }}"/></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'albumartist'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.artistString }}</div>
-	<div class="col-md-5"><input name="album[setAlbumArtist]" type="text" value="{% include 'partials/artist/string.htm' with { 'item': album } %}" class="form-control" /></div>
+	<div class="col-md-5"><span id="sourceArtist">{{ discogsalbum.artistString }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetArtist" data-source="#sourceArtist">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="col-md-5"><input name="album[setAlbumArtist]" id="targetArtist" type="text" value="{% include 'partials/artist/string.htm' with { 'item': album } %}" class="form-control" data-initvalue="{% include 'partials/artist/string.htm' with { 'item': album } %}"/></div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'year'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.year }}</div>
-	<div class="col-md-5"><input name="album[setYear]" type="text" value="{{ album.year }}" class="form-control" /></div>
+	<div class="col-md-5"><span id="sourceYear">{{ discogsalbum.year }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetYear" data-source="#sourceYear">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="col-md-5"><input name="album[setYear]" id="targetYear" type="text" value="{{ album.year }}" class="form-control" data-initvalue="{{ album.year }}"/></div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'genre'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.genreString }}</div>
+	<div class="col-md-5"><span id="sourceGenre">{{ discogsalbum.genreString }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetGenre" data-source="#sourceGenre">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
 	<div class="col-md-5">
-		<input name="title" disabled="disabled" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}" class="form-control" />
+		<input name="album[setGenre]" id="targetGenre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}" class="form-control" data-initvalue="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}"/>
 	</div>
 </div>
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'label'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.labelString }}</div>
-	<div class="col-md-5"><input name="album[setLabel]" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}" class="form-control" /></div>
+	<div class="col-md-5"><span id="sourceLabel">{{ discogsalbum.labelString }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetLabel" data-source="#sourceLabel">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="col-md-5">
+		<input name="album[setLabel]" id="targetLabel" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}" class="form-control" data-initvalue="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}"/>
+	</div>
 </div>
 
 
 <div class="row">
 	<div class="col-md-2"><strong>{{'catnr'|ll}}</strong></div>
-	<div class="col-md-5">{{ discogsalbum.catalogNr }}</div>
-	<div class="col-md-5"><input name="album[setCatalogNr]" type="text" value="{{ album.catalogNr }}" class="form-control" /></div>
+	<div class="col-md-5"><span id="sourceCatalogNr">{{ discogsalbum.catalogNr }}</span>
+		<button class="marry-property btn btn-trnsp" data-target="#targetCatalogNr" data-source="#sourceCatalogNr">
+			<i class="fa fa-check-square-o fa-2x checked" aria-hidden="true"></i>
+			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
+		</button>
+	</div>
+	<div class="col-md-5">
+		<input name="album[setCatalogNr]" id="targetCatalogNr" type="text" value="{{ album.catalogNr }}" class="form-control" data-inivalue="{{ album.catalogNr }}"/>
+	</div>
 </div>
 
 

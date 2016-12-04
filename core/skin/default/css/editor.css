@@ -15,13 +15,15 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
-.marry {
+.marry,
+.marry-property {
     position: absolute;
     right: -1.5em;
     z-index: 10;
 }
 
-.marry-all {
+.marry-all,
+.marry-all-properties {
     position: absolute;
     right: 5.5em;
     top: -0.5em;
@@ -79,10 +81,12 @@
     display: none;
 }
 
-.is-married .unchecked {
+.is-married .unchecked,
+.use-property .unchecked {
     display: none;
 }
 
-.is-married .checked {
+.is-married .checked,
+.use-property .checked {
     display: inline-block;
 }
