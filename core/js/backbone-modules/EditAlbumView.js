@@ -52,6 +52,7 @@
             $(".marry-all", this.$el).off("click", this.marryAllTracksClickListener).on("click", this.marryAllTracksClickListener);
             $(".marry-property", this.$el).off("click", this.marryPropertyClickListener).on("click", this.marryPropertyClickListener);
             $(".marry-all-properties", this.$el).off("click", this.marryAllPropertiesClickListener).on("click", this.marryAllPropertiesClickListener);
+            $(".marry-genre", this.$el).off("click", this.marryGenreClickListener).on("click", this.marryGenreClickListener);
 
             this.highlightPhrases();
             $("#edit-album", this.$el).on("submit", function(e) {
@@ -94,7 +95,7 @@
                     var $target = $( $(this).attr("data-target"), this.$el);
                     data.album[$target.attr("name")] = $target.val();
                     collectedData++;
-                })
+                });
                 // do not submit nothing
                 if(collectedData < 1) {
                     window.sliMpd.notify({"message": "no changes have been made. skipping...", "type": "warning"});
@@ -153,9 +154,15 @@
             $(".marry", this.$el).off("click", this.marryTrackClickListener);
             $(".marry-all", this.$el).off("click", this.marryAllTracksClickListener);
             $(".marry-property", this.$el).off("click", this.marryPropertyClickListener);
+            $(".marry-all-properties", this.$el).off("click", this.marryAllPropertiesClickListener);
+            $(".marry-genre", this.$el).off("click", this.marryGenreClickListener);
             window.sliMpd.modules.PageView.prototype.remove.call(this);
         },
 
+
+        /**
+         * tracks
+         */
         marryTrack : function(index) {
             // add class to external item
             $("#ext-item-" + index).addClass("is-married");
@@ -213,12 +220,21 @@
             this.unmarryAllTracks(longerLength);
         },
 
+        /**
+         * album properties
+         */
         marryProperty : function($triggerElement) {
+            if($triggerElement.attr("id") === "marryAllGenres" ) {
+                return this.marryAllGenres();
+            }
             $( $triggerElement.attr("data-target"), this.$el).val($( $triggerElement.attr("data-source"), this.$el).text());
             $triggerElement.addClass("use-property");
         },
 
         unmarryProperty : function($triggerElement) {
+            if($triggerElement.attr("id") === "marryAllGenres" ) {
+                return this.unmarryAllGenres();
+            }
             var $targetElement = $( $triggerElement.attr("data-target"), this.$el);
             $targetElement.val($targetElement.attr("data-initvalue"));
             $triggerElement.removeClass("use-property");
@@ -242,8 +258,14 @@
             e.preventDefault();
             var $triggerElement = $(e.currentTarget);
             if($triggerElement.hasClass("use-property")) {
+                if($triggerElement.attr("id") === "marryAllGenres" ) {
+                    return this.unmarryAllGenres();
+                }
                 this.unmarryProperty($triggerElement);
                 return;
+            }
+            if($triggerElement.attr("id") === "marryAllGenres" ) {
+                return this.marryAllGenres();
             }
             this.marryProperty($triggerElement);
         },
@@ -260,6 +282,56 @@
                 return;
             }
             this.marryAllProperties($allTriggers);
+        },
+
+        /**
+         * genre stuff
+         */
+        marryGenre : function($triggerElement) {
+            $triggerElement.addClass("use-genre");
+            this.updateMarriedGenres();
+        },
+
+        unmarryGenre : function($triggerElement) {
+            $triggerElement.removeClass("use-genre");
+            this.updateMarriedGenres();
+        },
+
+        marryAllGenres : function($allTriggers) {
+            $(".marry-genre", this.$el).addClass("use-genre");
+            this.updateMarriedGenres();
+        },
+
+        unmarryAllGenres : function($allTriggers) {
+            $(".marry-genre", this.$el).removeClass("use-genre");
+            this.updateMarriedGenres();
+        },
+
+        marryGenreClickListener : function(e) {
+            e.preventDefault();
+            var $triggerElement = $(e.currentTarget);
+            if($triggerElement.hasClass("use-genre")) {
+                this.unmarryGenre($triggerElement);
+                return;
+            }
+            this.marryGenre($triggerElement);
+        },
+
+        updateMarriedGenres : function() {
+            var genres = new Array();
+            var $target = $("#targetGenre");
+            var $marryAll = $("#marryAllGenres");
+            var that = this;
+            $(".marry-genre.use-genre").each(function() {
+                genres.push( $( $(this).attr("data-source"), that.$el).text() );
+            });
+            if(genres.length > 0) {
+                $target.val(genres.join(", "));
+                $marryAll.addClass("use-property");
+                return;
+            }
+            $target.val($target.attr("data-initvalue"));
+            $marryAll.removeClass("use-property");
         },
 
         // TODO: move to separate file "formSnaphot.js" begin

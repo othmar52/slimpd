@@ -21,6 +21,7 @@ namespace Slimpd\Modules\Albummigrator;
 class DiscogsAlbumContext extends \Slimpd\Models\Album {
     protected $artistString;
     protected $genreString;
+    protected $genreList;
     protected $labelString;
     public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $container) {
         $this->container = $container;
@@ -38,12 +39,10 @@ class DiscogsAlbumContext extends \Slimpd\Models\Album {
         $this->setArtistString(join(",", $artists));
 
         $apiResponse['styles'] = (isset($apiResponse['styles']) === TRUE) ? $apiResponse['styles'] : array();
-        $genres = [];
         foreach(array_merge($apiResponse['genres'], $apiResponse['styles']) as $genre) {
-            $genres[] = $genre;
+            $this->appendGenreString($genre);
         }
-        $this->setGenreString(join(", ", $genres));
-
+        $this->setGenreString(join(", ", $this->getGenreList()));
         $this->setTitle(isset($apiResponse['title']) ? $apiResponse['title'] : "");
         $this->setYear(isset($apiResponse['released']) ? $apiResponse['released'] : "");
 
@@ -68,6 +67,17 @@ class DiscogsAlbumContext extends \Slimpd\Models\Album {
     }
     public function getGenreString() {
         return $this->genreString;
+    }
+
+    public function setGenreList($value) {
+        $this->genreList = $value;
+        return $this;
+    }
+    public function getGenreList() {
+        return $this->genreList;
+    }
+    public function appendGenreString($value) {
+        return $this->genreList[] = $value;
     }
 
     public function setLabelString($value) {

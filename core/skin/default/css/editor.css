@@ -82,11 +82,13 @@
 }
 
 .is-married .unchecked,
-.use-property .unchecked {
+.use-property .unchecked,
+.use-genre .unchecked {
     display: none;
 }
 
 .is-married .checked,
-.use-property .checked {
+.use-property .checked,
+.use-genre .checked {
     display: inline-block;
 }
