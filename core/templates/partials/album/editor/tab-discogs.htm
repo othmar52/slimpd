@@ -47,7 +47,9 @@
 			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
 		</button>
 	</div>
-	<div class="col-md-5"><input name="album[setAlbum]" id="targetAlbum" type="text" value="{{ album.title }}" class="form-control" data-initvalue="{{ album.title }}"/></div>
+	<div class="col-md-5">
+		<input name="setAlbum" id="targetAlbum" type="text" value="{{ album.title }}" class="form-control" data-initvalue="{{ album.title }}"/>
+	</div>
 </div>
 
 <div class="row">
@@ -58,7 +60,9 @@
 			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
 		</button>
 	</div>
-	<div class="col-md-5"><input name="album[setAlbumArtist]" id="targetArtist" type="text" value="{% include 'partials/artist/string.htm' with { 'item': album } %}" class="form-control" data-initvalue="{% include 'partials/artist/string.htm' with { 'item': album } %}"/></div>
+	<div class="col-md-5">
+		<input name="setAlbumArtist" id="targetArtist" type="text" value="{% include 'partials/artist/string.htm' with { 'item': album } %}" class="form-control" data-initvalue="{% include 'partials/artist/string.htm' with { 'item': album } %}"/>
+	</div>
 </div>
 
 <div class="row">
@@ -69,7 +73,9 @@
 			<i class="fa fa-square-o fa-2x unchecked" aria-hidden="true"></i>
 		</button>
 	</div>
-	<div class="col-md-5"><input name="album[setYear]" id="targetYear" type="text" value="{{ album.year }}" class="form-control" data-initvalue="{{ album.year }}"/></div>
+	<div class="col-md-5">
+		<input name="setYear" id="targetYear" type="text" value="{{ album.year }}" class="form-control" data-initvalue="{{ album.year }}"/>
+	</div>
 </div>
 
 
@@ -82,7 +88,7 @@
 		</button>
 	</div>
 	<div class="col-md-5">
-		<input name="album[setGenre]" id="targetGenre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}" class="form-control" data-initvalue="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}"/>
+		<input name="setGenre" id="targetGenre" type="text" value="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}" class="form-control" data-initvalue="{% include 'partials/genre/string.htm' with { 'genreUids': album.genreUid } %}"/>
 	</div>
 </div>
 
@@ -95,7 +101,7 @@
 		</button>
 	</div>
 	<div class="col-md-5">
-		<input name="album[setLabel]" id="targetLabel" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}" class="form-control" data-initvalue="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}"/>
+		<input name="setLabel" id="targetLabel" type="text" value="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}" class="form-control" data-initvalue="{% include 'partials/label/string.htm' with { 'labelUids': album.labelUid } %}"/>
 	</div>
 </div>
 
@@ -109,7 +115,7 @@
 		</button>
 	</div>
 	<div class="col-md-5">
-		<input name="album[setCatalogNr]" id="targetCatalogNr" type="text" value="{{ album.catalogNr }}" class="form-control" data-inivalue="{{ album.catalogNr }}"/>
+		<input name="setCatalogNr" id="targetCatalogNr" type="text" value="{{ album.catalogNr }}" class="form-control" data-inivalue="{{ album.catalogNr }}"/>
 	</div>
 </div>
 
@@ -117,7 +123,7 @@
 <div class="row">
 	<div class="col-md-5"></div>
 	<div class="col-md-2">
-		<form action="{{root}}maintainance/marrytracks/{{ album.uid }}" method="post" id="submit-marriage">
+		<form action="{{root}}maintainance/updatealbum/{{ album.uid }}" method="post" id="submit-marriage">
 			<button name="submit-marriage" value="1" class="btn btn-default">submit marriage</button>
 		</form>
 	</div>

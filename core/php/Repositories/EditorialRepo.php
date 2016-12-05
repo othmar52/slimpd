@@ -53,4 +53,10 @@ class EditorialRepo extends \Slimpd\Repositories\BaseRepository {
 
         $this->update($editorial);
     }
+
+    public function marryTrack(\Slimpd\Models\Track $track, \Slimpd\Modules\Albummigrator\DiscogsTrackContext $discogsItem) {
+        $this->insertTrackBasedInstance($track, "setArtist", $discogsItem->getArtistString());
+        $this->insertTrackBasedInstance($track, "setTitle", $discogsItem->getTitleString());
+        $this->insertTrackBasedInstance($track, "setTrackNumber", $discogsItem->getTrackNumber());
+    }
 }

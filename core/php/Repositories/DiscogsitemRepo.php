@@ -23,22 +23,22 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
     public static $classPath = '\Slimpd\Models\Discogsitem';
     public $trackContexts = array();
     public $albumContext;
-        
+
     public function retrieveAlbum($releaseId = FALSE) {
         if($releaseId === FALSE) {
             return $this;
         }
         if(is_numeric($releaseId) === FALSE || $releaseId < 1) {
-            $this->container->flash->AddMessage('error', $this->ll->str('error.discogsid'));
+            $this->container->flash->AddMessage('error', $this->container->ll->str('error.discogsid'));
             return;
         }
         $instance = new \Slimpd\Models\Discogsitem();
         $instance->setType('release');
         $instance->setExtid((int)$releaseId);
-        
+
         $this->fetch($instance);
         $this->convertApiResponseToContextItems($instance);
-        
+
         return $instance;
     }
 
@@ -74,24 +74,24 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
                 'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
             ]
         ]);
-        
+
         $getter = 'get' . ucfirst($instance->getType());
         $response = $client->$getter(['id' => $instance->getExtid()]);
-        
+
         $instance->setTstamp(time());
         $instance->setResponse(serialize($response));
-        
+
         $this->insert($instance);
     }
 
     public function guessTrackMatch(&$instance, $rawTagDataInstances) {
         $matchScore = array();
         $data = $instance->getResponse(TRUE);
-        
+
         // TODO:
         // fetch rawtablob and create trackContext items
         return;
-        
+
         foreach($rawTagDataInstances as $rawItem) {
             $localStrings = [
                 $rawItem->getArtist(),
@@ -103,7 +103,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
             foreach($data['tracklist'] as $t) {
                 $counter++;
                 $extIndex = $instance->getExtid() . '-' . $counter;
-                
+
                 $extArtistString = '';
                 foreach(((isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists']) as $a) {
                     $extArtistString .= $a['name'] . ' ';
@@ -117,13 +117,13 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
                     $t['title'],
                     $t['position']
                 ];
-                
+
                 foreach($discogsStrings as $discogsString) {
                     foreach($localStrings as $localString) {
                         $matchScore[$rawItem->getUid()][$extIndex] += $this->getMatchStringScore($discogsString, $localString);
                     }
                 }
-                
+
                 // in case we have a discogs duration compare durations
                 if(strlen($t['duration']) > 0) {
                     $extSeconds = timeStringToSeconds($t['duration']);
@@ -145,7 +145,6 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         return $return;
         #echo "<pre>" . print_r($return,1); die();
         #echo "<pre>" . print_r($rawItem,1); die();
-        
     }
 
     private function getMatchStringScore($string1, $string2) {
@@ -154,8 +153,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         }
         return similar_text($string1, $string2);
     }
-    
-    
+
     public function fetchRenderItems(&$renderItems, $discogsitemInstance) {
         // nothing to fetch for this model...
         return;

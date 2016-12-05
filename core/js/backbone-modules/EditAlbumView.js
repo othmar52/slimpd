@@ -72,10 +72,12 @@
 
             $("#submit-marriage", this.$el).on("submit", function(e) {
                 e.preventDefault();
-                window.NProgress.start();
+
                 var that = this;
                 var discogsId = $("#ext-items-container").attr("data-release-id");
-                var data = { discogsid: discogsId, track: { } };
+                var data = { discogsid: discogsId, track: { }, album: { } };
+                var collectedData = 0;
+                // collect linked tracks
                 $(".local-items .well").each(function(idx,item){
                     if($(item).hasClass("is-married")) {
                         //var trackProperties = { [$(this).attr("data-uid")]: { "setDiscogsId": discogsId, "setDiscogsTrackIndex": 44}};
@@ -83,9 +85,22 @@
                             "setDiscogsId": discogsId,
                             "setDiscogsTrackIndex": idx
                         };
+                        collectedData++;
                         //console.log("married", $(item).attr("data-uid"), discogsId);
                     }
                 });
+                // collected confirmed album properties
+                $(".marry-property.use-property").each(function(){
+                    var $target = $( $(this).attr("data-target"), this.$el);
+                    data.album[$target.attr("name")] = $target.val();
+                    collectedData++;
+                })
+                // do not submit nothing
+                if(collectedData < 1) {
+                    window.sliMpd.notify({"message": "no changes have been made. skipping...", "type": "warning"});
+                    return;
+                }
+                window.NProgress.start();
                 $.ajax({
                     type: $(this).attr("method"),
                     url: window.sliMpd.router.setGetParameter($(this).attr("action"), "nosurrounding", "1"),
