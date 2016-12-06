@@ -24,7 +24,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
     protected $length;
     protected $itemPaths = [];    // pathstrings
     protected $tracks = [];        // track-instances
-    private $fetchedLength = FALSE;
+    protected $fetchedLength = FALSE;
 
     public function __construct(\Slim\Container $container) {
         #$this->container = $container;
@@ -90,7 +90,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
         return $return;
     }
 
-    private function parsePlaintext($rawFileContent, $minIndex, $maxIndex) {
+    protected function parsePlaintext($rawFileContent, $minIndex, $maxIndex) {
         // windows generated playlists are not supported yet
         $playlistContent = str_replace("\\", "/", $rawFileContent);
         $playlistContent = trimExplode("\n", $playlistContent, TRUE);
@@ -103,7 +103,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
         }
     }
 
-    private function parseNml($rawFileContent, $minIndex, $maxIndex) {
+    protected function parseNml($rawFileContent, $minIndex, $maxIndex) {
         if(isValidXml($rawFileContent) === FALSE) {
             $this->container->flash->AddMessage('error', 'invalid XML ' . $this->getTitle());
             return;

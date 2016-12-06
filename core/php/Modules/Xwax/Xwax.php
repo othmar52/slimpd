@@ -82,7 +82,7 @@ class Xwax {
     /*
      * check if we have a cached pollresult to avoid xwax-client-penetration caused by multiple web-clients
      **/
-    private function onBeforeGetStatus() {
+    protected function onBeforeGetStatus() {
         $this->pollcache = $this->pollcacheRepo->getInstanceByAttributes(
             array(
                 'type' => $this->type,
@@ -93,7 +93,7 @@ class Xwax {
         );
     }
 
-    private function onAfterGetStatus($response) {
+    protected function onAfterGetStatus($response) {
         if($this->pollcache === NULL) {
             $this->pollcache = new \Slimpd\Models\Pollcache();
             $this->pollcache->setType($this->type)

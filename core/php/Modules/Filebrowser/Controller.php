@@ -155,7 +155,7 @@ class Controller extends \Slimpd\BaseController {
     /**
      * IMPORTANT TODO: check why performance on huge files is so bad (seeking-performance in large mixes is pretty poor compared to serving the mp3-mix directly)
      */
-    private function deliver($request, $response, $file) {
+    protected function deliver($request, $response, $file) {
 
         /**
          * Copyright 2012 Armand Niculescu - media-division.com
@@ -219,7 +219,7 @@ class Controller extends \Slimpd\BaseController {
         return $response;
     }
 
-    private function checkPartialContentDelivery($request, &$response, &$seekStart, &$seekEnd, $fileSize) {
+    protected function checkPartialContentDelivery($request, &$response, &$seekStart, &$seekEnd, $fileSize) {
 
         $requestedRange = $request->getServerParam("HTTP_RANGE");
         if($requestedRange === NULL) {

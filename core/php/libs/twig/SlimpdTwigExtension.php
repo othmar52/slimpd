@@ -21,7 +21,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
     /**
      * @var \Slim\Interfaces\RouterInterface
      */
-    private $container;
+    protected $container;
     
     public function __construct($container)
     {

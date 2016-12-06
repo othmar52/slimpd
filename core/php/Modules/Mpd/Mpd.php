@@ -77,7 +77,7 @@ class Mpd {
         return $currentPage;
     }
 
-    private function getFirePlay($cmd) {
+    protected function getFirePlay($cmd) {
         $commandList = [
             "appendTrackAndPlay",
             "injectTrackAndPlay",
@@ -92,7 +92,7 @@ class Mpd {
         return in_array($cmd, $commandList);
     }
 
-    private function getTargetPosition($cmd) {
+    protected function getTargetPosition($cmd) {
         $status = $this->mpd('status');
         $appendPos = (isset($status['playlistlength'])) ? $status['playlistlength'] : 0;
         $injectPos = (isset($status['song'])) ? $status['song']+1 : 0;
@@ -126,7 +126,7 @@ class Mpd {
         return FALSE;
     }
 
-    private function getClearPlaylist($cmd) {
+    protected function getClearPlaylist($cmd) {
         $commandList = [
             "replaceTrack",
             "replaceDir",
@@ -135,7 +135,7 @@ class Mpd {
         return in_array($cmd, $commandList);
     }
 
-    private function getSoftClear($cmd) {
+    protected function getSoftClear($cmd) {
         $commandList = [
             "softreplaceTrack",
             "softreplaceDir",
@@ -145,7 +145,7 @@ class Mpd {
     }
 
     /*
-    private function getIsPlaylist($cmd) {
+    protected function getIsPlaylist($cmd) {
         $commandList = [
             "appendPlaylist",
             "appendPlaylistAndPlay",
@@ -158,7 +158,7 @@ class Mpd {
     }
     */
 
-    private function getItemPath($item) {
+    protected function getItemPath($item) {
         if(is_numeric($item) === TRUE) {
             $instance = $this->trackRepo->getInstanceByAttributes(array('uid' => $item));
             if($instance === NULL) {
@@ -175,7 +175,7 @@ class Mpd {
         return FALSE;
     }
 
-    private function getItemType($itemPath) {
+    protected function getItemType($itemPath) {
         $musicDir = $this->conf['mpd']['musicdir'];
         if(is_file($musicDir.$itemPath) === TRUE) {
             return 'file';
@@ -410,7 +410,7 @@ class Mpd {
      * update() with a path as argument whichs parent does not exist in mpd db will also not work
      * with this function we search for the closest directory that exists in mpd-db
      */
-    private function findClosestExistingItem($item) {
+    protected function findClosestExistingItem($item) {
         if($this->mpd('lsinfo "' . str_replace("\"", "\\\"", $item) . '"') !== FALSE) {
             return $item;
         }

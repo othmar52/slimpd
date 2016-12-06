@@ -59,13 +59,13 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->process();
     }
     
-    private function process() {
+    protected function process() {
         $this->copyBaseProperties();
         $this->configBasedSetters();
         $this->postProcessAudioProperties();
     }
 
-    private function postProcessAudioProperties() {
+    protected function postProcessAudioProperties() {
         // convert decimal-seconds to miliseconds
         $this->setMiliseconds(round($this->getMiliseconds()*1000));
 
@@ -123,7 +123,7 @@ class TrackContext extends \Slimpd\Models\Track {
     /**
      * most rawTagData-fields are identical to track fields 
      */
-    private function copyBaseProperties() {
+    protected function copyBaseProperties() {
         $this->setUid($this->rawTagRecord['uid'])
             ->setRelPath($this->rawTagRecord['relPath'])
             ->setRelPathHash($this->rawTagRecord['relPathHash'])

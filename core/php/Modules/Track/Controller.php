@@ -97,7 +97,7 @@ class Controller extends \Slimpd\BaseController {
         return $response;
     }
 
-    private function completeArgsForDetailView($itemParam, &$args) {
+    protected function completeArgsForDetailView($itemParam, &$args) {
         $args['item'] = NULL;
         if(is_numeric($itemParam) === TRUE) {
             $search = array('uid' => (int)$itemParam);

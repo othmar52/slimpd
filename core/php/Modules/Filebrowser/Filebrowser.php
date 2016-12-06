@@ -19,7 +19,7 @@ namespace Slimpd\Modules\Filebrowser;
  */
 
 class Filebrowser {
-    private $container;
+    protected $container;
     public $directory;
     public $base;
     public $subDirectories = array(
@@ -94,7 +94,7 @@ class Filebrowser {
         return;
     }
 
-    private function handleFile($relPath, $minIndex, $maxIndex, $ignoreLimit, $extTypes) {
+    protected function handleFile($relPath, $minIndex, $maxIndex, $ignoreLimit, $extTypes) {
         $this->files["total"]++;
         if($this->filter === "dirs" && $ignoreLimit === FALSE) {
             return;
@@ -112,7 +112,7 @@ class Filebrowser {
         $this->files[$group][] = $fileInstance;
         $this->files["count"]++;
     }
-    private function handleDirectory($relPath, $minIndex, $maxIndex, $ignoreLimit) {
+    protected function handleDirectory($relPath, $minIndex, $maxIndex, $ignoreLimit) {
         $this->subDirectories["total"]++;
         if($this->filter === "files" && $ignoreLimit === FALSE) {
             return;
@@ -127,7 +127,7 @@ class Filebrowser {
         $this->subDirectories["count"]++;
     }
 
-    private function getExtMapping() {
+    protected function getExtMapping() {
         $extTypes = array();
         foreach($this->container->conf["musicfiles"]["ext"] as $ext) {
             $extTypes[$ext] = "music";
@@ -144,7 +144,7 @@ class Filebrowser {
         return $extTypes;
     }
 
-    private function checkDirectoryAccess($requestedPath, $systemdir) {
+    protected function checkDirectoryAccess($requestedPath, $systemdir) {
         
         if($this->container->conf["mpd"]["musicdir"] === "") {
             $this->container->flash->AddMessage("error", $this->container->ll->str("error.mpd.conf.musicdir"));
@@ -196,7 +196,7 @@ class Filebrowser {
         return $return;
     }
     
-    private function getParentDirSelf($path) {
+    protected function getParentDirSelf($path) {
         $parentPath = dirname($path);
         $isSysDir = FALSE;
         if($parentPath === ".") {

@@ -52,7 +52,7 @@ class Batcher {
         return;
     }
 
-    private function mayAddUid(&$instance, $tableName) {
+    protected function mayAddUid(&$instance, $tableName) {
         // instance already has an uid
         if($instance->getUid() > 0) {
             return;
@@ -77,7 +77,7 @@ class Batcher {
         $this->mayAddUid($instance, $tableName);
     }
     
-    private function checkQueue($tableName) {
+    protected function checkQueue($tableName) {
         if(count($this->instances[$tableName]) >= $this->treshold) {
             $this->insertBatch($tableName);
         }

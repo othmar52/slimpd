@@ -26,12 +26,12 @@ namespace Slimpd\Modules\Albummigrator;
 
 class JumbleJudge {
 
-    private $isAlbumTreshold = 0.7;
+    protected $isAlbumTreshold = 0.7;
     public $handleAsAlbum;
     public $tests;
     public $testResults;
-    private $trackContext;
-    private $albumContext;
+    protected $trackContext;
+    protected $albumContext;
     public $albumMigrator;
 
     public function __construct(\Slimpd\Modules\Albummigrator\AlbumContext &$albumContextItem, &$albumMigrator) {
@@ -76,7 +76,7 @@ class JumbleJudge {
             ->runTest("SchemaTests\\Album\\HasCatalogNr", $trackContext->getAlbum());
     }
 
-    private function runTest($className, $input) {
+    protected function runTest($className, $input) {
         $classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
         $test = new $classPath($input, $this->trackContext, $this->albumContext, $this);
         $test->run();

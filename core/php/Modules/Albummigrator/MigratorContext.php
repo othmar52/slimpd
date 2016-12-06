@@ -26,7 +26,7 @@ trait MigratorContext {
     protected $rawTagArray;    // unserialized array of field rawtagdata.tagData
     public $recommendations = array();
     
-    private function configBasedSetters() {
+    protected function configBasedSetters() {
         foreach($this->config as $confSection => $rawTagPaths) {
             if(preg_match("/^" . $this->confKey . "(.*)$/", $confSection, $matches)) {
                 $this->runSetters($matches[1], $rawTagPaths);
@@ -34,7 +34,7 @@ trait MigratorContext {
         }
     }
     
-    private function runSetters($setterName, $rawTagPaths) {
+    protected function runSetters($setterName, $rawTagPaths) {
         if(method_exists($this, $setterName) === FALSE) {
             cliLog(" invalid config. setter " . $setterName . " does not exists", 10, "red");
             return;
@@ -79,7 +79,7 @@ trait MigratorContext {
         }
     }
 
-    private function extractTagString($mixed) {
+    protected function extractTagString($mixed) {
         $out = '';
         if(is_string($mixed))    { $out = $mixed; }
         if(is_array($mixed))    { $out = join (", ", $mixed); }

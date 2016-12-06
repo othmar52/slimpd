@@ -23,7 +23,7 @@ abstract class AbstractModel {
     protected $uid;
 
 
-    private static function getTableName() {
+    protected static function getTableName() {
         $class = get_called_class();
         return $class::$tableName;
     }

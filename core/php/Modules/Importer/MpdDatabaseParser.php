@@ -23,19 +23,19 @@ class MpdDatabaseParser {
     public $gzipped = FALSE;
     protected $rawTagItem = FALSE;
     
-    private $useBatcher = FALSE;
+    protected $useBatcher = FALSE;
 
     // needed for traversing
-    private $level = -1;
-    private $openDirs = array();
-    private $currentSection = "";
-    private $currentSong = "";
-    private $currentDir = "";
-    private $currentPlaylist = "";
+    protected $level = -1;
+    protected $openDirs = array();
+    protected $currentSection = "";
+    protected $currentSong = "";
+    protected $currentDir = "";
+    protected $currentPlaylist = "";
 
     // timestamp attributes (filemtime, directorymtime, added)
-    private $currentDirTime = 0;
-    private $useNowAsAdded = TRUE;
+    protected $currentDirTime = 0;
+    protected $useNowAsAdded = TRUE;
 
     // needed for comparisons
     public $fileTstamps = array();
@@ -51,7 +51,7 @@ class MpdDatabaseParser {
     public $itemsChecked = 0;
     public $itemsProcessed = 0;
     
-    private $rawtagdataRepo;
+    protected $rawtagdataRepo;
 
     public function __construct($container, $dbFilePath) {
         $this->container = $container;
@@ -207,7 +207,7 @@ class MpdDatabaseParser {
         }
     }
 
-    private function handleStructuralLine($line) {
+    protected function handleStructuralLine($line) {
         if(in_array($line, ["playlist_end", "song_end"]) === FALSE) {
             return;
         }
@@ -287,7 +287,7 @@ class MpdDatabaseParser {
     /**
      * compare timestamps of mysql-database-entry(rawtagdata) and mpddatabase
      */
-    private function updateOrInsert() {
+    protected function updateOrInsert() {
         if(isset($this->fileTstamps[$this->rawTagItem->getRelPathHash()]) === FALSE) {
             cliLog("mpd-file does not exist in rawtagdata: " . $this->rawTagItem->getRelPath(), 5);
             return TRUE;

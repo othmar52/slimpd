@@ -149,7 +149,7 @@ class WaveformGenerator {
             DS . $this->fingerprint;
     }
 
-    private function generatePeakFile() {
+    protected function generatePeakFile() {
 
         \phpthumb_functions::EnsureDirectoryExists(
             dirname($this->peakValuesFilePath),
@@ -265,7 +265,7 @@ class WaveformGenerator {
         return $values;
     }
 
-    private function getWavPeaks($temp_wav) {
+    protected function getWavPeaks($temp_wav) {
         ini_set ('memory_limit', '1024M'); // extracted wav-data is very large (500000 entries)
         /**
          * Below as posted by "zvoneM" on
@@ -320,19 +320,19 @@ class WaveformGenerator {
         return $data;
     }
 
-    private function getValue8BitWav(&$data, $bytes) {
+    protected function getValue8BitWav(&$data, $bytes) {
         $value = $this->findValues($bytes[0], $bytes[1]) - 128;
         $data[]= ($value < 0) ? 0 : $value;
     }
 
-    private function getValue16BitWav(&$data, $bytes) {
+    protected function getValue16BitWav(&$data, $bytes) {
         $temp = (ord($bytes[1]) & 128) ? 0 : 128;
         $temp = chr((ord($bytes[1]) & 127) + $temp);
         $value = floor($this->findValues($bytes[0], $temp) / 256) - 128;
         $data[]= ($value < 0) ? 0 : $value;
     }
 
-    private function limitArray($input, $max = 22000) {
+    protected function limitArray($input, $max = 22000) {
         #echo "<pre>" . print_r($input, 1); die();
         #echo ini_get('memory_limit'); die();
         // 512MB is not enough for files > 4hours (XXX entries)
@@ -361,7 +361,7 @@ class WaveformGenerator {
         return $output;
     }
 
-    private function beautifyPeaks($input) {
+    protected function beautifyPeaks($input) {
         $beauty = array();
         $avg = array_sum($input)/count($input);
         $maxPeak = max($input);

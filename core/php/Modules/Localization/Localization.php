@@ -19,8 +19,8 @@ namespace Slimpd\Modules\Localization;
  */
 
 class Localization {
-    private $lang = array();
-    private $preferedLang;
+    protected $lang = array();
+    protected $preferedLang;
 
     public function __construct($preferedLang) {
         $this->preferedLang = $preferedLang;

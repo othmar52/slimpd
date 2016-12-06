@@ -96,7 +96,7 @@ class AlbumContext extends \Slimpd\Models\Album {
         }
     }
 
-    private function runTest($className, $input) {
+    protected function runTest($className, $input) {
         $classPath = "\\Slimpd\\Modules\\Albummigrator\\" . $className;
         // for now there is no need for this instance within the tests
         // but abstraction requires any kind of variable... 
@@ -143,7 +143,7 @@ class AlbumContext extends \Slimpd\Models\Album {
         $this->setUid($album->getUid())->updateAlbumIndex($useBatcher);
     }
 
-    private function updateAlbumIndex($useBatcher) {
+    protected function updateAlbumIndex($useBatcher) {
         $indexChunks = $this->getRelPath() . " " .
             str_replace(
                 array('/', '_', '-', '.'),
@@ -175,7 +175,7 @@ class AlbumContext extends \Slimpd\Models\Album {
         $this->container->albumindexRepo->update($albumIndex);
     }
 
-    private function scoreLabelByLabelDirectory(&$albumMigrator) {
+    protected function scoreLabelByLabelDirectory(&$albumMigrator) {
         cliLog("--- add LABEL based on directory ---", 8);
         cliLog("  album directory: " . $this->getRelPath(), 8);
 

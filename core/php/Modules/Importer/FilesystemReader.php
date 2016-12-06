@@ -31,7 +31,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
     // result
     public $foundImgPaths = array();
     
-    private function getCachedOrScan($dirPath) {
+    protected function getCachedOrScan($dirPath) {
         $dirHash = getFilePathHash($dirPath);
         // make sure that a single directory will not be scanned twice
         // so check if we have scanned the directory already
@@ -97,7 +97,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
         return $this->foundImgPaths;
     }
 
-    private function lookupSpecialDirNames($parentPath) {
+    protected function lookupSpecialDirNames($parentPath) {
         if(is_dir($this->conf['mpd']['musicdir'] . $parentPath) === FALSE) {
             return;
         }
@@ -130,7 +130,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
         return $this->artworkDirCache[$dirHash];
     } 
 
-    private function pluralizeArtworkDirNames() {
+    protected function pluralizeArtworkDirNames() {
         if(count($this->artworkDirNames)>0) {
             // we already have pluralized those strings
             return;

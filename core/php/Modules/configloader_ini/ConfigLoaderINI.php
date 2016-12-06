@@ -19,8 +19,8 @@ namespace Slimpd\Modules\configloader_ini;
  */
 class ConfigLoaderINI {
 
-    private $configPath;
-    private $absCacheFilePath; // absolute path for cached config
+    protected $configPath;
+    protected $absCacheFilePath; // absolute path for cached config
 
     /**
      * create new config loader to parse .ini files in given directory
@@ -103,11 +103,11 @@ class ConfigLoaderINI {
         return $config;
     }
 
-    private function prepareFilePath($path = '') {
+    protected function prepareFilePath($path = '') {
         return str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 
-    private function parseIniAdvanced($array) {
+    protected function parseIniAdvanced($array) {
         $returnArray = array();
         if (is_array($array) === FALSE) {
             return $returnArray;
@@ -142,7 +142,7 @@ class ConfigLoaderINI {
         return $returnArray;
     }
 
-    private function parseRecursive($array) {
+    protected function parseRecursive($array) {
         $returnArray = array();
         if (is_array($array) === FALSE) {
              return $returnArray;
@@ -182,7 +182,7 @@ class ConfigLoaderINI {
      * PARSE INI FILE AND CREATE GENERAL CONFIG/CONTENT
      * read all given config files - and merge them
      */
-    private function buildConfig($masterConfig, $additionalConfig) {
+    protected function buildConfig($masterConfig, $additionalConfig) {
         $config = array();
 
         // load default config
@@ -222,7 +222,7 @@ class ConfigLoaderINI {
     /**
      * override some config values based on other config values
      */
-    private function postProcess($config) {
+    protected function postProcess($config) {
         try {
             // append trailing slash if missing
             $config["mpd"]["musicdir"] = appendTrailingSlash($config["mpd"]["musicdir"]);
@@ -242,7 +242,7 @@ class ConfigLoaderINI {
         return $config;
     }
 
-    private function getCachedConfig() {
+    protected function getCachedConfig() {
         if(is_file($this->absCacheFilePath) === FALSE) {
             return FALSE;
         }
@@ -251,7 +251,7 @@ class ConfigLoaderINI {
         return $cachedConf;
     }
 
-    private function writeCacheFile($configArray) {
+    protected function writeCacheFile($configArray) {
         if(is_writeable($this->absCacheFilePath) === FALSE && is_writeable(dirname($this->absCacheFilePath)) === FALSE) {
             \Slim\Slim::getInstance()->flashNow(
                 'error',

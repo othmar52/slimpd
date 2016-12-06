@@ -179,7 +179,7 @@ class Controller extends \Slimpd\BaseController {
         return $response;
     }
 
-    private function completeArgsForDetailView($albumUid, &$args) {
+    protected function completeArgsForDetailView($albumUid, &$args) {
         $args['album'] = $this->container->albumRepo->getInstanceByAttributes(array('uid' => $albumUid));
         if($args['album'] === NULL) {
             return;

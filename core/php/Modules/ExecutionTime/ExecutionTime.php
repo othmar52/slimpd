@@ -18,8 +18,8 @@ namespace Slimpd\Modules\ExecutionTime;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class ExecutionTime {
-    private $startTime;
-    private $endTime;
+    protected $startTime;
+    protected $endTime;
 
     public function Start(){
         $this->startTime = getrusage();
@@ -29,7 +29,7 @@ class ExecutionTime {
         $this->endTime = getrusage();
     }
 
-    private function runTime($ru, $rus, $index) {
+    protected function runTime($ru, $rus, $index) {
         return ($ru["ru_$index.tv_sec"]*1000 + intval($ru["ru_$index.tv_usec"]/1000))
     -  ($rus["ru_$index.tv_sec"]*1000 + intval($rus["ru_$index.tv_usec"]/1000));
     }

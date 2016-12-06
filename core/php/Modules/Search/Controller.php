@@ -23,7 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
 
     // those values have to match sphinxindex:srcslimpdautocomplete
-    private $filterTypeMapping = [
+    protected $filterTypeMapping = [
         "artist" => 1,
         "album" => 2,
         "label" => 3,
@@ -35,7 +35,7 @@ class Controller extends \Slimpd\BaseController {
     // TODO: carefully check which sorting is possible for each model (@see config/sphinx.example.conf:srcslimpdmain)
     //   compare with templates/partials/dropdown-search-sorting.htm
     //   compare with templates/partials/dropdown-typelist-sorting.htm
-    private $sortfields = array(
+    protected $sortfields = array(
         "artist" => array("title", "trackCount", "albumCount"),
         "genre" => array("title", "trackCount", "albumCount"),
         "label" => array("title", "trackCount", "albumCount"),
@@ -164,7 +164,7 @@ class Controller extends \Slimpd\BaseController {
     /**
      * queries the sphinx index not for results but only for total count for specific item-type
      */
-    private function fetchSphinxResultAmount($sphinxPdo, $typeString, $term, &$args) {
+    protected function fetchSphinxResultAmount($sphinxPdo, $typeString, $term, &$args) {
         $typeIndex = ($typeString === 'all') ? 0 : $this->filterTypeMapping[$typeString];
         $args["timelog"][$typeString."-total"] = new \Slimpd\Modules\ExecutionTime\ExecutionTime();
         $args["timelog"][$typeString."-total"]->Start();
@@ -194,7 +194,7 @@ class Controller extends \Slimpd\BaseController {
         $args["timelog"][$typeString."-total"]->End();
     }
 
-    private function querySphinxIndex($sphinxPdo, $typeString, $term, &$args) {
+    protected function querySphinxIndex($sphinxPdo, $typeString, $term, &$args) {
 
         $start = 0;
         $itemsPerPage = 20;

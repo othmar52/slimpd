@@ -239,12 +239,12 @@ class BaseRepository {
         return $this->db->query($query)->fetch_assoc()['itemsTotal'];
     }
 
-    private static function getTableName() {
+    protected static function getTableName() {
         $class = get_called_class();
         return $class::$tableName;
     }
     
-    private static function getClassPath() {
+    protected static function getClassPath() {
         $class = get_called_class();
         return $class::$classPath;
     }

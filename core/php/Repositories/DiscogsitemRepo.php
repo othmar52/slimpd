@@ -147,7 +147,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         #echo "<pre>" . print_r($rawItem,1); die();
     }
 
-    private function getMatchStringScore($string1, $string2) {
+    protected function getMatchStringScore($string1, $string2) {
         if(strtolower(trim($string1)) == strtolower(trim($string2))) {
             return 100;
         }

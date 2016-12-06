@@ -330,7 +330,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
                         
         
      */
-    private function getTestData($index) {
+    protected function getTestData($index) {
         $tests = array(
             array("placeholder index 0"),
             array("Stel", "Your Parents Are Here (Ian F. Remix)", "Stel_-_Your_Parents_Are_Here-(JLYLTD015)-WEB-2009-WiTF"),

@@ -94,7 +94,7 @@ trait TrackArtistExtractor {
     /**
      * set class properties which are needed during parsing
      */
-    private function init() {
+    protected function init() {
         $this->artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
         $this->remixBlacklist = $GLOBALS["remixer-blacklist"] + $this->artistBlacklist;
 
@@ -117,7 +117,7 @@ trait TrackArtistExtractor {
         $this->regexRemix2 = "/" . RGX::REMIX2 . "/i";
     }
 
-    private function parseStringForFeat($artistOrTitle, $regex) {
+    protected function parseStringForFeat($artistOrTitle, $regex) {
         cliLog("  INPUT: " . $this->$artistOrTitle, 10);
         if(preg_match("/(.*)" . $regex . "([^\(]*)(.*)$/i", $this->$artistOrTitle, $matches)) {
             $sFeat = trim($matches[4]);
@@ -143,7 +143,7 @@ trait TrackArtistExtractor {
         cliLog("  no matches for featured artists " , 10, "darkgray");
     }
 
-    private function parseStringForRemixer($input, $regex, $matchIndex) {
+    protected function parseStringForRemixer($input, $regex, $matchIndex) {
         cliLog("  INPUT: " . $input, 10);
         if(preg_match($regex, $input, $matches)) {
             $foundRemixers = preg_split($this->regexArtist, $matches[$matchIndex]);
@@ -236,7 +236,7 @@ trait TrackArtistExtractor {
         return $this;
     }
 
-    private function mayForceVariousArtists() {
+    protected function mayForceVariousArtists() {
         // force Various Artists on Mixes
         cliLog(__FUNCTION__, 10, "purple");
         if(az09($this->artistString) === az09($this->titleString) && $this->getMiliseconds() > 1800000) {
@@ -247,7 +247,7 @@ trait TrackArtistExtractor {
         cliLog("  not forcing Various Artists", 10, "darkgray");
     }
 
-    private function finish() {
+    protected function finish() {
         $this->fetchArtistUids();
 
         // replace multiple whitespace with a single whitespace
@@ -272,7 +272,7 @@ trait TrackArtistExtractor {
      * in case we have the same artist in regular and featured drop the featured artist
      * but only if we have a regular artist left after dropping
      */
-    private function removeRegularArtistsBasedOnFeaturedArtists() {
+    protected function removeRegularArtistsBasedOnFeaturedArtists() {
         $dupes =  array_intersect($this->regularArtists, $this->featArtists);
         if(count($dupes) === 0) {
             cliLog("  no dupes found.", 10, "darkgray");
@@ -286,7 +286,7 @@ trait TrackArtistExtractor {
             }
         }
     }
-    private function removeCommonStringsFromArtists() {
+    protected function removeCommonStringsFromArtists() {
         cliLog(__FUNCTION__, 10, "purple");
         // clean up extracted remixer-names with common strings
         $tmp = array();
@@ -351,7 +351,7 @@ trait TrackArtistExtractor {
         cliLog(" ", 10);
     }
 
-    private function fetchArtistUids() {
+    protected function fetchArtistUids() {
         $this->setArtistUid(join(",", $this->container->artistRepo->getUidsByString(join(" & ", $this->regularArtists))));
 
         $this->setFeaturingUid('');
@@ -365,7 +365,7 @@ trait TrackArtistExtractor {
         }
     }
 
-    private function dumpParserResults() {
+    protected function dumpParserResults() {
         cliLog("=== artistresult begin for " . basename($this->getRelPath()) . " " . $this->getRelPathHash() . " ===", 10, "yellow");
         cliLog(str_repeat("―", 90), 10, "purple");
         cliLog("ARTIST", 10, "cyan");

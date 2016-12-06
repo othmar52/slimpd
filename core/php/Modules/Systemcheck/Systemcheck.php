@@ -92,7 +92,7 @@ class Systemcheck {
         return $check;
     }
 
-    private function runConfigLocalCheck(&$check) {
+    protected function runConfigLocalCheck(&$check) {
         // check if individual config file exists
         $relConfPath = "core/config/config_local.ini";
         if(is_file(APP_ROOT . $relConfPath) === FALSE) {
@@ -120,7 +120,7 @@ class Systemcheck {
         $check['fsConfLocalServe']['status'] = 'success';
     }
 
-    private function runMusicdirChecks(&$check) {
+    protected function runMusicdirChecks(&$check) {
         // check if we have a configured value for MPD-musicdirectory
         // DIRECTORY_SEPARATOR automatically gets appended to this config value. so DS means empty
         if(trim($this->conf['mpd']['musicdir']) === DS) {
@@ -142,7 +142,7 @@ class Systemcheck {
         $check['fsMusicdir']['status'] = 'success';
     }
 
-    private function runAppDirChecks(&$check) {
+    protected function runAppDirChecks(&$check) {
         // check filesystem access for writable directories
         foreach(['Cache', 'Embedded', 'Peakfiles'] as $dir) {
             if(is_dir(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE || is_writeable(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE) {
@@ -154,7 +154,7 @@ class Systemcheck {
         }
     }
 
-    private function runDatabasePermissionCheck(&$check) {
+    protected function runDatabasePermissionCheck(&$check) {
         // check permissions for "create database" (needed for schema-comparison)
         if($check['dbPerms']['skip'] === TRUE) {
             return;
@@ -170,7 +170,7 @@ class Systemcheck {
         }
     }
 
-    private function runDatabaseSchemaCheck(&$check) {
+    protected function runDatabaseSchemaCheck(&$check) {
         // check if db-schema is correct
         if($check['dbSchema']['skip'] === TRUE) {
             return;
@@ -190,7 +190,7 @@ class Systemcheck {
         }
     }
 
-    private function runDatabaseContentCheck(&$check) {
+    protected function runDatabaseContentCheck(&$check) {
         // check if we have useful records in our database
         if($check['dbContent']['skip'] === TRUE) {
             return;
@@ -205,7 +205,7 @@ class Systemcheck {
             : 'danger';
     }
 
-    private function runMpdChecks(&$check) {
+    protected function runMpdChecks(&$check) {
         // check MPD connection
         if($check['mpdConn']['skip'] === FALSE) {
             $check['mpdConn']['status'] = ($this->container->mpd->cmd('status') === FALSE) ? 'danger' : 'success';
@@ -232,7 +232,7 @@ class Systemcheck {
         $check['mpdDbfile']['status'] = 'success';
     }
 
-    private function runSphinxChecks(&$check) {
+    protected function runSphinxChecks(&$check) {
 
         // check sphinx connection
         $check['sxConn']['status'] = 'success';
@@ -277,7 +277,7 @@ class Systemcheck {
         }
     }
 
-    private function buildAudioCheckConf(&$check) {
+    protected function buildAudioCheckConf(&$check) {
         $this->audioFormats = array(
             'mp3' => array(
                 '811d1030efefb4bde7b5126e740ff34c' => 'testfile-online-convert.com.mp3'
@@ -326,7 +326,7 @@ class Systemcheck {
         }
     }
         
-    private function runAudioChecks(&$check) {
+    protected function runAudioChecks(&$check) {
         if($check['skipAudioTests'] === TRUE) {
             return;
         }

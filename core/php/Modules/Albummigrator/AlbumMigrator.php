@@ -106,7 +106,7 @@ class AlbumMigrator {
     /**
      * maybe manually edited properties exists for this tracks or album
      */
-    private function fetchEditorials() {
+    protected function fetchEditorials() {
         foreach($this->trackContextItems as $trackContext) {
             cliLog("=== collecting begin for " . basename($trackContext->getRelPath()) . " " . $trackContext->getRelPathHash() . " ===", 10, "yellow");
             cliLog(__FUNCTION__, 10, 'purple');
@@ -142,7 +142,7 @@ class AlbumMigrator {
      * TODO: how to handle albums/compilations where album artist does not appear on any track?
      * example compilation: "Sly & Robbie - LateNightTales"
      */
-    private function albumArtistViceVersaCorrection() {
+    protected function albumArtistViceVersaCorrection() {
         cliLog(__FUNCTION__, 10, "purple");
         // collect all final artist-uids of each album-track
         $trackArtistUids = "";
@@ -189,7 +189,7 @@ class AlbumMigrator {
     /**
      * update property on already persisted album or batcher-queued album-instance
      */
-    private function injectAlbumArtistUid($artistUids) {
+    protected function injectAlbumArtistUid($artistUids) {
         $uidString = join(",", $artistUids);
         if($this->albumContextItem->getArtistUid() === $uidString) {
             // album-artist-uid already is identical to all collected track-artist-uids
@@ -230,7 +230,7 @@ class AlbumMigrator {
         return count($this->rawTagItems);
     }
 
-    private function runAttributeScoring() {
+    protected function runAttributeScoring() {
         foreach($this->trackContextItems as $trackContextItem) {
             cliLog("=== scoring begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
             $trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
@@ -240,7 +240,7 @@ class AlbumMigrator {
     }
 
 
-    private function postProcessTrackProperties() {
+    protected function postProcessTrackProperties() {
         foreach($this->trackContextItems as $trackContextItem) {
             cliLog("=== postprocessing begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
             #$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);

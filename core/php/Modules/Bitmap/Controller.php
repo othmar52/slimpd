@@ -21,8 +21,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    private $imageSizes = array(35, 50,100,300,1000);
-    private $weightOrderBy;
+    protected $imageSizes = array(35, 50,100,300,1000);
+    protected $weightOrderBy;
     
     public function __construct($container) {
         $this->container = $container;

@@ -18,12 +18,12 @@ namespace Slimpd\Modules\Importer;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
-    private $dbTstampsTrack = array();
-    private $dbTstampsAlbum = array();
+    protected $dbTstampsTrack = array();
+    protected $dbTstampsAlbum = array();
 
-    private $skipAlbum = TRUE;
+    protected $skipAlbum = TRUE;
 
-    private $batchSize = 1500000; // process only 1.5 million tracks per batch
+    protected $batchSize = 1500000; // process only 1.5 million tracks per batch
 
     public $migratedAlbums = 0;
 
@@ -100,7 +100,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
      * so this method calls itself recursively
      *
      */
-    private function checkBatch() {
+    protected function checkBatch() {
         $query = "SELECT * FROM rawtagdata ORDER BY relDirPathHash LIMIT " . $this->itemsChecked . "," . $this->batchSize;
         $result = $this->db->query($query);
         $counter = 0;
@@ -147,7 +147,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
 
-    private function checkAlbumSkip() {    
+    protected function checkAlbumSkip() {
         // decide if we have to process album or if we can skip it
         if(isset($this->dbTstampsAlbum[ $this->prevAlb->getRelDirPathHash() ]) === FALSE) {
             cliLog('album does NOT exist in migrated data. migrating: ' . $this->prevAlb->getRelDirPath(), 5);
@@ -162,7 +162,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
 
-    private function checkTrackSkip($record) {
+    protected function checkTrackSkip($record) {
                 // decide if we have to process album based on single-track-change or if we can skip it
         if(isset($this->dbTstampsTrack[ $record['relPathHash'] ]) === FALSE) {
             cliLog('track does NOT exist in migrated data. migrating: ' . $record['relPath'], 5);
@@ -175,7 +175,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
 
-    private function mayMigrate() {
+    protected function mayMigrate() {
         $this->checkAlbumSkip();
         if($this->skipAlbum === TRUE) {
             cliLog('skipping migration for: ' . $this->prevAlb->getRelDirPath(), 5);
@@ -186,7 +186,7 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
         $this->migratedAlbums++;
     }
 
-    private function newPrevAlb($record) {
+    protected function newPrevAlb($record) {
         $this->prevAlb = new \Slimpd\Modules\Albummigrator\AlbumMigrator($this->container);
         $this->prevAlb->migratorConf = $this->migratorConfig;
         $this->prevAlb->useBatcher = $this->useBatcher;

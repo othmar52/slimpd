@@ -47,7 +47,7 @@ class Imageweighter {
         return "other";
     }
 
-    private function buildWeightConf() {
+    protected function buildWeightConf() {
         // read config stuff
         $rawConf = parse_ini_file(APP_ROOT . "core/config/importer/image-weights.ini", TRUE);
         $conf = array();
@@ -94,7 +94,7 @@ class Imageweighter {
      * 
      * @return array with filename variations
      */
-    private function addPaddedNumberSuffixes($input, $minNumber, $maxNumber) {
+    protected function addPaddedNumberSuffixes($input, $minNumber, $maxNumber) {
         $return = array();
         foreach(range($minNumber,$maxNumber) as $num) {
             foreach($input as $filename) {

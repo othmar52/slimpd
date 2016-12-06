@@ -105,7 +105,7 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
         fwrite ( $output,  "\n");
     }
 
-    private static function addKeywordToSql($keyword, $freq, $usedKeywords) {
+    protected static function addKeywordToSql($keyword, $freq, $usedKeywords) {
         if($keyword === "") {
             return FALSE;
         }

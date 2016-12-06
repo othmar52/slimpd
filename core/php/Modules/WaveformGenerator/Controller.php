@@ -61,7 +61,7 @@ class Controller extends \Slimpd\BaseController {
         return $WaveformGenerator->generateJson($args['width'], $response);
     }
 
-    private function validateInput($input, &$WaveformGenerator) {
+    protected function validateInput($input, &$WaveformGenerator) {
         #var_dump($input);
         $track = $this->trackRepo->getInstanceByPath($input, TRUE);
 

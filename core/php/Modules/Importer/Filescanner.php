@@ -99,7 +99,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
     }
 
     // Write tagdata-array into sparata database table, gzipcompressed, serialized
-    private function createTagBlobEntry($uid, $tagData) {
+    protected function createTagBlobEntry($uid, $tagData) {
         $this->container->rawtagblobRepo->ensureRecordUidExists($uid);
         $rawTagBlob = new \Slimpd\Models\Rawtagblob();
         $rawTagBlob->setUid($uid)
@@ -112,7 +112,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
      * maybe some or all array paths does not not exist...
      * TODO: move array paths to config
      */
-    private function removeHugeTagData($hugeTagdata) {
+    protected function removeHugeTagData($hugeTagdata) {
         // drop large data by common array paths
         try { unset($hugeTagdata['comments']['picture']); } catch (\Exception $e) { }
         try { unset($hugeTagdata['id3v2']['APIC']); } catch (\Exception $e) { }
@@ -132,7 +132,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
         return $hugeTagdata;
     }
 
-    private function extractEmbeddedBitmaps($tagData, $record) {
+    protected function extractEmbeddedBitmaps($tagData, $record) {
         if(isset($tagData['comments']['picture']) === FALSE) {
             return;
         }

@@ -21,8 +21,8 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    private $xwax;
-    private $notifyJson = NULL;
+    protected $xwax;
+    protected $notifyJson = NULL;
 
     public function xwaxplayerAction(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
@@ -142,7 +142,7 @@ class Controller extends \Slimpd\BaseController {
         return $newResponse->withJson($this->xwax->notifyJson);
     }
 
-    private function validateClientCommand($cmd) {
+    protected function validateClientCommand($cmd) {
         // check if we can fetch the command mapping from config
         if(isset($this->conf['xwax']['cmd_'. $cmd]) === FALSE || trim($this->conf['xwax']['cmd_'. $cmd]) === '') {
             $this->notifyJson = notifyJson($this->ll->str('xwax.invalid.cmd'), 'danger');
@@ -151,7 +151,7 @@ class Controller extends \Slimpd\BaseController {
         $this->xwax->runCmd = $cmd;
     }
 
-    private function validateDeckParam($deckIndex) {
+    protected function validateDeckParam($deckIndex) {
         if(in_array($this->xwax->runCmd, ['launch', 'exit']) === TRUE) {
             // we do not need a param for lauch or exit
             return;
@@ -164,7 +164,7 @@ class Controller extends \Slimpd\BaseController {
         $this->xwax->deckIndex = $deckIndex;
     }
 
-    private function validateBaseConfig() {
+    protected function validateBaseConfig() {
         // check if xwax control is enabled by config
         if($this->conf['modules']['enable_xwax'] !== '1') {
             $this->notifyJson = notifyJson($this->ll->str('xwax.notenabled'), 'danger');

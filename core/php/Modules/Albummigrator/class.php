@@ -227,7 +227,7 @@ class AlbumMigrator___________DELETEME {
 
 
 
-    private function postProcessRecommendations() {
+    protected function postProcessRecommendations() {
         $attrNames = array(
             'artist',
             'title',
@@ -285,7 +285,7 @@ class AlbumMigrator___________DELETEME {
      * TODO: remove title-score for "AudioTrack XX", "Unbekannter Titel", "Track XX", "Piste XX"
      */
 
-    private function getArtistOrTitleScheme($value, $idx, $artistOrTitle) {
+    protected function getArtistOrTitleScheme($value, $idx, $artistOrTitle) {
         $value = remU($value);
         if($value == '') {
             return 'missing';
@@ -353,7 +353,7 @@ class AlbumMigrator___________DELETEME {
         return $result;
     }
 
-    private function guessAttributesByDirectoryName($path) {
+    protected function guessAttributesByDirectoryName($path) {
         $value = basename($path);
 
         if(preg_match("/^cd\d+$/i", $value)) {
@@ -428,7 +428,7 @@ class AlbumMigrator___________DELETEME {
         }
     }
 
-    private function scoreLabelByLabelDirectory($albumPath) {
+    protected function scoreLabelByLabelDirectory($albumPath) {
         cliLog("--- add LABEL based on directory ---", 8);
         cliLog("  album directory: " . $albumPath, 8);
 
@@ -460,7 +460,7 @@ class AlbumMigrator___________DELETEME {
         return;
     }
 
-    private function recommend($idx, $attrArray, $score = 1) {
+    protected function recommend($idx, $attrArray, $score = 1) {
         $rgx = new \Slimpd\Utilities\RegexHelper();
 
         foreach($attrArray as $attrName => $attrValue) {
@@ -544,7 +544,7 @@ class AlbumMigrator___________DELETEME {
 
     }
 
-    private static function isVA($input) {
+    protected static function isVA($input) {
         switch(az09($input)) {
             case 'various':
             case 'variousartist':
@@ -558,7 +558,7 @@ class AlbumMigrator___________DELETEME {
         return FALSE;
     }
 
-    private function scoreAttribute($idx, $attrName, $attrValue, $score = 1) {
+    protected function scoreAttribute($idx, $attrName, $attrValue, $score = 1) {
         #cliLog($idx, 10, 'purple');
         #cliLog($attrName, 10, 'purple');
         #cliLog($attrValue, 10, 'purple');
@@ -621,7 +621,7 @@ class AlbumMigrator___________DELETEME {
         $this->r[$idx][$attrName][$attrValue] += $score;
     }
 
-    private function getAlbumScheme($value, $idx) {
+    protected function getAlbumScheme($value, $idx) {
         if($value == '') {
             return 'missing';
         }
@@ -754,7 +754,7 @@ class AlbumMigrator___________DELETEME {
     }
 
 
-    private function getFilenameScheme($value, $idx) {
+    protected function getFilenameScheme($value, $idx) {
         #$value = "B2-Aaron_Dilloway-Untitled-sour.mp3";
 
         if($value == '') {
@@ -874,7 +874,7 @@ class AlbumMigrator___________DELETEME {
         return $result;
     }
 
-    private function getFilenameCase($value) {
+    protected function getFilenameCase($value) {
         // exclude the file-extension
         $value = preg_replace('/\\.[^.\\s]{3,4}$/', '', $value);
 
@@ -883,7 +883,7 @@ class AlbumMigrator___________DELETEME {
         return 'mixed';
     }
 
-    private function getNumberScheme($value, $idx=NULL) {
+    protected function getNumberScheme($value, $idx=NULL) {
         $value = str_replace(array("of", " ", ".", ","), "/", $value);
         if($value == '') {
             return 'missing';
@@ -922,7 +922,7 @@ class AlbumMigrator___________DELETEME {
      * in case we find ranges without gaps add aditional score
      * 
      */
-    private function addChronologyScore() {
+    protected function addChronologyScore() {
         if(count($this->extractedTrackNumbers) === 0) {
             return;
         }
@@ -977,7 +977,7 @@ class AlbumMigrator___________DELETEME {
      * checks if passed number array is gapless
      * 
      */
-    private function extractNumericRangeness($numbers) {
+    protected function extractNumericRangeness($numbers) {
         #cliLog("COUNT: " . count($numbers), 1, 'cyan');
         #cliLog(join(" x ", $numbers), 1, 'cyan');
         $noGaps = range(1,max($numbers));
@@ -990,7 +990,7 @@ class AlbumMigrator___________DELETEME {
      * (TODO): remove this strange syntax "goto" of copy/pasted method
      */
     /*
-    private function extractNumericRangenessOld($input) {
+    protected function extractNumericRangenessOld($input) {
 
         //last value is dropped so add something useless to be dropped
         array_push($input, null);

@@ -21,11 +21,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class CliController extends \Slimpd\BaseController {
-    private $force = FALSE; // ignore parallel execution (or orphaned .lock file caused by crashed script-run)
+    protected $force = FALSE; // ignore parallel execution (or orphaned .lock file caused by crashed script-run)
 
-    private $interval = 5; //seconds for recursion of check-que
-    private $maxTime = 59;    // seconds - fits for cronjob executed every minute
-    private $startTime = 0;
+    protected $interval = 5; //seconds for recursion of check-que
+    protected $maxTime = 59;    // seconds - fits for cronjob executed every minute
+    protected $startTime = 0;
 
     public function indexAction(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
@@ -225,7 +225,7 @@ class CliController extends \Slimpd\BaseController {
         return $response;
     }
 
-    private function getDatabaseDropConfirm() {
+    protected function getDatabaseDropConfirm() {
         $userInput = '';
         do {
             if ($userInput != "\n") {
@@ -317,7 +317,7 @@ class CliController extends \Slimpd\BaseController {
         return $response;
     }
 
-    private function abortOnLockfile($ll) {
+    protected function abortOnLockfile($ll) {
         if(file_exists(APP_ROOT . "localdata/importer.lock") === TRUE) {
             $age = filemtime(APP_ROOT . "localdata/importer.lock");
             cliLog($ll->str("cli.parallel.execution.line1"), 1, "red", TRUE);

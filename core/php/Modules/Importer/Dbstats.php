@@ -76,7 +76,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         return;
     }
 
-    private function handleTrackRow($trackRow, &$tables, &$all) {
+    protected function handleTrackRow($trackRow, &$tables, &$all) {
         $this->updateJob(array(
             'currentItem' => 'trackUid: ' . $trackRow['uid']
         ));
@@ -112,13 +112,13 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
 
-    private function appendTopRelations(&$tables, $model, $modelUid, $relName, $relUids) {
+    protected function appendTopRelations(&$tables, $model, $modelUid, $relName, $relUids) {
         foreach($relUids as $relUid) {
             $tables[$model][$modelUid][$relName][] = $relUid;
         }
     }
 
-    private function handleAlbumRow($albumRow, &$tables, &$all) {
+    protected function handleAlbumRow($albumRow, &$tables, &$all) {
         #$all['al' . $albumRow['uid']] = NULL;
         $this->updateJob(array(
             'currentItem' => 'albumUid: ' . $albumRow['uid']
@@ -140,7 +140,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
     
-    private function processCollectedData($tables) {
+    protected function processCollectedData($tables) {
         foreach($tables as $className => $tableData) {
             cliLog("updating table:".$className." with trackCount and albumCount", 3);
             foreach($tableData as $itemUid => $data) {
@@ -171,7 +171,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         }
     }
 
-    private function setTopArtistUids(&$item, $className, $data) {
+    protected function setTopArtistUids(&$item, $className, $data) {
         if($className === "Artist" || isset($data["artists"]) === FALSE) {
             return;
         }
@@ -193,7 +193,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         $item->setTopArtistUids(trim($finalUids, ","));
     }
 
-    private function setTopGenreUids(&$item, $className, $data) {
+    protected function setTopGenreUids(&$item, $className, $data) {
         if($className === "Genre" || isset($data["genres"]) === FALSE) {
             return;
         }
@@ -214,7 +214,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         $item->setTopGenreUids(trim($finalUids, ","));
     }
 
-    private function setTopLabelUids(&$item, $className, $data) {
+    protected function setTopLabelUids(&$item, $className, $data) {
         if($className === "Label" || isset($data["labels"]) === FALSE) {
             return;
         }
@@ -235,7 +235,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         $item->setTopLabelUids(trim($finalUids, ","));
     }
 
-    private function setYearRange(&$item, $data) {
+    protected function setYearRange(&$item, $data) {
         if(isset($data['years']) === FALSE) {
             return;
         }
@@ -260,7 +260,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
      * delete all items which does not have any trackCount or albumCount
      * but preserve default entries
      */
-    private function deleteOrphans() {
+    protected function deleteOrphans() {
         $tables = [
             // tablename => highestDefaultUid
             'artist' => 11,    // Unknown artist=10, various artists=11

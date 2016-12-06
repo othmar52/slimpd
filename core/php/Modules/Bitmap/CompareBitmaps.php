@@ -19,7 +19,7 @@ namespace Slimpd\Modules\Bitmap;
  */
 // from http://compareimages.nikhazy-dizajn.hu/
 class CompareBitmaps {
-    private function mimeType($fileName) {
+    protected function mimeType($fileName) {
         /*returns array with mime type and if its jpg or png. Returns false if it isn't jpg or png*/
         $mime = getimagesize($fileName);
         $return = array($mime[0], $mime[1]);
@@ -36,7 +36,7 @@ class CompareBitmaps {
         }
     }
 
-    private function createImage($fileName)
+    protected function createImage($fileName)
     {
         /*retuns image resource or false if its not jpg or png*/
         $mime = $this->mimeType($fileName);
@@ -50,7 +50,7 @@ class CompareBitmaps {
         return false;
     }
 
-    private function resizeImage($fileName) {
+    protected function resizeImage($fileName) {
         /*resizes the image to a 8x8 squere and returns as image resource*/
         $mime = $this->mimeType($fileName);
         $img = imagecreatetruecolor(8, 8);
@@ -59,7 +59,7 @@ class CompareBitmaps {
         return $img;
     }
 
-    private function colorMeanValue($fileName) {
+    protected function colorMeanValue($fileName) {
         /*returns the mean value of the colors and the list of all pixel's colors*/
         $colorList = array();
         $colorSum = 0;
@@ -73,7 +73,7 @@ class CompareBitmaps {
         return array($colorSum/64,$colorList);
     }
 
-    private function bits($colorMean){
+    protected function bits($colorMean){
         /*returns an array with 1 and zeros. If a color is bigger than the mean value of colors it is 1*/
         $bits = array();
         foreach($colorMean[1] as $color){
