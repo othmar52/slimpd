@@ -25,8 +25,6 @@ class Controller extends \Slimpd\BaseController {
     protected $notifyJson = NULL;
 
     public function xwaxplayerAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        #die('TODO: upgrade to slimv3');
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('get_status');
@@ -45,7 +43,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function statusAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('get_status');
@@ -67,7 +65,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdLoadTrackAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('load_track');
@@ -89,21 +87,19 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdDisconnectAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         return $this->runSingleDeckCommand($request, $response, $args, 'disconnect');
     }
 
     public function cmdRecueAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         return $this->runSingleDeckCommand($request, $response, $args, 'recue');
     }
 
     public function cmdCycleTimecodeAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         return $this->runSingleDeckCommand($request, $response, $args, 'cycle_timecode');
     }
 
     public function runSingleDeckCommand(Request $request, Response $response, $args, $cmd) {
+        useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand($cmd);
@@ -117,7 +113,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdLaunchAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request, $args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('launch');
@@ -130,7 +126,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdExitAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request, $args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('exit');
@@ -199,7 +195,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('get_status');
@@ -214,12 +210,12 @@ class Controller extends \Slimpd\BaseController {
         foreach($args['xwax']['deckstats'] as $deckStat) {
             $itemsToRender[] = $deckStat['item'];
         }
-        $vars['renderitems'] = $this->getRenderItems($itemsToRender);
+        $args['renderitems'] = $this->getRenderItems($itemsToRender);
         $this->view->render($response, 'modules/widget-xwax.htm', $args);
         return $response;
     }
     public function djscreenAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request);
         $args['action'] = "djscreen";
         $this->view->render($response, 'djscreen.htm', $args);
         return $response;

@@ -99,7 +99,7 @@ class CliController extends \Slimpd\BaseController {
         $action = 'migrate';
 
         // TODO: manually performed db-changes does not get recognized here - find a solution!
-        
+
         // check if we can query the revisions table
         $query = "SELECT * FROM db_revisions";
         $result = $this->db->query($query);
@@ -108,33 +108,33 @@ class CliController extends \Slimpd\BaseController {
             // let's force initial creation of all tables
             $action = 'init';
         }
-    
+
         \Helper::setConfig( getDatabaseDiffConf($this->conf) );
         if (!\Helper::checkConfigEnough()) {
             \Output::error('mmp: please check configuration');
             return $response;
         }
-    
+
         # after database-structure changes we have to
         # 1) uncomment next line
         # 2) run ./slimpd update-db-scheme
         # 3) recomment this line again
         # to make a new revision
         #$action = 'create';
-    
+
         $controller = \Helper::getController($action, NULL);
         if ($controller !== false) {
             $controller->runStrategy();
         } else {
-            \Output::error('mmp: unknown command "'.$cli_params['command']['name'].'"');
+            \Output::error('mmp: unknown command "' . $action . '"');
             \Helper::getController('help')->runStrategy();
             return $response;
         }
-    
+
         if($action !== 'init') {
             return $response;
         }
-    
+
         foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries() as $query) {
             $this->db->query($query);
         }
@@ -149,7 +149,7 @@ class CliController extends \Slimpd\BaseController {
         // phase 11: delete all bitmap-database-entries that does not exist in filesystem
         // TODO: limit this to embedded images only
         $importer->deleteOrphanedBitmapRecords();
-        
+
         // TODO: delete orphaned artists + genres + labels
         return $response;
     }
@@ -258,12 +258,7 @@ class CliController extends \Slimpd\BaseController {
         $query = "SELECT uid FROM importer
             WHERE batchUid=0 AND jobStart=0 AND jobStatistics='update';";
 
-        $result = $this->db->query($query);
-        $runUpdate = FALSE;
-        while($record = $result->fetch_assoc()) {
-            $runUpdate = TRUE;
-        }
-        if($runUpdate === FALSE) {
+        if($this->db->query($query)->num_rows === 0) {
             $cliMsg = "Nothing to do. ";
 
             // check for recursion

@@ -26,12 +26,12 @@ class Controller extends \Slimpd\BaseController {
         $args["action"] = "albums";
         $args["itemlist"] = [];
         $itemsPerPage = 18;
-    
+
         $args['itemlist'] = $this->albumRepo->getAll($itemsPerPage, $args['currentPage'], $args['sort'] . " " . $args['direction']);
         #die(__FUNCTION__);
         $args["totalresults"] = $this->albumRepo->getCountAll();
         $args["activesorting"] = $args['sort'] . "-" . $args['direction'];
-    
+
         $args["paginator"] = new \JasonGrimes\Paginator(
             $args["totalresults"],
             $itemsPerPage,
@@ -71,6 +71,7 @@ class Controller extends \Slimpd\BaseController {
     }
     
     public function widgetAlbumAction(Request $request, Response $response, $args) {
+        useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -83,7 +84,6 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function remigrateAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -113,7 +113,7 @@ class Controller extends \Slimpd\BaseController {
         }
         return $this->detailAction($request, $response, $args);
     }
-    
+
     public function editAction(Request $request, Response $response, $args) {
         $this->completeArgsForDetailView($args['itemParams'], $args);
         if($args['album'] === NULL) {
@@ -125,10 +125,8 @@ class Controller extends \Slimpd\BaseController {
         $args['activeTab'] = 'editall';
         $trackInstances = $args['itemlist'];
         $args['itemlist'] = [];
-        $rawTagDataInstances = array();
         foreach($trackInstances as $track) {
             $args['itemlist'][$track->getUid()] = $track;
-            //$args['itemlistraw'][$track->getUid()] = $this->rawtagdataRepo->getInstanceByAttributes(array('uid' => (int)$track->getUid()));
         }
         $args['discogstracks'] = array();
         $args['matchmapping'] = array();
@@ -220,7 +218,8 @@ class Controller extends \Slimpd\BaseController {
         if($postParams === NULL) {
             $postParams = array();
         }
-        $albumEditorials = array();
+        // TODO: fetch editorials for album properties for highlighting input fields
+        //$albumEditorials = array();
         if(array_key_exists('album', $postParams) === FALSE) {
             $postParams['album'] = array();
         }
