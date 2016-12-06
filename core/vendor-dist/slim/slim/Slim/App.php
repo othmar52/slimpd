@@ -1,6 +1,6 @@
 <?php
 /**
- * Slim Framework (http://slimframework.com)
+ * Slim Framework (https://slimframework.com)
  *
  * @link      https://github.com/slimphp/Slim
  * @copyright Copyright (c) 2011-2016 Josh Lockhart
@@ -50,7 +50,7 @@ class App
      *
      * @var string
      */
-    const VERSION = '3.6.0-dev';
+    const VERSION = '3.7.0-dev';
 
     /**
      * Container
@@ -386,9 +386,9 @@ class App
                 while ($amountToRead > 0 && !$body->eof()) {
                     $data = $body->read(min($chunkSize, $amountToRead));
                     echo $data;
-                    
+
                     $amountToRead -= strlen($data);
-                                        
+
                     if (connection_status() != CONNECTION_NORMAL) {
                         break;
                     }

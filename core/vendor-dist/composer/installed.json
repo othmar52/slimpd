@@ -1,43 +1,5 @@
 [
     {
-        "name": "james-heinrich/getid3",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/JamesHeinrich/getID3.git",
-            "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/6e73fd3e65df55c55f14710f7b0298e03fe40969",
-            "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-10-09 16:01:38",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "getid3/getid3.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPL"
-        ],
-        "description": "PHP script that extracts useful information from popular multimedia file formats",
-        "homepage": "http://www.getid3.org/",
-        "keywords": [
-            "codecs",
-            "php",
-            "tags"
-        ]
-    },
-    {
         "name": "webfontkit/open-sans",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
@@ -107,69 +69,18 @@
         "homepage": "http://jquery.com"
     },
     {
-        "name": "symfony/process",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/symfony/process.git",
-            "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/symfony/process/zipball/fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
-            "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.9"
-        },
-        "time": "2016-10-01 14:21:27",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.2-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Symfony\\Component\\Process\\": ""
-            },
-            "exclude-from-classmap": [
-                "/Tests/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            },
-            {
-                "name": "Symfony Community",
-                "homepage": "https://symfony.com/contributors"
-            }
-        ],
-        "description": "Symfony Process Component",
-        "homepage": "https://symfony.com"
-    },
-    {
         "name": "kriswallsmith/assetic",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
             "url": "https://github.com/kriswallsmith/assetic.git",
-            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883"
+            "reference": "e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/4bb27cf9148b5c34f1963cb01bfc586db60d5883",
-            "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883",
+            "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1",
+            "reference": "e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1",
             "shasum": ""
         },
         "require": {
@@ -177,21 +88,21 @@
             "symfony/process": "~2.1|~3.0"
         },
         "conflict": {
-            "twig/twig": "<1.23"
+            "twig/twig": "<1.27"
         },
         "require-dev": {
-            "cssmin/cssmin": "3.0.1",
-            "joliclic/javascript-packer": "1.1",
-            "kamicane/packager": "1.0",
             "leafo/lessphp": "^0.3.7",
             "leafo/scssphp": "~0.1",
-            "mrclay/minify": "~2.2",
+            "meenie/javascript-packer": "^1.1",
+            "mrclay/minify": "<2.3",
+            "natxet/cssmin": "3.0.4",
             "patchwork/jsqueeze": "~1.0|~2.0",
-            "phpunit/phpunit": "~4.8",
+            "phpunit/phpunit": "~4.8 || ^5.6",
             "psr/log": "~1.0",
             "ptachoire/cssembed": "~1.0",
             "symfony/phpunit-bridge": "~2.7|~3.0",
-            "twig/twig": "~1.23|~2.0"
+            "twig/twig": "~1.23|~2.0",
+            "yfix/packager": "dev-master"
         },
         "suggest": {
             "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
@@ -201,7 +112,7 @@
             "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
             "twig/twig": "Assetic provides the integration with the Twig templating engine"
         },
-        "time": "2016-02-07 17:40:57",
+        "time": "2016-11-11 18:43:20",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -600,299 +511,6 @@
         },
         "type": "library",
         "installation-source": "source"
-    },
-    {
-        "name": "slim/flash",
-        "version": "0.1.0",
-        "version_normalized": "0.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/slimphp/Slim-Flash.git",
-            "reference": "1995ed53b77b8eeb67adf032de93c319f76aa5cd"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/slimphp/Slim-Flash/zipball/1995ed53b77b8eeb67adf032de93c319f76aa5cd",
-            "reference": "1995ed53b77b8eeb67adf032de93c319f76aa5cd",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.5.0"
-        },
-        "time": "2015-08-16 22:49:06",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Slim\\Flash\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Josh Lockhart",
-                "email": "hello@joshlockhart.com",
-                "homepage": "http://joshlockhart.com"
-            }
-        ],
-        "description": "Slim Framework Flash message service provider",
-        "homepage": "http://slimframework.com",
-        "keywords": [
-            "flash",
-            "framework",
-            "message",
-            "provider",
-            "slim"
-        ]
-    },
-    {
-        "name": "nikic/fast-route",
-        "version": "v1.0.1",
-        "version_normalized": "1.0.1.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/nikic/FastRoute.git",
-            "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/nikic/FastRoute/zipball/8ea928195fa9b907f0d6e48312d323c1a13cc2af",
-            "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4.0"
-        },
-        "time": "2016-06-12 19:08:51",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "FastRoute\\": "src/"
-            },
-            "files": [
-                "src/functions.php"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Nikita Popov",
-                "email": "nikic@php.net"
-            }
-        ],
-        "description": "Fast request router for PHP",
-        "keywords": [
-            "router",
-            "routing"
-        ]
-    },
-    {
-        "name": "container-interop/container-interop",
-        "version": "1.1.0",
-        "version_normalized": "1.1.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/container-interop/container-interop.git",
-            "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/container-interop/container-interop/zipball/fc08354828f8fd3245f77a66b9e23a6bca48297e",
-            "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e",
-            "shasum": ""
-        },
-        "time": "2014-12-30 15:22:37",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Interop\\Container\\": "src/Interop/Container/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "description": "Promoting the interoperability of container objects (DIC, SL, etc.)"
-    },
-    {
-        "name": "psr/http-message",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/php-fig/http-message.git",
-            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-08-06 14:39:51",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.0.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Psr\\Http\\Message\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "PHP-FIG",
-                "homepage": "http://www.php-fig.org/"
-            }
-        ],
-        "description": "Common interface for HTTP messages",
-        "homepage": "https://github.com/php-fig/http-message",
-        "keywords": [
-            "http",
-            "http-message",
-            "psr",
-            "psr-7",
-            "request",
-            "response"
-        ]
-    },
-    {
-        "name": "pimple/pimple",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/silexphp/Pimple.git",
-            "reference": "44515c40a4c4effc53c1e6c0e7158f711473dc98"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/silexphp/Pimple/zipball/44515c40a4c4effc53c1e6c0e7158f711473dc98",
-            "reference": "44515c40a4c4effc53c1e6c0e7158f711473dc98",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "time": "2016-09-10 19:36:25",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "3.0.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-0": {
-                "Pimple": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Fabien Potencier",
-                "email": "fabien@symfony.com"
-            }
-        ],
-        "description": "Pimple, a simple Dependency Injection Container",
-        "homepage": "http://pimple.sensiolabs.org",
-        "keywords": [
-            "container",
-            "dependency injection"
-        ]
-    },
-    {
-        "name": "slim/slim",
-        "version": "3.x-dev",
-        "version_normalized": "3.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/slimphp/Slim.git",
-            "reference": "2f29cc2e3042bfa8c6a9078486ea174acb6a69e8"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/slimphp/Slim/zipball/2f29cc2e3042bfa8c6a9078486ea174acb6a69e8",
-            "reference": "2f29cc2e3042bfa8c6a9078486ea174acb6a69e8",
-            "shasum": ""
-        },
-        "require": {
-            "container-interop/container-interop": "^1.1",
-            "nikic/fast-route": "^1.0",
-            "php": ">=5.5.0",
-            "pimple/pimple": "^3.0",
-            "psr/http-message": "^1.0"
-        },
-        "provide": {
-            "psr/http-message-implementation": "1.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^4.0",
-            "squizlabs/php_codesniffer": "^2.5"
-        },
-        "time": "2016-10-12 12:02:05",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Slim\\": "Slim"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Rob Allen",
-                "email": "rob@akrabat.com",
-                "homepage": "http://akrabat.com"
-            },
-            {
-                "name": "Josh Lockhart",
-                "email": "hello@joshlockhart.com",
-                "homepage": "https://joshlockhart.com"
-            },
-            {
-                "name": "Gabriel Manricks",
-                "email": "gmanricks@me.com",
-                "homepage": "http://gabrielmanricks.com"
-            },
-            {
-                "name": "Andrew Smith",
-                "email": "a.smith@silentworks.co.uk",
-                "homepage": "http://silentworks.co.uk"
-            }
-        ],
-        "description": "Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs",
-        "homepage": "http://slimframework.com",
-        "keywords": [
-            "api",
-            "framework",
-            "micro",
-            "router"
-        ]
     },
     {
         "name": "james-heinrich/phpthumb",
@@ -1766,6 +1384,180 @@
         }
     },
     {
+        "name": "nikic/fast-route",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/nikic/FastRoute.git",
+            "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/nikic/FastRoute/zipball/8ea928195fa9b907f0d6e48312d323c1a13cc2af",
+            "reference": "8ea928195fa9b907f0d6e48312d323c1a13cc2af",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2016-06-12 19:08:51",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "FastRoute\\": "src/"
+            },
+            "files": [
+                "src/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Nikita Popov",
+                "email": "nikic@php.net"
+            }
+        ],
+        "description": "Fast request router for PHP",
+        "keywords": [
+            "router",
+            "routing"
+        ]
+    },
+    {
+        "name": "container-interop/container-interop",
+        "version": "1.1.0",
+        "version_normalized": "1.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/container-interop/container-interop.git",
+            "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/container-interop/container-interop/zipball/fc08354828f8fd3245f77a66b9e23a6bca48297e",
+            "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e",
+            "shasum": ""
+        },
+        "time": "2014-12-30 15:22:37",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Interop\\Container\\": "src/Interop/Container/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "description": "Promoting the interoperability of container objects (DIC, SL, etc.)"
+    },
+    {
+        "name": "psr/http-message",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/php-fig/http-message.git",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-08-06 14:39:51",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Psr\\Http\\Message\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "PHP-FIG",
+                "homepage": "http://www.php-fig.org/"
+            }
+        ],
+        "description": "Common interface for HTTP messages",
+        "homepage": "https://github.com/php-fig/http-message",
+        "keywords": [
+            "http",
+            "http-message",
+            "psr",
+            "psr-7",
+            "request",
+            "response"
+        ]
+    },
+    {
+        "name": "pimple/pimple",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/silexphp/Pimple.git",
+            "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/silexphp/Pimple/zipball/1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
+            "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-11-19 22:52:52",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "3.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-0": {
+                "Pimple": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            }
+        ],
+        "description": "Pimple, a simple Dependency Injection Container",
+        "homepage": "http://pimple.sensiolabs.org",
+        "keywords": [
+            "container",
+            "dependency injection"
+        ]
+    },
+    {
         "name": "slim/twig-view",
         "version": "2.1.1",
         "version_normalized": "2.1.1.0",
@@ -1818,6 +1610,53 @@
         ]
     },
     {
+        "name": "slim/flash",
+        "version": "0.1.0",
+        "version_normalized": "0.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/slimphp/Slim-Flash.git",
+            "reference": "1995ed53b77b8eeb67adf032de93c319f76aa5cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/slimphp/Slim-Flash/zipball/1995ed53b77b8eeb67adf032de93c319f76aa5cd",
+            "reference": "1995ed53b77b8eeb67adf032de93c319f76aa5cd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5.0"
+        },
+        "time": "2015-08-16 22:49:06",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Slim\\Flash\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Josh Lockhart",
+                "email": "hello@joshlockhart.com",
+                "homepage": "http://joshlockhart.com"
+            }
+        ],
+        "description": "Slim Framework Flash message service provider",
+        "homepage": "http://slimframework.com",
+        "keywords": [
+            "flash",
+            "framework",
+            "message",
+            "provider",
+            "slim"
+        ]
+    },
+    {
         "name": "psr/log",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
@@ -1867,86 +1706,6 @@
         ]
     },
     {
-        "name": "monolog/monolog",
-        "version": "1.x-dev",
-        "version_normalized": "1.9999999.9999999.9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193",
-            "reference": "214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0",
-            "psr/log": "~1.0"
-        },
-        "provide": {
-            "psr/log-implementation": "1.0.0"
-        },
-        "require-dev": {
-            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
-            "doctrine/couchdb": "~1.0@dev",
-            "graylog2/gelf-php": "~1.0",
-            "jakub-onderka/php-parallel-lint": "0.9",
-            "php-amqplib/php-amqplib": "~2.4",
-            "php-console/php-console": "^3.1.3",
-            "phpunit/phpunit": "~4.5",
-            "phpunit/phpunit-mock-objects": "2.3.0",
-            "ruflin/elastica": ">=0.90 <3.0",
-            "sentry/sentry": "^0.13",
-            "swiftmailer/swiftmailer": "~5.3"
-        },
-        "suggest": {
-            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
-            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
-            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
-            "ext-mongo": "Allow sending log messages to a MongoDB server",
-            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
-            "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
-            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
-            "php-console/php-console": "Allow sending log messages to Google Chrome",
-            "rollbar/rollbar": "Allow sending log messages to Rollbar",
-            "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
-            "sentry/sentry": "Allow sending log messages to a Sentry server"
-        },
-        "time": "2016-10-03 18:31:30",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "2.0.x-dev"
-            }
-        },
-        "installation-source": "source",
-        "autoload": {
-            "psr-4": {
-                "Monolog\\": "src/Monolog"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Jordi Boggiano",
-                "email": "j.boggiano@seld.be",
-                "homepage": "http://seld.be"
-            }
-        ],
-        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
-        "homepage": "http://github.com/Seldaek/monolog",
-        "keywords": [
-            "log",
-            "logging",
-            "psr-3"
-        ]
-    },
-    {
         "name": "components/font-awesome",
         "version": "4.7.0",
         "version_normalized": "4.7.0.0",
@@ -1984,37 +1743,37 @@
         "description": "The iconic font designed for use with Twitter Bootstrap."
     },
     {
-        "name": "react/promise",
-        "version": "2.x-dev",
-        "version_normalized": "2.9999999.9999999.9999999-dev",
+        "name": "symfony/process",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/reactphp/promise.git",
-            "reference": "5131098293d66d58e5750c244988d5a465ffd9df"
+            "url": "https://github.com/symfony/process.git",
+            "reference": "b2a461e266f50a20c4d81b5b88153dde4369e94b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/reactphp/promise/zipball/5131098293d66d58e5750c244988d5a465ffd9df",
-            "reference": "5131098293d66d58e5750c244988d5a465ffd9df",
+            "url": "https://api.github.com/repos/symfony/process/zipball/b2a461e266f50a20c4d81b5b88153dde4369e94b",
+            "reference": "b2a461e266f50a20c4d81b5b88153dde4369e94b",
             "shasum": ""
         },
         "require": {
-            "php": ">=5.4.0"
+            "php": ">=5.5.9"
         },
-        "time": "2016-10-24 08:39:42",
+        "time": "2016-11-24 10:43:03",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "2.0-dev"
+                "dev-master": "3.3-dev"
             }
         },
         "installation-source": "source",
         "autoload": {
             "psr-4": {
-                "React\\Promise\\": "src/"
+                "Symfony\\Component\\Process\\": ""
             },
-            "files": [
-                "src/functions_include.php"
+            "exclude-from-classmap": [
+                "/Tests/"
             ]
         },
         "notification-url": "https://packagist.org/downloads/",
@@ -2023,11 +1782,54 @@
         ],
         "authors": [
             {
-                "name": "Jan Sorgalla",
-                "email": "jsorgalla@gmail.com"
+                "name": "Fabien Potencier",
+                "email": "fabien@symfony.com"
+            },
+            {
+                "name": "Symfony Community",
+                "homepage": "https://symfony.com/contributors"
             }
         ],
-        "description": "A lightweight implementation of CommonJS Promises/A for PHP"
+        "description": "Symfony Process Component",
+        "homepage": "https://symfony.com"
+    },
+    {
+        "name": "james-heinrich/getid3",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/JamesHeinrich/getID3.git",
+            "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
+            "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "time": "2016-12-05 23:07:42",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "getid3/"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL"
+        ],
+        "description": "PHP script that extracts useful information from popular multimedia file formats",
+        "homepage": "http://www.getid3.org/",
+        "keywords": [
+            "codecs",
+            "php",
+            "tags"
+        ]
     },
     {
         "name": "twig/twig",
@@ -2036,12 +1838,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/twigphp/Twig.git",
-            "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f"
+            "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twigphp/Twig/zipball/3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
-            "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
+            "url": "https://api.github.com/repos/twigphp/Twig/zipball/8ad862b98e8c0ea509a04242c454c97e1265bd9a",
+            "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a",
             "shasum": ""
         },
         "require": {
@@ -2049,13 +1851,13 @@
         },
         "require-dev": {
             "symfony/debug": "~2.7",
-            "symfony/phpunit-bridge": "~2.7"
+            "symfony/phpunit-bridge": "~3.2@dev"
         },
-        "time": "2016-10-25 19:28:14",
+        "time": "2016-12-05 09:20:45",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.27-dev"
+                "dev-master": "1.29-dev"
             }
         },
         "installation-source": "source",
@@ -2090,6 +1892,204 @@
         "homepage": "http://twig.sensiolabs.org",
         "keywords": [
             "templating"
+        ]
+    },
+    {
+        "name": "react/promise",
+        "version": "2.x-dev",
+        "version_normalized": "2.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/reactphp/promise.git",
+            "reference": "2f4b5955f3942870e01ce2492f7fde6dbe3e11cd"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/reactphp/promise/zipball/2f4b5955f3942870e01ce2492f7fde6dbe3e11cd",
+            "reference": "2f4b5955f3942870e01ce2492f7fde6dbe3e11cd",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4.0"
+        },
+        "time": "2016-11-23 18:42:25",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "React\\Promise\\": "src/"
+            },
+            "files": [
+                "src/functions_include.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Sorgalla",
+                "email": "jsorgalla@gmail.com"
+            }
+        ],
+        "description": "A lightweight implementation of CommonJS Promises/A for PHP"
+    },
+    {
+        "name": "slim/slim",
+        "version": "3.x-dev",
+        "version_normalized": "3.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/slimphp/Slim.git",
+            "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/slimphp/Slim/zipball/27695c0d8311a409b72781f57050e41eeaeda5c7",
+            "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7",
+            "shasum": ""
+        },
+        "require": {
+            "container-interop/container-interop": "^1.1",
+            "nikic/fast-route": "^1.0",
+            "php": ">=5.5.0",
+            "pimple/pimple": "^3.0",
+            "psr/http-message": "^1.0"
+        },
+        "provide": {
+            "psr/http-message-implementation": "1.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.0",
+            "squizlabs/php_codesniffer": "^2.5"
+        },
+        "time": "2016-12-05 20:32:33",
+        "type": "library",
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Slim\\": "Slim"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rob Allen",
+                "email": "rob@akrabat.com",
+                "homepage": "http://akrabat.com"
+            },
+            {
+                "name": "Josh Lockhart",
+                "email": "hello@joshlockhart.com",
+                "homepage": "https://joshlockhart.com"
+            },
+            {
+                "name": "Gabriel Manricks",
+                "email": "gmanricks@me.com",
+                "homepage": "http://gabrielmanricks.com"
+            },
+            {
+                "name": "Andrew Smith",
+                "email": "a.smith@silentworks.co.uk",
+                "homepage": "http://silentworks.co.uk"
+            }
+        ],
+        "description": "Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs",
+        "homepage": "https://slimframework.com",
+        "keywords": [
+            "api",
+            "framework",
+            "micro",
+            "router"
+        ]
+    },
+    {
+        "name": "monolog/monolog",
+        "version": "1.x-dev",
+        "version_normalized": "1.9999999.9999999.9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Seldaek/monolog.git",
+            "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
+            "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0",
+            "psr/log": "~1.0"
+        },
+        "provide": {
+            "psr/log-implementation": "1.0.0"
+        },
+        "require-dev": {
+            "aws/aws-sdk-php": "^2.4.9 || ^3.0",
+            "doctrine/couchdb": "~1.0@dev",
+            "graylog2/gelf-php": "~1.0",
+            "jakub-onderka/php-parallel-lint": "0.9",
+            "php-amqplib/php-amqplib": "~2.4",
+            "php-console/php-console": "^3.1.3",
+            "phpunit/phpunit": "~4.5",
+            "phpunit/phpunit-mock-objects": "2.3.0",
+            "ruflin/elastica": ">=0.90 <3.0",
+            "sentry/sentry": "^0.13",
+            "swiftmailer/swiftmailer": "~5.3"
+        },
+        "suggest": {
+            "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
+            "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
+            "ext-amqp": "Allow sending log messages to an AMQP server (1.0+ required)",
+            "ext-mongo": "Allow sending log messages to a MongoDB server",
+            "graylog2/gelf-php": "Allow sending log messages to a GrayLog2 server",
+            "mongodb/mongodb": "Allow sending log messages to a MongoDB server via PHP Driver",
+            "php-amqplib/php-amqplib": "Allow sending log messages to an AMQP server using php-amqplib",
+            "php-console/php-console": "Allow sending log messages to Google Chrome",
+            "rollbar/rollbar": "Allow sending log messages to Rollbar",
+            "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
+            "sentry/sentry": "Allow sending log messages to a Sentry server"
+        },
+        "time": "2016-12-04 18:12:24",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "2.0.x-dev"
+            }
+        },
+        "installation-source": "source",
+        "autoload": {
+            "psr-4": {
+                "Monolog\\": "src/Monolog"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jordi Boggiano",
+                "email": "j.boggiano@seld.be",
+                "homepage": "http://seld.be"
+            }
+        ],
+        "description": "Sends your logs to files, sockets, inboxes, databases and various web services",
+        "homepage": "http://github.com/Seldaek/monolog",
+        "keywords": [
+            "log",
+            "logging",
+            "psr-3"
         ]
     }
 ]

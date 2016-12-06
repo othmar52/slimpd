@@ -754,12 +754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969"
+                "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/6e73fd3e65df55c55f14710f7b0298e03fe40969",
-                "reference": "6e73fd3e65df55c55f14710f7b0298e03fe40969",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
+                "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
                 "shasum": ""
             },
             "require": {
@@ -768,7 +768,7 @@
             "type": "library",
             "autoload": {
                 "classmap": [
-                    "getid3/getid3.php"
+                    "getid3/"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -782,7 +782,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-10-09 16:01:38"
+            "time": "2016-12-05 23:07:42"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -908,12 +908,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/assetic.git",
-                "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883"
+                "reference": "e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/4bb27cf9148b5c34f1963cb01bfc586db60d5883",
-                "reference": "4bb27cf9148b5c34f1963cb01bfc586db60d5883",
+                "url": "https://api.github.com/repos/kriswallsmith/assetic/zipball/e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1",
+                "reference": "e911c437dbdf006a8f62c2f59b15b2d69a5e0aa1",
                 "shasum": ""
             },
             "require": {
@@ -921,21 +921,21 @@
                 "symfony/process": "~2.1|~3.0"
             },
             "conflict": {
-                "twig/twig": "<1.23"
+                "twig/twig": "<1.27"
             },
             "require-dev": {
-                "cssmin/cssmin": "3.0.1",
-                "joliclic/javascript-packer": "1.1",
-                "kamicane/packager": "1.0",
                 "leafo/lessphp": "^0.3.7",
                 "leafo/scssphp": "~0.1",
-                "mrclay/minify": "~2.2",
+                "meenie/javascript-packer": "^1.1",
+                "mrclay/minify": "<2.3",
+                "natxet/cssmin": "3.0.4",
                 "patchwork/jsqueeze": "~1.0|~2.0",
-                "phpunit/phpunit": "~4.8",
+                "phpunit/phpunit": "~4.8 || ^5.6",
                 "psr/log": "~1.0",
                 "ptachoire/cssembed": "~1.0",
                 "symfony/phpunit-bridge": "~2.7|~3.0",
-                "twig/twig": "~1.23|~2.0"
+                "twig/twig": "~1.23|~2.0",
+                "yfix/packager": "dev-master"
             },
             "suggest": {
                 "leafo/lessphp": "Assetic provides the integration with the lessphp LESS compiler",
@@ -977,7 +977,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2016-02-07 17:40:57"
+            "time": "2016-11-11 18:43:20"
         },
         {
             "name": "ksubileau/color-thief-php",
@@ -1142,12 +1142,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193"
+                "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193",
-                "reference": "214b8ef34b17ed0fcd3a5e027ef5a9ae9ebeb193",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
+                "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
                 "shasum": ""
             },
             "require": {
@@ -1212,7 +1212,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-10-03 18:31:30"
+            "time": "2016-12-04 18:12:24"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1223,7 +1223,7 @@
                 "reference": "origin/master"
             },
             "type": "library",
-            "time": "2016-10-15 15:06:36"
+            "time": "2016-01-21 23:37:59"
         },
         {
             "name": "neutron/sphinxsearch-api",
@@ -1371,12 +1371,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "44515c40a4c4effc53c1e6c0e7158f711473dc98"
+                "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/44515c40a4c4effc53c1e6c0e7158f711473dc98",
-                "reference": "44515c40a4c4effc53c1e6c0e7158f711473dc98",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
+                "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
                 "shasum": ""
             },
             "require": {
@@ -1409,7 +1409,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2016-09-10 19:36:25"
+            "time": "2016-11-19 22:52:52"
         },
         {
             "name": "psr/http-message",
@@ -1514,12 +1514,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/reactphp/promise.git",
-                "reference": "5131098293d66d58e5750c244988d5a465ffd9df"
+                "reference": "2f4b5955f3942870e01ce2492f7fde6dbe3e11cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/reactphp/promise/zipball/5131098293d66d58e5750c244988d5a465ffd9df",
-                "reference": "5131098293d66d58e5750c244988d5a465ffd9df",
+                "url": "https://api.github.com/repos/reactphp/promise/zipball/2f4b5955f3942870e01ce2492f7fde6dbe3e11cd",
+                "reference": "2f4b5955f3942870e01ce2492f7fde6dbe3e11cd",
                 "shasum": ""
             },
             "require": {
@@ -1550,7 +1550,7 @@
                 }
             ],
             "description": "A lightweight implementation of CommonJS Promises/A for PHP",
-            "time": "2016-10-24 08:39:42"
+            "time": "2016-11-23 18:42:25"
         },
         {
             "name": "ricbra/php-discogs-api",
@@ -1716,12 +1716,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "2f29cc2e3042bfa8c6a9078486ea174acb6a69e8"
+                "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/2f29cc2e3042bfa8c6a9078486ea174acb6a69e8",
-                "reference": "2f29cc2e3042bfa8c6a9078486ea174acb6a69e8",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/27695c0d8311a409b72781f57050e41eeaeda5c7",
+                "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7",
                 "shasum": ""
             },
             "require": {
@@ -1771,14 +1771,14 @@
                 }
             ],
             "description": "Slim is a PHP micro framework that helps you quickly write simple yet powerful web applications and APIs",
-            "homepage": "http://slimframework.com",
+            "homepage": "https://slimframework.com",
             "keywords": [
                 "api",
                 "framework",
                 "micro",
                 "router"
             ],
-            "time": "2016-10-12 12:02:05"
+            "time": "2016-12-05 20:32:33"
         },
         {
             "name": "slim/twig-view",
@@ -1836,12 +1836,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e"
+                "reference": "b2a461e266f50a20c4d81b5b88153dde4369e94b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
-                "reference": "fbaacdfc701a0ad50622eee45cfa2112f0ee144e",
+                "url": "https://api.github.com/repos/symfony/process/zipball/b2a461e266f50a20c4d81b5b88153dde4369e94b",
+                "reference": "b2a461e266f50a20c4d81b5b88153dde4369e94b",
                 "shasum": ""
             },
             "require": {
@@ -1850,7 +1850,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.2-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -1877,7 +1877,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-10-01 14:21:27"
+            "time": "2016-11-24 10:43:03"
         },
         {
             "name": "twbs/bootstrap",
@@ -1936,12 +1936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f"
+                "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
-                "reference": "3ff5abf75bf2fb9b9bffcc15c4384e08d0763c7f",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8ad862b98e8c0ea509a04242c454c97e1265bd9a",
+                "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a",
                 "shasum": ""
             },
             "require": {
@@ -1949,12 +1949,12 @@
             },
             "require-dev": {
                 "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~2.7"
+                "symfony/phpunit-bridge": "~3.2@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.27-dev"
+                    "dev-master": "1.29-dev"
                 }
             },
             "autoload": {
@@ -1989,7 +1989,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-10-25 19:28:14"
+            "time": "2016-12-05 09:20:45"
         },
         {
             "name": "webfontkit/open-sans",
