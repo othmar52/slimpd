@@ -155,7 +155,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
     }
 
     public function fetchRenderItems(&$renderItems, $discogsitemInstance) {
-        useArguments($renderItems, $directoryInstance);
+        useArguments($renderItems, $discogsitemInstance);
         // nothing to fetch for this model...
         return;
     }
