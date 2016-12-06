@@ -30,7 +30,7 @@ use Slimpd\Utilities\RegexHelper as RGX;
 abstract class HasSuffixedUrl extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
 
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
-        
+
         parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
         $this->pattern = "/^" . RGX::ANYTHING . "(?:[^ ])(?:\ [-:])?" . RGX::GLUE . RGX::URL . "$/";
         return $this;

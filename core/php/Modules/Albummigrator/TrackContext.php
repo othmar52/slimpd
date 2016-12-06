@@ -24,22 +24,22 @@ class TrackContext extends \Slimpd\Models\Track {
     use \Slimpd\Modules\Albummigrator\MigratorContext; // config
     use \Slimpd\Modules\Albummigrator\TrackArtistExtractor; // regularArtists, featuredArtists, remixArtists, artistString, titleString
     protected $confKey = "track-tag-mapping-";
-    
+
     // those attributes holds string values (track holds relational Uids)
     protected $album;
-    
+
     public $idx;
-    
+
     public $mostScored;
     protected $totalTracks;
     protected $audioBitrateMode;
-    
+
     public function __construct($rawTagArray, $idx, $config, $container) {
         $this->config = $config;
         $this->idx = $idx;
         $this->rawTagRecord = $rawTagArray;
-        
-        
+
+
         $this->container = $container;
         $this->db = $container->db;
         $this->ll = $container->ll;
@@ -53,12 +53,12 @@ class TrackContext extends \Slimpd\Models\Track {
             $rawTagBlob = $this->container->rawtagblobRepo->getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
         }
         $data = gzuncompress($rawTagBlob->getTagData());
-        
+
         $data = unserialize($data);
         $this->rawTagArray = $data;
         $this->process();
     }
-    
+
     protected function process() {
         $this->copyBaseProperties();
         $this->configBasedSetters();
@@ -143,7 +143,7 @@ class TrackContext extends \Slimpd\Models\Track {
             $tests[$this->idx]->scoreMatches($this, $albumContext, $jumbleJudge);
         }
     }
-    
+
     public function postProcessProperties() {
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteVariousArtists($this);
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteNumericArtists($this);
@@ -194,7 +194,7 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->setFeaturedArtistsAndRemixers()
             ->setLabelUid( join(",", $this->container->labelRepo->getUidsByString($this->getLabel())))
             ->setGenreUid( join(",", $this->container->genreRepo->getUidsByString($this->getGenre())));
-            
+
         $track = $this->getTrackInstanceByContext();
 
         // set all artist uids of track-context that we can do a vice-versa check for album-artists on album-context
@@ -210,7 +210,7 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->container->trackRepo->ensureRecordUidExists($track->getUid());
         $this->container->trackRepo->update($track);
     }
-    
+
     public function updateTrackIndex($useBatcher) {
         $indexChunks = $this->getRelPath() . " " .
             str_replace(

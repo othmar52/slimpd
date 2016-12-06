@@ -95,7 +95,7 @@ class JumbleJudge {
             // get the most occuring testresult
             $relevant = uniqueArrayOrderedByRelevance($result);
             $mostSimilarity = array_shift($relevant);
-            
+
             // count items which has this most occuring result
             $counter = 0;
             foreach($tests as $test) {

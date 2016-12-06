@@ -21,7 +21,7 @@ namespace Slimpd\Repositories;
 class DirectoryRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'noDatabaseTable';
     public static $classPath = '\Slimpd\Models\Directory';
-    
+
     public function create($dirPath) {
         #$classPath = self::getClassPath();
         return new \Slimpd\Models\Directory($dirPath);
@@ -41,6 +41,7 @@ class DirectoryRepo extends \Slimpd\Repositories\BaseRepository {
         return TRUE;
     }
     public function fetchRenderItems(&$renderItems, $directoryInstance) {
+        useArguments($renderItems, $directoryInstance);
         return;
     }
 }

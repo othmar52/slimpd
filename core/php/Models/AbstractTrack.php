@@ -31,7 +31,7 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
     protected $catalogNr;
 
     protected $error;
-    
+
     // getter
     public function getTitle() {
         return $this->title;
@@ -52,7 +52,7 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
     public function getError() {
         return $this->error;
     }
-    
+
     // setter
     public function setTitle($value) {
         $this->title = $value;

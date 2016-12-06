@@ -20,11 +20,11 @@ namespace Slimpd\Repositories;
 class AlbumRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'album';
     public static $classPath = '\Slimpd\Models\Album';
-    
+
     #public function __construct($container) {
     #    parent::__construct($container);
     #}
-    
+
     public function getAlbumByRelPath($relPath) {
         $query = "
             SELECT * 
@@ -50,21 +50,21 @@ class AlbumRepo extends \Slimpd\Repositories\BaseRepository {
             }
             $renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
         }
-        
+
         foreach(trimExplode(",", $albumInstance->getGenreUid(), TRUE) as $genreUid) {
             if(isset($renderItems["genres"][$genreUid]) === TRUE) {
                 continue;
             }
             $renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
         }
-        
+
         foreach(trimExplode(",", $albumInstance->getLabelUid(), TRUE) as $labelUid) {
             if(isset($renderItems["labels"][$labelUid]) === TRUE) {
                 continue;
             }
             $renderItems["labels"][$labelUid] = $this->container->labelRepo->getInstanceByAttributes(["uid" => $labelUid]);
         }
-        
+
         return;
     }
 

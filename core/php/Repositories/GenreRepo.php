@@ -20,7 +20,7 @@ namespace Slimpd\Repositories;
 class GenreRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'genre';
     public static $classPath = '\Slimpd\Models\Genre';
-    
+
     public function fetchRenderItems(&$renderItems, $genreInstance) {
         $renderItems["genres"][$genreInstance->getUid()] = $genreInstance;
         foreach(trimExplode(",", $genreInstance->getTopArtistUids(), TRUE) as $artistUid) {
@@ -37,7 +37,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         }
         return;
     }
-    
+
     protected static function unifyItemnames($genres) {
         $return = array();
         foreach($genres as $az09 => $genreString) {
@@ -140,7 +140,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         $chunks = trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE);
         foreach($chunks as $chunk) {
             $az09 = az09($chunk);
-            
+
             if(isset($this->importerCache[$classPath]["unified"][$az09])) {
                 $finalGenres[$az09] = $this->importerCache[$classPath]["unified"][$az09];
                 $itemString = str_ireplace($chunk, "", $itemString);
@@ -162,7 +162,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
             cliLog("  BAD-CHUNK: $chunk - entering phase 4...", 7);
             $badChunk = TRUE;
         }
-        
+
     }
 
     public function parseGenreStringPhase4(&$itemString, &$finalGenres, &$badChunk) {
@@ -213,7 +213,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
             return $finalGenres; 
         }
         $joinedChunkRest = strtolower(join(".", $chunks));
-        
+
         if(isset($this->importerCache[$classPath]["preserve"][$joinedChunkRest]) === TRUE) {
             $finalGenres[az09($joinedChunkRest)] = $this->importerCache[$classPath]["preserve"][$joinedChunkRest];
             cliLog("  found genre based on full preserved pattern: $joinedChunkRest = ".$this->importerCache[$classPath]["preserve"][$joinedChunkRest], 7);
@@ -251,16 +251,16 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
     // check for all uppercase or all lowercase and do apply corrections
     public static function cleanUpGenreStringArray($input) {
         $output = array();
-        
+
         if(count($input) == 0) {
             return array("unknown" => "Unknown");
         }
-        
+
         // "Unknown" can be dropped in case we have an additional genre-entry 
         if(count($input) > 1 && $idx = array_search("Unknown", $input)) {
             unset($input[$idx]);
         }
-        
+
         foreach($input as $item) {
             if(strlen($item) < 2) {
                 continue;
@@ -281,10 +281,10 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
             $output['deephouse'] = "Deep House";
         }
         */
-        
+
         return $output;
     }
-    
+
     public function getUidsByString($itemString) {
         $this->cacheUnifier(self::$classPath);
         $this->buildPreserveCache(self::$classPath);
@@ -299,11 +299,11 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         // string beautyfying & 1 workaround for a parser bug
         $genreStringArray = self::cleanUpGenreStringArray($genreStringArray);
 
-        
+
         #echo "input: $itemString\nresul: " . join(' || ', $genreStringArray) . "\n-------------------\n";
         #ob_flush();
 
-        
+
         $itemUids = array();
         foreach($genreStringArray as $az09 => $genreString) {
 
@@ -314,7 +314,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
                 $itemUids[$itemUid] = $itemUid;
                 continue;
             }
-            
+
             $query = "SELECT uid FROM genre WHERE az09=\"" . $az09 . "\" LIMIT 1;";
             $result = $this->db->query($query);
             $record = $result->fetch_assoc();
@@ -337,7 +337,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
             $itemUids[$itemUid] = $itemUid;
             $this->cacheWrite(self::$classPath, $az09, $itemUid);
         }
-        
+
         return $itemUids;
 
     }
@@ -352,7 +352,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         // we can only modify a copy and assign it back afterward (Indirect modification of overloaded property)
         $tmpArray = $this->importerCache;
         $tmpArray[$classPath]["preserve"] = array();
-        
+
         // build a special whitelist
         $recursiveIterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($this->conf['genre-preserve-junks']));
         foreach ($recursiveIterator as $leafValue) {

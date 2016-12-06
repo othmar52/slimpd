@@ -55,7 +55,7 @@ class AlbumMigrator___________DELETEME {
     protected $relDirPathHash;
     protected $relDirPath;
     public $directoryMtime;
-    
+
     public $conf;
 
     protected $tracks;
@@ -76,7 +76,7 @@ class AlbumMigrator___________DELETEME {
     protected $sources;
     protected $urls;
 
-    
+
     protected $mimeTypes;
     protected $audioBitrates;
     protected $audioBitrateModes;
@@ -85,10 +85,10 @@ class AlbumMigrator___________DELETEME {
     protected $audioEncoders;
     protected $audioLosslesss;
 
-    
+
     protected $totalTrackss;
 
-    
+
     protected $filenameCases;
 
     // extracted schemes for each track
@@ -105,7 +105,7 @@ class AlbumMigrator___________DELETEME {
     protected $uniRelAlbumSchemes;
     protected $uniRelNumberSchemes;
 
-    
+
     protected $extractedTrackNumbers;
     protected $extractedTotalTracks;
 
@@ -121,7 +121,7 @@ class AlbumMigrator___________DELETEME {
 
 
     public function run() {
-        
+
         // first of all - try to guess if this dir should be
         // treated as an album or as a bunch of loose tracks
         // further this method is adding score to several attributes which will be migrated to production db-table
@@ -130,12 +130,12 @@ class AlbumMigrator___________DELETEME {
 
         cliLog("handleAsAlbum " . (($this->handleAsAlbum)?"yes":"no") . " (SCORE: ".$this->handleAsAlbumScore.")", 3, 'purple');
 
-        
+
         #if($this->tracks[0]['relPath'] == 'newroot/crse002cd--Calibre-Musique_Concrete-2CD-CRSE002CD-2001-sour/101-calibre-deep_everytime.mp3') {
             #print_r($this->r); die();
         #}
 
-        
+
         // extract some attributes from tracks
         // those will be used for album stuff
         $mergedFromTracks = array(
@@ -183,7 +183,7 @@ class AlbumMigrator___________DELETEME {
         // add the whole bunch of valid and invalid attributes to albumindex table
         $this->updateAlbumIndex($albumUid);
 
-        
+
 
         foreach($this->tracks as $idx => $rawTagData) {
             $track = $this->migrateNonGuessableData($rawTagData)
@@ -210,7 +210,7 @@ class AlbumMigrator___________DELETEME {
 
             // make sure extracted images will be referenced to an album
             \Slimpd\Models\Bitmap::addAlbumUidToTrackUid($track->getUid(), $albumUid);#
-            
+
             // add the whole bunch of valid and indvalid attributes to trackindex table
             $this->updateTrackIndex($track->getUid(), $idx);
         }
@@ -252,7 +252,7 @@ class AlbumMigrator___________DELETEME {
             $this->mostScored['album']['label'] = \Slim\Slim::getInstance()->ll->str("importer.unknownlabel");
         }
         $rgx = new \Slimpd\Utilities\RegexHelper();
-        
+
         // last fixes :)                                   hopefully...
         foreach($this->mostScored as $idx => $item) {
             if($idx === 'album') {
@@ -279,7 +279,7 @@ class AlbumMigrator___________DELETEME {
         }
     }
 
-    
+
     /**
      * can be used for processing artist or title tag
      * TODO: remove title-score for "AudioTrack XX", "Unbekannter Titel", "Track XX", "Piste XX"
@@ -485,7 +485,7 @@ class AlbumMigrator___________DELETEME {
             }
         }
 
-        
+
         // remove various artists in case we find it in albumtitle
         if($idx == 'album' && isset($attrArray['title'])) {
             if(preg_match("/".$rgx->various.$rgx->glue. $rgx->anything.$rgx->dEndInsens, $attrArray['title'], $matches)) {
@@ -626,7 +626,7 @@ class AlbumMigrator___________DELETEME {
             return 'missing';
         }
 
-        
+
         #$result = "nomatch";
         #cliLog(__FUNCTION__ ." ".$result .": " . $value ,3 , 'red');
         #return $result;
@@ -778,7 +778,7 @@ class AlbumMigrator___________DELETEME {
                 }
             }
         }
-        
+
         $iHateRegex = array(
             // 01-Aaron_Dilloway-Untitled.mp3
             'classic' => $rgx->dStart.$rgx->num.$rgx->glue.$rgx->noMinus."-".$rgx->noMinus.$rgx->ext.$rgx->dEnd,
@@ -795,7 +795,7 @@ class AlbumMigrator___________DELETEME {
             // V.A. Brazilified - A1 - Mr Gone - Mosquito Coast
             'album-vinyl-artist-title' => $rgx->dStart.$rgx->noMinus.$rgx->glue.$rgx->vinyl.$rgx->glue.$rgx->noMinus.$rgx->glue.$rgx->noMinus.$rgx->ext.$rgx->dEnd,
 
-            
+
             // 05-Voodoo_Man.mp3
             'noartist' => $rgx->dStart.$rgx->num.$rgx->glue.$rgx->noMinus.$rgx->ext.$rgx->dEnd,
             // B2-Voodoo_Man_(Last_Break_Mix).mp3
@@ -917,7 +917,7 @@ class AlbumMigrator___________DELETEME {
         cliLog(__FUNCTION__ ."(" . $value . ") unknown",6 , 'red');
         return 'unknown';
     }
-    
+
     /**
      * in case we find ranges without gaps add aditional score
      * 
@@ -972,7 +972,7 @@ class AlbumMigrator___________DELETEME {
         return;
     }
 
-    
+
     /**
      * checks if passed number array is gapless
      * 
@@ -983,7 +983,7 @@ class AlbumMigrator___________DELETEME {
         $noGaps = range(1,max($numbers));
         return array_diff($noGaps,$numbers);
     }
-    
+
     /**
      * 
      * TODO: maybe this function is useful to identify missing tracks of an album!?

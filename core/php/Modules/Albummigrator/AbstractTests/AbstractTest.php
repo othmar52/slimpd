@@ -27,7 +27,7 @@ abstract class AbstractTest {
     public $trackContext;
     public $albumContext;
     public $jumbleJudge;
-    
+
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
         $this->input = $input;
         $this->trackContext = $trackContext;
@@ -35,8 +35,8 @@ abstract class AbstractTest {
         $this->jumbleJudge = $jumbleJudge;
         return $this;
     }
-    
+
     public function run() { }
-    
+
     public function scoreMatches() { }
 }

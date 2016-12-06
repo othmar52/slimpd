@@ -22,7 +22,7 @@ class MpdDatabaseParser {
     public $error = FALSE;
     public $gzipped = FALSE;
     protected $rawTagItem = FALSE;
-    
+
     protected $useBatcher = FALSE;
 
     // needed for traversing
@@ -50,7 +50,7 @@ class MpdDatabaseParser {
     public $itemsTotal = 0;
     public $itemsChecked = 0;
     public $itemsProcessed = 0;
-    
+
     protected $rawtagdataRepo;
 
     public function __construct($container, $dbFilePath) {
@@ -61,7 +61,7 @@ class MpdDatabaseParser {
         $this->rawtagdataRepo = $container->rawtagdataRepo;
         $this->filesystemUtility = $container->filesystemUtility;
         $this->batcher = $container->batcher;
-        
+
         // very first import may use filesystem timestamp as attribute:added instead of time()
         if($this->rawtagdataRepo->getCountAll() < 1
         && $this->conf["importer"]["use-filemtime-on-initial-import"] === "1") {
@@ -69,7 +69,7 @@ class MpdDatabaseParser {
         }
 
         $this->dbFile = $dbFilePath;
-        
+
         // batcher is only used on the very first import because we can be sure that no update of existing record is required
         if($this->rawtagdataRepo->getCountAll() < 1) {
             $this->useBatcher = TRUE;
@@ -273,7 +273,7 @@ class MpdDatabaseParser {
         $this->rawTagItem->setLastScan(0)
             ->setImportStatus(1)
             ->setExtension($this->filesystemUtility->getFileExt($this->rawTagItem->getRelPath()));
-            
+
         if($this->useBatcher === TRUE) {
             $this->batcher->que($this->rawTagItem);
         } else {

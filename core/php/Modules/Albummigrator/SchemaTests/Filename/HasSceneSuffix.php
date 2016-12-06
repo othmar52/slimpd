@@ -26,13 +26,13 @@ class HasSceneSuffix extends \Slimpd\Modules\Albummigrator\AbstractTests\Abstrac
     // TODO: it makes sense to weight a lot in case its the same but ignore in case its not the same suffix
     // for now dont weight at all for handleAsAlbum decision
     public $isAlbumWeight = 0.01;
-    
+
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
         parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
         $this->pattern = "/" . RGX::SCENE . RGX::EXT . "$/i";
         return $this;
     }
-    
+
     public function run() {
         if(preg_match($this->pattern, $this->input, $matches)) {
             $this->matches = $matches;

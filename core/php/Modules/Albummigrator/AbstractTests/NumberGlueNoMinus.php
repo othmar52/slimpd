@@ -30,13 +30,13 @@ use Slimpd\Utilities\RegexHelper as RGX;
 
 class NumberGlueNoMinus extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
     public $isAlbumWeight = 0.8;
-    
+
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
         parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
         $this->pattern = "/^" . RGX::MAY_BRACKET . RGX::NUM . RGX::MAY_BRACKET. RGX::GLUE . RGX::NO_MINUS . "$/i";
         return $this;
     }
-    
+
     public function run() {
         if(preg_match($this->pattern, $this->input, $matches)) {
             $this->matches = $matches;

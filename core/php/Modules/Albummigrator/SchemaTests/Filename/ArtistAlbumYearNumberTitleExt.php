@@ -24,14 +24,14 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 class ArtistAlbumYearNumberTitleExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
     public $isAlbumWeight = 0.6;
-    
+
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
         parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
         $this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NO_MINUS . RGX::GLUE .
             RGX::MAY_BRACKET . RGX::YEAR . RGX::MAY_BRACKET . RGX::NUM . RGX::GLUE . RGX::NO_MINUS . RGX::EXT . "$/";
         return $this;
     }
-    
+
     public function run() {
         if(preg_match($this->pattern, $this->input, $matches)) {
             $this->matches = $matches;
@@ -40,7 +40,7 @@ class ArtistAlbumYearNumberTitleExt extends \Slimpd\Modules\Albummigrator\Abstra
         }
         $this->result = 0;
     }
-    
+
     public function scoreMatches() {
         cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
         if(count($this->matches) === 0) {

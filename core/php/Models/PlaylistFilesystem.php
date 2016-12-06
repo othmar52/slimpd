@@ -35,7 +35,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
         $this->trackRepo = $container->trackRepo;
         $this->flash = $container->flash;
     }
-    
+
     public function load($relPath) {
         if($this->fsUtil->isInAllowedPath($relPath) === TRUE) {
             $this->setRelPath($relPath);

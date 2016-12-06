@@ -21,8 +21,8 @@ namespace Slimpd\Repositories;
 class TrackRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'track';
     public static $classPath = '\Slimpd\Models\Track';
-    
-    
+
+
     /**
      * in case tracks have been added via playlist containing absolute paths that
      * does not begin with mpd-music dir try to fix the path...
@@ -39,7 +39,7 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
         return $this->getNewInstanceWithoutDbQueries($pathString);
     }
 
-    
+
     public function getNewInstanceWithoutDbQueries($pathString) {
         $track = new \Slimpd\Models\Track();
         $track->setRelPath($pathString);
@@ -52,7 +52,7 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
         if(isset($renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()]) === FALSE) {
             $renderItems["itembreadcrumbs"][$trackInstance->getRelPathHash()] = \Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($trackInstance->getRelPath());
         }
-        
+
         $artistUidString = join(",", [$trackInstance->getArtistUid(), $trackInstance->getFeaturingUid(), $trackInstance->getRemixerUid()]);
         foreach(trimExplode(",", $artistUidString, TRUE) as $artistUid) {
             if(isset($renderItems["artists"][$artistUid]) === TRUE) {
@@ -60,25 +60,25 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
             }
             $renderItems["artists"][$artistUid] = $this->container->artistRepo->getInstanceByAttributes(["uid" => $artistUid]);
         }
-        
+
         if(isset($renderItems["albums"][$trackInstance->getAlbumUid()]) === FALSE) {
             $renderItems["albums"][$trackInstance->getAlbumUid()] = $this->container->albumRepo->getInstanceByAttributes(["uid" => $trackInstance->getAlbumUid()]);
         }
-        
+
         foreach(trimExplode(",", $trackInstance->getGenreUid(), TRUE) as $genreUid) {
             if(isset($renderItems["genres"][$genreUid]) === TRUE) {
                 continue;
             }
             $renderItems["genres"][$genreUid] = $this->container->genreRepo->getInstanceByAttributes(["uid" => $genreUid]);
         }
-        
+
         foreach(trimExplode(",", $trackInstance->getLabelUid(), TRUE) as $labelUid) {
             if(isset($renderItems["labels"][$labelUid]) === TRUE) {
                 continue;
             }
             $renderItems["labels"][$labelUid] = $this->container->labelRepo->getInstanceByAttributes(["uid" => $labelUid]);
         }
-        
+
         return;
     }
 }

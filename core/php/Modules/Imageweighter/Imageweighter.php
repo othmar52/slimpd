@@ -27,7 +27,7 @@ class Imageweighter {
         }
         $pathInfo = pathinfo($filename);
         $cleanFilename = az09($pathInfo['filename']);
-        
+
         if(array_key_exists($cleanFilename, self::$weights) === TRUE) {
             return $this::$weights[$cleanFilename];
         }
@@ -40,7 +40,7 @@ class Imageweighter {
         }
         $pathInfo = pathinfo($filename);
         $cleanFilename = az09($pathInfo['filename']);
-        
+
         if(array_key_exists($cleanFilename, self::$types) === TRUE) {
             return $this::$types[$cleanFilename];
         }
@@ -70,7 +70,7 @@ class Imageweighter {
         $typeArray = [];
         foreach($conf as $picturetype => $filenameArray) {
             foreach($filenameArray as $filename) {
-                
+
                 if(array_key_exists($filename, $typeArray) === FALSE) {
                     $typeArray[$filename] = $picturetype;
                     $weightArray[] = $filename;
@@ -78,7 +78,7 @@ class Imageweighter {
             }
         }
         $weightArray = array_flip($weightArray);
-        
+
         #echo "<pre>" . print_r($typeArray, 1);
         #echo "<pre>" . print_r($weightArray, 1);
         #echo "<pre>" . print_r($conf, 1); die();

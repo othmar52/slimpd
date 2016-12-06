@@ -61,7 +61,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
             ->setRelPath($record['relPath'])
             ->setLastScan(time())
             ->setImportStatus(2);
-        
+
         // TODO: handle not found files
         if(is_file($this->conf['mpd']['musicdir'] . $record['relPath']) === FALSE) {
             $rawTagData->setError('invalid file');
@@ -71,7 +71,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
         }
 
         $rawTagData->setFilesize( filesize($this->conf['mpd']['musicdir'] . $record['relPath']) );
-        
+
         // skip very large files
         // TODO: how to handle this?
         if($rawTagData->getFilesize() > 1000000000) {
@@ -88,7 +88,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
 
         // Write tagdata-array into sparata database table, gzipcompressed, serialized
         $this->createTagBlobEntry($record['uid'], $tagData);
-    
+
         // TODO: should we complete rawTagData with fingerprint on flac files?
         $this->container->rawtagdataRepo->update($rawTagData);
 
@@ -139,11 +139,11 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
         if(is_array($tagData['comments']['picture']) === FALSE) {
             return;
         }
-        
+
         $bitmapController = new \Slimpd\Modules\Bitmap\Controller($this->container);
         $phpThumb = $bitmapController->getPhpThumb();
         $phpThumb->setParameter('config_cache_directory', APP_ROOT.'localdata/embedded');
-        
+
         // loop through all embedded images
         foreach($tagData['comments']['picture'] as $bitmapIndex => $bitmapData) {    
             if(isset($bitmapData['image_mime']) === FALSE) {
@@ -154,7 +154,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
                 // skip missing datachunk
                 continue;
             }
-        
+
             $rawImageData = $bitmapData['data'];
             if(strlen($rawImageData) < 20) {
                 // skip obviously invalid imagedata
@@ -180,23 +180,23 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
                 cliLog("ERROR extracting embedded Bitmap! " . $e->getMessage(), 1, "red");
                 continue;
             }
-            
+
             $this->extractedImages ++;
-            
+
             if(is_file($phpThumb->cache_filename) === FALSE) {
                 // there had been an error
                 // TODO: how to handle this?
                 continue;
             }
-            
+
             // remove tempfiles of phpThumb
             $this->container->filesystemUtility->clearPhpThumbTempFiles($phpThumb);
-            
+
             $relPath = removeAppRootPrefix($phpThumb->cache_filename);
             $relPathHash = getFilePathHash($relPath);
-            
+
             $imageSize = GetImageSize($phpThumb->cache_filename);
-            
+
             $bitmap = new \Slimpd\Models\Bitmap();
             $bitmap->setRelPath($relPath)
                 ->setRelPathHash($relPathHash)
@@ -226,7 +226,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
                     self::getDominantColor($phpThumb->cache_filename, $imageSize[0], $imageSize[1])
                 )
                 ->setMimeType($imageSize['mime']);
-                
+
             # TODO: can we call insert() immediatly instead of letting check the update() function itself?
             # this could save performance...
             $this->container->bitmapRepo->update($bitmap);

@@ -81,7 +81,7 @@ class CompareBitmaps {
         }
         return $bits;
     }
-    
+
     public function compare($fileNameA, $fileNameB) {
         /*main function. returns the hammering distance of two images' bit value*/
         $imageA = $this->createImage($fileNameA);

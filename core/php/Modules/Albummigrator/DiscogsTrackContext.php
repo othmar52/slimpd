@@ -80,7 +80,7 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
             }
         }
     }
-    
+
     public function setIdx($value) {
         $this->idx = $value;
         return $this;

@@ -56,7 +56,7 @@ class Controller extends \Slimpd\BaseController {
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;
     }
-    
+
     public function albumTracksAction(Request $request, Response $response, $args) {
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
@@ -69,7 +69,7 @@ class Controller extends \Slimpd\BaseController {
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;
     }
-    
+
     public function widgetAlbumAction(Request $request, Response $response, $args) {
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
@@ -130,10 +130,10 @@ class Controller extends \Slimpd\BaseController {
         }
         $args['discogstracks'] = array();
         $args['matchmapping'] = array();
-        
+
         $discogsId = $request->getParam('discogsid');
         if($discogsId > 0) {
-            
+
             /* possible usecases:
              * we have same track amount on local side and discogs side
              *   each local track matches to one discogs track
@@ -150,7 +150,7 @@ class Controller extends \Slimpd\BaseController {
              * 
              * 
              */
-            
+
             // TODO: catch error in case we cant retrieve release informations (example discogsID : 777655 )
             $this->discogsitemRepo->retrieveAlbum($discogsId);
             #$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);

@@ -22,7 +22,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
      * @var \Slim\Interfaces\RouterInterface
      */
     protected $container;
-    
+
     public function __construct($container)
     {
         $this->container = $container;

@@ -21,7 +21,7 @@ use Slimpd\Utilities\RegexHelper as RGX;
 
 class HasSuffixedUrl extends \Slimpd\Modules\Albummigrator\AbstractTests\HasSuffixedUrl {
     public $isAlbumWeight = 0.1;
-    
+
     public function scoreMatches() {
         cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
         if(count($this->matches) === 0) {

@@ -145,7 +145,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
         ), __FUNCTION__);
     }
 
-    
+
 
     # TODO: it makes sense to search for other files (like discogs-links) during
     # this scan process to avoid multiple scan-processes of the same directory

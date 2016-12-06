@@ -23,7 +23,7 @@ class AlbumContext extends \Slimpd\Models\Album {
     protected $confKey = "album-tag-mapping-";
     protected $jumbleJudge;
     #public $sceneSuffix;
-    
+
     public function __construct($container) {
         $this->container = $container;
         $this->db = $container->db;
@@ -52,7 +52,7 @@ class AlbumContext extends \Slimpd\Models\Album {
             //->setLastScan($rawTagRecord['lastDirScan'])
             ;
     }
-    
+
     public function collectAlbumStuff(&$albumMigrator, &$jumbleJudge) {
         $this->jumbleJudge = $jumbleJudge;
         $dirname = unifyAll(basename($this->getRelPath()));

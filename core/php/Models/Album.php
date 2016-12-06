@@ -21,11 +21,11 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
     use \Slimpd\Traits\PropertyLastScan; // lastScan
     use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
 
-    
+
     protected $title;
     protected $year;
     protected $month;
-    
+
     protected $catalogNr;
 
     protected $added;

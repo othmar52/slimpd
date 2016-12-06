@@ -23,7 +23,7 @@ class BaseRepository {
     public $importerCache = array();
     protected $container;
     protected $db;
-    
+
     public function __construct(\Slim\Container $container) {
         $this->container = $container;
         #echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
@@ -192,14 +192,14 @@ class BaseRepository {
         if(count($attributeArray) < 1) {
             return $instance;
         }
-        
+
         #$database = $this->db;
         $query = "SELECT * FROM `". self::getTableName() ."` WHERE ";
         foreach($attributeArray as $key => $value) {
             $query .= '`' . $this->db->real_escape_string($key) . '`="' . $this->db->real_escape_string($value) . '" AND ';
         }
         $query = substr($query, 0, -5); // remove suffixed ' AND '
-        
+
         if($orderBy !== FALSE && is_string($orderBy) === TRUE) {
             # TODO: whitelist to avoid sql injection
             $query .= ' ORDER BY ' . $orderBy . ' ';
@@ -243,12 +243,12 @@ class BaseRepository {
         $class = get_called_class();
         return $class::$tableName;
     }
-    
+
     protected static function getClassPath() {
         $class = get_called_class();
         return $class::$classPath;
     }
-    
+
     public function mapArrayToInstance($array) {
         foreach($array as $dbField => $value) {
             $setter = 'set'.ucfirst($dbField);
@@ -355,7 +355,7 @@ class BaseRepository {
             if(method_exists($classPath, 'getRelPath') === TRUE) {
                 $instance = $this->$repoKey->getInstanceByAttributes(array('relPath' => $this->getRelPath()));
             }
-            
+
             if(method_exists($classPath, 'getAz09') === TRUE) {
                 $instance = $this->$repoKey->getInstanceByAttributes(array('az09' => $this->getAz09()));
             }
@@ -376,10 +376,10 @@ class BaseRepository {
         if(trim($itemString) === '') {
             return array($uidForUnknown => $uidForUnknown); // Unknown
         }
-        
+
         $tmp = get_called_class();
         $classPath = $tmp::$classPath;
-        
+
         $class = strtolower($classPath);
         if(preg_match("/\\\([^\\\]*)$/", $classPath, $matches)) {
             $class = strtolower($matches[1]);
@@ -391,7 +391,7 @@ class BaseRepository {
         $tmpGlue = "tmpGlu3";
         foreach(trimExplode($tmpGlue, str_ireplace($this->conf[$class . '-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
             $az09 = az09($itemPart);
-            
+
             if($az09 === '' || isHash($az09) === TRUE) {
                 // TODO: is there a chance to translate strings like HASH(0xa54fe70) to an useable string?
                 $itemUids[$uidForUnknown] = $uidForUnknown;
@@ -403,7 +403,7 @@ class BaseRepository {
                 $itemPart = $this->importerCache[$classPath]["unified"][$az09];
                 $az09 = az09($itemPart);
             }
-            
+
             // check if we alread have an id
             // permformance improvement ~8%
             $itemUid = $this->cacheRead($classPath, $az09);
@@ -487,7 +487,7 @@ class BaseRepository {
             $itemsperPage = 500;
         }
         $currentPage = ($currentPage < 1) ? 1 : $currentPage;
-        
+
         $query = "SELECT * FROM `". self::getTableName() . '`';
         // IMPORTANT TODO: validate orderBy to avoid sql injection
         switch($orderBy) {
@@ -503,7 +503,7 @@ class BaseRepository {
         $query .= ' LIMIT ' . $itemsperPage * ($currentPage-1) . ','. $itemsperPage ; // TODO: handle limit
         #echo $query; die();
         $result = $this->db->query($query);
-        
+
         $classPath = self::getClassPath();
 
         while($record = $result->fetch_assoc()) {
@@ -523,7 +523,7 @@ class BaseRepository {
         }
         return $result->fetch_assoc()['itemsTotal'];
     }
-    
+
     public function getRandomInstance() {
 
         // ORDER BY RAND is the killer on huge tables

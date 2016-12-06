@@ -195,10 +195,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     protected function querySphinxIndex($sphinxPdo, $typeString, $term, &$args) {
-
-        $start = 0;
         $itemsPerPage = 20;
-
         $typeIndex = ($typeString === 'all') ? 0 : $this->filterTypeMapping[$typeString];
         $args["timelog"][$typeString] = new \Slimpd\Modules\ExecutionTime\ExecutionTime();
         $args["timelog"][$typeString]->Start();
@@ -250,7 +247,7 @@ class Controller extends \Slimpd\BaseController {
             ]
         );
 
-        
+
         #if($args['useExactMatch'] === TRUE) {
         #    $args['useExactMatch'] = FALSE;
         #    // recursion with fuzzy search
@@ -349,13 +346,12 @@ class Controller extends \Slimpd\BaseController {
         $args["search"]["all"]["total"] = '?';
 
         $currentTypeString = $args['currentType'];
-        $curentTypeIndex = ($currentTypeString === 'all') ? 0 : $this->filterTypeMapping[$currentTypeString];
 
         // first query only the requested item type
         $this->querySphinxIndex($sphinxPdo, $currentTypeString, $term, $args);
 
         // in case we have enough time fetch totalCount for all remaining types
-        foreach($this->filterTypeMapping as $filterTypeString => $filterTypeIndex) {
+        foreach(array_keys($this->filterTypeMapping) as $filterTypeString) {
             if($currentTypeString === $filterTypeString) {
                 // we already queried this type
                 continue;
@@ -386,9 +382,8 @@ class Controller extends \Slimpd\BaseController {
 
         $term = cleanSearchterm($term);
         $args['useExactMatch'] = (preg_match("/^\".*\"$/", trim($originalTerm))) ? TRUE : FALSE;
-        $start =0;
-        $offset =20;
-        $current = 1;
+        $start = 0;
+        $offset = 20;
         $result = [];
 
         $sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
@@ -397,7 +392,7 @@ class Controller extends \Slimpd\BaseController {
             WHERE MATCH(:match)
             " . (($args["type"] !== "all") ? " AND type=:type " : "") . "
             GROUP BY itemuid,type
-            LIMIT $start,$offset
+            LIMIT " . $start . "," . $offset . "
             OPTION
             ranker = wordcount,
                 field_weights=(title=50, display=40, artist=30, allchunks=1);");

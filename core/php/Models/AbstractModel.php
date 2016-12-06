@@ -27,12 +27,12 @@ abstract class AbstractModel {
         $class = get_called_class();
         return $class::$tableName;
     }
-    
+
     public static function getRepoKey() {
         $class = get_called_class();
         return $class::$repoKey;
     }
-    
+
     public function mapArrayToInstance($array) {
         foreach($array as $dbField => $value) {
             $setter = 'set'.ucfirst($dbField);

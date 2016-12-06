@@ -21,7 +21,7 @@ namespace Slimpd\Repositories;
 class LabelRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'label';
     public static $classPath = '\Slimpd\Models\Label';
-    
+
     public function fetchRenderItems(&$renderItems, $labelInstance) {
         $renderItems["labels"][$labelInstance->getUid()] = $labelInstance;
         foreach(trimExplode(",", $labelInstance->getTopArtistUids(), TRUE) as $artistUid) {

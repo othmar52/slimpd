@@ -37,11 +37,11 @@ class Filebrowser {
         "other" => array(),
     );
     public $breadcrumb = array();
-    
+
     public $currentPage = 1;
     public $itemsPerPage = 20;
     public $filter = "";
-    
+
     public function __construct($container) {
         $this->container = $container;
     }
@@ -60,7 +60,7 @@ class Filebrowser {
 
         $files = scandir($base . $dir);
         natcasesort($files);
-        
+
         // determine which portion is requestet
         $minIndex = (($this->currentPage-1) * $this->itemsPerPage);
         $minIndex = ($minIndex === 0) ? 1 : $minIndex+1;
@@ -145,7 +145,7 @@ class Filebrowser {
     }
 
     protected function checkDirectoryAccess($requestedPath, $systemdir) {
-        
+
         if($this->container->conf["mpd"]["musicdir"] === "") {
             $this->container->flash->AddMessage("error", $this->container->ll->str("error.mpd.conf.musicdir"));
             return FALSE;
@@ -162,7 +162,7 @@ class Filebrowser {
         $base = $this->container->conf["mpd"]["musicdir"];
         $path = ($requestedPath === $base) ? "" : $path;
         $return = ["base" => $base, "dir" => $path];
-        
+
 
         // avoid path disclosure outside relevant directories
         if($realpath === FALSE && $systemdir === FALSE) {
@@ -174,7 +174,7 @@ class Filebrowser {
             $return['base'] = APP_ROOT;
             $realpath = realpath(APP_ROOT . $path) . DS;
         }
-        
+
         if($this->container->filesystemUtility->isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
             // TODO: remove this error message "outsiderealpath"! invaliddir should be enough
             // $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.outsiderealpath", [$realpath, $this->conf["mpd"]["musicdir"]]));
@@ -195,7 +195,7 @@ class Filebrowser {
 
         return $return;
     }
-    
+
     protected function getParentDirSelf($path) {
         $parentPath = dirname($path);
         $isSysDir = FALSE;
@@ -222,7 +222,7 @@ class Filebrowser {
         // iterate over parentdirectories until we find the inputdirectory +1
         $found = FALSE;
         foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
-            
+
             if($found === TRUE) {
                 return $this->getDirectoryContent($subDir->getRelPath());
             }
@@ -246,7 +246,7 @@ class Filebrowser {
         $parentDirectory = $this->getParentDirSelf($path);
 
         $prev = 0;
-        
+
         foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
             if($subDir->getRelPath()."/" === $path) {
                 if($prev === 0) {

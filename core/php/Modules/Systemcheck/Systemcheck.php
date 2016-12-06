@@ -27,7 +27,7 @@ class Systemcheck {
     protected $audioFormats;
     public $configLocalUrl;
 
-    
+
     public function __construct($container, $request) {
         $this->container = $container;
         $this->conf = $container->conf;
@@ -325,7 +325,7 @@ class Systemcheck {
 
         }
     }
-        
+
     protected function runAudioChecks(&$check) {
         if($check['skipAudioTests'] === TRUE) {
             return;

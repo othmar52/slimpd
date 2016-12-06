@@ -60,7 +60,7 @@ class Controller extends \Slimpd\BaseController {
             $args['plaintext'] = nfostring2html(file_get_contents($validPath));
         }
         $args['filepath'] = $relPath;
-        
+
         $this->view->render($response, 'modules/widget-plaintext.htm', $args);
         return $response->withHeader('Content-Type', 'text/css');
     }

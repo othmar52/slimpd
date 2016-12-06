@@ -24,7 +24,7 @@ class Editorial extends \Slimpd\Models\AbstractModel {
     protected $itemUid;
     protected $column;
     protected $value;
-    
+
     use \Slimpd\Traits\PropGroupRelPath; // $relPath, $relPathHash
     use \Slimpd\Traits\PropertyFingerprint; // $fingerprint
 

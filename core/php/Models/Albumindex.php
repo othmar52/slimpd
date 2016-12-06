@@ -21,7 +21,7 @@ class Albumindex extends \Slimpd\Models\AbstractModel {
     protected $artist;
     protected $title;
     protected $allchunks;
-    
+
     public static $tableName = 'albumindex';
     public static $repoKey = 'albumindexRepo';
 

@@ -25,13 +25,13 @@ use Slimpd\Utilities\RegexHelper as RGX;
  */
 class ArtistNumberTitleSceneExt extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTest {
     public $isAlbumWeight = 0.8;
-    
+
     public function __construct($input, &$trackContext, &$albumContext, &$jumbleJudge) {
         parent::__construct($input, $trackContext, $albumContext, $jumbleJudge);
         $this->pattern = "/^" . RGX::NO_MINUS . RGX::GLUE . RGX::NUM . "-" . RGX::NO_MINUS . RGX::SCENE . RGX::EXT . "$/i";
         return $this;
     }
-    
+
     public function run() {
         if(preg_match($this->pattern, $this->input, $matches)) {
             $this->matches = $matches;
@@ -40,7 +40,7 @@ class ArtistNumberTitleSceneExt extends \Slimpd\Modules\Albummigrator\AbstractTe
         }
         $this->result = 0;
     }
-    
+
     public function scoreMatches() {
         cliLog(get_called_class(),10, "purple"); cliLog("  INPUT: " . $this->input, 10);
         if(count($this->matches) === 0) {

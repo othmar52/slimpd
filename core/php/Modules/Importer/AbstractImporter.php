@@ -30,7 +30,7 @@ abstract class AbstractImporter {
     protected $itemsChecked = 0;
     protected $itemsProcessed = 0;
     protected $itemsTotal = 0;
-    
+
     public function __construct($container) {
         $this->container = $container;
         $this->db = $container->db;
@@ -44,7 +44,7 @@ abstract class AbstractImporter {
         $this->jobBegin = getMicrotimeFloat();
         $this->itemsChecked = 0;
         $this->itemsProcessed = 0;
-        
+
         $relPath = (isset($data['relPath']) === TRUE)
             ? $this->db->real_escape_string($data['relPath'])
             : '';
@@ -100,7 +100,7 @@ abstract class AbstractImporter {
             SET jobEnd=".$microtime.",
             jobLastUpdate=".$microtime.",
             jobStatistics='" .serialize($data)."' WHERE uid=" . $this->jobUid;
-        
+
         $this->db->query($query);
         $this->jobUid = 0;
         $this->itemsChecked = 0;

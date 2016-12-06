@@ -61,7 +61,7 @@ class AlbumMigrator {
             // do some voting for each attribute
             $this->runAttributeScoring();
         }
-        
+
         // 
         // direcory path is the same for all tracks. copy from first rawTagItem
         $this->albumContextItem->copyBaseProperties($this->rawTagItems[0]);
@@ -183,7 +183,7 @@ class AlbumMigrator {
         cliLog('  final album artists: Various Artists', 10);
         // set "various Artists"
         $this->injectAlbumArtistUid([11]);
-        
+
     }
 
     /**
@@ -268,7 +268,7 @@ class AlbumMigrator {
         $this->directoryMtime = $value;
         return $this;
     }
-    
+
 
     protected $relDirPath;
     protected $relDirPathHash;

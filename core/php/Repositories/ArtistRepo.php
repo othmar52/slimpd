@@ -20,7 +20,7 @@ namespace Slimpd\Repositories;
 class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'artist';
     public static $classPath = '\Slimpd\Models\Artist';
-    
+
 
     public function fetchRenderItems(&$renderItems, $artistInstance) {
         $renderItems["artists"][$artistInstance->getUid()] = $artistInstance;
@@ -38,7 +38,7 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
         }
         return;
     }
-    
+
     protected static function unifyItemnames($items) {
         $return = array();
         foreach($items as $az09 => $itemString) {

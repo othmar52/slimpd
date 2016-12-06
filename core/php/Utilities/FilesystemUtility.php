@@ -46,7 +46,7 @@ class FilesystemUtility {
         $ext = pathinfo($filePath, PATHINFO_EXTENSION);
         return ($toLower === TRUE) ? strtolower($ext) : $ext;
     }
-    
+
     function getFileRealPath($pathString) {
         $mpdConf = $this->conf['mpd'];
         foreach(["alternative_musicdir", "musicdir"] as $confName) {
@@ -56,7 +56,7 @@ class FilesystemUtility {
         }
         return FALSE;
     }
-    
+
     /**
      * checks if file path or directory path is within allowed direcories
      */
@@ -107,7 +107,7 @@ class FilesystemUtility {
 
     function getMimeType($filename) {
         $mimeExtensionMapping = parse_ini_file(APP_ROOT . "core/config/mimetypes.ini", TRUE);
-    
+
         //Get Extension
         $ext = $this->getFileExt($filename);
         if(empty($ext)) {
@@ -137,11 +137,11 @@ class FilesystemUtility {
         rmdir($dir);
     }
 
-    
+
     function unlink($filePath) {
         unlink($filePath);
     }
-    
+
     /**
      * performs check if ifle is within application directory and deletes the file
      */
@@ -173,7 +173,7 @@ class FilesystemUtility {
     function testBinary($filePath) {
         // return mime type ala mimetype extension
         $finfo = finfo_open(FILEINFO_MIME);
-    
+
         //check to see if the mime-type starts with "text"
         return (substr(finfo_file($finfo, $filePath), 0, 4) == "text") ? FALSE : TRUE;
     }

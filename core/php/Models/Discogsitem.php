@@ -24,7 +24,7 @@ class Discogsitem extends \Slimpd\Models\AbstractModel {
     protected $response;
     public $trackstrings;
     public $albumAttributes;
-    
+
     public static $tableName = 'discogsapicache';
     public static $repoKey = 'discogsitemRepo';
 

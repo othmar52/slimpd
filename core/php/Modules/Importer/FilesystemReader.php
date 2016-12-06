@@ -18,19 +18,19 @@ namespace Slimpd\Modules\Importer;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
-    
+
     // a whitelist with common directory names like "cover", "artwork" 
     protected $artworkDirNames = array();
 
     // a list with real existing directories which maches whitelist entries 
     protected $artworkDirCache = array();
-    
+
     // a list with filepaths of already scanned directories
     protected $dirImgCache = array();
 
     // result
     public $foundImgPaths = array();
-    
+
     protected function getCachedOrScan($dirPath) {
         $dirHash = getFilePathHash($dirPath);
         // make sure that a single directory will not be scanned twice
@@ -65,7 +65,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
     public function getFilesystemImagesForMusicFile($musicFilePath) {
         // reset result
         $this->foundImgPaths = [];
-        
+
         // makes sure we have pluralized common directory names
         $this->pluralizeArtworkDirNames();
 
@@ -140,8 +140,8 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
             $this->artworkDirNames[] = az09($dirname) . 's';
         }
     }
-    
-    
+
+
     /**
      * getDirectoryFiles() read all files of given directory without recursion
      * @param $dir (string): Directory to search
@@ -185,7 +185,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
             }
             $foundFiles[] = (($addFilePath == TRUE)? $dir : "") . $file;
         }
-    
+
         finfo_close($finfo);
         closedir($handle);
         return $foundFiles;

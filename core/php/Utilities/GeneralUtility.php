@@ -90,12 +90,12 @@ function parseMetaForTotal($metaArray) {
 function getSphinxMatchSyntax(array $terms, $useExactMatch = FALSE) {
     $groups = [];
     foreach($terms as $term) {
-        
+
         #$groups[] = "('\"". $term ."\"')";
         ##$groups[] = "('\"". str_replace(" ", "*", $term) ."\"')";
         ##$groups[] = "('\"". str_replace(" ", ",", $term) ."\"')";
         ##$groups[] = "('\"". str_replace(" ", " | ", $term) ."\"')";
-        
+
         $groups[] = "('@* ". join(" ", $terms) ."')";
         $groups[] = "(' \"". addStars($term) . "\"')";
         if($useExactMatch === FALSE) {
@@ -324,7 +324,7 @@ function MakeSuggestion($keyword, $sphinxPDO, $force = FALSE) {
             return $suggested;
         }
     }
-    
+
     return $keyword;
 }
 
@@ -351,7 +351,7 @@ function MakePhaseSuggestion($words, $query, $sphinxPDO, $force = FALSE) {
             $mismatches[] = $word["keyword"];
         }
     }
-    
+
     if(count($mismatches) < 1) {
         return FALSE;
     }

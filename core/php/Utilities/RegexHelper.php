@@ -36,17 +36,17 @@ class RegexHelper {
     const ANYTHING= "(.*)";
     const MAY_BRACKET = "(?:[\(\)\[\]]{0,1})?";
     const URL = "((?:http|https)\:\/\/(?:[^\s]+))";
-    
+
     const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
-    
+
     const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
     const REMIX1 = "(.*)(?:\(|\ -\ )(.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ vip|\ remake|\ instrumental|\ radio\ edit|\ edit)";
     const REMIX2 = "(.*)(remix\ by\ |rmx\ by\ |remixed\ by\ |remixedby\ |mixed\ by\ |compiled\ by\ |arranged\ by\ )(.*)\)?";
-    
+
     public static function seemsYeary($input) {
         return ($input > 1900 && $input < date("Y")+1 )? TRUE : FALSE;
     }
-    
+
     public static function seemsCatalogy($input) {
         $input = preg_replace('/[^A-Z0-9]/', "", strtoupper($input));
         if(preg_match("/". $this->catNr."/", $input)) {
@@ -54,7 +54,7 @@ class RegexHelper {
         }
         return FALSE;
     }
-    
+
     public static function seemsTitly($input) {
         $blacklist = array(
             'various',
@@ -67,7 +67,7 @@ class RegexHelper {
         }
         return TRUE;
     }
-    
+
     public static function seemsArtistly($input) {
         $blacklist = array(
             'various',

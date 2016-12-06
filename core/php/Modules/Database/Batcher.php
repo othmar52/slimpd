@@ -29,7 +29,7 @@ class Batcher {
     protected $nextUid = array();
     protected $instances = array();
     protected $treshold = 1000;
-    
+
     public function __construct($container) {
         $this->db = $container->db;
     }
@@ -76,7 +76,7 @@ class Batcher {
         // recursion - now the id should be there
         $this->mayAddUid($instance, $tableName);
     }
-    
+
     protected function checkQueue($tableName) {
         if(count($this->instances[$tableName]) >= $this->treshold) {
             $this->insertBatch($tableName);
@@ -94,7 +94,7 @@ class Batcher {
         $counter = 0;
         foreach($this->instances[$tableName] as $instance) {
             $mapped = $instance->mapInstancePropertiesToDatabaseKeys(FALSE);
-            
+
             // TODO: remove track.relDirPath (caused by abstraction ???)
             // TODO: remove album.relDirPath (caused by abstraction ???)
             // for now use this ugly hack...
@@ -121,7 +121,7 @@ class Batcher {
         $this->db->query($query);
         $this->instances[$tableName] = array();
     }
-    
+
     public function finishAll() {
         foreach(array_keys($this->instances) as $tableName) {
             $this->insertBatch($tableName);

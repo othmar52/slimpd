@@ -20,7 +20,7 @@ namespace Slimpd\Repositories;
 class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'bitmap';
     public static $classPath = '\Slimpd\Models\Bitmap';
-    
+
 
     public function searchUidBeforeInsert(&$instance) {
         if($instance->getUid() > 0) {
@@ -40,13 +40,13 @@ class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
         }
         return;
     }
-    
+
     public function update(&$instance) {
         $this->searchUidBeforeInsert($instance);
         if($instance->getUid() < 1) {
             return $this->insert($instance);
         }
-        
+
         $query = 'UPDATE '.self::$tableName .' SET ';
         foreach($instance->mapInstancePropertiesToDatabaseKeys() as $dbfield => $value) {
             $query .= $dbfield . '="' . $this->db->real_escape_string($value) . '",';
@@ -54,18 +54,18 @@ class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
         $query = substr($query,0,-1) . ' WHERE uid=' . (int)$instance->getUid() . ";";
         $this->db->query($query);
     }
-    
+
     public function destroy($instance) {
         if($instance->getUid() < 1) {
             // invalid instance
             return FALSE;
         }
-        
+
         if($instance->getEmbedded() < 1) {
             // currently it is only allowed to delete images extracted from musicfiles
             return FALSE;
         }
-        
+
         if(!$instance->getRelPath()) {
             // invalid instance 
             return FALSE;
@@ -75,7 +75,7 @@ class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
         $this->db->query($query);
         return TRUE;
     }
-    
+
     public function addAlbumUidToRelDirPathHash($relDirPathHash, $albumUid) {
         # blind adding albumUid - no matter if it a record is affected or not..
         # TODO: does it matter or not?

@@ -192,7 +192,7 @@ class Mpd {
 
         // validate commands
 
-        
+
         $firePlay = $this->getFirePlay($cmd);
         $targetPosition = $this->getTargetPosition($cmd);
         $itemPath = $this->getItemPath($item);
@@ -471,7 +471,7 @@ class Mpd {
         return $counter;
     }
 
-        
+
 
     //  +------------------------------------------------------------------------+
     //  | Music Player Daemon                                                    |
@@ -501,7 +501,7 @@ class Mpd {
             return FALSE;
         }
 
-        
+
 
         $line = trim(fgets($socket, 1024));
         if (substr($line, 0, 3) === 'ACK') {

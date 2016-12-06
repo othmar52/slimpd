@@ -42,16 +42,16 @@ class Track extends \Slimpd\Models\AbstractTrack {
     /*
     # TODO: extract catNr from labelString
     public function setLabelAndCatalogueNr() {
-        
+
     }
     */
-    
+
     public function jsonSerialize() {
         return get_object_vars($this);
     }
 
 
-    
+
     //setter
     public function setFeaturingUid($value) {
         $this->featuringUid = $value;
@@ -61,10 +61,10 @@ class Track extends \Slimpd\Models\AbstractTrack {
         $this->remixerUid = $value;
         return $this;
     }
-    
+
 
     // ...
-    
+
     public function setDisc($value) {
         $this->disc = $value;
         return $this;
@@ -83,7 +83,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
         $this->isMixed = $value;
         return $this;
     }
-    
+
     public function setDiscogsId($value) {
         $this->discogsId = $value;
         return $this;
@@ -100,15 +100,15 @@ class Track extends \Slimpd\Models\AbstractTrack {
         $this->junoId = $value;
         return $this;
     }
-    
+
     public function setDynRange($value) {
         $this->dynRange = $value;
         return $this;
     }
-    
-    
-    
-    
+
+
+
+
     // getter
     public function getFeaturingUid() {
         return $this->featuringUid;
@@ -145,19 +145,19 @@ class Track extends \Slimpd\Models\AbstractTrack {
     public function getJunoId() {
         return $this->junoId;
     }
-    
+
     public function getDynRange() {
         return $this->dynRange;
     }
-    
-    
-    
+
+
+
     /* Testdata for development/debuggung only
-    
+
     #$artistString = "Ed Rush & Optical (Featuring Tali";
     #$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
     #$artistString = "Ed Rush & Optical ft Tali";
-    
+
     #$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
     #$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
     #$titleString = "Something About Love (Original Mix)";
@@ -180,14 +180,14 @@ class Track extends \Slimpd\Models\AbstractTrack {
     #$titleString = "Been a Long Time (Axwell Unreleased Remix)";
     #$titleString = "Feel 2009 (Deepside Deejays Rework)";
     #$titleString = "Jeff And Jane Hudson - Los Alamos";
-    
+
     #TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
     #TODO: $artistString = "Lionel Richie With Little Big Town";
     #TODO: $artistString = "B-Tight Und Sido";
     #TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
     #TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
     #TODO: $titleString = "Time To Remember - MAZTEK Remix"
-    
+
     # common errors in extracted artists
     # Rob Mello No Ears Vocal
     # Robin Dubstep
@@ -243,7 +243,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
     # (Holy Ghost Remix)
     # D-Region Full Vocal
 
-    
+
     #######################################################
     # special remixer Strings - currently ignored at all
     # TODO: try to extract relevant data
@@ -291,13 +291,13 @@ class Track extends \Slimpd\Models\AbstractTrack {
     # RemixedBy: Roland Schwarz & Parov Stelar
     # Engineer [Additional], Mixed By [Additional] - Tobi Neumann Vocals - Dinky
     # Vocals, Guitar - Stan Eknatz
-    
-    
-    
+
+
+
     #$artistString = "Ed Rush & Optical (Featuring Tali";
     #$artistString = "Swell Session & Berti Feat. Yukimi Nagano AND Adolf)";
     #$artistString = "Ed Rush & Optical ft Tali";
-    
+
     #$titleString = "The Allenko Brotherhood Ensemble Tony Allen Vs Son Of Scientists (Featuring Eska) - The Drum";
     #$titleString = "Don't Die Just Yet (The Holiday Girl-Arab Strap Remix)";
     #$titleString = "Something About Love (Original Mix)";
@@ -320,15 +320,15 @@ class Track extends \Slimpd\Models\AbstractTrack {
     #$titleString = "Been a Long Time (Axwell Unreleased Remix)";
     #$titleString = "Feel 2009 (Deepside Deejays Rework)";
     #$titleString = "Jeff And Jane Hudson - Los Alamos";
-    
+
     #TODO: $titleString = "Movement (Remixed By Lapsed & Nonnon";
     #TODO: $artistString = "Lionel Richie With Little Big Town";
     #TODO: $artistString = "B-Tight Und Sido";
     #TODO: $artistString = "James Morrison (feat. Jessie J)" // check why featArt had not been extracted
     #TODO: $titleString = "Moving Higher (Muffler VIP Mix)"
     #TODO: $titleString = "Time To Remember - MAZTEK Remix"
-                        
-        
+
+
      */
     protected function getTestData($index) {
         $tests = array(
@@ -368,9 +368,9 @@ class Track extends \Slimpd\Models\AbstractTrack {
             array("The Vision","Back In The Days (ft.Buggsy & Shadz & Scarz & Double KHK-SP)"),
             array("Crystal Clear", "No Sell Out (Xample & Sol Remi", "a_crystal_clear-no_sell_out_(xample_and_sol_remix).mp3", "iap001--industry_artists-crystal_clear_vs_xample_and_sol-iap001-vinyl-2005-obc"),
             array("Infuze", "Black Out (with TADT)"), // not solved yet
-            
+
         );
-        
+
         if(isset($tests[$index]) === TRUE) {
             return $tests[$index];
         }

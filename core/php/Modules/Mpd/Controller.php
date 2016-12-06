@@ -45,7 +45,7 @@ class Controller extends \Slimpd\BaseController {
                 array('uid' => $args['item']->getAlbumUid())
             );
         }
-        
+
         switch($args['pagenum']) {
             case 'current':
                 $currentPage = $this->mpd->getCurrentPlaylistCurrentPage();
@@ -57,10 +57,10 @@ class Controller extends \Slimpd\BaseController {
                 $currentPage = (int)$args['pagenum'];
                 break;
         }
-    
+
         $args['currentplaylist'] = $this->mpd->getCurrentPlaylist($currentPage);
         $args['currentplaylistlength'] = $this->mpd->getCurrentPlaylistLength();
-        
+
         // get all relational items we need for rendering
         $args['renderitems'] = $this->getRenderItems($args['item'], $args['nowplaying_album'], $args['currentplaylist']);
         $args['paginator'] = new \JasonGrimes\Paginator(

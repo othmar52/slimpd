@@ -415,7 +415,7 @@
         },
 
         spanIt : function(input, className) {
-            var darkList = ["ft", "feat", "and", "mp3", "flac", "mp4", "m4a"];
+            var darkList = ["ft", "feat", "and", "mp3", "flac", "mp4", "m4a", "ogg"];
             if(darkList.indexOf(input.toLowerCase()) > -1) {
                 className = "dark";
             }

@@ -88,7 +88,7 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
             if (self::addKeywordToSql($keyword, $freq, $usedKeywords) === FALSE) {
                 continue;
             }
-            
+
             $trigrams = buildTrigrams($keyword);
             $usedKeywords[$keyword] = NULL;
             fwrite($output, (($sectionCounter === 0) ? "INSERT INTO suggest VALUES\n" : ",\n"));
@@ -126,5 +126,5 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
         }
         return TRUE;
     }
-    
+
 }

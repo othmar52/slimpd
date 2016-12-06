@@ -30,7 +30,7 @@ class Controller extends \Slimpd\BaseController {
         $this->validateClientCommand('get_status');
         $args['decknum'] = $request->getParam('deck');
         $this->validateDeckParam($args['decknum']);
-        
+
         $args['item'] = $this->xwax->getCurrentlyPlayedTrack($args['decknum']);
         if($args['item'] !== NULL) {
             $args['renderitems'] = $this->getRenderItems($args['item']);

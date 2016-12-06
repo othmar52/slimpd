@@ -25,7 +25,7 @@ class Genre extends \Slimpd\Models\AbstractModel {
     protected $title;
     protected $parent;
     protected $az09;
-    
+
     public static $tableName = 'genre';
     public static $repoKey = 'genreRepo';
 

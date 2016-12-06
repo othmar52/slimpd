@@ -23,7 +23,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
     protected $imageSizes = array(35, 50,100,300,1000);
     protected $weightOrderBy;
-    
+
     public function __construct($container) {
         $this->container = $container;
         #var_dump($this->__get('conf')['images']['weightening']); die;
@@ -67,7 +67,7 @@ class Controller extends \Slimpd\BaseController {
         );
         return $response->withRedirect($uri, 403);
     }
-    
+
     public function bitmap(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
         $bitmap = $this->bitmapRepo->getInstanceByAttributes(
@@ -93,7 +93,7 @@ class Controller extends \Slimpd\BaseController {
         $bitmap->setRelPath($args['itemParams']);
         return $this->dump($bitmap, $args['imagesize'], $response);
     }
-    
+
     public function searchfor(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
         $filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader($this->container);
@@ -108,7 +108,7 @@ class Controller extends \Slimpd\BaseController {
         // pick a random image
         shuffle($images);
         $path = array_shift($images);
-        
+
         // redirect to image route with bitmap path
         $uri = $this->router->pathFor(
             'imagepath',
@@ -144,11 +144,11 @@ class Controller extends \Slimpd\BaseController {
         $imgDirecoryPrefix = ($bitmap->getTrackUid())
             ? APP_ROOT
             : $this->conf['mpd']['musicdir'];
-            
+
         $phpThumb = $this->getPhpThumb();    
         $phpThumb->setSourceFilename($imgDirecoryPrefix . $bitmap->getRelPath());
         $phpThumb->setParameter('config_output_format', 'jpg');
-        
+
         switch($imageSize) {
             case 35:
             case 50:
@@ -161,7 +161,7 @@ class Controller extends \Slimpd\BaseController {
                 $phpThumb->setParameter('w', 300);
         }
         $phpThumb->SetCacheFilename();
-        
+
         try {
             // check if we already have a cached image
             if(is_file($phpThumb->cache_filename) === FALSE || is_readable($phpThumb->cache_filename) === FALSE) {
@@ -197,12 +197,12 @@ class Controller extends \Slimpd\BaseController {
         #$phpThumb->resetObject();
         $phpThumb->setParameter('config_disable_debug', FALSE);
         $phpThumb->setParameter('config_document_root', APP_ROOT);
-        
+
         #$phpThumb->setParameter('config_high_security_enabled', TRUE);
-        
+
         $phpThumb->setParameter('config_imagemagick_path', '/usr/bin/convert');
         $phpThumb->setParameter('config_allow_src_above_docroot', true);
-        
+
         $phpThumb->setParameter('config_cache_directory', APP_ROOT .'localdata/cache');
         $phpThumb->setParameter('config_temp_directory',  APP_ROOT .'localdata/cache');
         $phpThumb->setParameter('config_cache_prefix', 'phpThumb_cache');

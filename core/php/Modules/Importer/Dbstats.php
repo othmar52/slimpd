@@ -41,14 +41,14 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             $query = "SELECT count(uid) AS itemsTotal FROM " . $table;
             $this->itemsTotal += $this->db->query($query)->fetch_assoc()['itemsTotal'];
         }
-        
+
         // collect all genreUids, labelUids, artistUids, remixerUids, featuringUids, albumUid provided by tracks
         $tables = array(
             'Artist' => array(),
             'Genre' => array(),
             'Label' => array()
         );
-        
+
         // "$all" is used for displaying current progress but not processed
         $all = array();
         $result = $this->db->query("SELECT uid,albumUid,artistUid,remixerUid,featuringUid,genreUid,labelUid,year FROM track");
@@ -91,7 +91,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             $this->appendTopRelations($tables, 'Artist', $itemUid, 'labels', $labelUids);
             $all['ar' . $itemUid] = NULL;
         }
-        
+
         foreach($genreUids as $itemUid) {
             $tables['Genre'][$itemUid]['tracks'][ $trackRow['uid'] ] = NULL;
             $tables['Genre'][$itemUid]['albums'][ $trackRow['albumUid'] ] = NULL;
@@ -100,14 +100,14 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             $this->appendTopRelations($tables, 'Genre', $itemUid, 'labels', $labelUids);
             $all['ge' . $itemUid] = NULL;
         }
-        
+
         foreach($labelUids as $itemUid) {
             $tables['Label'][$itemUid]['tracks'][ $trackRow['uid'] ] = NULL;
             $tables['Label'][$itemUid]['albums'][ $trackRow['albumUid'] ] = NULL;
             $tables['Label'][$itemUid]['years'][ $trackRow['year'] ] = NULL;
             $this->appendTopRelations($tables, 'Label', $itemUid, 'artists', $artistUids);
             $this->appendTopRelations($tables, 'Label', $itemUid, 'genres', $genreUids);
-            
+
             $all['la' . $itemUid] = NULL;
         }
     }
@@ -139,7 +139,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             $all['la' . $itemUid] = NULL;
         }
     }
-    
+
     protected function processCollectedData($tables) {
         foreach($tables as $className => $tableData) {
             cliLog("updating table:".$className." with trackCount and albumCount", 3);
@@ -154,7 +154,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
                 $this->setTopGenreUids($item, $className, $data);
                 $this->setTopLabelUids($item, $className, $data);
                 $this->setYearRange($item, $data);
-                
+
                 $repoKey = $item::$repoKey;
                 $this->container->$repoKey->update($item);
                 $this->itemsProcessed++;
@@ -189,7 +189,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
                 break;
             }
         }
-        
+
         $item->setTopArtistUids(trim($finalUids, ","));
     }
 
@@ -246,7 +246,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             }
             $finalYears[] = $year;
         }
-        
+
         if(count($finalYears) === 0) {
             return;
         }

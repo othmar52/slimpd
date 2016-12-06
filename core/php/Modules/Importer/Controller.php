@@ -25,11 +25,10 @@ class Controller extends \Slimpd\BaseController {
         useArguments($request, $response, $args);
         $args['action'] = 'importer';
         $args['servertime'] = time();
-        
+
         $query = "SELECT * FROM importer WHERE batchUid>0 ORDER BY batchUid DESC, jobPhase ASC LIMIT 200;";
         $result = $this->db->query($query);
         $showDetail = TRUE;
-        $running = TRUE;
         $batchBegin = 0;
         while($record = $result->fetch_assoc() ) {
             $record['jobStatistics'] = unserialize($record['jobStatistics']);

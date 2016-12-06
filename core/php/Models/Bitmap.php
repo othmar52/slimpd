@@ -23,7 +23,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
     protected $width;
     protected $height;
     protected $bghex;
-    
+
     protected $albumUid;
     protected $trackUid;
     protected $embedded;
@@ -32,7 +32,7 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
     protected $sorting;
     protected $hidden;
     protected $error;
-    
+
     public static $tableName = 'bitmap';
     public static $repoKey = 'bitmapRepo';
 

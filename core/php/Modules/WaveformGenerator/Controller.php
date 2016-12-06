@@ -37,8 +37,8 @@ class Controller extends \Slimpd\BaseController {
             // $response got returned so something went wrong...
             return $args['peakvalues'];
         }
-        
-        
+
+
         $args['color'] =  $this->conf['colors']['defaultwaveform'];
         $colorFor = $request->getParam('colorFor');
         if(in_array($colorFor, ['mpd', 'local', 'xwax']) === TRUE) {
@@ -48,7 +48,7 @@ class Controller extends \Slimpd\BaseController {
         $newResponse = $response->withHeader('Content-Type', 'image/svg+xml');
         return $newResponse;
     }
-    
+
     public function jsonAction(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
@@ -81,7 +81,7 @@ class Controller extends \Slimpd\BaseController {
         if(isValidFingerprint($WaveformGenerator->getFingerprint()) === 1) {
             return TRUE;
         }
-        
+
         $fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
         $fingerprint = $fileScanner->extractAudioFingerprint($WaveformGenerator->getAbsolutePath());
         if(isValidFingerprint($fingerprint) === 1) {

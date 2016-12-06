@@ -25,7 +25,7 @@ trait MigratorContext {
     protected $rawTagRecord; // database record as array
     protected $rawTagArray;    // unserialized array of field rawtagdata.tagData
     public $recommendations = array();
-    
+
     protected function configBasedSetters() {
         foreach($this->config as $confSection => $rawTagPaths) {
             if(preg_match("/^" . $this->confKey . "(.*)$/", $confSection, $matches)) {
@@ -33,7 +33,7 @@ trait MigratorContext {
             }
         }
     }
-    
+
     protected function runSetters($setterName, $rawTagPaths) {
         if(method_exists($this, $setterName) === FALSE) {
             cliLog(" invalid config. setter " . $setterName . " does not exists", 10, "red");
@@ -89,7 +89,7 @@ trait MigratorContext {
         if(trim($out) === '')    { return FALSE; }
         return unifyAll(strip_tags($out));
     }
-    
+
     public function recommend($properties, $score = 1) {
         cliLog("  " .get_called_class() . " recommendations", 10, "purple");
         foreach($properties as $setterName => $value) {
@@ -102,7 +102,7 @@ trait MigratorContext {
         }
         cliLog(" ", 10);
     }
-    
+
     /**
      * checks if array key exists before scoring
      */
@@ -127,7 +127,7 @@ trait MigratorContext {
         $this->recommendations[$setterName][$cleanValue] += $score;
     }
 
-    
+
     public function getMostScored($setterName) {
         // without recommendations return instance property
         if(array_key_exists($setterName, $this->recommendations) === FALSE) {
@@ -149,7 +149,7 @@ trait MigratorContext {
         $index = array_search($maxLength, $lengths);
         return $highestScore[$index];
     }
-    
+
     public function getAllRecommendations($setterName) {
         // without recommendations return instance property
         if(array_key_exists($setterName, $this->recommendations) === FALSE) {

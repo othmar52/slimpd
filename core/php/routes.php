@@ -116,7 +116,7 @@ $ctrlRoutes = [
         ['/xwax/launch', 'cmdLaunchAction'],
         ['/xwax/exit', 'cmdExitAction'],
         ['/djscreen', 'djscreenAction']
-        
+
     ],
 ];
 
