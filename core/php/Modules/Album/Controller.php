@@ -250,8 +250,9 @@ class Controller extends \Slimpd\BaseController {
         }
         // TODO: highlight all input fields that already has an editorial value
         $newResponse = $response;
-        return $newResponse->withJson(notifyJson("saved successful<br><strong>NOTE:</strong> you have to apply changes for taking effect", 'success'));
-        //return $this->remigrateAction($request, $response, $args);
+        return $newResponse->withJson(
+            notifyJson("saved successful<br><strong>NOTE:</strong> you have to apply changes for taking effect", 'success')
+        );
     }
 
 }
