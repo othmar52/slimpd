@@ -245,23 +245,19 @@
         triggerModalClickListener : function(e) {
             e.preventDefault();
             var $el = $(e.currentTarget);
-
             $.ajax({
                 url: $el.attr("data-href")
             }).done(function(response){
                 try {
-                    var notifyConf = JSON.parse(response);
-                    if (typeof notifyConf.notify !== "undefined") {
-                        window.sliMpd.checkNotify(response);
+                    if (typeof response.notify !== "undefined") {
+                        window.sliMpd.notify(response);
                         window.sliMpd.modal.$modal.modal("hide");
                         return;
                     }
                 } catch(e) {
                     //console.log(e + " no json response in SliMpd::checkNotify()");
                 }
-
                 window.sliMpd.modal.renderModalContent(response);
-
             }).fail(function() {
                 window.sliMpd.notifyError($el.attr("data-href"));
                 return;

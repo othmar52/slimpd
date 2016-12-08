@@ -50,19 +50,17 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function showplaintextAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request);
         $args['action'] = "showplaintext";
         $relPath = $args['itemParams'];
         $validPath = $this->container->filesystemUtility->getFileRealPath($relPath);
         if($validPath === FALSE) {
-            $this->container->flash->AddMessage('error', 'invalid path ' . $relPath);
-        } else {
-            $args['plaintext'] = nfostring2html(file_get_contents($validPath));
+            return deliverJson(notifyJson('invalid path ' . $relPath, 'danger'), $response);
         }
+        $args['plaintext'] = nfostring2html(file_get_contents($validPath));
         $args['filepath'] = $relPath;
-
         $this->view->render($response, 'modules/widget-plaintext.htm', $args);
-        return $response->withHeader('Content-Type', 'text/css');
+        return $response;
     }
 
     public function cleanRenameConfirmAction(Request $request, Response $response, $args) {
