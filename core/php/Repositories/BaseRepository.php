@@ -344,30 +344,13 @@ class BaseRepository {
         $instance->setUid($dummyInstance->getUid());
     }
 
-    public function delete() {
-        if($this->getUid() > 0) {
-            // we already have an uid ...
-        } else {
-            // check if we have a record with this path
-            $classPath = get_called_class();
-            $repoKey = $this->getClassPath();
-            $instance = new $classPath;
-            if(method_exists($classPath, 'getRelPath') === TRUE) {
-                $instance = $this->$repoKey->getInstanceByAttributes(array('relPath' => $this->getRelPath()));
-            }
-
-            if(method_exists($classPath, 'getAz09') === TRUE) {
-                $instance = $this->$repoKey->getInstanceByAttributes(array('az09' => $this->getAz09()));
-            }
-            if($instance !== NULL && $instance->getUid() > 0) {
-                $this->setUid($instance->getUid());
-            } else {
-                // no idea which database item should be deleted...
-                return FALSE;
-            }
+    public function delete(&$instance) {
+        $this->searchExistingUid($instance);
+        if($instance->getUid() < 1) {
+            return;
         }
         $this->db->query(
-            'DELETE FROM `'. self::getTableName() . '` WHERE uid=' . (int)$this->getUid()
+            'DELETE FROM `'. self::getTableName() . '` WHERE uid=' . (int)$instance->getUid()
         );
     }
 

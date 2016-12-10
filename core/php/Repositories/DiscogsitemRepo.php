@@ -50,7 +50,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         $counter = 0;
         foreach($instance->getResponse(TRUE)['tracklist'] as $idx => $trackData) {
             if($trackData['type_'] !== 'track') {
-                // skip stuff like type:heading @see: discogs-id: 1008775
+                // skip stuff like type:heading @see: discogs-release-id: 1008775
                 continue;
             }
             $this->trackContexts[$counter] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $counter, $this->container);
@@ -67,13 +67,9 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         );
         if($item !== NULL) {
             $instance->setResponse($item->getResponse());
-            return;    
+            return;
         }
-        $client = \Discogs\ClientFactory::factory([
-            'defaults' => [
-                'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
-            ]
-        ]);
+        $client = $this->getDiscogsClient();
 
         $getter = 'get' . ucfirst($instance->getType());
         $response = $client->$getter(['id' => $instance->getExtid()]);
@@ -82,6 +78,38 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         $instance->setResponse(serialize($response));
 
         $this->insert($instance);
+    }
+
+    protected function getDiscogsClient() {
+        $client = \Discogs\ClientFactory::factory([
+            'defaults' => [
+                'headers' => ['User-Agent' => $this->conf['discogsapi']['useragent']],
+                'auth' => 'oauth'
+            ]
+        ]);
+        $client = \Discogs\ClientFactory::factory([]);
+        $this->mayAttachOauth($client);
+        return $client;
+    }
+
+    public function mayAttachOauth(&$client) {
+        $oauthConf = array(
+            'consumer_key' => $this->conf['discogsapi']['consumer_key'],
+            'consumer_secret' => $this->conf['discogsapi']['consumer_secret']
+        );
+        $item = $this->getInstanceByAttributes(['type' => 'oauth_response_token']);
+        if($item === NULL) {
+            return;
+        }
+        $oauthConf['token'] = $item->getResponse();
+        $item = $this->getInstanceByAttributes(['type' => 'oauth_response_token_secret']);
+        if($item === NULL) {
+            return;
+        }
+        $oauthConf['token_secret'] = $item->getResponse();
+        $client->getHttpClient()->getEmitter()->attach(
+            new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauthConf)
+        );
     }
 
     public function guessTrackMatch(&$instance, $rawTagDataInstances) {

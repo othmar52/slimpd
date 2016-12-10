@@ -255,6 +255,10 @@
 						{% include 'modules/directorytracks.htm' %}
 					{% endif %}
 
+					{% if action == 'discogs.index' %}
+						{% include 'partials/discogs/index.htm' %}
+					{% endif %}
+
 					</div>
 {% if not nosurrounding %}
 				</div>

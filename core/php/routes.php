@@ -118,6 +118,10 @@ $ctrlRoutes = [
         ['/djscreen', 'djscreenAction']
 
     ],
+    'Discogs' => [
+        ['/discogs[/]', 'indexAction', 'discogs'],
+        ['/discogs/verify', 'verifyAction']
+    ],
 ];
 
 foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
