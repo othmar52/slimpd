@@ -1716,12 +1716,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7"
+                "reference": "50029c8a625bd3aaf9d6889da4570f9423b8e61a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/27695c0d8311a409b72781f57050e41eeaeda5c7",
-                "reference": "27695c0d8311a409b72781f57050e41eeaeda5c7",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/50029c8a625bd3aaf9d6889da4570f9423b8e61a",
+                "reference": "50029c8a625bd3aaf9d6889da4570f9423b8e61a",
                 "shasum": ""
             },
             "require": {
@@ -1778,7 +1778,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-05 20:32:33"
+            "time": "2016-12-06 18:33:04"
         },
         {
             "name": "slim/twig-view",
@@ -1936,12 +1936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a"
+                "reference": "e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/8ad862b98e8c0ea509a04242c454c97e1265bd9a",
-                "reference": "8ad862b98e8c0ea509a04242c454c97e1265bd9a",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1",
+                "reference": "e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1",
                 "shasum": ""
             },
             "require": {
@@ -1989,7 +1989,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-05 09:20:45"
+            "time": "2016-12-08 10:31:05"
         },
         {
             "name": "webfontkit/open-sans",

@@ -40,6 +40,14 @@ abstract class Twig_Template implements Twig_TemplateInterface
     }
 
     /**
+     * @internal this method will be removed in 2.0 and is only used internally to provide an upgrade path from 1.x to 2.0
+     */
+    public function __toString()
+    {
+        return $this->getTemplateName();
+    }
+
+    /**
      * Returns the template name.
      *
      * @return string The template name
@@ -125,7 +133,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 $this->parents[$parent] = $this->loadTemplate($parent);
             }
         } catch (Twig_Error_Loader $e) {
-            $e->setTemplateName(null);
+            $e->setSourceContext(null);
             $e->guess();
 
             throw $e;
@@ -165,7 +173,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, $blocks, false);
         } else {
-            throw new Twig_Error_Runtime(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('The template has no parent and no traits defining the "%s" block.', $name), -1, $this->getSourceContext());
         }
     }
 
@@ -206,8 +214,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
             try {
                 $template->$block($context, $blocks);
             } catch (Twig_Error $e) {
-                if (!$e->getTemplateName()) {
-                    $e->setTemplateName($template->getTemplateName());
+                if (!$e->getSourceContext()) {
+                    $e->setSourceContext($template->getSourceContext());
                 }
 
                 // this is mostly useful for Twig_Error_Loader exceptions
@@ -219,7 +227,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
                 throw $e;
             } catch (Exception $e) {
-                throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
+                throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getSourceContext(), $e);
             }
         } elseif (false !== $parent = $this->getParent($context)) {
             $parent->displayBlock($name, $context, array_merge($this->blocks, $blocks), false);
@@ -357,8 +365,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             return $this->env->loadTemplate($template, $index);
         } catch (Twig_Error $e) {
-            if (!$e->getTemplateName()) {
-                $e->setTemplateName($templateName ? $templateName : $this->getTemplateName());
+            if (!$e->getSourceContext()) {
+                $e->setSourceContext($templateName ? new Twig_Source('', $templateName) : $this->getSourceContext());
             }
 
             if ($e->getTemplateLine()) {
@@ -429,8 +437,8 @@ abstract class Twig_Template implements Twig_TemplateInterface
         try {
             $this->doDisplay($context, $blocks);
         } catch (Twig_Error $e) {
-            if (!$e->getTemplateName()) {
-                $e->setTemplateName($this->getTemplateName());
+            if (!$e->getSourceContext()) {
+                $e->setSourceContext($this->getSourceContext());
             }
 
             // this is mostly useful for Twig_Error_Loader exceptions
@@ -442,7 +450,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
 
             throw $e;
         } catch (Exception $e) {
-            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getTemplateName(), $e);
+            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $this->getSourceContext(), $e);
         }
     }
 
@@ -482,7 +490,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $item), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Variable "%s" does not exist.', $item), -1, $this->getSourceContext());
         }
 
         return $context[$item];
@@ -551,7 +559,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                     $message = sprintf('Impossible to access an attribute ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
                 }
 
-                throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
+                throw new Twig_Error_Runtime($message, -1, $this->getSourceContext());
             }
         }
 
@@ -570,7 +578,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s").', $item, gettype($object), $object);
             }
 
-            throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime($message, -1, $this->getSourceContext());
         }
 
         // object property
@@ -652,7 +660,7 @@ abstract class Twig_Template implements Twig_TemplateInterface
                 return;
             }
 
-            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $this->getTemplateName());
+            throw new Twig_Error_Runtime(sprintf('Neither the property "%1$s" nor one of the methods "%1$s()", "get%1$s()"/"is%1$s()" or "__call()" exist and have public access in class "%2$s".', $item, $class), -1, $this->getSourceContext());
         }
 
         if ($isDefinedTest) {
