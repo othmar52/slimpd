@@ -1,3 +1,53 @@
 <div class="row">
-	<div class="alert alert-warning">Sorry - Editing images is not implemented yet</div>
+	<div class="alert alert-warning">Sorry - Editing images is not implemented yet.<br>
+		The stuff you see below is currently under development...
+	</div>
+	{% if albumimages|length > 0 %}
+	{% for image in albumimages %}
+	<div class="col-md-2">
+	<a href="{{root}}image-1000/id/{{ image.uid }}"
+		data-toggle="lightbox"
+		data-type="image"
+		data-gallery="galname"
+		class="contain-img img-placeholder main-image"
+		style="background-image:url({{root}}image-300/id/{{ image.uid }});background-color:{{ image.bghex }};">
+	</a>
+	</div>
+	<div class="col-md-2">
+		<span class="uc small dark">Dimensions:</span> {{ image.width }} x {{ image.height }}<span class="dark">px</span>
+		<select class="form-control">
+			<option>Front</option>
+			<option>Back</option>
+		</select>
+
+		<div class="radio">
+			<label><input type="radio" name="primary">Primary</label>
+		</div>
+	</div>
+	{% endfor %}
+
+	{% else %}
+		<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
+	{% endif %}
+</div>
+<h2>Discogs Images</h2>
+<div class="row">
+	{% for image in discogsimages %}
+		{% if loop.index0 < 3 %}
+		<div class="col-md-2">
+			<a href="{{image.resource_url}}" target="_blank">
+				<img src="{{image.uri150}}" />
+			</a>
+		</div>
+		<div class="col-md-2">
+			<span class="uc small dark">Dimensions:</span> {{ image.width }} x {{ image.height }}<span class="dark">px</span>
+			<br>
+			<span>{{image.type}}</span>
+			<select class="form-control">
+				<option>Front</option>
+				<option>Back</option>
+			</select>
+		</div>
+		{% endif %}
+	{% endfor %}
 </div>

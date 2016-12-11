@@ -155,6 +155,7 @@ class Controller extends \Slimpd\BaseController {
             #$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
             $args['discogstracks'] = $this->discogsitemRepo->trackContexts;
             $args['discogsalbum'] = $this->discogsitemRepo->albumContext;
+            $args['discogsimages'] = $this->discogsitemRepo->images;
             $args['activeTab'] = 'discogs';
             $args['discogsid'] = $discogsId;
         }

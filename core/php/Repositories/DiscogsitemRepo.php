@@ -23,6 +23,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
     public static $classPath = '\Slimpd\Models\Discogsitem';
     public $trackContexts = array();
     public $albumContext;
+    public $images = array();
 
     public function retrieveAlbum($releaseId = FALSE) {
         if($releaseId === FALSE) {
@@ -55,6 +56,12 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
             }
             $this->trackContexts[$counter] = new \Slimpd\Modules\Albummigrator\DiscogsTrackContext($instance, $counter, $this->container);
             $counter++;
+        }
+
+        // add images array
+        $rawDiscogsData = $instance->getResponse(TRUE);
+        if(array_key_exists('images', $rawDiscogsData) === TRUE) {
+            $this->images = $rawDiscogsData['images'];
         }
     }
 
