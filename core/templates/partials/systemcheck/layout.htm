@@ -128,6 +128,26 @@
 	{% endif %}
 </ul>
 
+
+<h1 id="discogs">{{'syscheck.discogs'|ll}}</h1>
+<ul class="list-group">
+	{% for test in ['discogsConf', 'discogsAuth'] %}
+	{% if not sys[test].hide %}
+	<li class="list-group-item list-group-item-{{sys[test].status}}">
+		<h4 class="uc">
+			{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+			{{['syscheck.',test]|join|ll}}</h4>
+		{% if sys[test].skip %}
+			{{'syscheck.skipped'|ll}}
+		{% else %}
+			{% include 'partials/systemcheck/discogs/'~test~'-'~sys[test].status~'.htm' %}
+		{% endif %}
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+
+
 <h1>Environment</h1>
 <h6>TODO: check if php-pdo is enabled (if (class_exists('PDO')) )</h6>
 <h6>TODO: check locale settings to avoid errors caused by specialchars</h6>

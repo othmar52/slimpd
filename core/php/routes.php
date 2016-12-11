@@ -48,7 +48,7 @@ $ctrlRoutes = [
         ['/album/remigrate/{itemUid}', 'remigrateAction']
     ],
     'Systemcheck' => [
-        ['/systemcheck', 'runAction']
+        ['/systemcheck', 'runAction', 'systemcheck']
     ],
     'Playlist' => [
         ['/playlists', 'indexAction'],
@@ -119,7 +119,6 @@ $ctrlRoutes = [
 
     ],
     'Discogs' => [
-        ['/discogs[/]', 'indexAction', 'discogs'],
         ['/discogs/verify', 'verifyAction']
     ],
 ];

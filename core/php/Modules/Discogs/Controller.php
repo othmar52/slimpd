@@ -21,14 +21,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    public function indexAction(Request $request, Response $response, $args) {
-        useArguments($request);
-        $args["action"] = "discogs.index";
-
-        $args["authorized"] = ($this->checkApiAccess() === TRUE) ? 1 : 0;
-        $this->view->render($response, 'surrounding.htm', $args);
-        return $response;
-    }
 
     public function checkApiAccess() {
         try {
@@ -80,7 +72,7 @@ class Controller extends \Slimpd\BaseController {
         $this->discogsitemRepo->delete($reqTokenSecret);
 
         // redirect to indexAction
-        return $response->withRedirect($this->router->pathFor('discogs'), 301);
+        return $response->withRedirect($this->router->pathFor('systemcheck') . '#discogs', 301);
     }
 
     protected function persistOauthProperty($type, $value) {

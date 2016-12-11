@@ -28,7 +28,6 @@ class Controller extends \Slimpd\BaseController {
         $itemsPerPage = 18;
 
         $args['itemlist'] = $this->albumRepo->getAll($itemsPerPage, $args['currentPage'], $args['sort'] . " " . $args['direction']);
-        #die(__FUNCTION__);
         $args["totalresults"] = $this->albumRepo->getCountAll();
         $args["activesorting"] = $args['sort'] . "-" . $args['direction'];
 
