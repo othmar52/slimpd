@@ -2,52 +2,48 @@
 	<div class="alert alert-warning">Sorry - Editing images is not implemented yet.<br>
 		The stuff you see below is currently under development...
 	</div>
-	{% if albumimages|length > 0 %}
-	{% for image in albumimages %}
-	<div class="col-md-2">
-	<a href="{{root}}image-1000/id/{{ image.uid }}"
-		data-toggle="lightbox"
-		data-type="image"
-		data-gallery="galname"
-		class="contain-img img-placeholder main-image"
-		style="background-image:url({{root}}image-300/id/{{ image.uid }});background-color:{{ image.bghex }};">
-	</a>
-	</div>
-	<div class="col-md-2">
-		<span class="uc small dark">Dimensions:</span> {{ image.width }} x {{ image.height }}<span class="dark">px</span>
-		<select class="form-control">
-			<option>Front</option>
-			<option>Back</option>
-		</select>
-
-		<div class="radio">
-			<label><input type="radio" name="primary">Primary</label>
+	<hr />
+	<p>
+		Drag&amp;Drop to change sorting. The very first image will be used as primary album image
+		<button class="btn btn-default">Save sorting</button>
+		{% if discogsimages|length %}
+		<button class="btn btn-default pull-right">Download all Discogs images</button>
+		{% endif %}
+	</p>
+	<hr />
+	<div class="thumbs">
+		{% for image in albumimages %}
+		<div class="thumb">
+			<div class="contain-img img-placeholder"
+				style="background-image:url({{root}}image-300/id/{{ image.uid }});background-color:{{ image.bghex }};">
+				<div class="abs-center-wrap">
+					<div class="dimensions">{{ image.width }} <span class="dark">x</span> {{ image.height }}</div>
+				</div>
+			</div>
 		</div>
-	</div>
-	{% endfor %}
+		{% endfor %}
 
-	{% else %}
-		<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
-	{% endif %}
-</div>
-<h2>Discogs Images</h2>
-<div class="row">
-	{% for image in discogsimages %}
+		{% for image in discogsimages %}
 		{% if loop.index0 < 3 %}
-		<div class="col-md-2">
-			<a href="{{image.resource_url}}" target="_blank">
-				<img src="{{image.uri150}}" />
-			</a>
+		<div class="thumb not-downloaded">
+			<div class="contain-img img-placeholder"
+				style="background-image:url('{{image.uri150}}');background-color:#000000;">
+				<div class="abs-center-wrap hover-show">
+					<a href="#" class="btn btn-default">Download from Discogs</a>
+				</div>
+				<div class="abs-center-wrap">
+					<div class="dimensions">{{ image.width }} <span class="dark">x</span> {{ image.height }}</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-2">
-			<span class="uc small dark">Dimensions:</span> {{ image.width }} x {{ image.height }}<span class="dark">px</span>
-			<br>
-			<span>{{image.type}}</span>
-			<select class="form-control">
-				<option>Front</option>
-				<option>Back</option>
-			</select>
-		</div>
+		{#
+			{{image.resource_url}}
+			{{image.uri150}}
+			{{image.type}} 'primary', 'secondary'
+			{{image.width}}
+			{{image.height}}
+		#}
 		{% endif %}
 	{% endfor %}
+	</div>
 </div>

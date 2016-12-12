@@ -92,3 +92,45 @@
 .use-genre .checked {
     display: inline-block;
 }
+
+
+.thumb {
+    width: 180px;
+    height: 180px;
+    display:inline-block;
+    position: relative;
+    margin: 0 2em 2em 0;
+}
+
+.abs-center-wrap {
+    position: absolute;
+    left: 50%;
+    bottom: 0.5em;
+}
+.dimensions {
+    position: relative;
+    left: -50%;
+    background-color: #000000;
+    padding: 0.1em 0.4em;
+}
+
+.not-downloaded {
+    border: 5px solid yellow;
+}
+
+.abs-center-wrap.hover-show {
+    opacity: 0;
+    bottom: 4em;
+}
+
+
+.hover-show a {
+    position: relative;
+    left: -50%;
+    background-color: #000000;
+    padding: 0.1em 0.4em;
+}
+
+.thumb:hover .hover-show {
+    opacity: 1;
+}

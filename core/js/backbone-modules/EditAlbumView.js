@@ -147,6 +147,14 @@
                     that.highlightPhrases();
                 }
             }).disableSelection();
+
+           this.imageSortable = $(".thumbs", this.$el).sortable({
+                items: ".thumb",
+                placeholder: "thumb placeholder",
+                tolerance: "pointer",
+                forceHelperSize: true
+            }).disableSelection();
+
             this.rendered = true;
         },
 
