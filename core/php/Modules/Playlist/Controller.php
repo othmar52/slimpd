@@ -41,12 +41,10 @@ class Controller extends \Slimpd\BaseController {
 
         $itemsPerPage = $this->conf['mpd-playlist']['max-items'];
         $totalItems = $playlist->getLength();
-        if($request->getParam('page') === 'last') {
-            $currentPage = ceil($totalItems/$itemsPerPage);
-        } else {
-            $currentPage = $request->getParam('page');
-        }
-        $currentPage = ($currentPage) ? $currentPage : 1;
+        $currentPage = ($request->getParam('page') === 'last')
+            ? ceil($totalItems/$itemsPerPage)
+            : ($request->getParam('page')) ? $request->getParam('page') : 1;
+
         $minIndex = (($currentPage-1) * $itemsPerPage);
         $maxIndex = $minIndex +  $itemsPerPage;
 

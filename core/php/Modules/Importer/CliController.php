@@ -123,13 +123,12 @@ class CliController extends \Slimpd\BaseController {
         #$action = 'create';
 
         $controller = \Helper::getController($action, NULL);
-        if ($controller !== false) {
-            $controller->runStrategy();
-        } else {
+        if ($controller === false) {
             \Output::error('mmp: unknown command "' . $action . '"');
             \Helper::getController('help')->runStrategy();
             return $response;
         }
+        $controller->runStrategy();
 
         if($action !== 'init') {
             return $response;
@@ -158,7 +157,7 @@ class CliController extends \Slimpd\BaseController {
      * start from scratch by dropping and recreating database
      */
     public function hardResetAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request, $args);
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
         }
@@ -206,19 +205,8 @@ class CliController extends \Slimpd\BaseController {
         }
 
         // delete files created by sliMpd
-        foreach(['cache', 'embedded', 'peakfiles'] as $sysDir) {
-            $fileBrowser = new \Slimpd\Modules\Filebrowser\Filebrowser($this->container);
-            $fileBrowser->getDirectoryContent('localdata' . DS . $sysDir, TRUE, TRUE);
-            cliLog("Deleting files and directories inside ". 'localdata' . DS . $sysDir ."/");
-            foreach(['music','playlist','info','image','other'] as $key) {
-                foreach($fileBrowser->files[$key] as $file) {
-                    $this->filesystemUtility->rmfile(APP_ROOT . $file->getRelPath());
-                }
-            }
-            foreach($fileBrowser->subDirectories['dirs'] as $dir) {
-                $this->filesystemUtility->rrmdir(APP_ROOT . $dir->getRelPath());
-            }
-        }
+        $this->filesystemUtility->deleteSlimpdGeneratedFiles();
+
         $importer = new \Slimpd\Modules\Importer\Importer($this->container);
         $importer->triggerImport();
         self::deleteLockFile();
