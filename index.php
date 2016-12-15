@@ -34,6 +34,7 @@ require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
 foreach([
     'Utilities' . DS . 'GeneralUtility.php',
     'Utilities' . DS . 'StringUtility.php',
+    'Utilities' . DS . 'SphinxUtility.php',
     'libs' . DS . 'twig' . DS . 'SlimpdTwigExtension.php'] as $filePath) {
     require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
 }

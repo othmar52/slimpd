@@ -114,19 +114,21 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
      */
     protected function removeHugeTagData($hugeTagdata) {
         // drop large data by common array paths
-        try { unset($hugeTagdata['comments']['picture']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['id3v2']['APIC']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['id3v2']['PIC']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['id3v2']['PRIV']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['id3v2']['picture']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['id3v2']['comments']['picture']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['flac']['PICTURE']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['ape']['items']['cover art (front)']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['comments']['text']['COVERART_UUENCODED']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['tags']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['comments_html']); } catch (\Exception $e) { }
-        try { unset($hugeTagdata['tags_html']); } catch (\Exception $e) { }
-
+        foreach([
+            ['comments', 'picture'],
+            ['id3v2', 'APIC'],
+            ['id3v2', 'PIC'],
+            ['id3v2', 'PRIV'],
+            ['id3v2', 'picture'],
+            ['id3v2', 'comments', 'picture'],
+            ['flac', 'PICTURE'],
+            ['ape', 'items', 'cover art (front)'],
+            ['comments', 'text', 'COVERART_UUENCODED'],
+            ['comments_html'],
+            ['tags_html']
+        ] as $arrayPath) {
+            recursiveArrayCleaner($arrayPath, $hugeTagdata);
+        }
         // drop the rest of large data under non-common array paths
         try { recursiveDropLargeData($hugeTagdata); } catch (\Exception $e) { }
         return $hugeTagdata;

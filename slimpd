@@ -47,7 +47,8 @@ require_once APP_ROOT . 'core' . DS . 'vendor-dist' . DS . 'autoload.php';
 // include some additional files
 foreach([
     'Utilities' . DS . 'GeneralUtility.php',
-    'Utilities' . DS . 'StringUtility.php'] as $filePath) {
+    'Utilities' . DS . 'StringUtility.php',
+    'Utilities' . DS . 'SphinxUtility.php'] as $filePath) {
     require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
 }
 
