@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "19729674774d0d086e7ed8f65ad73916",
-    "content-hash": "64e4f66fa0bedf1541ce74f8eb73f345",
+    "hash": "faa4e1cb4aa17b0b97fa057e749dc25d",
+    "content-hash": "9318eb58ded5523387be99829946fcac",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -754,12 +754,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/JamesHeinrich/getID3.git",
-                "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a"
+                "reference": "b9a8564e56bdcc294dc7ade32a7f67885bed3778"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
-                "reference": "f4e51aabbd78eb52f08c0e0257b2d0f0b7c1463a",
+                "url": "https://api.github.com/repos/JamesHeinrich/getID3/zipball/b9a8564e56bdcc294dc7ade32a7f67885bed3778",
+                "reference": "b9a8564e56bdcc294dc7ade32a7f67885bed3778",
                 "shasum": ""
             },
             "require": {
@@ -782,7 +782,7 @@
                 "php",
                 "tags"
             ],
-            "time": "2016-12-05 23:07:42"
+            "time": "2016-12-14 14:29:29"
         },
         {
             "name": "james-heinrich/phpthumb",
@@ -981,16 +981,16 @@
         },
         {
             "name": "ksubileau/color-thief-php",
-            "version": "v1.3.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ksubileau/color-thief-php.git",
-                "reference": "f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e"
+                "reference": "f9f3afd790b18e50d5974220ae2566c885c4d072"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ksubileau/color-thief-php/zipball/f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e",
-                "reference": "f0e1bc5da3dd86abd3e8c95a553c3e8f25e0fe7e",
+                "url": "https://api.github.com/repos/ksubileau/color-thief-php/zipball/f9f3afd790b18e50d5974220ae2566c885c4d072",
+                "reference": "f9f3afd790b18e50d5974220ae2566c885c4d072",
                 "shasum": ""
             },
             "require": {
@@ -1030,10 +1030,10 @@
                 "thief"
             ],
             "support": {
-                "source": "https://github.com/ksubileau/color-thief-php/tree/v1.3.0",
+                "source": "https://github.com/ksubileau/color-thief-php/tree/master",
                 "issues": "https://github.com/ksubileau/color-thief-php/issues"
             },
-            "time": "2016-01-17 18:55:16"
+            "time": "2016-12-15 00:14:55"
         },
         {
             "name": "lusitanian/oauth",
@@ -1142,12 +1142,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4"
+                "reference": "b732364e70a615231f15944e015b31d0d77bf9f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
-                "reference": "fdd6780ffd2f1aa1d7af7d6c69f186bf17d35cd4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b732364e70a615231f15944e015b31d0d77bf9f5",
+                "reference": "b732364e70a615231f15944e015b31d0d77bf9f5",
                 "shasum": ""
             },
             "require": {
@@ -1212,7 +1212,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-12-04 18:12:24"
+            "time": "2016-12-13 14:25:55"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1716,12 +1716,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "50029c8a625bd3aaf9d6889da4570f9423b8e61a"
+                "reference": "ff8233265f2abbfd36b0c4128be8ab6ed327b8af"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/50029c8a625bd3aaf9d6889da4570f9423b8e61a",
-                "reference": "50029c8a625bd3aaf9d6889da4570f9423b8e61a",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/ff8233265f2abbfd36b0c4128be8ab6ed327b8af",
+                "reference": "ff8233265f2abbfd36b0c4128be8ab6ed327b8af",
                 "shasum": ""
             },
             "require": {
@@ -1778,7 +1778,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-06 18:33:04"
+            "time": "2016-12-08 17:51:16"
         },
         {
             "name": "slim/twig-view",
@@ -1936,12 +1936,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1"
+                "reference": "1ee6bee3db7247328e30588c8047d1670f4ad949"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1",
-                "reference": "e4125e6ef97f07a7c60816a0ed1578a5e1d85bc1",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/1ee6bee3db7247328e30588c8047d1670f4ad949",
+                "reference": "1ee6bee3db7247328e30588c8047d1670f4ad949",
                 "shasum": ""
             },
             "require": {
@@ -1989,7 +1989,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-08 10:31:05"
+            "time": "2016-12-13 17:39:54"
         },
         {
             "name": "webfontkit/open-sans",

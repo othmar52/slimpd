@@ -16,11 +16,11 @@
  */
 class Twig_Environment
 {
-    const VERSION = '1.29.0-DEV';
-    const VERSION_ID = 12900;
+    const VERSION = '1.29.1-DEV';
+    const VERSION_ID = 12901;
     const MAJOR_VERSION = 1;
-    const MINOR_VERSION = 20;
-    const RELEASE_VERSION = 0;
+    const MINOR_VERSION = 29;
+    const RELEASE_VERSION = 1;
     const EXTRA_VERSION = 'DEV';
 
     protected $charset;
@@ -1512,8 +1512,12 @@ class Twig_Environment
 
         // operators
         if ($operators = $extension->getOperators()) {
+            if (!is_array($operators)) {
+                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array with operators, got "%s".', get_class($extension), is_object($operators) ? get_class($operators) : gettype($operators).(is_resource($operators) ? '' : '#'.$operators)));
+            }
+
             if (2 !== count($operators)) {
-                throw new InvalidArgumentException(sprintf('"%s::getOperators()" does not return a valid operators array.', get_class($extension)));
+                throw new InvalidArgumentException(sprintf('"%s::getOperators()" must return an array of 2 elements, got %d.', get_class($extension), count($operators)));
             }
 
             $this->unaryOperators = array_merge($this->unaryOperators, $operators[0]);
