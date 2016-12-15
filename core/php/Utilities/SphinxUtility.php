@@ -53,6 +53,23 @@ function parseMetaForTotal($metaArray) {
 }
 
 
+function getPhaseSuggestion($term, &$sphinxPdo) {
+    $meta = $sphinxPdo->query("SHOW META")->fetchAll();
+    $metaMap = array();
+    foreach($meta as $metaVar) {
+        $metaMap[$metaVar["Variable_name"]] = $metaVar["Value"];
+    }
+    $words = array();
+    foreach($metaMap as $key => $value) {
+        if(preg_match("/keyword\[([\d]*)\]/", $key, $matches)) {
+            $words[ $matches[1] ]["keyword"] = $value;
+        }
+        if(preg_match("/docs\[([\d]*)\]/", $key, $matches)) {
+            $words[ $matches[1] ]["docs"] = $value;
+        }
+    }
+    return MakePhaseSuggestion($words, $term, $sphinxPdo, TRUE);
+}
 
 /**
  * Builds querystring to use for sphinx-queries

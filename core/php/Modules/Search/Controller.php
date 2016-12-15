@@ -47,8 +47,7 @@ class Controller extends \Slimpd\BaseController {
 
     // albumlist+tracklist of artist|genre|label
     public function listAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        #echo "<pre>" . print_r($args,1); die();
+        useArguments($request);
 
         $args["action"] = $args['className']."." . $args['show']."s";
         $args["itemtype"] = $args['className'];
@@ -62,7 +61,6 @@ class Controller extends \Slimpd\BaseController {
 
         $term = str_replace(",", " ", $args['itemUid']);
         $args["item"] = $this->$repoKey->getInstanceByAttributes(array("uid" => $args['itemUid']));
-
         $args["itemUids"] = $args['itemUid'];
         $itemsPerPage = 20;
         $maxCount = 1000;
@@ -82,19 +80,15 @@ class Controller extends \Slimpd\BaseController {
             ");
             $stmt->bindValue(":type", $sphinxTypeIndex, \PDO::PARAM_INT);
             $stmt->execute();
-            $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-            $args["search"][$resultType]["total"] = 0;
-            foreach($meta as $m) {
-                if($m["Variable_name"] === "total_found") {
-                    $args["search"][$resultType]["total"] = $m["Value"];
-                }
-            }
-            $args["search"][$resultType]["time"] = 0;
-            $args["search"][$resultType]["term"] = $args['itemUid'];
-            $args["search"][$resultType]["matches"] = [];
+            $args["search"][$resultType] = [
+                "total" => parseMetaForTotal($sphinxPdo->query("SHOW META")->fetchAll()),
+                "time" => 0,
+                "term" => $args['itemUid'],
+                "matches" => []
+            ];
 
             if($resultType !== $args['show']) {
-                // we only need total count for non requested item
+                // we need only total count for non requested item but not the items itself
                 continue;
             }
 
@@ -143,22 +137,27 @@ class Controller extends \Slimpd\BaseController {
             $args["paginator"]->setMaxPagesToShow(paginatorPages($args['currentPage']));
 
         }
-        // redirect to tracks in case we have zero albums
-        if($args['show'] === "album" && $args["search"]["album"]["total"] === "0" && $args["search"]["track"]["total"] > 0) {
-            $args['show'] = 'track';
-            $uri =$this->router->pathFor('search-list', $args). getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
-            return $response->withRedirect($uri, 403);
-        }
-        // redirect to albums in case we have zero tracks
-        if($args['show'] === "track" && $args["search"]["track"]["total"] === "0" && $args["search"]["album"]["total"] > 0) {
-            $args['show'] = 'album';
-            $uri =$this->router->pathFor('search-list', $args). getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
-            return $response->withRedirect($uri, 403);
+        if($redirectUri = $this->mayRedirect($args)) {
+            return $response->withRedirect($redirectUri, 403);
         }
         $args["renderitems"] = $this->getRenderItems($args["item"], $args["itemlist"]);
 
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;
+    }
+
+    protected function mayRedirect(&$args) {
+        // redirect to tracks in case we have zero albums
+        if($args['show'] === "album" && $args["search"]["album"]["total"] === "0" && $args["search"]["track"]["total"] > 0) {
+            $args['show'] = 'track';
+            return $this->router->pathFor('search-list', $args). getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
+        }
+        // redirect to albums in case we have zero tracks
+        if($args['show'] === "track" && $args["search"]["track"]["total"] === "0" && $args["search"]["album"]["total"] > 0) {
+            $args['show'] = 'album';
+            return $this->router->pathFor('search-list', $args). getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
+        }
+        return FALSE;
     }
 
     /**
@@ -181,13 +180,7 @@ class Controller extends \Slimpd\BaseController {
         }
 
         $stmt->execute();
-        $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-        $args["search"][$typeString]["total"] = 0;
-        foreach($meta as $m) {
-            if($m["Variable_name"] === "total_found") {
-                $args["search"][$typeString]["total"] = $m["Value"];
-            }
-        }
+        $args["search"][$typeString]["total"] = parseMetaForTotal($sphinxPdo->query("SHOW META")->fetchAll());
         $args["search"][$typeString]["time"] = 0;
         $args["search"][$typeString]["term"] = $term;
         $args["search"][$typeString]["matches"] = [];
@@ -226,13 +219,7 @@ class Controller extends \Slimpd\BaseController {
         }
 
         $stmt->execute();
-        $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-        $args["search"][$typeString]["total"] = 0;
-        foreach($meta as $m) {
-            if($m["Variable_name"] === "total_found") {
-                $args["search"][$typeString]["total"] = $m["Value"];
-            }
-        }
+        $args["search"][$typeString]["total"] = parseMetaForTotal($sphinxPdo->query("SHOW META")->fetchAll());
         $rows = $stmt->fetchAll();
 
         $args["search"][$typeString]["time"] = number_format(getMicrotimeFloat() - $args["search"][$typeString]["time"],3);
@@ -246,32 +233,7 @@ class Controller extends \Slimpd\BaseController {
                 $args["search"][$args['currentType']]["time"]
             ]
         );
-
-
-        #if($args['useExactMatch'] === TRUE) {
-        #    $args['useExactMatch'] = FALSE;
-        #    // recursion with fuzzy search
-        #    return $this->querySphinxIndex($sphinxPdo, $typeString, $term, $args);
-        #}
-        $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-        foreach($meta as $m) {
-            $meta_map[$m["Variable_name"]] = $m["Value"];
-        }
-        $words = array();
-        foreach($meta_map as $k=>$v) {
-            if(preg_match("/keyword\[\d+]/", $k)) {
-                preg_match("/\d+/", $k,$key);
-                $key = $key[0];
-                $words[$key]["keyword"] = $v;
-            }
-            if(preg_match("/docs\[\d+]/", $k)) {
-                preg_match("/\d+/", $k,$key);
-                $key = $key[0];
-                $words[$key]["docs"] = $v;
-            }
-        }
-        $suggest = MakePhaseSuggestion($words, $term, $sphinxPdo, TRUE);
-        #echo "xfdbgdg"; var_dump($suggest); die;
+        $suggest = getPhaseSuggestion($term, $sphinxPdo);
         if($suggest !== FALSE) {
             $args['suggestions'] = explode(" ", $suggest);
         }
@@ -302,22 +264,16 @@ class Controller extends \Slimpd\BaseController {
 
         $filterTypeMappingF = array_flip($this->filterTypeMapping);
         foreach($rows as $row) {
-            switch($filterTypeMappingF[$row["type"]]) {
-                case "artist":
-                case "label":
-                case "album":
-                case "track":
-                case "genre":
-                    $repoKey = $filterTypeMappingF[$row["type"]] . 'Repo';
-                    $obj = $this->$repoKey->getInstanceByAttributes(array("uid" => $row["itemuid"]));
-                    break;
-                case "dirname":
-                    $tmp = $this->albumRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
-                    if($tmp !== NULL) {
-                        $obj = new \Slimpd\Models\Directory($tmp->getRelPath());
-                        $obj->setBreadcrumb(\Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($obj->getRelPath()));
-                    }
-                    break;
+            if($filterTypeMappingF[$row["type"]] === "dirname") {
+                $tmp = $this->albumRepo->getInstanceByAttributes(array("uid" => $row["itemuid"]));
+                if($tmp !== NULL) {
+                    $obj = new \Slimpd\Models\Directory($tmp->getRelPath());
+                    $obj->setBreadcrumb(\Slimpd\Modules\Filebrowser\Filebrowser::fetchBreadcrumb($obj->getRelPath()));
+                }
+            }
+            if(in_array($filterTypeMappingF[$row["type"]], ["artist", "label", "album", "track", "genre"]) === TRUE) {
+                $repoKey = $filterTypeMappingF[$row["type"]] . 'Repo';
+                $obj = $this->$repoKey->getInstanceByAttributes(array("uid" => $row["itemuid"]));
             }
             if($obj === NULL) {
                 // vanished item: we have it in sphinx index but not in MySQL database
@@ -421,23 +377,10 @@ class Controller extends \Slimpd\BaseController {
         $timLogData[] = " execute() " . (getMicrotimeFloat() - $timeLogBegin);
         $rows = $stmt->fetchAll();
         $timLogData[] = " fetchAll() " . (getMicrotimeFloat() - $timeLogBegin);
-        $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-        $timLogData[] = " metaFetch() " . (getMicrotimeFloat() - $timeLogBegin);
-        foreach($meta as $m) {
-            $meta_map[$m["Variable_name"]] = $m["Value"];
-        }
+
         if(count($rows) === 0 && $request->getParam("suggested") != 1) {
-            $words = array();
-            foreach($meta_map as $key => $value) {
-                if(preg_match("/keyword\[([\d]*)\]/", $key, $matches)) {
-                    $words[ $matches[1] ]["keyword"] = $value;
-                }
-                if(preg_match("/docs\[([\d]*)\]/", $key, $matches)) {
-                    $words[ $matches[1] ]["docs"] = $value;
-                }
-            }
-            $suggest = MakePhaseSuggestion($words, $term, $sphinxPdo);
-            $timLogData[] = " MakePhaseSuggestion() " . (getMicrotimeFloat() - $timeLogBegin);
+            $suggest = getPhaseSuggestion($term, $sphinxPdo);
+            $timLogData[] = " getPhaseSuggestion() " . (getMicrotimeFloat() - $timeLogBegin);
             if($suggest !== FALSE) {
                 $uri = $this->router->pathFor(
                     'autocomplete',
@@ -531,13 +474,7 @@ class Controller extends \Slimpd\BaseController {
         $stmt->bindValue(":match", "'@allchunks \"". $directory->getRelPath() . "\"'", \PDO::PARAM_STR);
         $stmt->bindValue(":type", 4, \PDO::PARAM_INT);
         $stmt->execute();
-        $meta = $sphinxPdo->query("SHOW META")->fetchAll();
-        $total = 0;
-        foreach($meta as $m) {
-            if($m["Variable_name"] === "total_found") {
-                $total = $m["Value"];
-            }
-        }
+        $total = parseMetaForTotal($sphinxPdo->query("SHOW META")->fetchAll());
 
         // get requestet portion of track-uids from sphinx
         $itemsPerPage = 20;
