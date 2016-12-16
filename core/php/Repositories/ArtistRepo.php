@@ -69,7 +69,6 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
             $this->artistBlacklist[$term] = 1;
             $this->artistBlacklist[" " . $term] = 1;
         }
-        #print_r($this->artistBlacklist); die;
         return $this->artistBlacklist;
     }
 

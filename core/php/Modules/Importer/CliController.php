@@ -27,22 +27,24 @@ class CliController extends \Slimpd\BaseController {
     protected $maxTime = 59;    // seconds - fits for cronjob executed every minute
     protected $startTime = 0;
 
+    public function __construct($container) {
+        $this->container = $container;
+        $unused = $this->conf['config']; // TODO: how to trigger required session variable beeing set?
+    }
+
     public function indexAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request, $args);
         renderCliHelp($this->ll);
         return $response;
     }
 
     public function remigrateForceAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         self::deleteLockFile();
         return $this->remigrateAction($request, $response, $args);
     }
 
     public function remigrateAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request, $args);
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
         }
@@ -54,8 +56,7 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function remigratealbumAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request);
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
         }
@@ -67,14 +68,12 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function updateForceAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         self::deleteLockFile();
         return $this->updateAction($request, $response, $args);
     }
 
     public function updateAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request, $args);
         if($this->abortOnLockfile($this->ll) === TRUE) {
             return $response;
         }
@@ -86,16 +85,14 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function builddictsqlAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request, $args);
         $importer = new \Slimpd\Modules\Importer\DatabaseStuff($this->container);
         $importer->buildDictionarySql();
         return $response;
     }
 
     public function updateDbSchemeAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
+        useArguments($request, $args);
         $action = 'migrate';
 
         // TODO: manually performed db-changes does not get recognized here - find a solution!
@@ -141,9 +138,9 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function databaseCleanerAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
-        die('TODO: not implemented yet '. __FUNCTION__ );
+        useArguments($request, $args);
+        throw new \Exception('TODO: not implemented yet '. __FUNCTION__, 1481874244);
+
         $importer = new \Slimpd\Modules\Importer\Importer($this->container);
         // phase 11: delete all bitmap-database-entries that does not exist in filesystem
         // TODO: limit this to embedded images only
@@ -235,8 +232,6 @@ class CliController extends \Slimpd\BaseController {
      * TODO: add support for "remigrate" trigger
      */
     public function checkQueAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
-        $xx = $this->conf; // TODO: how to trigger required session variable beeing set?
         self::heartBeat();
         if($this->startTime === 0) {
             $this->startTime = time();
@@ -297,7 +292,6 @@ class CliController extends \Slimpd\BaseController {
 
         self::deleteLockFile();
         return $this->checkQueAction($request, $response, $args);
-        return $response;
     }
 
     protected function abortOnLockfile($ll) {
