@@ -27,8 +27,7 @@ class Controller extends \Slimpd\BaseController {
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
         $valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
         if(($valid) === FALSE) {
-            // TODO: handle invalid input
-            die('invalid path');
+            throw new \Exception("Unable to handle invalid file path", 1481873390);
         }
         $WaveformGenerator->prepare($response);
         $half = ($request->getParam('mode') === "half");
@@ -54,21 +53,18 @@ class Controller extends \Slimpd\BaseController {
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
         $valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
         if(($valid) === FALSE) {
-            // TODO: handle invalid input
-            die('invalid path');
+            throw new \Exception("Unable to handle invalid file path", 1481873246);
         }
         $WaveformGenerator->prepare($response);
         return $WaveformGenerator->generateJson($args['width'], $response);
     }
 
     protected function validateInput($input, &$WaveformGenerator) {
-        #var_dump($input);
         $track = $this->trackRepo->getInstanceByPath($input, TRUE);
 
         if($this->filesystemUtility->isInAllowedPath($track->getRelPath()) === FALSE
         && $this->filesystemUtility->isSystemCheckSample($track->getRelPath()) === FALSE) {
-            #die(' not within allowed path');
-            return FALSE;
+            throw new \Exception("File is not within allowed paths", 1481873364);
         }
 
         $absolutePath = ($this->filesystemUtility->isSystemCheckSample($track->getRelPath()) === TRUE)
@@ -88,8 +84,6 @@ class Controller extends \Slimpd\BaseController {
             $WaveformGenerator->setFingerprint($fingerprint);
             return TRUE;
         }
-        # TODO: handle missing fingerprint
-        //die('invalid fingerprint');
         return FALSE;
     }
 }
