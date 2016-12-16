@@ -49,7 +49,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         //echo "<pre>" . print_r($data = $instance->getResponse(TRUE));die;
         // create DiscogsTrackContext instances for each provided track
         $counter = 0;
-        foreach($instance->getResponse(TRUE)['tracklist'] as $idx => $trackData) {
+        foreach(array_keys($instance->getResponse(TRUE)['tracklist']) as $trackData) {
             if($trackData['type_'] !== 'track') {
                 // skip stuff like type:heading @see: discogs-release-id: 1008775
                 continue;

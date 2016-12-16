@@ -29,7 +29,7 @@ class CliController extends \Slimpd\BaseController {
 
     public function __construct($container) {
         $this->container = $container;
-        $unused = $this->conf['config']; // TODO: how to trigger required session variable beeing set?
+        useArguments($this->conf); // required $_SESSION var will be set as soon as we access $this->conf
     }
 
     public function indexAction(Request $request, Response $response, $args) {

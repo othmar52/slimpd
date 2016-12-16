@@ -63,7 +63,6 @@ class Controller extends \Slimpd\BaseController {
         $args["item"] = $this->$repoKey->getInstanceByAttributes(array("uid" => $args['itemUid']));
         $args["itemUids"] = $args['itemUid'];
         $itemsPerPage = 20;
-        $maxCount = 1000;
 
         $sphinxPdo = \Slimpd\Modules\sphinx\Sphinx::getPdo($this->conf);
 
