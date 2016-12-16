@@ -96,7 +96,7 @@ trait TrackArtistExtractor {
      */
     protected function init() {
         $this->artistBlacklist = $this->container->artistRepo->getArtistBlacklist();
-        $this->remixBlacklist = $GLOBALS["remixer-blacklist"] + $this->artistBlacklist;
+        $this->remixBlacklist = $this->container->artistRepo->getRemixerBlacklist() + $this->artistBlacklist;
 
         $this->artistVanilla = $this->getArtist();
         $this->titleVanilla = $this->getTitle();

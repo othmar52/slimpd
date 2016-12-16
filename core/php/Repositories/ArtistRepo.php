@@ -20,6 +20,8 @@ namespace Slimpd\Repositories;
 class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
     public static $tableName = 'artist';
     public static $classPath = '\Slimpd\Models\Artist';
+    protected $artistBlacklist = array();
+    protected $remixerBlacklist = array();
 
 
     public function fetchRenderItems(&$renderItems, $artistInstance) {
@@ -49,12 +51,12 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
 
     public function getArtistBlacklist() {
         // get unified artist-blacklist
-        if(isset($GLOBALS["artist-blacklist"]) === TRUE) {
-            return $GLOBALS["artist-blacklist"];
+        if(count($this->artistBlacklist) > 0) {
+            return $this->artistBlacklist;
         }
-        $GLOBALS["artist-blacklist"] = array();
+        $this->artistBlacklist = array();
         if(isset($this->conf["artist-blacklist"]["blacklist"]) === FALSE) {
-            return $GLOBALS["artist-blacklist"];
+            return $this->artistBlacklist;
         }
         foreach(trimExplode("\n", $this->conf["artist-blacklist"]["blacklist"], TRUE) as $term) {
 
@@ -62,13 +64,22 @@ class ArtistRepo extends \Slimpd\Repositories\BaseRepository {
             // good example: "I Need Your Lovin (Popmuschi’s Radar Radio Cut)"
             // bad example:  "Jungle Brother (Stereo MC's Mix)"
             // maybe we need another blacklist's whitelist for this special case :)
-            $GLOBALS["remixer-blacklist"]["'s " . $term] = 1;
+            $this->remixerBlacklist["'s " . $term] = 1;
 
-            $GLOBALS["artist-blacklist"][$term] = 1;
-            $GLOBALS["artist-blacklist"][" " . $term] = 1;
+            $this->artistBlacklist[$term] = 1;
+            $this->artistBlacklist[" " . $term] = 1;
         }
-        #print_r($GLOBALS["artist-blacklist"]); die;
-        return $GLOBALS["artist-blacklist"];
+        #print_r($this->artistBlacklist); die;
+        return $this->artistBlacklist;
+    }
+
+    public function getRemixerBlacklist() {
+        // get unified artist-blacklist
+        if(count($this->remixerBlacklist) > 0) {
+            return $this->remixerBlacklist;
+        }
+        $this->getArtistBlacklist();
+        return $this->remixerBlacklist;
     }
 
     public function getUidsByString($itemString) {
