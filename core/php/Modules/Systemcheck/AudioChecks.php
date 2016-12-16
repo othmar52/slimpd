@@ -57,7 +57,7 @@ trait AudioChecks {
         $check['audioFormatsUc'] = array_map('ucfirst', $check['audioFormats']);
 
         foreach($this->audioFormats as $format => $data) {
-            $check['fp'.ucfirst($format)] = array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE,
+            $check['fp'.ucfirst($format)] = array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE,
                 'filepath' => 'core/templates/partials/systemcheck/waveforms/testfiles/' . array_values($data)[0],
                 'cmd' => '',
                 'resultExpected' => array_keys($data)[0],
@@ -72,6 +72,7 @@ trait AudioChecks {
     }
 
     protected function runAudioChecks(&$check) {
+        $this->buildAudioCheckConf($check);
         if($check['skipAudioTests'] === TRUE) {
             return;
         }
@@ -80,18 +81,14 @@ trait AudioChecks {
         foreach($check['audioFormats'] as $ext) {
             $checkFp = 'fp'.ucfirst($ext);
             $checkWf = 'wf'.ucfirst($ext);
-            if($check[$checkFp]['skip'] === FALSE) {
-                $check[$checkFp]['cmd'] = $fileScanner->extractAudioFingerprint(APP_ROOT . $check[$checkFp]['filepath'], TRUE);
-                exec($check[$checkFp]['cmd'], $response);
-                $check[$checkFp]['resultReal'] = trim(join("\n", $response));
-                unset($response);
-                if($check[$checkFp]['resultExpected'] === $check[$checkFp]['resultReal']) {
-                    $check[$checkFp]['status'] = 'success';
-                    if($check['fsPeakfiles']['status'] === 'success' && $check['fsCache']['status'] === 'success') {
-                        $check[$checkWf]['skip'] = FALSE;
-                    }
-                } else {
-                    $check[$checkFp]['status'] = 'danger';
+            $check[$checkFp]['cmd'] = $fileScanner->extractAudioFingerprint(APP_ROOT . $check[$checkFp]['filepath'], TRUE);
+            exec($check[$checkFp]['cmd'], $response);
+            $check[$checkFp]['resultReal'] = trim(join("\n", $response));
+            unset($response);
+            if($check[$checkFp]['resultExpected'] === $check[$checkFp]['resultReal']) {
+                $check[$checkFp]['status'] = 'success';
+                if($check['fsPeakfiles']['status'] === 'success' && $check['fsCache']['status'] === 'success') {
+                    $check[$checkWf]['skip'] = FALSE;
                 }
             }
 

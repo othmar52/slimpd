@@ -23,6 +23,15 @@ namespace Slimpd\Modules\Systemcheck;
  */
 trait FilesystemChecks {
 
+    /**
+     * call all existing filesystem checks
+     */
+    protected function runFilesystemChecks(&$check) {
+        $this->runConfigLocalCheck($check);
+        $this->runMusicdirChecks($check);
+        $this->runAppDirChecks($check);
+    }
+
     protected function runConfigLocalCheck(&$check) {
         // check if individual config file exists
         $relConfPath = "core/config/config_local.ini";
@@ -79,9 +88,9 @@ trait FilesystemChecks {
             if(is_dir(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE || is_writeable(APP_ROOT . 'localdata' . DS . strtolower($dir)) === FALSE) {
                 $check['fs'. $dir]['status'] = 'danger';
                 $check['skipAudioTests'] = TRUE;
-            } else {
-                $check['fs'. $dir]['status'] = 'success';
+                continue;
             }
+            $check['fs'. $dir]['status'] = 'success';
         }
     }
 }

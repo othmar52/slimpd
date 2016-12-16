@@ -27,11 +27,11 @@ class Systemcheck {
     use \Slimpd\Modules\Systemcheck\SphinxChecks;
     use \Slimpd\Modules\Systemcheck\AudioChecks;
     use \Slimpd\Modules\Systemcheck\DiscogsChecks;
+    use \Slimpd\Modules\Systemcheck\MpdChecks;
     protected $config;
     protected $checks;
     protected $audioFormats;
     public $configLocalUrl;
-
 
     public function __construct($container, $request) {
         $this->container = $container;
@@ -53,8 +53,8 @@ class Systemcheck {
             // TODO: perform checks for optional configuration [mpd]alternative_musicdir
 
             // database
-            'dbConn'           => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
-            'dbPerms'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+            'dbConn'           => array('status' => 'success', 'hide' => FALSE, 'skip' => FALSE),
+            'dbPerms'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
             'dbSchema'         => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
             'dbContent'        => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE, 'tracks' => 0),
 
@@ -75,57 +75,12 @@ class Systemcheck {
             'skipAudioTests'=> FALSE
         );
 
-        $this->runConfigLocalCheck($check);
-        $this->runMusicdirChecks($check);
-        $this->runAppDirChecks($check);
-
-        $check['dbConn']['status'] = 'success';
-        $check['dbPerms']['skip'] = FALSE;
-        // check if we can connect to database
-        if($dbError === TRUE) {
-            $check['dbConn']['status'] = 'danger';
-            $check['dbPerms']['skip'] = TRUE;
-            $check['dbSchema']['skip'] = TRUE;
-            $check['dbContent']['skip'] = TRUE;
-            $check['mpdConn']['skip'] = TRUE;
-            $check['skipAudioTests'] = TRUE;
-        }
-
-        $this->runDatabasePermissionCheck($check);
-        $this->runDatabaseSchemaCheck($check);
-        $this->runDatabaseContentCheck($check);
+        $this->runFilesystemChecks($check);
+        $this->runDatabaseChecks($check, $dbError);
         $this->runMpdChecks($check);
         $this->runSphinxChecks($check);
-        $this->buildAudioCheckConf($check);
-        $this->runAudioChecks($check);
         $this->runDiscogsChecks($check);
+        $this->runAudioChecks($check);
         return $check;
-    }
-
-    protected function runMpdChecks(&$check) {
-        // check MPD connection
-        if($check['mpdConn']['skip'] === FALSE) {
-            $check['mpdConn']['status'] = ($this->container->mpd->cmd('status') === FALSE) ? 'danger' : 'success';
-        }
-
-        // check if we have a configured value for MPD-databasefile
-        if(trim($this->conf['mpd']['dbfile']) === '') {
-            $check['mpdDbfileconf']['status'] = 'danger';
-            $check['mpdDbfile']['hide'] = TRUE;
-        } else {
-            $check['mpdDbfile']['skip'] = FALSE;
-            $check['mpdDbfileconf']['hide'] = TRUE;
-        }
-
-        // check if MPD databasefile is readable
-        if($check['mpdDbfile']['skip'] === TRUE) {
-            return;
-        }
-
-        if(is_file($this->conf['mpd']['dbfile']) == FALSE || is_readable($this->conf['mpd']['dbfile']) === FALSE) {
-            $check['mpdDbfile']['status'] = 'danger';
-            return;
-        }
-        $check['mpdDbfile']['status'] = 'success';
     }
 }

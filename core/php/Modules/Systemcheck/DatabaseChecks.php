@@ -23,8 +23,29 @@ namespace Slimpd\Modules\Systemcheck;
  */
 trait DatabaseChecks {
 
+    /**
+     * call all existing database checks
+     */
+    protected function runDatabaseChecks(&$check, $dbError) {
+        // check if we can connect to database
+        if($dbError === TRUE) {
+            $check['dbConn']['status'] = 'danger';
+            $check['dbPerms']['skip'] = TRUE;
+            $check['dbSchema']['skip'] = TRUE;
+            $check['dbContent']['skip'] = TRUE;
+            $check['mpdConn']['skip'] = TRUE;
+            $check['skipAudioTests'] = TRUE;
+        }
+
+        $this->runDatabasePermissionCheck($check);
+        $this->runDatabaseSchemaCheck($check);
+        $this->runDatabaseContentCheck($check);
+    }
+
+    /**
+     * check permissions for "create database" (needed for schema-comparison)
+     */
     protected function runDatabasePermissionCheck(&$check) {
-        // check permissions for "create database" (needed for schema-comparison)
         if($check['dbPerms']['skip'] === TRUE) {
             return;
         }
@@ -32,15 +53,17 @@ trait DatabaseChecks {
         $result = $this->container->db->query("CREATE DATABASE ". $tmpDb .";");
         if (!$result) {#
             $check['dbPerms']['status'] = 'danger';
-        } else {
-            $this->container->db->query("DROP DATABASE ". $tmpDb .";");
-            $check['dbPerms']['status'] = 'success';
-            $check['dbSchema']['skip'] = FALSE;
+            return;
         }
+        $this->container->db->query("DROP DATABASE ". $tmpDb .";");
+        $check['dbPerms']['status'] = 'success';
+        $check['dbSchema']['skip'] = FALSE;
     }
 
+    /**
+     * check if db-schema is correct
+     */
     protected function runDatabaseSchemaCheck(&$check) {
-        // check if db-schema is correct
         if($check['dbSchema']['skip'] === TRUE) {
             return;
         }
@@ -52,11 +75,11 @@ trait DatabaseChecks {
         if(!count($difference['up']) && !count($difference['down'])) {
             $check['dbSchema']['status'] = 'success';
             $check['dbContent']['skip'] = FALSE;
-        } else {
-            $check['dbSchema']['status'] = 'danger';
-            $check['dbSchema']['queries'] = $difference['down'];
-            $check['skipAudioTests'] = TRUE;
+            return;
         }
+        $check['dbSchema']['status'] = 'danger';
+        $check['dbSchema']['queries'] = $difference['down'];
+        $check['skipAudioTests'] = TRUE;
     }
 
     protected function runDatabaseContentCheck(&$check) {
