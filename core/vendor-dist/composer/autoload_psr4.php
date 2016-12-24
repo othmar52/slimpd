@@ -23,4 +23,5 @@ return array(
     'GuzzleHttp\\Command\\' => array($vendorDir . '/guzzlehttp/command/src'),
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'ColorThief\\' => array($vendorDir . '/ksubileau/color-thief-php/lib/ColorThief'),
 );

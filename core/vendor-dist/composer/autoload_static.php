@@ -52,6 +52,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             'FastRoute\\' => 10,
         ),
+        'C' => 
+        array (
+            'ColorThief\\' => 11,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -123,6 +127,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
+        'ColorThief\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/lib/ColorThief',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -170,10 +178,6 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
             'ComponentInstaller' => 
             array (
                 0 => __DIR__ . '/..' . '/robloach/component-installer/src',
-            ),
-            'ColorThief' => 
-            array (
-                0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/lib',
             ),
         ),
         'A' => 
