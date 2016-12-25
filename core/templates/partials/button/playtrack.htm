@@ -4,7 +4,7 @@
 <button
 	role="control"
 	title="{{'pbctrl.appendandplay.title'|ll}}"
-	class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal"
+	class="btn btn-trnsp player-ctrl is-playbtn trigger-hide-modal {{ buttonClass }}"
 	data-player='{
 		"action":"appendTrackAndPlay",
 		"item":"{{ trackpath|path2url }}",
