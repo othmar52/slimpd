@@ -215,7 +215,8 @@
                 url: window.sliMpd.router.setGetParameter($el.attr("href"), "nosurrounding", "1")
             }).done(function(response) {
                 window.sliMpd.checkNotify(response);
-                $($el.attr("data-ajaxtarget")).html(response);
+                // TODO: add smooth animation
+                $($el.attr("data-ajaxtarget")).hide().html(response).show(200);
                 that.rendered = false;
                 that.render();
                 window.NProgress.done();
@@ -310,7 +311,7 @@
                     }
                 });
             }
-            $target.toggle();
+            $target.slideToggle(300, "swing");
             $el.text((($target.is(":hidden")) ? $el.attr("data-text1") : $el.attr("data-text2") ) );
         },
 

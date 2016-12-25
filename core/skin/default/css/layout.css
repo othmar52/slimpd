@@ -447,3 +447,8 @@ body.standalone {
     background-position: center;
     background-size: contain;
 }
+
+
+.album-controls {
+    background-color: #252525;
+}

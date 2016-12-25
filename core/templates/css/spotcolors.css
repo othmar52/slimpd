@@ -29,6 +29,12 @@
 	transition: {{trans}};
 }
 
+.spotcol-{{ colname }} .left-bordered {
+	border-left: 3px solid {{ values["1st"] }};
+	{# TODO: transition is not working #}
+	transition: "border 0.5s ease 0.2s";
+}
+
 .spotcol-{{ colname }} #nprogress .bar {
 	background-color: {{ values["1st"] }};
 	transition: {{trans}};

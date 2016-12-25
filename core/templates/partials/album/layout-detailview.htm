@@ -20,9 +20,9 @@
 		<h3 class="nomargin">
 			<button
 			  role="control"
-			  data-href="{{root}}markup/widget-album/{{ album.uid }}"
-			  title="show album widget TRNSL"
-			  class="btn btn-default trigger-modal">
+			  title="show album controls TRNSL"
+			  class="btn btn-default toggle-content"
+			  data-toggle=".album-controls">
 				<i class="fa fa-plus fa-lg"></i>
 			</button>
 			
@@ -37,7 +37,10 @@
 		{% include 'partials/filebrowser/breadcrumb.htm' %}
 		</div>
 		<div class="row replace-me-with-proper-css"><br></div>
-			
+		<div class="album-controls container left-bordered" style="display: none;">
+			{% include 'partials/album/control-buttons.htm' %}
+			<br class="row replace-me-with-proper-css" />
+		</div>
 		<div class="row">
 		
 			<div class="col-md-6">
