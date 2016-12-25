@@ -330,6 +330,10 @@
                     forcePageReload = true;
                 }
                 this.previousPlayingItem = this.nowPlayingItem;
+                if(window.sliMpd.currentPlayer.mode === "mpd") {
+                    // dont show MPD trackchange notification when mpd-player is active
+                    this.initialNotificationBlocker = true;
+                }
                 this.redraw("");
                 this.refreshInterval();
             }
