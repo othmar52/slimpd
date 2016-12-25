@@ -9,11 +9,10 @@
 			data-gallery="galname"
 			class="contain-img img-placeholder main-image"
 			style="background-image:url({{root}}image-300/id/{{ albumimages|first.uid }});background-color:{{ albumimages|first.bghex }};">
-
 		</a>
 		{% include 'modules/imagecarousel.htm' with { 'itemlist': albumimages } %}
 		{% else %}
-			<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="">
+			<img class="main-image" src="{{root}}image-300/album/{{ album.uid }}" alt="" />
 		{% endif %}
 	</div>
 	<div class="col-md-9">
@@ -25,10 +24,9 @@
 			  data-toggle=".album-controls">
 				<i class="fa fa-plus fa-lg"></i>
 			</button>
-			
-		</button> {% if album.isJumble %}<span class="col2" title="no album but jumble">*</span>{% endif %}{{album.title}}
+			{% if album.isJumble %}<span class="col2" title="no album but jumble">*</span>{% endif %}{{album.title}}
 		</h3>
-		
+
 		<div id="album-info-artist">
 			<span class="dark uc small darker-links">{% include 'partials/artist/linked-label.htm' %}:</span> {% include 'partials/artist/link.htm' with { 'item': album } %}
 		</div>
@@ -42,7 +40,6 @@
 			<br class="row replace-me-with-proper-css" />
 		</div>
 		<div class="row">
-		
 			<div class="col-md-6">
 				{% if album.genreUid %}
 				<div class="col-md12">
@@ -54,7 +51,7 @@
 					</div>
 				</div>
 				{% endif %}
-				
+
 				{% if album.year %}
 				<div class="col-md12">
 					<div class="col-md-2">
@@ -65,7 +62,7 @@
 					</div>
 				</div>
 				{% endif %}
-				
+
 				{% if album.labelUid %}
 				<div class="col-md12">
 					<div class="col-md-2">
@@ -76,7 +73,7 @@
 					</div>
 				</div>
 				{% endif %}
-				
+
 				{% if album.catalogNr %}
 				<div class="col-md12">
 					<div class="col-md-2">
@@ -88,8 +85,7 @@
 				</div>
 				{% endif %}
 			</div>
-			
-			
+
 			<div class="col-md-6">
 				<div class="col-md12">
 					<div class="col-md-3">
@@ -118,16 +114,13 @@
 				<div class="col-md12">
 					<div class="col-md-2">
 						{% include 'partials/extlink-discogs.htm' %}
-						<a href="{{root}}maintainance/albumdebug/{{album.uid}}" title="edit album" class="ajax-link"><i class="fa fa-pencil"></i></a>
 					</div>
 				</div>
-			
 			</div>
 			<div class="col-md-12">
 				{% include 'partials/debug/migrator-log-album-buttons.htm' %}
 			</div>
 		</div>
-		
 	</div>
 </div>
 
@@ -157,7 +150,3 @@
 	<div class="col-md-1">total time</div>
 	<div class="col-md-1">{{ totalTime|formatMiliseconds }}</div>
 </div>
-
-
-
-			
