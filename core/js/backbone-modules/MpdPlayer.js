@@ -334,7 +334,7 @@
                     // dont show MPD trackchange notification when mpd-player is active
                     this.initialNotificationBlocker = true;
                 }
-                this.redraw("");
+                this.redraw({ hash : data.trackHash });
                 this.refreshInterval();
             }
 

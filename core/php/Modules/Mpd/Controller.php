@@ -99,7 +99,8 @@ class Controller extends \Slimpd\BaseController {
                 "nextsong" => "0",
                 "nextsongid" => "0",
                 "duration" => "0",
-                "percent" => "0"
+                "percent" => "0",
+                "trackHash" => ""
             );
         }
         try {
@@ -113,6 +114,7 @@ class Controller extends \Slimpd\BaseController {
             $args['mpd']['status']['duration'] = $currentSong['Time'];
             $percent = $args['mpd']['status']['elapsed'] / ($args['mpd']['status']['duration']/100);
             $args['mpd']['status']['percent'] = ($percent >=0 && $percent <= 100) ? $percent : 0;
+            $args['mpd']['status']['trackHash'] = getFilePathHash($currentSong['file']);
         } catch (\Exception $e) {
             $args['mpd']['status']['duration'] = "0";
             $args['mpd']['status']['percent'] = "0";
