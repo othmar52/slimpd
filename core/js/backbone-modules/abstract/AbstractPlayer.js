@@ -82,13 +82,12 @@
         redraw : function(item) {
             item = item || { item : 0};
             var url =  window.sliMpd.conf.absRefPrefix + "markup/"+ this.mode+"player";
+            url = window.sliMpd.router.setGetParameter(url, "item", item.item);
             if(this.mode === "xwax") {
                 url = window.sliMpd.router.setGetParameter(url, "deck", this.deckIndex);
                 if(this.showWaveform === false) {
                     url = window.sliMpd.router.setGetParameter(url, "type", "djscreen");
                 } 
-            } else {
-                url = window.sliMpd.router.setGetParameter(url, "item", item.item);
             }
 
             $.ajax({
@@ -108,11 +107,9 @@
         updateStateIcons : function() {
             var that = this;
             ["repeat", "random", "consume"].forEach(function(prop) {
-                if(that.state[prop] === 1) {
-                    $(".status-"+prop, that.$el).addClass("active");
-                } else {
-                    $(".status-"+prop, that.$el).removeClass("active");
-                }
+                $(".status-"+prop, that.$el)[
+                    (that.state[prop] === 1) ? "addClass" : "removeClass"
+                ]("active");
             });
         },
 
@@ -178,15 +175,16 @@
         removeTrack : function(item) { return; },
 
         reloadCss : function(hash) {
-            // TODO: comment whats happening here
-            // FIXME: mpd-version is broken since backbonify
+            /**
+             * visual now-playing indicator is solved by requesting a dynamically created css
+             * @see <head><style id="css-[playertype]">
+             */
             var suffix, selector;
+            suffix = "";
+            selector = "#css-"+this.mode+"player";
             if(this.mode === "xwax") {
                 suffix = "?deck=" + this.deckIndex;
                 selector = "#css-xwaxdeck-"+ this.deckIndex;
-            } else {
-                suffix = "";
-                selector = "#css-"+this.mode+"player";
             }
             $(selector).attr("href", window.sliMpd.conf.absRefPrefix + "css/"+ this.mode +"player/"+ ((hash) ? hash : "0") + suffix);
 
