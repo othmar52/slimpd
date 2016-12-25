@@ -148,10 +148,29 @@
 </ul>
 
 
-<h1>Environment</h1>
-<h6>TODO: check if php-pdo is enabled (if (class_exists('PDO')) )</h6>
-<h6>TODO: check locale settings to avoid errors caused by specialchars</h6>
-
+<h1 id="discogs">{{'syscheck.env'|ll}}</h1>
+<ul class="list-group">
+	{% for test in ['envCron'] %}
+	{% if not sys[test].hide %}
+	<li class="list-group-item list-group-item-{{sys[test].status}}">
+		<h4 class="uc">
+			{% include 'partials/systemcheck/icon-'~sys[test].status~'.htm' %}
+			{{['syscheck.',test]|join|ll}}</h4>
+		{% if sys[test].skip %}
+			{{'syscheck.skipped'|ll}}
+		{% else %}
+			{% include 'partials/systemcheck/env/'~test~'-'~sys[test].status~'.htm' %}
+		{% endif %}
+	</li>
+	{% endif %}
+	{% endfor %}
+	<li class="list-group-item list-group-item-info">
+		TODO: check if php-pdo is enabled (if (class_exists('PDO')) )
+	</li>
+	<li class="list-group-item list-group-item-info">
+		TODO: check locale settings to avoid errors caused by specialchars
+	</li>
+</ul>
 
 
 <h1>Xwax</h1>

@@ -28,6 +28,7 @@ class Systemcheck {
     use \Slimpd\Modules\Systemcheck\AudioChecks;
     use \Slimpd\Modules\Systemcheck\DiscogsChecks;
     use \Slimpd\Modules\Systemcheck\MpdChecks;
+    use \Slimpd\Modules\Systemcheck\EnvironmentChecks;
     protected $config;
     protected $checks;
     protected $audioFormats;
@@ -70,7 +71,10 @@ class Systemcheck {
 
             // discogs
             'discogsConf'      => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
-            'discogsAuth'        => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+            'discogsAuth'      => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
+
+            // environment
+            'envCron'          => array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 
             'skipAudioTests'=> FALSE
         );
@@ -81,6 +85,7 @@ class Systemcheck {
         $this->runSphinxChecks($check);
         $this->runDiscogsChecks($check);
         $this->runAudioChecks($check);
+        $this->runEnvironmentChecks($check);
         return $check;
     }
 }
