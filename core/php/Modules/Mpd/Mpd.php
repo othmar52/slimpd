@@ -334,8 +334,12 @@ class Mpd {
                 return;
             case 'seekPercent':
                 $currentSong = $this->mpd('currentsong');
-                $cmd = 'seek ' .$currentSong['Pos'] . ' ' . round($item * ($currentSong['Time']/100)) . '';
-                $this->mpd($cmd);
+                $targetSecond = round($item * ($currentSong['Time']/100));
+                $cmd = 'seek ' . $currentSong['Pos'] . ' ' . $targetSecond;
+                // TODO: check mpd version >= 0.18
+                // @see: https://bugs.musicpd.org/view.php?id=4073
+                #$cmd = 'seekcur ' . $targetSecond;
+                return $this->mpd($cmd);
             case 'status':
             case 'stats':
             case 'currentsong':
