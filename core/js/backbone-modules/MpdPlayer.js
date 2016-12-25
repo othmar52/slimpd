@@ -166,12 +166,14 @@
         },
 
         injectTrack : function(item) {
+            this.checkDisableRandom();
             window.sliMpd.fireRequestAndNotify(item.mpdurl);
             this.refreshInterval();
             window.sliMpd.modules.AbstractPlayer.prototype.injectTrack.call(this, item);
         },
 
         injectTrackAndPlay : function(item) {
+            this.checkDisableRandom();
             window.sliMpd.fireRequestAndNotify(item.mpdurl);
             this.refreshInterval();
             window.sliMpd.modules.AbstractPlayer.prototype.injectTrackAndPlay.call(this, item);
@@ -265,6 +267,20 @@
             window.sliMpd.fireRequestAndNotify(item.mpdurl);
             this.refreshInterval();
             window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
+        },
+
+        checkDisableRandom() {
+            // on some operations like play-as-next we have to make sure that random is disabled
+            if(this.state.random === 0) {
+                return;
+            }
+            this.toggleRandom({"action":"toggleRandom", "mpdurl":"/mpdctrl/toggleRandom"});
+            // notify user about this change
+            window.sliMpd.notify({
+                "notify":1,
+                "type": "mpd",
+                "message": "<span class='label label-danger'>NOTE: MPD Random had been disabled</span>"
+            });
         },
 
         process : function(item) {
