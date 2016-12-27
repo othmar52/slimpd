@@ -49,7 +49,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         //echo "<pre>" . print_r($data = $instance->getResponse(TRUE));die;
         // create DiscogsTrackContext instances for each provided track
         $counter = 0;
-        foreach(array_keys($instance->getResponse(TRUE)['tracklist']) as $trackData) {
+        foreach($instance->getResponse(TRUE)['tracklist'] as $trackData) {
             if($trackData['type_'] !== 'track') {
                 // skip stuff like type:heading @see: discogs-release-id: 1008775
                 continue;
@@ -117,76 +117,6 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
         $client->getHttpClient()->getEmitter()->attach(
             new \GuzzleHttp\Subscriber\Oauth\Oauth1($oauthConf)
         );
-    }
-
-    public function guessTrackMatch(&$instance, $rawTagDataInstances) {
-        $matchScore = array();
-        $data = $instance->getResponse(TRUE);
-
-        // TODO:
-        // fetch rawtablob and create trackContext items
-        return;
-
-        foreach($rawTagDataInstances as $rawItem) {
-            $localStrings = [
-                $rawItem->getArtist(),
-                $rawItem->getTitle(),
-                $rawItem->getTrackNumber(),
-                basename($rawItem->getRelPath())
-            ];
-            $counter = 0;
-            foreach($data['tracklist'] as $t) {
-                $counter++;
-                $extIndex = $instance->getExtid() . '-' . $counter;
-
-                $extArtistString = '';
-                foreach(((isset($t['artists']) === TRUE) ? $t['artists'] : $data['artists']) as $a) {
-                    $extArtistString .= $a['name'] . ' ';
-                }
-
-                if(isset($matchScore[$rawItem->getUid()][$extIndex]) === FALSE) {
-                    $matchScore[$rawItem->getUid()][$extIndex] = 0;
-                }
-                $discogsStrings = [
-                    $extArtistString,
-                    $t['title'],
-                    $t['position']
-                ];
-
-                foreach($discogsStrings as $discogsString) {
-                    foreach($localStrings as $localString) {
-                        $matchScore[$rawItem->getUid()][$extIndex] += $this->getMatchStringScore($discogsString, $localString);
-                    }
-                }
-
-                // in case we have a discogs duration compare durations
-                if(strlen($t['duration']) > 0) {
-                    $extSeconds = timeStringToSeconds($t['duration']);
-                    $higher = $extSeconds;
-                    $lower =  $rawItem->getMiliseconds();
-                    if($rawItem->getMiliseconds() > $extSeconds) {
-                        $higher = $rawItem->getMiliseconds();
-                        $lower =  $extSeconds;
-                    }
-                    $matchScore[$rawItem->getUid()][$extIndex] += floor($lower/($higher/100));
-                }
-            }
-        }
-        $return = array();
-        foreach($matchScore as $rawIndex => $scorePairs) {
-            arsort($scorePairs);
-            $return[$rawIndex] = $scorePairs;
-        }
-        return $return;
-        #echo "<pre>" . print_r($return,1); die();
-        #echo "<pre>" . print_r($rawItem,1); die();
-    }
-
-    protected function getMatchStringScore($string1, $string2) {
-        if(strtolower(trim($string1)) == strtolower(trim($string2))) {
-            return 100;
-        }
-        return similar_text($string1, $string2);
     }
 
     public function fetchRenderItems(&$renderItems, $discogsitemInstance) {

@@ -129,6 +129,9 @@ class Controller extends \Slimpd\BaseController {
         }
         $args['discogstracks'] = array();
         $args['matchmapping'] = array();
+        $args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
+        $args['guessmapping'] = array_keys($args['itemlist']);
+
 
         $discogsId = $request->getParam('discogsid');
         if($discogsId > 0) {
@@ -152,15 +155,18 @@ class Controller extends \Slimpd\BaseController {
 
             // TODO: catch error in case we cant retrieve release informations (example discogsID : 777655 )
             $this->discogsitemRepo->retrieveAlbum($discogsId);
-            #$this->discogsitemRepo->guessTrackMatch($discogsItem, $args['itemlistraw']);
             $args['discogstracks'] = $this->discogsitemRepo->trackContexts;
             $args['discogsalbum'] = $this->discogsitemRepo->albumContext;
             $args['discogsimages'] = $this->discogsitemRepo->images;
             $args['activeTab'] = 'discogs';
             $args['discogsid'] = $discogsId;
+            $trackMatcher = new \Slimpd\Modules\Discogs\TrackMatcher(
+                $this->discogsitemRepo->trackContexts,
+                $args['itemlist'],
+                $args['renderitems']['artists']
+            );
+            $args['guessmapping'] = $trackMatcher->guessTrackMatch();
         }
-
-        $args['renderitems'] = $this->getRenderItems($args['itemlist'], $args['album']);
 
         // fetch manually edited properties for highlighting input fields
         $args['editorials'] = array();

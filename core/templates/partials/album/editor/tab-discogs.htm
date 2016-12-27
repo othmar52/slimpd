@@ -168,26 +168,26 @@
 	</div>
 
 	<div class="col-md-6 grid local-items">
-		{% for idx,item in itemlist %}
-			{% set dirs = item.relPath|split('/') %}
-			{% for dir in dirs %}
-				{% if loop.last == true %}
-				<div class="well well-sm" data-uid="{{item.uid}}" title="{{ dir }}">
-					<span class="duration" data-miliseconds="{{ item.miliseconds }}">
-						<span class="dark">[{{ item.miliseconds|formatMiliseconds }}]</span>
-					</span>
-					<span class="highlight shorten">{{ dir }}</span>
-				</div>
-				{% endif %}
-			{% endfor %}
-		{% endfor %}
-		{% if itemlist|length < discogstracks|length %}
-			{% set diff = discogstracks|length - itemlist|length %}
-			{% for i in 1..diff %}
+		{% set longerList = (itemlist|length > discogstracks|length) ? itemlist|length-1 : discogstracks|length-1 %}
+		{% for i in guessmapping %}
+			{% if i == 'placeholder' %}
 			<div class='well well-sm empty-placeholder centered-text' title='placeholder'>
 				<span class='dark'>placeholder</span>
 			</div>
-			{% endfor %}
-		{% endif %}
+			{% else %}
+				{% set item = itemlist[ i ] %}
+				{% set dirs = item.relPath|split('/') %}
+				{% for dir in dirs %}
+					{% if loop.last == true %}
+					<div class="well well-sm" data-uid="{{item.uid}}" title="{{ dir }}">
+						<span class="duration" data-miliseconds="{{ item.miliseconds }}">
+							<span class="dark">[{{ item.miliseconds|formatMiliseconds }}]</span>
+						</span>
+						<span class="highlight shorten">{{ dir }}</span>
+					</div>
+					{% endif %}
+				{% endfor %}
+			{% endif %}
+		{% endfor %}
 	</div>
 </div>
