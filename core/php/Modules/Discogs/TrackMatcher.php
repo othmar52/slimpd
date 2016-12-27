@@ -55,10 +55,11 @@ class TrackMatcher {
 
     /**
      * process the scoring from highest scoring to lowest scoring
-     * theoretically $recursionPanic can be removed but it feels more comfortable to keep it :)
      */
     public function guessTrackMatch() {
         $this->runScoring();
+        // theoretically $recursionPanic can be removed but it feels more comfortable to keep it :)
+        $recursionPanic = 0;
         while($recursionPanic < 10000) {
             $recursionPanic++;
             // fetch the highest score that exists in our scoring matrix
