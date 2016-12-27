@@ -39,9 +39,8 @@ class TrackMatcher {
     protected $highestScore = 0;
     protected $highestLocal = 0;
     protected $highestDiscogs = 0;
-    protected $recursionPanic = 0;
 
-    protected $matches = array(/* localUid => discogsIdx */);
+    protected $matches = array(/* discogsIdx|higherIdx => localUid|placeholder */);
 
     /**
      * @param array $discogsTracks: instances of \Slimpd\Modules\Albummigrator\DiscogsTrackContext
@@ -54,23 +53,36 @@ class TrackMatcher {
         $this->localArtists = $localArtists;
     }
 
+    /**
+     * process the scoring from highest scoring to lowest scoring
+     * theoretically $recursionPanic can be removed but it feels more comfortable to keep it :)
+     */
     public function guessTrackMatch() {
         $this->runScoring();
-        while($this->recursionPanic < 10000) {
-            $this->recursionPanic++;
+        while($recursionPanic < 10000) {
+            $recursionPanic++;
+            // fetch the highest score that exists in our scoring matrix
             $this->setMostScoredPair();
+            // accept it as final decision
             $this->matches[$this->highestLocal] = $this->highestDiscogs;
+            // remove all occurances of processed stuff in pur scoring matrix
             $this->dropMatches();
             if(count($this->localMatchScores) === 0) {
-                $this->recursionPanic = 10000;
+                break;
             }
         }
+        // sort to ascending discogsIdx
         $this->matches = array_flip($this->matches);
         ksort($this->matches);
         $this->addPlaceholders();
         return($this->matches);
     }
 
+    /**
+     * our mapping array needs exactly amount of the longer list (localTracks/discogsTracks)
+     * as listlenghts can vary in both directions this function cleans up the difference
+     * values with "placeholders" means we do not have that much local tracks and those can be handeled in frontend
+     */
     protected function addPlaceholders() {
         $longerLength = (count($this->localTracks) > count($this->discogsTracks))
             ? count($this->localTracks)
@@ -83,7 +95,7 @@ class TrackMatcher {
                 unset($remainigLocals[ array_search($this->matches[$idx], $remainigLocals)]);
                 continue;
             }
-            // in case we have less discogs-items we have to fill guesmatch with remaining local tracks
+            // in case we have less discogs-items we have to fill guessmatch with remaining local tracks
             if(count($remainigLocals) > 0) {
                 $tmp[$idx] = array_shift($remainigLocals);
                 continue;
@@ -94,11 +106,9 @@ class TrackMatcher {
         $this->matches = $tmp;
     }
 
-    protected function sortMatches() {
-        $this->matches = array_flip($this->matches);
-        ksort($this->matches);
-    }
-
+    /**
+     * This function removes all entries which has $discogsIdx or $localUid in our scoring matrix
+     */
     protected function dropMatches() {
         unset($this->localMatchScores[$this->highestLocal]);
         foreach(array_keys($this->localMatchScores) as $localUid) {
@@ -125,54 +135,38 @@ class TrackMatcher {
      *       special usecase: multiple local tracks had been manually married to a single discogs track
      */
     protected function runScoring() {
-        // convert to compareable strings
+        // convert track information to compareable strings
         $this->trackInstancesToStringArray();
         $this->discogsInstancesToStringArray();
-        
+
         // compare all string chunks and collect scores for similarity
         foreach($this->localStrings as $localUid => $localStrings) {
             foreach($this->discogsStrings as $discogsIdx => $discogsStrings) {
                 if(isset($this->localMatchScores[$localUid][$discogsIdx]) === FALSE) {
                     $this->localMatchScores[$localUid][$discogsIdx] = 0;
                 }
-                
                 foreach($discogsStrings as $discogsString) {
                     foreach($localStrings as $localString) {
                         $score = $this->getMatchStringScore($discogsString, $localString);
-                        #$score = 10 + rand(0,2);
                         $this->localMatchScores[$localUid][$discogsIdx] += $score;
                     }
                 }
 
-                /*
-                // TODO: duration based scoring
-                // in case we have a discogs duration do some additional scoring based on durations
-                if($discogsTrack->getMiliseconds() < 1) {
+                // in case we have a track duration from discogs do some additional scoring based on durations
+                if($this->discogsTracks[$discogsIdx]->getMiliseconds() < 1) {
                     continue;
                 }
-                $extSeconds = $discogsTrack->getMiliseconds()*1000;
-                $higher = $extSeconds;
-                $lower =  $track->getMiliseconds();
-                if($track->getMiliseconds() > $extSeconds) {
-                    $higher = $track->getMiliseconds();
-                    $lower =  $extSeconds;
+                $localDuration = $this->localTracks[$localUid]->getMiliseconds();
+                $extDuration = $this->discogsTracks[$discogsIdx]->getMiliseconds();
+                $higher = $extDuration;
+                $lower = $localDuration;
+                if($localDuration > $extDuration) {
+                    $higher = $localDuration;
+                    $lower =  $extDuration;
                 }
                 $this->localMatchScores[$localUid][$discogsIdx] += floor($lower/($higher/100));
-                */
             }
         }
-
-        // sort scoring with highest first (not needed for functionality but comfortable for debugging)
-        $this->localMatchScores = $this->sortScoringByValue($this->localMatchScores);
-    }
-
-    protected function sortScoringByValue($inputArray) {
-        $return = array();
-        foreach($inputArray as $idx => $scorePairs) {
-            arsort($scorePairs);
-            $return[$idx] = $scorePairs;
-        }
-        return $return;
     }
 
     /**
