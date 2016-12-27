@@ -26,7 +26,7 @@
     $.extend(true, window.sliMpd, {
         modules : {}
     });
-    window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.AbstractPlayer.extend({
+    window.sliMpd.modules.MpdPlayer = window.sliMpd.modules.TimelinedPlayer.extend({
         mode : "mpd",
         faviconDoghnutColor : window.sliMpd.conf.color.mpd.favicon,
         faviconBackgroundColor : "#444",
@@ -54,9 +54,6 @@
         initialize : function(options) {
             this.$content = $(".player-"+ this.mode, this.$el);
 
-            this.trackAnimation = { currentPosPerc: 0 };
-            this.timeLineLight = new window.TimelineLite();
-
             this.pollWorker = new Worker(window.sliMpd.conf.absFilePrefix + "core/js/poll-worker.js");
             var that = this;
             this.pollWorker.addEventListener("message", function(e) {
@@ -77,7 +74,7 @@
                 cmd: "start"
             });
 
-            window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
+            window.sliMpd.modules.TimelinedPlayer.prototype.initialize.call(this, options);
         },
 
         render : function(options) {
@@ -311,21 +308,7 @@
                 $(".mpd-status-elapsed").text(this.formatTime(this.nowPlayingElapsed));
                 $(".mpd-status-total").text(this.formatTime(this.nowPlayingDuration));
 
-                // animate from 0 to 100, onUpdate -> change Text
-                this.timeLineLight = new window.TimelineLite();
-                this.trackAnimation.currentPosPerc = 0;
-                this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
-                    currentPosPerc: 100,
-                    ease: window.Linear.easeNone,
-                    onUpdate: this.updateSlider,
-                    onUpdateScope: this
-                });
-
-                if(this.nowPlayingState === "play") {
-                    this.timelineSetValue(this.nowPlayingPercent);
-                } else {
-                    this.timeLineLight.pause();
-                }
+                this.setPlayHead();
                 this.drawTimeGrid();
 
                 // update view in case current route shows playlist and playlist has changed
@@ -422,11 +405,6 @@
                 $(".mpd-status-playpause", this.$el).addClass("fa-play");
             }
             window.sliMpd.modules.AbstractPlayer.prototype.setPlayPauseIcon.call(this, item);
-        },
-
-        timelineSetValue : function(value) {
-            this.timeLineLight.progress(value/100);
-            window.sliMpd.modules.AbstractPlayer.prototype.timelineSetValue.call(this, value);
         },
 
         updateSlider : function(item) {

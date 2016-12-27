@@ -26,7 +26,7 @@
     $.extend(true, window.sliMpd, {
         modules : {}
     });
-    window.sliMpd.modules.XwaxPlayer = window.sliMpd.modules.AbstractPlayer.extend({
+    window.sliMpd.modules.XwaxPlayer = window.sliMpd.modules.TimelinedPlayer.extend({
 
         mode : "xwax",
         faviconDoghnutColor : "rgb(255,156,1)",
@@ -38,23 +38,15 @@
         timeGridStrokeColor2 : "#FCC772",
 
         deckIndex : false,
-        showWaveform : true,
         timecode : "",
-
-        timeLineLight : null,
 
         initialize : function(options) {
             this.deckIndex = options.deckIndex;
             this.timeGridSelectorCanvas = "timegrid-xwax-deck-"+ this.deckIndex;
             this.$content = $(".player-"+ this.mode, this.$el);
             this.showWaveform = options.showWaveform;
-            this.trackAnimation = { currentPosPerc: 0 };
 
-            if(this.showWaveform === true) {
-                this.timeLineLight = new window.TimelineLite();
-            }
-
-            window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
+            window.sliMpd.modules.TimelinedPlayer.prototype.initialize.call(this, options);
 
             this._template = _.template("<div class='show-no-connection'>xwax connection failed</div>");
             this.rendered = false;
@@ -71,21 +63,7 @@
                 this.updateTimecode(this.timecode);
                 return;
             }
-            // animate from 0 to 100, onUpdate -> change Text
-            this.timeLineLight = new window.TimelineLite();
-            this.trackAnimation.currentPosPerc = 0;
-            this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
-                currentPosPerc: 100,
-                ease: window.Linear.easeNone,
-                onUpdate: this.updateSlider,
-                onUpdateScope: this
-            });
-
-            if(this.nowPlayingState === "play") {
-                this.timelineSetValue(this.nowPlayingPercent);
-            } else {
-                this.timeLineLight.pause();
-            }
+            this.setPlayHead();
             this.drawTimeGrid();
             window.sliMpd.modules.AbstractPlayer.prototype.onRedrawComplete.call(this, item);
         },
@@ -107,7 +85,7 @@
             }
             // TODO: how to respect parents padding on absolute positioned div with width 100% ?
             $(".xwax-deck-"+ this.deckIndex+"-status-progressbar").css("width", "calc("+ this.timeLineLight.progress() *100 +"% - 15px)");
-            window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
+            window.sliMpd.modules.AbstractPlayer.prototype.TimelinedPlayer.call(this, item);
         },
         updateTimecode : function(timecode) {
             this.timecode = timecode;
