@@ -75,6 +75,8 @@ class Systemcheck {
 
             // environment
             'envCron'          => array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
+            'envPDO'           => array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
+            'envLocale'        => array('status' => 'danger', 'hide' => FALSE, 'skip' => FALSE),
 
             'skipAudioTests'=> FALSE
         );

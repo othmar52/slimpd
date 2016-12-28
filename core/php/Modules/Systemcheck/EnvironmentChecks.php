@@ -24,6 +24,8 @@ namespace Slimpd\Modules\Systemcheck;
 trait EnvironmentChecks {
     protected function runEnvironmentChecks(&$check) {
         $this->runCronjobCheck($check);
+        $this->runPDOCheck($check);
+        $this->runLocaleCheck($check);
     }
 
     /**
@@ -33,6 +35,24 @@ trait EnvironmentChecks {
         $check['envCron']['lastHeartBeat'] = \Slimpd\Modules\Importer\CliController::getHeartBeatTstamp();
         if(time() - $check['envCron']['lastHeartBeat'] < 100) {
             $check['envCron']['status'] = 'success';
+        }
+    }
+
+    /**
+     * checks that PDO is installed
+     */
+    protected function runPDOCheck(&$check) {
+        if (extension_loaded('pdo')) {
+            $check['envPDO']['status'] = 'success';
+        }
+    }
+
+    /**
+     * checks that the current locale can handle UTF-8 (by dint of the escapeshellarg function)
+     */
+    protected function runLocaleCheck(&$check) {
+        if (escapeshellarg('/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3') === "'/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3'") {
+            $check['envLocale']['status'] = 'success';
         }
     }
 }

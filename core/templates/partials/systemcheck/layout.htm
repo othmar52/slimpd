@@ -150,7 +150,7 @@
 
 <h1 id="discogs">{{'syscheck.env'|ll}}</h1>
 <ul class="list-group">
-	{% for test in ['envCron'] %}
+	{% for test in ['envCron', 'envPDO', 'envLocale'] %}
 	{% if not sys[test].hide %}
 	<li class="list-group-item list-group-item-{{sys[test].status}}">
 		<h4 class="uc">
@@ -164,12 +164,6 @@
 	</li>
 	{% endif %}
 	{% endfor %}
-	<li class="list-group-item list-group-item-info">
-		TODO: check if php-pdo is enabled (if (class_exists('PDO')) )
-	</li>
-	<li class="list-group-item list-group-item-info">
-		TODO: check locale settings to avoid errors caused by specialchars
-	</li>
 </ul>
 
 
