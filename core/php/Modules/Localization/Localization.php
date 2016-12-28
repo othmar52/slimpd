@@ -52,12 +52,7 @@ class Localization {
                 setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
                 break;
             default:
-                // TODO: what is the correct locale-setting for en?
-                // make sure this works correctly:
-                //   var_dump(basename('musicfiles/testdirectory/Ænima-bla')); die();
-                // for now force DE...
-                // setlocale(LC_ALL, array('en_EN.UTF-8','en_EN','en_EN'))
-                setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
+                setlocale(LC_ALL, array('en_US.UTF-8','en_US','english'));
                 break;
         }
     }
