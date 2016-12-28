@@ -202,7 +202,8 @@
                 borderWidth : 1.2,
                 backgroundColor : this.faviconBackgroundColor,
                 titleRenderer : function(v, t){
-                    return $(".player-"+ this.mode +" .now-playing-string").text();
+                    var nowPlaying = $(".player-" + window.sliMpd.currentPlayer.mode + " .now-playing-string").text();
+                    return nowPlaying === "" ? t : t + " - " + nowPlaying;
                 }
             }).setValue(this.nowPlayingPercent);
         },
