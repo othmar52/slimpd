@@ -21,5 +21,12 @@ URL: <a class="dark" href="{{configLocalUrl}}">{{configLocalUrl}}</a><br />
   ...
 </VirtualHost></xmp></pre>
 
-<p>TODO: Add example protection for <strong>nginx</strong><br />
-TODO: Add example protection for <strong>lighttpd</strong></p>
+<h4>Nginx v1.6</h4>
+<pre>server {
+  ...
+  location ~ config_local\.ini$ {
+    return 403;
+  }
+  ...
+}</pre>
+<p>TODO: Add example protection for <strong>lighttpd</strong></p>
