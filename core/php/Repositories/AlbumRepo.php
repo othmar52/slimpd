@@ -1,6 +1,6 @@
 <?php
 namespace Slimpd\Repositories;
-/* Copyright (C) 2015-2016 othmar52 <othmar52@users.noreply.github.com>
+/* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
  *
@@ -11,7 +11,7 @@ namespace Slimpd\Repositories;
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
  * for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
