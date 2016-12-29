@@ -56,6 +56,44 @@ class Controller extends \Slimpd\BaseController {
         return $response;
     }
 
+    /**
+     * downloadAction ALPHA
+     * 
+     * TODO: implement something like a size check to avoid creating a multi-terrabyte archive
+     * TODO: create a meaningful filename without problematic characters
+     * TODO: serve archive by redirecting to /deliver/path/to/archive
+     * TODO: delete archive file after delivery
+     * TODO: separate downloadDirectory and downloadAlbum
+     * TODO: implement a global exec() wrapper
+     */
+    public function downloadAction(Request $request, Response $response, $args) {
+        useArguments($request);
+        $this->completeArgsForDetailView($args['itemUid'], $args);
+        if($args['album'] === NULL || $this->conf['modules']['enable_dirdownload'] !== '1') {
+            $args['action'] = '404';
+            $this->view->render($response, 'surrounding.htm', $args);
+            return $response->withStatus(404);
+        }
+        $tmpFile = "localdata/cache/" . getFilePathHash(microtime(TRUE)). ".zip";
+        $cmd = str_replace(
+            array(
+                "%targetfile",
+                "%directory"
+            ),
+            array(
+                APP_ROOT . $tmpFile,
+                escapeshellargDirty($this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath()))
+            ),
+            $this->conf['modules']['cmd_dirdownload']
+        );
+        $cmd = "7za a -tzip ". APP_ROOT . $tmpFile ." " . escapeshellargDirty(
+            $this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath())
+        );
+        exec($cmd);
+        $newResponse = $response->withRedirect("/" . $tmpFile, 301);
+        return $newResponse;
+    }
+
     public function albumTracksAction(Request $request, Response $response, $args) {
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);

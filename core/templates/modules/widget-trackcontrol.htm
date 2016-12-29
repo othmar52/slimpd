@@ -216,7 +216,20 @@
 				<a href="{{root}}deliver/{{item.relPath|path2url}}" target="_blank" download><i class="fa fa-download"></i> Track</a>
 			</div>
 			<div class="col-md-12">
-				<a href="#" {{'niymarkup'|ll|raw}} data-container=".modal-body"><i class="fa fa-download"></i> Album</a>
+				{% if config.modules.enable_dirdownload %}
+				<a href="{{root}}download-album/{{item.albumUid}}"
+					title="CAUTION"
+					data-content="do not use this on huge directories!!!"
+					data-toggle="popover"
+					data-trigger="hover"
+					target="_blank">
+					<i class="fa fa-download"></i> Directory <sup class="col2">ALPHA</sup>
+				</a>
+				{% else %}
+				<a href="#" title="Directory download ALPHA is disabled by configuration" data-toggle="popover" data-placement="right" data-trigger="hover">
+					<i class="fa fa-download"></i> <strike>Directory</strike>
+				</a>
+				{% endif %}
 			</div>
 		</div>
 

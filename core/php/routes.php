@@ -45,7 +45,8 @@ $ctrlRoutes = [
         ['/albums/page/{currentPage}/sort/{sort}/{direction}', 'listAction'],
         ['/maintainance/albumdebug/[{itemParams:.*}]', 'editAction'],
         ['/maintainance/updatealbum/{itemUid}', 'updateAction', '', 'post'],
-        ['/album/remigrate/{itemUid}', 'remigrateAction']
+        ['/album/remigrate/{itemUid}', 'remigrateAction'],
+        ['/download-album/{itemUid}', 'downloadAction']
     ],
     'Systemcheck' => [
         ['/systemcheck', 'runAction', 'systemcheck']
