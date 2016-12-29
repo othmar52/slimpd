@@ -63,8 +63,9 @@ class Controller extends \Slimpd\BaseController {
      * TODO: create a meaningful filename without problematic characters
      * TODO: serve archive by redirecting to /deliver/path/to/archive
      * TODO: delete archive file after delivery
-     * TODO: separate downloadDirectory and downloadAlbum
+     * TODO: separate downloadDirectory from downloadAlbum
      * TODO: implement a global exec() wrapper
+     * TODO: add a systemcheck to verify $this->conf['modules']['cmd_dirdownload'] is working as expected
      */
     public function downloadAction(Request $request, Response $response, $args) {
         useArguments($request);
