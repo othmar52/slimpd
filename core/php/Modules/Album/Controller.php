@@ -66,6 +66,7 @@ class Controller extends \Slimpd\BaseController {
      * TODO: separate downloadDirectory from downloadAlbum
      * TODO: implement a global exec() wrapper
      * TODO: add a systemcheck to verify $this->conf['modules']['cmd_dirdownload'] is working as expected
+     * TODO: add something like a que to avoid parallel execution of archive creation
      */
     public function downloadAction(Request $request, Response $response, $args) {
         useArguments($request);
