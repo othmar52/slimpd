@@ -45,15 +45,4 @@ class Localization {
         }
         return 'TRNSLT:' . $itemkey;
     }
-
-    public static function setLocaleByLangKey($languageKey) {
-        switch($languageKey) {
-            case 'de':
-                setlocale(LC_ALL, array('de_DE.UTF-8','de_DE@euro','de_DE','german'));
-                break;
-            default:
-                setlocale(LC_ALL, array('en_US.UTF-8','en_US','english'));
-                break;
-        }
-    }
 }

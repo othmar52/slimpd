@@ -45,7 +45,6 @@ $container['conf'] = function ($cont) {
 
     $configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
     $config = $configLoader->loadConfig('master.ini', NULL, $noCache);
-    \Slimpd\Modules\Localization\Localization::setLocaleByLangKey($config['config']['langkey']);
 
     if(PHP_SAPI === 'cli') {
         $_SESSION['cliVerbosity'] = $config['config']['cli-verbosity'];
