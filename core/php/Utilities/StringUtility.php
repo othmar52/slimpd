@@ -168,21 +168,8 @@ function removeLeadingZeroes($input) {
 }
 
 /**
- * php's escapeshellarg() invalidates pathes with some specialchars
- *      escapeshellarg("/testdir/pathtest-u§s²e³l¼e¬sµsöäüß⁄x/testfile.mp3")
- *          results in "/testdir/pathtest-uselessx/testfile.mp3"
- * TODO: check if this is a security issue
- * @see: issue #4
- */
-function escapeshellargDirty($input) {
-    return "'" . str_replace("'", "'\"'\"'", $input) . "'";
-}
-
-
-
-/**
- * converts exotic characters in similar [A-Za-z0-9]
- * and removes all other characters (also whitspaces and punctiations)
+ * replaces exotic characters with similar [A-Za-z0-9] and removes all
+ * other characters (also whitespaces and punctuations) of a string
  * 
  * @param $string string    input string
  * @return string the converted string

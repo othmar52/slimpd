@@ -241,15 +241,15 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
         switch($this->container->filesystemUtility->getFileExt($absolutePath)) {
             case 'mp3':
                 $cmd =  $this->conf['modules']['bin_python_2'] .
-                    ' ' . APP_ROOT . "core/scripts/mp3md5_mod.py -3 " . escapeshellargDirty($absolutePath);
+                    ' ' . APP_ROOT . "core/scripts/mp3md5_mod.py -3 " . escapeshellarg($absolutePath);
                 break;
             case 'flac':
                 $cmd =  $this->conf['modules']['bin_metaflac'] .
-                    ' --show-md5sum ' . escapeshellargDirty($absolutePath);
+                    ' --show-md5sum ' . escapeshellarg($absolutePath);
                 break;
             default:
                 # TODO: can we get md5sum with php in a performant way?
-                $cmd = $this->conf['modules']['bin_md5'] .' ' . escapeshellargDirty($absolutePath) . ' | awk \'{ print $1 }\'';
+                $cmd = $this->conf['modules']['bin_md5'] .' ' . escapeshellarg($absolutePath) . ' | awk \'{ print $1 }\'';
         }
         if($returnCommand === TRUE) {
             return $cmd;

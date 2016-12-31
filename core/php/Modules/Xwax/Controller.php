@@ -76,7 +76,7 @@ class Controller extends \Slimpd\BaseController {
             return $newResponse->withJson(notifyJson($this->ll->str('xwax.invalid.file'), 'danger'));
         }
         // TODO: fetch artist and title from database
-        $this->xwax->loadArgs = escapeshellargDirty($filePath) . ' artistname tracktitle';
+        $this->xwax->loadArgs = escapeshellarg($filePath) . ' artistname tracktitle';
         $this->xwax->cmd();
         return $newResponse->withJson($this->xwax->notifyJson);
     }

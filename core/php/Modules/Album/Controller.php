@@ -84,12 +84,9 @@ class Controller extends \Slimpd\BaseController {
             ),
             array(
                 APP_ROOT . $tmpFile,
-                escapeshellargDirty($this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath()))
+                escapeshellarg($this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath()))
             ),
             $this->conf['modules']['cmd_dirdownload']
-        );
-        $cmd = "7za a -tzip ". APP_ROOT . $tmpFile ." " . escapeshellargDirty(
-            $this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath())
         );
         exec($cmd);
         $newResponse = $response->withRedirect("/" . $tmpFile, 301);
