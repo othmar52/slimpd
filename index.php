@@ -43,9 +43,7 @@ foreach([
 // Timezone needs to be set before session_start, the locale is also set here for convience
 $configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
 $config = $configLoader->loadConfig('master.ini');
-if (isset($config['config']['timezone'])) {
-    date_default_timezone_set($config['config']['timezone']);
-}
+date_default_timezone_set($config['config']['timezone']);
 if (isset($config['config']['locale'])) {
     setlocale(LC_ALL, array($config['config']['locale']));
 }
