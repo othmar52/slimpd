@@ -147,7 +147,7 @@ class Filebrowser {
     protected function checkDirectoryAccess($requestedPath, $systemdir) {
 
         if($this->container->conf["mpd"]["musicdir"] === "") {
-            $this->container->flash->AddMessage("error", $this->container->ll->str("error.mpd.conf.musicdir"));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("error.mpd.conf.musicdir"));
             return FALSE;
         }
 
@@ -155,7 +155,7 @@ class Filebrowser {
         $realpath = $this->container->filesystemUtility->getFileRealPath($path) . DS;
 
         if($realpath === DS && $this->container->conf["mpd"]["musicdir"] !== $requestedPath) {
-            $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
             return FALSE;
         }
 
@@ -166,7 +166,7 @@ class Filebrowser {
 
         // avoid path disclosure outside relevant directories
         if($realpath === FALSE && $systemdir === FALSE) {
-            $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.realpathempty", [$realpath]));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.realpathempty", [$realpath]));
             return FALSE;
         }
 
@@ -177,14 +177,14 @@ class Filebrowser {
 
         if($this->container->filesystemUtility->isInAllowedPath($path) === FALSE && $systemdir === FALSE) {
             // TODO: remove this error message "outsiderealpath"! invaliddir should be enough
-            // $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.outsiderealpath", [$realpath, $this->conf["mpd"]["musicdir"]]));
-            $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
+            // $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.outsiderealpath", [$realpath, $this->conf["mpd"]["musicdir"]]));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
             return FALSE;
         }
 
         // check filesystem permission
         if(is_readable($realpath) === FALSE) {
-            $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.dirpermission", [$path]));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.dirpermission", [$path]));
             return FALSE;
         }
 
@@ -230,8 +230,7 @@ class Filebrowser {
                 $found = TRUE;
             }
         }
-        // TODO: force message getting displayed immediately (currrently we need another request))
-        $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.nonextdir"));
+        $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.nonextdir"));
         return $this->getDirectoryContent($path);
     }
 
@@ -250,16 +249,14 @@ class Filebrowser {
         foreach($parentDirectory->subDirectories["dirs"] as $subDir) {
             if($subDir->getRelPath()."/" === $path) {
                 if($prev === 0) {
-                    // TODO: force message getting displayed immediately (currrently we need another request))
-                    $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.noprevdir"));
+                    $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.noprevdir"));
                     return $this->getDirectoryContent($path);
                 }
                 return $this->getDirectoryContent($prev);
             }
             $prev = $subDir->getRelPath();
         }
-        // TODO: force message getting displayed immediately (currrently we need another request))
-        $this->container->flash->AddMessage("error", $this->container->ll->str("filebrowser.noprevdir"));
+        $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.noprevdir"));
         return $this->getDirectoryContent($path);
     }
 

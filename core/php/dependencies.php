@@ -107,7 +107,7 @@ $container['db'] = function ($cont) {
             cliLog($cont->ll->str('database.connect'), 1, 'red');
             exit;
         }
-        $cont->flash->AddMessage('error', $cont->ll->str('database.connect'));
+        $cont->flash->AddMessageNow('error', $cont->ll->str('database.connect'));
         $uri = $cont->conf['config']['absRefPrefix'] . 'systemcheck?dberror';
         // TODO: are we able to set the header in the reponse object?
         // workaround without response object:

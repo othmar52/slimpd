@@ -490,18 +490,18 @@ class Mpd {
                 3
             );
             if($socket === FALSE) {
-                $this->container->flash->AddMessage('error', $errorString . "(" . $errorNo . ")");
+                $this->container->flash->AddMessageNow('error', $errorString . "(" . $errorNo . ")");
                 return FALSE;
             }
         } catch (\Exception $e) {
-            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnect'));
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnect'));
             return FALSE;
         }
 
         try {
             fwrite($socket, $command . "\n");
         } catch (\Exception $e) {
-            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdwrite'));
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdwrite'));
             return FALSE;
         }
 
@@ -510,13 +510,13 @@ class Mpd {
         $line = trim(fgets($socket, 1024));
         if (substr($line, 0, 3) === 'ACK') {
             fclose($socket);
-            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
             return FALSE;
         }
 
         if (substr($line, 0, 6) !== 'OK MPD') {
             fclose($socket);
-            $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
             return FALSE;
         }
 
@@ -525,7 +525,7 @@ class Mpd {
             $line = trim(@fgets($socket, 1024));
             if (substr($line, 0, 3) == 'ACK') {
                 fclose($socket);
-                $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+                $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
                 return FALSE;
             }
             if (substr($line, 0, 2) == 'OK') {
@@ -546,7 +546,7 @@ class Mpd {
             $array[$key] = $value;
         }
         fclose($socket);
-        $this->container->flash->AddMessage('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
+        $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
         return FALSE;
     }
 }

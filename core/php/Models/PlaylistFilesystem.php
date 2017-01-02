@@ -43,7 +43,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
         }
 
         if($this->getErrorPath() === TRUE) {
-            $this->flash->AddMessage('error', 'playlist file ' . $relPath . ' does not exist');
+            $this->flash->AddMessageNow('error', 'playlist file ' . $relPath . ' does not exist');
             return $this;
         }
         $this->setTitle(basename($this->getRelPath()));
@@ -62,7 +62,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
                 $this->parseNml($raw, $minIndex, $maxIndex);
                 break;
             default :
-                $this->flash->AddMessage('error', 'playlist extension ' . $this->getExt() . ' is not supported');
+                $this->flash->AddMessageNow('error', 'playlist extension ' . $this->getExt() . ' is not supported');
                 return;
         }
         $this->fetchedLength === TRUE;
@@ -105,7 +105,7 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
     protected function parseNml($rawFileContent, $minIndex, $maxIndex) {
         if(isValidXml($rawFileContent) === FALSE) {
-            $this->container->flash->AddMessage('error', 'invalid XML ' . $this->getTitle());
+            $this->container->flash->AddMessageNow('error', 'invalid XML ' . $this->getTitle());
             return;
         }
         $playlistContent = new \SimpleXMLElement($rawFileContent);

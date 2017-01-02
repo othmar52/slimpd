@@ -30,7 +30,7 @@ class DiscogsitemRepo extends \Slimpd\Repositories\BaseRepository {
             return $this;
         }
         if(is_numeric($releaseId) === FALSE || $releaseId < 1) {
-            $this->container->flash->AddMessage('error', $this->container->ll->str('error.discogsid'));
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.discogsid'));
             return;
         }
         $instance = new \Slimpd\Models\Discogsitem();

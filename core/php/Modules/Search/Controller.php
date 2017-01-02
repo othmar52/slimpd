@@ -455,7 +455,7 @@ class Controller extends \Slimpd\BaseController {
         // validate directory
         $directory = $this->directoryRepo->create($args['itemParams']);
         if($this->directoryRepo->validate($directory) === FALSE) {
-            $this->container->flash->AddMessage("error", $this->container->ll->str("directory.notfound"));
+            $this->container->flash->AddMessageNow("error", $this->container->ll->str("directory.notfound"));
             $this->view->render($response, 'surrounding.htm', $args);
             return $response;
         }
