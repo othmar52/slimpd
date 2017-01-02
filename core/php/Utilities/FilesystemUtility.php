@@ -207,24 +207,4 @@ class FilesystemUtility {
             }
         }
     }
-
-    public function getDirectorySize($absolutePath, $stopAfterMB = FALSE) {
-        $bytesTotal = 0;
-        $stopAfterBytes = ($stopAfterMB !== FALSE) ? $stopAfterMB*1024*1024 : 0;
-        $path = realpath($absolutePath);
-        if($path === FALSE){
-            return $bytesTotal;
-        }
-        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS)) as $object){
-            $bytesTotal += $object->getSize();
-            if($stopAfterBytes === 0) {
-                continue;
-            }
-            if($bytesTotal > $stopAfterBytes) {
-                // do not continue in case we already reached size limit
-                return $bytesTotal;
-            }
-        }
-        return $bytesTotal;
-    }
 }

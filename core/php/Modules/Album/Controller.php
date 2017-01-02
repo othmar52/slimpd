@@ -73,13 +73,15 @@ class Controller extends \Slimpd\BaseController {
             return $response->withStatus(404);
         }
         $realPath = $this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath());
+        $maxSizeMB = $this->conf['modules']['max_archivsize'];
+        $maxSizeBytes = $this->conf['modules']['max_archivsize']*1024*1024;
 
         // check total directory size before creating archive
-        $maxSizeMB = $this->conf['modules']['max_archivsize'];
-        $realSizeMB = round($this->container->filesystemUtility->getDirectorySize($realPath, $maxSizeMB)/1024/1024);
+        $filesystemReader = new \Slimpd\Modules\Importer\FilesystemReader($this->container);
+        $realSizeBytes = $filesystemReader->getDirectorySizeInBytes($realPath, $maxSizeBytes);
 
         // do not continue if expected archive size is too big
-        if($realSizeMB > $maxSizeMB) {
+        if($realSizeBytes > $maxSizeBytes) {
             $this->flash->AddMessageNow("error", $this->container->ll->str("error.dirarchivsize", [$maxSizeMB]));
             $this->view->render($response, 'surrounding.htm', $args);
             return $response;

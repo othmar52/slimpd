@@ -190,4 +190,23 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
         closedir($handle);
         return $foundFiles;
     }
+
+    public function getDirectorySizeInBytes($absolutePath, $stopAfterBytes = FALSE) {
+        $bytesTotal = 0;
+        $path = realpath($absolutePath);
+        if($path === FALSE){
+            return $bytesTotal;
+        }
+        foreach(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($absolutePath, \FilesystemIterator::SKIP_DOTS)) as $object){
+            $bytesTotal += $object->getSize();
+            if($stopAfterBytes === FALSE) {
+                continue;
+            }
+            if($bytesTotal > $stopAfterBytes) {
+                // do not continue in case we already reached size limit
+                return $bytesTotal;
+            }
+        }
+        return $bytesTotal;
+    }
 }
