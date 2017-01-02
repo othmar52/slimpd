@@ -46,22 +46,7 @@ trait MethodTypeListAction {
                     break;
             }
         }
-
-        if($searchterm !== FALSE) {
-            $args['itemlist'] = $this->$repoKey->getInstancesLikeAttributes(
-                array('az09' => preg_replace('/[^\da-z]/i', '%', $searchterm)),
-                $itemsPerPage,
-                $currentPage
-            );
-            $args['totalresults'] = $this->$repoKey->getCountLikeAttributes(
-                array('az09' => preg_replace('/[^\da-z]/i', '%', $searchterm))
-            );
-            $urlPattern = $this->conf['config']['absRefPrefix'] .$className.'s/searchterm/'.$searchterm.'/page/(:num)';
-        } else {
-            $args['itemlist'] = $this->$repoKey->getAll($itemsPerPage, $currentPage);
-            $args['totalresults'] = $this->$repoKey->getCountAll();
-            $urlPattern = $this->conf['config']['absRefPrefix'] . $className.'s/page/(:num)';
-        }
+        $urlPattern = $this->fetchItemlistAndUrlPattern($args, $className, $repoKey, $searchterm, $itemsPerPage, $currentPage);
         $args['paginator'] = new \JasonGrimes\Paginator(
             $args['totalresults'],
             $itemsPerPage,
@@ -72,5 +57,21 @@ trait MethodTypeListAction {
         $args['paginator']->setMaxPagesToShow(paginatorPages($currentPage));
         $args['renderitems'] = $this->getRenderItems($args['itemlist']);
         return;
+    }
+
+    protected function fetchItemlistAndUrlPattern(&$args, $className, $repoKey, $searchterm, $itemsPerPage, $currentPage) {
+        if($searchterm === FALSE) {
+            $args['itemlist'] = $this->$repoKey->getAll($itemsPerPage, $currentPage);
+            $args['totalresults'] = $this->$repoKey->getCountAll();
+            return $this->conf['config']['absRefPrefix'] . $className.'s/page/(:num)';
+        }
+        $where = array('az09' => preg_replace('/[^\da-z]/i', '%', $searchterm));
+        $args['itemlist'] = $this->$repoKey->getInstancesLikeAttributes(
+            $where,
+            $itemsPerPage,
+            $currentPage
+        );
+        $args['totalresults'] = $this->$repoKey->getCountLikeAttributes($where);
+        return $this->conf['config']['absRefPrefix'] .$className.'s/searchterm/'.$searchterm.'/page/(:num)';
     }
 }
