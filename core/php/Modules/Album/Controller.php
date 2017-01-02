@@ -76,6 +76,19 @@ class Controller extends \Slimpd\BaseController {
             $this->view->render($response, 'surrounding.htm', $args);
             return $response->withStatus(404);
         }
+        $realPath = $this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath());
+
+        // check total directory size before creating archive
+        $maxSizeMB = $this->conf['modules']['max_archivsize'];
+        $realSizeMB = round($this->container->filesystemUtility->getDirectorySize($realPath)/1024/1024);
+
+        // do not continue if expected archive size is too big
+        if($realSizeMB > $maxSizeMB) {
+            $this->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$maxSizeMB]));
+            $this->view->render($response, 'surrounding.htm', $args);
+            return $response;
+        }
+
         $tmpFile = "localdata/cache/" . getFilePathHash(microtime(TRUE)). ".zip";
         $cmd = str_replace(
             array(
@@ -84,7 +97,7 @@ class Controller extends \Slimpd\BaseController {
             ),
             array(
                 APP_ROOT . $tmpFile,
-                escapeshellarg($this->container->filesystemUtility->getFileRealPath($args['album']->getRelPath()))
+                escapeshellarg($realPath)
             ),
             $this->conf['modules']['cmd_dirdownload']
         );
