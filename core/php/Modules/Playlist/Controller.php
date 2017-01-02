@@ -43,11 +43,10 @@ class Controller extends \Slimpd\BaseController {
         $totalItems = $playlist->getLength();
         $currentPage = ($request->getParam('page') === 'last')
             ? ceil($totalItems/$itemsPerPage)
-            : ($request->getParam('page')) ? $request->getParam('page') : 1;
+            : (($request->getParam('page')) ? $request->getParam('page') : 1);
 
         $minIndex = (($currentPage-1) * $itemsPerPage);
         $maxIndex = $minIndex +  $itemsPerPage;
-
         $playlist->fetchTrackRange($minIndex, $maxIndex);
 
         $args['itemlist'] = $playlist->getTracks();
