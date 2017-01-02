@@ -39,8 +39,8 @@
 		<h3>{{'download'|ll}}</h3>
 		<a href="{{root}}download-album/{{album.uid}}"
 			class="btn btn-default"
-			title="CAUTION"
-			data-content="do not use this on huge directories!!!"
+			title="{{'caution'|ll|upper}}"
+			data-content="{{'dirdownload.warning'|ll([config.modules.max_archivsize])}}"
 			data-toggle="popover"
 			data-trigger="hover"
 			target="_blank">

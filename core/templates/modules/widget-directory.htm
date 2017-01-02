@@ -60,6 +60,25 @@
 			<a class="ajax-link btn btn-default" href="{{root}}directory/{{ [directory,item.title]|path2url }}" title="{{'viewdirtracksrecursive.title'|ll}}" data-dismiss="modal">
 				<i class="fa fa-lg fa-search"></i> {{'viewdirtracksrecursive'|ll}}
 			</a>
+			{% if album %}
+				<h3>Download</h3>
+				{% if config.modules.enable_dirdownload %}
+				{# TODO: currently we only have a route for download-album but not for download-directory #}
+				<a href="{{root}}download-album/{{album.uid}}"
+					class="btn btn-default"
+					title="{{'caution'|ll|upper}}"
+					data-content="{{'dirdownload.warning'|ll([config.modules.max_archivsize])}}"
+					data-toggle="popover"
+					data-trigger="hover"
+					target="_blank">
+					<i class="fa fa-download"></i> Directory <sup class="col2">ALPHA</sup>
+				</a>
+				{% else %}
+				<a href="#" title="Directory download ALPHA is disabled by configuration" data-toggle="popover" data-placement="right" data-trigger="hover">
+					<i class="fa fa-download"></i> <strike>Directory</strike>
+				</a>
+				{% endif %}
+			{% endif %}
 		</div>
 
 		<div class="col-md-4">

@@ -59,10 +59,6 @@ class Controller extends \Slimpd\BaseController {
     /**
      * downloadAction ALPHA
      * 
-     * TODO: implement something like a size check to avoid creating a multi-terrabyte archive
-     * TODO: create a meaningful filename without problematic characters
-     * TODO: serve archive by redirecting to /deliver/path/to/archive
-     * TODO: delete archive file after delivery
      * TODO: separate downloadDirectory from downloadAlbum
      * TODO: implement a global exec() wrapper
      * TODO: add a systemcheck to verify $this->conf['modules']['cmd_dirdownload'] is working as expected
@@ -80,16 +76,16 @@ class Controller extends \Slimpd\BaseController {
 
         // check total directory size before creating archive
         $maxSizeMB = $this->conf['modules']['max_archivsize'];
-        $realSizeMB = round($this->container->filesystemUtility->getDirectorySize($realPath)/1024/1024);
+        $realSizeMB = round($this->container->filesystemUtility->getDirectorySize($realPath, $maxSizeMB)/1024/1024);
 
         // do not continue if expected archive size is too big
         if($realSizeMB > $maxSizeMB) {
-            $this->flash->AddMessage("error", $this->container->ll->str("filebrowser.invaliddir", [$maxSizeMB]));
+            $this->flash->AddMessageNow("error", $this->container->ll->str("error.dirarchivsize", [$maxSizeMB]));
             $this->view->render($response, 'surrounding.htm', $args);
             return $response;
         }
 
-        $tmpFile = "localdata/cache/" . getFilePathHash(microtime(TRUE)). ".zip";
+        $tmpFile = "localdata/cache/" . az09(basename($realPath), "_\-.", FALSE). ".zip";
         $cmd = str_replace(
             array(
                 "%targetfile",
@@ -102,7 +98,30 @@ class Controller extends \Slimpd\BaseController {
             $this->conf['modules']['cmd_dirdownload']
         );
         exec($cmd);
-        $newResponse = $response->withRedirect("/" . $tmpFile, 301);
+
+        // do not block other requests of this client
+        session_write_close();
+        set_time_limit(0);
+
+        $newResponse = $response->withHeader('Content-Description', 'File Transfer')
+           ->withHeader('Content-Type', 'application/octet-stream')
+           ->withHeader('Content-Disposition', 'attachment;filename="'.basename(APP_ROOT . $tmpFile).'"')
+           ->withHeader('Expires', '0')
+           ->withHeader('Cache-Control', 'must-revalidate')
+           ->withHeader('Pragma', 'public')
+           ->withHeader('Content-Length', filesize(APP_ROOT . $tmpFile));
+
+        $file = @fopen(APP_ROOT . $tmpFile,"rb");
+        fseek($file, 0);
+        while(!feof($file)) {
+            $response->getBody()->write(@fread($file, 1024*8));
+            if (connection_status()!=0) {
+                @fclose($file);
+                return $newResponse;
+            }
+        }
+        @fclose($file);
+        unlink(APP_ROOT . $tmpFile);
         return $newResponse;
     }
 
