@@ -57,11 +57,11 @@ abstract class AbstractModel {
                 continue;
             }
             if(method_exists($calledClass, $getter)) {
-                $instancePropertyValue = $this->$getter();
-                if($ignoreEmpty === TRUE && !$instancePropertyValue) {
+                $propertyValue = $this->$getter();
+                if($ignoreEmpty === TRUE && !$propertyValue) {
                     continue;
                 }
-                $return[$classVar] = $instancePropertyValue;
+                $return[$classVar] = $propertyValue;
             }
         }
         return $return;

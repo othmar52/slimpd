@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\album;
+namespace Slimpd\Modules\Album;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client

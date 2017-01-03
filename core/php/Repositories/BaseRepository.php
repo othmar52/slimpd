@@ -26,7 +26,6 @@ class BaseRepository {
 
     public function __construct(\Slim\Container $container) {
         $this->container = $container;
-        #echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
         $this->db = $container->db;
         $this->conf = $container->conf;
     }
@@ -273,11 +272,11 @@ class BaseRepository {
                 continue;
             }
             if(method_exists($calledClass, $getter)) {
-                $instancePropertyValue = $this->$getter();
-                if($ignoreEmpty === TRUE && !$instancePropertyValue) {
+                $propertyValue = $this->$getter();
+                if($ignoreEmpty === TRUE && !$propertyValue) {
                     continue;
                 }
-                $return[$classVar] = $instancePropertyValue;
+                $return[$classVar] = $propertyValue;
             }
         }
         return $return;

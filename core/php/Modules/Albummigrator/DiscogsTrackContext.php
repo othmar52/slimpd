@@ -27,7 +27,7 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
     public $idx;
 
     public function __construct(\Slimpd\Models\DiscogsItem $discogsItem, $idx, $container) {
-        $this->idx = $idx;        
+        $this->idx = $idx;
         $this->container = $container;
         $this->db = $container->db;
         $this->ll = $container->ll;
@@ -47,7 +47,7 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
                 continue;
             }
             $this->setTrackNumber($trackData['position']);
-            $this->setFeaturedArtistsByApiResponse($trackData);
+            $this->setFeaturedArtistsByApiResponse($trackData, $apiResponse['artists']);
             $this->setArtistsByApiResponse($trackData);
             $this->setTitleString($trackData['title']);
             if(strlen($trackData['duration']) > 0) {
@@ -56,9 +56,9 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
         }
     }
 
-    protected function setArtistsByApiResponse($trackData) {
+    protected function setArtistsByApiResponse($trackData, $albumArtists) {
         // use track artists or album artist?
-        $trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $apiResponse['artists'];
+        $trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $albumArtists;
         foreach($trackArtists as $artist) {#
             if(array_key_exists($artist['id'], $this->featArtists) === TRUE) {
                 // skip already provided featured artists
