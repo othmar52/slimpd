@@ -46,37 +46,45 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
             if($counter !== $this->idx) {
                 continue;
             }
-            if(isset($trackData['extraartists'])) {
-                foreach($trackData['extraartists'] as $artist) {
-                    switch($artist['role']) {
-                        case 'Featuring':
-                            $this->featArtists[ $artist['id'] ] = $artist['name'];
-                            break;
-                        default:
-                            // TODO: lets see what other possibilities discogs-API-response is returning...
-                            break;
-                    }
-                }
-            }
-
             $this->setTrackNumber($trackData['position']);
-            // use track artists or album artist?
-            $trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $apiResponse['artists'];
-            foreach($trackArtists as $artist) {#
-                if(array_key_exists($artist['id'], $this->featArtists) === TRUE) {
-                    // skip already provided featured artists
-                    continue;
-                }
-                $this->regularArtists[] = $artist['name'];
-            }
-            // TODO: move this to class TrackArtistExtractor
-            $this->artistString = join(" & ", $this->regularArtists);
-            if(count($this->featArtists) > 0) {
-                $this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
-            }
+            $this->setFeaturedArtistsByApiResponse($trackData);
+            $this->setArtistsByApiResponse($trackData);
             $this->setTitleString($trackData['title']);
             if(strlen($trackData['duration']) > 0) {
                 $this->setMiliseconds(timeStringToSeconds($trackData['duration'])*1000);
+            }
+        }
+    }
+
+    protected function setArtistsByApiResponse($trackData) {
+        // use track artists or album artist?
+        $trackArtists = (isset($trackData['artists']) === TRUE) ? $trackData['artists'] : $apiResponse['artists'];
+        foreach($trackArtists as $artist) {#
+            if(array_key_exists($artist['id'], $this->featArtists) === TRUE) {
+                // skip already provided featured artists
+                continue;
+            }
+            $this->regularArtists[] = $artist['name'];
+        }
+        // TODO: move this to class TrackArtistExtractor
+        $this->artistString = join(" & ", $this->regularArtists);
+        if(count($this->featArtists) > 0) {
+            $this->artistString .= " (ft. " . join(" & ", $this->featArtists) . ")";
+        }
+    }
+
+    protected function setFeaturedArtistsByApiResponse($trackData) {
+        if(isset($trackData['extraartists']) === FALSE) {
+            return;
+        }
+        foreach($trackData['extraartists'] as $artist) {
+            switch($artist['role']) {
+                case 'Featuring':
+                    $this->featArtists[ $artist['id'] ] = $artist['name'];
+                    break;
+                default:
+                    // TODO: lets see what other possibilities discogs-API-response is returning...
+                    break;
             }
         }
     }
