@@ -1,6 +1,6 @@
 <?php
 namespace Slimpd\Traits;
-/* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
+/* Copyright (C) 2017 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
  *
@@ -17,18 +17,15 @@ namespace Slimpd\Traits;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-trait PropGroupCounters {
-    use \Slimpd\Traits\PropertyTrackCount;       // trackCount
-    protected $albumCount;
+trait PropertyCatalogNr {
+    protected $catalogNr;
 
-    // getter
-    public function getAlbumCount() {
-        return $this->albumCount;
+    public function getCatalogNr() {
+        return $this->catalogNr;
     }
 
-    // setter
-    public function setAlbumCount($value) {
-        $this->albumCount = $value;
+    public function setCatalogNr($value) {
+        $this->catalogNr = $value;
         return $this;
     }
 }

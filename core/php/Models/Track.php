@@ -18,7 +18,8 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Track extends \Slimpd\Models\AbstractTrack {
-    use \Slimpd\Traits\PropGroupTypeIds; // artistUid, labelUid, genreUid
+    use \Slimpd\Traits\PropGroupTypeIds;  // artistUid, labelUid, genreUid
+    use \Slimpd\Traits\PropGroupExternalIds; // discogsId, rolldabeatsId, beatportId, junoId
 
     protected $featuringUid;
     protected $remixerUid;
@@ -28,11 +29,6 @@ class Track extends \Slimpd\Models\AbstractTrack {
     protected $transcoded;
     protected $isMixed;
     protected $dynRange;
-
-    protected $discogsId;
-    protected $rolldabeatsId;
-    protected $beatportId;
-    protected $junoId;
 
     public static $tableName = 'track';
     public static $repoKey = 'trackRepo';
@@ -84,23 +80,6 @@ class Track extends \Slimpd\Models\AbstractTrack {
         return $this;
     }
 
-    public function setDiscogsId($value) {
-        $this->discogsId = $value;
-        return $this;
-    }
-    public function setRolldabeatsId($value) {
-        $this->rolldabeatsId = $value;
-        return $this;
-    }
-    public function setBeatportId($value) {
-        $this->beatportId = $value;
-        return $this;
-    }
-    public function setJunoId($value) {
-        $this->junoId = $value;
-        return $this;
-    }
-
     public function setDynRange($value) {
         $this->dynRange = $value;
         return $this;
@@ -131,19 +110,6 @@ class Track extends \Slimpd\Models\AbstractTrack {
 
     public function getIsMixed() {
         return $this->isMixed;
-    }
-
-    public function getDiscogsId() {
-        return $this->discogsId;
-    }
-    public function getRolldabeatsId() {
-        return $this->rolldabeatsId;
-    }
-    public function getBeatportId() {
-        return $this->beatportId;
-    }
-    public function getJunoId() {
-        return $this->junoId;
     }
 
     public function getDynRange() {

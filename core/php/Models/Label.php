@@ -18,22 +18,18 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Label extends \Slimpd\Models\AbstractModel {
+    use \Slimpd\Traits\PropertyTitle;     // title
     use \Slimpd\Traits\PropGroupCounters; // trackCount, albumCount
     use \Slimpd\Traits\PropertyTopArtist; // topArtistUids
-    use \Slimpd\Traits\PropertyTopGenre; // topGenreUids
+    use \Slimpd\Traits\PropertyTopGenre;  // topGenreUids
     use \Slimpd\Traits\PropertyYearRange; // yearRange
 
-    protected $title;
     protected $az09;
 
     public static $tableName = 'label';
     public static $repoKey = 'labelRepo';
 
     //setter
-    public function setTitle($value) {
-        $this->title = $value;
-        return $this;
-    }
     public function setAz09($value) {
         $this->az09 = $value;
         return $this;
@@ -41,9 +37,6 @@ class Label extends \Slimpd\Models\AbstractModel {
 
 
     // getter
-    public function getTitle() {
-        return $this->title;
-    }
     public function getAz09() {
         return $this->az09;
     }

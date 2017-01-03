@@ -18,7 +18,8 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
-    use \Slimpd\Traits\PropertyMimeType;
+    use \Slimpd\Traits\PropertyMimeType;    // mimeType
+    use \Slimpd\Traits\PropertyError;       // error
 
     protected $width;
     protected $height;
@@ -31,11 +32,9 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
     protected $pictureType;
     protected $sorting;
     protected $hidden;
-    protected $error;
 
     public static $tableName = 'bitmap';
     public static $repoKey = 'bitmapRepo';
-
 
     //setter
     public function setWidth($value) {
@@ -78,10 +77,6 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
         $this->hidden = $value;
         return $this;
     }
-    public function setError($value) {
-        $this->error = $value;
-        return $this;
-    }
 
     // getter
     public function getWidth() {
@@ -113,8 +108,5 @@ class Bitmap extends \Slimpd\Models\AbstractFilesystemItem {
     }
     public function getHidden() {
         return $this->hidden;
-    }
-    public function getError() {
-        return $this->error;
     }
 }

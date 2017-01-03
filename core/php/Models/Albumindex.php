@@ -18,8 +18,8 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Albumindex extends \Slimpd\Models\AbstractModel {
+    use \Slimpd\Traits\PropertyTitle; // $title
     protected $artist;
-    protected $title;
     protected $allchunks;
 
     public static $tableName = 'albumindex';
@@ -28,10 +28,6 @@ class Albumindex extends \Slimpd\Models\AbstractModel {
     //setter
     public function setArtist($value) {
         $this->artist = $value;
-        return $this;
-    }
-    public function setTitle($value) {
-        $this->title = $value;
         return $this;
     }
     public function setAllchunks($value) {
@@ -43,9 +39,6 @@ class Albumindex extends \Slimpd\Models\AbstractModel {
     // getter
     public function getArtist() {
         return $this->artist;
-    }
-    public function getTitle() {
-        return $this->title;
     }
     public function getAllchunks() {
         return $this->allchunks;

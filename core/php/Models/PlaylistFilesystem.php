@@ -18,8 +18,8 @@ namespace Slimpd\Models;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
+    use \Slimpd\Traits\PropertyTitle;       // $title
     protected $errorPath = TRUE; // TODO: consider to remove and use $error instead
-    protected $title;
     protected $ext;
     protected $length;
     protected $itemPaths = [];    // pathstrings
@@ -126,15 +126,6 @@ class PlaylistFilesystem extends \Slimpd\Models\AbstractFilesystemItem {
 
     public function getErrorPath() {
         return $this->errorPath;
-    }
-
-    public function setTitle($value) {
-        $this->title = $value;
-        return $this;
-    }
-
-    public function getTitle() {
-        return $this->title;
     }
 
     public function setExt($ext) {

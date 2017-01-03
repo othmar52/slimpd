@@ -19,14 +19,14 @@ namespace Slimpd\Models;
  */
 
 class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
-    use \Slimpd\Traits\PropertyLastScan;
-    use \Slimpd\Traits\PropertyFingerprint;
+    use \Slimpd\Traits\PropertyAdded;       // added
+    use \Slimpd\Traits\PropertyLastScan;    // lastScan
+    use \Slimpd\Traits\PropertyFingerprint; // fingerprint
+    use \Slimpd\Traits\PropertyError;       // error
 
     protected $directoryMtime = 0;
-    protected $added;
     protected $extension;
     protected $lastDirScan;
-    protected $error;    // TODO: move to Trait
 
     public static $tableName = 'rawtagdata';
     public static $repoKey = 'rawtagdataRepo';
@@ -37,10 +37,6 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
         $this->directoryMtime = $value;
         return $this;
     }
-    public function setAdded($value) {
-        $this->added = $value;
-        return $this;
-    }
     public function setExtension($value) {
         $this->extension = $value;
         return $this;
@@ -49,26 +45,16 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
         $this->lastDirScan = $value;
         return $this;
     }
-    public function setError($value) {
-        $this->error = $value;
-        return $this;
-    }
 
 
     // getter
     public function getDirectoryMtime() {
         return $this->directoryMtime;
     }
-    public function getAdded() {
-        return $this->added;
-    }
     public function getExtension() {
         return $this->extension;
     }
     public function getLastDirScan() {
         return $this->lastDirScan;
-    }
-    public function getError() {
-        return $this->error;
     }
 }
