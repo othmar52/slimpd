@@ -21,6 +21,7 @@
 $ctrlRoutes = [
     ['[/]', 'indexAction'],
     ['/hard-reset', 'hardResetAction'],
+    ['/hard-reset/--force', 'hardResetForceAction'],
     ['/remigrate', 'remigrateAction'],
     ['/remigrate/--force', 'remigrateForceAction'],
     ['/remigratealbum/{albumUid}', 'remigratealbumAction'],

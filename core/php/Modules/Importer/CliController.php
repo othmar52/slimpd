@@ -150,6 +150,11 @@ class CliController extends \Slimpd\BaseController {
         return $response;
     }
 
+    public function hardResetForceAction(Request $request, Response $response, $args) {
+        self::deleteLockFile();
+        return $this->hardResetAction($request, $response, $args);
+    }
+
     /**
      * start from scratch by dropping and recreating database
      */
@@ -194,7 +199,11 @@ class CliController extends \Slimpd\BaseController {
             self::deleteLockFile();
             return $response;
         }
+        // create initial database
         $controller = \Helper::getController($action, NULL);
+        $controller->runStrategy();
+        // apply all database updates
+        $controller = \Helper::getController("migrate", NULL);
         $controller->runStrategy();
 
         foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries($this->ll) as $query) {
