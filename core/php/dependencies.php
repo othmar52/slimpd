@@ -54,6 +54,11 @@ $container['conf'] = function ($cont) {
 };
 
 
+
+$container['auth'] = function($container) {
+    return new \Slimpd\Modules\Auth\Auth;
+};
+
 // Twig
 $container['view'] = function ($cont) {
     if(PHP_SAPI === 'cli') {
@@ -84,12 +89,35 @@ $container['view'] = function ($cont) {
         'root' => $conf['config']['absRefPrefix'],
         'fileroot' => $conf['config']['absFilePrefix'],
         'config' => $conf,
-        'flash' => $cont['flash']
+        'flash' => $cont['flash'],
+        'auth' => [
+            'check' => $cont->auth->check(),
+            'user' => $cont->auth->user()
+        ]
     ];
     foreach($globalTwigVars as $varName => $value) {
         $view->getEnvironment()->addGlobal($varName, $value);
     }
     return $view;
+};
+
+$capsule = new \Illuminate\Database\Capsule\Manager;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => $config['database']['dbhost'],
+    'database'  => $config['database']['dbdatabase'],
+    'username'  => $config['database']['dbusername'],
+    'password'  => $config['database']['dbpassword'],
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => ''
+]);
+#echo "<pre>" . print_r($capsule,1);die;
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
+$container['db2'] = function ($container) use ($capsule){
+    return $capsule;
 };
 
 $container['db'] = function ($cont) { 
@@ -215,6 +243,15 @@ $container['notFoundHandler'] = function ($cont) {
 };
 
 
+$container['validator'] = function($container) {
+    return new \Slimpd\Validation\Validator;
+};
+
+
+$container['AuthController'] = function($container) {
+    return new \Slimpd\Controllers\Auth\AuthController($container);
+};
+
 $container['albumRepo'] = function($cont) {
     return new \Slimpd\Repositories\AlbumRepo($cont);
 };
@@ -269,6 +306,17 @@ $container['mpd'] = function($cont) {
     return new \Slimpd\Modules\Mpd\Mpd($cont);
 };
 
-// -----------------------------------------------------------------------------
-// Action factories
-// -----------------------------------------------------------------------------
+$container['csrf'] = function($container) {
+    return new \Slim\Csrf\Guard;
+};
+
+
+
+$app->add(new \Slimpd\Middleware\CsrfViewMiddleware($container));
+$app->add($container->csrf);
+$app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
+$app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
+
+
+
+\Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');

@@ -21,9 +21,17 @@
 
 $ctrlRoutes = [
     'Library' => [
-        ['[/]', 'indexAction'],
+        ['[/]', 'indexAction', 'home'],
         ['/library[/]', 'indexAction']
     ],
+     /*
+    'Auth' => [
+        ['/auth/signup', 'getSignUp', 'auth.signup'],
+        ['/auth/signup', 'postSignUp', 'auth.signup', 'post'],
+        ['/auth/signin', 'getSignIn', 'auth.signin'],
+        ['/auth/signin', 'postSignIn', 'auth.signin', 'post']
+    ],
+    */
     'Filebrowser' => [
         ['/filebrowser[/]', 'index', 'filebrowser'],
         ['/filebrowser/{itemParams:.*}', 'dircontent'],
@@ -134,3 +142,8 @@ foreach($ctrlRoutes as $ctrlName => $ctrlRoutes) {
         )->setName($routeName);
     }
 }
+
+$app->get('/auth/signup', 'Slimpd\Controllers\Auth\AuthController:getSignUp')->setName('auth.signup');
+$app->post('/auth/signup', 'Slimpd\Controllers\Auth\AuthController:postSignUp');
+$app->get('/auth/signin', 'Slimpd\Controllers\Auth\AuthController:getSignIn')->setName('auth.signin');
+$app->post('/auth/signin', 'Slimpd\Controllers\Auth\AuthController:postSignIn');

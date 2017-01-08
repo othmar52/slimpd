@@ -63,7 +63,9 @@
 {% endif %}
 				<div class="main-content">
 					{% include 'modules/errorbox.htm' %}
-
+					
+					{% block content %}{% endblock %}
+					{# TODO instead of conditions on action-var use "extends" in child templates #}
 					{% for type in ['genre', 'artist', 'label'] %}
 						{% if action == 'library.'~type~'s' %}
 							{% include 'modules/typelist.htm' %}

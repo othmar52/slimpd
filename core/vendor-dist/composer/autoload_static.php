@@ -8,22 +8,29 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
+        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '532945a4b12d830ff3e086cc36a64375' => __DIR__ . '/..' . '/james-heinrich/phpthumb/phpthumb.class.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'S' => 
         array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\Process\\' => 26,
             'Slimpd\\' => 7,
             'Slim\\Views\\' => 11,
             'Slim\\Flash\\' => 11,
+            'Slim\\Csrf\\' => 10,
             'Slim\\' => 5,
         ),
         'R' => 
         array (
+            'Respect\\Validation\\' => 19,
             'React\\Promise\\' => 14,
         ),
         'P' => 
@@ -38,6 +45,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'I' => 
         array (
             'Interop\\Container\\' => 18,
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Database\\' => 20,
+            'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
         ),
         'G' => 
         array (
@@ -55,10 +66,19 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'C' => 
         array (
             'ColorThief\\' => 11,
+            'Carbon\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation',
+        ),
         'Symfony\\Component\\Process\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/process',
@@ -75,9 +95,17 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             0 => __DIR__ . '/..' . '/slim/flash/src',
         ),
+        'Slim\\Csrf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/slim/csrf/src',
+        ),
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'Respect\\Validation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/respect/validation/library',
         ),
         'React\\Promise\\' => 
         array (
@@ -98,6 +126,22 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'Interop\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
+        ),
+        'Illuminate\\Support\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/support',
+        ),
+        'Illuminate\\Database\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/database',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
         ),
         'GuzzleHttp\\Subscriber\\Oauth\\' => 
         array (
@@ -130,6 +174,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'ColorThief\\' => 
         array (
             0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/lib/ColorThief',
+        ),
+        'Carbon\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
         ),
     );
 
@@ -168,6 +216,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         ),
         'D' => 
         array (
+            'Doctrine\\Common\\Inflector\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/inflector/lib',
+            ),
             'Discogs' => 
             array (
                 0 => __DIR__ . '/..' . '/ricbra/php-discogs-api/lib',
