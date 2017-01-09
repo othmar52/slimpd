@@ -29,6 +29,7 @@ class Migration1483685070 extends AbstractMigration
       . "  `password` varchar(255) NOT NULL,\r"
       . "  `email` varchar(255) NOT NULL,\r"
       . "  `role` varchar(50) NOT NULL,\r"
+      . "  `quickswitch` smallint(1) unsigned DEFAULT NULL,\r"
       . "  `created_at` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  `updated_at` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  PRIMARY KEY (`uid`)\r"

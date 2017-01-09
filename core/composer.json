@@ -40,7 +40,8 @@
         "monolog/monolog": "^1.21",
         "illuminate/database": "^5.3",
         "respect/validation": "^1.1",
-        "slim/csrf": "^0.8.1"
+        "slim/csrf": "^0.8.1",
+        "forsigner/magic-check": "master"
     },
     "repositories": [
         {
@@ -174,6 +175,18 @@
         {
             "type": "vcs",
             "url": "https://github.com/ksubileau/color-thief-php"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "forsigner/magic-check",
+                "version": "master",
+                "source": {
+                    "url": "git@github.com:forsigner/magic-check.git",
+                    "type": "git",
+                    "reference": "origin/master"
+                }
+            }
         }
     ],
     "config" : {

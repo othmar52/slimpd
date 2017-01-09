@@ -92,7 +92,8 @@ $container['view'] = function ($cont) {
         'flash' => $cont['flash'],
         'auth' => [
             'check' => $cont->auth->check(),
-            'user' => $cont->auth->user()
+            'user' => $cont->auth->user(),
+            'perms' => $cont->auth->permissions()
         ]
     ];
     foreach($globalTwigVars as $varName => $value) {
@@ -305,18 +306,17 @@ $container['filesystemUtility'] = function($cont) {
 $container['mpd'] = function($cont) {
     return new \Slimpd\Modules\Mpd\Mpd($cont);
 };
-
-$container['csrf'] = function($container) {
-    return new \Slim\Csrf\Guard;
-};
-
-
-
-$app->add(new \Slimpd\Middleware\CsrfViewMiddleware($container));
-$app->add($container->csrf);
-$app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
-$app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
-
+if(PHP_SAPI !== 'cli') {
+    $container['csrf'] = function($container) {
+        return new \Slim\Csrf\Guard;
+    };
+    $app->add(new \Slimpd\Middleware\CsrfViewMiddleware($container));
+    $app->add($container->csrf);
+    $app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
+    $app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
+    \Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
+}
 
 
-\Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
+
+

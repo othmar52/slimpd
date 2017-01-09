@@ -44,4 +44,49 @@ class Auth
         }
         return FALSE;
     }
+
+    public function attemptQuickLogin($userUid)
+    {
+        $user = User::where([
+            ["quickswitch", "=", "1"],
+            ["uid", "=", $userUid]
+        ])->first();
+        if(!$user) {
+            return FALSE;
+        }
+        $_SESSION['user'] = $user->uid;
+        return TRUE;
+    }
+
+    public function logout()
+    {
+        unset($_SESSION['user']);
+    }
+
+    public function permissions()
+    {
+        $user = User::find(@$_SESSION['user']);
+        if(!$user) {
+            return $this->permissionsForRole('guest');
+        }
+        return $this->permissionsForRole($user->role);
+    }
+
+    private function permissionsForRole($rolename) {
+        // TODO: move roles and permissions to database
+        switch($rolename) {
+            case 'guest':
+                return array(
+                    'media' => '0'
+                );
+            case 'member':
+                return array(
+                    'media' => '1'
+                );
+        }
+    }
+
+    public function hasPermissionFor($key) {
+        return @$this->permissions()[$key] === '1';
+    }
 }

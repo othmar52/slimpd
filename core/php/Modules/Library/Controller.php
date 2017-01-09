@@ -21,9 +21,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-
+    use \Slimpd\Traits\MethodRedirectToSignIn;
     public function indexAction(Request $request, Response $response, $args) {
         useArguments($request);
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->redirectToSignIn($response);
+        }
         $args['action'] = "landing";
         $args['itemlist'] = $this->albumRepo->getAll(11, 0, "added desc");
         $args['totalAlbums'] = $this->albumRepo->getCountAll();

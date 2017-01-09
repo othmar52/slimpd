@@ -15,7 +15,8 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
-.form-control[type=text] {
+.form-control[type=text],
+.form-control[type=password] {
     background-color: #2D2D2D;
     border:none;
     color: #AAA;
@@ -38,3 +39,19 @@
 .form-control.highlight {
     border: 1px solid #6b1f1f;
 }
+
+
+.checkbox input[type=checkbox] {
+     cursor: pointer;
+  }
+
+.checkbox input[type=checkbox]:after {
+  content: " ";
+  background-color: #D7B1D7;
+  display: inline-block;
+  visibility: visible;
+ }
+
+ .checkbox input[type=checkbox]:checked:after {
+   content: "\2714";
+ }

@@ -36,6 +36,34 @@
             _.bindAll.apply(_, [this].concat(_.functions(this)));
         },
 
+        // TODO: check why event binding this does not work for this.ajaxPostSubmitListener
+        /*
+        events : {
+            "click a.ajax-link": "genericClickListener",
+            "click .ajax-rqst": "ajaxRequestClickListener",
+            "click .player-ctrl": "playerCtrlClickListener",
+            "click .ajax-partial": "ajaxPartialClickListener",
+            "click .trigger-modal": "triggerModalClickListener",
+            "mouseenter .glue-hover-trigger": "itemGlueMouseenterListener",
+            "mouseleave .glue-hover-trigger": "itemGlueMouseleaveListener",
+            "click .toggle-content": "itemToggleClickListener",
+            "keyup input.clearable": "clearableInputListener",
+            "click .clearinput": "clearinputClickListener",
+            "click .force-xwax-poll": "forceXwaxPoll",
+            //"click *[data-toggle="lightbox"]": "triggerLightboxClickListener",
+            "click .toggle-player": "playerModeToggleTriggerListener",
+            "click .toggle-player-size": "playerSizeToggleTriggerListener",
+            "click .xwax-gui-toggler": "xwaxGuiToggleTriggerListener",
+            // TODO: do we really have to add BookBlock EventListeners manually???
+            "click .bb-nav-next": "bookblockNextClickListener",
+            "click .bb-nav-prev": "bookblockPrevClickListener",
+            "submit .ajax-post": "ajaxPostSubmitListener",
+        },
+        */
+        events : {
+            //"submit .ajax-post": "ajaxPostSubmitListener"
+        },
+
         render : function() {
             // only render page once (to prevent multiple click listeners)
             if (this.rendered) {
@@ -43,10 +71,12 @@
             }
             $("body", this.$el).animate({ scrollTop: 0 }, 300);
 
+            // TODO: move this stuff to events property
             $("a.ajax-link", this.$el).off("click", this.genericClickListener).on("click", this.genericClickListener);
             $(".ajax-rqst", this.$el).off("click", this.ajaxRequestClickListener).on("click", this.ajaxRequestClickListener);
             $(".player-ctrl", this.$el).off("click", this.playerCtrlClickListener).on("click", this.playerCtrlClickListener);
             $(".ajax-partial", this.$el).off("click", this.ajaxPartialClickListener).on("click", this.ajaxPartialClickListener);
+            $(".ajax-post", this.$el).off("submit", this.ajaxPostSubmitListener).on("submit", this.ajaxPostSubmitListener);
             $(".trigger-modal", this.$el).off("click", this.triggerModalClickListener).on("click", this.triggerModalClickListener);
             $(".glue-hover-trigger", this.$el).off("mouseenter", this.itemGlueMouseenterListener).on("mouseenter", this.itemGlueMouseenterListener);
             $(".glue-hover-trigger", this.$el).off("mouseleave", this.itemGlueMouseleaveListener).on("mouseleave", this.itemGlueMouseleaveListener);
@@ -150,6 +180,7 @@
             $(".ajax-rqst", this.$el).off("click", this.ajaxRequestClickListener);
             $(".player-ctrl", this.$el).off("click", this.playerCtrlClickListener);
             $(".ajax-partial", this.$el).off("click", this.ajaxPartialClickListener);
+            $(".ajax-post", this.$el).off("submit", this.ajaxPostSubmitListener);
             $(".trigger-modal", this.$el).off("click", this.triggerModalClickListener);
             $(".toggle-player", this.$el).off("click", this.playerModeToggleTriggerListener);
             $(".glue-hover-trigger", this.$el).off("mouseenter", this.itemGlueMouseenterListener);
@@ -239,6 +270,27 @@
                 }
             }).fail(function() {
                 window.sliMpd.notifyError($el.attr("data-href"));
+                return;
+            });
+        },
+
+        ajaxPostSubmitListener : function(e) {
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            var that = this;
+            window.NProgress.start();
+            $.ajax({
+                url: window.sliMpd.router.setGetParameter($el.attr("action"), "nosurrounding", "1"),
+                method : "post",
+                data: $el.serialize()
+            }).done(function(response) {
+                that.$el.html(response);
+                that.rendered = false;
+                that.render();
+                window.NProgress.done();
+            }).fail(function() {
+                window.sliMpd.notifyError($el.attr("data-href"));
+                window.NProgress.done();
                 return;
             });
         },

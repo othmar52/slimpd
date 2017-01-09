@@ -4,17 +4,10 @@
 
 <div class="row">
 	<div class="col-md-6 col-md-offset-3">
-		<div class="panel panel-default">
-			<div class="panel-heading">Sign up</div>
-			<div class="panel-body">
-				<form action="{{ path_for('auth.signup')}}" method="post">
-					<div class="form-group {{ errors.email ? 'has-error' : '' }}">
-						<label for="username">Email</label>
-						<input type="text" class="form-control" name="email" id="email" value="{{oldInput.email}}">
-						{% if errors.email %}
-							<span class="help-block">{{ errors.email | first }}</span>
-						{% endif %}
-					</div>
+		<div class="pXanel pXanel-default">
+			<div class="pXanel-heading">Sign up</div>
+			<div class="pXanel-body">
+				<form action="{{ path_for('auth.signup')}}" method="post" class="ajax-post">
 					<div class="form-group {{ errors.username ? 'has-error' : '' }}">
 						<label for="username">Username</label>
 						<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}">
@@ -23,11 +16,22 @@
 						{% endif %}
 					</div>
 					<div class="form-group {{ errors.password ? 'has-error' : '' }}">
-						<label for="password">Password</label>
+						<label for="password">Password (optional)</label>
 						<input type="password" class="form-control" name="password" id="password" value="">
 						{% if errors.password %}
 							<span class="help-block">{{ errors.password | first }}</span>
 						{% endif %}
+					</div>
+					<div class="form-group {{ errors.email ? 'has-error' : '' }}">
+						<label for="username">Email (optional)</label>
+						<input type="text" class="form-control" name="email" id="email" value="{{oldInput.email}}">
+						{% if errors.email %}
+							<span class="help-block">{{ errors.email | first }}</span>
+						{% endif %}
+					</div>
+					<div class="form-group">
+						<input type="checkbox" class="magic-checkbox" name="quickswitch" id="quickswitch" value="1" {{ oldInput.quickswitch ? 'checked="checked"' : '' }}>
+						<label for="quickswitch">Allow Login without Password</label>
 					</div>
 					{# add cross-site-request-forgery protection #}
 					{{ csrf.field | raw }}

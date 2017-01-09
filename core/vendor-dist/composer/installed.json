@@ -2724,5 +2724,17 @@
             "middleware",
             "slim"
         ]
+    },
+    {
+        "name": "forsigner/magic-check",
+        "version": "master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "git@github.com:forsigner/magic-check.git",
+            "reference": "origin/master"
+        },
+        "type": "library",
+        "installation-source": "source"
     }
 ]

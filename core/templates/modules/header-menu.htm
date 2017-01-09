@@ -22,12 +22,10 @@
 						{% endfor %}
 						
 						<li class="pull-right">
-							<a href="{{root}}auth/signin?nosurrounding=1" class="ajax-partial" data-ajaxtarget="#user-quicknav">
+							<a href="{{root}}auth/signin" class="ajax-link col3">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 							{% if auth.user %}
-							
 							{{ auth.user.username }}
-							
 							{% else %}
 							Guest
 							{% endif %}

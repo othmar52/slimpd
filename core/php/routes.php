@@ -147,3 +147,5 @@ $app->get('/auth/signup', 'Slimpd\Controllers\Auth\AuthController:getSignUp')->s
 $app->post('/auth/signup', 'Slimpd\Controllers\Auth\AuthController:postSignUp');
 $app->get('/auth/signin', 'Slimpd\Controllers\Auth\AuthController:getSignIn')->setName('auth.signin');
 $app->post('/auth/signin', 'Slimpd\Controllers\Auth\AuthController:postSignIn');
+$app->get('/auth/signout', 'Slimpd\Controllers\Auth\AuthController:getSignOut')->setName('auth.signout');
+$app->get('/auth/quicksignin/{itemUid}', 'Slimpd\Controllers\Auth\AuthController:quickSignInAction')->setName('auth.quicksignin');

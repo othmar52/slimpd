@@ -28,9 +28,38 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class AuthController extends Controller
 {
+    use \Slimpd\Traits\MethodRedirectToSignIn;
+
+    public function getSignOut(Request $request, Response $response)
+    {
+        $this->auth->logout();
+        return $response->withRedirect(
+            $this->router->pathFor('home') .
+            getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+        );
+    }
+
+    /**
+     * login without a password in case user.quickswitch == 1
+     * TODO: limit this functionality to LAN access
+     */
+    public function quickSignInAction(Request $request, Response $response, $args)
+    {
+        $auth = $this->auth->attemptQuickLogin($args["itemUid"]);
+        if($auth === FALSE) {
+            $this->flash->AddMessage("error", "Could not log you in.");
+            return $this->redirectToSignIn($response);
+        }
+        return $response->withRedirect(
+            $this->router->pathFor('home') .
+            getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+        );
+    }
+
     public function getSignIn(Request $request, Response $response)
     {
-        return $this->view->render($response, 'auth/signin.htm');
+        $users = User::where("quickswitch", "1")->getModels();
+        return $this->view->render($response, 'auth/signin.htm', ['users' => $users]);
     }
 
     public function postSignIn(Request $request, Response $response)
@@ -40,9 +69,13 @@ class AuthController extends Controller
             $request->getParam('password')
         );
         if($auth === FALSE) {
-            return $response->withRedirect($this->router->pathFor('auth.signin'));
+            $this->flash->AddMessage("error", "Could not log you in.");
+            return $this->redirectToSignIn($response);
         }
-        return $response->withRedirect($this->router->pathFor('home'));
+        return $response->withRedirect(
+            $this->router->pathFor('home') .
+            getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+        );
     }
 
     public function getSignUp(Request $request, Response $response)
@@ -55,20 +88,26 @@ class AuthController extends Controller
         $validation = $this->validator->validate(
             $request,
             [
-                'email' => v::noWhitespace()->notEmpty(),
                 'username' => v::noWhitespace()->notEmpty()->alpha()->usernameAvailable(),
-                'password' => v::noWhitespace()->notEmpty()
+                'email' => v::noWhitespace(),
+                'password' => v::noWhitespace()
             ]
         );
         if($validation->failed()) {
-            return $response->withRedirect($this->container->router->pathFor('auth.signup'));
+            return $response->withRedirect(
+                $this->container->router->pathFor('auth.signup') .
+                getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+            );
         }
         $user = User::create([
             'email' => $request->getParam('email'),
             'username' => $request->getParam('username'),
             'password' => password_hash($request->getParam('password'), \PASSWORD_DEFAULT),
+            'quickswitch' => (($request->getParam('quickswitch') === "1") ? 1 : NULL),
             'role' => 'member'
         ]);
-        return $response->withRedirect($this->container->router->pathFor('home'));
+        return $response->withRedirect(
+            $this->container->router->pathFor('home') .
+            getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']));
     }
 }

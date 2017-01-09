@@ -20,6 +20,9 @@ twbs/bootstrap/js/popover.js
 twbs/bootstrap/js/tooltip.js
 twbs/bootstrap/js/dropdown.js
 
+forsigner/magic-check/css/magic-check.min.css
+forsigner/magic-check/LICENSE
+
 hendrismit/bootstrap-lightbox/LICENSE.txt
 hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css
 hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.js

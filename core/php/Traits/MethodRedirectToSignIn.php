@@ -1,6 +1,6 @@
 <?php
-namespace Slimpd\Models;
-/* Copyright (C) 2017 othmar52 <othmar52@users.noreply.github.com>
+namespace Slimpd\Traits;
+/* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
  *
@@ -17,18 +17,14 @@ namespace Slimpd\Models;
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+use Psr\Http\Message\ResponseInterface as Response;
 
-use Illuminate\Database\Eloquent\Model;
+trait MethodRedirectToSignIn {
 
-class User extends Model
-{
-    protected $table = 'users';
-    protected $primaryKey = 'uid';
-    protected $fillable = [
-        'username',
-        'password',
-        'quickswitch',
-        'email',
-        'role'
-    ];
+    public function redirectToSignIn(Response $response) {
+        return $response->withRedirect(
+            $this->router->pathFor('auth.signin') .
+            getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+        );
+    }
 }

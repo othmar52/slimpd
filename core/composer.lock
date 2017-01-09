@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0bf10ecfe0fbe3bff26f6f674f831c34",
-    "content-hash": "13139ddcf5d33303304fcf164cade513",
+    "hash": "1f2b3c7f819c3bf709972b966e2b927f",
+    "content-hash": "0a06c2bbe3e08220af7f5f392753f2c1",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -437,6 +437,17 @@
                 "string"
             ],
             "time": "2016-05-12 17:23:41"
+        },
+        {
+            "name": "forsigner/magic-check",
+            "version": "master",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:forsigner/magic-check.git",
+                "reference": "origin/master"
+            },
+            "type": "library",
+            "time": "2016-04-19 07:47:29"
         },
         {
             "name": "greensock/GreenSock-JS",
