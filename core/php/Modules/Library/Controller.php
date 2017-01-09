@@ -1,5 +1,5 @@
 <?php
-namespace Slimpd\Modules\library;
+namespace Slimpd\Modules\Library;
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -25,6 +25,7 @@ class Controller extends \Slimpd\BaseController {
     public function indexAction(Request $request, Response $response, $args) {
         useArguments($request);
         if($this->auth->hasPermissionFor('media') === FALSE) {
+            $this->flash->addMessage('warning', 'Access denied');
             return $this->redirectToSignIn($response);
         }
         $args['action'] = "landing";

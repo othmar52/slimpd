@@ -77,9 +77,13 @@ class Auth
         switch($rolename) {
             case 'guest':
                 return array(
-                    'media' => '0'
+                    'media' => '1'
                 );
             case 'member':
+                return array(
+                    'media' => '1'
+                );
+            case 'admin':
                 return array(
                     'media' => '1'
                 );

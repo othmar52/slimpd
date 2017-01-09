@@ -20,6 +20,10 @@
     background-color: #353535;
 }
 
+.main-nav .navbar-nav {
+	width: 100%;
+}
+
 .main-nav .active {
     border-bottom: 3px solid #FFF;
 }

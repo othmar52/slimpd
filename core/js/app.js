@@ -28,6 +28,8 @@ $(document).ready(function() {
 
         xwax : false,
 
+        username : null,
+
         drawFavicon : function() {
             clearTimeout(window.sliMpd.drawFaviconTimeout);
             window.sliMpd.currentPlayer.drawFavicon();
@@ -186,6 +188,9 @@ $(document).ready(function() {
             $.cookie("playerMode", window.sliMpd.currentPlayer.mode, { expires : 365, path: "/" });
             window.sliMpd.drawFavicon();
             window.sliMpd.currentPlayer.drawWaveform();
+        },
+        setUser: function() {
+            $("#perma-username").text(this.username);
         }
     });
 

@@ -103,6 +103,10 @@ class Controller extends \Slimpd\BaseController {
                 "trackHash" => ""
             );
         }
+        // TODO: remove this dirty hack of mixing up mpd response with logged in user
+        // TODO: move wording "Guest" to translation file
+        $user = $this->auth->user();
+        $args['mpd']['status']['username'] = ($user === NULL) ? 'Guest' : $user->username;
         try {
             $currentSong = $this->mpd->cmd('currentsong');
             if(isset($currentSong['Time']) === FALSE || $currentSong['Time'] < 1) {

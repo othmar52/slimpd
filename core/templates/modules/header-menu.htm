@@ -24,11 +24,7 @@
 						<li class="pull-right">
 							<a href="{{root}}auth/signin" class="ajax-link col3">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-							{% if auth.user %}
-							{{ auth.user.username }}
-							{% else %}
-							Guest
-							{% endif %}
+								<span id="perma-username">{{ auth.user ? auth.user.username : 'Guest' }}</span>
 							</a>
 						</li>
 					</ul>

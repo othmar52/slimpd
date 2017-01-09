@@ -5,47 +5,52 @@
 <div class="row">
 {% if auth.user %}
 	logged in as <strong>{{ auth.user.username }}</strong>
-	<a href="{{root}}auth/signout" class="btn btn-default ajax-link">Logout</a>
+	<a href="{{root}}auth/signout" class="btn btn-default ajax-link refresh-status">Logout</a>
 {% else %}
+	<div class="col-md-3">
 	{% if users|length %}
-		<ul>
+		<h2>Quick login</h2>
 		{% for user in users %}
-			<li>
-				<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link">
-				<img src="/index.php/imagefallback-50/artist" alt="" class="icon-50">
+			<div class="row">
+				<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link btn btn-default btn-block refresh-status">
+				<i class="fa fa-user pull-left"></i>
 				{{user.username}}
 				</a>
-			</li>
+			</div>
 		{% endfor %}
-		</ul>
 	{% endif %}
-	<div class="col-md-6 col-md-offset-3">
-		<div class="panXel panel-default">
-			<div class="panXel-heading">Sign In</div>
+	</div>
+	<div class="col-md-4">
+		<h2>Login</h2>
+		<div class="panXel paXnel-default">
 			<div class="panXel-body">
 				<form action="{{ path_for('auth.signin')}}" method="post" class="ajax-post">
-					<div class="form-group {{ errors.username ? 'has-error' : '' }}">
-						<label for="username">Username</label>
-						<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}">
-						{% if errors.username %}
-							<span class="help-block">{{ errors.username | first }}</span>
-						{% endif %}
+					<div class="form-group row">
+						<label for="username" class="col-sm-4 col-form-label">Username</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}">
+						</div>
 					</div>
-					<div class="form-group {{ errors.password ? 'has-error' : '' }}">
-						<label for="password">Password</label>
-						<input type="password" class="form-control" name="password" id="password" value="">
-						{% if errors.password %}
-							<span class="help-block">{{ errors.password | first }}</span>
-						{% endif %}
+					<div class="form-group row">
+						<label for="password" class="col-sm-4 col-form-label">Password</label>
+						<div class="col-sm-8">
+							<input type="password" class="form-control" name="password" id="password" value="">
+						</div>
 					</div>
 					{# add cross-site-request-forgery protection #}
 					{{ csrf.field | raw }}
-					<div class="form-group">
-						<button type="submit" class="btn btn-default">signin</button>
+					<div class="form-group row">
+						<div class="col-sm-12">
+							<button type="submit" class="btn btn-default btn-block">Login</button>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="col-sm-12">
+							<hr>
+							<a class="btn btn-default btn-block ajax-link" href="{{ path_for('auth.signup')}}">or create new account</a>
+						</div>
 					</div>
 				</form>
-				<hr>
-				<a class="btn btn-default ajax-link" href="{{ path_for('auth.signup')}}">or create new account</a>
 			</div>
 		</div>
 	</div>

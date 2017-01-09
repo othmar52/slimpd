@@ -34,6 +34,7 @@ class Migration1483685070 extends AbstractMigration
       . "  `updated_at` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  PRIMARY KEY (`uid`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
+      "INSERT INTO `users` SET username='admin', password='\$2y\$10\$HXxsprgY0YAnUQhAO6Us9uiaMg.I6qHMd/u7hV0avYFr92HnY3VLa', role='admin', created_at=NOW(), updated_at=NOW()",
     );
   }
 

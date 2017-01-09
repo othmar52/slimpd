@@ -214,6 +214,9 @@
             if($el.hasClass("trigger-hide-modal")) {
                 window.sliMpd.modal.$modal.modal("hide");
             }
+            if($el.hasClass("refresh-status")) {
+                window.sliMpd.mpdPlayer.refreshInterval();
+            }
         },
 
         playerCtrlClickListener : function(e) {
@@ -288,6 +291,7 @@
                 that.rendered = false;
                 that.render();
                 window.NProgress.done();
+                window.sliMpd.mpdPlayer.refreshInterval();
             }).fail(function() {
                 window.sliMpd.notifyError($el.attr("data-href"));
                 window.NProgress.done();

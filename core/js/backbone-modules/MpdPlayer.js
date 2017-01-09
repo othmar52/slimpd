@@ -296,6 +296,10 @@
             this.state.random = parseInt(data.random);
             this.state.consume = parseInt(data.consume);
 
+            // TODO: remove ugly mixing up mpdstatus with logged in user
+            window.sliMpd.username = data.username;
+            window.sliMpd.setUser();
+
             // helper var to avoid double page reload (trackchange + playlistchange)
             var forcePageReload = false;
 
