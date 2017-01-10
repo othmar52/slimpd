@@ -47,8 +47,8 @@ class DiscogsTrackContext extends \Slimpd\Models\Track {
                 continue;
             }
             $this->setTrackNumber($trackData['position']);
-            $this->setFeaturedArtistsByApiResponse($trackData, $apiResponse['artists']);
-            $this->setArtistsByApiResponse($trackData);
+            $this->setFeaturedArtistsByApiResponse($trackData);
+            $this->setArtistsByApiResponse($trackData, $apiResponse['artists']);
             $this->setTitleString($trackData['title']);
             if(strlen($trackData['duration']) > 0) {
                 $this->setMiliseconds(timeStringToSeconds($trackData['duration'])*1000);
