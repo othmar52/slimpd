@@ -311,7 +311,6 @@ if(PHP_SAPI !== 'cli') {
         return new \Slim\Csrf\Guard;
     };
     $app->add(new \Slimpd\Middleware\CsrfViewMiddleware($container));
-    $app->add($container->csrf);
     $app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
     $app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
     \Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
