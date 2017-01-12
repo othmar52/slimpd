@@ -301,3 +301,7 @@ respect/validation/LICENSE.md
 
 slim/csrf/src
 slim/csrf/LICENSE.md
+
+
+bryanjhv/slim-session/src
+bryanjhv/slim-session/LICENSE

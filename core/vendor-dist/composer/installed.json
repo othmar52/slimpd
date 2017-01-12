@@ -2736,5 +2736,52 @@
         },
         "type": "library",
         "installation-source": "source"
+    },
+    {
+        "name": "bryanjhv/slim-session",
+        "version": "3.0.3",
+        "version_normalized": "3.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/bryanjhv/slim-session.git",
+            "reference": "ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/bryanjhv/slim-session/zipball/ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8",
+            "reference": "ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8",
+            "shasum": ""
+        },
+        "require": {
+            "slim/slim": "^3.0"
+        },
+        "time": "2016-11-18 22:25:56",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Bryan Horna",
+                "email": "bryanjhv@gmail.com",
+                "homepage": "https://bryanjhv.xyz",
+                "role": "developer"
+            }
+        ],
+        "description": "Session middleware and helper for Slim framework 3.",
+        "homepage": "https://github.com/bryanjhv/slim-session",
+        "keywords": [
+            "helper",
+            "middleware",
+            "session",
+            "slim"
+        ]
     }
 ]

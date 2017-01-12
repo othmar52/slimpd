@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "1f2b3c7f819c3bf709972b966e2b927f",
-    "content-hash": "0a06c2bbe3e08220af7f5f392753f2c1",
+    "hash": "e1524ca8118c5b01d973ea3f294320c1",
+    "content-hash": "be0004b43639d935e7b7b284b29754dc",
     "packages": [
         {
             "name": "ajjahn/puppet-mpd",
@@ -17,6 +17,51 @@
             },
             "type": "library",
             "time": "2014-11-06 14:31:47"
+        },
+        {
+            "name": "bryanjhv/slim-session",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bryanjhv/slim-session.git",
+                "reference": "ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bryanjhv/slim-session/zipball/ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8",
+                "reference": "ccc0c7e0a6d05188caeda859cf83fa7bc9dbb6a8",
+                "shasum": ""
+            },
+            "require": {
+                "slim/slim": "^3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bryan Horna",
+                    "email": "bryanjhv@gmail.com",
+                    "homepage": "https://bryanjhv.xyz",
+                    "role": "developer"
+                }
+            ],
+            "description": "Session middleware and helper for Slim framework 3.",
+            "homepage": "https://github.com/bryanjhv/slim-session",
+            "keywords": [
+                "helper",
+                "middleware",
+                "session",
+                "slim"
+            ],
+            "time": "2016-11-18 22:25:56"
         },
         {
             "name": "codrops/BookBlock",
