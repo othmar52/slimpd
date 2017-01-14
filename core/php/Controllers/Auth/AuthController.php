@@ -58,8 +58,26 @@ class AuthController extends Controller
 
     public function getSignIn(Request $request, Response $response)
     {
-        $users = User::where("quickswitch", "1")->getModels();
+        if($this->auth->user()) {
+            return $response->withRedirect(
+                $this->router->pathFor('auth.status') .
+                getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+            );
+        }
+        $users = User::where("quickswitch", "1")->orWhere('role', '=', 'guest')->getModels();
         return $this->view->render($response, 'auth/signin.htm', ['users' => $users]);
+    }
+
+    public function getStatus(Request $request, Response $response)
+    {
+        if(!$this->auth->user()) {
+            return $response->withRedirect(
+                $this->router->pathFor('auth.status') .
+                getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
+            );
+        }
+        $users = User::where("quickswitch", "1")->orWhere('role', '=', 'guest')->getModels();
+        return $this->view->render($response, 'auth/status.htm', ['users' => $users]);
     }
 
     public function postSignIn(Request $request, Response $response)

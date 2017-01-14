@@ -40,6 +40,8 @@ class Auth
         }
         if(password_verify($password, $user->password)) {
             $_SESSION['user'] = $user->uid;
+            $user->last_login = $user->freshTimestamp();
+            $user->save();
             return TRUE;
         }
         return FALSE;
@@ -55,6 +57,8 @@ class Auth
             return FALSE;
         }
         $_SESSION['user'] = $user->uid;
+        $user->last_login = $user->freshTimestamp();
+        $user->save();
         return TRUE;
     }
 

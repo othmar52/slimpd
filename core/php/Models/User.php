@@ -29,6 +29,7 @@ class User extends Model
         'password',
         'quickswitch',
         'email',
-        'role'
+        'role',
+        'last_login'
     ];
 }

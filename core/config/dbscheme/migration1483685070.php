@@ -30,11 +30,13 @@ class Migration1483685070 extends AbstractMigration
       . "  `email` varchar(255) NOT NULL,\r"
       . "  `role` varchar(50) NOT NULL,\r"
       . "  `quickswitch` smallint(1) unsigned DEFAULT NULL,\r"
+      . "  `last_login` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  `created_at` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  `updated_at` TIMESTAMP NOT NULL DEFAULT 0,\r"
       . "  PRIMARY KEY (`uid`)\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "INSERT INTO `users` SET username='admin', password='\$2y\$10\$HXxsprgY0YAnUQhAO6Us9uiaMg.I6qHMd/u7hV0avYFr92HnY3VLa', role='admin', created_at=NOW(), updated_at=NOW()",
+      "INSERT INTO `users` SET username='guest', password='\$2y\$10\$CB1/wAHWYsQk45O/GvwpFusGodYXwZCT7RwFnG/3Im.oSvkSWnav2', role='guest', created_at=NOW(), updated_at=NOW()",
     );
   }
 
