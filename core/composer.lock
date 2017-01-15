@@ -557,17 +557,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8"
+                "reference": "fc66319d0027509c3a83166314dfc813fa25ffcc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/70f1fa53b71c4647bf2762c09068a95f77e12fb8",
-                "reference": "70f1fa53b71c4647bf2762c09068a95f77e12fb8",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/fc66319d0027509c3a83166314dfc813fa25ffcc",
+                "reference": "fc66319d0027509c3a83166314dfc813fa25ffcc",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/ringphp": "^1.1",
-                "php": ">=5.4.0"
+                "php": ">=5.4.0",
+                "react/promise": "^2.2"
             },
             "require-dev": {
                 "ext-curl": "*",
@@ -601,7 +602,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2016-07-15 19:28:39"
+            "time": "2017-01-05 06:25:03"
         },
         {
             "name": "guzzlehttp/guzzle-services",
@@ -706,12 +707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "9465032ac5d6beaa55f10923403e6e1c36018d9c"
+                "reference": "4c8fe4c48a0fb7cc5e41ef529e43fecd6da4d539"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/9465032ac5d6beaa55f10923403e6e1c36018d9c",
-                "reference": "9465032ac5d6beaa55f10923403e6e1c36018d9c",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/4c8fe4c48a0fb7cc5e41ef529e43fecd6da4d539",
+                "reference": "4c8fe4c48a0fb7cc5e41ef529e43fecd6da4d539",
                 "shasum": ""
             },
             "require": {
@@ -749,7 +750,7 @@
                 }
             ],
             "description": "Provides a simple API and specification that abstracts away the details of HTTP into a single PHP function.",
-            "time": "2015-05-21 17:23:02"
+            "time": "2017-01-13 20:44:38"
         },
         {
             "name": "guzzlehttp/streams",
@@ -920,12 +921,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "a6c5128b46383fed416925f1b7d2bcba68e8595a"
+                "reference": "039f4a7ac598b38fc0dfe5f8fd94336eceec544e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/a6c5128b46383fed416925f1b7d2bcba68e8595a",
-                "reference": "a6c5128b46383fed416925f1b7d2bcba68e8595a",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/039f4a7ac598b38fc0dfe5f8fd94336eceec544e",
+                "reference": "039f4a7ac598b38fc0dfe5f8fd94336eceec544e",
                 "shasum": ""
             },
             "require": {
@@ -954,7 +955,7 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-02 20:15:25"
+            "time": "2017-01-15 01:21:06"
         },
         {
             "name": "illuminate/database",
@@ -962,12 +963,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
-                "reference": "9e17b5e8d72e6d893de4cf6358f188b66f02f0e3"
+                "reference": "22a8d5ccd9bebb2c4aecb946af45bdc3a7cd67e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/database/zipball/9e17b5e8d72e6d893de4cf6358f188b66f02f0e3",
-                "reference": "9e17b5e8d72e6d893de4cf6358f188b66f02f0e3",
+                "url": "https://api.github.com/repos/illuminate/database/zipball/22a8d5ccd9bebb2c4aecb946af45bdc3a7cd67e5",
+                "reference": "22a8d5ccd9bebb2c4aecb946af45bdc3a7cd67e5",
                 "shasum": ""
             },
             "require": {
@@ -1014,7 +1015,7 @@
                 "orm",
                 "sql"
             ],
-            "time": "2017-01-06 14:38:13"
+            "time": "2017-01-15 01:22:02"
         },
         {
             "name": "illuminate/support",
@@ -1022,12 +1023,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "71a3dcc046ee318b7d5c39817cf3ab95973dff76"
+                "reference": "0b830769574247f0e8766a73c8fa5d8dd5550e2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/71a3dcc046ee318b7d5c39817cf3ab95973dff76",
-                "reference": "71a3dcc046ee318b7d5c39817cf3ab95973dff76",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/0b830769574247f0e8766a73c8fa5d8dd5550e2b",
+                "reference": "0b830769574247f0e8766a73c8fa5d8dd5550e2b",
                 "shasum": ""
             },
             "require": {
@@ -1071,7 +1072,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-02 20:15:25"
+            "time": "2017-01-13 18:11:31"
         },
         {
             "name": "james-heinrich/getid3",
@@ -1467,12 +1468,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "b732364e70a615231f15944e015b31d0d77bf9f5"
+                "reference": "c82afaa30356d20e08cc74fec7ab9b6ecd38288a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b732364e70a615231f15944e015b31d0d77bf9f5",
-                "reference": "b732364e70a615231f15944e015b31d0d77bf9f5",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/c82afaa30356d20e08cc74fec7ab9b6ecd38288a",
+                "reference": "c82afaa30356d20e08cc74fec7ab9b6ecd38288a",
                 "shasum": ""
             },
             "require": {
@@ -1537,7 +1538,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-12-13 14:25:55"
+            "time": "2017-01-11 16:17:39"
         },
         {
             "name": "mouse0270/bootstrap-notify",
@@ -1556,27 +1557,26 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "0f87ca78d68298615068b08ce6c1b72c6ed86a49"
+                "reference": "3b114ab800c6432ad42387ccf6bc8d4388a2885a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/0f87ca78d68298615068b08ce6c1b72c6ed86a49",
-                "reference": "0f87ca78d68298615068b08ce6c1b72c6ed86a49",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/3b114ab800c6432ad42387ccf6bc8d4388a2885a",
+                "reference": "3b114ab800c6432ad42387ccf6bc8d4388a2885a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "symfony/translation": "~2.6|~3.0"
+                "symfony/translation": "~2.6 || ~3.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "~1.11",
-                "phpunit/phpunit": "~4.0|~5.0",
-                "sllh/php-cs-fixer-styleci-bridge": "^2.1"
+                "friendsofphp/php-cs-fixer": "~2",
+                "phpunit/phpunit": "~4.0 || ~5.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.22-dev"
+                    "dev-master": "1.23-dev"
                 }
             },
             "autoload": {
@@ -1602,7 +1602,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2016-12-02 15:58:32"
+            "time": "2017-01-15 14:47:48"
         },
         {
             "name": "neutron/sphinxsearch-api",
@@ -1798,12 +1798,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/silexphp/Pimple.git",
-                "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d"
+                "reference": "ac03ac93edb0ac6d2aced595ee00577ebc6ff480"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
-                "reference": "1ce4ec44d782ecacd45e8644006b8a5d96ca7b3d",
+                "url": "https://api.github.com/repos/silexphp/Pimple/zipball/ac03ac93edb0ac6d2aced595ee00577ebc6ff480",
+                "reference": "ac03ac93edb0ac6d2aced595ee00577ebc6ff480",
                 "shasum": ""
             },
             "require": {
@@ -1836,7 +1836,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2016-11-19 22:52:52"
+            "time": "2017-01-02 20:35:07"
         },
         {
             "name": "psr/http-message",
@@ -2260,12 +2260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/slimphp/Slim.git",
-                "reference": "50f3eef927689b5bbf3cfbf34c8aa8762e549b6c"
+                "reference": "fb5356a0f16ef027035155067377239c938bb767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/slimphp/Slim/zipball/50f3eef927689b5bbf3cfbf34c8aa8762e549b6c",
-                "reference": "50f3eef927689b5bbf3cfbf34c8aa8762e549b6c",
+                "url": "https://api.github.com/repos/slimphp/Slim/zipball/fb5356a0f16ef027035155067377239c938bb767",
+                "reference": "fb5356a0f16ef027035155067377239c938bb767",
                 "shasum": ""
             },
             "require": {
@@ -2322,7 +2322,7 @@
                 "micro",
                 "router"
             ],
-            "time": "2016-12-20 20:32:05"
+            "time": "2017-01-07 08:51:41"
         },
         {
             "name": "slim/twig-view",
@@ -2439,12 +2439,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "d060993e395dfe8afdbce749328b01cae41941cb"
+                "reference": "6c687d5ae36a8677a6e3ce020d12b18feac79d5b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/d060993e395dfe8afdbce749328b01cae41941cb",
-                "reference": "d060993e395dfe8afdbce749328b01cae41941cb",
+                "url": "https://api.github.com/repos/symfony/process/zipball/6c687d5ae36a8677a6e3ce020d12b18feac79d5b",
+                "reference": "6c687d5ae36a8677a6e3ce020d12b18feac79d5b",
                 "shasum": ""
             },
             "require": {
@@ -2480,7 +2480,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-12-27 10:45:09"
+            "time": "2017-01-02 20:33:09"
         },
         {
             "name": "symfony/translation",
@@ -2603,12 +2603,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "5d1f37c881b91c32b20c066cf081e83b737eb065"
+                "reference": "9b3796b14088e5c9039de6cf2291566c95aa76c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/5d1f37c881b91c32b20c066cf081e83b737eb065",
-                "reference": "5d1f37c881b91c32b20c066cf081e83b737eb065",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/9b3796b14088e5c9039de6cf2291566c95aa76c1",
+                "reference": "9b3796b14088e5c9039de6cf2291566c95aa76c1",
                 "shasum": ""
             },
             "require": {
@@ -2621,7 +2621,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.30-dev"
+                    "dev-master": "1.31-dev"
                 }
             },
             "autoload": {
@@ -2656,7 +2656,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-29 21:21:24"
+            "time": "2017-01-11 19:37:33"
         },
         {
             "name": "webfontkit/open-sans",
