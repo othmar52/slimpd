@@ -34,12 +34,16 @@ class Validator
                 $this->errors[$field] = $exception->getMessages();
             }
         }
-        $_SESSION['errors'] = $this->errors;
         return $this;
     }
 
     public function failed()
     {
         return !empty($this->errors);
+    }
+
+    public function getErrors()
+    {
+        return $this->errors;
     }
 }

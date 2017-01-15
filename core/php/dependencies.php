@@ -20,11 +20,28 @@
 
 // DIC configuration
 
+
+
+$app->add(new \Slim\Middleware\Session([
+    'name' => 'slimpd',
+    'autorefresh' => true,
+    'lifetime' => '1 year'
+]));
+
+
 $container = $app->getContainer();
+
+
+$container['session'] = function ($container) {
+  return new \SlimSession\Helper;
+};
+
 
 // -----------------------------------------------------------------------------
 // Service providers
 // -----------------------------------------------------------------------------
+
+
 
 // Flash messages
 $container['flash'] = function () {
@@ -56,7 +73,7 @@ $container['conf'] = function ($cont) {
 
 
 $container['auth'] = function($container) {
-    return new \Slimpd\Modules\Auth\Auth;
+    return new \Slimpd\Modules\Auth\Auth($container);
 };
 
 // Twig
@@ -307,15 +324,13 @@ $container['mpd'] = function($cont) {
     return new \Slimpd\Modules\Mpd\Mpd($cont);
 };
 if(PHP_SAPI !== 'cli') {
+    $refStorage = null; // passed by reference so we need a variable
     $container['csrf'] = function($container) {
-        return new \Slim\Csrf\Guard;
+        return new \Slim\Csrf\Guard('csrf', $refStorage, null, 4, 16, false);
     };
     $app->add(new \Slimpd\Middleware\CsrfViewMiddleware($container));
     $app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
     $app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
     \Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
 }
-
-
-
 

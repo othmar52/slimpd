@@ -112,6 +112,7 @@ class AuthController extends Controller
             ]
         );
         if($validation->failed()) {
+            $this->container->session->set('errors', $validation->getErrors());
             return $response->withRedirect(
                 $this->container->router->pathFor('auth.signup') .
                 getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])

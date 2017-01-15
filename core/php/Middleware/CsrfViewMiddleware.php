@@ -36,7 +36,7 @@ class CsrfViewMiddleware extends Middleware
                 '
             ]
         );
-        $_SESSION['oldInput'] = $request->getParams();
+        $this->container->session->set('oldInput', $request->getParams());
         $response = $next($request, $response);
         return $response;
     }

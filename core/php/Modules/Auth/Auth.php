@@ -22,14 +22,20 @@ use Slimpd\Models\User;
 
 class Auth
 {
+    protected $container;
+
+    public function __construct($container) {
+        $this->container = $container;
+    }
+
     public function user()
     {
-        return User::find(@$_SESSION['user']);
+        return User::find($this->container->session->get('user'));
     }
 
     public function check()
     {
-        return isset($_SESSION['user']);
+        return $this->container->session->get('user');
     }
 
     public function attempt($username, $password)
@@ -39,7 +45,7 @@ class Auth
             return FALSE;
         }
         if(password_verify($password, $user->password)) {
-            $_SESSION['user'] = $user->uid;
+            $this->container->session->set('user', $user->uid);
             $user->last_login = $user->freshTimestamp();
             $user->save();
             return TRUE;
@@ -56,7 +62,7 @@ class Auth
         if(!$user) {
             return FALSE;
         }
-        $_SESSION['user'] = $user->uid;
+        $this->container->session->set('user', $user->uid);
         $user->last_login = $user->freshTimestamp();
         $user->save();
         return TRUE;
@@ -64,12 +70,12 @@ class Auth
 
     public function logout()
     {
-        unset($_SESSION['user']);
+        $this->container->session->delete('user');
     }
 
     public function permissions()
     {
-        $user = User::find(@$_SESSION['user']);
+        $user = User::find($this->container->session->get('user'));
         if(!$user) {
             return $this->permissionsForRole('guest');
         }
