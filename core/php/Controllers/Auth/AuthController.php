@@ -69,7 +69,7 @@ class AuthController extends Controller
             $this->flash->AddMessage("error", "Could not log you in.");
             return $this->redirectToSignIn($response);
         }
-
+        $this->persistRememberArgs($request);
         return $response->withRedirect(
             $this->router->pathFor('home') .
             getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])

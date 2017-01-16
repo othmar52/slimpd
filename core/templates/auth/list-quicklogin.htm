@@ -9,6 +9,7 @@
 		<div class="row bg-col2">
 			<form action="{{ path_for('auth.quicksignin')}}" method="post" class="ajax-post">
 				<input type="hidden" name="useruid" value="{{user.uid}}">
+				<input type="hidden" class="" name="remember_username" value="1">
 				{{ csrf.field | raw }}
 				{% if user.rememberPassword %}
 				<button class="btn btn-trnsp btn-block bg-col2">
@@ -29,7 +30,7 @@
 					</div>
 				</button>
 				<div class="pw-{{user.uid}} bg-col2" style="display:none;">
-					{% include 'auth/input-password.htm' %}
+					{% include 'auth/input-password.htm' with { passwordid: user.uid }%}
 					<div class="form-group row">
 						<div class="col-sm-7 col-sm-offset-5">
 							<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">Login</button>

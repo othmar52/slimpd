@@ -29,7 +29,7 @@ class SessionHelper extends \SlimSession\Helper
     public function push($key, $value)
     {
         $array = (is_array($this->get($key)) === TRUE)
-            ? $this->get($key)
+            ? array_unique($this->get($key))
             : array();
         $existingKey = (array_search($value, $array));
         if($existingKey !== FALSE) {
@@ -49,7 +49,7 @@ class SessionHelper extends \SlimSession\Helper
     public function drop($key, $value)
     {
         $array = (is_array($this->get($key)) === TRUE)
-            ? $this->get($key)
+            ? array_unique($this->get($key))
             : array();
         $existingKey = (array_search($value, $array));
         if($existingKey === FALSE) {
