@@ -27,9 +27,30 @@ class User extends Model
     protected $fillable = [
         'username',
         'password',
-        'quickswitch',
         'email',
         'role',
         'last_login'
     ];
+    public $rememberUsername;
+    public $rememberPassword;
+
+    public function setRememberUsername(array $rememberedUsernames) {
+        foreach($rememberedUsernames as $user) {
+            if($this->uid === $user->uid) {
+                $this->rememberUsername = TRUE;
+                return;
+            }
+        }
+        $this->rememberUsername = FALSE;
+    }
+
+    public function setRememberPassword(array $rememberedPasswords) {
+        foreach($rememberedPasswords as $user) {
+            if($this->uid === $user->uid) {
+                $this->rememberPassword = TRUE;
+                return;
+            }
+        }
+        $this->rememberPassword = FALSE;
+    }
 }

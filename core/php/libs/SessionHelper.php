@@ -33,6 +33,7 @@ class SessionHelper extends \SlimSession\Helper
             : array();
         $existingKey = (array_search($value, $array));
         if($existingKey !== FALSE) {
+            // $value already exists in $key-array
             return;
         }
         $array[] = $value;
@@ -51,7 +52,8 @@ class SessionHelper extends \SlimSession\Helper
             ? $this->get($key)
             : array();
         $existingKey = (array_search($value, $array));
-        if($existingKey !== FALSE) {
+        if($existingKey === FALSE) {
+            // $value does not exist in $key-array. no need to drop
             return;
         }
         unset($array[$existingKey]);

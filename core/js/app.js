@@ -190,7 +190,7 @@ $(document).ready(function() {
             window.sliMpd.currentPlayer.drawWaveform();
         },
         setUser: function() {
-            $("#perma-username").text((this.username) ? this.username : 'Login' );
+            $("#perma-username").text((this.username) ? this.username : "Login" );
         }
     });
 

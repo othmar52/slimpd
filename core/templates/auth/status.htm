@@ -1,13 +1,7 @@
 {% extends 'surrounding.htm' %}
-
 {% block content %}
-
 <div class="row">
-
-	<div class="col-md-3">
-status.htm
-	</div>
-	<div class="col-md-4">
+	<div class="col-md-4 col-md-offset-3">
 		<div class="row bg-col2">
 			<div class="col-md-4">
 				<i class="fa fa-user fa-5x pull-left"></i>
@@ -20,27 +14,8 @@ status.htm
 				<br><br>
 			</div>
 		</div>
-		
-		{% if users|length %}
-			{% for user in users %}
-				{% if user.uid != auth.user.uid %}
-				
-				<div class="row bg-col2">
-					<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link btn btn-default btn-block refresh-status">
-					<div class="col-md-4">
-						<i class="fa fa-user fa-3x pull-left"></i>
-					</div>
-					<div class="col-md-8">
-						<h3>{{ user.username }}</h3>
-					</div>
-					</a>
-				</div>
-				
-		
-				{% endif %}
-			{% endfor %}
-		{% endif %}
+		<br />
+		{% include 'auth/list-quicklogin.htm' %}
 	</div>
-
 </div>
 {% endblock %}

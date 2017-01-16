@@ -41,18 +41,35 @@ class AuthController extends Controller
     }
 
     /**
-     * login without a password in case user.quickswitch == 1
-     * TODO: limit this functionality to LAN access
+     * login without username and/or password in case we have session vars with "remember_user" and/or "remember_password"
      */
-    public function quickSignInAction(Request $request, Response $response, $args)
+    public function postQuickSignIn(Request $request, Response $response)
     {
-        useArguments($request);
-        #var_dump($this->container->session->get('remember_user'));die;
-        $auth = $this->auth->attemptQuickLogin($args["itemUid"]);
+        $this->auth->logout();
+        $user = User::find( $request->getParam('useruid'));
+        if(!$user) {
+            $this->flash->AddMessage("error", "Could not log you in.");
+            return $this->redirectToSignIn($response);
+        }
+        $user->setRememberUsername($this->getRememberedUsers());
+        if($user->rememberUsername === FALSE) {
+            $this->flash->AddMessage("error", "Could not log you in.");
+            return $this->redirectToSignIn($response);
+        }
+        $user->setRememberPassword($this->getRememberedPasswords());
+
+        $skipPasswordCheck = $user->rememberPassword;
+        $auth = $this->auth->attempt(
+            $user->username,
+            $request->getParam('password'),
+            $skipPasswordCheck
+        );
+
         if($auth === FALSE) {
             $this->flash->AddMessage("error", "Could not log you in.");
             return $this->redirectToSignIn($response);
         }
+
         return $response->withRedirect(
             $this->router->pathFor('home') .
             getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
@@ -68,8 +85,16 @@ class AuthController extends Controller
                 getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
             );
         }
-        $users = User::where("quickswitch", "1")->orWhere('role', '=', 'guest')->getModels();
-        return $this->view->render($response, 'auth/signin.htm', ['users' => $users]);
+        $users = $this->getRememberedUsers();
+        $passwords = $this->getRememberedPasswords();
+        foreach($users as $user) {
+            $user->setRememberPassword($passwords);
+        }
+        return $this->view->render(
+            $response,
+            'auth/signin.htm',
+            ['users' => $users]
+        );
     }
 
     public function getStatus(Request $request, Response $response)
@@ -81,8 +106,16 @@ class AuthController extends Controller
                 getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
             );
         }
-        $users = User::where("quickswitch", "1")->orWhere('role', '=', 'guest')->getModels();
-        return $this->view->render($response, 'auth/status.htm', ['users' => $users]);
+        $users = $this->getRememberedUsers();
+        $passwords = $this->getRememberedPasswords();
+        foreach($users as $user) {
+            $user->setRememberPassword($passwords);
+        }
+        return $this->view->render(
+            $response,
+            'auth/status.htm',
+            ['users' => $users]
+        );
     }
 
     public function postSignIn(Request $request, Response $response)
@@ -104,10 +137,37 @@ class AuthController extends Controller
         );
     }
 
+    /**
+     * returns all user records that has logged in with "remember username" on specific client device
+     */
+    protected function getRememberedUsers()
+    {
+        $rememberedUsers = $this->container->session->get("remember_username");
+        if($this->conf['users']['always_show_guest_usernames'] === '1') {
+            if(is_array($rememberedUsers) === TRUE) {
+                return User::whereIn('uid', $rememberedUsers)->orWhere('role', 'guest')->getModels();
+            }
+            return User::where('role', 'guest')->getModels();
+        }
+        return User::whereIn('uid', $rememberedUsers)->getModels();
+    }
+
+    /**
+     * returns all user records that has logged in with "remember password" on specific client device
+     */
+    protected function getRememberedPasswords()
+    {
+        $rememberedPasswords = $this->container->session->get("remember_password");
+        if(is_array($rememberedPasswords) === FALSE) {
+            return [];
+        }
+        return User::whereIn('uid', $rememberedPasswords)->getModels();
+    }
+
     protected function persistRememberArgs(Request $request)
     {
-        // store remember_user and remember_password in session
-        foreach(['user', 'password'] as $what) {
+        // store remember_username and remember_password in session
+        foreach(['username', 'password'] as $what) {
             $method = ($request->getParam('remember_' . $what) === '1') ? 'push' : 'drop';
             $this->session->$method('remember_' . $what, $this->auth->user()->uid);
         }
@@ -140,9 +200,9 @@ class AuthController extends Controller
             'email' => $request->getParam('email'),
             'username' => $request->getParam('username'),
             'password' => password_hash($request->getParam('password'), \PASSWORD_DEFAULT),
-            'quickswitch' => (($request->getParam('quickswitch') === "1") ? 1 : NULL),
             'role' => 'member'
         ]);
+        $this->persistRememberArgs($request);
         return $response->withRedirect(
             $this->container->router->pathFor('home') .
             getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']));

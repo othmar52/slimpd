@@ -1,18 +1,45 @@
 {% if users|length %}
+{% set renderedHeader = 0 %}
 	{% for user in users %}
 		{% if user.uid != auth.user.uid %}
-		
+		{% if not renderedHeader %}
+		<p>Login as</p>
+		{% set renderedHeader = 1 %}
+		{% endif %}
 		<div class="row bg-col2">
-			<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link btn btn-default btn-block refresh-status">
-			<div class="col-md-4">
-				<i class="fa fa-user fa-3x pull-left"></i>
-			</div>
-			<div class="col-md-8">
-				<h3>{{ user.username }}</h3>
-			</div>
-			</a>
+			<form action="{{ path_for('auth.quicksignin')}}" method="post" class="ajax-post">
+				<input type="hidden" name="useruid" value="{{user.uid}}">
+				{{ csrf.field | raw }}
+				{% if user.rememberPassword %}
+				<button class="btn btn-trnsp btn-block bg-col2">
+					<div class="col-md-4">
+						<i class="fa fa-user fa-3x pull-left"></i>
+					</div>
+					<div class="col-md-8">
+						<h3>{{ user.username }}</h3>
+					</div>
+				</button>
+				{% else %}
+				<button class="btn btn-trnsp btn-block toggle-content" data-toggle=".pw-{{user.uid}}">
+					<div class="col-md-4">
+						<i class="fa fa-user fa-3x pull-left"></i>
+					</div>
+					<div class="col-md-8">
+						<h3>{{ user.username }}</h3>
+					</div>
+				</button>
+				<div class="pw-{{user.uid}} bg-col2" style="display:none;">
+					{% include 'auth/input-password.htm' %}
+					<div class="form-group row">
+						<div class="col-sm-7 col-sm-offset-5">
+							<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">Login</button>
+						</div>
+					</div>
+				</div>
+				{% endif %}
+			</form>
 		</div>
-		
+		<br />
 
 		{% endif %}
 	{% endfor %}

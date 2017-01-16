@@ -38,19 +38,28 @@ class Auth
         return $this->container->session->get('user');
     }
 
-    public function attempt($username, $password)
+    public function attempt($username, $password, $skipPasswordCheck = FALSE)
     {
         $user = User::where('username', $username)->first();
         if(!$user) {
             return FALSE;
         }
+        if($skipPasswordCheck === TRUE) {
+            $this->login($user);
+            return TRUE;
+        }
         if(password_verify($password, $user->password)) {
-            $this->container->session->set('user', $user->uid);
-            $user->last_login = $user->freshTimestamp();
-            $user->save();
+            $this->login($user);
             return TRUE;
         }
         return FALSE;
+    }
+
+    public function login(\Slimpd\Models\User $user)
+    {
+        $this->container->session->set('user', $user->uid);
+        $user->last_login = $user->freshTimestamp();
+        $user->save();
     }
 
     public function attemptQuickLogin($userUid)

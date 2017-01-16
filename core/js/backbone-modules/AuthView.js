@@ -41,7 +41,7 @@
             window.sliMpd.modules.PageView.prototype.render.call(this, renderMarkup);
             $(".toggle-password-lock", this.$el).off("click", this.togglePasswordLockClickListener).on("click", this.togglePasswordLockClickListener);
             $(".toggle-lock", this.$el).off("click", this.toggleLockClickListener).on("click", this.toggleLockClickListener);
-            $("#remeber_password_toggle", this.$el).hide();
+            $(".remember_password_toggle", this.$el).hide();
             this.rendered = true;
         },
 
@@ -59,12 +59,11 @@
          */
         togglePasswordLockClickListener : function(e) {
             var $el = $(e.currentTarget);
-            console.log($el);
             if($el.find(".toggle-lock").first().hasClass("fa-unlock-alt")) {
-                $("#remeber_password_toggle", this.$el).hide();
+                $(".remember_password_toggle", this.$el).hide();
                 return;
             }
-            $("#remeber_password_toggle", this.$el).show();
+            $(".remember_password_toggle", this.$el).show();
         },
 
         /**
