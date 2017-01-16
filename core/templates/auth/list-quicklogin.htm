@@ -1,0 +1,19 @@
+{% if users|length %}
+	{% for user in users %}
+		{% if user.uid != auth.user.uid %}
+		
+		<div class="row bg-col2">
+			<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link btn btn-default btn-block refresh-status">
+			<div class="col-md-4">
+				<i class="fa fa-user fa-3x pull-left"></i>
+			</div>
+			<div class="col-md-8">
+				<h3>{{ user.username }}</h3>
+			</div>
+			</a>
+		</div>
+		
+
+		{% endif %}
+	{% endfor %}
+{% endif %}

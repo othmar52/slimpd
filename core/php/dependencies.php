@@ -33,7 +33,7 @@ $container = $app->getContainer();
 
 
 $container['session'] = function ($container) {
-  return new \SlimSession\Helper;
+  return new \Slimpd\libs\SessionHelper;
 };
 
 

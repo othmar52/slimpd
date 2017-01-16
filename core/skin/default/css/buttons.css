@@ -75,3 +75,9 @@
 button:focus {
     outline:0 !important;
 }
+
+.abs-icon {
+	position:absolute;
+	right: -1.2em;
+	top:-0.1em;
+}

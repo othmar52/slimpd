@@ -1,89 +1,26 @@
 {% extends 'surrounding.htm' %}
-
 {% block content %}
-
 <div class="row">
-
-	<div class="col-md-3">
-
-	</div>
-	<div class="col-md-4">
-		{% if auth.user %}
-		Eingeloggt als <strong>{{ auth.user.username }}</strong>
-			
-			
-			<hr>
-			<a href="{{root}}auth/signout" class="btn btn-default ajax-link refresh-status btn-block">
-				<i class="fa fa-user pull-left"></i>
-				Gast
-			</a>
-		{% else %}
-				
-			
-		Eingeloggt als Gast
-		config.show_guest_login
-		config.allow_empty_password
-		
-		{% endif %}
-		
-		<hr />
-		
-		{% if users|length %}
-			<h2>Quick login</h2>
-			{% for user in users %}
-				{% if user.uid != auth.user.uid %}
-				<div class="row">
-					<a href="{{ path_for('auth.quicksignin', { itemUid: user.uid }) }}" class="ajax-link btn btn-default btn-block refresh-status">
-					<i class="fa fa-user pull-left"></i>
-					{{user.username}}
-					</a>
-				</div>
-				{% endif %}
-			{% endfor %}
-		{% endif %}
+	<div class="col-md-4 col-md-offset-3">
+		{% include 'auth/list-quicklogin.htm' %}
 		<hr/>
-		
-		<h2>Login</h2>
-		<div class="panXel paXnel-default">
-			<div class="panXel-body">
-				<form action="{{ path_for('auth.signin')}}" method="post" class="ajax-post">
-					<div class="form-group row">
-						<label for="username" class="col-sm-4 col-form-label">Username</label>
-						<div class="col-sm-8">
-							<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}">
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="password" class="col-sm-4 col-form-label">Password</label>
-						<div class="col-sm-8">
-							<input type="password" class="form-control" name="password" id="password" value="">
-						</div>
-					</div>
-					<div class="form-group">
-						<input type="checkbox" class="magic-checkbox" name="remember_user" id="remember_user" value="1" {{ oldInput.remember_user ? 'checked="checked"' : '' }}>
-						<label for="remember_user">Remember user</label>
-					</div>
-					<div class="form-group">
-						<input type="checkbox" class="magic-checkbox" name="remember_password" id="remember_password" value="1" {{ oldInput.remember_password ? 'checked="checked"' : '' }}>
-						<label for="remember_password">Remember password</label>
-					</div>
-					{# add cross-site-request-forgery protection #}
-					{{ csrf.field | raw }}
-					<div class="form-group row">
-						<div class="col-sm-12">
-							<button type="submit" class="btn btn-default btn-block">Login</button>
-						</div>
-					</div>
-					<div class="form-group row">
-						<div class="col-sm-12">
-							<hr>
-							<a class="btn btn-default btn-block ajax-link" href="{{ path_for('auth.signup')}}">or create new account</a>
-						</div>
-					</div>
-				</form>
+		<form action="{{ path_for('auth.signin')}}" method="post" class="ajax-post">
+			{% include 'auth/input-username.htm' %}
+			{% include 'auth/input-password.htm' %}
+			{# add cross-site-request-forgery protection #}
+			{{ csrf.field | raw }}
+			<div class="form-group row">
+				<div class="col-sm-7 col-sm-offset-5">
+					<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">Login</button>
+				</div>
 			</div>
-		</div>
+			<div class="form-group row">
+				<div class="col-sm-12">
+					<hr>
+					<a class="btn btn-default btn-block ajax-link" href="{{ path_for('auth.signup')}}">or create new account</a>
+				</div>
+			</div>
+		</form>
 	</div>
-
 </div>
 {% endblock %}

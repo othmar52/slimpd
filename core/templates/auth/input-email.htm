@@ -1,0 +1,9 @@
+<div class="form-group {{ errors.email ? 'has-error' : '' }} row">
+	<label for="username" class="col-sm-5 col-form-label uc dark">Email</label>
+	<div class="col-sm-7">
+		<input type="text" class="form-control" name="email" id="email" value="{{oldInput.email}}">
+		{% if errors.username %}
+			<span class="help-block">{{ errors.email | first }}</span>
+		{% endif %}
+	</div>
+</div>

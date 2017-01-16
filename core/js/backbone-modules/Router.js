@@ -39,6 +39,7 @@
         routes : {
             "" : "generic",
             [window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/:albumUid"] : "editAlbum",
+            [window.sliMpd.conf.backboneRoot + "auth/:subroute"] : "auth",
             "*generic" : "generic",
         },
 
@@ -81,8 +82,13 @@
 
             window.Backbone.Router.prototype.navigate.call(this, fragment, options);
         },
+
         editAlbum : function(albumUid, queryString) {
             this.generic(window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/" + albumUid, queryString, window.sliMpd.modules.EditAlbumView);
+        },
+
+        auth : function(subroute, queryString) {
+            this.generic(window.sliMpd.conf.backboneRoot + "auth/" + subroute, queryString, window.sliMpd.modules.AuthView);
         },
 
         generic : function(route, queryString, ViewClass) {

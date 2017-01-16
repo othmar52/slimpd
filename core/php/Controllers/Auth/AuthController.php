@@ -32,6 +32,7 @@ class AuthController extends Controller
 
     public function getSignOut(Request $request, Response $response)
     {
+        useArguments($request);
         $this->auth->logout();
         return $response->withRedirect(
             $this->router->pathFor('home') .
@@ -45,6 +46,8 @@ class AuthController extends Controller
      */
     public function quickSignInAction(Request $request, Response $response, $args)
     {
+        useArguments($request);
+        #var_dump($this->container->session->get('remember_user'));die;
         $auth = $this->auth->attemptQuickLogin($args["itemUid"]);
         if($auth === FALSE) {
             $this->flash->AddMessage("error", "Could not log you in.");
@@ -58,6 +61,7 @@ class AuthController extends Controller
 
     public function getSignIn(Request $request, Response $response)
     {
+        useArguments($request);
         if($this->auth->user()) {
             return $response->withRedirect(
                 $this->router->pathFor('auth.status') .
@@ -70,6 +74,7 @@ class AuthController extends Controller
 
     public function getStatus(Request $request, Response $response)
     {
+        useArguments($request);
         if(!$this->auth->user()) {
             return $response->withRedirect(
                 $this->router->pathFor('auth.status') .
@@ -90,14 +95,27 @@ class AuthController extends Controller
             $this->flash->AddMessage("error", "Could not log you in.");
             return $this->redirectToSignIn($response);
         }
+
+        $this->persistRememberArgs($request);
+
         return $response->withRedirect(
             $this->router->pathFor('home') .
             getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
         );
     }
 
+    protected function persistRememberArgs(Request $request)
+    {
+        // store remember_user and remember_password in session
+        foreach(['user', 'password'] as $what) {
+            $method = ($request->getParam('remember_' . $what) === '1') ? 'push' : 'drop';
+            $this->session->$method('remember_' . $what, $this->auth->user()->uid);
+        }
+    }
+
     public function getSignUp(Request $request, Response $response)
     {
+        useArguments($request);
         return $this->view->render($response, 'auth/signup.htm');
     }
 
