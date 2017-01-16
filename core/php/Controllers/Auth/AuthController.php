@@ -145,11 +145,11 @@ class AuthController extends Controller
         $rememberedUsers = $this->container->session->get("remember_username");
         if($this->conf['users']['always_show_guest_usernames'] === '1') {
             if(is_array($rememberedUsers) === TRUE) {
-                return User::whereIn('uid', $rememberedUsers)->orWhere('role', 'guest')->getModels();
+                return User::whereIn('uid', $rememberedUsers)->orWhere('role', 'guest')->orderBy('last_login', 'DESC')->getModels();
             }
-            return User::where('role', 'guest')->getModels();
+            return User::where('role', 'guest')->orderBy('last_login', 'DESC')->getModels();
         }
-        return User::whereIn('uid', $rememberedUsers)->getModels();
+        return User::whereIn('uid', $rememberedUsers)->orderBy('last_login', 'DESC')->getModels();
     }
 
     /**
@@ -202,6 +202,8 @@ class AuthController extends Controller
             'password' => password_hash($request->getParam('password'), \PASSWORD_DEFAULT),
             'role' => 'member'
         ]);
+        // TODO: implement something like approval of new created user
+        $this->auth->login($user);
         $this->persistRememberArgs($request);
         return $response->withRedirect(
             $this->container->router->pathFor('home') .
