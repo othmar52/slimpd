@@ -8,10 +8,13 @@
 			</div>
 			<div class="col-md-8">
 				<h3>{{ auth.user.username }}</h3>
-				<a href="{{root}}auth/signout" class="btn btn-default ajax-link refresh-status btn-bloxck">
-					Logout
-				</a>
-				<br><br>
+				<form action="{{ path_for('auth.logout')}}" method="post" class="ajax-post">
+					{{ csrf.field | raw }}
+					<button class="btn-block btn btn-trnsp btn-bordered col2" type="submit">
+						Logout
+					</button>
+				</form>
+				<br>
 			</div>
 		</div>
 		<br />

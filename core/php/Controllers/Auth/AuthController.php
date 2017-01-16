@@ -30,7 +30,7 @@ class AuthController extends Controller
 {
     use \Slimpd\Traits\MethodRedirectToSignIn;
 
-    public function getSignOut(Request $request, Response $response)
+    public function postLogout(Request $request, Response $response)
     {
         useArguments($request);
         $this->auth->logout();
@@ -168,7 +168,7 @@ class AuthController extends Controller
     {
         // store remember_username and remember_password in session
         foreach(['username', 'password'] as $what) {
-            $method = ($request->getParam('remember_' . $what) === '1') ? 'push' : 'drop';
+            $method = ($request->getParam('remember_' . $what) == '1') ? 'push' : 'drop';
             $this->session->$method('remember_' . $what, $this->auth->user()->uid);
         }
     }

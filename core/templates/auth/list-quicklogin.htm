@@ -12,6 +12,7 @@
 				<input type="hidden" class="" name="remember_username" value="1">
 				{{ csrf.field | raw }}
 				{% if user.rememberPassword %}
+				<input type="hidden" class="" name="remember_password" value="1">
 				<button class="btn btn-trnsp btn-block bg-col2">
 					<div class="col-md-4">
 						<i class="fa fa-user fa-3x pull-left"></i>
