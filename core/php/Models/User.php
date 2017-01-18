@@ -31,6 +31,17 @@ class User extends Model
         'role',
         'last_login'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'last_login'
+    ];
     public $rememberUsername;
     public $rememberPassword;
 

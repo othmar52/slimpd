@@ -19,6 +19,14 @@
 		</div>
 		<br />
 		{% include 'auth/list-quicklogin.htm' %}
+		<hr>
+		<div class="row">
+			<div class="col-md-12 dark">
+				<p>Not listed? <a href="{{ path_for('auth.signin')}}" class="item-link ajax-link col2">Login</a> as another user
+					or <a href="{{ path_for('auth.signup')}}" class="ajax-link item-link col2">create new account</a>
+				</p>
+			</div>
+		</div>
 	</div>
 </div>
 {% endblock %}

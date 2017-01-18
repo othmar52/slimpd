@@ -179,6 +179,9 @@ class AuthController extends Controller
         return $this->view->render($response, 'auth/signup.htm');
     }
 
+    /**
+     * TODO: respect "config[users].allow_empty_password"
+     */
     public function postSignUp(Request $request, Response $response)
     {
         $validation = $this->validator->validate(

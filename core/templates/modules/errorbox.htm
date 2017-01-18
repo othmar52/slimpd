@@ -1,10 +1,22 @@
-{% for msg in flash.getMessages('error') %}
-{# TODO: slimv3 does not support flashNow - so the messages comes very late #}
-<div class="alert alert-danger" role="alert">
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  
-  <span class="sr-only">Error:</span>
-        {{ msg.0 }}
-    </div>
+{% for msgType,msgGroup in flash.getMessages() %}
+	{% for msg in msgGroup %}
+		{% if msgType == 'error'%}
+		<div class="alert alert-danger" role="alert">
+			<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+			<span class="sr-only">Error:</span> {{ msg }}
+		</div>
+		{% endif %}
+		{% if msgType == 'success'%}
+		<div class="alert alert-success" role="alert">
+			<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+			<span class="sr-only">Success:</span> {{ msg }}
+		</div>
+		{% endif %}
+		{% if msgType == 'warning'%}
+		<div class="alert alert-warning" role="alert">
+			<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+			<span class="sr-only">Warning:</span> {{ msg }}
+		</div>
+		{% endif %}
+	{% endfor %}
 {% endfor %}
-

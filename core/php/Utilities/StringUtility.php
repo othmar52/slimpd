@@ -378,6 +378,9 @@ function getMicrotimeFloat() {
  */
 function timeElapsedString($datetime, $full = false) {
     $now = new DateTime;
+    $datetime = ($datetime instanceof \Carbon\Carbon)
+        ? $datetime->timestamp
+        : $datetime;
     $ago = new DateTime("@".floor($datetime));
     $diff = $now->diff($ago);
 

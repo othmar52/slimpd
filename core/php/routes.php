@@ -150,3 +150,6 @@ $app->post('/auth/signin', 'Slimpd\Controllers\Auth\AuthController:postSignIn');
 $app->post('/auth/logout', 'Slimpd\Controllers\Auth\AuthController:postLogout')->setName('auth.logout');
 $app->get('/auth/status', 'Slimpd\Controllers\Auth\AuthController:getStatus')->setName('auth.status');
 $app->post('/auth/quicksignin', 'Slimpd\Controllers\Auth\AuthController:postQuickSignIn')->setName('auth.quicksignin');
+
+$app->get('/users/list', 'Slimpd\Controllers\User\UserController:listAction')->setName('users.list');
+$app->post('/users/edit', 'Slimpd\Controllers\User\UserController:editAction')->setName('users.edit');

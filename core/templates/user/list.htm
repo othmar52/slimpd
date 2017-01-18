@@ -1,0 +1,79 @@
+{% extends 'surrounding.htm' %}
+{% block content %}
+<h2>Users <a href="{{ path_for('users.list') }}" class="btn btn-default ajax-link">refresh</a></h2>
+
+<div class="row">
+	<div class="col-md-3"><span class="dark uc small">{{'username'|ll}}</span></div>
+	<div class="col-md-1"><span class="dark uc small">{{'role'|ll}}</span></div>
+	<div class="col-md-3"><span class="dark uc small">{{'created_at'|ll}}</span></div>
+	<div class="col-md-3"><span class="dark uc small">{{'last_login'|ll}}</span></div>
+</div>
+
+
+{% if users|length %}
+	{% for user in users %}
+	<div class="{{ cycle(['','fw-bg'],loop.index) }} mouseover track-{{ item.relPathHash }} track-row">
+		<div class="row">
+			<div class="col-md-3 vcenter">
+				<div class="vcinner">
+					<i class="fa fa-user fa-lg pull-left"></i> {{ user.username }}
+				</div>
+			</div>
+			<div class="col-md-1 vcenter">
+				<div class="vcinner">
+					{{ user.role }}
+				</div>
+			</div>
+			<div class="col-md-3 vcenter" title="{{ user.created_at }}">
+				<div class="vcinner">
+					{{ user.created_at|timeElapsedString }}
+				</div>
+			</div>
+			<div class="col-md-3 vcenter" title="{{ user.last_login }}">
+				<div class="vcinner">
+					{{ user.last_login|timeElapsedString }}
+				</div>
+			</div>
+			<div class="col-md-1 vcenter">
+				<div class="vcinner">
+					<button class="btn btn-default toggle-content close-all" data-toggle=".user-edit{{user.uid}}"> edit</button>
+				</div>
+			</div>
+		</div>
+		<div class="row user-edit{{user.uid}}" style="display:none;">
+			<form action="{{ path_for('users.edit')}}" method="post" class="ajax-post">
+				<input type="hidden" name="uid" value="{{user.uid}}">
+				<input type="hidden" class="" name="remember_username" value="1">
+				<div class="col-md-3 vcenter">
+					<div class="vcinner">
+						<label class="dark uc small">{{'username'|ll}}</label>
+						<input type="text" class="form-control" name="username" id="username" value="{{user.username}}">
+					</div>
+				</div>
+				<div class="col-md-3 vcenter">
+					<div class="vcinner">
+						<label class="dark uc small">{{'role'|ll}}</label>
+						<select class="form-control" name="role">
+							<option value="guest"  {{ user.role == 'guest'  ? 'selected="selected"' : '' }}>guest</option>
+							<option value="member" {{ user.role == 'member' ? 'selected="selected"' : '' }}>member</option>
+							<option value="admin"  {{ user.role == 'admin'  ? 'selected="selected"' : '' }}>admin</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md-3 vcenter">
+					<div class="vcinner">
+						<label class="dark uc small">{{'new.password'|ll}}</label>
+						<input type="text" class="form-control" name="password" id="password" value="TODO: not implemented yet">
+					</div>
+				</div>
+				<div class="col-md-3 vcenter">
+					<div class="vcinner">
+						<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% endfor %}
+{% endif %}
+{% endblock %}

@@ -104,7 +104,9 @@ class Auth
                 );
             case 'admin':
                 return array(
-                    'media' => '1'
+                    'media' => '1',
+                    'users.list' => '1',
+                    'users.edit' => '1',
                 );
         }
     }
