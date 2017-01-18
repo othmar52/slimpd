@@ -189,14 +189,31 @@ $(document).ready(function() {
             window.sliMpd.drawFavicon();
             window.sliMpd.currentPlayer.drawWaveform();
         },
-        setUser: function() {
-            $("#perma-username").text((this.username) ? this.username : "Login" );
+
+        checkUserChange: function(username) {
+            if(this.username === username) {
+                return;
+            }
+            this.username = username;
+            this.handleUserChange();
+        },
+
+        handleUserChange: function() {
+            $.ajax({
+                url: window.sliMpd.conf.absRefPrefix,
+                type: "get",
+                success : function( siteMarkup ) {
+                    // refresh navigation
+                    window.sliMpd.navbar.redraw($(siteMarkup).find('nav.main-nav').html());
+                }
+            });
         }
     });
 
     window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({
         el : "nav.main-nav"
     });
+    window.sliMpd.username = window.sliMpd.conf.currentUser;
     window.sliMpd.navbar.render();
 
     window.sliMpd.xwax = new window.sliMpd.modules.XwaxView({

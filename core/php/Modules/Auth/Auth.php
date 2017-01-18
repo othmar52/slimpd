@@ -96,17 +96,20 @@ class Auth
         switch($rolename) {
             case 'guest':
                 return array(
-                    'media' => '1'
+                    'media' => '1',
+                    'filebrowser' => '0'
                 );
             case 'member':
                 return array(
-                    'media' => '1'
+                    'media' => '1',
+                    'filebrowser' => '1'
                 );
             case 'admin':
                 return array(
                     'media' => '1',
                     'users.list' => '1',
                     'users.edit' => '1',
+                    'filebrowser' => '1'
                 );
         }
     }

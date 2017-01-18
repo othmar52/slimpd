@@ -22,6 +22,7 @@
 		},
 		absRefPrefix: '{{ config.config.absRefPrefix }}',
 		absFilePrefix: '{{ config.config.absFilePrefix }}',
-		backboneRoot: '{{ config.config.absRefPrefix|slice(1) }}'
+		backboneRoot: '{{ config.config.absRefPrefix|slice(1) }}',
+		currentUser: '{{ auth.user.username }}',
 	};
 </script>

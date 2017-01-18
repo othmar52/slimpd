@@ -32,18 +32,24 @@
 
         tabAutocomplete : false,
 
-        searchfield : $("#mainsearch"),
+        searchfield : false,
 
         previousRequest: null,
 
         initialize : function(options) {
+            this.searchfield = $("#mainsearch", this.$el);
             window.sliMpd.modules.AbstractView.prototype.initialize.call(this, options);
         },
 
-        render : function() {
+        render : function(renderMarkup) {
             // only render page once (to prevent multiple click listeners)
             if (this.rendered) {
                 return;
+            }
+
+            if (renderMarkup) {
+                this.$el.html($(this._template((this.model || {}).attributes)));
+                this.searchfield = $("#mainsearch", this.$el);
             }
 
             var that = this;
@@ -307,6 +313,14 @@
                 window.sliMpd.navbar.searchfield.autocomplete("enable");
             },
             2000);
+        },
+
+        redraw : function(headerMarkup) {
+            // place markup in DOM
+            this.searchfield.autocomplete("destroy");
+            this._template = _.template(headerMarkup);
+            this.rendered = false;
+            this.render(true);
         }
     });
 }());
