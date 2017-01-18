@@ -26,12 +26,12 @@
 			</div>
 			<div class="col-md-3 vcenter" title="{{ user.created_at }}">
 				<div class="vcinner">
-					{{ user.created_at|timeElapsedString }}
+					{{ user.created_at.timestamp|timeElapsedString }}
 				</div>
 			</div>
 			<div class="col-md-3 vcenter" title="{{ user.last_login }}">
 				<div class="vcinner">
-					{{ user.last_login|timeElapsedString }}
+					{{ user.last_login.timestamp|timeElapsedString }}
 				</div>
 			</div>
 			<div class="col-md-1 vcenter">
