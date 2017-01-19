@@ -14,13 +14,12 @@
 				<div class="col-md-6">
 					<ul class="nav navbar-nav">
 						{% for menu in config.mainmenu %}
-						{% if menu.url %}
+						{% if (menu.url) and (menu.permission is allowed) %}
 						<li class="{% if menu.url == current_url %} active{% endif %}">
 							<a href="{{root}}{{menu.url}}" class="ajax-link col3">{{menu.title|ll|raw}}</a>
 						</li>
 						{% endif %}
 						{% endfor %}
-						
 						<li class="pull-right">
 							<a href="{{root}}auth/signin" class="ajax-link col3">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>

@@ -21,8 +21,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
+    use \Slimpd\Traits\MethodRedirectToSignIn;
     public function indexAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        if($this->auth->hasPermissionFor('importer') === FALSE) {
+            $this->flash->addMessage('error', 'Access denied');
+            return $this->redirectToSignIn($response);
+        }
+        useArguments($request);
         $args['action'] = 'importer';
         $args['servertime'] = time();
 

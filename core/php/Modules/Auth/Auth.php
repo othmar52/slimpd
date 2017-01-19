@@ -58,63 +58,44 @@ class Auth
     public function login(\Slimpd\Models\User $user)
     {
         $this->container->session->set('user', $user->uid);
+        $this->container->session->set('role', $user->role);
         $user->last_login = $user->freshTimestamp();
         $user->save();
-    }
-
-    public function attemptQuickLogin($userUid)
-    {
-        $user = User::where([
-            ["quickswitch", "=", "1"],
-            ["uid", "=", $userUid]
-        ])->first();
-        if(!$user) {
-            return FALSE;
-        }
-        $this->container->session->set('user', $user->uid);
-        $user->last_login = $user->freshTimestamp();
-        $user->save();
-        return TRUE;
     }
 
     public function logout()
     {
         $this->container->session->delete('user');
-    }
-
-    public function permissions()
-    {
-        $user = User::find($this->container->session->get('user'));
-        if(!$user) {
-            return $this->permissionsForRole('guest');
-        }
-        return $this->permissionsForRole($user->role);
+        $this->container->session->delete('role');
     }
 
     private function permissionsForRole($rolename) {
         // TODO: move roles and permissions to database
         switch($rolename) {
-            case 'guest':
-                return array(
-                    'media' => '1',
-                    'filebrowser' => '0'
-                );
             case 'member':
                 return array(
                     'media' => '1',
-                    'filebrowser' => '1'
+                    'users.list' => '0',
+                    'users.edit' => '0',
+                    'filebrowser' => '1',
+                    'importer' => '0',
+                    'filebrowser' => '1',
+                    'systemcheck' => '0',
                 );
-            case 'admin':
+            case 'guest':
+            default:
                 return array(
                     'media' => '1',
-                    'users.list' => '1',
-                    'users.edit' => '1',
-                    'filebrowser' => '1'
                 );
         }
     }
 
     public function hasPermissionFor($key) {
-        return @$this->permissions()[$key] === '1';
+        $role = $this->container->session->get('role');
+        if($role === 'admin') {
+            return TRUE;
+        }
+        $permissions = $this->permissionsForRole($role);
+        return @$permissions[$key] === '1';
     }
 }

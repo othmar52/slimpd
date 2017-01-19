@@ -206,6 +206,10 @@ class SlimpdTwigExtension extends \Twig_Extension {
 
             new \Twig_SimpleTest('typeObject', function ($value) {
                 return is_object($value);
+            }),
+
+            new \Twig_SimpleTest('allowed', function ($permissionKey) {
+                return $this->container->auth->hasPermissionFor($permissionKey);
             })
         );
     }

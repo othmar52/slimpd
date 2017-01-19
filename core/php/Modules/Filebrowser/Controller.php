@@ -21,9 +21,12 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-
+    use \Slimpd\Traits\MethodRedirectToSignIn;
     public function index(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
+            $this->flash->addMessage('warning', 'Access denied');
+            return $this->redirectToSignIn($response);
+        }
         $args['itemParams'] = $this->conf['mpd']['musicdir'];
         $args['hotlinks'] = array();
         #$args['hideQuicknav'] = 1;
@@ -34,7 +37,10 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function dircontent(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
+            $this->flash->addMessage('warning', 'Access denied');
+            return $this->redirectToSignIn($response);
+        }
         $args['action'] = 'filebrowser';
         $fileBrowser = $this->filebrowser;
         $fileBrowser->itemsPerPage = $this->conf['filebrowser']['max-items'];

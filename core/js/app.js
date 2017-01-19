@@ -204,7 +204,7 @@ $(document).ready(function() {
                 type: "get",
                 success : function( siteMarkup ) {
                     // refresh navigation
-                    window.sliMpd.navbar.redraw($(siteMarkup).find('nav.main-nav').html());
+                    window.sliMpd.navbar.redraw($(siteMarkup).find("nav.main-nav").html());
                 }
             });
         }

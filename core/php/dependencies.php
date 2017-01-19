@@ -109,8 +109,7 @@ $container['view'] = function ($cont) {
         'flash' => $cont['flash'],
         'auth' => [
             'check' => $cont->auth->check(),
-            'user' => $cont->auth->user(),
-            'perms' => $cont->auth->permissions()
+            'user' => $cont->auth->user()
         ]
     ];
     foreach($globalTwigVars as $varName => $value) {
@@ -137,7 +136,7 @@ $capsule->bootEloquent();
 $container['db2'] = function ($container) use ($capsule){
     return $capsule;
 };
-
+// TODO: make capsule/eloquent the only database wrapper and remove mysqli
 $container['db'] = function ($cont) { 
     try {
         mysqli_report(MYSQLI_REPORT_STRICT);
