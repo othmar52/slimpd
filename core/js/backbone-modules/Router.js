@@ -132,10 +132,14 @@
 
                 this.ajaxLoading = false;
             }.bind(this))
-            .fail(function() {
+            .fail(function(jqXHR) {
                 this.$body.removeClass("is-loading");
                 window.NProgress.done();
                 this.ajaxLoading = false;
+                if(jqXHR.status === 401) {
+                    window.sliMpd.handleUnauthorized(jqXHR.responseText);
+                    return;
+                }
                 window.sliMpd.notifyError(url);
                 return;
             }.bind(this));

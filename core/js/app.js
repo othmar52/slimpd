@@ -207,6 +207,15 @@ $(document).ready(function() {
                     window.sliMpd.navbar.redraw($(siteMarkup).find("nav.main-nav").html());
                 }
             });
+        },
+
+        handleUnauthorized: function(responseMarkup) {
+            $("<div class='overlay-backdrop'>"+ responseMarkup +"</div>")
+            .css({opacity: 1, display: "block"})
+            .on("click", function(e){
+                $(e.currentTarget).remove();
+            })
+            .appendTo(document.body);
         }
     });
 

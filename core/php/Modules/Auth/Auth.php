@@ -24,7 +24,8 @@ class Auth
 {
     protected $container;
 
-    public function __construct($container) {
+    public function __construct($container)
+    {
         $this->container = $container;
     }
 
@@ -69,33 +70,15 @@ class Auth
         $this->container->session->delete('role');
     }
 
-    private function permissionsForRole($rolename) {
-        // TODO: move roles and permissions to database
-        switch($rolename) {
-            case 'member':
-                return array(
-                    'media' => '1',
-                    'users.list' => '0',
-                    'users.edit' => '0',
-                    'filebrowser' => '1',
-                    'importer' => '0',
-                    'filebrowser' => '1',
-                    'systemcheck' => '0',
-                );
-            case 'guest':
-            default:
-                return array(
-                    'media' => '1',
-                );
-        }
-    }
-
-    public function hasPermissionFor($key) {
+    public function hasPermissionFor($key)
+    {
         $role = $this->container->session->get('role');
         if($role === 'admin') {
             return TRUE;
         }
-        $permissions = $this->permissionsForRole($role);
-        return @$permissions[$key] === '1';
+        if(array_key_exists('roles-' . $role, $this->container->conf) === FALSE) {
+            return FALSE;
+        }
+        return @$this->container->conf['roles-' . $role][$key] === '1';
     }
 }

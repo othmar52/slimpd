@@ -452,3 +452,17 @@ body.standalone {
 .album-controls {
     background-color: #252525;
 }
+
+
+/* not authorized overlay */
+.huge-centered {
+    font-size: 8em;
+    font-weight: bold;
+}
+
+.overlay-backdrop .huge-centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}

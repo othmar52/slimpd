@@ -27,4 +27,10 @@ trait MethodRedirectToSignIn {
             getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding'])
         );
     }
+
+    public function renderAccessDenied(Response $response) {
+        $newResponse = $response;
+        $this->view->render($response, 'error/401.htm');
+        return $response->withStatus(401);
+    }
 }

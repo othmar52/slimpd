@@ -24,8 +24,7 @@ class Controller extends \Slimpd\BaseController {
     use \Slimpd\Traits\MethodRedirectToSignIn;
     public function index(Request $request, Response $response, $args) {
         if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
-            $this->flash->addMessage('warning', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         $args['itemParams'] = $this->conf['mpd']['musicdir'];
         $args['hotlinks'] = array();
@@ -38,8 +37,7 @@ class Controller extends \Slimpd\BaseController {
 
     public function dircontent(Request $request, Response $response, $args) {
         if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
-            $this->flash->addMessage('warning', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         $args['action'] = 'filebrowser';
         $fileBrowser = $this->filebrowser;
@@ -120,7 +118,7 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetDirectory(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        useArguments($request);
         $fileBrowser = $this->filebrowser;
         $fileBrowser->getDirectoryContent($args['itemParams']);
         $args['directory'] = $fileBrowser->directory;
@@ -138,7 +136,6 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function deliverAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         $path = $args['itemParams'];
         if(is_numeric($path)) {
             $track = $this->trackRepo->getInstanceByAttributes(array('uid' => (int)$args['itemParams']));

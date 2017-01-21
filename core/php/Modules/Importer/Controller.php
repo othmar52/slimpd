@@ -22,10 +22,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     use \Slimpd\Traits\MethodRedirectToSignIn;
+
     public function indexAction(Request $request, Response $response, $args) {
         if($this->auth->hasPermissionFor('importer') === FALSE) {
-            $this->flash->addMessage('error', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         useArguments($request);
         $args['action'] = 'importer';
