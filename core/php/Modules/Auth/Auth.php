@@ -73,6 +73,10 @@ class Auth
     public function hasPermissionFor($key)
     {
         $role = $this->container->session->get('role');
+
+        // not logged in means guest
+        $role = ($role === NULL) ? 'guest' : $role;
+
         if($role === 'admin') {
             return TRUE;
         }
@@ -80,5 +84,22 @@ class Auth
             return FALSE;
         }
         return @$this->container->conf['roles-' . $role][$key] === '1';
+    }
+
+    public function getRouteNameForAfterLogin()
+    {
+        $role = $this->container->session->get('role');
+
+        // not logged in means guest
+        $role = ($role === NULL) ? 'guest' : $role;
+
+        if(array_key_exists('roles-' . $role, $this->container->conf) === FALSE) {
+            return FALSE;
+        }
+        if(array_key_exists('landingpage', $this->container->conf['roles-' . $role]) === FALSE) {
+            return FALSE;
+        }
+        return $this->container->router->pathFor($this->container->conf['roles-' . $role]['landingpage']) .
+            getNoSurSuffix($this->container->view->getEnvironment()->getGlobals()['nosurrounding']);
     }
 }

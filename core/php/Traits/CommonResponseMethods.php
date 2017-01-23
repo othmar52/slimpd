@@ -19,7 +19,7 @@ namespace Slimpd\Traits;
  */
 use Psr\Http\Message\ResponseInterface as Response;
 
-trait MethodRedirectToSignIn {
+trait CommonResponseMethods {
 
     public function redirectToSignIn(Response $response) {
         return $response->withRedirect(
@@ -29,7 +29,6 @@ trait MethodRedirectToSignIn {
     }
 
     public function renderAccessDenied(Response $response) {
-        $newResponse = $response;
         $this->view->render($response, 'error/401.htm');
         return $response->withStatus(401);
     }

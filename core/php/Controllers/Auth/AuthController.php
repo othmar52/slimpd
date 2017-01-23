@@ -28,7 +28,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class AuthController extends Controller
 {
-    use \Slimpd\Traits\MethodRedirectToSignIn;
+    use \Slimpd\Traits\CommonResponseMethods;
 
     public function postLogout(Request $request, Response $response)
     {
@@ -176,6 +176,9 @@ class AuthController extends Controller
     public function getSignUp(Request $request, Response $response)
     {
         useArguments($request);
+        if($this->auth->hasPermissionFor('signup') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         return $this->view->render($response, 'auth/signup.htm');
     }
 
@@ -184,6 +187,9 @@ class AuthController extends Controller
      */
     public function postSignUp(Request $request, Response $response)
     {
+        if($this->auth->hasPermissionFor('signup') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $validation = $this->validator->validate(
             $request,
             [

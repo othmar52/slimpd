@@ -21,12 +21,11 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    use \Slimpd\Traits\MethodRedirectToSignIn;
+    use \Slimpd\Traits\CommonResponseMethods;
     public function indexAction(Request $request, Response $response, $args) {
         useArguments($request);
         if($this->auth->hasPermissionFor('media') === FALSE) {
-            $this->flash->addMessage('warning', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         $args['action'] = "landing";
         $args['itemlist'] = $this->albumRepo->getAll(11, 0, "added desc");

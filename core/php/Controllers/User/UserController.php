@@ -26,14 +26,24 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class UserController extends Controller
 {
-    use \Slimpd\Traits\MethodRedirectToSignIn;
+    use \Slimpd\Traits\CommonResponseMethods;
+
+    /**
+     * this method redirects to configured "landingpage" after login and after logout
+     */
+    public function homeAction(Request $request, Response $response)
+    {
+        useArguments($request);
+        return $response->withRedirect(
+            $this->auth->getRouteNameForAfterLogin()
+        );
+    }
 
     public function listAction(Request $request, Response $response)
     {
         useArguments($request);
         if($this->auth->hasPermissionFor('users.list') === FALSE) {
-            $this->flash->addMessage('warning', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         return $this->view->render(
             $response,
@@ -45,8 +55,7 @@ class UserController extends Controller
     public function editAction(Request $request, Response $response)
     {
         if($this->auth->hasPermissionFor('users.edit') === FALSE) {
-            $this->flash->addMessage('warning', 'Access denied');
-            return $this->redirectToSignIn($response);
+            return $this->renderAccessDenied($response);
         }
         $user = User::find($request->getParam('uid'));
         if(!$user) {

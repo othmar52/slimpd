@@ -21,8 +21,7 @@
 
 $ctrlRoutes = [
     'Library' => [
-        ['[/]', 'indexAction', 'home'],
-        ['/library[/]', 'indexAction']
+        ['/library[/]', 'indexAction', 'library']
     ],
      /*
     'Auth' => [
@@ -151,5 +150,6 @@ $app->post('/auth/logout', 'Slimpd\Controllers\Auth\AuthController:postLogout')-
 $app->get('/auth/status', 'Slimpd\Controllers\Auth\AuthController:getStatus')->setName('auth.status');
 $app->post('/auth/quicksignin', 'Slimpd\Controllers\Auth\AuthController:postQuickSignIn')->setName('auth.quicksignin');
 
+$app->get('[/]', 'Slimpd\Controllers\User\UserController:homeAction')->setName('home');
 $app->get('/users/list', 'Slimpd\Controllers\User\UserController:listAction')->setName('users.list');
 $app->post('/users/edit', 'Slimpd\Controllers\User\UserController:editAction')->setName('users.edit');
