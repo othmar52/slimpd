@@ -21,6 +21,8 @@ namespace Slimpd\Controllers;
 
 class Controller
 {
+    use \Slimpd\Traits\CommonResponseMethods;
+
     protected $container;
 
     public function __construct($container)

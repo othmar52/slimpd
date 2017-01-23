@@ -23,7 +23,10 @@ use Psr\Http\Message\ResponseInterface as Response;
 class Controller extends \Slimpd\BaseController {
     use \Slimpd\Traits\MethodTypeListAction;
     public function listAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
+        useArguments($request);
         $this->completeArgsForTypelist('artist', $args);
         $this->view->render($response, 'surrounding.htm', $args);
         return $response;

@@ -28,7 +28,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class AuthController extends Controller
 {
-    use \Slimpd\Traits\CommonResponseMethods;
 
     public function postLogout(Request $request, Response $response)
     {

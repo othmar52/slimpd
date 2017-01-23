@@ -22,6 +22,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
     public function listAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $args["action"] = "albums";
         $args["itemlist"] = [];
@@ -44,6 +47,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function detailAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
@@ -65,6 +71,9 @@ class Controller extends \Slimpd\BaseController {
      * TODO: add something like a que to avoid parallel execution of archive creation
      */
     public function downloadAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('download-directory') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL || $this->conf['modules']['enable_dirdownload'] !== '1') {
@@ -128,6 +137,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function albumTracksAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
@@ -141,6 +153,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetAlbumAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->completeArgsForDetailView($args['itemUid'], $args);
         if($args['album'] === NULL) {
@@ -185,6 +200,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function editAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('edit-library') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $this->completeArgsForDetailView($args['itemParams'], $args);
         if($args['album'] === NULL) {
             $args['action'] = '404';
@@ -291,6 +309,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function updateAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('edit-library') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $postParams = $request->getParsedBody();
         if($postParams === NULL) {
             $postParams = array();

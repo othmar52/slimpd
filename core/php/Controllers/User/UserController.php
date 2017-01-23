@@ -26,8 +26,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 
 class UserController extends Controller
 {
-    use \Slimpd\Traits\CommonResponseMethods;
-
     /**
      * this method redirects to configured "landingpage" after login and after logout
      */

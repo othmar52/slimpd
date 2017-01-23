@@ -21,11 +21,16 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
+
     use \Slimpd\Traits\MethodTypeListAction;
+
     public function runAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('systemcheck') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $dbError = ($request->getParam('dberror') !== NULL) ? TRUE : FALSE;
 
-        $systemCheck = new \Slimpd\Modules\Systemcheck\Systemcheck($this->container, $request);        
+        $systemCheck = new \Slimpd\Modules\Systemcheck\Systemcheck($this->container, $request);
         $systemCheck->configLocalUrl = $request->getUri()->getScheme()
             . "://" . $request->getUri()->getHost()
             . $this->conf['config']['absFilePrefix']

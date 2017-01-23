@@ -19,6 +19,7 @@ namespace Slimpd;
  */
 
 class BaseController {
+    use \Slimpd\Traits\CommonResponseMethods;
 
     protected $container;
 

@@ -25,6 +25,9 @@ class Controller extends \Slimpd\BaseController {
     protected $notifyJson = NULL;
 
     public function xwaxplayerAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
         $this->validateClientCommand('get_status');
@@ -43,6 +46,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function statusAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
@@ -65,6 +71,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdLoadTrackAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
@@ -82,7 +91,6 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdReconnectAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
         return $this->runSingleDeckCommand($request, $response, $args, 'reconnect');
     }
 
@@ -99,6 +107,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function runSingleDeckCommand(Request $request, Response $response, $args, $cmd) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
@@ -113,6 +124,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdLaunchAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request, $args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
@@ -126,6 +140,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function cmdExitAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request, $args);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();
@@ -195,6 +212,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function widgetAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('xwax') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
         $this->xwax = new \Slimpd\Modules\Xwax\Xwax($this->container);
         $this->validateBaseConfig();

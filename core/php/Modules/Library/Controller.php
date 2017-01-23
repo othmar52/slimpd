@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    use \Slimpd\Traits\CommonResponseMethods;
+
     public function indexAction(Request $request, Response $response, $args) {
         useArguments($request);
         if($this->auth->hasPermissionFor('media') === FALSE) {

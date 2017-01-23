@@ -47,6 +47,9 @@ class Controller extends \Slimpd\BaseController {
 
     // albumlist+tracklist of artist|genre|label
     public function listAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($request);
 
         $args["action"] = $args['className']."." . $args['show']."s";
@@ -285,6 +288,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function searchAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
 
         # TODO: evaluate if modifying searchterm makes sense
         // "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
@@ -327,6 +333,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function autocompleteAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($args);
         $term = $request->getParam("q");
 
@@ -450,7 +459,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function directoryAction(Request $request, Response $response, $args) {
-        useArguments($request, $response, $args);
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
 
         // validate directory
         $directory = $this->directoryRepo->create($args['itemParams']);
@@ -515,6 +526,9 @@ class Controller extends \Slimpd\BaseController {
     }
 
     public function alphasearchAction(Request $request, Response $response, $args) {
+        if($this->auth->hasPermissionFor('media') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         useArguments($args);
         $type = $request->getParam("searchtype");
         $term = $request->getParam("searchterm");

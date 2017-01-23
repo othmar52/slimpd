@@ -21,7 +21,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 class Controller extends \Slimpd\BaseController {
-    use \Slimpd\Traits\CommonResponseMethods;
+
     public function index(Request $request, Response $response, $args) {
         if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
             return $this->renderAccessDenied($response);
@@ -119,6 +119,9 @@ class Controller extends \Slimpd\BaseController {
 
     public function widgetDirectory(Request $request, Response $response, $args) {
         useArguments($request);
+        if($this->auth->hasPermissionFor('filebrowser') === FALSE) {
+            return $this->renderAccessDenied($response);
+        }
         $fileBrowser = $this->filebrowser;
         $fileBrowser->getDirectoryContent($args['itemParams']);
         $args['directory'] = $fileBrowser->directory;
