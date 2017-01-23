@@ -39,7 +39,9 @@ $ctrlRoutes = [
     ],
     'Bitmap' => [
         ['/imagefallback-{imagesize}/{type}','fallback', 'imagefallback'],
+        ['/image-{imagesize}/album[/]', 'album', 'imagealbum'], // vanished albums
         ['/image-{imagesize}/album/{itemUid}', 'album', 'imagealbum'],
+        ['/image-{imagesize}/track[/]', 'track'], // vanished tracks
         ['/image-{imagesize}/track/{itemUid}', 'track'],
         ['/image-{imagesize}/id/{itemUid}', 'bitmap'],
         ['/image-{imagesize}/path/[{itemParams:.*}]', 'path', 'imagepath'],

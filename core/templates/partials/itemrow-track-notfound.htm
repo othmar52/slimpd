@@ -11,7 +11,7 @@
 				'attrs': 'class="icon-50"'
 			} %}
 			{% endif %}
-			<a title="search track" class="btn btn-trnsp ajax-link trigger-hide-modal" href="{{root}}searchall/page/1/sort/relevance/desc?q={{ fileName }}">
+			<a title="search track" class="btn btn-trnsp ajax-link trigger-hide-modal" href="{{root}}searchall/page/1/sort/relevance/desc?q={{ fileName|path2url }}">
 				<i class="fa fa-search fa-lg"></i>
 			</a>
 		</div>
