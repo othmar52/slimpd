@@ -48,6 +48,7 @@ if (isset($config['config']['locale'])) {
     setlocale(LC_ALL, array($config['config']['locale']));
 }
 
+ini_set('session.cookie_lifetime', (int)$config['config']['session_lifetime']);
 session_start();
 
 // Create app
