@@ -36,6 +36,34 @@ class Mpd {
         return $this->trackRepo->getInstanceByPath($files[$listpos], TRUE);
     }
 
+    public function getPriorityForTrack($relativePath) {
+        $entry = $this->mpd('playlistfind "File" "'. str_replace('"', '\"', $relativePath).'"');
+        if(array_key_exists('Prio', $entry) === FALSE) {
+            return 0;
+        }
+        #echo "<pre>";print_r($entry);die;
+        return $entry['Prio'];
+    }
+
+    /**
+     * values of priorities are between 0 (no prio) and 255 (max prio)
+     * so when playAsNext is requested we have to make sure it will get a lower prio than other prirized tracks.
+     * this function fetches the highest existing prio decremented by 1
+     */
+    public function getNextGlobalPriority() {
+        $nextPrio = 255;
+        $allTracksInfo = $this->mpd('playlistinfo');
+        foreach($allTracksInfo as $idx => $trackInfo) {
+            if(array_key_exists('Prio', $trackInfo) === FALSE) {
+                continue;
+            }
+            if($trackInfo["Prio"] > 0 && $trackInfo["Prio"] < $nextPrio) {
+                $nextPrio = $trackInfo["Prio"]-1;
+            }
+        }
+        return ($nextPrio === 0) ? 1 : $nextPrio;
+    }
+
     public function getCurrentPlaylist($pageNum = 1) {
         $playlist = array();
         $filePaths = $this->mpd('playlist');
@@ -51,6 +79,7 @@ class Mpd {
                 continue;
             }
             $playlist[$idx] = $this->trackRepo->getInstanceByPath($filePath, TRUE);
+            $playlist[$idx]->prio = $this->getPriorityForTrack($filePath);
         }
         return $playlist;
     }
@@ -87,6 +116,15 @@ class Mpd {
             "replaceTrack",
             "replaceDir",
             "replacePlaylist"
+        ];
+        return in_array($cmd, $commandList);
+    }
+
+    protected function getSetPriority($cmd) {
+        $commandList = [
+            "injectTrack",
+            "injectDir",
+            "injectPlaylist"
         ];
         return in_array($cmd, $commandList);
     }
@@ -193,6 +231,7 @@ class Mpd {
 
 
         $firePlay = $this->getFirePlay($cmd);
+        $setPriority = $this->getSetPriority($cmd);
         $targetPosition = $this->getTargetPosition($cmd);
         $itemPath = $this->getItemPath($item);
         $itemType = $this->getItemType($itemPath);
@@ -231,6 +270,9 @@ class Mpd {
                 if($firePlay === TRUE) {
                     $this->mpd('play ' . intval($targetPosition));
                 }
+                if($setPriority === TRUE) {
+                    $this->mpd('prio ' . $this->getNextGlobalPriority() . " " . intval($targetPosition));
+                }
                 $this->notifyJson = notifyJson("MPD: added " . $itemPath . " to playlist", 'mpd');
                 return;
             case 'injectDir':
@@ -248,7 +290,7 @@ class Mpd {
             case 'injectPlaylistAndPlay':
                 $playlist = new \Slimpd\Models\PlaylistFilesystem($itemPath);
                 $playlist->fetchTrackRange(0,1000, TRUE);
-                $counter = $this->appendPlaylist($playlist, $targetPosition);
+                $counter = $this->appendPlaylist($playlist, $targetPosition, $this->getNextGlobalPriority());
                 if($firePlay === TRUE) {
                     $this->mpd('play ' . intval($targetPosition));
                 }
@@ -457,18 +499,25 @@ class Mpd {
         }
     }
 
-    public function appendPlaylist($playlist, $targetPosition = FALSE) {
+    public function appendPlaylist($playlist, $targetPosition = FALSE, $priority = FALSE) {
         $counter = 0;
         foreach($playlist->getTracks() as $t) {
             if($t->getError() === 'notfound') {
                 continue;
             }
             $trackPath = "\"" . str_replace("\"", "\\\"", $t->getRelPath()) . "\""; 
-            $cmd = "add " . $trackPath;
+            $cmdAdd = "add " . $trackPath;
+            $cmdPrio = FALSE;
             if($targetPosition !== FALSE) {
-                $cmd = "addid " . $trackPath . " " . ($targetPosition+$counter);
+                $cmdAdd = "addid " . $trackPath . " " . ($targetPosition+$counter);
+                if($priority > 0) {
+                    $cmdPrio = 'prio ' . $priority . " " . ($targetPosition+$counter);
+                }
             }
-            $this->mpd($cmd);
+            $this->mpd($cmdAdd);
+            if($cmdPrio !== FALSE) {
+                $this->mpd($cmdPrio);
+            }
             $counter ++;
         }
         return $counter;
@@ -480,6 +529,63 @@ class Mpd {
     //  | Music Player Daemon                                                    |
     //  +------------------------------------------------------------------------+
     public function mpd($command) {
+        $socket = $this->getMpdSocket();
+        if($socket === FALSE) {
+            return FALSE;
+        }
+
+        try {
+            fwrite($socket, $command . "\n");
+        } catch (\Exception $e) {
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdwrite'));
+            return FALSE;
+        }
+
+        $line = trim(fgets($socket, 1024));
+        if (substr($line, 0, 3) === 'ACK') {
+            fclose($socket);
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            return FALSE;
+        }
+
+        if (substr($line, 0, 6) !== 'OK MPD') {
+            fclose($socket);
+            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+            return FALSE;
+        }
+
+        $array = array();
+        $idx = -1;
+        while (!feof($socket)) {
+            $line = trim(@fgets($socket, 1024));
+            if (substr($line, 0, 3) == 'ACK') {
+                fclose($socket);
+                $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
+                return FALSE;
+            }
+            if (substr($line, 0, 2) == 'OK') {
+                fclose($socket);
+                return $array;
+            }
+            $keyValuePair = explode(': ', $line, 2);
+            if(count($keyValuePair) !== 2) {
+                continue;
+            }
+            if($command == 'playlistinfo') {
+                if($keyValuePair[0] === 'file') {
+                    $idx++;
+                }
+                $array[$idx][$keyValuePair[0]] = iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
+                continue;
+            }
+            $array[str_replace(":file", "", $keyValuePair[0])] = iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
+        }
+        fclose($socket);
+        $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
+        return FALSE;
+    }
+
+    private function getMpdSocket() {
         try {
             $socket = fsockopen(
                 $this->conf['mpd']['host'],
@@ -496,56 +602,6 @@ class Mpd {
             $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnect'));
             return FALSE;
         }
-
-        try {
-            fwrite($socket, $command . "\n");
-        } catch (\Exception $e) {
-            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdwrite'));
-            return FALSE;
-        }
-
-
-
-        $line = trim(fgets($socket, 1024));
-        if (substr($line, 0, 3) === 'ACK') {
-            fclose($socket);
-            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-            return FALSE;
-        }
-
-        if (substr($line, 0, 6) !== 'OK MPD') {
-            fclose($socket);
-            $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-            return FALSE;
-        }
-
-        $array = array();
-        while (!feof($socket)) {
-            $line = trim(@fgets($socket, 1024));
-            if (substr($line, 0, 3) == 'ACK') {
-                fclose($socket);
-                $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdgeneral', array($line)));
-                return FALSE;
-            }
-            if (substr($line, 0, 2) == 'OK') {
-                fclose($socket);
-                return $array;
-            }
-            try {
-                list($key, $value) = explode(': ', $line, 2);
-            } catch(\Exception $e) {
-                continue;
-            }
-
-            if ($command == 'playlist' || $command == 'playlistinfo') {
-                $array[] = iconv('UTF-8', APP_DEFAULT_CHARSET, $value);
-                continue;
-            }
-            // name: value
-            $array[$key] = $value;
-        }
-        fclose($socket);
-        $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
-        return FALSE;
+        return $socket;
     }
 }
