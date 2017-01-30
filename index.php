@@ -36,7 +36,8 @@ foreach([
     'Utilities' . DS . 'GeneralUtility.php',
     'Utilities' . DS . 'StringUtility.php',
     'Utilities' . DS . 'SphinxUtility.php',
-    'libs' . DS . 'twig' . DS . 'SlimpdTwigExtension.php'] as $filePath) {
+    'libs' . DS . 'twig' . DS . 'SlimpdTwigExtension.php',
+    'libs' . DS . 'TempQueryException.php'] as $filePath) {
     require_once APP_ROOT . 'core' . DS . 'php' . DS . $filePath;
 }
 

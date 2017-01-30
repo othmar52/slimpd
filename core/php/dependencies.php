@@ -118,6 +118,8 @@ $container['view'] = function ($cont) {
     return $view;
 };
 
+
+// database 2
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection([
     'driver'    => 'mysql',
@@ -129,7 +131,6 @@ $capsule->addConnection([
     'collation' => 'utf8_unicode_ci',
     'prefix'    => ''
 ]);
-#echo "<pre>" . print_r($capsule,1);die;
 $capsule->setAsGlobal();
 $capsule->bootEloquent();
 
@@ -333,3 +334,20 @@ if(PHP_SAPI !== 'cli') {
     \Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
 }
 
+
+
+/**
+ * use database for triggering a possible connection error
+ * TODO is there a more elegant way for this?
+ * TODO how to how to use $container['errorHandler']($r, $r, $e) without recursive exception?
+ */
+try {
+    \Slimpd\Models\User::find(1);
+} catch (\Illuminate\Database\QueryException $exception) {
+    if(PHP_SAPI === 'cli') {
+        cliLog($container->ll->str('database.connect'), 1, 'red');
+        exit;
+    }
+    echo $container->ll->str('database.connect');
+    exit;
+}
