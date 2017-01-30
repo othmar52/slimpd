@@ -36,8 +36,14 @@ $(document).ready(function() {
             window.sliMpd.drawFaviconTimeout = setTimeout(window.sliMpd.drawFavicon, 2000);
         },
 
-        fireRequestAndNotify : function(url) {
+        fireRequestAndNotify : function(url, showProgressBar) {
+            if(showProgressBar === true) {
+                window.NProgress.start();
+            }
             $.get(url).done(function(response) {
+                if(showProgressBar === true) {
+                    window.NProgress.done();
+                }
                 window.sliMpd.checkNotify(response);
             });
         },

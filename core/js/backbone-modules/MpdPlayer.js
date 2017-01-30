@@ -259,7 +259,7 @@
         },
 
         removeDupes : function(item) {
-            window.sliMpd.fireRequestAndNotify(item.mpdurl);
+            window.sliMpd.fireRequestAndNotify(item.mpdurl, true);
             this.refreshInterval();
             window.sliMpd.modules.AbstractPlayer.prototype.removeDupes.call(this, item);
         },
