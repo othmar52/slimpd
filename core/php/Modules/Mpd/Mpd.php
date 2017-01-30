@@ -22,7 +22,6 @@ class Mpd {
     public $notifyJson = NULL;
     public function __construct(\Slim\Container $container) {
         $this->container = $container;
-        #echo "<pre>" . print_r($container,1); echo "xdgdhdh";#die;
         $this->conf = $container->conf;
         $this->trackRepo = $container->trackRepo;
     }
