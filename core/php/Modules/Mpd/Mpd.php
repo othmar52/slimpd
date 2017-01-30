@@ -53,7 +53,7 @@ class Mpd {
     public function getNextGlobalPriority() {
         $nextPrio = 255;
         $allTracksInfo = $this->mpd('playlistinfo');
-        foreach($allTracksInfo as $idx => $trackInfo) {
+        foreach($allTracksInfo as $trackInfo) {
             if(array_key_exists('Prio', $trackInfo) === FALSE) {
                 continue;
             }
