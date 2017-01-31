@@ -59,7 +59,7 @@
 		</div>
 	</div>
 	<div class="col-md-1 vcenter">
-		<div class="vcinner">
+		<div class="vcinner {{ (item.miliseconds < config.config.duration.warning) ? 'warning' : '' }}">
 			{{ item.miliseconds|formatMiliseconds }}
 		<br />{% include 'partials/track/audioformat.htm' %}
 		</div>

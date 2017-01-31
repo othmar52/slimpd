@@ -466,3 +466,8 @@ body.standalone {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+
+.warning {
+	color: #a94442;
+}
