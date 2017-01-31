@@ -2,19 +2,24 @@
 {% block content %}
 <div class="row">
 	<div class="col-md-4 col-md-offset-3">
-		<h2>Create new <span class="col2">{{ config.config.logomarkup|raw }}</span> account</h2>
+		<h2>{{'create.account.header'|ll('<span class="col2">'~config.config.logomarkup~'</span>')|raw }}</h2>
+		<hr>
 		<form action="{{ path_for('auth.signup')}}" method="post" class="ajax-post">
-			{% include 'auth/input-username.htm' %}
-			{% include 'auth/input-password.htm' %}
-			{% include 'auth/input-email.htm' %}
+			{% include 'auth/input-username.htm'  with { required: 1, placeholder: 'username.placeholder'|ll } %}
+			{% include 'auth/input-password.htm' with { required: 0, placeholder: 'password.placeholder'|ll }%}
+			{% include 'auth/input-email.htm' with { required: 0, placeholder: 'email.placeholder'|ll } %}
 			{# add cross-site-request-forgery protection #}
 			{{ csrf.field | raw }}
 			<div class="form-group row">
 				<div class="col-sm-7 col-sm-offset-5">
-					<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">Create account</button>
+					<button type="submit" class="btn-block btn btn-trnsp btn-bordered col2 ">{{ 'create.submit'|ll }}</button>
 				</div>
 			</div>
 		</form>
+		<hr>
+		<p class="centered-text dark">
+			<span class='col2'>*</span> {{ 'required.fields'|ll }}
+		</p>
 	</div>
 </div>
 {% endblock %}

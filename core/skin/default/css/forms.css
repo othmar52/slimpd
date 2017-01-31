@@ -52,6 +52,19 @@
   visibility: visible;
  }
 
- .checkbox input[type=checkbox]:checked:after {
-   content: "\2714";
- }
+.checkbox input[type=checkbox]:checked:after {
+    content: "\2714";
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #545454;
+}
+.form-control:-moz-placeholder {
+    color: #545454;
+}
+.form-control::-moz-placeholder {
+    color: #545454;
+}
+.form-control:-ms-input-placeholder {
+    color: #545454;
+}

@@ -1,7 +1,9 @@
 <div class="form-group {{ errors.email ? 'has-error' : '' }} row">
-	<label for="username" class="col-sm-5 col-form-label uc dark">Email</label>
+	<label for="username" class="col-sm-5 col-form-label uc dark">{{ 'email'|ll }}<br>
+		{{ required ? "<span class='dark tinyfont small'>*</span>"|raw : "" }}
+	</label>
 	<div class="col-sm-7">
-		<input type="text" class="form-control" name="email" id="email" value="{{oldInput.email}}">
+		<input type="text" class="form-control" name="email" id="email" value="{{oldInput.email}}" placeholder="{{ placeholder ? placeholder : '' }}">
 		{% if errors.username %}
 			<span class="help-block">{{ errors.email | first }}</span>
 		{% endif %}

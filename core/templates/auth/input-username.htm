@@ -1,10 +1,10 @@
 <div class="form-group {{ errors.username ? 'has-error' : '' }} row">
-	<label for="username" class="col-sm-5 col-form-label uc dark">Username</label>
+	<label for="username" class="col-sm-5 col-form-label uc dark">{{ 'username'|ll }} {{ required ? "<span class='col2'>*</span>"|raw : "" }}</label>
 	<div class="col-sm-7">
-		<div class="abs-icon dark toggle-tooltip toggle-password-lock disabled" title="remember username on this device">
+		<div class="abs-icon dark toggle-tooltip toggle-password-lock disabled" title="{{ 'username.lock.tooltip'|ll }}">
 			<i class="fa fa-2x fa-unlock-alt toggle-lock" data-target="#remember_username"></i>
 		</div>
-		<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}">
+		<input type="text" class="form-control" name="username" id="username" value="{{oldInput.username}}" placeholder="{{ placeholder ? placeholder : '' }}">
 		<input type="hidden" class="" name="remember_username" id="remember_username" value="">
 		{% if errors.username %}
 			<span class="help-block">{{ errors.username | first }}</span>
