@@ -8,12 +8,10 @@ use JsonSerializable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Jsonable;
-use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Routing\UrlRoutable;
 use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
@@ -271,6 +269,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
 
         $model->exists = $exists;
 
+        $model->setConnection(
+            $this->getConnectionName()
+        );
+
         return $model;
     }
 
@@ -320,63 +322,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         $instance = new static;
 
         return $instance->newQuery()->useWritePdo();
-    }
-
-    /**
-     * Save a new model and return the instance.
-     *
-     * @param  array  $attributes
-     * @return static
-     */
-    public static function create(array $attributes = [])
-    {
-        return tap(new static($attributes), function ($model) {
-            $model->save();
-        });
-    }
-
-    /**
-     * Save a new model and return the instance. Allow mass-assignment.
-     *
-     * @param  array  $attributes
-     * @return static
-     */
-    public static function forceCreate(array $attributes)
-    {
-        return static::unguarded(function () use ($attributes) {
-            return (new static)->create($attributes);
-        });
-    }
-
-    /**
-     * Create a collection of models from plain arrays.
-     *
-     * @param  array  $items
-     * @param  string|null  $connection
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function hydrate(array $items, $connection = null)
-    {
-        $instance = (new static)->setConnection($connection);
-
-        return $instance->newCollection(array_map(function ($item) use ($instance) {
-            return $instance->newFromBuilder($item);
-        }, $items));
-    }
-
-    /**
-     * Create a collection of models from a raw query.
-     *
-     * @param  string  $query
-     * @param  array  $bindings
-     * @param  string|null  $connection
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public static function fromQuery($query, $bindings = [], $connection = null)
-    {
-        $instance = (new static)->setConnection($connection);
-
-        return static::hydrate($instance->getConnection()->select($query, $bindings), $connection);
     }
 
     /**
@@ -623,7 +568,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         // First we need to create a fresh query instance and touch the creation and
         // update timestamp on the model which are maintained by us for developer
         // convenience. Then we will just continue saving the model instances.
-        if ($this->timestamps) {
+        if ($this->usesTimestamps()) {
             $this->updateTimestamps();
         }
 
@@ -681,7 +626,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         // First we'll need to create a fresh query instance and touch the creation and
         // update timestamps on this model, which are maintained by us for developer
         // convenience. After, we will just continue saving these model instances.
-        if ($this->timestamps) {
+        if ($this->usesTimestamps()) {
             $this->updateTimestamps();
         }
 

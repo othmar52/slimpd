@@ -134,8 +134,6 @@ codrops/BookBlock/js/jquery.bookblock.min.js
 ksubileau/color-thief-php/lib
 
 
-
-
 slim/slim/Slim
 slim/slim/LICENSE.md
 
@@ -172,6 +170,7 @@ pimple/pimple/LICENSE
 illuminate/container/BoundMethod.php
 illuminate/container/Container.php
 illuminate/container/ContextualBindingBuilder.php
+
 illuminate/contracts/Auth
 illuminate/contracts/Broadcasting
 illuminate/contracts/Bus
@@ -220,8 +219,10 @@ illuminate/database/DatabaseServiceProvider.php
 illuminate/database/DetectsDeadlocks.php
 illuminate/database/DetectsLostConnections.php
 illuminate/database/Grammar.php
+illuminate/database/MigrationServiceProvider.php
 illuminate/database/MySqlConnection.php
 illuminate/database/PostgresConnection.php
+illuminate/database/QueryException.php
 illuminate/database/Seeder.php
 illuminate/database/SQLiteConnection.php
 illuminate/database/SqlServerConnection.php
@@ -272,6 +273,7 @@ symfony/translation/Loader
 symfony/translation/Tests
 symfony/translation/Util
 symfony/translation/Writer
+symfony/translation/DataCollectorTranslator.php
 symfony/translation/IdentityTranslator.php
 symfony/translation/Interval.php
 symfony/translation/LoggingTranslator.php
@@ -279,7 +281,6 @@ symfony/translation/MessageCatalogueInterface.php
 symfony/translation/MessageCatalogue.php
 symfony/translation/MessageSelector.php
 symfony/translation/MetadataAwareInterface.php
-symfony/translation/phpunit.xml.dist
 symfony/translation/PluralizationRules.php
 symfony/translation/TranslatorBagInterface.php
 symfony/translation/TranslatorInterface.php
