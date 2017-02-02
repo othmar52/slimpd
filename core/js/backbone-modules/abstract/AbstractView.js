@@ -58,6 +58,9 @@
             "click .bb-nav-next": "bookblockNextClickListener",
             "click .bb-nav-prev": "bookblockPrevClickListener",
             "submit .ajax-post": "ajaxPostSubmitListener",
+            "change .toggle-checkbox toggleCheckboxChangeListener",
+            "paste .toggle-checkbox toggleCheckboxChangeListener",
+            "keyup .toggle-checkbox toggleCheckboxChangeListener",
         },
         */
         events : {
@@ -91,6 +94,7 @@
             // TODO: do we really have to add BookBlock EventListeners manually???
             $(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener).on("click", this.bookblockNextClickListener);
             $(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener).on("click", this.bookblockPrevClickListener);
+            $(".toggle-checkbox", this.$el).off("change paste keyup", this.toggleCheckboxChangeListener).on("change paste keyup", this.toggleCheckboxChangeListener);
 
             /* display selected value in dropdown instead of dropdown-label */
             // TODO: choose more generic attribute-names. maybe we add "label-dropdowns" which has nothing to do with sorting...
@@ -193,6 +197,7 @@
             $(".xwax-gui-toggler", this.$el).off("click", this.xwaxGuiToggleTriggerListener);
             $(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener);
             $(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener);
+            $(".toggle-checkbox", this.$el).off("change paste keyup", this.toggleCheckboxChangeListener);
 
             $( "#bb-bookblock", this.$el ).bookblock("destroy");
 
@@ -406,6 +411,16 @@
         bookblockPrevClickListener : function(e) {
             e.preventDefault();
             $("#bb-bookblock").bookblock("prev");
+        },
+
+        toggleCheckboxChangeListener : function(e) {
+            var $el = $(e.currentTarget);
+            var $checkbox = $($el.attr("data-checkbox"));
+            if($el.val() === "") {
+                $checkbox.prop("checked", false);
+                return;
+            }
+            $checkbox.prop("checked", true);
         }
     });
 }());
