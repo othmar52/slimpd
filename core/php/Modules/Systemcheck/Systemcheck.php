@@ -59,6 +59,7 @@ class Systemcheck {
             'dbPerms'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
             'dbSchema'         => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE),
             'dbContent'        => array('status' => 'warning', 'hide' => FALSE, 'skip' => TRUE, 'tracks' => 0),
+            'dbAdmin'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
 
             // mpd
             'mpdConn'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),

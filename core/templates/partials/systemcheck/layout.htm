@@ -18,7 +18,7 @@
 
 <h1>{{'syscheck.db'|ll}}</h1>
 <ul class="list-group">
-	{% for test in ['dbConn', 'dbPerms', 'dbSchema', 'dbContent'] %}
+	{% for test in ['dbConn', 'dbPerms', 'dbSchema', 'dbContent', 'dbAdmin'] %}
 	{% if not sys[test].hide %}
 	<li class="list-group-item list-group-item-{{sys[test].status}}">
 		<h4 class="uc">

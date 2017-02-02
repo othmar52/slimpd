@@ -33,6 +33,7 @@ trait DatabaseChecks {
             $check['dbPerms']['skip'] = TRUE;
             $check['dbSchema']['skip'] = TRUE;
             $check['dbContent']['skip'] = TRUE;
+            $check['dbAdmin']['skip'] = TRUE;
             $check['mpdConn']['skip'] = TRUE;
             $check['skipAudioTests'] = TRUE;
         }
@@ -40,6 +41,7 @@ trait DatabaseChecks {
         $this->runDatabasePermissionCheck($check);
         $this->runDatabaseSchemaCheck($check);
         $this->runDatabaseContentCheck($check);
+        $this->runDatabaseAdminCheck($check);
     }
 
     /**
@@ -95,5 +97,29 @@ trait DatabaseChecks {
         $check['dbContent']['status'] = ($check['dbContent']['tracks'] > 0)
             ? 'success'
             : 'danger';
+    }
+
+    /**
+     * check if admin user(s) has default or empty password
+     */
+    protected function runDatabaseAdminCheck(&$check) {
+        if($check['dbAdmin']['skip'] === TRUE) {
+            return;
+        }
+        $query = 'SELECT password
+                  FROM users
+                  WHERE role="admin";';
+        $result = $this->container->db->query($query);
+        while($record = $result->fetch_assoc()) {
+            if(password_verify("admin", $record["password"])) {
+                // found default password "admin";
+                return;
+            }
+            if(password_verify("", $record["password"])) {
+                // found empty password
+                return;
+            }
+        }
+        $check['dbAdmin']['status'] = 'success';
     }
 }
