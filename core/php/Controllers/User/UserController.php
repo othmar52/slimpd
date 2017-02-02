@@ -65,6 +65,9 @@ class UserController extends Controller
         }
         $user->username = $request->getParam('username');
         $user->role = $request->getParam('role');
+        if($request->getParam('changePassword') === '1') {
+            $user->password = password_hash($request->getParam('password'), \PASSWORD_DEFAULT);
+        }
         $user->update();
         $this->flash->addMessage('success', 'User had been updated');
         return $response->withRedirect(

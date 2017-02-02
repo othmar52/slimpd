@@ -1,6 +1,6 @@
 {% extends 'surrounding.htm' %}
 {% block content %}
-<h2>Users</h2>
+<h2>{{'userlist'|ll}}</h2>
 
 <div class="row">
 	<div class="col-md-3"><span class="dark uc small">{{'username'|ll}}</span></div>
@@ -62,8 +62,9 @@
 				</div>
 				<div class="col-md-3 vcenter">
 					<div class="vcinner">
-						<label class="dark uc small">{{'new.password'|ll}}</label>
-						<input type="text" class="form-control" name="password" id="password" value="TODO: not implemented yet">
+						<input type="checkbox" class="magic-checkbox" name="changePassword" id="changePassword{{user.uid}}" value="1">
+						<label class="dark uc small" for="changePassword{{user.uid}}">{{'new.password'|ll}}</label>
+						<input type="password" class="form-control" name="password" id="password" value="">
 					</div>
 				</div>
 				<div class="col-md-3 vcenter">
