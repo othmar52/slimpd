@@ -41,6 +41,16 @@ trait FilesystemChecks {
         $check['fsConfLocalExists']['hide'] = TRUE;
         $check['fsConfLocalExists']['status'] = 'success';
 
+        // in case installation uses custom serverName check if it can be properly resolved to an IP
+        $url = \GuzzleHttp\Url::fromString($this->configLocalUrl);
+        $hostIsIpScheme = ip2long($url->getHost()) !== false;
+        if($hostIsIpScheme === FALSE && gethostbyname($url->getHost()) === $url->getHost()) {
+            $check['fsConfLocalServe']['host'] = $url->getHost();
+            $check['fsConfLocalServe']['resolve'] = '1';
+            $check['fsConfLocalServe']['status'] = 'danger';
+            return;
+        }
+
         // check if individual config file is not served by webserver
         $httpClient = new \GuzzleHttp\Client();
         try {
@@ -50,7 +60,8 @@ trait FilesystemChecks {
             $statusCode = $exception->getResponse()->getStatusCode();
         } catch(\GuzzleHttp\Exception\RequestException $exception) {
             $check['fsConfLocalServe']['skip'] = TRUE;
-            \Slim\Slim::getInstance()->flashNow('error', $exception->getMessage());
+            // TODO: replace incompatible slim2 stuff
+            // \Slim\Slim::getInstance()->flashNow('error', $exception->getMessage());
             return;
         }
         if($statusCode === 200) {
