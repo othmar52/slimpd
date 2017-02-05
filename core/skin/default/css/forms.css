@@ -16,7 +16,8 @@
  * along with this program.    If not, see <http://www.gnu.org/licenses/>.
  */
 .form-control[type=text],
-.form-control[type=password] {
+.form-control[type=password],
+select.form-control {
     background-color: #2D2D2D;
     border:none;
     color: #AAA;
