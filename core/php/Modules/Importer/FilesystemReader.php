@@ -99,7 +99,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
 
     protected function lookupSpecialDirNames($parentPath) {
         if(is_dir($this->conf['mpd']['musicdir'] . $parentPath) === FALSE) {
-            return;
+            return [];
         }
         $dirHash = getFilePathHash($parentPath);
         // make sure that a single directory will not be scanned twice

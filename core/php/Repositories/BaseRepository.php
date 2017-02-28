@@ -510,7 +510,14 @@ class BaseRepository {
 
         // ORDER BY RAND is the killer on huge tables
         // lets try a different approach
-        $highestUid = $this->db->query("SELECT uid FROM `". self::getTableName() ."` ORDER BY uid DESC LIMIT 0, 1")->fetch_assoc()['uid'];
+        $result = $this->db->query("SELECT uid FROM `". self::getTableName() ."` ORDER BY uid DESC LIMIT 0, 1");
+        if($result === FALSE) {
+            return FALSE;
+        }
+        $highestUid = $result->fetch_assoc()['uid'];
+        if($highestUid < 1) {
+            return FALSE;
+        }
 
         $maxAttempts = 1000;
         $counter = 0;
