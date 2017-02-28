@@ -225,7 +225,7 @@ $container['errorHandler'] = function ($cont) {
 
         // delete cached config
         $configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
-        $config = $configLoader->loadConfig('master.ini', NULL, 1);
+        $config = $configLoader->loadConfig('master.ini', NULL, TRUE);
 
         $cont->view->render($response, 'appless.htm', $vars);
         return $response->withStatus(500);
@@ -332,22 +332,24 @@ if(PHP_SAPI !== 'cli') {
     $app->add(new \Slimpd\Middleware\ValidationErrorsMiddleware($container));
     $app->add(new \Slimpd\Middleware\OldInputMiddleware($container));
     \Respect\Validation\Validator::with('Slimpd\\Validation\\Rules\\');
-}
 
+    /**
+     * use database for triggering a possible connection error
+     * TODO is there a more elegant way for this?
+     * TODO how to how to use $container['errorHandler']($r, $r, $e) without recursive exception?
+     */
+    try {
+        \Slimpd\Models\User::find(1);
+    } catch (\Illuminate\Database\QueryException $exception) {
 
-
-/**
- * use database for triggering a possible connection error
- * TODO is there a more elegant way for this?
- * TODO how to how to use $container['errorHandler']($r, $r, $e) without recursive exception?
- */
-try {
-    \Slimpd\Models\User::find(1);
-} catch (\Illuminate\Database\QueryException $exception) {
-    if(PHP_SAPI === 'cli') {
-        cliLog($container->ll->str('database.connect'), 1, 'red');
+        // delete cached config
+        $configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
+        $config = $configLoader->loadConfig('master.ini', NULL, TRUE);
+        #if(PHP_SAPI === 'cli') {
+        #    cliLog($container->ll->str('database.connect'), 1, 'red');
+        #    exit;
+        #}
+        echo $container->ll->str('database.connect');
         exit;
     }
-    echo $container->ll->str('database.connect');
-    exit;
 }

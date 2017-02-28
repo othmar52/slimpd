@@ -50,11 +50,19 @@ foreach([
 }
 
 // set directory to root
-chdir(dirname(__DIR__)); 
+chdir(dirname(__DIR__));
+
+// convert all the command line arguments into a URL
+$argv = $GLOBALS['argv'];
+array_shift($GLOBALS['argv']);
+$pathInfo = '/' . implode('/', $argv);
+
+// after installation we may have invalid cached database credentials
+$deleteCachedConfig = in_array($pathInfo, ["/hard-reset", "/hard-reset/--force", "/update-db-scheme"]);
 
 // Timezone needs to be set before session_start, the locale is also set here for convience
 $configLoader = new \Slimpd\Modules\configloader_ini\ConfigLoaderINI(APP_ROOT . 'core/config/');
-$config = $configLoader->loadConfig('master.ini');
+$config = $configLoader->loadConfig('master.ini', NULL, $deleteCachedConfig);
 date_default_timezone_set($config['config']['timezone']);
 if (isset($config['config']['locale'])) {
     setlocale(LC_ALL, array($config['config']['locale']));
@@ -64,11 +72,6 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', $config['cli']['memory_limit']);
 
 session_start();
-
-// convert all the command line arguments into a URL
-$argv = $GLOBALS['argv'];
-array_shift($GLOBALS['argv']);
-$pathInfo = '/' . implode('/', $argv);
 
 // Create app
 $app = new \Slim\App(

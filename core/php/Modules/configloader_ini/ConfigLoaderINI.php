@@ -253,10 +253,7 @@ class ConfigLoaderINI {
 
     protected function writeCacheFile($configArray) {
         if(is_writeable($this->absCacheFilePath) === FALSE && is_writeable(dirname($this->absCacheFilePath)) === FALSE) {
-            \Slim\Slim::getInstance()->flashNow(
-                'error',
-                strip_tags(\Slim\Slim::getInstance()->ll->str('syscheck.fsCache.danger',[APP_ROOT]))
-            );
+            throw new \Exception($this->absCacheFilePath . " is not writable", 1488214371);
             return;
         }
         $fileContent = "<?php \$cachedConf = " . var_export($configArray,1) . ";";
