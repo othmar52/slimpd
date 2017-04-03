@@ -144,6 +144,9 @@ $(document).ready(function() {
 
 
             if(window.sliMpd.currentPlayer.mode === "mpd") {
+                // destroy possible mpd http stream
+                window.sliMpd.currentPlayer.stopStream();
+
                 // activate local player
                 window.sliMpd.currentPlayer = window.sliMpd.localPlayer;
 

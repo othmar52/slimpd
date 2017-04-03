@@ -51,6 +51,8 @@
         playlistState : false,
         initialNotificationBlocker : true,
 
+        streamPlayer : false,
+
         initialize : function(options) {
             this.$content = $(".player-"+ this.mode, this.$el);
 
@@ -397,6 +399,60 @@
         updateSlider : function(item) {
             $(".mpd-status-progressbar").css("width", this.timeLineLight.progress() *100 +"%");
             window.sliMpd.modules.AbstractPlayer.prototype.updateSlider.call(this, item);
+        },
+
+        toggleStream : function() {
+            if(this.streamPlayer === false) {
+                this.startStream();
+                return;
+            }
+            this.stopStream();
+        },
+
+        startStream : function() {
+            if(window.sliMpd.conf.mpdHttpStream === "") {
+                window.sliMpd.notify({
+                    message: "missing configuration for mpd.http_stream_url"
+                });
+                return;
+            }
+
+            /* init javascript player with mpd's http stream */
+            this.streamPlayer = $("#jquery_jplayer_2").jPlayer({
+                //cssSelectorAncestor: "#jp_container_1",
+                swfPath: window.sliMpd.conf.absFilePrefix + "vendor-dist/happyworm/jplayer/dist/jplayer",
+                supplied: "mp3",
+                useStateClassSkin: false,
+                autoBlur: false,
+                smoothPlayBar: true,
+                keyEnabled: false,
+                remainingDuration: false,
+                toggleDuration: true,
+                ended : function() {},
+                progress : function(e,data){},
+                seeked : function() {}
+            });
+
+            // load stream url
+            $("#jquery_jplayer_2").jPlayer(
+                "setMedia",
+                {
+                    mp3: window.sliMpd.conf.mpdHttpStream,
+                    supplied: "mp3"
+                }
+            ).jPlayer( "play");
+
+            // highlight stream toggler
+            $(".toggle-stream", this.$el).addClass("col2");
+        },
+
+        stopStream : function() {
+            if(this.streamPlayer === false) {
+                return;
+            }
+            $("#jquery_jplayer_2").jPlayer("destroy");
+            $(".toggle-stream", this.$el).removeClass("col2");
+            this.streamPlayer = false;
         }
     });
 }());

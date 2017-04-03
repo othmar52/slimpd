@@ -95,6 +95,7 @@
             $(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener).on("click", this.bookblockNextClickListener);
             $(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener).on("click", this.bookblockPrevClickListener);
             $(".toggle-checkbox", this.$el).off("change paste keyup", this.toggleCheckboxChangeListener).on("change paste keyup", this.toggleCheckboxChangeListener);
+            $(".toggle-stream", this.$el).off("click", this.toggleStream).on("click", this.toggleStream);
 
             /* display selected value in dropdown instead of dropdown-label */
             // TODO: choose more generic attribute-names. maybe we add "label-dropdowns" which has nothing to do with sorting...
@@ -198,6 +199,7 @@
             $(".bb-nav-next", this.$el).off("click", this.bookblockNextClickListener);
             $(".bb-nav-prev", this.$el).off("click", this.bookblockPrevClickListener);
             $(".toggle-checkbox", this.$el).off("change paste keyup", this.toggleCheckboxChangeListener);
+            $(".toggle-stream", this.$el).off("click", this.toggleStream);
 
             $( "#bb-bookblock", this.$el ).bookblock("destroy");
 

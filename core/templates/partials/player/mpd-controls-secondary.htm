@@ -1,3 +1,8 @@
+	{% if config.mpd.http_stream_url %}
+	<span class="status-stream">
+		<button class="toggle-stream btn btn-trnsp btn-xs btn-bordered toggle-tooltip" data-href="#" title="Stream MPD's music to your browser">MPD-STREAM</button>
+	</span>
+	{% endif %}
 	<span class="status-random">
 		<button role="control" class="btn btn-trnsp player-ctrl" data-player='{"action":"toggleRandom", "mpdurl":"{{root}}mpdctrl/toggleRandom"}' title="toggle random">
 			<i class="fa fa-random sign-ctrl fa-fw"></i>
