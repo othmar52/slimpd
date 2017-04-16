@@ -347,6 +347,11 @@
                 that.seekzero();
             });
 
+            // highlight stream-link in case stream is currently active
+            if(this.streamPlayer !== false) {
+                 $(".toggle-stream", this.$el).addClass("col2");
+            }
+
             // do not show notification on initial load
             if(that.initialNotificationBlocker === false) {
                 var mpdNotify = $("<div/>")
