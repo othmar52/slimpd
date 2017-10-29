@@ -332,4 +332,8 @@ $(document).ready(function() {
             $(this).trigger("resizeEnd");
         }, 500);
     });
+
+    // focus username input field on initial load
+    // TODO: focus last loggid in user button to cinfirm with return-key
+    $("#username").focus();
 });
