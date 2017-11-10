@@ -5,10 +5,13 @@ namespace Illuminate\Database\Schema;
 use Closure;
 use Illuminate\Support\Fluent;
 use Illuminate\Database\Connection;
+use Illuminate\Support\Traits\Macroable;
 use Illuminate\Database\Schema\Grammars\Grammar;
 
 class Blueprint
 {
+    use Macroable;
+
     /**
      * The table the blueprint describes.
      *
@@ -406,6 +409,17 @@ class Blueprint
     }
 
     /**
+     * Create a new auto-incrementing tiny integer (1-byte) column on the table.
+     *
+     * @param  string  $column
+     * @return \Illuminate\Support\Fluent
+     */
+    public function tinyIncrements($column)
+    {
+        return $this->unsignedTinyInteger($column, true);
+    }
+
+    /**
      * Create a new auto-incrementing small integer (2-byte) column on the table.
      *
      * @param  string  $column
@@ -664,6 +678,21 @@ class Blueprint
     }
 
     /**
+     * Create a new unsigned decimal column on the table.
+     *
+     * @param  string  $column
+     * @param  int  $total
+     * @param  int  $places
+     * @return \Illuminate\Support\Fluent
+     */
+    public function unsignedDecimal($column, $total = 8, $places = 2)
+    {
+        return $this->addColumn('decimal', $column, [
+            'total' => $total, 'places' => $places, 'unsigned' => true,
+        ]);
+    }
+
+    /**
      * Create a new boolean column on the table.
      *
      * @param  string  $column
@@ -824,11 +853,12 @@ class Blueprint
     /**
      * Add a "deleted at" timestamp for the table.
      *
+     * @param  string  $column
      * @return \Illuminate\Support\Fluent
      */
-    public function softDeletes()
+    public function softDeletes($column = 'deleted_at')
     {
-        return $this->timestamp('deleted_at')->nullable();
+        return $this->timestamp($column)->nullable();
     }
 
     /**

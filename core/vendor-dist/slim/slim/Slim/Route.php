@@ -265,7 +265,7 @@ class Route extends Routable implements RouteInterface
      * Retrieve a specific route argument
      *
      * @param string $name
-     * @param mixed $default
+     * @param string|null $default
      *
      * @return mixed
      */
@@ -345,11 +345,9 @@ class Route extends Routable implements RouteInterface
                 $output = ob_get_clean();
             // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
-                ob_end_clean();
                 throw $e;
             // @codeCoverageIgnoreEnd
             } catch (Exception $e) {
-                ob_end_clean();
                 throw $e;
             }
         }

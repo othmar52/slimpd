@@ -9,7 +9,7 @@
 namespace Slim;
 
 use FastRoute\Dispatcher;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use InvalidArgumentException;
 use RuntimeException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -199,7 +199,7 @@ class Router implements RouterInterface
      *
      * @param  string[] $methods Array of HTTP methods
      * @param  string   $pattern The route pattern
-     * @param  callable $handler The route callable
+     * @param  callable $callable The route callable
      *
      * @return \Slim\Interfaces\RouteInterface
      */

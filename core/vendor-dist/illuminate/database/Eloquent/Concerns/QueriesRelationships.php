@@ -108,6 +108,17 @@ trait QueriesRelationships
     }
 
     /**
+     * Add a relationship count / exists condition to the query with an "or".
+     *
+     * @param  string  $relation
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function orDoesntHave($relation)
+    {
+        return $this->doesntHave($relation, 'or');
+    }
+
+    /**
      * Add a relationship count / exists condition to the query with where clauses.
      *
      * @param  string  $relation
@@ -130,7 +141,7 @@ trait QueriesRelationships
      * @param  int       $count
      * @return \Illuminate\Database\Eloquent\Builder|static
      */
-    public function orWhereHas($relation, Closure $callback, $operator = '>=', $count = 1)
+    public function orWhereHas($relation, Closure $callback = null, $operator = '>=', $count = 1)
     {
         return $this->has($relation, $operator, $count, 'or', $callback);
     }
@@ -148,6 +159,18 @@ trait QueriesRelationships
     }
 
     /**
+     * Add a relationship count / exists condition to the query with where clauses and an "or".
+     *
+     * @param  string    $relation
+     * @param  \Closure  $callback
+     * @return \Illuminate\Database\Eloquent\Builder|static
+     */
+    public function orWhereDoesntHave($relation, Closure $callback = null)
+    {
+        return $this->doesntHave($relation, 'or', $callback);
+    }
+
+    /**
      * Add subselect queries to count the relations.
      *
      * @param  mixed  $relations
@@ -155,6 +178,10 @@ trait QueriesRelationships
      */
     public function withCount($relations)
     {
+        if (empty($relations)) {
+            return $this;
+        }
+
         if (is_null($this->query->columns)) {
             $this->query->select([$this->query->from.'.*']);
         }

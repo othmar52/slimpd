@@ -151,6 +151,11 @@ return [
                     'type' => 'string',
                     'location' => 'uri',
                     'required' => true
+                ],
+                'curr_abbr' => [
+                    'type' => 'string',
+                    'location' => 'query',
+                    'required' => false
                 ]
             ]
         ],
@@ -264,24 +269,12 @@ return [
                 ]
             ]
         ],
-        'getImage' => [
-            'httpMethod' => 'GET',
-            'uri' => 'images/{filename}',
-            'responseModel' => 'GetImage',
-            'parameters' => [
-                'filename' => [
-                    'type' => 'string',
-                    'location' => 'uri',
-                    'required' => true
-                ]
-            ]
-        ],
         'getOrder' => [
             'httpMethod' => 'GET',
-            'uri' => 'marketplace/orders/{id}',
+            'uri' => 'marketplace/orders/{order_id}',
             'responseModel' => 'GetResponse',
             'parameters' => [
-                'id' => [
+                'order_id' => [
                     'type' => 'string',
                     'location' => 'uri',
                     'required' => true
@@ -312,11 +305,11 @@ return [
         ],
         'changeOrder' => [
             'httpMethod' => 'POST',
-            'uri' => 'marketplace/orders/{id}',
+            'uri' => 'marketplace/orders/{order_id}',
             'summary' => 'Edit the data associated with an order.',
             'responseModel' => 'GetResponse',
             'parameters' => [
-                'id' => [
+                'order_id' => [
                     'type' => 'string',
                     'location' => 'uri',
                     'required' => true
@@ -416,14 +409,5 @@ return [
                 'location' => 'json'
             ],
         ],
-        'GetImage' => [
-            'type' => 'object',
-            'properties' => [
-                'image' => [
-                    'location' => 'body',
-                    'type' => 'string'
-                ]
-            ],
-        ]
     ]
 ];

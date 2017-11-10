@@ -4,19 +4,23 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
+class ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
-        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
+        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '532945a4b12d830ff3e086cc36a64375' => __DIR__ . '/..' . '/james-heinrich/phpthumb/phpthumb.class.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Twig\\' => 5,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -37,6 +41,7 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
+            'Psr\\Container\\' => 14,
         ),
         'M' => 
         array (
@@ -71,6 +76,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
     );
 
     public static $prefixDirsPsr4 = array (
+        'Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -118,6 +127,10 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
+        'Psr\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/container/src',
         ),
         'Monolog\\' => 
         array (
@@ -346,11 +359,11 @@ class ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit6357e3a354c8cefef3075eb8ebde6d7f::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitfb78514ced9ab94f2c4ec08b637944c2::$classMap;
 
         }, null, ClassLoader::class);
     }
