@@ -46,7 +46,7 @@ class Controller extends \Slimpd\BaseController {
                 ['type' => 'album', 'imagesize' => $args['imagesize'] ]
             )
         );
-        return $response->withRedirect($uri, 403);
+        return $response->withRedirect($uri, 303);
     }
 
     public function track(Request $request, Response $response, $args) {
@@ -65,7 +65,7 @@ class Controller extends \Slimpd\BaseController {
                 ['imagesize' => $args['imagesize'], 'itemUid' => $track->getAlbumUid() ]
             )
         );
-        return $response->withRedirect($uri, 403);
+        return $response->withRedirect($uri, 303);
     }
 
     public function bitmap(Request $request, Response $response, $args) {
@@ -84,7 +84,7 @@ class Controller extends \Slimpd\BaseController {
                 ['imagesize' => $args['imagesize'], 'itemUid' => $track->getAlbumUid() ]
             )
         );
-        return $response->withRedirect($uri, 403);
+        return $response->withRedirect($uri, 303);
     }
 
     public function path(Request $request, Response $response, $args) {
@@ -103,7 +103,7 @@ class Controller extends \Slimpd\BaseController {
                 'imagefallback',
                 ['type' => 'track', 'imagesize' => $args['imagesize'] ]
             );
-            return $response->withRedirect($uri, 403);
+            return $response->withRedirect($uri, 303);
         }
         // pick a random image
         shuffle($images);
@@ -114,7 +114,7 @@ class Controller extends \Slimpd\BaseController {
             'imagepath',
             ['itemParams' => path2url($path), 'imagesize' => $args['imagesize'] ]
         );
-        return $response->withRedirect($uri, 403);
+        return $response->withRedirect($uri, 303);
     }
 
     public function fallback(Request $request, Response $response, $args) {
@@ -176,7 +176,7 @@ class Controller extends \Slimpd\BaseController {
                         'imagefallback',
                         ['imagesize' => $imageSize, 'type' => 'album']
                     );
-                    return $response->withRedirect($uri, 403);
+                    return $response->withRedirect($uri, 303);
                 }
             }
             return $response->write(
@@ -187,7 +187,7 @@ class Controller extends \Slimpd\BaseController {
                 'imagefallback',
                 ['imagesize' => $imageSize, 'type' => 'broken']
             );
-            return $response->withRedirect($uri, 403);
+            return $response->withRedirect($uri, 303);
         }
     }
 
