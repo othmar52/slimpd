@@ -31,6 +31,7 @@ $ctrlRoutes = [
     ['/update-db-scheme', 'updateDbSchemeAction'],
     ['/database-cleaner', 'databaseCleanerAction'],
     ['/check-que', 'checkQueAction'],
+    ['/destem[/{itemPath:.*}]', 'destemAction'],
 ];
 
 foreach($ctrlRoutes as $ctrlRoute) {

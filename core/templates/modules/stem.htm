@@ -1,0 +1,88 @@
+{% if config.modules.enable_stem == '1' %}
+
+
+<div class="row">
+	<div class="col-md-12">
+		<h2 class="nomargin">
+			STEMPLAYER (experimental) <strong>{{ item.relPath|split('/')|last }}</strong>
+		</h2>
+                                <span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
+                                        hiderootlink: 1,
+                                        breadcrumb: renderitems.itembreadcrumbs[item.relPathHash],
+                                        skiplast: 1 } %}</span>
+
+		 
+		<p class="dark">Destemming-Status: {{status}}</p>
+
+
+	</div>
+	<div class="col-md-9">
+		<button class="btn btn-default toggleplay-stem">PLAY STEM</button>
+		{% include 'modules/paginator.htm' %}
+	</div>
+	<div class="col-md-3">
+		<button class="btn btn-default unsolo-stems btn-blXock">
+			<span class="small">UNSOLO ALL</span>
+		</button>
+		<button class="btn btn-default unmute-stems btn-bloXck">
+			<span class="small">UNMUTE ALL</span>
+		</button>
+	</div>
+</div>
+
+<div id="stem-container">
+	<div class="stem-status-timestring status-timestring tinyfont">
+		<span class="jp-current-time dark" role="timer" aria-label="time">00:00</span><span class="col2">&nbsp; /&nbsp;</span>
+		<span class="jp-duration col2" role="timer" aria-label="duration">00:00</span>	
+	</div>
+
+
+{% for idx,item in stems %}
+<div class="row" id="container_stemplayer_{{idx}}">
+	
+	<div id="jquery_stemplayer_{{idx}}" class="jp-jplayer" data-item="{{item.relPath}}" data-ext="mp3" data-volume="{{item.audioEncoder}}"></div>
+	<div class="col-md-9 nomargin">
+		<div class="waveform-wrapper" data-jsonurl="//{{ config.stem.subdomain_pattern|replace({'%d': idx}) }}{{root}}audiojson/resolution/2500/{{ item.relPath|path2url }}" data-player="stem"> </div>
+		<div class="seekbar-wrapper">
+			<div class="seekbar-inner-wrapper">
+				<div class="stem-ctrl-seekzero"></div>
+				<div class="jp-play-bar"></div>
+				<div class="jp-seek-bar"></div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-3">
+		<button class="btn btn-default isolate-stem btn-sm" data-stemtrack="{{idx}}" title="isolate track">
+			I
+		</button>
+		<button class="btn btn-default solo-stem btn-sm" data-stemtrack="{{idx}}" title="solo track">
+			S
+		</button>
+
+		<button class="btn btn-default mute-stem btn-sm" data-stemtrack="{{idx}}" title="mute track">
+			M
+		</button>
+		<span class="uc stemtrack-title">{{item.title}}</span>
+		<div class="jp-volume-controls">
+			<div class="jp-volume-bar" style="background: black; margin-top: 5px;">
+				<div class="jp-volume-bar-value" style=" height: 15px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endfor %}
+</div>
+
+{% else %}
+	<h1>STEMPLAYER (experimental) is disabled in your configuration</h1>
+	<p>To enable it change your config to</p>
+	<pre>
+[modules]
+enable_stem = 1
+</pre>
+	<p>make sure to provide subdomains for the amount of stemtracks as well</p>
+<pre>
+[stem] 
+subdomain_pattern = "stem%d.localhost"
+</pre>	
+{% endif %}

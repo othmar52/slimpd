@@ -40,6 +40,7 @@
             "" : "generic",
             [window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/:albumUid"] : "editAlbum",
             [window.sliMpd.conf.backboneRoot + "auth/:subroute"] : "auth",
+            [window.sliMpd.conf.backboneRoot + "stemplayer/*subroute"] : "stem",
             "*generic" : "generic",
         },
 
@@ -89,6 +90,12 @@
 
         auth : function(subroute, queryString) {
             this.generic(window.sliMpd.conf.backboneRoot + "auth/" + subroute, queryString, window.sliMpd.modules.AuthView);
+        },
+
+        stem : function(subroute, queryString) {
+            //console.log("queryString", queryString);
+            //console.log("subroute", subroute);
+            this.generic(window.sliMpd.conf.backboneRoot + "stemplayer/" + subroute, queryString, window.sliMpd.modules.StemView);
         },
 
         generic : function(route, queryString, ViewClass) {

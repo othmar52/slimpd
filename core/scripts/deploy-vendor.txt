@@ -144,6 +144,7 @@ slim/flash/src
 slim/flash/LICENSE.md
 
 twig/twig/lib
+twig/twig/src
 twig/twig/test/bootstrap.php
 twig/twig/LICENSE
 
@@ -158,6 +159,12 @@ container-interop/container-interop/LICENSE
 
 psr/http-message/src
 psr/http-message/LICENSE
+
+psr/container/src
+psr/container/LICENSE
+
+psr/log/Psr
+psr/log/LICENSE
 
 pimple/pimple/src
 pimple/pimple/LICENSE
@@ -238,6 +245,7 @@ illuminate/support/Composer.php
 illuminate/support/Fluent.php
 illuminate/support/helpers.php
 illuminate/support/HigherOrderCollectionProxy.php
+illuminate/support/HigherOrderTapProxy.php
 illuminate/support/HtmlString.php
 illuminate/support/Manager.php
 illuminate/support/MessageBag.php
@@ -265,11 +273,16 @@ symfony/process/ProcessUtils.php
 symfony/process/LICENSE
 
 symfony/translation/Catalogue
+symfony/translation/Command
 symfony/translation/DataCollector
+symfony/translation/DependencyInjection
 symfony/translation/Dumper
 symfony/translation/Exception
 symfony/translation/Extractor
+symfony/translation/Formatter
 symfony/translation/Loader
+symfony/translation/Reader
+symfony/translation/Resources
 symfony/translation/Tests
 symfony/translation/Util
 symfony/translation/Writer
@@ -293,6 +306,9 @@ nesbot/carbon/LICENSE
 paragonie/random_compat/lib
 paragonie/random_compat/other
 paragonie/random_compat/LICENSE
+
+robloach/component-installer/src
+robloach/component-installer/LICENSE.md
 
 doctrine/inflector/lib
 doctrine/inflector/LICENSE

@@ -153,7 +153,6 @@ class Filebrowser {
 
         $path = appendTrailingSlash($requestedPath);
         $realpath = $this->container->filesystemUtility->getFileRealPath($path) . DS;
-
         if($realpath === DS && $this->container->conf["mpd"]["musicdir"] !== $requestedPath) {
             $this->container->flash->AddMessageNow("error", $this->container->ll->str("filebrowser.invaliddir", [$requestedPath]));
             return FALSE;
@@ -163,6 +162,10 @@ class Filebrowser {
         $path = ($requestedPath === $base) ? "" : $path;
         $return = ["base" => $base, "dir" => $path];
 
+        if(stripos($realpath, APP_ROOT . "localdata/stems") === 0) {
+            $return = ["base" => APP_ROOT, "dir" => $path];
+            return $return;
+        }
 
         // avoid path disclosure outside relevant directories
         if($realpath === FALSE && $systemdir === FALSE) {
@@ -170,7 +173,7 @@ class Filebrowser {
             return FALSE;
         }
 
-        if($systemdir === TRUE && in_array($path, ["localdata/cache/", "localdata/embedded/", "localdata/peakfiles/"]) === TRUE) {
+        if($systemdir === TRUE && in_array($path, ["localdata/cache/", "localdata/embedded/", "localdata/peakfiles/", "localdata/stems/"]) === TRUE) {
             $return['base'] = APP_ROOT;
             $realpath = realpath(APP_ROOT . $path) . DS;
         }

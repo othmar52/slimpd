@@ -164,7 +164,14 @@
 				<button role="control" data-href="#" class="btn btn-default toggle-player" title="{{'pbctrl.toggleplayer.title'|ll}}">
 					<i class="fa fa-exchange"></i> {{'pbctrl.toggleplayer'|ll}}
 				</button>
+				<br class="replace-me-with-proper-css" /><br class="replace-me-with-proper-css"/>
 			</div>
+			{% if config.modules.enable_stem %}
+			<div class="col-md-12">
+				<a href="{{root}}stemplayer/{{ item.relPath|path2url }}" class="btn btn-default ajax-link trigger-hide-modal">
+					 STEM (experimental)</a>
+			</div>
+			{% endif %}
 		</div>
 		<div class="col-md-3">
 			<div class="col-md-12">

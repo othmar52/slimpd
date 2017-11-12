@@ -118,6 +118,11 @@ class TrackContext extends \Slimpd\Models\Track {
             $this->setMimeType('audio/aac');
             $this->setAudioDataformat('aac');
         }
+
+        // files > 1 GB probably had been unscannable with getid3
+        if($this->getAudioDataformat() === NULL) {
+            $this->setAudioDataformat(strtolower($this->rawTagRecord['extension']));
+        }
     }
 
     /**

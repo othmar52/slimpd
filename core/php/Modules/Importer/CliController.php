@@ -335,4 +335,74 @@ class CliController extends \Slimpd\BaseController {
         }
         return FALSE;
     }
+
+    /**
+     * experimental feature
+     * TODO cleanup
+     */
+    public function destemAction(Request $request, Response $response, $args) {
+        useArguments($request);
+        if($this->abortOnLockfile($this->ll) === TRUE) {
+            return $response;
+        }
+        self::touchLockFile();
+
+        self::deleteLockFile();
+        if(array_key_exists("itemPath", $args) === FALSE) {
+            cliLog("ERROR: Missing file argument for destemming", 1 , "red");
+            cliLog(" example: ./slimpd destem /music/file.stem.mp4", 1 , "yellow");
+            return $response;
+        }
+        $filePath = $this->filesystemUtility->trimAltMusicDirPrefix($args['itemPath']);
+        if($this->filesystemUtility->getFileRealPath($filePath) === FALSE) {
+            cliLog("ERROR: invalid filepath", 1 , "red");
+            return $response;
+        }
+        if($this->filesystemUtility->isInAllowedPath($filePath) === FALSE) {
+            cliLog("ERROR: outside of allowed filepath", 1 , "red");
+            return $response;
+        }
+
+        $fileScanner = new \Slimpd\Modules\Importer\Filescanner($this->container);
+        $trackInstance = $this->trackRepo->getInstanceByPath($filePath, TRUE);
+        if($trackInstance->getFingerPrint()  === NULL) {
+            $fingerPrint = $fileScanner->extractAudioFingerprint(
+                $this->filesystemUtility->getFileRealPath($filePath)
+            );
+            $trackInstance->setFingerPrint($fingerPrint);
+        }
+
+        #echo "<pre>" . print_r($fingerPrint, 1) . "</pre>";exit;
+        $stemDir = APP_ROOT . 'localdata' . DS . 'stems' .
+            DS . $trackInstance->getAudioDataFormat() .
+            DS . $trackInstance->getFingerPrint() ;
+
+
+        \phpthumb_functions::EnsureDirectoryExists(
+            $stemDir,
+            octdec($this->conf['config']['dirCreateMask'])
+        );
+        file_put_contents($stemDir . DS . "status", "destemming");
+        
+        $cmd = APP_ROOT . "core/destem-temp.sh " .  escapeshellarg($stemDir) . " " . escapeshellarg($this->filesystemUtility->getFileRealPath($filePath));
+        exec($cmd, $result);
+
+        // generate peakfile for all generatred single stem tracks
+        $waveformCtrl = new \Slimpd\Modules\WaveformGenerator\Controller($this->container);
+        foreach($result as $resultLine) {
+            if(preg_match("/^newStemTrack\:\ (.*)$/", $resultLine, $matches)) {
+                cliLog("creating peakfile for " . $matches[1], 1);
+                $argsSingleStem = [
+                    "itemParams" => removeAppRootPrefix($matches[1]),
+                    "width" => 10
+                ];
+                $waveformCtrl->jsonAction($request, $response, $argsSingleStem);
+            }
+        }
+        echo "nix";die;
+        print_r($result); die;
+        echo $cmd;
+        die;
+        return $response;
+    }
 }

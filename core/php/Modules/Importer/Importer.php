@@ -414,13 +414,13 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
         $query = "
             SELECT count(uid) AS itemsTotal
             FROM rawtagdata
-            WHERE extension='mp3' AND fingerprint='';";
+            WHERE extension IN('mp3', 'mp4') AND fingerprint='';";
         $this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
         $query = "
             SELECT uid, relPath
             FROM rawtagdata
-            WHERE extension='mp3' AND fingerprint='';";
+            WHERE extension IN('mp3', 'mp4') AND fingerprint='';";
 
         $result = $this->db->query($query);
 

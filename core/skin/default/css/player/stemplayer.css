@@ -1,0 +1,23 @@
+#stem-container .row-seekbar {
+	position:absolute;
+	height: 100%;
+	width: 83.33333333%;
+}
+
+
+#stem-container .jp-seek-bar {
+	z-index: 999;
+}
+
+#stem-container .waveform {
+	height: 40px;
+	position: relative;
+	top: 10px;
+}
+#stem-container .seekbar-wrapper {
+	position: relative;
+	top: -51px;
+	height: 30px;
+	width: 100%;
+	margin: 0;
+}

@@ -54,6 +54,9 @@ class FilesystemUtility {
                 return realpath($mpdConf[$confName] . $pathString);
             }
         }
+        if(file_exists(APP_ROOT . $pathString) === TRUE) {
+           return realpath(APP_ROOT . $pathString);
+        }
         return FALSE;
     }
 
@@ -61,6 +64,7 @@ class FilesystemUtility {
      * checks if file path or directory path is within allowed direcories
      */
     function isInAllowedPath($itemPath) {
+        
         if($this->conf['filebrowser']['restrict-to-musicdir'] === "0") {
             return TRUE;
         }
@@ -97,7 +101,7 @@ class FilesystemUtility {
         if($realPath === FALSE) {
             return FALSE;
         }
-        foreach(["cache", "embedded", "peakfiles"] as $appDir) {
+        foreach(["cache", "embedded", "peakfiles", "stems"] as $appDir) {
             if(strpos($realPath, APP_ROOT . 'localdata' . DS . $appDir) === 0) {
                 return TRUE;
             }

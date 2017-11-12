@@ -30,6 +30,7 @@
 			'skin/default/css/bookblock.css',
 			'skin/default/css/widget-autocomplete.css',
 			'skin/default/css/player/player.css',
+			'skin/default/css/player/stemplayer.css',
 			'skin/default/css/editor.css'
 		] %}
 
@@ -82,6 +83,11 @@
 							{% include 'modules/searchresult-items.htm' with { dropdown: 'typelist' } %}
 						{% endif %}
 					{% endfor%}
+
+					{% if action == 'stem' %}
+						{% include 'modules/stem.htm' %}
+					{% endif %}
+
 
 					{% if action == 'maintainance.trackdebug' %}
 						{% include 'modules/trackdebug.htm' %}

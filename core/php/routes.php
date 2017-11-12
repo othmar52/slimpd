@@ -73,7 +73,8 @@ $ctrlRoutes = [
         ['/markup/widget-deckselector', 'widgetDeckselectorAction'],
         ['/markup/standalone-trackview', 'standaloneTrackviewAction'],
         ['/maintainance/trackid3/[{itemParams:.*}]', 'dumpid3Action'],
-        ['/maintainance/trackdebug/[{itemParams:.*}]', 'editAction']
+        ['/maintainance/trackdebug/[{itemParams:.*}]', 'editAction'],
+        ['/stemplayer/[{itemParams:.*}]', 'stemplayerAction']
     ],
     'Artist' => [
         ['/artists/[{itemParams:.*}]', 'listAction'],

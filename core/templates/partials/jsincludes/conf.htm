@@ -1,5 +1,6 @@
 <script type="text/javascript">
 	var sliMpd = sliMpd || {};
+	// ; preconfigured values are orange,green,red,blue,yellow,pink,cyan,violet
 	sliMpd.conf = {
 		color: {
 			mpd: {
@@ -14,6 +15,57 @@
 				secondary: '{{ config.colors[ config.spotcolor.local ]['2nd'] }}',
 				favicon: '{{ config.colors[ config.spotcolor.local ]['fav'] }}',
 			}
+{% if config.modules.enable_stem == '1' %}
+			,
+			cyan: {
+				bodyclass: '',
+				primary: '{{ config.colors.cyan['1st'] }}',
+				secondary: '{{ config.colors.cyan['2nd'] }}',
+				favicon: '{{ config.colors.cyan.fav }}',
+			},
+			violet: {
+				bodyclass: '',
+				primary: '{{ config.colors.violet['1st'] }}',
+				secondary: '{{ config.colors.violet['2nd'] }}',
+				favicon: '{{ config.colors.violet.fav }}',
+			},
+			red: {
+				bodyclass: '',
+				primary: '{{ config.colors.red['1st'] }}',
+				secondary: '{{ config.colors.red['2nd'] }}',
+				favicon: '{{ config.colors.red.fav }}',
+			},
+			blue: {
+				bodyclass: '',
+				primary: '{{ config.colors.blue['1st'] }}',
+				secondary: '{{ config.colors.blue['2nd'] }}',
+				favicon: '{{ config.colors.blue.fav }}',
+			},
+			yellow: {
+				bodyclass: '',
+				primary: '{{ config.colors.yellow['1st'] }}',
+				secondary: '{{ config.colors.yellow['2nd'] }}',
+				favicon: '{{ config.colors.yellow.fav }}',
+			},
+			pink: {
+				bodyclass: '',
+				primary: '{{ config.colors.pink['1st'] }}',
+				secondary: '{{ config.colors.pink['2nd'] }}',
+				favicon: '{{ config.colors.pink.fav }}',
+			},
+			orange: {
+				bodyclass: '',
+				primary: '{{ config.colors.orange['1st'] }}',
+				secondary: '{{ config.colors.orange['2nd'] }}',
+				favicon: '{{ config.colors.orange.fav }}',
+			},
+			green: {
+				bodyclass: '',
+				primary: '{{ config.colors.green['1st'] }}',
+				secondary: '{{ config.colors.green['2nd'] }}',
+				favicon: '{{ config.colors.green.fav }}',
+			}
+{% endif %}
 		},
 		waveform: {
 			barwidth: {{ config.waveform.barwidth }},
@@ -25,5 +77,10 @@
 		backboneRoot: '{{ config.config.absRefPrefix|slice(1) }}',
 		currentUser: '{{ auth.user.username }}',
 		mpdHttpStream: '{{ config.mpd.http_stream_url }}'
+		
+{% if config.modules.enable_stem == '1' %}
+		,
+		subdomainPattern: '{{ config.stem.subdomain_pattern }}'
+{% endif %}
 	};
 </script>
