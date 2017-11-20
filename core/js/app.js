@@ -228,6 +228,8 @@ $(document).ready(function() {
         }
     });
 
+    window.sliMpd.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
     window.sliMpd.navbar = new window.sliMpd.modules.NavbarView({
         el : "nav.main-nav"
     });

@@ -212,10 +212,24 @@
             );
             this.nowPlayingItem = item.hash;
 
+            this.initVolumeMeter();
+
             this.drawWaveform();
 
             //this.redraw(item);
             //this.reloadCss(item.hash);
+        },
+
+        initVolumeMeter() {
+            var webAudioPeakMeter = new WebAudioPeakMeter();
+            var myMeterElement = document.getElementById('dbmeter_' + this.playerIndex);
+            var myAudio = $(this.playerSelector).data("jPlayer").htmlElement.audio;
+            myAudio.crossOrigin = "anonymous";
+            var audioCtx = window.sliMpd.audioCtx;
+            var sourceNode = audioCtx.createMediaElementSource(myAudio);
+            sourceNode.connect(audioCtx.destination);
+            var meterNode = webAudioPeakMeter.createMeterNode(sourceNode, audioCtx);
+            webAudioPeakMeter.createMeter(myMeterElement, meterNode, {});
         },
 
         play : function(item) {
