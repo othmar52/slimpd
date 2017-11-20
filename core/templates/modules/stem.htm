@@ -40,7 +40,7 @@
 {% for idx,item in stems %}
 <div class="row" id="container_stemplayer_{{idx}}">
 	
-	<div id="jquery_stemplayer_{{idx}}" class="jp-jplayer" data-item="{{item.relPath}}" data-ext="mp3" data-volume="{{item.audioEncoder}}"></div>
+	<div id="jquery_stemplayer_{{idx}}" class="jp-jplayer" data-item="{{item.relPath}}" data-ext="mp3" data-volume="{{item.audioEncoder}}" data-starttime="{{starttime}}"></div>
 	<div class="col-md-9 nomargin">
 		<div class="waveform-wrapper" data-jsonurl="//{{ config.stem.subdomain_pattern|replace({'%d': idx}) }}{{root}}audiojson/resolution/2500/{{ item.relPath|path2url }}" data-player="stem"> </div>
 		<div class="seekbar-wrapper">
@@ -52,20 +52,20 @@
 		</div>
 	</div>
 	<div class="col-md-3">
-		<button class="btn btn-default isolate-stem btn-sm" data-stemtrack="{{idx}}" title="isolate track">
+		<div class="dbmeter" id="dbmeter_{{idx}}"></div>
+		<button class="btn btn-default btn-trnsp btn-bordered btn-grey isolate-stem btn-sm" data-stemtrack="{{idx}}" title="isolate track">
 			I
 		</button>
-		<button class="btn btn-default solo-stem btn-sm" data-stemtrack="{{idx}}" title="solo track">
+		<button class="btn btn-default btn-trnsp btn-bordered btn-grey solo-stem btn-sm" data-stemtrack="{{idx}}" title="solo track">
 			S
 		</button>
-
-		<button class="btn btn-default mute-stem btn-sm" data-stemtrack="{{idx}}" title="mute track">
+		<button class="btn btn-default btn-trnsp btn-bordered btn-grey mute-stem btn-sm" data-stemtrack="{{idx}}" title="mute track">
 			M
 		</button>
 		<span class="uc stemtrack-title">{{item.title}}</span>
 		<div class="jp-volume-controls">
-			<div class="jp-volume-bar" style="background: black; margin-top: 5px;">
-				<div class="jp-volume-bar-value" style=" height: 15px;"></div>
+			<div class="jp-volume-bar">
+				<div class="jp-volume-bar-value"></div>
 			</div>
 		</div>
 	</div>

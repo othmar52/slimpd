@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 /*
  * dependencies: jquery, backbonejs, underscorejs
  */
@@ -37,6 +38,8 @@
         isSoloed : false,
         isMuted : false,
         isIsolated : false,
+
+        starttime : 0,
 
         timeGridSelectorCanvas : "timegrid-stem",
         timeGridSelectorSeekbar : ".jp-seek-bar",
@@ -134,9 +137,9 @@
                     seekBar: ".jp-seek-bar",
                     playBar: (( that.playerIndex == 0) ? ".jp-play-bar" : ""),
                     volumeBar: "#container_stemplayer_" + that.playerIndex + " .jp-volume-bar",
-                    volumeBarValue: "#container_stemplayer_" + that.playerIndex + " .jp-volume-bar-value"
-                    //currentTime: ".jp-current-time",
-                    //duration: ".jp-duration",
+                    volumeBarValue: "#container_stemplayer_" + that.playerIndex + " .jp-volume-bar-value",
+                    currentTime: (( that.playerIndex == 0) ? ".jp-current-time" : ""),
+                    duration: (( that.playerIndex == 0) ? ".jp-duration" : "")
                 },
                 volumeBar: function(e) { // Handles clicks on the volumeBar
                     if(this.css.jq.volumeBar.length) {
@@ -157,10 +160,21 @@
                         this._muted(false);
                     }
                 }
-            });
+            }).bind($.jPlayer.event.timeupdate, that.updateTimer);
+
 
             this.updateStateIcons();
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
+        },
+
+        updateTimer : function(event) {
+            var status = event.jPlayer.status;
+            //console.log(status.duration);
+            //console.log(status.currentTime);
+            //console.log("this.", $(this).data("starttime"));
+            //console.log("this.starttime", this.starttime);
+            $('.jp-current-time', this.$el).text($.jPlayer.convertTime($(this).data("starttime") + status.currentTime));
+            //$('.jp-duration', this.$el).text($.jPlayer.convertTime(delta+status.duration - status.currentTime));
         },
 
         render : function(options) {
@@ -186,6 +200,10 @@
                     $(this.playerSelector).data("volume")
                 );
             }
+            if($(this.playerSelector).data("starttime")) {
+                this.starttime = $(this.playerSelector).data("starttime");
+            }
+
             jPlayerConfObject[item.ext] = mp3Url;
             jPlayerConfObject.wmode = "window";
             $(this.playerSelector).jPlayer(
@@ -193,8 +211,9 @@
                 jPlayerConfObject
             );
             this.nowPlayingItem = item.hash;
-            
+
             this.drawWaveform();
+
             //this.redraw(item);
             //this.reloadCss(item.hash);
         },
@@ -217,37 +236,37 @@
 
         isolate : function(item) {
             //this.isIsolated = true;
-            $(".isolate-stem", this.$el).addClass("col2");
+            $(".isolate-stem", this.$el).addClass("btn-violet");
             return this;
         },
 
         unisolate : function(item) {
             //this.isIsolated = false;
-            $(".isolate-stem", this.$el).removeClass("col2");
+            $(".isolate-stem", this.$el).removeClass("btn-violet");
             return this;
         },
 
         solo : function(item) {
             //this.isSoloed = true;
-            $(".solo-stem", this.$el).addClass("col2");
+            $(".solo-stem", this.$el).addClass("btn-yellow");
             return this;
         },
 
         unsolo : function(item) {
             //this.isSoloed = false;
-            $(".solo-stem", this.$el).removeClass("col2");
+            $(".solo-stem", this.$el).removeClass("btn-yellow");
             return this;
         },
 
         mute : function(item) {
             //this.isMuted = true;
-            $(".mute-stem", this.$el).addClass("col2");
+            $(".mute-stem", this.$el).addClass("btn-red");
             return this;
         },
 
         unmute : function(item) {
             //this.isMuted = false;
-            $(".mute-stem", this.$el).removeClass("col2");
+            $(".mute-stem", this.$el).removeClass("btn-red");
             return this;
         },
 
@@ -360,6 +379,9 @@
             $("#main .is-playbtn")[0].click();
         },
 
+        /**
+         * TODO: use abstract player drawWaveform()
+         */
         drawWaveform : function() {
             // thanks to https://github.com/Idnan/SoundCloud-Waveform-Generator
             var $waveFormWrapper = $(".waveform-wrapper", this.$el);
@@ -387,6 +409,10 @@
                     
                     var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
                     var maxVal = that.getMaxVal(vals);
+                    if(maxVal === 0) {
+                        // draw at least a one pixel line for 100% silence files
+                        maxVal = 1;
+                    }
                     for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
                         that.drawBar(
                             j,

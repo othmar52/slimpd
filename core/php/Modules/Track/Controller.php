@@ -145,7 +145,9 @@ class Controller extends \Slimpd\BaseController {
      * TODO: volume meter for each track
      * TODO: store changed volume levels for each track when mute/solo/nextChunk
      * TODO: make multiple solo possible
+     * TODO: muting should not clear volume bar
      *
+     * LIMITATION: only works for streams with identical duration
      *
      *
      *
@@ -229,14 +231,11 @@ class Controller extends \Slimpd\BaseController {
             $this->conf['config']['absRefPrefix'] . 'stemplayer/'.$args["itemParams"] .'?stemChunk=(:num)'
         );
         $args['paginator']->setMaxPagesToShow(10);
-        
 
-        
-        
         $this->fileBrowser->getDirectoryContent($this->stemDir."/" . $this->stemChunk);
-        
+
         $args['stems'] = [];
-        
+
         $status = "ERROR: obviously sliMpd was not able to destem requested file";
 
         foreach($this->fileBrowser->files["other"] as $file) {
@@ -261,6 +260,11 @@ class Controller extends \Slimpd\BaseController {
             $tempTrack->setAudioEncoder($this->temp_getMeta($idx, "volume"));
             $args['stems'][] = $tempTrack;
         }
+        $this->temp_resortStems($args);
+
+        // currently we have 30 minute splits because of the huge amount of audiodata
+        // TODO move maximum duration of stem splits to config file
+        $args['starttime'] = $this->stemChunk * 1800;
     }
 
     protected function temp_getMeta($idx, $propName) {
@@ -274,27 +278,64 @@ class Controller extends \Slimpd\BaseController {
         if($propName !== "volume") {
             return "";
         }
-        $peak = 0;
+        $currentPeak = 0;
         if(preg_match("/stream".$idx.$this->TODO_RemoveMe["search_for"] . "\:\ (.*)/", $this->TODO_RemoveMe["rawdata"], $matches)) {
-            $peak = str_replace(",", ".", floatval(str_replace("+", "",$matches[1])));
+            $currentPeak = str_replace(",", ".", floatval(str_replace("+", "",$matches[1])));
         }
-        if($peak === 0) {
+        if($currentPeak === 0) {
             return $this->TODO_RemoveMe["set_vol_default"];
         }
 
         // find out percent
         $foundMax = $this->TODO_RemoveMe["found_peak_max"];
         $foundMin = $this->TODO_RemoveMe["found_peak_min"];
-        
+
         $targetMax = $this->TODO_RemoveMe["set_vol_max"];
         $targetMin = $this->TODO_RemoveMe["set_vol_min"];
-        
-        $currentPeak = $peak;
-        
+
         $onePercent = ($foundMin*-1) - ($foundMax*-1);
         $targetPercent = 1 - ((($currentPeak*-1) - ($foundMax*-1)) / $onePercent) * ($targetMax - $targetMin);
 
         return str_replace(",", ".", floatval($targetPercent));
+
+    }
+
+    /**
+     * quick & dirty sorting for personal use
+     * TODO: remove this as soon as personal created Stem-files has its streams in correct order 
+     */
+    protected function temp_resortStems(&$args) {
+        $found = [
+            "drums" => [],
+            "wastl" => [],
+            "kurt" => [],
+            "richie" => [],
+            "astl" => [],
+            "wuifi" => [],
+            "andi" => [],
+            "rotzbub" => [],
+            "johnny" => [],
+            "orgel" => [],
+            "master" => [],
+            "slave" => [],
+            "other" => []
+        ];
+        foreach($args['stems'] as $stem) {
+            #var_dump($stem);die;
+            foreach(array_keys($found) as $searchFor) {
+                if(preg_match("/". $searchFor ."/i", $stem->getTitle())) {
+                    $found[$searchFor][] = $stem;
+                    continue 2;
+                }
+            }
+            $found["other"][] = $stem;
+        }
+
+        $finalSorting = [];
+        foreach($found as $group) {
+            $finalSorting = array_merge($finalSorting, $group);
+        }
+        $args['stems'] = $finalSorting;
 
     }
     /**

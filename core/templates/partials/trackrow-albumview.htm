@@ -3,7 +3,11 @@
 <div class="row item-row">
 	<div class="col-xs-3 col-sm-2 vcenter">
 		<div class="vcinner">
+			{% if item is not instanceofStem %}
 			{% include 'partials/button/playtrack.htm' %}
+			{% else %}
+			{% include 'partials/button/playstem.htm' %}
+			{% endif %}
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' %}
 

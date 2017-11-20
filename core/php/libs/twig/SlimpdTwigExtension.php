@@ -210,6 +210,11 @@ class SlimpdTwigExtension extends \Twig_Extension {
 
             new \Twig_SimpleTest('allowed', function ($permissionKey) {
                 return $this->container->auth->hasPermissionFor($permissionKey);
+            }),
+
+            new \Twig_SimpleTest('instanceofStem', function ($item) {
+                // TODO: replace with instanceofStem as soon as we have such a model
+                return preg_match("/\.stem\.mp4$/i", $item->getRelPath());
             })
         );
     }

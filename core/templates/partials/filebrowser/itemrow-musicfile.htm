@@ -2,11 +2,19 @@
 	<div class="row">
 		<div class="col-md-12 vcenter">
 			<div class="vcinner">
+			{% if item is instanceofStem %}
+				{% include 'partials/button/playstem.htm' with {
+					'trackpath': [directory,item.title],
+					'trackext': item.ext ,
+					'additionalClass': 'fa-fw'
+				} %}
+			{% else %}
 				{% include 'partials/button/playtrack.htm' with {
 					'trackpath': [directory,item.title],
 					'trackext': item.ext ,
 					'additionalClass': 'fa-fw'
 				} %}
+			{% endif %}
 				{% include 'partials/button/showtrackwidget.htm' with { 'trackpath': item.relPath } %}
 				{% include 'partials/button/showdeckselector.htm' with { 'trackpath': item.relPath } %}
 

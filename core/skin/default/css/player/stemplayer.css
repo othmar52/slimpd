@@ -21,3 +21,39 @@
 	width: 100%;
 	margin: 0;
 }
+
+#stem-container .jp-volume-bar {
+	background: black;
+	margin-top: 5px;
+}
+
+#stem-container .jp-volume-bar-value {
+	height: 15px;
+}
+
+.dbmeter {
+	width: 1em;
+	height: 2.1em;
+	display: inline-block;
+	position:relative;
+	top: 11px;
+}
+
+.btn-bordered.btn-grey {
+	border: 1px solid #353535;
+}
+
+.btn-bordered.btn-red {
+	border: 1px solid #FF5050;
+	color: #FF5050;
+}
+
+.btn-bordered.btn-yellow {
+	border: 1px solid #EFFE4B;
+	color: #EFFE4B;
+}
+
+.btn-bordered.btn-violet {
+	border: 1px solid #9932CC;
+	color: #9932CC;
+}

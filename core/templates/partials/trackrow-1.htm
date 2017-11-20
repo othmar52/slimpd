@@ -11,7 +11,11 @@
 					'attrs': 'class="icon-50"'
 				} %}
 			</a>
+			{% if item is not instanceofStem %}
 			{% include 'partials/button/playtrack.htm' %}
+			{% else %}
+			{% include 'partials/button/playstem.htm' %}
+			{% endif %}
 			{% include 'partials/button/showtrackwidget.htm' %}
 			{% include 'partials/button/showdeckselector.htm' %}
 		</div>

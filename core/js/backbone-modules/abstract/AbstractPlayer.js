@@ -282,6 +282,10 @@
                 success : function(vals) {
                     var len = Math.floor(vals.length / that.waveformSettings.canvas.width);
                     var maxVal = that.getMaxVal(vals);
+                    if(maxVal === 0) {
+                        // draw at least a one pixel line for 100% silence files
+                        maxVal = 1;
+                    }
                     for (var j = 0; j < that.waveformSettings.canvas.width; j += that.waveformSettings.barWidth) {
                         that.drawBar(
                             j,
