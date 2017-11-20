@@ -144,104 +144,112 @@ WebAudioPeakMeter.prototype.createMeter = function(domElement, meterNode, option
 
 WebAudioPeakMeter.prototype.createTicks = function() {
     var numTicks = Math.floor(this.options.dbRange / this.options.dbTickSize);
-    var dbTickLabel = 0;
+    var baseStyles = {
+        width: this.tickWidth + 'px',
+        textAlign: 'right',
+        color: this.options.tickColor,
+        fontSize: this.options.fontSize + 'px',
+        position: 'absolute'
+    };
     if (this.vertical) {
-        var dbTickTop = this.options.fontSize + this.options.borderSize;
-        for (var i = 0; i < numTicks; i++) {
-            var dbTick = document.createElement('div');
-            this.meterElement.appendChild(dbTick);
-            dbTick.style.width = this.tickWidth + 'px';
-            dbTick.style.textAlign = 'right';
-            dbTick.style.color = this.options.tickColor;
-            dbTick.style.fontSize = this.options.fontSize + 'px';
-            dbTick.style.position = 'absolute';
-            dbTick.style.top = dbTickTop + 'px';
-            dbTick.textContent = dbTickLabel + '';
-            dbTickLabel -= this.options.dbTickSize;
-            dbTickTop += this.meterHeight / numTicks;
-        }
-    } else {
-        this.tickWidth = this.meterWidth / numTicks;
-        var dbTickRight = this.options.fontSize * 2;
-        for (var i = 0; i < numTicks; i++) {
-            var dbTick = document.createElement('div');
-            this.meterElement.appendChild(dbTick);
-            dbTick.style.width = this.tickWidth + 'px';
-            dbTick.style.textAlign = 'right';
-            dbTick.style.color = this.options.tickColor;
-            dbTick.style.fontSize = this.options.fontSize + 'px';
-            dbTick.style.position = 'absolute';
-            dbTick.style.right = dbTickRight + 'px';
-            dbTick.textContent = dbTickLabel + '';
-            dbTickLabel -= this.options.dbTickSize;
-            dbTickRight += this.tickWidth;
-        }
+        return this.createTicksVertical(numTicks, 0, baseStyles)
+    }
+    this.createTicksHorizontal(numTicks, 0, baseStyles)
+};
+
+WebAudioPeakMeter.prototype.createTicksVertical = function(numTicks, dbTickLabel, styles) {
+    var dbTickTop = this.options.fontSize + this.options.borderSize;
+    for (var i = 0; i < numTicks; i++) {
+        var dbTick = document.createElement('div');
+        this.meterElement.appendChild(dbTick);
+        styles.top = dbTickTop + 'px';
+        Object.assign(dbTick.style, styles);
+        dbTick.textContent = dbTickLabel + '';
+        dbTickLabel -= this.options.dbTickSize;
+        dbTickTop += this.meterHeight / numTicks;
+    }
+};
+
+WebAudioPeakMeter.prototype.createTicksHorizontal = function(numTicks, dbTickLabel, styles) {
+    this.tickWidth = this.meterWidth / numTicks;
+    var dbTickRight = this.options.fontSize * 2;
+    for (var i = 0; i < numTicks; i++) {
+        var dbTick = document.createElement('div');
+        this.meterElement.appendChild(dbTick);
+        styles.right = dbTickRight + 'px';
+        Object.assign(dbTick.style, styles);
+        dbTick.textContent = dbTickLabel + '';
+        dbTickLabel -= this.options.dbTickSize;
+        dbTickRight += this.tickWidth;
     }
 };
 
 WebAudioPeakMeter.prototype.createRainbow = function() {
     var rainbow = document.createElement('div');
     this.meterElement.appendChild(rainbow);
-    rainbow.style.width = this.meterWidth + 'px';
-    rainbow.style.height = this.meterHeight + 'px';
-    rainbow.style.position = 'absolute';
-    rainbow.style.top = this.meterTop + 'px';
+    var styles = {
+        width: this.meterWidth + 'px',
+        height: this.meterHeight + 'px',
+        position: 'absolute',
+        top: this.meterTop + 'px',
+        left: this.options.borderSize + 'px',
+        backgroundImage: 'linear-gradient(to left, ' + this.options.gradient.join(', ') + ')'
+    };
+
     if (this.vertical) {
-        rainbow.style.left = this.tickWidth + 'px';
-        var gradientStyle = 'linear-gradient(to bottom, ' +
-            this.options.gradient.join(', ') + ')';
-    } else {
-        rainbow.style.left = this.options.borderSize + 'px';
-        var gradientStyle = 'linear-gradient(to left, ' +
-            this.options.gradient.join(', ') + ')';
+        styles.left = this.tickWidth + 'px';
+        styles.backgroundImage = 'linear-gradient(to bottom, ' + this.options.gradient.join(', ') + ')';
     }
-    rainbow.style.backgroundImage = gradientStyle;
+    Object.assign(rainbow.style, styles);
     return rainbow;
 };
 
 WebAudioPeakMeter.prototype.createPeakLabel = function(width, left) {
     var label = document.createElement('div');
     this.meterElement.appendChild(label);
-    label.style.textAlign = 'center';
-    label.style.color = this.options.tickColor;
-    label.style.fontSize = this.options.fontSize + 'px';
-    label.style.position = 'absolute';
     label.textContent = '-∞';
+    var styles = {
+        textAlign: 'center',
+        color: this.options.tickColor,
+        fontSize: this.options.fontSize + 'px',
+        position: 'absolute',
+        width: this.options.fontSize * 2 + 'px',
+        right: this.options.borderSize + 'px',
+        top: (width * 0.25) + left + 'px'
+    };
+
     if (this.vertical) {
-        label.style.width = width + 'px';
-        label.style.top = this.options.borderSize + 'px';
-        label.style.left = left + 'px';
-    } else {
-        label.style.width = this.options.fontSize * 2 + 'px';
-        label.style.right = this.options.borderSize + 'px';
-        label.style.top = (width * 0.25) + left + 'px';
+        styles.width = width + 'px';
+        styles.top = this.options.borderSize + 'px';
+        styles.left = left + 'px';
+        delete styles.right;
     }
+    Object.assign(label.style, styles);
     return label;
 };
 
 WebAudioPeakMeter.prototype.createChannelMask = function( width, left, transition) {
     var channelMask = document.createElement('div');
     this.meterElement.appendChild(channelMask);
-    channelMask.style.position = 'absolute';
+    var styles = {
+        position: 'absolute',
+        backgroundColor: this.options.backgroundColor,
+        width: this.meterWidth + 'px',
+        height: width + 'px',
+        top: left + 'px',
+        right: this.options.fontSize * 2 + 'px'
+    };
     if (this.vertical) {
-        channelMask.style.width = width + 'px';
-        channelMask.style.height = this.meterHeight + 'px';
-        channelMask.style.top = this.meterTop + 'px';
-        channelMask.style.left = left + 'px';
-    } else {
-        channelMask.style.width = this.meterWidth + 'px';
-        channelMask.style.height = width + 'px';
-        channelMask.style.top = left + 'px';
-        channelMask.style.right = this.options.fontSize * 2 + 'px';
+        styles.width = width + 'px';
+        styles.height = this.meterHeight + 'px';
+        styles.top = this.meterTop + 'px';
+        styles.left = left + 'px';
+        delete styles.right;
     }
-    channelMask.style.backgroundColor = this.options.backgroundColor;
     if (transition) {
-        if (this.vertical) {
-            channelMask.style.transition = 'height ' + this.options.maskTransition;
-        } else {
-            channelMask.style.transition = 'width ' + this.options.maskTransition;
-        }
+        styles.transition = ((this.vertical) ? 'height' : 'width') + ' ' + this.options.maskTransition;
     }
+    Object.assign(channelMask.style, styles);
     return channelMask;
 };
 
@@ -249,15 +257,13 @@ WebAudioPeakMeter.prototype.maskSize = function(floatVal) {
     var meterDimension = this.vertical ? this.meterHeight : this.meterWidth;
     if (floatVal === 0.0) {
         return meterDimension;
-    } else {
-        var d = this.options.dbRange * -1;
-        var returnVal = Math.floor(this.dbFromFloat(floatVal) * meterDimension / d);
-        if (returnVal > meterDimension) {
-            return meterDimension;
-        } else {
-            return returnVal;
-        }
     }
+    var d = this.options.dbRange * -1;
+    var returnVal = Math.floor(this.dbFromFloat(floatVal) * meterDimension / d);
+    if (returnVal > meterDimension) {
+        return meterDimension;
+    }
+    return returnVal;
 };
 
 WebAudioPeakMeter.prototype.updateMeter = function(audioProcessingEvent) {
@@ -278,20 +284,18 @@ WebAudioPeakMeter.prototype.updateMeter = function(audioProcessingEvent) {
     }
     for (i = 0; i < this.channelCount; i++) {
         this.maskSizes[i] = this.maskSize(channelMaxes[i], this.meterHeight);
-        if (channelMaxes[i] > this.channelPeaks[i]) {
-            this.channelPeaks[i] = channelMaxes[i];
-            this.textLabels[i] = this.dbFromFloat(this.channelPeaks[i]).toFixed(1);
+        if (channelMaxes[i] <= this.channelPeaks[i]) {
+            continue;
         }
+        this.channelPeaks[i] = channelMaxes[i];
+        this.textLabels[i] = this.dbFromFloat(this.channelPeaks[i]).toFixed(1);
     }
 };
 
 WebAudioPeakMeter.prototype.paintMeter = function() {
+    var axis = (this.vertical) ? "height" : "width";
     for (var i = 0; i < this.channelCount; i++) {
-        if (this.vertical) {
-            this.channelMasks[i].style.height = this.maskSizes[i] + 'px';
-        } else {
-            this.channelMasks[i].style.width = this.maskSizes[i] + 'px';
-        }
+        this.channelMasks[i].style[axis] = this.maskSizes[i] + 'px';
         this.channelPeakLabels[i].textContent = this.textLabels[i];
     }
     window.requestAnimationFrame(this.paintMeter.bind(this));
