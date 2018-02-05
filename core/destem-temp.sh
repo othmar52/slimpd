@@ -6,6 +6,7 @@
 # values unit is seconds
 # TODO: move configuration to config_local and parse it
 maxStemDuration=1800 # 30 minutes
+maxStemDuration=2400 # 40 minutes
 #maxStemDuration=15
 
 
@@ -37,7 +38,7 @@ duration=$( ffprobe "${cmd[@]}" )
 if [[ $(echo " $duration > $maxStemDuration" | bc) -eq 1 ]] && [[ $maxStemDuration -gt 0 ]]
 then
 	echo "splitting input file into $maxStemDuration second chunks"
-    ffmpeg -y -loglevel panic -i "$fileToDestem" -f segment -segment_time $maxStemDuration -c copy -map 0 -reset_timestamps 1 "$targetDirectory/_temp.stem.%01d.mp4"
+    ffmpeg -y -hide_banner -v quiet -stats -i "$fileToDestem" -f segment -segment_time $maxStemDuration -c copy -map 0 -reset_timestamps 1 "$targetDirectory/_temp.stem.%01d.mp4"
     splitted=1
     filesToProcess=( $(find "$targetDirectory/_temp.stem"*) )
 fi
@@ -60,7 +61,7 @@ for fileToProcess in "${filesToProcess[@]}"
 do
 
 	echo "Destemming `basename "$fileToProcess"` ..."
-	mkdir mkdir "$targetDirectory/$chunkCounter"
+	mkdir "$targetDirectory/$chunkCounter"
 	echo "destemming" > "$targetDirectory/$chunkCounter/status"
 	# TODO: make skipping of stream 0 configurable
 	echo "skipping stream 0..."
@@ -69,7 +70,7 @@ do
 		
 		echo " extracting stream $IDX"
 		cmd=(-y)
-		#cmd+=(-loglevel panic)
+		cmd+=(-hide_banner -v quiet -stats)
 		cmd+=(-i "$fileToProcess")
 		cmd+=(-ar 44100 -ac 2 -ab 192k -f mp3)
 		cmd+=(-map 0:$IDX -map_metadata 0)

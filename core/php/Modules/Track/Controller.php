@@ -258,6 +258,11 @@ class Controller extends \Slimpd\BaseController {
             $tempTrack->setTitle($this->temp_getMeta($idx, "title"));
             # TODO: remove misuse of audio-encoder property
             $tempTrack->setAudioEncoder($this->temp_getMeta($idx, "volume"));
+
+            // make sure the drums are always 100%
+            if(preg_match("/drum/", $tempTrack->getTitle())) {
+                $tempTrack->setAudioEncoder(1);
+            }
             $args['stems'][] = $tempTrack;
         }
         $this->temp_resortStems($args);

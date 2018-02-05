@@ -86,10 +86,15 @@ WebAudioPeakMeter.prototype.createMeterNode = function(sourceNode, audioCtx) {
 
 WebAudioPeakMeter.prototype.createContainerDiv = function(parent) {
     this.meterElement = document.createElement('div');
-    this.meterElement.style.position = 'relative';
-    this.meterElement.style.width = this.elementWidth + 'px';
-    this.meterElement.style.height = this.elementHeight + 'px';
-    this.meterElement.style.backgroundColor = this.options.backgroundColor;
+    Object.assign(
+        this.meterElement.style,
+        {
+            position: 'relative',
+            width: this.elementWidth + 'px',
+            height: this.elementHeight + 'px',
+            backgroundColor: this.options.backgroundColor
+        }
+    );
     parent.appendChild(this.meterElement);
     return this.meterElement;
 };
