@@ -28,7 +28,6 @@ hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.css
 hendrismit/bootstrap-lightbox/dist/ekko-lightbox.min.js
 
 ricbra/php-discogs-api/lib
-ricbra/php-discogs-api/lib/Discogs
 ricbra/php-discogs-api/LICENSE
 ricbra/php-discogs-api/resources/service.php
 
@@ -51,6 +50,7 @@ guzzlehttp/ringphp/src
 guzzlehttp/ringphp/LICENSE
 
 guzzlehttp/oauth-subscriber/src
+guzzlehttp/oauth-subscriber/LICENSE
 
 lusitanian/oauth/src
 lusitanian/oauth/LICENSE
@@ -73,15 +73,15 @@ mouse0270/bootstrap-notify/bootstrap-notify.min.js
 
 neutron/sphinxsearch-api/sphinxapi.php
 
-james-heinrich/phpthumb/phpThumb.config.php
-james-heinrich/phpthumb/phpthumb.filters.php
-james-heinrich/phpthumb/phpthumb.functions.php
-james-heinrich/phpthumb/phpThumb.php
-james-heinrich/phpthumb/phpthumb.unsharp.php
 james-heinrich/phpthumb/index.php
 james-heinrich/phpthumb/phpthumb.bmp.php
-james-heinrich/phpthumb/phpthumb.gif.php
 james-heinrich/phpthumb/phpthumb.class.php
+james-heinrich/phpthumb/phpthumb.filters.php
+james-heinrich/phpthumb/phpthumb.functions.php
+james-heinrich/phpthumb/phpthumb.gif.php
+james-heinrich/phpthumb/phpthumb.ico.php
+james-heinrich/phpthumb/phpThumb.php
+james-heinrich/phpthumb/phpthumb.unsharp.php
 
 james-heinrich/getid3/licenses
 james-heinrich/getid3/license.txt
@@ -140,11 +140,17 @@ slim/slim/LICENSE.md
 slim/twig-view/src
 slim/twig-view/LICENSE.md
 
+slim/views/SmartyPlugins
+slim/views/Smarty.php
+slim/views/Twig.php
+slim/views/TwigExtension.php
+
 slim/flash/src
 slim/flash/LICENSE.md
 
 twig/twig/lib
-twig/twig/test/bootstrap.php
+twig/twig/src
+twig/twig/test
 twig/twig/LICENSE
 
 monolog/monolog/src
@@ -156,8 +162,17 @@ nikic/fast-route/LICENSE
 container-interop/container-interop/src
 container-interop/container-interop/LICENSE
 
+psr/container/src
+psr/container/LICENSE
+
 psr/http-message/src
 psr/http-message/LICENSE
+
+psr/log/src
+psr/log/LICENSE
+
+psr/simple-cache/src
+psr/simple-cache/LICENSE
 
 pimple/pimple/src
 pimple/pimple/LICENSE
@@ -170,6 +185,7 @@ pimple/pimple/LICENSE
 illuminate/container/BoundMethod.php
 illuminate/container/Container.php
 illuminate/container/ContextualBindingBuilder.php
+illuminate/container/EntryNotFoundException.php
 
 illuminate/contracts/Auth
 illuminate/contracts/Broadcasting
@@ -187,7 +203,6 @@ illuminate/contracts/Filesystem
 illuminate/contracts/Foundation
 illuminate/contracts/Hashing
 illuminate/contracts/Http
-illuminate/contracts/Logging
 illuminate/contracts/Mail
 illuminate/contracts/Notifications
 illuminate/contracts/Pagination
@@ -233,16 +248,20 @@ illuminate/support/Testing
 illuminate/support/Traits
 illuminate/support/AggregateServiceProvider.php
 illuminate/support/Arr.php
+illuminate/support/Carbon.php
 illuminate/support/Collection.php
 illuminate/support/Composer.php
 illuminate/support/Fluent.php
 illuminate/support/helpers.php
 illuminate/support/HigherOrderCollectionProxy.php
+illuminate/support/HigherOrderTapProxy.php
 illuminate/support/HtmlString.php
+illuminate/support/InteractsWithTime.php
 illuminate/support/Manager.php
 illuminate/support/MessageBag.php
 illuminate/support/NamespacedItemResolver.php
 illuminate/support/Pluralizer.php
+illuminate/support/ProcessUtils.php
 illuminate/support/ServiceProvider.php
 illuminate/support/Str.php
 illuminate/support/ViewErrorBag.php
@@ -265,11 +284,16 @@ symfony/process/ProcessUtils.php
 symfony/process/LICENSE
 
 symfony/translation/Catalogue
+symfony/translation/Command
 symfony/translation/DataCollector
+symfony/translation/DependencyInjection
 symfony/translation/Dumper
 symfony/translation/Exception
 symfony/translation/Extractor
+symfony/translation/Formatter
 symfony/translation/Loader
+symfony/translation/Reader
+symfony/translation/Resources
 symfony/translation/Tests
 symfony/translation/Util
 symfony/translation/Writer
@@ -292,6 +316,7 @@ nesbot/carbon/LICENSE
 
 paragonie/random_compat/lib
 paragonie/random_compat/other
+paragonie/random_compat/psalm-autoload.php
 paragonie/random_compat/LICENSE
 
 doctrine/inflector/lib
@@ -306,3 +331,8 @@ slim/csrf/LICENSE.md
 
 bryanjhv/slim-session/src
 bryanjhv/slim-session/LICENSE
+
+
+robloach/component-installer/src
+robloach/component-installer/LICENSE.md
+

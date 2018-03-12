@@ -1,4 +1,5 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
@@ -16,20 +17,53 @@
 
 class getid3_write_real
 {
+	/**
+	 * @var string
+	 */
 	public $filename;
+
+	/**
+	 * @var array
+	 */
 	public $tag_data          = array();
-	public $fread_buffer_size = 32768;   // read buffer size in bytes
-	public $warnings          = array(); // any non-critical errors will be stored here
-	public $errors            = array(); // any critical errors will be stored here
-	public $paddedlength      = 512;     // minimum length of CONT tag in bytes
+
+	/**
+	 * Read buffer size in bytes.
+	 *
+	 * @var int
+	 */
+	public $fread_buffer_size = 32768;
+
+	/**
+	 * Any non-critical errors will be stored here.
+	 *
+	 * @var array
+	 */
+	public $warnings          = array();
+
+	/**
+	 * Any critical errors will be stored here.
+	 *
+	 * @var array
+	 */
+	public $errors            = array();
+
+	/**
+	 * Minimum length of CONT tag in bytes.
+	 *
+	 * @var int
+	 */
+	public $paddedlength      = 512;
 
 	public function __construct() {
-		return true;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function WriteReal() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
+		if (getID3::is_writable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
 			// Initialize getID3 engine
 			$getID3 = new getID3;
@@ -45,6 +79,7 @@ class getid3_write_real
 				fclose($fp_source);
 				return false;
 			}
+			$oldChunkInfo = array();
 			foreach ($OldThisFileInfo['real']['chunks'] as $chunknumber => $chunkarray) {
 				$oldChunkInfo[$chunkarray['name']] = $chunkarray;
 			}
@@ -94,7 +129,7 @@ class getid3_write_real
 					$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
 				}
 				if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
-					if (is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
+					if (getID3::is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
 
 						rewind($fp_source);
 						fwrite($fp_temp, fread($fp_source, $BeforeOffset));
@@ -127,8 +162,14 @@ class getid3_write_real
 		return false;
 	}
 
+	/**
+	 * @param array $chunks
+	 *
+	 * @return string
+	 */
 	public function GenerateRMFchunk(&$chunks) {
 		$oldCONTexists = false;
+		$chunkNameKeys = array();
 		foreach ($chunks as $key => $chunk) {
 			$chunkNameKeys[$chunk['name']] = $key;
 			if ($chunk['name'] == 'CONT') {
@@ -145,10 +186,17 @@ class getid3_write_real
 		return $RMFchunk;
 	}
 
+	/**
+	 * @param array  $chunks
+	 * @param string $new_CONT_tag_data
+	 *
+	 * @return string
+	 */
 	public function GeneratePROPchunk(&$chunks, &$new_CONT_tag_data) {
 		$old_CONT_length = 0;
 		$old_DATA_offset = 0;
 		$old_INDX_offset = 0;
+		$chunkNameKeys = array();
 		foreach ($chunks as $key => $chunk) {
 			$chunkNameKeys[$chunk['name']] = $key;
 			if ($chunk['name'] == 'CONT') {
@@ -182,6 +230,9 @@ class getid3_write_real
 		return $PROPchunk;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GenerateCONTchunk() {
 		foreach ($this->tag_data as $key => $value) {
 			// limit each value to 0xFFFF bytes
@@ -211,9 +262,12 @@ class getid3_write_real
 		return $CONTchunk;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function RemoveReal() {
 		// File MUST be writeable - CHMOD(646) at least
-		if (is_writeable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
+		if (getID3::is_writable($this->filename) && is_file($this->filename) && ($fp_source = fopen($this->filename, 'r+b'))) {
 
 			// Initialize getID3 engine
 			$getID3 = new getID3;
@@ -242,7 +296,7 @@ class getid3_write_real
 			$BeforeOffset = $oldChunkInfo['CONT']['offset'];
 			$AfterOffset  = $oldChunkInfo['CONT']['offset'] + $oldChunkInfo['CONT']['length'];
 			if ($tempfilename = tempnam(GETID3_TEMP_DIR, 'getID3')) {
-				if (is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
+				if (getID3::is_writable($tempfilename) && is_file($tempfilename) && ($fp_temp = fopen($tempfilename, 'wb'))) {
 
 					rewind($fp_source);
 					fwrite($fp_temp, fread($fp_source, $BeforeOffset));

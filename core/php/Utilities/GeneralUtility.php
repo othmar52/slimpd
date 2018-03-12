@@ -176,8 +176,11 @@ function cliLog($msg, $verbosity = 1, $color = "default", $fatal = FALSE) {
     if($shellColorize !== TRUE || isset($colors[$color]) === FALSE) {
         $colors[$color] = ["", ""];
     }
+
     echo $colors[$color][0] . $msg . $colors[$color][1] . "\n";
-    ob_flush();
+    if (ob_get_length()) {
+        ob_end_flush();
+    }
 }
 
 function cli2html($input) {

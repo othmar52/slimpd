@@ -5,6 +5,20 @@ namespace Illuminate\Contracts\Queue;
 interface Job
 {
     /**
+     * Get the job identifier.
+     *
+     * @return string
+     */
+    public function getJobId();
+
+    /**
+     * Get the decoded body of the job.
+     *
+     * @return array
+     */
+    public function payload();
+
+    /**
      * Fire the job.
      *
      * @return void
@@ -15,7 +29,7 @@ interface Job
      * Release the job back into the queue.
      *
      * @param  int   $delay
-     * @return void
+     * @return mixed
      */
     public function release($delay = 0);
 
@@ -56,6 +70,27 @@ interface Job
     public function failed($e);
 
     /**
+     * Get the number of times to attempt a job.
+     *
+     * @return int|null
+     */
+    public function maxTries();
+
+    /**
+     * Get the number of seconds the job can run.
+     *
+     * @return int|null
+     */
+    public function timeout();
+
+    /**
+     * Get the timestamp indicating when the job should timeout.
+     *
+     * @return int|null
+     */
+    public function timeoutAt();
+
+    /**
      * Get the name of the queued job class.
      *
      * @return string
@@ -85,10 +120,10 @@ interface Job
      */
     public function getQueue();
 
-     /**
-      * Get the raw body string for the job.
-      *
-      * @return string
-      */
-     public function getRawBody();
+    /**
+     * Get the raw body string for the job.
+     *
+     * @return string
+     */
+    public function getRawBody();
 }

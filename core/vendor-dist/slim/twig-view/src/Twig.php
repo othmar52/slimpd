@@ -85,7 +85,23 @@ class Twig implements \ArrayAccess
     {
         $data = array_merge($this->defaultVariables, $data);
 
-        return $this->environment->loadTemplate($template)->render($data);
+        return $this->environment->render($template, $data);
+    }
+
+    /**
+     * Fetch rendered block
+     *
+     * @param  string $template Template pathname relative to templates directory
+     * @param  string $block    Name of the block within the template
+     * @param  array  $data     Associative array of template variables
+     *
+     * @return string
+     */
+    public function fetchBlock($template, $block, $data = [])
+    {
+        $data = array_merge($this->defaultVariables, $data);
+
+        return $this->environment->loadTemplate($template)->renderBlock($block, $data);
     }
 
     /**

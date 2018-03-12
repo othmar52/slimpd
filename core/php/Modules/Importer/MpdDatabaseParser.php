@@ -278,7 +278,7 @@ class MpdDatabaseParser {
             $this->batcher->que($this->rawTagItem);
         } else {
             $this->rawtagdataRepo->update($this->rawTagItem);
-            // force a rescan of tags by creating db cached tag infos
+            // force a rescan of tags by deleting db cached tag infos
             $this->container->rawtagblobRepo->deleteRecordsByUids([$this->rawTagItem->getUid()]);
         }
         $this->itemsProcessed++;

@@ -2,10 +2,11 @@
 
 namespace Illuminate\Support\Testing\Fakes;
 
+use Illuminate\Queue\QueueManager;
 use Illuminate\Contracts\Queue\Queue;
-use PHPUnit_Framework_Assert as PHPUnit;
+use PHPUnit\Framework\Assert as PHPUnit;
 
-class QueueFake implements Queue
+class QueueFake extends QueueManager implements Queue
 {
     /**
      * All of the jobs that have been pushed.
@@ -18,14 +19,33 @@ class QueueFake implements Queue
      * Assert if a job was pushed based on a truth-test callback.
      *
      * @param  string  $job
-     * @param  callable|null  $callback
+     * @param  callable|int|null  $callback
      * @return void
      */
     public function assertPushed($job, $callback = null)
     {
+        if (is_numeric($callback)) {
+            return $this->assertPushedTimes($job, $callback);
+        }
+
         PHPUnit::assertTrue(
             $this->pushed($job, $callback)->count() > 0,
             "The expected [{$job}] job was not pushed."
+        );
+    }
+
+    /**
+     * Assert if a job was pushed a number of times.
+     *
+     * @param  string  $job
+     * @param  int  $times
+     * @return void
+     */
+    protected function assertPushedTimes($job, $times = 1)
+    {
+        PHPUnit::assertTrue(
+            ($count = $this->pushed($job)->count()) === $times,
+            "The expected [{$job}] job was pushed {$count} times instead of {$times} times."
         );
     }
 
@@ -61,6 +81,16 @@ class QueueFake implements Queue
             $this->pushed($job, $callback)->count() === 0,
             "The unexpected [{$job}] job was pushed."
         );
+    }
+
+    /**
+     * Assert that no jobs were pushed.
+     *
+     * @return void
+     */
+    public function assertNothingPushed()
+    {
+        PHPUnit::assertEmpty($this->jobs, 'Jobs were pushed unexpectedly.');
     }
 
     /**
@@ -128,7 +158,7 @@ class QueueFake implements Queue
      */
     public function push($job, $data = '', $queue = null)
     {
-        $this->jobs[get_class($job)][] = [
+        $this->jobs[is_object($job) ? get_class($job) : $job][] = [
             'job' => $job,
             'queue' => $queue,
         ];
@@ -209,8 +239,8 @@ class QueueFake implements Queue
      */
     public function bulk($jobs, $data = '', $queue = null)
     {
-        foreach ($this->jobs as $job) {
-            $this->push($job);
+        foreach ($jobs as $job) {
+            $this->push($job, $data, $queue);
         }
     }
 

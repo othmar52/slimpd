@@ -82,7 +82,7 @@ $container['view'] = function ($cont) {
         return new stdClass();
     }
     $conf = $cont->get('conf');
-    $view = new Slim\Views\Twig(
+    $view = new \Slim\Views\Twig(
         'core/templates',
         [
             #'cache' => 'localdata/cache',

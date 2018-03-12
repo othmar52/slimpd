@@ -1,4 +1,5 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
@@ -18,13 +19,16 @@ getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', 
 
 class getid3_lpac extends getid3_handler
 {
-
+	/**
+	 * @return bool
+	 */
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
 		$this->fseek($info['avdataoffset']);
 		$LPACheader = $this->fread(14);
-		if (substr($LPACheader, 0, 4) != 'LPAC') {
+		$StreamMarker = substr($LPACheader, 0, 4);
+		if ($StreamMarker != 'LPAC') {
 			$this->error('Expected "LPAC" at offset '.$info['avdataoffset'].', found "'.$StreamMarker.'"');
 			return false;
 		}

@@ -32,6 +32,23 @@ if(PHP_SAPI !== 'cli') {
     exit;
 }
 
+// temporary supress specific errormessage for php 7.2 caused by
+// https://github.com/bryanjhv/slim-session/issues/32
+// TODO: remove after update of bryanjhv/slim-session
+if (PHP_MAJOR_VERSION >= 7) {
+    set_error_handler(function ($errno, $errstr) {
+       $skipWarningStrings = [
+          "session is active"
+       ];
+       $supressWarning = FALSE;
+       foreach($skipWarningStrings as $skipWarningString) {
+           if(strpos($errstr, $skipWarningString) !== FALSE ) {
+              $supressWarning = TRUE;
+           }
+       }
+       return $supressWarning;
+    }, E_WARNING);
+}
 ob_start();
 
 define('DS', DIRECTORY_SEPARATOR);
