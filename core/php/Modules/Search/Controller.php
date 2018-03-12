@@ -140,7 +140,7 @@ class Controller extends \Slimpd\BaseController {
 
         }
         if($redirectUri = $this->mayRedirect($args)) {
-            return $response->withRedirect($redirectUri, 403);
+            return $response->withRedirect($redirectUri, 303);
         }
         $args["renderitems"] = $this->getRenderItems($args["item"], $args["itemlist"]);
 
@@ -394,7 +394,7 @@ class Controller extends \Slimpd\BaseController {
                     'autocomplete',
                     ['type' => $args['type'] ]
                 ). "?suggested=1&q=" . rawurlencode($suggest) . "&qo=" . rawurlencode($term);
-                return $response->withRedirect($uri, 403);
+                return $response->withRedirect($uri, 303);
             }
         } else {
             $filterTypeMapping = array_flip($this->filterTypeMapping);
@@ -533,6 +533,6 @@ class Controller extends \Slimpd\BaseController {
         $type = $request->getParam("searchtype");
         $term = $request->getParam("searchterm");
         $uri = $this->conf['config']['absRefPrefix'] . $type."s/searchterm/".rawurlencode($term)."/page/1" . getNoSurSuffix($this->view->getEnvironment()->getGlobals()['nosurrounding']);
-        return $response->withRedirect($uri, 403);
+        return $response->withRedirect($uri, 303);
     }
 }

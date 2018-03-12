@@ -67,7 +67,7 @@ class WaveformGenerator {
                 'imagefallback',
                 ['type' => 'broken', 'imagesize' => 100 ]
             );
-            $newResponse = $response->withRedirect($uri, 403);
+            $newResponse = $response->withRedirect($uri, 303);
             return $newResponse;
         }
 
@@ -124,7 +124,7 @@ class WaveformGenerator {
                 'imagefallback',
                 ['type' => 'broken', 'imagesize' => 100 ]
             );
-            $newResponse = $response->withRedirect($uri, 403);
+            $newResponse = $response->withRedirect($uri, 303);
             return $newResponse;
         }
 
