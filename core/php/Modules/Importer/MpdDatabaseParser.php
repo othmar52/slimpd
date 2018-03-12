@@ -146,7 +146,7 @@ class MpdDatabaseParser {
 
             $attr = explode (": ", $line, 2);
             array_map("trim", $attr);
-            if(count($attr === 1)) {
+            if(count($attr) === 1) {
                 $this->handleStructuralLine($attr[0]);
                 $importer->setItemsTotal($this->itemsTotal)
                     ->setItemsChecked($this->itemsChecked)
