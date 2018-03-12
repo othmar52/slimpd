@@ -279,3 +279,14 @@ function renderCliHelp($ll) {
     cliLog("  https://github.com/othmar52/slimpd");
     cliLog("");
 }
+
+/**
+ * some external libraries has hardcoded set_time_limit()) calls
+ * which interrupts the CLI update script run...
+ */
+function fixMaxExecutionTime() {
+    if(PHP_SAPI !== 'cli') {
+        return;
+    }
+    set_time_limit(0);
+}
