@@ -578,10 +578,10 @@ class Mpd {
                 if($keyValuePair[0] === 'file') {
                     $idx++;
                 }
-                $array[$idx][$keyValuePair[0]] = iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
+                $array[$idx][$keyValuePair[0]] = \iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
                 continue;
             }
-            $array[str_replace(":file", "", $keyValuePair[0])] = iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
+            $array[str_replace(":file", "", $keyValuePair[0])] = \iconv('UTF-8', APP_DEFAULT_CHARSET, $keyValuePair[1]);
         }
         fclose($socket);
         $this->container->flash->AddMessageNow('error', $this->container->ll->str('error.mpdconnectionclosed', array($line)));
