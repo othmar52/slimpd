@@ -144,6 +144,13 @@ trait TrackArtistExtractor {
     }
 
     protected function parseStringForRemixer($input, $regex, $matchIndex) {
+        // TODO: properly implement special case with string|array conflict
+        // unusual case of existing id3 remixer tag which is a string
+        // but in our model we have an array
+        //@see: "01. Cubicolor - Dead End Thrills (Patrice Baumel Remix).mp3"
+        if(is_string($this->remixArtists) === TRUE) {
+            $this->remixArtists = [$this->remixArtists];
+        }
         cliLog("  INPUT: " . $input, 10);
         if(preg_match($regex, $input, $matches)) {
             $foundRemixers = preg_split($this->regexArtist, $matches[$matchIndex]);
