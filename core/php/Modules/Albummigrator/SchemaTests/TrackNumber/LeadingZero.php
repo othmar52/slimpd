@@ -27,7 +27,7 @@ class LeadingZero extends \Slimpd\Modules\Albummigrator\AbstractTests\AbstractTe
     public function run() {
         if(removeLeadingZeroes($this->input) !== strval($this->input)) {
             $this->result = 'leadingzero';    // 01, 02, 001, 002
-            $this->matches = intval($this->input);
+            $this->matches = [intval($this->input)];
             return;
         }
         $this->result = 0;
