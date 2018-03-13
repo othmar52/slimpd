@@ -15,9 +15,9 @@ class PostgresGrammar extends Grammar
      */
     protected $operators = [
         '=', '<', '>', '<=', '>=', '<>', '!=',
-        'like', 'not like', 'between', 'ilike',
-        '&', '|', '#', '<<', '>>',
-        '@>', '<@', '?', '?|', '?&', '||', '-', '-', '#-',
+        'like', 'not like', 'ilike',
+        '&', '|', '#', '<<', '>>', '>>=', '=<<',
+        '&&', '@>', '<@', '?', '?|', '?&', '||', '-', '-', '#-',
     ];
 
     /**
@@ -32,6 +32,20 @@ class PostgresGrammar extends Grammar
         $value = $this->parameter($where['value']);
 
         return $this->wrap($where['column']).'::date '.$where['operator'].' '.$value;
+    }
+
+    /**
+     * Compile a "where time" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    protected function whereTime(Builder $query, $where)
+    {
+        $value = $this->parameter($where['value']);
+
+        return $this->wrap($where['column']).'::time '.$where['operator'].' '.$value;
     }
 
     /**
@@ -63,6 +77,18 @@ class PostgresGrammar extends Grammar
         }
 
         return $value;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function compileInsert(Builder $query, array $values)
+    {
+        $table = $this->wrapTable($query->from);
+
+        return empty($values)
+                ? "insert into {$table} DEFAULT VALUES"
+                : parent::compileInsert($query, $values);
     }
 
     /**
@@ -212,6 +238,39 @@ class PostgresGrammar extends Grammar
         return array_values(
             array_merge($values, $bindings['join'], Arr::flatten($bindingsWithoutJoin))
         );
+    }
+
+    /**
+     * Compile a delete statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @return string
+     */
+    public function compileDelete(Builder $query)
+    {
+        $table = $this->wrapTable($query->from);
+
+        return isset($query->joins)
+            ? $this->compileDeleteWithJoins($query, $table)
+            : parent::compileDelete($query);
+    }
+
+    /**
+     * Compile a delete query that uses joins.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string  $table
+     * @return string
+     */
+    protected function compileDeleteWithJoins($query, $table)
+    {
+        $using = ' USING '.collect($query->joins)->map(function ($join) {
+            return $this->wrapTable($join->table);
+        })->implode(', ');
+
+        $where = count($query->wheres) > 0 ? ' '.$this->compileUpdateWheres($query) : '';
+
+        return trim("delete from {$table}{$using}{$where}");
     }
 
     /**

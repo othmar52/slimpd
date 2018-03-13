@@ -56,6 +56,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
     }
 
     public function singleFile2Database($record) {
+        fixMaxExecutionTime();
         $rawTagData = new \Slimpd\Models\Rawtagdata();
         $rawTagData->setUid($record['uid'])
             ->setRelPath($record['relPath'])
@@ -175,6 +176,7 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
             $phpThumb->GenerateThumbnail();
             $this->persistEmbeddedBitmap($phpThumb, $trackRecord, $bitmapData);
         }
+        fixMaxExecutionTime();
     }
 
     /**

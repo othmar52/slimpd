@@ -36,13 +36,15 @@ class Session
     public function __construct($settings = [])
     {
         $defaults = [
-            'lifetime'    => '20 minutes',
-            'path'        => '/',
-            'domain'      => null,
-            'secure'      => false,
-            'httponly'    => false,
-            'name'        => 'slim_session',
-            'autorefresh' => false,
+            'lifetime'     => '20 minutes',
+            'path'         => '/',
+            'domain'       => null,
+            'secure'       => false,
+            'httponly'     => false,
+            'name'         => 'slim_session',
+            'autorefresh'  => false,
+            'handler'      => null,
+            'ini_settings' => []
         ];
         $settings = array_merge($defaults, $settings);
 
@@ -51,9 +53,13 @@ class Session
         }
         $this->settings = $settings;
 
-        ini_set('session.gc_probability', 1);
-        ini_set('session.gc_divisor', 1);
-        ini_set('session.gc_maxlifetime', 30 * 24 * 60 * 60);
+        $this->iniSet($settings['ini_settings']);
+        // Just override this, to ensure package is working
+        if (ini_get('session.gc_maxlifetime') < $settings['lifetime']) {
+            $this->iniSet([
+                'session.gc_maxlifetime' => $settings['lifetime'] * 2,
+            ]);
+        }
     }
 
     /**
@@ -88,9 +94,11 @@ class Session
             $settings['httponly']
         );
 
-        $active = session_status() === PHP_SESSION_ACTIVE;
+        $inactive = session_status() === PHP_SESSION_NONE;
 
-        if ($active) {
+        if ($inactive) {
+            // Refresh session cookie when "inactive",
+            // else PHP won't know we want this to refresh
             if ($settings['autorefresh'] && isset($_COOKIE[$name])) {
                 setcookie(
                     $name,
@@ -105,9 +113,27 @@ class Session
         }
 
         session_name($name);
+
+        $handler = $settings['handler'];
+        if ($handler) {
+            if (!($handler instanceof SessionHandlerInterface)) {
+                $handler = new $handler;
+            }
+            session_set_save_handler($handler, true);
+        }
+
         session_cache_limiter(false);
-        if (!$active) {
+        if ($inactive) {
             session_start();
+        }
+    }
+
+    protected function iniSet($settings)
+    {
+        foreach ($settings as $key => $val) {
+            if (strpos($key, 'session.') === 0) {
+                ini_set($key, $val);
+            }
         }
     }
 }

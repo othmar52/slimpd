@@ -1,8 +1,7 @@
 <?php
 
 if (!defined('ENT_SUBSTITUTE')) {
-    // use 0 as hhvm does not support several flags yet
-    define('ENT_SUBSTITUTE', 0);
+    define('ENT_SUBSTITUTE', 8);
 }
 
 /*
@@ -163,7 +162,7 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleFilter('upper', 'strtoupper'),
             new Twig_SimpleFilter('lower', 'strtolower'),
             new Twig_SimpleFilter('striptags', 'strip_tags'),
-            new Twig_SimpleFilter('trim', 'trim'),
+            new Twig_SimpleFilter('trim', 'twig_trim_filter'),
             new Twig_SimpleFilter('nl2br', 'nl2br', array('pre_escape' => 'html', 'is_safe' => array('html'))),
 
             // array helpers
@@ -662,7 +661,7 @@ function twig_slice(Twig_Environment $env, $item, $start, $length = null, $prese
 
         if ($start >= 0 && $length >= 0 && $item instanceof Iterator) {
             try {
-                return iterator_to_array(new LimitIterator($item, $start, $length === null ? -1 : $length), $preserveKeys);
+                return iterator_to_array(new LimitIterator($item, $start, null === $length ? -1 : $length), $preserveKeys);
             } catch (OutOfBoundsException $exception) {
                 return array();
             }
@@ -946,6 +945,31 @@ function twig_in_filter($value, $compare)
 }
 
 /**
+ * Returns a trimmed string.
+ *
+ * @return string
+ *
+ * @throws Twig_Error_Runtime When an invalid trimming side is used (not a string or not 'left', 'right', or 'both')
+ */
+function twig_trim_filter($string, $characterMask = null, $side = 'both')
+{
+    if (null === $characterMask) {
+        $characterMask = " \t\n\r\0\x0B";
+    }
+
+    switch ($side) {
+        case 'both':
+            return trim($string, $characterMask);
+        case 'left':
+            return ltrim($string, $characterMask);
+        case 'right':
+            return rtrim($string, $characterMask);
+        default:
+            throw new Twig_Error_Runtime('Trimming side must be "left", "right" or "both".');
+    }
+}
+
+/**
  * Escapes a string.
  *
  * @param Twig_Environment $env
@@ -981,30 +1005,22 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             // Using a static variable to avoid initializing the array
             // each time the function is called. Moving the declaration on the
             // top of the function slow downs other escaping strategies.
-            static $htmlspecialcharsCharsets;
-
-            if (null === $htmlspecialcharsCharsets) {
-                if (defined('HHVM_VERSION')) {
-                    $htmlspecialcharsCharsets = array('utf-8' => true, 'UTF-8' => true);
-                } else {
-                    $htmlspecialcharsCharsets = array(
-                        'ISO-8859-1' => true, 'ISO8859-1' => true,
-                        'ISO-8859-15' => true, 'ISO8859-15' => true,
-                        'utf-8' => true, 'UTF-8' => true,
-                        'CP866' => true, 'IBM866' => true, '866' => true,
-                        'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
-                        '1251' => true,
-                        'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
-                        'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
-                        'BIG5' => true, '950' => true,
-                        'GB2312' => true, '936' => true,
-                        'BIG5-HKSCS' => true,
-                        'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
-                        'EUC-JP' => true, 'EUCJP' => true,
-                        'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
-                    );
-                }
-            }
+            static $htmlspecialcharsCharsets = array(
+                'ISO-8859-1' => true, 'ISO8859-1' => true,
+                'ISO-8859-15' => true, 'ISO8859-15' => true,
+                'utf-8' => true, 'UTF-8' => true,
+                'CP866' => true, 'IBM866' => true, '866' => true,
+                'CP1251' => true, 'WINDOWS-1251' => true, 'WIN-1251' => true,
+                '1251' => true,
+                'CP1252' => true, 'WINDOWS-1252' => true, '1252' => true,
+                'KOI8-R' => true, 'KOI8-RU' => true, 'KOI8R' => true,
+                'BIG5' => true, '950' => true,
+                'GB2312' => true, '936' => true,
+                'BIG5-HKSCS' => true,
+                'SHIFT_JIS' => true, 'SJIS' => true, '932' => true,
+                'EUC-JP' => true, 'EUCJP' => true,
+                'ISO8859-5' => true, 'ISO-8859-5' => true, 'MACROMAN' => true,
+            );
 
             if (isset($htmlspecialcharsCharsets[$charset])) {
                 return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE, $charset);
@@ -1143,8 +1159,13 @@ function _twig_escape_js_callback($matches)
 
     // \uHHHH
     $char = twig_convert_encoding($char, 'UTF-16BE', 'UTF-8');
+    $char = strtoupper(bin2hex($char));
 
-    return '\\u'.strtoupper(substr('0000'.bin2hex($char), -4));
+    if (4 >= strlen($char)) {
+        return sprintf('\u%04s', $char);
+    }
+
+    return sprintf('\u%04s\u%04s', substr($char, 0, -4), substr($char, -4));
 }
 
 function _twig_escape_css_callback($matches)
@@ -1195,7 +1216,7 @@ function _twig_escape_html_attr_callback($matches)
      * The following replaces characters undefined in HTML with the
      * hex entity for the Unicode replacement character.
      */
-    if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r") || ($ord >= 0x7f && $ord <= 0x9f)) {
+    if (($ord <= 0x1f && "\t" != $chr && "\n" != $chr && "\r" != $chr) || ($ord >= 0x7f && $ord <= 0x9f)) {
         return '&#xFFFD;';
     }
 
@@ -1203,7 +1224,7 @@ function _twig_escape_html_attr_callback($matches)
      * Check if the current character to escape has a name entity we should
      * replace it with while grabbing the hex value of the character.
      */
-    if (strlen($chr) == 1) {
+    if (1 == strlen($chr)) {
         $hex = strtoupper(substr('00'.bin2hex($chr), -2));
     } else {
         $chr = twig_convert_encoding($chr, 'UTF-16BE', 'UTF-8');
@@ -1234,7 +1255,27 @@ if (function_exists('mb_get_info')) {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
-        return is_scalar($thing) ? mb_strlen($thing, $env->getCharset()) : count($thing);
+        if (null === $thing) {
+            return 0;
+        }
+
+        if (is_scalar($thing)) {
+            return mb_strlen($thing, $env->getCharset());
+        }
+
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+            return mb_strlen((string) $thing, $env->getCharset());
+        }
+
+        if ($thing instanceof \Countable || is_array($thing)) {
+            return count($thing);
+        }
+
+        if ($thing instanceof \IteratorAggregate) {
+            return iterator_count($thing);
+        }
+
+        return 1;
     }
 
     /**
@@ -1317,7 +1358,27 @@ else {
      */
     function twig_length_filter(Twig_Environment $env, $thing)
     {
-        return is_scalar($thing) ? strlen($thing) : count($thing);
+        if (null === $thing) {
+            return 0;
+        }
+
+        if (is_scalar($thing)) {
+            return strlen($thing);
+        }
+
+        if (is_object($thing) && method_exists($thing, '__toString') && !$thing instanceof \Countable) {
+            return strlen((string) $thing);
+        }
+
+        if ($thing instanceof \Countable || is_array($thing)) {
+            return count($thing);
+        }
+
+        if ($thing instanceof \IteratorAggregate) {
+            return iterator_count($thing);
+        }
+
+        return 1;
     }
 
     /**
@@ -1379,6 +1440,10 @@ function twig_test_empty($value)
         return 0 == count($value);
     }
 
+    if (is_object($value) && method_exists($value, '__toString')) {
+        return '' === (string) $value;
+    }
+
     return '' === $value || false === $value || null === $value || array() === $value;
 }
 
@@ -1387,7 +1452,7 @@ function twig_test_empty($value)
  *
  * <pre>
  * {# evaluates to true if the foo variable is an array or a traversable object #}
- * {% if foo is traversable %}
+ * {% if foo is iterable %}
  *     {# ... #}
  * {% endif %}
  * </pre>
@@ -1551,3 +1616,5 @@ function twig_array_batch($items, $size, $fill = null)
 
     return $result;
 }
+
+class_alias('Twig_Extension_Core', 'Twig\Extension\CoreExtension', false);

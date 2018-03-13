@@ -1,4 +1,5 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
@@ -72,8 +73,36 @@
 
 class getID3_cached_dbm extends getID3
 {
+	/**
+	 * @var resource
+	 */
+	private $dba;
 
-	// public: constructor - see top of this file for cache type and cache_options
+	/**
+	 * @var resource|bool
+	 */
+	private $lock;
+
+	/**
+	 * @var string
+	 */
+	private $cache_type;
+
+	/**
+	 * @var string
+	 */
+	private $dbm_filename;
+
+	/**
+	 * constructor - see top of this file for cache type and cache_options
+	 *
+	 * @param string $cache_type
+	 * @param string $dbm_filename
+	 * @param string $lock_filename
+	 *
+	 * @throws Exception
+	 * @throws getid3_exception
+	 */
 	public function __construct($cache_type, $dbm_filename, $lock_filename) {
 
 		// Check for dba extension
@@ -141,7 +170,9 @@ class getID3_cached_dbm extends getID3
 
 
 
-	// public: destructor
+	/**
+	 * destructor
+	 */
 	public function __destruct() {
 
 		// Close dbm file
@@ -156,7 +187,11 @@ class getID3_cached_dbm extends getID3
 
 
 
-	// public: clear cache
+	/**
+	 * clear cache
+	 *
+	 * @throws Exception
+	 */
 	public function clear_cache() {
 
 		// Close dbm file
@@ -178,8 +213,16 @@ class getID3_cached_dbm extends getID3
 
 
 
-	// public: analyze file
-	public function analyze($filename) {
+	/**
+	 * clear cache
+	 *
+	 * @param string $filename
+	 * @param int    $filesize
+	 * @param string $original_filename
+	 *
+	 * @return mixed
+	 */
+	public function analyze($filename, $filesize=null, $original_filename='') {
 
 		if (file_exists($filename)) {
 
@@ -199,7 +242,7 @@ class getID3_cached_dbm extends getID3
 		$result = parent::analyze($filename);
 
 		// Save result
-		if (file_exists($filename)) {
+		if (isset($key) && file_exists($filename)) {
 			dba_insert($key, serialize($result), $this->dba);
 		}
 

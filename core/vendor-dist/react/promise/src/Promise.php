@@ -11,7 +11,6 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     private $progressHandlers = [];
 
     private $requiredCancelRequests = 0;
-    private $cancelRequests = 0;
 
     public function __construct(callable $resolver, callable $canceller = null)
     {
@@ -22,7 +21,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
     {
         if (null !== $this->result) {
-            return $this->result()->then($onFulfilled, $onRejected, $onProgress);
+            return $this->result->then($onFulfilled, $onRejected, $onProgress);
         }
 
         if (null === $this->canceller) {
@@ -32,18 +31,18 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         $this->requiredCancelRequests++;
 
         return new static($this->resolver($onFulfilled, $onRejected, $onProgress), function () {
-            if (++$this->cancelRequests < $this->requiredCancelRequests) {
-                return;
-            }
+            $this->requiredCancelRequests--;
 
-            $this->cancel();
+            if ($this->requiredCancelRequests <= 0) {
+                $this->cancel();
+            }
         });
     }
 
     public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
     {
         if (null !== $this->result) {
-            return $this->result()->done($onFulfilled, $onRejected, $onProgress);
+            return $this->result->done($onFulfilled, $onRejected, $onProgress);
         }
 
         $this->handlers[] = function (ExtendedPromiseInterface $promise) use ($onFulfilled, $onRejected) {
@@ -87,14 +86,37 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
     public function cancel()
     {
-        if (null === $this->canceller || null !== $this->result) {
-            return;
-        }
-
         $canceller = $this->canceller;
         $this->canceller = null;
 
-        $this->call($canceller);
+        $parentCanceller = null;
+
+        if (null !== $this->result) {
+            // Go up the promise chain and reach the top most promise which is
+            // itself not following another promise
+            $root = $this->unwrap($this->result);
+
+            // Return if the root promise is already resolved or a
+            // FulfilledPromise or RejectedPromise
+            if (!$root instanceof self || null !== $root->result) {
+                return;
+            }
+
+            $root->requiredCancelRequests--;
+
+            if ($root->requiredCancelRequests <= 0) {
+                $parentCanceller = [$root, 'cancel'];
+            }
+        }
+
+        if (null !== $canceller) {
+            $this->call($canceller);
+        }
+
+        // For BC, we call the parent canceller after our own canceller
+        if ($parentCanceller) {
+            $parentCanceller();
+        }
     }
 
     private function resolver(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
@@ -155,14 +177,16 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
     private function settle(ExtendedPromiseInterface $promise)
     {
-        if ($promise instanceof LazyPromise) {
-            $promise = $promise->promise();
-        }
+        $promise = $this->unwrap($promise);
 
         if ($promise === $this) {
             $promise = new RejectedPromise(
                 new \LogicException('Cannot resolve a promise with itself.')
             );
+        }
+
+        if ($promise instanceof self) {
+            $promise->requiredCancelRequests++;
         }
 
         $handlers = $this->handlers;
@@ -175,13 +199,24 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
     }
 
-    private function result()
+    private function unwrap($promise)
     {
-        while ($this->result instanceof self && null !== $this->result->result) {
-            $this->result = $this->result->result;
+        $promise = $this->extract($promise);
+
+        while ($promise instanceof self && null !== $promise->result) {
+            $promise = $this->extract($promise->result);
         }
 
-        return $this->result;
+        return $promise;
+    }
+
+    private function extract($promise)
+    {
+        if ($promise instanceof LazyPromise) {
+            $promise = $promise->promise();
+        }
+
+        return $promise;
     }
 
     private function call(callable $callback)

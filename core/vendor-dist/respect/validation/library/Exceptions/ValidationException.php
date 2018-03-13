@@ -62,7 +62,7 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
                 }
 
                 $value = $vars[$match[1]];
-                if ('name' == $match[1]) {
+                if ('name' == $match[1] && is_string($value)) {
                     return $value;
                 }
 
@@ -305,6 +305,9 @@ class ValidationException extends InvalidArgumentException implements ExceptionI
     public function setTemplate($template)
     {
         $this->customTemplate = true;
+        if (isset(static::$defaultTemplates[$this->mode][$template])) {
+            $template = static::$defaultTemplates[$this->mode][$template];
+        }
         $this->template = $template;
 
         $this->buildMessage();

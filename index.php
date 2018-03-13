@@ -17,6 +17,25 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+// temporary supress specific errormessage for php 7.2 caused by
+// https://github.com/bryanjhv/slim-session/issues/32
+// TODO: remove after update of bryanjhv/slim-session
+if (PHP_MAJOR_VERSION >= 7) {
+    set_error_handler(function ($errno, $errstr) {
+       $skipWarningStrings = [
+          "session is active"
+       ];
+       $supressWarning = FALSE;
+       foreach($skipWarningStrings as $skipWarningString) {
+           if(strpos($errstr, $skipWarningString) !== FALSE ) {
+              $supressWarning = TRUE;
+           }
+       }
+       return $supressWarning;
+    }, E_WARNING);
+}
+
 
 $debug = isset($_REQUEST['debug']) ? true : false;
 if($debug){

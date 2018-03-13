@@ -135,9 +135,9 @@ class Migrator
         // each migration's execution. We will also extract a few of the options.
         $batch = $this->repository->getNextBatchNumber();
 
-        $pretend = Arr::get($options, 'pretend', false);
+        $pretend = $options['pretend'] ?? false;
 
-        $step = Arr::get($options, 'step', false);
+        $step = $options['step'] ?? false;
 
         // Once we have the array of migrations, we will spin through them and run the
         // migrations "up" so the changes are made to the databases. We'll then log
@@ -172,6 +172,8 @@ class Migrator
             return $this->pretendToRun($migration, 'up');
         }
 
+        $this->note("<comment>Migrating:</comment> {$name}");
+
         $this->runMigration($migration, 'up');
 
         // Once we have run a migrations class, we will log that it was run in this
@@ -179,7 +181,7 @@ class Migrator
         // in the application. A migration repository keeps the migrate order.
         $this->repository->log($name, $batch);
 
-        $this->note("<info>Migrated:</info> {$name}");
+        $this->note("<info>Migrated:</info>  {$name}");
     }
 
     /**
@@ -202,9 +204,9 @@ class Migrator
             $this->note('<info>Nothing to rollback.</info>');
 
             return [];
-        } else {
-            return $this->rollbackMigrations($migrations, $paths, $options);
         }
+
+        return $this->rollbackMigrations($migrations, $paths, $options);
     }
 
     /**
@@ -215,7 +217,7 @@ class Migrator
      */
     protected function getMigrationsForRollback(array $options)
     {
-        if (($steps = Arr::get($options, 'step', 0)) > 0) {
+        if (($steps = $options['step'] ?? 0) > 0) {
             return $this->repository->getMigrations($steps);
         } else {
             return $this->repository->getLast();
@@ -226,11 +228,11 @@ class Migrator
      * Rollback the given migrations.
      *
      * @param  array  $migrations
-     * @param  array  $paths
+     * @param  array|string  $paths
      * @param  array  $options
      * @return array
      */
-    protected function rollbackMigrations(array $migrations, array $paths, array $options)
+    protected function rollbackMigrations(array $migrations, $paths, array $options)
     {
         $rolledBack = [];
 
@@ -242,11 +244,17 @@ class Migrator
         foreach ($migrations as $migration) {
             $migration = (object) $migration;
 
-            $rolledBack[] = $files[$migration->migration];
+            if (! $file = Arr::get($files, $migration->migration)) {
+                $this->note("<fg=red>Migration not found:</> {$migration->migration}");
+
+                continue;
+            }
+
+            $rolledBack[] = $file;
 
             $this->runDown(
-                $files[$migration->migration],
-                $migration, Arr::get($options, 'pretend', false)
+                $file, $migration,
+                $options['pretend'] ?? false
             );
         }
 
@@ -273,9 +281,9 @@ class Migrator
             $this->note('<info>Nothing to rollback.</info>');
 
             return [];
-        } else {
-            return $this->resetMigrations($migrations, $paths, $pretend);
         }
+
+        return $this->resetMigrations($migrations, $paths, $pretend);
     }
 
     /**
@@ -317,6 +325,8 @@ class Migrator
             $name = $this->getMigrationName($file)
         );
 
+        $this->note("<comment>Rolling back:</comment> {$name}");
+
         if ($pretend) {
             return $this->pretendToRun($instance, 'down');
         }
@@ -328,7 +338,7 @@ class Migrator
         // by the application then will be able to fire by any later operation.
         $this->repository->delete($migration);
 
-        $this->note("<info>Rolled back:</info> {$name}");
+        $this->note("<info>Rolled back:</info>  {$name}");
     }
 
     /**
@@ -345,10 +355,13 @@ class Migrator
         );
 
         $callback = function () use ($migration, $method) {
-            $migration->{$method}();
+            if (method_exists($migration, $method)) {
+                $migration->{$method}();
+            }
         };
 
         $this->getSchemaGrammar($connection)->supportsSchemaTransactions()
+            && $migration->withinTransaction
                     ? $connection->transaction($callback)
                     : $callback();
     }
@@ -382,11 +395,13 @@ class Migrator
         // queries against the database returning the array of raw SQL statements
         // that would get fired against the database system for this migration.
         $db = $this->resolveConnection(
-            $connection = $migration->getConnection()
+            $migration->getConnection()
         );
 
         return $db->pretend(function () use ($migration, $method) {
-            $migration->$method();
+            if (method_exists($migration, $method)) {
+                $migration->{$method}();
+            }
         });
     }
 

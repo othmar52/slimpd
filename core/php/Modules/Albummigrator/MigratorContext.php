@@ -46,7 +46,7 @@ trait MigratorContext {
                     $this->rawTagArray
                 )
             );
-            if($foundValue === FALSE || $foundValue === "0") {
+            if($foundValue === FALSE || $foundValue === "0" || $foundValue === []) {
                 // nothing to do in case we have no value
                 continue;
             }
@@ -54,7 +54,13 @@ trait MigratorContext {
             // preserve priority by config
             // do not overwrite value in case a previous setter already populated the property
             $getterName = "g" . substr($setterName, 1);
-            if(strlen($this->$getterName()) === 0) {
+            $propertyValue = $this->$getterName();
+            if(is_array($propertyValue) === TRUE) {
+                // getRemixArtists() can be an array or string
+                $propertyValue = join(", ", $propertyValue);
+            }
+            if(strlen($propertyValue) === 0) {
+
                 $this->$setterName($foundValue);
             }
             if(

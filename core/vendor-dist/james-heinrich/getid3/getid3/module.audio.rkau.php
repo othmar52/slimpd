@@ -1,4 +1,5 @@
 <?php
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
@@ -17,7 +18,9 @@
 
 class getid3_rkau extends getid3_handler
 {
-
+	/**
+	 * @return bool
+	 */
 	public function Analyze() {
 		$info = &$this->getid3->info;
 
@@ -50,7 +53,7 @@ class getid3_rkau extends getid3_handler
 		$this->RKAUqualityLookup($info['rkau']);
 
 		$info['rkau']['raw']['flags']            = getid3_lib::LittleEndian2Int(substr($RKAUHeader, 15, 1));
-		$info['rkau']['flags']['joint_stereo']   = (bool) (!($info['rkau']['raw']['flags'] & 0x01));
+		$info['rkau']['flags']['joint_stereo']   = !($info['rkau']['raw']['flags'] & 0x01);
 		$info['rkau']['flags']['streaming']      =  (bool)  ($info['rkau']['raw']['flags'] & 0x02);
 		$info['rkau']['flags']['vrq_lossy_mode'] =  (bool)  ($info['rkau']['raw']['flags'] & 0x04);
 
@@ -76,7 +79,11 @@ class getid3_rkau extends getid3_handler
 
 	}
 
-
+	/**
+	 * @param array $RKAUdata
+	 *
+	 * @return bool
+	 */
 	public function RKAUqualityLookup(&$RKAUdata) {
 		$level   = ($RKAUdata['raw']['quality'] & 0xF0) >> 4;
 		$quality =  $RKAUdata['raw']['quality'] & 0x0F;

@@ -11,7 +11,6 @@ return array(
     'OAuth\\Unit' => array($vendorDir . '/lusitanian/oauth/tests'),
     'OAuth' => array($vendorDir . '/lusitanian/oauth/src'),
     'JasonGrimes' => array($vendorDir . '/jasongrimes/paginator/src'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'Discogs' => array($vendorDir . '/ricbra/php-discogs-api/lib'),
     'ComponentInstaller' => array($vendorDir . '/robloach/component-installer/src'),
     'Assetic' => array($vendorDir . '/kriswallsmith/assetic/src'),

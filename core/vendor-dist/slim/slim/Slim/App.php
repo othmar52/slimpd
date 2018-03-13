@@ -9,13 +9,15 @@
 namespace Slim;
 
 use Exception;
+use Slim\Exception\InvalidMethodException;
+use Slim\Http\Response;
 use Throwable;
 use Closure;
 use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use FastRoute\Dispatcher;
 use Slim\Exception\SlimException;
 use Slim\Exception\MethodNotAllowedException;
@@ -50,7 +52,7 @@ class App
      *
      * @var string
      */
-    const VERSION = '3.8.0-dev';
+    const VERSION = '3.9.3-dev';
 
     /**
      * Container
@@ -287,16 +289,70 @@ class App
      */
     public function run($silent = false)
     {
-        $request = $this->container->get('request');
         $response = $this->container->get('response');
 
-        $response = $this->process($request, $response);
+        try {
+            ob_start();
+            $response = $this->process($this->container->get('request'), $response);
+        } catch (InvalidMethodException $e) {
+            $response = $this->processInvalidMethod($e->getRequest(), $response);
+        } finally {
+            $output = ob_get_clean();
+        }
+
+        if (!empty($output) && $response->getBody()->isWritable()) {
+            $outputBuffering = $this->container->get('settings')['outputBuffering'];
+            if ($outputBuffering === 'prepend') {
+                // prepend output buffer content
+                $body = new Http\Body(fopen('php://temp', 'r+'));
+                $body->write($output . $response->getBody());
+                $response = $response->withBody($body);
+            } elseif ($outputBuffering === 'append') {
+                // append output buffer content
+                $response->getBody()->write($output);
+            }
+        }
+
+        $response = $this->finalize($response);
 
         if (!$silent) {
             $this->respond($response);
         }
 
         return $response;
+    }
+
+    /**
+     * Pull route info for a request with a bad method to decide whether to
+     * return a not-found error (default) or a bad-method error, then run
+     * the handler for that error, returning the resulting response.
+     *
+     * Used for cases where an incoming request has an unrecognized method,
+     * rather than throwing an exception and not catching it all the way up.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    protected function processInvalidMethod(ServerRequestInterface $request, ResponseInterface $response)
+    {
+        $router = $this->container->get('router');
+        if (is_callable([$request->getUri(), 'getBasePath']) && is_callable([$router, 'setBasePath'])) {
+            $router->setBasePath($request->getUri()->getBasePath());
+        }
+
+        $request = $this->dispatchRouterAndPrepareRoute($request, $router);
+        $routeInfo = $request->getAttribute('routeInfo', [RouterInterface::DISPATCH_STATUS => Dispatcher::NOT_FOUND]);
+
+        if ($routeInfo[RouterInterface::DISPATCH_STATUS] === Dispatcher::METHOD_NOT_ALLOWED) {
+            return $this->handleException(
+                new MethodNotAllowedException($request, $response, $routeInfo[RouterInterface::ALLOWED_METHODS]),
+                $request,
+                $response
+            );
+        }
+
+        return $this->handleException(new NotFoundException($request, $response), $request, $response);
     }
 
     /**
@@ -336,13 +392,11 @@ class App
             $response = $this->handlePhpError($e, $request, $response);
         }
 
-        $response = $this->finalize($response);
-
         return $response;
     }
 
     /**
-     * Send the response the client
+     * Send the response to the client
      *
      * @param ResponseInterface $response
      */
@@ -350,6 +404,16 @@ class App
     {
         // Send response
         if (!headers_sent()) {
+            // Headers
+            foreach ($response->getHeaders() as $name => $values) {
+                foreach ($values as $value) {
+                    header(sprintf('%s: %s', $name, $value), false);
+                }
+            }
+
+            // Set the status _after_ the headers, because of PHP's "helpful" behavior with location headers.
+            // See https://github.com/slimphp/Slim/issues/1730
+
             // Status
             header(sprintf(
                 'HTTP/%s %s %s',
@@ -357,13 +421,6 @@ class App
                 $response->getStatusCode(),
                 $response->getReasonPhrase()
             ));
-
-            // Headers
-            foreach ($response->getHeaders() as $name => $values) {
-                foreach ($values as $value) {
-                    header(sprintf('%s: %s', $name, $value), false);
-                }
-            }
         }
 
         // Body

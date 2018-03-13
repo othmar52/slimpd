@@ -31,18 +31,19 @@ class Localization {
         $this->lang = parse_ini_file(APP_ROOT . "core/config/i18n.ini", FALSE);
     }
 
-    public function str($itemkey, $vars = array()) {
+    public function str($itemkey, $vars = NULL) {
         $checkLanguages = array(
             $this->preferedLang,
             'en' // fallback language
         );
         foreach($checkLanguages as $langkey) {
-            if(isset($this->lang[$langkey . '.' . $itemkey])) {
-                if(count($vars) === 0) {
-                    return $this->lang[$langkey . '.' . $itemkey];
-                }
-                return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
+            if(isset($this->lang[$langkey . '.' . $itemkey]) === FALSE) {
+                continue;
             }
+            if(is_null($vars) === TRUE) {
+                return $this->lang[$langkey . '.' . $itemkey];
+            }
+            return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
         }
         return 'TRNSLT:' . $itemkey;
     }

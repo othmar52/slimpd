@@ -207,7 +207,7 @@ class BaseRepository {
         #echo $query; die;
         $result = $this->db->query($query);
         if($result === FALSE) {
-            #return NULL;
+            return $instance;
         }
         if($result->num_rows == 0) {
             return $instance;

@@ -47,9 +47,9 @@ class SqlServerConnector extends Connector implements ConnectorInterface
             return $this->getDblibDsn($config);
         } elseif ($this->prefersOdbc($config)) {
             return $this->getOdbcDsn($config);
-        } else {
-            return $this->getSqlSrvDsn($config);
         }
+
+        return $this->getSqlSrvDsn($config);
     }
 
     /**
@@ -61,7 +61,7 @@ class SqlServerConnector extends Connector implements ConnectorInterface
     protected function prefersOdbc(array $config)
     {
         return in_array('odbc', $this->getAvailableDrivers()) &&
-               array_get($config, 'odbc') === true;
+               ($config['odbc'] ?? null) === true;
     }
 
     /**
@@ -75,7 +75,7 @@ class SqlServerConnector extends Connector implements ConnectorInterface
         return $this->buildConnectString('dblib', array_merge([
             'host' => $this->buildHostString($config, ':'),
             'dbname' => $config['database'],
-        ], Arr::only($config, ['appname', 'charset'])));
+        ], Arr::only($config, ['appname', 'charset', 'version'])));
     }
 
     /**
@@ -116,6 +116,26 @@ class SqlServerConnector extends Connector implements ConnectorInterface
 
         if (isset($config['appname'])) {
             $arguments['APP'] = $config['appname'];
+        }
+
+        if (isset($config['encrypt'])) {
+            $arguments['Encrypt'] = $config['encrypt'];
+        }
+
+        if (isset($config['trust_server_certificate'])) {
+            $arguments['TrustServerCertificate'] = $config['trust_server_certificate'];
+        }
+
+        if (isset($config['multiple_active_result_sets']) && $config['multiple_active_result_sets'] === false) {
+            $arguments['MultipleActiveResultSets'] = 'false';
+        }
+
+        if (isset($config['transaction_isolation'])) {
+            $arguments['TransactionIsolation'] = $config['transaction_isolation'];
+        }
+
+        if (isset($config['multi_subnet_failover'])) {
+            $arguments['MultiSubnetFailover'] = $config['multi_subnet_failover'];
         }
 
         return $this->buildConnectString('sqlsrv', $arguments);

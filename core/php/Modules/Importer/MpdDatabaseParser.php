@@ -146,7 +146,7 @@ class MpdDatabaseParser {
 
             $attr = explode (": ", $line, 2);
             array_map("trim", $attr);
-            if(count($attr === 1)) {
+            if(count($attr) === 1) {
                 $this->handleStructuralLine($attr[0]);
                 $importer->setItemsTotal($this->itemsTotal)
                     ->setItemsChecked($this->itemsChecked)
@@ -278,6 +278,8 @@ class MpdDatabaseParser {
             $this->batcher->que($this->rawTagItem);
         } else {
             $this->rawtagdataRepo->update($this->rawTagItem);
+            // force a rescan of tags by deleting db cached tag infos
+            $this->container->rawtagblobRepo->deleteRecordsByUids([$this->rawTagItem->getUid()]);
         }
         $this->itemsProcessed++;
         // reset song attributes

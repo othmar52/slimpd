@@ -16,6 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UriInterface;
 use Psr\Http\Message\StreamInterface;
 use Slim\Collection;
+use Slim\Exception\InvalidMethodException;
 use Slim\Interfaces\Http\HeadersInterface;
 
 /**
@@ -112,6 +113,7 @@ class Request extends Message implements ServerRequestInterface
      * Valid request methods
      *
      * @var string[]
+     * @deprecated
      */
     protected $validMethods = [
         'CONNECT' => 1,
@@ -166,6 +168,7 @@ class Request extends Message implements ServerRequestInterface
      * @param array            $serverParams  The server environment variables
      * @param StreamInterface  $body          The request body object
      * @param array            $uploadedFiles The request uploadedFiles collection
+     * @throws InvalidMethodException on invalid HTTP method
      */
     public function __construct(
         $method,
@@ -176,7 +179,12 @@ class Request extends Message implements ServerRequestInterface
         StreamInterface $body,
         array $uploadedFiles = []
     ) {
-        $this->originalMethod = $this->filterMethod($method);
+        try {
+            $this->originalMethod = $this->filterMethod($method);
+        } catch (InvalidMethodException $e) {
+            $this->originalMethod = $method;
+        }
+
         $this->uri = $uri;
         $this->headers = $headers;
         $this->cookies = $cookies;
@@ -194,20 +202,36 @@ class Request extends Message implements ServerRequestInterface
         }
 
         $this->registerMediaTypeParser('application/json', function ($input) {
-            return json_decode($input, true);
+            $result = json_decode($input, true);
+            if (!is_array($result)) {
+                return null;
+            }
+            return $result;
         });
 
         $this->registerMediaTypeParser('application/xml', function ($input) {
             $backup = libxml_disable_entity_loader(true);
+            $backup_errors = libxml_use_internal_errors(true);
             $result = simplexml_load_string($input);
             libxml_disable_entity_loader($backup);
+            libxml_clear_errors();
+            libxml_use_internal_errors($backup_errors);
+            if ($result === false) {
+                return null;
+            }
             return $result;
         });
 
         $this->registerMediaTypeParser('text/xml', function ($input) {
             $backup = libxml_disable_entity_loader(true);
+            $backup_errors = libxml_use_internal_errors(true);
             $result = simplexml_load_string($input);
             libxml_disable_entity_loader($backup);
+            libxml_clear_errors();
+            libxml_use_internal_errors($backup_errors);
+            if ($result === false) {
+                return null;
+            }
             return $result;
         });
 
@@ -215,6 +239,11 @@ class Request extends Message implements ServerRequestInterface
             parse_str($input, $data);
             return $data;
         });
+
+        // if the request had an invalid method, we can throw it now
+        if (isset($e) && $e instanceof InvalidMethodException) {
+            throw $e;
+        }
     }
 
     /**
@@ -320,11 +349,8 @@ class Request extends Message implements ServerRequestInterface
         }
 
         $method = strtoupper($method);
-        if (!isset($this->validMethods[$method])) {
-            throw new InvalidArgumentException(sprintf(
-                'Unsupported HTTP method "%s" provided',
-                $method
-            ));
+        if (preg_match("/^[!#$%&'*+.^_`|~0-9a-z-]+$/i", $method) !== 1) {
+            throw new InvalidMethodException($this, $method);
         }
 
         return $method;
@@ -567,7 +593,7 @@ class Request extends Message implements ServerRequestInterface
                 $clone->headers->set('Host', $uri->getHost());
             }
         } else {
-            if ($this->uri->getHost() !== '' && (!$this->hasHeader('Host') || $this->getHeader('Host') === null)) {
+            if ($uri->getHost() !== '' && (!$this->hasHeader('Host') || $this->getHeaderLine('Host') === '')) {
                 $clone->headers->set('Host', $uri->getHost());
             }
         }
@@ -1171,18 +1197,29 @@ class Request extends Message implements ServerRequestInterface
     }
 
     /**
-     * Fetch assocative array of body and query string parameters.
+     * Fetch associative array of body and query string parameters.
      *
      * Note: This method is not part of the PSR-7 standard.
      *
-     * @return array
+     * @param array|null $only list the keys to retrieve.
+     * @return array|null
      */
-    public function getParams()
+    public function getParams(array $only = null)
     {
         $params = $this->getQueryParams();
         $postParams = $this->getParsedBody();
         if ($postParams) {
             $params = array_merge($params, (array)$postParams);
+        }
+
+        if ($only) {
+            $onlyParams = [];
+            foreach ($only as $key) {
+                if (array_key_exists($key, $params)) {
+                    $onlyParams[$key] = $params[$key];
+                }
+            }
+            return $onlyParams;
         }
 
         return $params;

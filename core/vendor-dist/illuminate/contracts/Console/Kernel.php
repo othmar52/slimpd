@@ -18,16 +18,17 @@ interface Kernel
      *
      * @param  string  $command
      * @param  array  $parameters
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $outputBuffer
      * @return int
      */
-    public function call($command, array $parameters = []);
+    public function call($command, array $parameters = [], $outputBuffer = null);
 
     /**
      * Queue an Artisan console command by name.
      *
      * @param  string  $command
      * @param  array  $parameters
-     * @return int
+     * @return \Illuminate\Foundation\Bus\PendingDispatch
      */
     public function queue($command, array $parameters = []);
 
