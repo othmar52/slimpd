@@ -223,7 +223,7 @@ function az09($string, $preserve = "", $strToLower = TRUE) {
     $charGroup[] = array("z","з");
     $charGroup[] = array("Z","З");
     $charGroup[] = array("ae","æ");
-    $charGroup[] = array("AE","Æ")
+    $charGroup[] = array("AE","Æ");
     $charGroup[] = array("tm","™");
     #$charGroup[] = array("(","{", "[", "<");
     #$charGroup[] = array(")","}", "]", ">");
