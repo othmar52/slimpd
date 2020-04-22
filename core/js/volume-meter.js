@@ -114,7 +114,7 @@ WebAudioPeakMeter.prototype.createMeter = function(domElement, meterNode, option
     this.channelCount = meterNode.channelCount;
     var channelWidth = this.meterWidth / this.channelCount;
     if (!this.vertical) {
-        this.channelWidth = this.meterHeight / this.channelCount;
+        channelWidth = this.meterHeight / this.channelCount;
     }
     var channelLeft = this.tickWidth;
     if (!this.vertical) {
