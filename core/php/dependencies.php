@@ -148,6 +148,8 @@ $container['db'] = function ($cont) {
             $settings['dbpassword'],
             $settings['dbdatabase']
         );
+        $dbh->query("SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
+        $dbh->query("SET sql_mode=(SELECT REPLACE(@@sql_mode,'STRICT_TRANS_TABLES',''));");
     } catch (\Exception $e) {
         if(PHP_SAPI === 'cli') {
             cliLog($cont->ll->str('database.connect'), 1, 'red');

@@ -19,7 +19,7 @@ namespace Slimpd\Traits;
  */
 trait PropGroupCounters {
     use \Slimpd\Traits\PropertyTrackCount;       // trackCount
-    protected $albumCount;
+    protected $albumCount = 0;
 
     // getter
     public function getAlbumCount() {

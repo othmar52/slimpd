@@ -18,7 +18,7 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyTitle {
-    protected $title;
+    protected $title = "";
 
     public function getTitle() {
         return $this->title;

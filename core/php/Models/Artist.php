@@ -23,8 +23,8 @@ class Artist extends \Slimpd\Models\AbstractModel {
     use \Slimpd\Traits\PropertyTopGenre;  // topGenreUids
     use \Slimpd\Traits\PropertyTopLabel;  // topLabelUids
     use \Slimpd\Traits\PropertyYearRange; // yearRange
-    protected $article;
-    protected $az09;
+    protected $article = "";
+    protected $az09 = "";
 
     public static $tableName = "artist";
     public static $repoKey = 'artistRepo';

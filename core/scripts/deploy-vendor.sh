@@ -36,6 +36,12 @@ DIR_DEST="vendor-dist"
 rm -Rf "$SCRIPT_PATH/../$DIR_DEST/"*
 cd "$SCRIPT_PATH/../$DIR_SOURCE"
 
+cd "$SCRIPT_PATH/../"
+cp -Rfv "$DIR_SOURCE/"* "$DIR_DEST/"
+chmod +x "$SCRIPT_PATH/../$DIR_DEST/ajjahn/puppet-mpd/files/mpd-remove-duplicates.sh"
+
+exit 0
+
 # copy files and directories of deploy-vendor.txt
 while IFS='' read -r line || [[ -n "$line" ]]; do
 	if [[ -d "$line" ]]

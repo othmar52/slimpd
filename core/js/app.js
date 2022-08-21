@@ -88,7 +88,7 @@ $(document).ready(function() {
 
         /* toggle between mpd-control and local player (jPlayer) */
         togglePlayer : function() {
-            var TweenMax = window.TweenMax;
+            var TweenMax = window.gsap;
             var Back = window.Back;
             var Power2 = window.Power2;
 
@@ -118,6 +118,7 @@ $(document).ready(function() {
                 z:0
             };
             var transformPreviousPlayerTo = {
+                duration: speed,
                 display: "none",
                 rotationX: 90,
                 y: $(".player-mpd").height()/2,
@@ -134,6 +135,7 @@ $(document).ready(function() {
                 z: -5
             };
             var transformNewPlayerTo = {
+                duration: speed,
                 display: "block",
                 rotationX: 0,
                 y:0,
@@ -157,13 +159,13 @@ $(document).ready(function() {
                 });
 
                 // flip animation for both players
-                tweenIn = TweenMax.fromTo($(".player-mpd"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-                tweenOut = TweenMax.fromTo($(".player-local"), speed, transformNewPlayerFrom, transformNewPlayerTo);
+                tweenIn = TweenMax.fromTo($(".player-mpd"), transformPreviousPlayerFrom, transformPreviousPlayerTo);
+                tweenOut = TweenMax.fromTo($(".player-local"), transformNewPlayerFrom, transformNewPlayerTo);
 
                 tweenIn.timeScale(timeScale);
                 tweenOut.timeScale(timeScale);
 
-                //TweenMax.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 0 }, {rotationX: 90});
+                //TweenMax.fromTo($(".permaplayer-wrapper"), {rotationX: 0 }, {rotationX: 90, duration: speed});
             } else {
                 // pause local player when switching to mpd
                 window.sliMpd.currentPlayer.process({"action":"pause"});
@@ -179,13 +181,13 @@ $(document).ready(function() {
                 window.sliMpd.currentPlayer.refreshInterval();
 
                 // flip animation for both players
-                tweenIn = TweenMax.fromTo($(".player-local"), speed, transformPreviousPlayerFrom, transformPreviousPlayerTo);
-                tweenOut = TweenMax.fromTo($(".player-mpd"), speed, transformNewPlayerFrom, transformNewPlayerTo);
+                tweenIn = TweenMax.fromTo($(".player-local"), transformPreviousPlayerFrom, transformPreviousPlayerTo);
+                tweenOut = TweenMax.fromTo($(".player-mpd"), transformNewPlayerFrom, transformNewPlayerTo);
 
                 tweenIn.timeScale(timeScale);
                 tweenOut.timeScale(timeScale);
 
-                //TweenMax.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 90 }, {rotationX: 0});
+                //TweenMax.fromTo($(".permaplayer-wrapper"), speed, {rotationX: 90 }, {rotationX: 0, duration: speed});
 
                 classToRemove = window.sliMpd.conf.color.local.bodyclass;
                 classToAdd = window.sliMpd.conf.color.mpd.bodyclass;

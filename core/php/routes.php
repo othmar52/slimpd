@@ -69,7 +69,7 @@ $ctrlRoutes = [
         ['/markup/mpdplayer', 'mpdplayerAction'],
         ['/markup/localplayer', 'localplayerAction'],
         ['/markup/widget-trackcontrol', 'widgetTrackcontrolAction'],
-        #['/markup/widget-xwax', 'widgetXwaxAction'],
+        //['/markup/widget-xwax', 'widgetXwaxAction'],
         ['/markup/widget-deckselector', 'widgetDeckselectorAction'],
         ['/markup/standalone-trackview', 'standaloneTrackviewAction'],
         ['/maintainance/trackid3/[{itemParams:.*}]', 'dumpid3Action'],

@@ -29,6 +29,12 @@ class CliController extends \Slimpd\BaseController {
 
     public function __construct($container) {
         $this->container = $container;
+        $this->db = new \mysqli(
+            $this->conf['database']['dbhost'],
+            $this->conf['database']['dbusername'],
+            $this->conf['database']['dbpassword'],
+            $this->conf['database']['dbdatabase']
+        );
         useArguments($this->conf); // required $_SESSION var will be set as soon as we access $this->conf
     }
 
@@ -192,7 +198,6 @@ class CliController extends \Slimpd\BaseController {
         cliLog("Recreating database");
         $result = $db->query("CREATE DATABASE " . $this->conf['database']['dbdatabase'].";");
         $action = 'init';
-
         \Helper::setConfig( getDatabaseDiffConf($this->conf) );
         if (!\Helper::checkConfigEnough()) {
             cliLog("ERROR: invalid mmp configuration", 1, "red");

@@ -147,8 +147,8 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
                 $classPath = "\\Slimpd\\Models\\" . $className;
                 $item = new $classPath();
                 $item->setUid($itemUid)
-                    ->setTrackCount( count(@$data['tracks']) )
-                    ->setAlbumCount( count(@$data['albums']) );
+                    ->setTrackCount( $data['tracks'] ? count($data['tracks']) : 0 )
+                    ->setAlbumCount( $data['albums'] ? count($data['albums']) : 0 );
 
                 $this->setTopArtistUids($item, $className, $data);
                 $this->setTopGenreUids($item, $className, $data);

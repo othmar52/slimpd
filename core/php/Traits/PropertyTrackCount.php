@@ -18,7 +18,7 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyTrackCount {
-    protected $trackCount;
+    protected $trackCount = 0;
 
     public function getTrackCount() {
         return $this->trackCount;

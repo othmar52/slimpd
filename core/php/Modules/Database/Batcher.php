@@ -117,8 +117,9 @@ class Batcher {
         }
         $query = substr($query,0,-1) . ";";
         cliLog("batch-insert " . $tableName . "s (" . $counter . " records)" , 2, "lightblue");
-        #echo $query; die;
+        
         $this->db->query($query);
+
         $this->instances[$tableName] = array();
     }
 

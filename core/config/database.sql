@@ -459,6 +459,22 @@ CREATE TABLE IF NOT EXISTS `pollcache` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `uid` int unsigned NOT NULL AUTO_INCREMENT,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `role` varchar(50) NOT NULL,
+  `last_login` timestamp DEFAULT NULL,
+  `created_at` timestamp DEFAULT NULL,
+  `updated_at` timestamp DEFAULT NULL,
+  PRIMARY KEY (`uid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- --------------------------------------------------------
 
 --
@@ -498,3 +514,16 @@ INSERT INTO `genre` VALUES (NULL, 'Unknown', '0', 'unknown', 0, 0, '', '', '');
 --
 
 INSERT INTO `label` VALUES (NULL, 'Unknown Label', 'unknownlabel', 0, 0, '', '', '');
+
+-- --------------------------------------------------------
+
+-- 
+-- Default users
+--
+
+INSERT INTO `users` SET username='admin', password='\$2y\$10\$HXxsprgY0YAnUQhAO6Us9uiaMg.I6qHMd/u7hV0avYFr92HnY3VLa', role='admin', created_at=NOW(), updated_at=NOW();
+INSERT INTO `users` SET username='guest', password='\$2y\$10\$CB1/wAHWYsQk45O/GvwpFusGodYXwZCT7RwFnG/3Im.oSvkSWnav2', role='guest', created_at=NOW(), updated_at=NOW();
+ 
+
+
+-- INSERT INTO `rawtagdata` SET filesize=20;

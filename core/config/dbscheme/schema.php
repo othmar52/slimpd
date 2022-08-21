@@ -340,6 +340,21 @@ class Schema extends AbstractSchema
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "INSERT INTO `db_revisions` SET rev=1468749226",
       "INSERT INTO `db_alias` SET rev=1468749226, alias='slimpd_v1'",
-    );
+      "DROP TABLE IF EXISTS `users`",
+      "CREATE TABLE `users` (\r"
+      . "  `uid` int(11) unsigned NOT NULL AUTO_INCREMENT,\r"
+      . "  `username` varchar(50) NOT NULL,\r"
+      . "  `password` varchar(255) NOT NULL DEFAULT '',\r"
+      . "  `email` varchar(255) NOT NULL DEFAULT '',\r"
+      . "  `role` varchar(50) NOT NULL,\r"
+      . "  `last_login` TIMESTAMP DEFAULT NULL,\r"
+      . "  `created_at` TIMESTAMP DEFAULT NULL,\r"
+      . "  `updated_at` TIMESTAMP DEFAULT NULL,\r"
+      . "  PRIMARY KEY (`uid`)\r"
+      . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
+      "INSERT INTO `users` SET username='admin', password='\$2y\$10\$HXxsprgY0YAnUQhAO6Us9uiaMg.I6qHMd/u7hV0avYFr92HnY3VLa', role='admin', created_at=NOW(), updated_at=NOW()",
+      "INSERT INTO `users` SET username='guest', password='\$2y\$10\$CB1/wAHWYsQk45O/GvwpFusGodYXwZCT7RwFnG/3Im.oSvkSWnav2', role='guest', created_at=NOW(), updated_at=NOW()",
+ 
+      );
   }
 }

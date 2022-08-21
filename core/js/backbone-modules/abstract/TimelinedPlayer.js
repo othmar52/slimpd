@@ -34,16 +34,17 @@
         initialize : function(options) {
             this.trackAnimation = { currentPosPerc: 0 };
             if(this.showWaveform === true) {
-                this.timeLineLight = new window.TimelineLite();
+                this.timeLineLight = window.gsap.timeline();
             }
             window.sliMpd.modules.AbstractPlayer.prototype.initialize.call(this, options);
         },
 
         setPlayHead : function() {
             // animate from 0 to 100, onUpdate -> change Text
-            this.timeLineLight = new window.TimelineLite();
+            this.timeLineLight = window.gsap.timeline();
             this.trackAnimation.currentPosPerc = 0;
-            this.timeLineLight.to(this.trackAnimation, this.nowPlayingDuration, {
+            this.timeLineLight.to(this.trackAnimation, {
+                duration: this.nowPlayingDuration,
                 currentPosPerc: 100,
                 ease: window.Linear.easeNone,
                 onUpdate: this.updateSlider,

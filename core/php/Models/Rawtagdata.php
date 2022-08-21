@@ -25,8 +25,8 @@ class Rawtagdata extends \Slimpd\Models\AbstractFilesystemItem {
     use \Slimpd\Traits\PropertyError;       // error
 
     protected $directoryMtime = 0;
-    protected $extension;
-    protected $lastDirScan;
+    protected $extension = "";
+    protected $lastDirScan = 0;
 
     public static $tableName = 'rawtagdata';
     public static $repoKey = 'rawtagdataRepo';

@@ -99,7 +99,7 @@ components/jquery-cookie/jquery.cookie.js
 components/jquery/jquery.min.js
 components/jquery/jquery.min.map
 
-greensock/GreenSock-JS/src/minified/TweenMax.min.js
+greensock/greensock-js/src/minified/TweenMax.min.js
 
 components/backbone/backbone-min.map
 components/backbone/backbone-min.js
@@ -126,10 +126,10 @@ mmp/mmp/phing
 mmp/mmp/init.php
 mmp/mmp/migration.php
 
-codrops/BookBlock/css/bookblock.css
-codrops/BookBlock/js/modernizr.custom.js
-codrops/BookBlock/js/jquerypp.custom.js
-codrops/BookBlock/js/jquery.bookblock.min.js
+codrops/bookblock/css/bookblock.css
+codrops/bookblock/js/modernizr.custom.js
+codrops/bookblock/js/jquerypp.custom.js
+codrops/bookblock/js/jquery.bookblock.min.js
 
 ksubileau/color-thief-php/lib
 

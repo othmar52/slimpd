@@ -20,11 +20,11 @@ namespace Slimpd\Models;
 
 abstract class AbstractFilesystemItem extends \Slimpd\Models\AbstractModel {
     use \Slimpd\Traits\PropGroupRelPath; // relPath, relPathHash
-    protected $relDirPath;
-    protected $relDirPathHash;
-    protected $filesize;
+    protected $relDirPath = "";
+    protected $relDirPathHash = "";
+    protected $filesize = 0;
     protected $filemtime = 0;
-    protected $importStatus;
+    protected $importStatus = 0;
 
     // getter
     public function getRelDirPath() {
