@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,66 +12,43 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Compiles CoffeeScript into Javascript.
  *
- * @link http://coffeescript.org/
+ * @link http://jashkenas.github.com/coffee-script/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class CoffeeScriptFilter extends BaseNodeFilter
+class CoffeeScriptFilter implements FilterInterface
 {
-    private $coffeeBin;
-    private $nodeBin;
+    private $coffeePath;
+    private $nodePath;
 
-    // coffee options
-    private $bare;
-    private $noHeader;
-
-    public function __construct($coffeeBin = '/usr/bin/coffee', $nodeBin = null)
+    public function __construct($coffeePath = '/usr/bin/coffee', $nodePath = '/usr/bin/node')
     {
-        $this->coffeeBin = $coffeeBin;
-        $this->nodeBin = $nodeBin;
-    }
-
-    public function setBare($bare)
-    {
-        $this->bare = $bare;
-    }
-
-    public function setNoHeader($noHeader)
-    {
-        $this->noHeader = $noHeader;
+        $this->coffeePath = $coffeePath;
+        $this->nodePath = $nodePath;
     }
 
     public function filterLoad(AssetInterface $asset)
     {
-        $input = FilesystemUtils::createTemporaryFile('coffee');
+        $input = tempnam(sys_get_temp_dir(), 'assetic_coffeescript');
         file_put_contents($input, $asset->getContent());
 
-        $pb = $this->createProcessBuilder($this->nodeBin
-            ? array($this->nodeBin, $this->coffeeBin)
-            : array($this->coffeeBin));
+        $pb = new ProcessBuilder(array(
+            $this->nodePath,
+            $this->coffeePath,
+            '-cp',
+            $input,
+        ));
 
-        $pb->add('-cp');
-
-        if ($this->bare) {
-            $pb->add('--bare');
-        }
-
-        if ($this->noHeader) {
-            $pb->add('--no-header');
-        }
-
-        $pb->add($input);
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());

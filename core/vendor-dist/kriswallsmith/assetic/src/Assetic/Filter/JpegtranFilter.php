@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,16 +12,14 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through jpegtran.
  *
- * @link http://jpegclub.org/jpegtran/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegtranFilter extends BaseProcessFilter
+class JpegtranFilter implements FilterInterface
 {
     const COPY_NONE = 'none';
     const COPY_COMMENTS = 'comments';
@@ -69,7 +67,7 @@ class JpegtranFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegtranBin));
+        $pb = new ProcessBuilder(array($this->jpegtranBin));
 
         if ($this->optimize) {
             $pb->add('-optimize');
@@ -87,15 +85,15 @@ class JpegtranFilter extends BaseProcessFilter
             $pb->add('-restart')->add($this->restart);
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegtran'));
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegtran'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());

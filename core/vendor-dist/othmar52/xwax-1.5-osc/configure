@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+# Copyright (C) 2012 Mark Hills <mark@xwax.org>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License version 2, as
+# published by the Free Software Foundation.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License version 2 for more details.
+#
+# You should have received a copy of the GNU General Public License
+# version 2 along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+
+OUTPUT=.config
+
+usage()
+{
+cat <<EOF
+Usage: configure [options]
+
+Options:
+  --prefix <dir>   Set the install prefix
+  --enable-alsa    Enable ALSA audio device
+  --enable-jack    Enable JACK audio device
+  --enable-oss     Enable OSS audio device
+  --debug          Debug build
+  --profile        Profile build
+EOF
+}
+
+# Set some defaults and parse the command line
+
+PREFIX=
+ALSA=false
+JACK=false
+OSS=false
+DEBUG=false
+PROFILE=false
+
+while [ $# -ge 1 ]; do
+	case $1 in
+	--help)
+		usage
+		exit 0
+		;;
+	--enable-alsa)
+		ALSA=true
+		;;
+	--enable-jack)
+		JACK=true
+		;;
+	--enable-oss)
+		OSS=true
+		;;
+	--prefix)
+		if [ -z "$2" ]; then
+			echo "--prefix requires a pathname argument" >&2
+			exit 1
+		fi
+		PREFIX=$2
+		shift
+		;;
+	--debug)
+		DEBUG=true
+		;;
+	--profile)
+		PROFILE=true
+		;;
+	esac
+
+	shift
+done
+
+# Construct the output file
+
+> $OUTPUT
+
+if [ -n "$PREFIX" ]; then
+	echo "Installation prefix $PREFIX"
+	echo "PREFIX = $PREFIX" >> $OUTPUT
+fi
+
+if $ALSA; then
+	echo "ALSA enabled"
+	echo "ALSA = yes" >> $OUTPUT
+else
+	echo "ALSA disabled"
+fi
+
+if $JACK; then
+	echo "JACK enabled"
+	echo "JACK = yes" >> $OUTPUT
+else
+	echo "JACK disabled"
+fi
+
+if $OSS; then
+	echo "OSS enabled"
+	echo "OSS = yes" >> $OUTPUT
+else
+	echo "OSS disabled"
+fi
+
+if $DEBUG && $PROFILE; then
+	echo "Debug and profile build cannot be used together" >&2
+	exit 1
+fi
+
+if $DEBUG; then
+	echo "Debug build"
+	echo "CFLAGS += -O0 -g" >> $OUTPUT
+fi
+
+if $PROFILE; then
+	echo "Profile build"
+	echo "CFLAGS += -g -fno-inline-functions -fno-inline-functions-called-once -fno-optimize-sibling-calls" >> $OUTPUT
+fi
+
+# Explain the next step
+
+echo "Be sure to run 'make clean' if you have changed the configuration."
+echo "Run 'make' to compile xwax."

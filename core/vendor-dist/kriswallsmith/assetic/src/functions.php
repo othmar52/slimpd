@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,10 +11,6 @@
 
 use Assetic\Factory\AssetFactory;
 use Assetic\Util\TraversableString;
-
-if (function_exists('assetic_init')) {
-    return;
-}
 
 /**
  * Initializes the global Assetic object.
@@ -113,12 +109,12 @@ function _assetic_urls($inputs = array(), $filters = array(), array $options = a
 
     $one = $coll->getTargetPath();
     if ($combine) {
-        $many = array($one);
-    } else {
         $many = array();
         foreach ($coll as $leaf) {
             $many[] = $leaf->getTargetPath();
         }
+    } else {
+        $many = array($one);
     }
 
     return new TraversableString($one, $many);

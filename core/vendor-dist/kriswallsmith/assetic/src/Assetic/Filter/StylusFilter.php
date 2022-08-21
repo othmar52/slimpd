@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,21 +12,18 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Factory\AssetFactory;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads STYL files.
  *
- * @link http://learnboost.github.com/stylus/
  * @author Konstantin Kudryashov <ever.zet@gmail.com>
  */
-class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterface
+class StylusFilter implements FilterInterface
 {
     private $nodeBin;
+    private $nodePaths;
     private $compress;
-    private $useNib;
 
     /**
      * Constructs filter.
@@ -37,7 +34,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     public function __construct($nodeBin = '/usr/bin/node', array $nodePaths = array())
     {
         $this->nodeBin = $nodeBin;
-        $this->setNodePaths($nodePaths);
+        $this->nodePaths = $nodePaths;
     }
 
     /**
@@ -51,16 +48,6 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
     }
 
     /**
-     * Enable the use of Nib
-     *
-     * @param boolean $useNib
-     */
-    public function setUseNib($useNib)
-    {
-        $this->useNib = $useNib;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function filterLoad(AssetInterface $asset)
@@ -69,7 +56,7 @@ class StylusFilter extends BaseNodeFilter implements DependencyExtractorInterfac
 var stylus = require('stylus');
 var sys    = require(process.binding('natives').util ? 'util' : 'sys');
 
-stylus(%s, %s)%s.render(function(e, css){
+stylus(%s, %s).render(function(e, css){
     if (e) {
         throw e;
     }
@@ -80,32 +67,40 @@ stylus(%s, %s)%s.render(function(e, css){
 
 EOF;
 
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+
         // parser options
         $parserOptions = array();
-        if ($dir = $asset->getSourceDirectory()) {
-            $parserOptions['paths'] = array($dir);
-            $parserOptions['filename'] = basename($asset->getSourcePath());
+        if ($root && $path) {
+            $parserOptions['paths'] = array(dirname($root.'/'.$path));
+            $parserOptions['filename'] = basename($path);
         }
 
         if (null !== $this->compress) {
             $parserOptions['compress'] = $this->compress;
         }
 
-        $pb = $this->createProcessBuilder();
+        $pb = new ProcessBuilder();
+        $pb->inheritEnvironmentVariables();
 
-        $pb->add($this->nodeBin)->add($input = FilesystemUtils::createTemporaryFile('stylus'));
+        // node.js configuration
+        if (0 < count($this->nodePaths)) {
+            $pb->setEnv('NODE_PATH', implode(':', $this->nodePaths));
+        }
+
+        $pb->add($this->nodeBin)->add($input = tempnam(sys_get_temp_dir(), 'assetic_stylus'));
         file_put_contents($input, sprintf($format,
             json_encode($asset->getContent()),
-            json_encode($parserOptions),
-            $this->useNib ? '.use(require(\'nib\')())' : ''
+            json_encode($parserOptions)
         ));
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());
@@ -116,11 +111,5 @@ EOF;
      */
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        // todo
-        return array();
     }
 }

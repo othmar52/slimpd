@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.graphic.jpg.php                                      //
@@ -16,7 +15,9 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
-
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 class getid3_jpg extends getid3_handler
 {
 	/**
@@ -35,7 +36,7 @@ class getid3_jpg extends getid3_handler
 
 		$imageinfo = array();
 		//list($width, $height, $type) = getid3_lib::GetDataImageSize($this->fread($info['filesize']), $imageinfo);
-		list($width, $height, $type) = getimagesize($info['filenamepath'], $imageinfo); // http://www.getid3.org/phpBB3/viewtopic.php?t=1474
+		list($width, $height, $type) = getimagesize($info['filenamepath'], $imageinfo); // https://www.getid3.org/phpBB3/viewtopic.php?t=1474
 
 
 		if (isset($imageinfo['APP13'])) {
@@ -61,7 +62,7 @@ class getid3_jpg extends getid3_handler
 
 		$returnOK = false;
 		switch ($type) {
-			case IMG_JPG:
+			case IMAGETYPE_JPEG:
 				$info['video']['resolution_x'] = $width;
 				$info['video']['resolution_y'] = $height;
 
@@ -70,17 +71,14 @@ class getid3_jpg extends getid3_handler
 						if (substr($imageinfo['APP1'], 0, 4) == 'Exif') {
 							//$this->warning('known issue: https://bugs.php.net/bug.php?id=62523');
 							//return false;
-							set_error_handler(function($errno, $errstr, $errfile, $errline, array $errcontext) {
+							set_error_handler(function($errno, $errstr, $errfile, $errline) { // https://github.com/JamesHeinrich/getID3/issues/275
 								if (!(error_reporting() & $errno)) {
 									// error is not specified in the error_reporting setting, so we ignore it
 									return false;
 								}
-
-								$errcontext['info']['warning'][] = 'Error parsing EXIF data ('.$errstr.')';
+								$this->warning('Error parsing EXIF data ('.$errstr.')');
 							});
-
 							$info['jpg']['exif'] = exif_read_data($info['filenamepath'], null, true, false);
-
 							restore_error_handler();
 						} else {
 							$this->warning('exif_read_data() cannot parse non-EXIF data in APP1 (expected "Exif", found "'.substr($imageinfo['APP1'], 0, 4).'")');

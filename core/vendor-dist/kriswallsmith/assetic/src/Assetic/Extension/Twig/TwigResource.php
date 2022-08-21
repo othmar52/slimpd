@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,9 +32,7 @@ class TwigResource implements ResourceInterface
     public function getContent()
     {
         try {
-            return method_exists($this->loader, 'getSourceContext')
-                ? $this->loader->getSourceContext($this->name)->getCode()
-                : $this->loader->getSource($this->name);
+            return $this->loader->getSource($this->name);
         } catch (\Twig_Error_Loader $e) {
             return '';
         }

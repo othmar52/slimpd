@@ -1,0 +1,69 @@
+{
+    "name": "lusitanian/oauth",
+    "description": "PHP 7.2 oAuth 1/2 Library",
+    "keywords": ["oauth", "authentication", "authorization", "security"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Desberg",
+            "email": "david@daviddesberg.com"
+        },
+        {
+            "name": "Pieter Hordijk",
+            "email": "info@pieterhordijk.com"
+        },
+        {
+            "name": "Elliot Chance",
+            "email": "elliotchance@gmail.com"
+        }
+    ],
+    "scripts" : {
+        "tests" : [
+            "./vendor/bin/phpunit --color=always"
+        ],
+        "check" : [
+            "./vendor/bin/php-cs-fixer fix --ansi --dry-run --diff",
+            "./vendor/bin/phpunit --color=always"
+        ],
+        "fix": [
+            "./vendor/bin/php-cs-fixer fix --ansi"
+        ]
+    },
+    "require": {
+        "php": "^7.2 || 8.0.*"
+    },
+    "require-dev": {
+        "ext-dom": "*",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "symfony/http-foundation": "~2.1",
+        "predis/predis": "0.8.*@dev",
+        "squizlabs/php_codesniffer": "^3.5",
+        "symfony/var-dumper": "^5.1",
+        "symfony/finder": "^5.1",
+        "phpunit/phpunit": "^8.5",
+        "friendsofphp/php-cs-fixer": "^3.0"
+    },
+    "suggest": {
+        "symfony/http-foundation": "Allows using the Symfony Session storage backend.",
+        "predis/predis": "Allows using the Redis storage backend.",
+        "ext-openssl": "Allows for usage of secure connections with the stream-based HTTP client."
+    },
+    "autoload": {
+        "psr-4": {
+            "OAuth\\": "src/OAuth"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OAuthTest\\Unit\\": "tests/Unit",
+            "OAuthTest\\Mocks\\": "tests/Mocks"
+        }
+    },
+
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1-dev"
+        }
+    }
+}

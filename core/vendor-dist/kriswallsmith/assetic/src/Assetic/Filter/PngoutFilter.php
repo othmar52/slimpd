@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,16 +12,14 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through pngout.
  *
- * @link http://advsys.net/ken/utils.htm#pngout
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class PngoutFilter extends BaseProcessFilter
+class PngoutFilter implements FilterInterface
 {
     // -c#
     const COLOR_GREY       = '0';
@@ -87,7 +85,7 @@ class PngoutFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->pngoutBin));
+        $pb = new ProcessBuilder(array($this->pngoutBin));
 
         if (null !== $this->color) {
             $pb->add('-c'.$this->color);
@@ -105,19 +103,19 @@ class PngoutFilter extends BaseProcessFilter
             $pb->add('-b'.$this->blockSplitThreshold);
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('pngout_in'));
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_pngout'));
         file_put_contents($input, $asset->getContent());
 
-        $output = FilesystemUtils::createTemporaryFile('pngout_out');
+        $output = tempnam(sys_get_temp_dir(), 'assetic_pngout');
         unlink($output);
         $pb->add($output .= '.png');
 
         $proc = $pb->getProcess();
         $code = $proc->run();
 
-        if (0 !== $code) {
+        if (0 < $code) {
             unlink($input);
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent(file_get_contents($output));

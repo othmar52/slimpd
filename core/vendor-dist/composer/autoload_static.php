@@ -4,28 +4,45 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
+class ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929
 {
     public static $files = array (
         'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        'ce89ac35a6c330c55f4710717db9ff78' => __DIR__ . '/..' . '/kriswallsmith/assetic/src/functions.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
-        '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '532945a4b12d830ff3e086cc36a64375' => __DIR__ . '/..' . '/james-heinrich/phpthumb/phpthumb.class.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'v' => 
+        array (
+            'voku\\' => 5,
+        ),
         'T' => 
         array (
             'Twig\\' => 5,
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
+            'Symfony\\Polyfill\\Intl\\Grapheme\\' => 31,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Symfony\\Contracts\\Translation\\' => 30,
+            'Symfony\\Contracts\\Service\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
-            'Symfony\\Component\\Process\\' => 26,
+            'Symfony\\Component\\String\\' => 25,
+            'Symfony\\Component\\Console\\' => 26,
             'Slimpd\\' => 7,
             'Slim\\Views\\' => 11,
             'Slim\\Flash\\' => 11,
@@ -44,13 +61,16 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
         ),
+        'O' => 
+        array (
+            'OAuth\\' => 6,
+        ),
         'M' => 
         array (
             'Monolog\\' => 8,
         ),
         'I' => 
         array (
-            'Interop\\Container\\' => 18,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Database\\' => 20,
             'Illuminate\\Contracts\\' => 21,
@@ -71,7 +91,7 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         ),
         'D' => 
         array (
-            'Doctrine\\Common\\Inflector\\' => 26,
+            'Doctrine\\Inflector\\' => 19,
         ),
         'C' => 
         array (
@@ -81,21 +101,53 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
     );
 
     public static $prefixDirsPsr4 = array (
+        'voku\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
+        ),
         'Twig\\' => 
         array (
             0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
+        ),
+        'Symfony\\Polyfill\\Intl\\Grapheme\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Symfony\\Contracts\\Translation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/translation-contracts',
+        ),
+        'Symfony\\Contracts\\Service\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/service-contracts',
+        ),
         'Symfony\\Component\\Translation\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/translation',
         ),
-        'Symfony\\Component\\Process\\' => 
+        'Symfony\\Component\\String\\' => 
         array (
-            0 => __DIR__ . '/..' . '/symfony/process',
+            0 => __DIR__ . '/..' . '/symfony/string',
+        ),
+        'Symfony\\Component\\Console\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/console',
         ),
         'Slimpd\\' => 
         array (
@@ -141,17 +193,20 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'OAuth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lusitanian/oauth/src/OAuth',
+        ),
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'Interop\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
         'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/illuminate/support',
+            0 => __DIR__ . '/..' . '/illuminate/collections',
+            1 => __DIR__ . '/..' . '/illuminate/conditionable',
+            2 => __DIR__ . '/..' . '/illuminate/macroable',
+            3 => __DIR__ . '/..' . '/illuminate/support',
         ),
         'Illuminate\\Database\\' => 
         array (
@@ -193,13 +248,13 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
-        'Doctrine\\Common\\Inflector\\' => 
+        'Doctrine\\Inflector\\' => 
         array (
-            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Inflector',
         ),
         'ColorThief\\' => 
         array (
-            0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/lib/ColorThief',
+            0 => __DIR__ . '/..' . '/ksubileau/color-thief-php/src/ColorThief',
         ),
         'Carbon\\' => 
         array (
@@ -224,17 +279,6 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
             'Pimple' => 
             array (
                 0 => __DIR__ . '/..' . '/pimple/pimple/src',
-            ),
-        ),
-        'O' => 
-        array (
-            'OAuth\\Unit' => 
-            array (
-                0 => __DIR__ . '/..' . '/lusitanian/oauth/tests',
-            ),
-            'OAuth' => 
-            array (
-                0 => __DIR__ . '/..' . '/lusitanian/oauth/src',
             ),
         ),
         'J' => 
@@ -274,11 +318,18 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         'AbstractController' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractController.class.php',
         'AbstractMigration' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractMigration.class.php',
         'AbstractSchema' => __DIR__ . '/..' . '/mmp/mmp/lib/AbstractSchema.class.php',
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'GetOpt' => __DIR__ . '/..' . '/mmp/mmp/lib/GetOpt.class.php',
         'Helper' => __DIR__ . '/..' . '/mmp/mmp/lib/Helper.class.php',
         'Image_XMP' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.tag.xmp.php',
+        'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'Output' => __DIR__ . '/..' . '/mmp/mmp/lib/Output.class.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
         'SphinxClient' => __DIR__ . '/..' . '/neutron/sphinxsearch-api/sphinxapi.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
         'addController' => __DIR__ . '/..' . '/mmp/mmp/lib/addController.class.php',
         'createController' => __DIR__ . '/..' . '/mmp/mmp/lib/createController.class.php',
         'dbDiff' => __DIR__ . '/..' . '/mmp/mmp/lib/dbDiff.class.php',
@@ -299,6 +350,7 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         'getid3_bmp' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.graphic.bmp.php',
         'getid3_bonk' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.bonk.php',
         'getid3_cue' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.misc.cue.php',
+        'getid3_dsdiff' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.dsdiff.php',
         'getid3_dsf' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.dsf.php',
         'getid3_dss' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.dss.php',
         'getid3_dts' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.dts.php',
@@ -310,9 +362,11 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         'getid3_gif' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.graphic.gif.php',
         'getid3_gzip' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.gzip.php',
         'getid3_handler' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/getid3.php',
+        'getid3_hpk' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.hpk.php',
         'getid3_id3v1' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.tag.id3v1.php',
         'getid3_id3v2' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.tag.id3v2.php',
         'getid3_iso' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.misc.iso.php',
+        'getid3_ivf' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio-video.ivf.php',
         'getid3_jpg' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.graphic.jpg.php',
         'getid3_la' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.la.php',
         'getid3_lib' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/getid3.lib.php',
@@ -342,8 +396,11 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         'getid3_svg' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.graphic.svg.php',
         'getid3_swf' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio-video.swf.php',
         'getid3_szip' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.szip.php',
+        'getid3_tag_nikon_nctg' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.tag.nikon-nctg.php',
+        'getid3_tak' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.tak.php',
         'getid3_tar' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.tar.php',
         'getid3_tiff' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.graphic.tiff.php',
+        'getid3_torrent' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.misc.torrent.php',
         'getid3_ts' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio-video.ts.php',
         'getid3_tta' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.tta.php',
         'getid3_voc' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio.voc.php',
@@ -357,6 +414,8 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
         'getid3_write_real' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/write.real.php',
         'getid3_write_vorbiscomment' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/write.vorbiscomment.php',
         'getid3_writetags' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/write.php',
+        'getid3_wtv' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.audio-video.wtv.php',
+        'getid3_xz' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.xz.php',
         'getid3_zip' => __DIR__ . '/..' . '/james-heinrich/getid3/getid3/module.archive.zip.php',
         'helpController' => __DIR__ . '/..' . '/mmp/mmp/lib/helpController.class.php',
         'initController' => __DIR__ . '/..' . '/mmp/mmp/lib/initController.class.php',
@@ -368,11 +427,11 @@ class ComposerStaticInit231022f1063530a0f26c57ef9fba52a2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit231022f1063530a0f26c57ef9fba52a2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit231022f1063530a0f26c57ef9fba52a2::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit231022f1063530a0f26c57ef9fba52a2::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit231022f1063530a0f26c57ef9fba52a2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit231022f1063530a0f26c57ef9fba52a2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit54eca22af24e705b86e2ddc3e49ca929::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -113,16 +113,6 @@ interface AssetInterface
     public function getSourcePath();
 
     /**
-     * Returns the asset's source directory.
-     *
-     * The source directory is the directory the asset was located in
-     * and can be used to resolve references relative to an asset.
-     *
-     * @return string|null The asset's source directory
-     */
-    public function getSourceDirectory();
-
-    /**
      * Returns the URL for the current asset.
      *
      * @return string|null A web URL where the asset will be dumped
@@ -142,25 +132,4 @@ interface AssetInterface
      * @return integer|null A UNIX timestamp
      */
     public function getLastModified();
-
-    /**
-     * Returns an array of variable names for this asset.
-     *
-     * @return array
-     */
-    public function getVars();
-
-    /**
-     * Sets the values for the asset's variables.
-     *
-     * @param array $values
-     */
-    public function setValues(array $values);
-
-    /**
-     * Returns the current values for this asset.
-     *
-     * @return array an array of strings
-     */
-    public function getValues();
 }

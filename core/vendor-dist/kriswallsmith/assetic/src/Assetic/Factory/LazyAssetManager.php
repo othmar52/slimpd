@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,7 +11,6 @@
 
 namespace Assetic\Factory;
 
-use Assetic\Asset\AssetInterface;
 use Assetic\AssetManager;
 use Assetic\Factory\Loader\FormulaLoaderInterface;
 use Assetic\Factory\Resource\ResourceInterface;
@@ -112,7 +111,7 @@ class LazyAssetManager extends AssetManager
      *
      * @return array The formula
      *
-     * @throws \InvalidArgumentException If there is no formula by that name
+     * @throws InvalidArgumentException If there is no formula by that name
      */
     public function getFormula($name)
     {
@@ -141,7 +140,7 @@ class LazyAssetManager extends AssetManager
     /**
      * Loads formulae from resources.
      *
-     * @throws \LogicException If a resource has been added to an invalid loader
+     * @throws LogicException If a resource has been added to an invalid loader
      */
     public function load()
     {
@@ -201,10 +200,5 @@ class LazyAssetManager extends AssetManager
     public function isDebug()
     {
         return $this->factory->isDebug();
-    }
-
-    public function getLastModified(AssetInterface $asset)
-    {
-        return $this->factory->getLastModified($asset);
     }
 }

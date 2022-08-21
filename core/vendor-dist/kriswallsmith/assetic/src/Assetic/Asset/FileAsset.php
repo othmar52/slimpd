@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,7 +12,6 @@
 namespace Assetic\Asset;
 
 use Assetic\Filter\FilterInterface;
-use Assetic\Util\VarUtils;
 
 /**
  * Represents an asset loaded from a file.
@@ -30,11 +29,10 @@ class FileAsset extends BaseAsset
      * @param array  $filters    An array of filters
      * @param string $sourceRoot The source asset root directory
      * @param string $sourcePath The source asset path
-     * @param array  $vars
      *
-     * @throws \InvalidArgumentException If the supplied root doesn't match the source when guessing the path
+     * @throws InvalidArgumentException If the supplied root doesn't match the source when guessing the path
      */
-    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null, array $vars = array())
+    public function __construct($source, $filters = array(), $sourceRoot = null, $sourcePath = null)
     {
         if (null === $sourceRoot) {
             $sourceRoot = dirname($source);
@@ -51,28 +49,16 @@ class FileAsset extends BaseAsset
 
         $this->source = $source;
 
-        parent::__construct($filters, $sourceRoot, $sourcePath, $vars);
+        parent::__construct($filters, $sourceRoot, $sourcePath);
     }
 
     public function load(FilterInterface $additionalFilter = null)
     {
-        $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
-
-        if (!is_file($source)) {
-            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
-        }
-
-        $this->doLoad(file_get_contents($source), $additionalFilter);
+        $this->doLoad(file_get_contents($this->source), $additionalFilter);
     }
 
     public function getLastModified()
     {
-        $source = VarUtils::resolve($this->source, $this->getVars(), $this->getValues());
-
-        if (!is_file($source)) {
-            throw new \RuntimeException(sprintf('The source file "%s" does not exist.', $source));
-        }
-
-        return filemtime($source);
+        return filemtime($this->source);
     }
 }

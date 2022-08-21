@@ -1,0 +1,8 @@
+# gcc coverage testing tool files
+
+*.gcno
+*.gcda
+*.gcov
+
+# npm modules
+node_modules

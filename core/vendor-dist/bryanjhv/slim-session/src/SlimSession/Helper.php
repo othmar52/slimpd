@@ -9,6 +9,7 @@ namespace SlimSession;
  * and the session variables passed via $_SESSION superglobal.
  *
  * @package SlimSession
+ * @author  Bryan Horna
  */
 class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -22,9 +23,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function get($key, $default = null)
     {
-        return $this->exists($key)
-            ? $_SESSION[$key]
-            : $default;
+        return $this->exists($key) ? $_SESSION[$key] : $default;
     }
 
     /**
@@ -126,15 +125,11 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
             session_write_close();
 
             if (ini_get('session.use_cookies')) {
-                $params = session_get_cookie_params();
-                setcookie(
+                Cookie::set(
                     session_name(),
                     '',
                     time() - 4200,
-                    $params['path'],
-                    $params['domain'],
-                    $params['secure'],
-                    $params['httponly']
+                    session_get_cookie_params()
                 );
             }
         }
@@ -190,6 +185,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($_SESSION);
@@ -200,6 +196,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return \Traversable
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($_SESSION);
@@ -212,6 +209,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return boolean
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return $this->exists($offset);
@@ -224,6 +222,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -235,6 +234,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param mixed $offset
      * @param mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->set($offset, $value);
@@ -245,6 +245,7 @@ class Helper implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @param mixed $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         $this->delete($offset);

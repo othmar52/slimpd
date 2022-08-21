@@ -1,12 +1,10 @@
 <?php
-
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio.bink.php                                       //
@@ -15,6 +13,9 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 
 class getid3_bink extends getid3_handler
 {
@@ -31,20 +32,14 @@ class getid3_bink extends getid3_handler
 		switch ($fileTypeID) {
 			case 'BIK':
 				return $this->ParseBink();
-				break;
 
 			case 'SMK':
 				return $this->ParseSmacker();
-				break;
 
 			default:
 				$this->error('Expecting "BIK" or "SMK" at offset '.$info['avdataoffset'].', found "'.getid3_lib::PrintHexBytes($fileTypeID).'"');
 				return false;
-				break;
 		}
-
-		return true;
-
 	}
 
 	/**

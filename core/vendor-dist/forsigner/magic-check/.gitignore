@@ -1,0 +1,20 @@
+# web
+bower_components
+.sass-cache/
+
+# Node
+node_modules
+npm-debug.log
+
+# atom
+.tag*
+
+# vim
+.*.swp
+*~
+
+# mac
+.DS_Store
+
+# test
+coverage

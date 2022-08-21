@@ -2,67 +2,130 @@
 
 namespace Illuminate\Database\Query\Grammars;
 
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Database\Query\JsonExpression;
+use Illuminate\Support\Str;
 
 class MySqlGrammar extends Grammar
 {
     /**
      * The grammar specific operators.
      *
-     * @var array
+     * @var string[]
      */
     protected $operators = ['sounds like'];
 
     /**
-     * The components that make up a select clause.
-     *
-     * @var array
-     */
-    protected $selectComponents = [
-        'aggregate',
-        'columns',
-        'from',
-        'joins',
-        'wheres',
-        'groups',
-        'havings',
-        'orders',
-        'limit',
-        'offset',
-        'lock',
-    ];
-
-    /**
-     * Compile a select query into SQL.
+     * Add a "where null" clause to the query.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
      * @return string
      */
-    public function compileSelect(Builder $query)
+    protected function whereNull(Builder $query, $where)
     {
-        $sql = parent::compileSelect($query);
+        if ($this->isJsonSelector($where['column'])) {
+            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
 
-        if ($query->unions) {
-            $sql = '('.$sql.') '.$this->compileUnions($query);
+            return '(json_extract('.$field.$path.') is null OR json_type(json_extract('.$field.$path.')) = \'NULL\')';
         }
 
-        return $sql;
+        return parent::whereNull($query, $where);
     }
 
     /**
-     * Compile a single union statement.
+     * Add a "where not null" clause to the query.
      *
-     * @param  array  $union
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
      * @return string
      */
-    protected function compileUnion(array $union)
+    protected function whereNotNull(Builder $query, $where)
     {
-        $conjuction = $union['all'] ? ' union all ' : ' union ';
+        if ($this->isJsonSelector($where['column'])) {
+            [$field, $path] = $this->wrapJsonFieldAndPath($where['column']);
 
-        return $conjuction.'('.$union['query']->toSql().')';
+            return '(json_extract('.$field.$path.') is not null AND json_type(json_extract('.$field.$path.')) != \'NULL\')';
+        }
+
+        return parent::whereNotNull($query, $where);
+    }
+
+    /**
+     * Compile a "where fulltext" clause.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $where
+     * @return string
+     */
+    public function whereFullText(Builder $query, $where)
+    {
+        $columns = $this->columnize($where['columns']);
+
+        $value = $this->parameter($where['value']);
+
+        $mode = ($where['options']['mode'] ?? []) === 'boolean'
+            ? ' in boolean mode'
+            : ' in natural language mode';
+
+        $expanded = ($where['options']['expanded'] ?? []) && ($where['options']['mode'] ?? []) !== 'boolean'
+            ? ' with query expansion'
+            : '';
+
+        return "match ({$columns}) against (".$value."{$mode}{$expanded})";
+    }
+
+    /**
+     * Compile an insert ignore statement into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @return string
+     */
+    public function compileInsertOrIgnore(Builder $query, array $values)
+    {
+        return Str::replaceFirst('insert', 'insert ignore', $this->compileInsert($query, $values));
+    }
+
+    /**
+     * Compile a "JSON contains" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonContains($column, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'json_contains('.$field.', '.$value.$path.')';
+    }
+
+    /**
+     * Compile a "JSON contains key" statement into SQL.
+     *
+     * @param  string  $column
+     * @return string
+     */
+    protected function compileJsonContainsKey($column)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'ifnull(json_contains_path('.$field.', \'one\''.$path.'), 0)';
+    }
+
+    /**
+     * Compile a "JSON length" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonLength($column, $operator, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'json_length('.$field.$path.') '.$operator.' '.$value;
     }
 
     /**
@@ -93,65 +156,33 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile an update statement into SQL.
+     * Compile an insert statement into SQL.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
-    public function compileUpdate(Builder $query, $values)
+    public function compileInsert(Builder $query, array $values)
     {
-        $table = $this->wrapTable($query->from);
-
-        // Each one of the columns in the update statements needs to be wrapped in the
-        // keyword identifiers, also a place-holder needs to be created for each of
-        // the values in the list of bindings so we can make the sets statements.
-        $columns = $this->compileUpdateColumns($values);
-
-        // If the query has any "join" clauses, we will setup the joins on the builder
-        // and compile them so we can attach them to this update, as update queries
-        // can get join statements to attach to other tables when they're needed.
-        $joins = '';
-
-        if (isset($query->joins)) {
-            $joins = ' '.$this->compileJoins($query, $query->joins);
+        if (empty($values)) {
+            $values = [[]];
         }
 
-        // Of course, update queries may also be constrained by where clauses so we'll
-        // need to compile the where clauses and attach it to the query so only the
-        // intended records are updated by the SQL statements we generate to run.
-        $where = $this->compileWheres($query);
-
-        $sql = rtrim("update {$table}{$joins} set $columns $where");
-
-        // If the query has an order by clause we will compile it since MySQL supports
-        // order bys on update statements. We'll compile them using the typical way
-        // of compiling order bys. Then they will be appended to the SQL queries.
-        if (! empty($query->orders)) {
-            $sql .= ' '.$this->compileOrders($query, $query->orders);
-        }
-
-        // Updates on MySQL also supports "limits", which allow you to easily update a
-        // single record very easily. This is not supported by all database engines
-        // so we have customized this update compiler here in order to add it in.
-        if (isset($query->limit)) {
-            $sql .= ' '.$this->compileLimit($query, $query->limit);
-        }
-
-        return rtrim($sql);
+        return parent::compileInsert($query, $values);
     }
 
     /**
-     * Compile all of the columns for an update statement.
+     * Compile the columns for an update statement.
      *
+     * @param  \Illuminate\Database\Query\Builder  $query
      * @param  array  $values
      * @return string
      */
-    protected function compileUpdateColumns($values)
+    protected function compileUpdateColumns(Builder $query, array $values)
     {
         return collect($values)->map(function ($value, $key) {
             if ($this->isJsonSelector($key)) {
-                return $this->compileJsonUpdateColumn($key, new JsonExpression($value));
+                return $this->compileJsonUpdateColumn($key, $value);
             }
 
             return $this->wrap($key).' = '.$this->parameter($value);
@@ -159,21 +190,83 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Prepares a JSON column being updated using the JSON_SET function.
+     * Compile an "upsert" statement into SQL.
      *
-     * @param  string  $key
-     * @param  \Illuminate\Database\Query\JsonExpression  $value
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  array  $values
+     * @param  array  $uniqueBy
+     * @param  array  $update
      * @return string
      */
-    protected function compileJsonUpdateColumn($key, JsonExpression $value)
+    public function compileUpsert(Builder $query, array $values, array $uniqueBy, array $update)
     {
-        $path = explode('->', $key);
+        $useUpsertAlias = $query->connection->getConfig('use_upsert_alias');
 
-        $field = $this->wrapValue(array_shift($path));
+        $sql = $this->compileInsert($query, $values);
 
-        $accessor = "'$.\"".implode('"."', $path)."\"'";
+        if ($useUpsertAlias) {
+            $sql .= ' as laravel_upsert_alias';
+        }
 
-        return "{$field} = json_set({$field}, {$accessor}, {$value->getValue()})";
+        $sql .= ' on duplicate key update ';
+
+        $columns = collect($update)->map(function ($value, $key) use ($useUpsertAlias) {
+            if (! is_numeric($key)) {
+                return $this->wrap($key).' = '.$this->parameter($value);
+            }
+
+            return $useUpsertAlias
+                ? $this->wrap($value).' = '.$this->wrap('laravel_upsert_alias').'.'.$this->wrap($value)
+                : $this->wrap($value).' = values('.$this->wrap($value).')';
+        })->implode(', ');
+
+        return $sql.$columns;
+    }
+
+    /**
+     * Prepare a JSON column being updated using the JSON_SET function.
+     *
+     * @param  string  $key
+     * @param  mixed  $value
+     * @return string
+     */
+    protected function compileJsonUpdateColumn($key, $value)
+    {
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        } elseif (is_array($value)) {
+            $value = 'cast(? as json)';
+        } else {
+            $value = $this->parameter($value);
+        }
+
+        [$field, $path] = $this->wrapJsonFieldAndPath($key);
+
+        return "{$field} = json_set({$field}{$path}, {$value})";
+    }
+
+    /**
+     * Compile an update statement without joins into SQL.
+     *
+     * @param  \Illuminate\Database\Query\Builder  $query
+     * @param  string  $table
+     * @param  string  $columns
+     * @param  string  $where
+     * @return string
+     */
+    protected function compileUpdateWithoutJoins(Builder $query, $table, $columns, $where)
+    {
+        $sql = parent::compileUpdateWithoutJoins($query, $table, $columns, $where);
+
+        if (! empty($query->orders)) {
+            $sql .= ' '.$this->compileOrders($query, $query->orders);
+        }
+
+        if (isset($query->limit)) {
+            $sql .= ' '.$this->compileLimit($query, $query->limit);
+        }
+
+        return $sql;
     }
 
     /**
@@ -188,43 +281,12 @@ class MySqlGrammar extends Grammar
     public function prepareBindingsForUpdate(array $bindings, array $values)
     {
         $values = collect($values)->reject(function ($value, $column) {
-            return $this->isJsonSelector($column) &&
-                in_array(gettype($value), ['boolean', 'integer', 'double']);
+            return $this->isJsonSelector($column) && is_bool($value);
+        })->map(function ($value) {
+            return is_array($value) ? json_encode($value) : $value;
         })->all();
 
         return parent::prepareBindingsForUpdate($bindings, $values);
-    }
-
-    /**
-     * Compile a delete statement into SQL.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @return string
-     */
-    public function compileDelete(Builder $query)
-    {
-        $table = $this->wrapTable($query->from);
-
-        $where = is_array($query->wheres) ? $this->compileWheres($query) : '';
-
-        return isset($query->joins)
-                    ? $this->compileDeleteWithJoins($query, $table, $where)
-                    : $this->compileDeleteWithoutJoins($query, $table, $where);
-    }
-
-    /**
-     * Prepare the bindings for a delete statement.
-     *
-     * @param  array  $bindings
-     * @return array
-     */
-    public function prepareBindingsForDelete(array $bindings)
-    {
-        $cleanBindings = Arr::except($bindings, ['join', 'select']);
-
-        return array_values(
-            array_merge($bindings['join'], Arr::flatten($cleanBindings))
-        );
     }
 
     /**
@@ -232,12 +294,12 @@ class MySqlGrammar extends Grammar
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @param  string  $table
-     * @param  array  $where
+     * @param  string  $where
      * @return string
      */
-    protected function compileDeleteWithoutJoins($query, $table, $where)
+    protected function compileDeleteWithoutJoins(Builder $query, $table, $where)
     {
-        $sql = trim("delete from {$table} {$where}");
+        $sql = parent::compileDeleteWithoutJoins($query, $table, $where);
 
         // When using MySQL, delete statements may contain order by statements and limits
         // so we will compile both of those here. Once we have finished compiling this
@@ -254,24 +316,6 @@ class MySqlGrammar extends Grammar
     }
 
     /**
-     * Compile a delete query that uses joins.
-     *
-     * @param  \Illuminate\Database\Query\Builder  $query
-     * @param  string  $table
-     * @param  array  $where
-     * @return string
-     */
-    protected function compileDeleteWithJoins($query, $table, $where)
-    {
-        $joins = ' '.$this->compileJoins($query, $query->joins);
-
-        $alias = strpos(strtolower($table), ' as ') !== false
-                ? explode(' as ', $table)[1] : $table;
-
-        return trim("delete {$alias} from {$table}{$joins} {$where}");
-    }
-
-    /**
      * Wrap a single string in keyword identifiers.
      *
      * @param  string  $value
@@ -279,18 +323,7 @@ class MySqlGrammar extends Grammar
      */
     protected function wrapValue($value)
     {
-        if ($value === '*') {
-            return $value;
-        }
-
-        // If the given value is a JSON selector we will wrap it differently than a
-        // traditional value. We will need to split this path and wrap each part
-        // wrapped, etc. Otherwise, we will simply wrap the value as a string.
-        if ($this->isJsonSelector($value)) {
-            return $this->wrapJsonSelector($value);
-        }
-
-        return '`'.str_replace('`', '``', $value).'`';
+        return $value === '*' ? $value : '`'.str_replace('`', '``', $value).'`';
     }
 
     /**
@@ -301,23 +334,21 @@ class MySqlGrammar extends Grammar
      */
     protected function wrapJsonSelector($value)
     {
-        $path = explode('->', $value);
+        [$field, $path] = $this->wrapJsonFieldAndPath($value);
 
-        $field = $this->wrapValue(array_shift($path));
-
-        return sprintf('%s->\'$.%s\'', $field, collect($path)->map(function ($part) {
-            return '"'.$part.'"';
-        })->implode('.'));
+        return 'json_unquote(json_extract('.$field.$path.'))';
     }
 
     /**
-     * Determine if the given string is a JSON selector.
+     * Wrap the given JSON selector for boolean values.
      *
      * @param  string  $value
-     * @return bool
+     * @return string
      */
-    protected function isJsonSelector($value)
+    protected function wrapJsonBooleanSelector($value)
     {
-        return Str::contains($value, '->');
+        [$field, $path] = $this->wrapJsonFieldAndPath($value);
+
+        return 'json_extract('.$field.$path.')';
     }
 }

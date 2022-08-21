@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,16 +12,15 @@
 namespace Assetic\Filter\Sass;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Filter\FilterInterface;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads SASS files.
  *
- * @link http://sass-lang.com/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SassFilter extends BaseSassFilter
+class SassFilter implements FilterInterface
 {
     const STYLE_NESTED     = 'nested';
     const STYLE_EXPANDED   = 'expanded';
@@ -29,24 +28,21 @@ class SassFilter extends BaseSassFilter
     const STYLE_COMPRESSED = 'compressed';
 
     private $sassPath;
-    private $rubyPath;
     private $unixNewlines;
     private $scss;
     private $style;
-    private $precision;
     private $quiet;
     private $debugInfo;
     private $lineNumbers;
-    private $sourceMap;
+    private $loadPaths = array();
     private $cacheLocation;
     private $noCache;
     private $compass;
 
-    public function __construct($sassPath = '/usr/bin/sass', $rubyPath = null)
+    public function __construct($sassPath = '/usr/bin/sass')
     {
         $this->sassPath = $sassPath;
-        $this->rubyPath = $rubyPath;
-        $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
+        $this->cacheLocation = realpath(sys_get_temp_dir());
     }
 
     public function setUnixNewlines($unixNewlines)
@@ -64,11 +60,6 @@ class SassFilter extends BaseSassFilter
         $this->style = $style;
     }
 
-    public function setPrecision($precision)
-    {
-        $this->precision = $precision;
-    }
-
     public function setQuiet($quiet)
     {
         $this->quiet = $quiet;
@@ -84,9 +75,9 @@ class SassFilter extends BaseSassFilter
         $this->lineNumbers = $lineNumbers;
     }
 
-    public function setSourceMap($sourceMap)
+    public function addLoadPath($loadPath)
     {
-        $this->sourceMap = $sourceMap;
+        $this->loadPaths[] = $loadPath;
     }
 
     public function setCacheLocation($cacheLocation)
@@ -106,31 +97,25 @@ class SassFilter extends BaseSassFilter
 
     public function filterLoad(AssetInterface $asset)
     {
-        $sassProcessArgs = array($this->sassPath);
-        if (null !== $this->rubyPath) {
-            $sassProcessArgs = array_merge(explode(' ', $this->rubyPath), $sassProcessArgs);
-        }
+        $pb = new ProcessBuilder(array($this->sassPath));
 
-        $pb = $this->createProcessBuilder($sassProcessArgs);
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
 
-        if ($dir = $asset->getSourceDirectory()) {
-            $pb->add('--load-path')->add($dir);
+        if ($root && $path) {
+            $pb->add('--load-path')->add(dirname($root.'/'.$path));
         }
 
         if ($this->unixNewlines) {
             $pb->add('--unix-newlines');
         }
 
-        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($asset->getSourcePath(), PATHINFO_EXTENSION))) {
+        if (true === $this->scss || (null === $this->scss && 'scss' == pathinfo($path, PATHINFO_EXTENSION))) {
             $pb->add('--scss');
         }
 
         if ($this->style) {
             $pb->add('--style')->add($this->style);
-        }
-
-        if ($this->precision) {
-            $pb->add('--precision')->add($this->precision);
         }
 
         if ($this->quiet) {
@@ -143,10 +128,6 @@ class SassFilter extends BaseSassFilter
 
         if ($this->lineNumbers) {
             $pb->add('--line-numbers');
-        }
-
-        if ($this->sourceMap) {
-            $pb->add('--sourcemap');
         }
 
         foreach ($this->loadPaths as $loadPath) {
@@ -166,15 +147,15 @@ class SassFilter extends BaseSassFilter
         }
 
         // input
-        $pb->add($input = FilesystemUtils::createTemporaryFile('sass'));
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_sass'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());

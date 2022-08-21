@@ -2,11 +2,11 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
 /////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // write.vorbiscomment.php                                     //
@@ -84,14 +84,14 @@ class getid3_write_vorbiscomment
 
 				// On top of that, if error messages are not always captured properly under Windows
 				// To at least see if there was a problem, compare file modification timestamps before and after writing
-				clearstatcache();
+				clearstatcache(true, $this->filename);
 				$timestampbeforewriting = filemtime($this->filename);
 
 				$commandline = GETID3_HELPERAPPSDIR.'vorbiscomment.exe -w --raw -c "'.$tempcommentsfilename.'" "'.$this->filename.'" 2>&1';
 				$VorbiscommentError = `$commandline`;
 
 				if (empty($VorbiscommentError)) {
-					clearstatcache();
+					clearstatcache(true, $this->filename);
 					if ($timestampbeforewriting == filemtime($this->filename)) {
 						$VorbiscommentError = 'File modification timestamp has not changed - it looks like the tags were not written';
 					}

@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.graphic.gif.php                                      //
@@ -18,7 +17,13 @@
 /**
  * @link https://www.w3.org/Graphics/GIF/spec-gif89a.txt
  * @link http://www.matthewflickinger.com/lab/whatsinagif/bits_and_bytes.asp
+ * @link http://www.vurdalakov.net/misc/gif/netscape-looping-application-extension
  */
+
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
+
 class getid3_gif extends getid3_handler
 {
 	/**
@@ -46,6 +51,10 @@ class getid3_gif extends getid3_handler
 			unset($info['gif']);
 			return false;
 		}
+
+		//if (!$this->getid3->option_extra_info) {
+		//	$this->warning('GIF Extensions and Global Color Table not returned due to !getid3->option_extra_info');
+		//}
 
 		$info['gif']['header']['raw']['version']               =                              substr($GIFheader, $offset, 3);
 		$offset += 3;
@@ -86,16 +95,20 @@ class getid3_gif extends getid3_handler
 
 		if ($info['gif']['header']['flags']['global_color_table']) {
 			$GIFcolorTable = $this->fread(3 * $info['gif']['header']['global_color_size']);
-			$offset = 0;
-			for ($i = 0; $i < $info['gif']['header']['global_color_size']; $i++) {
-				$red   = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
-				$green = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
-				$blue  = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
-				$info['gif']['global_color_table'][$i] = (($red << 16) | ($green << 8) | ($blue));
+			if ($this->getid3->option_extra_info) {
+				$offset = 0;
+				for ($i = 0; $i < $info['gif']['header']['global_color_size']; $i++) {
+					$red   = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
+					$green = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
+					$blue  = getid3_lib::LittleEndian2Int(substr($GIFcolorTable, $offset++, 1));
+					$info['gif']['global_color_table'][$i] = (($red << 16) | ($green << 8) | ($blue));
+					$info['gif']['global_color_table_rgb'][$i] = sprintf('%02X%02X%02X', $red, $green, $blue);
+				}
 			}
 		}
 
 		// Image Descriptor
+		$info['gif']['animation']['animated'] = false;
 		while (!feof($this->getid3->fp)) {
 			$NextBlockTest = $this->fread(1);
 			switch ($NextBlockTest) {
@@ -156,17 +169,36 @@ class getid3_gif extends getid3_handler
 					$ExtensionBlock['byte_length']    = getid3_lib::LittleEndian2Int(substr($ExtensionBlockData, 2, 1));
 					$ExtensionBlock['data']           = (($ExtensionBlock['byte_length'] > 0) ? $this->fread($ExtensionBlock['byte_length']) : null);
 
-					if (substr($ExtensionBlock['data'], 0, 11) == 'NETSCAPE2.0') { // Netscape Application Block (NAB)
-						$ExtensionBlock['data'] .= $this->fread(4);
-						if (substr($ExtensionBlock['data'], 11, 2) == "\x03\x01") {
-							$info['gif']['animation']['animated']   = true;
-							$info['gif']['animation']['loop_count'] = getid3_lib::LittleEndian2Int(substr($ExtensionBlock['data'], 13, 2));
-						} else {
-							$this->warning('Expecting 03 01 at offset '.($this->ftell() - 4).', found "'.getid3_lib::PrintHexBytes(substr($ExtensionBlock['data'], 11, 2)).'"');
-						}
+					switch ($ExtensionBlock['function_code']) {
+						case 0xFF:
+							// Application Extension
+							if ($ExtensionBlock['byte_length'] != 11) {
+								$this->warning('Expected block size of the Application Extension is 11 bytes, found '.$ExtensionBlock['byte_length'].' at offset '.$this->ftell());
+								break;
+							}
+
+							if (substr($ExtensionBlock['data'], 0, 11) !== 'NETSCAPE2.0'
+								&& substr($ExtensionBlock['data'], 0, 11) !== 'ANIMEXTS1.0'
+							) {
+								$this->warning('Ignoring unsupported Application Extension '.substr($ExtensionBlock['data'], 0, 11));
+								break;
+							}
+
+							// Netscape Application Block (NAB)
+							$ExtensionBlock['data'] .= $this->fread(4);
+							if (substr($ExtensionBlock['data'], 11, 2) == "\x03\x01") {
+								$info['gif']['animation']['animated']   = true;
+								$info['gif']['animation']['loop_count'] = getid3_lib::LittleEndian2Int(substr($ExtensionBlock['data'], 13, 2));
+							} else {
+								$this->warning('Expecting 03 01 at offset '.($this->ftell() - 4).', found "'.getid3_lib::PrintHexBytes(substr($ExtensionBlock['data'], 11, 2)).'"');
+							}
+
+							break;
 					}
 
-					$info['gif']['extension_blocks'][] = $ExtensionBlock;
+					if ($this->getid3->option_extra_info) {
+						$info['gif']['extension_blocks'][] = $ExtensionBlock;
+					}
 					break;
 
 				case ';':

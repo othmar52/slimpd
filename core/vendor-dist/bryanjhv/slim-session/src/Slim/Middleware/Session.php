@@ -2,8 +2,9 @@
 
 namespace Slim\Middleware;
 
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use SlimSession\Cookie;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 /**
  * Session middleware
@@ -15,8 +16,8 @@ use \Psr\Http\Message\ResponseInterface as Response;
  * for a session and it will be updated after each user activity or interaction
  * like an 'autorefresh' feature.
  *
- * Keep in mind this relies on PHP native sessions, so for this to work you
- * must have that enabled and correctly working.
+ * Keep in mind this relies on PHP native sessions, so for this to work you must
+ * have that enabled and correctly working.
  *
  * @package Slim\Middleware
  * @author  Bryan Horna
@@ -36,15 +37,16 @@ class Session
     public function __construct($settings = [])
     {
         $defaults = [
-            'lifetime'     => '20 minutes',
-            'path'         => '/',
-            'domain'       => null,
-            'secure'       => false,
-            'httponly'     => false,
-            'name'         => 'slim_session',
-            'autorefresh'  => false,
-            'handler'      => null,
-            'ini_settings' => []
+            'lifetime' => '20 minutes',
+            'path' => '/',
+            'domain' => '',
+            'secure' => false,
+            'httponly' => false,
+            'samesite' => 'Lax',
+            'name' => 'slim_session',
+            'autorefresh' => false,
+            'handler' => null,
+            'ini_settings' => [],
         ];
         $settings = array_merge($defaults, $settings);
 
@@ -71,8 +73,11 @@ class Session
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    public function __invoke(Request $request, Response $response, callable $next)
-    {
+    public function __invoke(
+        Request $request,
+        Response $response,
+        callable $next
+    ) {
         $this->startSession();
 
         return $next($request, $response);
@@ -83,49 +88,38 @@ class Session
      */
     protected function startSession()
     {
+        if (session_status() !== PHP_SESSION_NONE) {
+            return;
+        }
+
         $settings = $this->settings;
         $name = $settings['name'];
 
-        session_set_cookie_params(
-            $settings['lifetime'],
-            $settings['path'],
-            $settings['domain'],
-            $settings['secure'],
-            $settings['httponly']
-        );
+        Cookie::setup($settings);
 
-        $inactive = session_status() === PHP_SESSION_NONE;
-
-        if ($inactive) {
-            // Refresh session cookie when "inactive",
-            // else PHP won't know we want this to refresh
-            if ($settings['autorefresh'] && isset($_COOKIE[$name])) {
-                setcookie(
-                    $name,
-                    $_COOKIE[$name],
-                    time() + $settings['lifetime'],
-                    $settings['path'],
-                    $settings['domain'],
-                    $settings['secure'],
-                    $settings['httponly']
-                );
-            }
+        // Refresh session cookie when "inactive",
+        // else PHP won't know we want this to refresh
+        if ($settings['autorefresh'] && isset($_COOKIE[$name])) {
+            Cookie::set(
+                $name,
+                $_COOKIE[$name],
+                time() + $settings['lifetime'],
+                $settings
+            );
         }
 
         session_name($name);
 
         $handler = $settings['handler'];
         if ($handler) {
-            if (!($handler instanceof SessionHandlerInterface)) {
-                $handler = new $handler;
+            if (!($handler instanceof \SessionHandlerInterface)) {
+                $handler = new $handler();
             }
             session_set_save_handler($handler, true);
         }
 
-        session_cache_limiter(false);
-        if ($inactive) {
-            session_start();
-        }
+        session_cache_limiter('');
+        session_start();
     }
 
     protected function iniSet($settings)

@@ -2,10 +2,9 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
 //                                                             //
 // extension.cache.dbm.php - part of getID3()                  //
 // Please see readme.txt for more information                  //
@@ -216,14 +215,16 @@ class getID3_cached_dbm extends getID3
 	/**
 	 * clear cache
 	 *
-	 * @param string $filename
-	 * @param int    $filesize
-	 * @param string $original_filename
+	 * @param string   $filename
+	 * @param int      $filesize
+	 * @param string   $original_filename
+	 * @param resource $fp
 	 *
 	 * @return mixed
 	 */
-	public function analyze($filename, $filesize=null, $original_filename='') {
+	public function analyze($filename, $filesize=null, $original_filename='', $fp=null) {
 
+		$key = null;
 		if (file_exists($filename)) {
 
 			// Calc key     filename::mod_time::size    - should be unique
@@ -239,7 +240,7 @@ class getID3_cached_dbm extends getID3
 		}
 
 		// Miss
-		$result = parent::analyze($filename);
+		$result = parent::analyze($filename, $filesize, $original_filename, $fp);
 
 		// Save result
 		if (isset($key) && file_exists($filename)) {

@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio-video.real.php                                 //
@@ -15,6 +14,9 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'module.audio-video.riff.php', __FILE__, true);
 
 class getid3_real extends getid3_handler
@@ -217,7 +219,8 @@ class getid3_real extends getid3_handler
 
 							case 'audio/x-pn-realaudio':
 							case 'audio/x-pn-multirate-realaudio':
-								$this->ParseOldRAheader($thisfile_real_chunks_currentchunk_typespecificdata, $thisfile_real_chunks_currentchunk['parsed_audio_data']);
+								$this->ParseOldRAheader($thisfile_real_chunks_currentchunk_typespecificdata, $parsedAudioData);
+								$thisfile_real_chunks_currentchunk['parsed_audio_data'] = &$parsedAudioData;
 
 								$info['audio']['sample_rate']     = $thisfile_real_chunks_currentchunk['parsed_audio_data']['sample_rate'];
 								$info['audio']['bits_per_sample'] = $thisfile_real_chunks_currentchunk['parsed_audio_data']['bits_per_sample'];
@@ -484,8 +487,9 @@ class getid3_real extends getid3_handler
 			$ParsedArray['fourcc'] = $ParsedArray['fourcc3'];
 
 		}
+		/** @var string[]|false[] $value */
 		foreach ($ParsedArray['comments'] as $key => $value) {
-			if ($ParsedArray['comments'][$key][0] === false) {
+			if ($value[0] === false) {
 				$ParsedArray['comments'][$key][0] = '';
 			}
 		}

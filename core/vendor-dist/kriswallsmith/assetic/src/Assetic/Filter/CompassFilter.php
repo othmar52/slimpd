@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,20 +12,17 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Filter\Sass\BaseSassFilter;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Filter\FilterInterface;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Loads Compass files.
  *
- * @link http://compass-style.org/
  * @author Maxime Thirouin <maxime.thirouin@gmail.com>
  */
-class CompassFilter extends BaseSassFilter
+class CompassFilter implements FilterInterface
 {
     private $compassPath;
-    private $rubyPath;
     private $scss;
 
     // sass options
@@ -42,24 +39,18 @@ class CompassFilter extends BaseSassFilter
     private $noLineComments;
     private $imagesDir;
     private $javascriptsDir;
-    private $fontsDir;
-    private $relativeAssets;
 
     // compass configuration file options
     private $plugins = array();
+    private $loadPaths = array();
     private $httpPath;
     private $httpImagesPath;
-    private $httpFontsPath;
-    private $httpGeneratedImagesPath;
-    private $generatedImagesPath;
     private $httpJavascriptsPath;
-    private $homeEnv = true;
 
-    public function __construct($compassPath = '/usr/bin/compass', $rubyPath = null)
+    public function __construct($compassPath = '/usr/bin/compass')
     {
         $this->compassPath = $compassPath;
-        $this->rubyPath = $rubyPath;
-        $this->cacheLocation = FilesystemUtils::getTemporaryDirectory();
+        $this->cacheLocation = sys_get_temp_dir();
 
         if ('cli' !== php_sapi_name()) {
             $this->boring = true;
@@ -128,11 +119,6 @@ class CompassFilter extends BaseSassFilter
         $this->javascriptsDir = $javascriptsDir;
     }
 
-    public function setFontsDir($fontsDir)
-    {
-        $this->fontsDir = $fontsDir;
-    }
-
     // compass configuration file options setters
     public function setPlugins(array $plugins)
     {
@@ -142,6 +128,11 @@ class CompassFilter extends BaseSassFilter
     public function addPlugin($plugin)
     {
         $this->plugins[] = $plugin;
+    }
+
+    public function addLoadPath($loadPath)
+    {
+        $this->loadPaths[] = $loadPath;
     }
 
     public function setHttpPath($httpPath)
@@ -154,55 +145,30 @@ class CompassFilter extends BaseSassFilter
         $this->httpImagesPath = $httpImagesPath;
     }
 
-    public function setHttpFontsPath($httpFontsPath)
-    {
-        $this->httpFontsPath = $httpFontsPath;
-    }
-
-    public function setHttpGeneratedImagesPath($httpGeneratedImagesPath)
-    {
-        $this->httpGeneratedImagesPath = $httpGeneratedImagesPath;
-    }
-
-    public function setGeneratedImagesPath($generatedImagesPath)
-    {
-        $this->generatedImagesPath = $generatedImagesPath;
-    }
-
     public function setHttpJavascriptsPath($httpJavascriptsPath)
     {
         $this->httpJavascriptsPath = $httpJavascriptsPath;
     }
 
-    public function setHomeEnv($homeEnv)
-    {
-        $this->homeEnv = $homeEnv;
-    }
-
-    public function setRelativeAssets($relativeAssets)
-    {
-        $this->relativeAssets = $relativeAssets;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+
         $loadPaths = $this->loadPaths;
-        if ($dir = $asset->getSourceDirectory()) {
-            $loadPaths[] = $dir;
+        if ($root && $path) {
+            $loadPaths[] = dirname($root.'/'.$path);
         }
 
-        $tempDir = $this->cacheLocation ? $this->cacheLocation : FilesystemUtils::getTemporaryDirectory();
+        // compass does not seems to handle symlink, so we use realpath()
+        $tempDir = realpath(sys_get_temp_dir());
 
-        $compassProcessArgs = array(
+        $pb = new ProcessBuilder(array(
             $this->compassPath,
             'compile',
             $tempDir,
-        );
-        if (null !== $this->rubyPath) {
-            $compassProcessArgs = array_merge(explode(' ', $this->rubyPath), $compassProcessArgs);
-        }
-
-        $pb = $this->createProcessBuilder($compassProcessArgs);
+        ));
+        $pb->inheritEnvironmentVariables();
 
         if ($this->force) {
             $pb->add('--force');
@@ -224,23 +190,15 @@ class CompassFilter extends BaseSassFilter
             $pb->add('--no-line-comments');
         }
 
-        // these three options are not passed into the config file
+        // these two options are not passed into the config file
         // because like this, compass adapts this to be xxx_dir or xxx_path
         // whether it's an absolute path or not
         if ($this->imagesDir) {
             $pb->add('--images-dir')->add($this->imagesDir);
         }
 
-        if ($this->relativeAssets) {
-            $pb->add('--relative-assets');
-        }
-
         if ($this->javascriptsDir) {
             $pb->add('--javascripts-dir')->add($this->javascriptsDir);
-        }
-
-        if ($this->fontsDir) {
-            $pb->add('--fonts-dir')->add($this->fontsDir);
         }
 
         // options in config file
@@ -274,18 +232,6 @@ class CompassFilter extends BaseSassFilter
             $optionsConfig['http_images_path'] = $this->httpImagesPath;
         }
 
-        if ($this->httpFontsPath) {
-            $optionsConfig['http_fonts_path'] = $this->httpFontsPath;
-        }
-
-        if ($this->httpGeneratedImagesPath) {
-            $optionsConfig['http_generated_images_path'] = $this->httpGeneratedImagesPath;
-        }
-
-        if ($this->generatedImagesPath) {
-            $optionsConfig['generated_images_path'] = $this->generatedImagesPath;
-        }
-
         if ($this->httpJavascriptsPath) {
             $optionsConfig['http_javascripts_path'] = $this->httpJavascriptsPath;
         }
@@ -314,7 +260,7 @@ class CompassFilter extends BaseSassFilter
         // compass choose the type (sass or scss from the filename)
         if (null !== $this->scss) {
             $type = $this->scss ? 'scss' : 'sass';
-        } elseif ($path = $asset->getSourcePath()) {
+        } elseif ($path) {
             // FIXME: what if the extension is something else?
             $type = pathinfo($path, PATHINFO_EXTENSION);
         } else {
@@ -338,22 +284,19 @@ class CompassFilter extends BaseSassFilter
         // output
         $output = $tempName.'.css';
 
-        if ($this->homeEnv) {
-            // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
-            $pb->setEnv('HOME', FilesystemUtils::getTemporaryDirectory());
-            $this->mergeEnv($pb);
-        }
+        // it's not really usefull but... https://github.com/chriseppstein/compass/issues/376
+        $pb->setEnv('HOME', sys_get_temp_dir());
 
         $proc = $pb->getProcess();
         $code = $proc->run();
 
-        if (0 !== $code) {
+        if (0 < $code) {
             unlink($input);
             if (isset($configFile)) {
                 unlink($configFile);
             }
 
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw new \RuntimeException($proc->getErrorOutput().'...'.$proc->getOutput());
         }
 
         $asset->setContent(file_get_contents($output));

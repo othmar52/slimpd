@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,9 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Factory\AssetFactory;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through Sprockets.
@@ -26,7 +24,7 @@ use Assetic\Util\FilesystemUtils;
  *
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class SprocketsFilter extends BaseProcessFilter implements DependencyExtractorInterface
+class SprocketsFilter implements FilterInterface
 {
     private $sprocketsLib;
     private $rubyBin;
@@ -90,10 +88,10 @@ EOF;
             $more .= "\n";
         }
 
-        $tmpAsset = FilesystemUtils::createTemporaryFile('sprockets_asset');
+        $tmpAsset = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
         file_put_contents($tmpAsset, $asset->getContent());
 
-        $input = FilesystemUtils::createTemporaryFile('sprockets_in');
+        $input = tempnam(sys_get_temp_dir(), 'assetic_sprockets');
         file_put_contents($input, sprintf($format,
             $this->sprocketsLib
                 ? sprintf('File.join(%s, \'sprockets\')', var_export($this->sprocketsLib, true))
@@ -103,7 +101,7 @@ EOF;
             $more
         ));
 
-        $pb = $this->createProcessBuilder(array(
+        $pb = new ProcessBuilder(array(
             $this->rubyBin,
             $input,
         ));
@@ -113,8 +111,8 @@ EOF;
         unlink($tmpAsset);
         unlink($input);
 
-        if (0 !== $code) {
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+        if (0 < $code) {
+            throw new \RuntimeException($proc->getErrorOutput());
         }
 
         $asset->setContent($proc->getOutput());
@@ -122,12 +120,6 @@ EOF;
 
     public function filterDump(AssetInterface $asset)
     {
-    }
-
-    public function getChildren(AssetFactory $factory, $content, $loadPath = null)
-    {
-        // todo
-        return array();
     }
 
     private function getHack(AssetInterface $asset)
@@ -145,8 +137,11 @@ end
 
 EOF;
 
-        if ($dir = $asset->getSourceDirectory()) {
-            return sprintf($format, var_export($dir, true));
+        $root = $asset->getSourceRoot();
+        $path = $asset->getSourcePath();
+
+        if ($root && $path) {
+            return sprintf($format, var_export(dirname($root.'/'.$path), true));
         }
     }
 }

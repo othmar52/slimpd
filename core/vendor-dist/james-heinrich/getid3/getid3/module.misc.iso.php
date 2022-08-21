@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.misc.iso.php                                         //
@@ -15,6 +14,9 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 
 class getid3_iso extends getid3_handler
 {
@@ -30,7 +32,7 @@ class getid3_iso extends getid3_handler
 			$this->fseek(2048 * $i);
 			$ISOheader = $this->fread(2048);
 			if (substr($ISOheader, 1, 5) == 'CD001') {
-				switch (ord($ISOheader{0})) {
+				switch (ord($ISOheader[0])) {
 					case 1:
 						$info['iso']['primary_volume_descriptor']['offset'] = 2048 * $i;
 						$this->ParsePrimaryVolumeDescriptor($ISOheader);
@@ -51,8 +53,10 @@ class getid3_iso extends getid3_handler
 		$this->ParsePathTable();
 
 		$info['iso']['files'] = array();
-		foreach ($info['iso']['path_table']['directories'] as $directorynum => $directorydata) {
-			$info['iso']['directories'][$directorynum] = $this->ParseDirectoryRecord($directorydata);
+		if (!empty($info['iso']['path_table']['directories'])) {
+			foreach ($info['iso']['path_table']['directories'] as $directorynum => $directorydata) {
+				$info['iso']['directories'][$directorynum] = $this->ParseDirectoryRecord($directorydata);
+			}
 		}
 
 		return true;
@@ -248,6 +252,7 @@ class getid3_iso extends getid3_handler
 
 		$offset = 0;
 		$pathcounter = 1;
+		$FullPathArray = array();
 		while ($offset < $PathTableSize) {
 			// shortcut
 			$info['iso']['path_table']['directories'][$pathcounter] = array();
@@ -297,9 +302,9 @@ class getid3_iso extends getid3_handler
 		$DirectoryRecordData = $this->fread(1);
 		$DirectoryRecord = array();
 
-		while (ord($DirectoryRecordData{0}) > 33) {
+		while (ord($DirectoryRecordData[0]) > 33) {
 
-			$DirectoryRecordData .= $this->fread(ord($DirectoryRecordData{0}) - 1);
+			$DirectoryRecordData .= $this->fread(ord($DirectoryRecordData[0]) - 1);
 
 			$ThisDirectoryRecord = array();
 
@@ -390,13 +395,13 @@ class getid3_iso extends getid3_handler
 		// 6: second of the minute from 0 to 59
 		// 7: Offset from Greenwich Mean Time in number of 15 minute intervals from -48 (West) to +52 (East)
 
-		$UNIXyear   = ord($ISOtime{0}) + 1900;
-		$UNIXmonth  = ord($ISOtime{1});
-		$UNIXday    = ord($ISOtime{2});
-		$UNIXhour   = ord($ISOtime{3});
-		$UNIXminute = ord($ISOtime{4});
-		$UNIXsecond = ord($ISOtime{5});
-		$GMToffset  = $this->TwosCompliment2Decimal(ord($ISOtime{5}));
+		$UNIXyear   = ord($ISOtime[0]) + 1900;
+		$UNIXmonth  = ord($ISOtime[1]);
+		$UNIXday    = ord($ISOtime[2]);
+		$UNIXhour   = ord($ISOtime[3]);
+		$UNIXminute = ord($ISOtime[4]);
+		$UNIXsecond = ord($ISOtime[5]);
+		$GMToffset  = $this->TwosCompliment2Decimal(ord($ISOtime[5]));
 
 		return gmmktime($UNIXhour, $UNIXminute, $UNIXsecond, $UNIXmonth, $UNIXday, $UNIXyear);
 	}

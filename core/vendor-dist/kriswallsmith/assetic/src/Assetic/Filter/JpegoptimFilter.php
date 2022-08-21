@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,8 +12,7 @@
 namespace Assetic\Filter;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Runs assets through Jpegoptim.
@@ -21,7 +20,7 @@ use Assetic\Util\FilesystemUtils;
  * @link   http://www.kokkonen.net/tjko/projects.html
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-class JpegoptimFilter extends BaseProcessFilter
+class JpegoptimFilter implements FilterInterface
 {
     private $jpegoptimBin;
     private $stripAll;
@@ -53,7 +52,7 @@ class JpegoptimFilter extends BaseProcessFilter
 
     public function filterDump(AssetInterface $asset)
     {
-        $pb = $this->createProcessBuilder(array($this->jpegoptimBin));
+        $pb = new ProcessBuilder(array($this->jpegoptimBin));
 
         if ($this->stripAll) {
             $pb->add('--strip-all');
@@ -63,7 +62,7 @@ class JpegoptimFilter extends BaseProcessFilter
             $pb->add('--max='.$this->max);
         }
 
-        $pb->add($input = FilesystemUtils::createTemporaryFile('jpegoptim'));
+        $pb->add($input = tempnam(sys_get_temp_dir(), 'assetic_jpegoptim'));
         file_put_contents($input, $asset->getContent());
 
         $proc = $pb->getProcess();
@@ -71,7 +70,7 @@ class JpegoptimFilter extends BaseProcessFilter
 
         if (false !== strpos($proc->getOutput(), 'ERROR')) {
             unlink($input);
-            throw FilterException::fromProcess($proc)->setInput($asset->getContent());
+            throw new \RuntimeException($proc->getOutput());
         }
 
         $asset->setContent(file_get_contents($input));

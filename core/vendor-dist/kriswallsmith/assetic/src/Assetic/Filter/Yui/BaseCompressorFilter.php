@@ -3,7 +3,7 @@
 /*
  * This file is part of the Assetic package, an OpenSky project.
  *
- * (c) 2010-2014 OpenSky Project Inc
+ * (c) 2010-2012 OpenSky Project Inc
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -12,23 +12,20 @@
 namespace Assetic\Filter\Yui;
 
 use Assetic\Asset\AssetInterface;
-use Assetic\Exception\FilterException;
-use Assetic\Filter\BaseProcessFilter;
-use Assetic\Util\FilesystemUtils;
+use Assetic\Filter\FilterInterface;
+use Assetic\Util\ProcessBuilder;
 
 /**
  * Base YUI compressor filter.
  *
- * @link http://developer.yahoo.com/yui/compressor/
  * @author Kris Wallsmith <kris.wallsmith@gmail.com>
  */
-abstract class BaseCompressorFilter extends BaseProcessFilter
+abstract class BaseCompressorFilter implements FilterInterface
 {
     private $jarPath;
     private $javaPath;
     private $charset;
     private $lineBreak;
-    private $stackSize;
 
     public function __construct($jarPath, $javaPath = '/usr/bin/java')
     {
@@ -46,11 +43,6 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         $this->lineBreak = $lineBreak;
     }
 
-    public function setStackSize($stackSize)
-    {
-        $this->stackSize = $stackSize;
-    }
-
     public function filterLoad(AssetInterface $asset)
     {
     }
@@ -66,13 +58,11 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
      */
     protected function compress($content, $type, $options = array())
     {
-        $pb = $this->createProcessBuilder(array($this->javaPath));
-
-        if (null !== $this->stackSize) {
-            $pb->add('-Xss'.$this->stackSize);
-        }
-
-        $pb->add('-jar')->add($this->jarPath);
+        $pb = new ProcessBuilder(array(
+            $this->javaPath,
+            '-jar',
+            $this->jarPath,
+        ));
 
         foreach ($options as $option) {
             $pb->add($option);
@@ -87,25 +77,24 @@ abstract class BaseCompressorFilter extends BaseProcessFilter
         }
 
         // input and output files
-        $tempDir = FilesystemUtils::getTemporaryDirectory();
-        $input = tempnam($tempDir, 'assetic_yui_input');
-        $output = tempnam($tempDir, 'assetic_yui_output');
+        $tempDir = realpath(sys_get_temp_dir());
+        $hash = substr(sha1(time().rand(11111, 99999)), 0, 7);
+        $input = $tempDir.DIRECTORY_SEPARATOR.$hash.'.'.$type;
+        $output = $tempDir.DIRECTORY_SEPARATOR.$hash.'-min.'.$type;
         file_put_contents($input, $content);
-        $pb->add('-o')->add($output)->add('--type')->add($type)->add($input);
+        $pb->add('-o')->add($output)->add($input);
 
         $proc = $pb->getProcess();
         $code = $proc->run();
         unlink($input);
 
-        if (0 !== $code) {
+        if (0 < $code) {
             if (file_exists($output)) {
                 unlink($output);
             }
 
-            throw FilterException::fromProcess($proc)->setInput($content);
-        }
-
-        if (!file_exists($output)) {
+            throw new \RuntimeException($proc->getErrorOutput());
+        } elseif (!file_exists($output)) {
             throw new \RuntimeException('Error creating output file.');
         }
 

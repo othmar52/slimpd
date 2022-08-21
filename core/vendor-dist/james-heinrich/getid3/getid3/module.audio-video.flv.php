@@ -1,15 +1,21 @@
 <?php
-
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
+/////////////////////////////////////////////////////////////////
+//                                                             //
+// module.audio-video.flv.php                                  //
+// module for analyzing Shockwave Flash Video files            //
+// dependencies: NONE                                          //
+//                                                             //
+/////////////////////////////////////////////////////////////////
 //                                                             //
 //  FLV module by Seth Kaufman <sethØwhirl-i-gig*com>          //
 //                                                             //
 //  * version 0.1 (26 June 2005)                               //
-//                                                             //
 //                                                             //
 //  * version 0.1.1 (15 July 2005)                             //
 //  minor modifications by James Heinrich <info@getid3.org>    //
@@ -44,14 +50,12 @@
 //  handle GETID3_FLV_VIDEO_VP6FLV_ALPHA                       //
 //  improved AVCSequenceParameterSetReader::readData()         //
 //    by Xander Schouwerwou <schouwerwouØgmail*com>            //
-//                                                             //
-/////////////////////////////////////////////////////////////////
-//                                                             //
-// module.audio-video.flv.php                                  //
-// module for analyzing Shockwave Flash Video files            //
-// dependencies: NONE                                          //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
+
+if (!defined('GETID3_INCLUDEPATH')) { // prevent path-exposing attacks that access modules directly on public webservers
+	exit;
+}
 
 define('GETID3_FLV_TAG_AUDIO',          8);
 define('GETID3_FLV_TAG_VIDEO',          9);
@@ -157,6 +161,7 @@ class getid3_flv extends getid3_handler
 						$info['flv']['video']['videoCodec'] = $LastHeaderByte & 0x07;
 
 						$FLVvideoHeader = $this->fread(11);
+						$PictureSizeEnc = array();
 
 						if ($info['flv']['video']['videoCodec'] == GETID3_FLV_VIDEO_H264) {
 							// this code block contributed by: moysevichØgmail*com
@@ -597,7 +602,6 @@ class AMFReader
 			// null
 			case 6:
 				return null;
-				break;
 
 			// Mixed array
 			case 8:

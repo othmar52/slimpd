@@ -11,11 +11,18 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     private $progressHandlers = [];
 
     private $requiredCancelRequests = 0;
+    private $cancelRequests = 0;
 
     public function __construct(callable $resolver, callable $canceller = null)
     {
         $this->canceller = $canceller;
-        $this->call($resolver);
+
+        // Explicitly overwrite arguments with null values before invoking
+        // resolver function. This ensure that these arguments do not show up
+        // in the stack trace in PHP 7+ only.
+        $cb = $resolver;
+        $resolver = $canceller = null;
+        $this->call($cb);
     }
 
     public function then(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
@@ -28,15 +35,24 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
             return new static($this->resolver($onFulfilled, $onRejected, $onProgress));
         }
 
-        $this->requiredCancelRequests++;
+        // This promise has a canceller, so we create a new child promise which
+        // has a canceller that invokes the parent canceller if all other
+        // followers are also cancelled. We keep a reference to this promise
+        // instance for the static canceller function and clear this to avoid
+        // keeping a cyclic reference between parent and follower.
+        $parent = $this;
+        ++$parent->requiredCancelRequests;
 
-        return new static($this->resolver($onFulfilled, $onRejected, $onProgress), function () {
-            $this->requiredCancelRequests--;
+        return new static(
+            $this->resolver($onFulfilled, $onRejected, $onProgress),
+            static function () use (&$parent) {
+                if (++$parent->cancelRequests >= $parent->requiredCancelRequests) {
+                    $parent->cancel();
+                }
 
-            if ($this->requiredCancelRequests <= 0) {
-                $this->cancel();
+                $parent = null;
             }
-        });
+        );
     }
 
     public function done(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
@@ -45,7 +61,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
             return $this->result->done($onFulfilled, $onRejected, $onProgress);
         }
 
-        $this->handlers[] = function (ExtendedPromiseInterface $promise) use ($onFulfilled, $onRejected) {
+        $this->handlers[] = static function (ExtendedPromiseInterface $promise) use ($onFulfilled, $onRejected) {
             $promise
                 ->done($onFulfilled, $onRejected);
         };
@@ -57,7 +73,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
     public function otherwise(callable $onRejected)
     {
-        return $this->then(null, function ($reason) use ($onRejected) {
+        return $this->then(null, static function ($reason) use ($onRejected) {
             if (!_checkTypehint($onRejected, $reason)) {
                 return new RejectedPromise($reason);
             }
@@ -68,11 +84,11 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
     public function always(callable $onFulfilledOrRejected)
     {
-        return $this->then(function ($value) use ($onFulfilledOrRejected) {
+        return $this->then(static function ($value) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($value) {
                 return $value;
             });
-        }, function ($reason) use ($onFulfilledOrRejected) {
+        }, static function ($reason) use ($onFulfilledOrRejected) {
             return resolve($onFulfilledOrRejected())->then(function () use ($reason) {
                 return new RejectedPromise($reason);
             });
@@ -86,44 +102,21 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 
     public function cancel()
     {
+        if (null === $this->canceller || null !== $this->result) {
+            return;
+        }
+
         $canceller = $this->canceller;
         $this->canceller = null;
 
-        $parentCanceller = null;
-
-        if (null !== $this->result) {
-            // Go up the promise chain and reach the top most promise which is
-            // itself not following another promise
-            $root = $this->unwrap($this->result);
-
-            // Return if the root promise is already resolved or a
-            // FulfilledPromise or RejectedPromise
-            if (!$root instanceof self || null !== $root->result) {
-                return;
-            }
-
-            $root->requiredCancelRequests--;
-
-            if ($root->requiredCancelRequests <= 0) {
-                $parentCanceller = [$root, 'cancel'];
-            }
-        }
-
-        if (null !== $canceller) {
-            $this->call($canceller);
-        }
-
-        // For BC, we call the parent canceller after our own canceller
-        if ($parentCanceller) {
-            $parentCanceller();
-        }
+        $this->call($canceller);
     }
 
     private function resolver(callable $onFulfilled = null, callable $onRejected = null, callable $onProgress = null)
     {
         return function ($resolve, $reject, $notify) use ($onFulfilled, $onRejected, $onProgress) {
             if ($onProgress) {
-                $progressHandler = function ($update) use ($notify, $onProgress) {
+                $progressHandler = static function ($update) use ($notify, $onProgress) {
                     try {
                         $notify($onProgress($update));
                     } catch (\Throwable $e) {
@@ -136,7 +129,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
                 $progressHandler = $notify;
             }
 
-            $this->handlers[] = function (ExtendedPromiseInterface $promise) use ($onFulfilled, $onRejected, $resolve, $reject, $progressHandler) {
+            $this->handlers[] = static function (ExtendedPromiseInterface $promise) use ($onFulfilled, $onRejected, $resolve, $reject, $progressHandler) {
                 $promise
                     ->then($onFulfilled, $onRejected)
                     ->done($resolve, $reject, $progressHandler);
@@ -146,15 +139,6 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         };
     }
 
-    private function resolve($value = null)
-    {
-        if (null !== $this->result) {
-            return;
-        }
-
-        $this->settle(resolve($value));
-    }
-
     private function reject($reason = null)
     {
         if (null !== $this->result) {
@@ -162,17 +146,6 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         }
 
         $this->settle(reject($reason));
-    }
-
-    private function notify($update = null)
-    {
-        if (null !== $this->result) {
-            return;
-        }
-
-        foreach ($this->progressHandlers as $handler) {
-            $handler($update);
-        }
     }
 
     private function settle(ExtendedPromiseInterface $promise)
@@ -185,14 +158,11 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
             );
         }
 
-        if ($promise instanceof self) {
-            $promise->requiredCancelRequests++;
-        }
-
         $handlers = $this->handlers;
 
         $this->progressHandlers = $this->handlers = [];
         $this->result = $promise;
+        $this->canceller = null;
 
         foreach ($handlers as $handler) {
             $handler($promise);
@@ -219,23 +189,67 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
         return $promise;
     }
 
-    private function call(callable $callback)
+    private function call(callable $cb)
     {
+        // Explicitly overwrite argument with null value. This ensure that this
+        // argument does not show up in the stack trace in PHP 7+ only.
+        $callback = $cb;
+        $cb = null;
+
+        // Use reflection to inspect number of arguments expected by this callback.
+        // We did some careful benchmarking here: Using reflection to avoid unneeded
+        // function arguments is actually faster than blindly passing them.
+        // Also, this helps avoiding unnecessary function arguments in the call stack
+        // if the callback creates an Exception (creating garbage cycles).
+        if (\is_array($callback)) {
+            $ref = new \ReflectionMethod($callback[0], $callback[1]);
+        } elseif (\is_object($callback) && !$callback instanceof \Closure) {
+            $ref = new \ReflectionMethod($callback, '__invoke');
+        } else {
+            $ref = new \ReflectionFunction($callback);
+        }
+        $args = $ref->getNumberOfParameters();
+
         try {
-            $callback(
-                function ($value = null) {
-                    $this->resolve($value);
-                },
-                function ($reason = null) {
-                    $this->reject($reason);
-                },
-                function ($update = null) {
-                    $this->notify($update);
-                }
-            );
+            if ($args === 0) {
+                $callback();
+            } else {
+                // Keep references to this promise instance for the static resolve/reject functions.
+                // By using static callbacks that are not bound to this instance
+                // and passing the target promise instance by reference, we can
+                // still execute its resolving logic and still clear this
+                // reference when settling the promise. This helps avoiding
+                // garbage cycles if any callback creates an Exception.
+                // These assumptions are covered by the test suite, so if you ever feel like
+                // refactoring this, go ahead, any alternative suggestions are welcome!
+                $target =& $this;
+                $progressHandlers =& $this->progressHandlers;
+
+                $callback(
+                    static function ($value = null) use (&$target) {
+                        if ($target !== null) {
+                            $target->settle(resolve($value));
+                            $target = null;
+                        }
+                    },
+                    static function ($reason = null) use (&$target) {
+                        if ($target !== null) {
+                            $target->reject($reason);
+                            $target = null;
+                        }
+                    },
+                    static function ($update = null) use (&$progressHandlers) {
+                        foreach ($progressHandlers as $handler) {
+                            $handler($update);
+                        }
+                    }
+                );
+            }
         } catch (\Throwable $e) {
+            $target = null;
             $this->reject($e);
         } catch (\Exception $e) {
+            $target = null;
             $this->reject($e);
         }
     }
