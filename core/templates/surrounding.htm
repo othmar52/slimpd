@@ -309,7 +309,12 @@
 		{% include 'partials/jsincludes/conf.htm' %}
 		{% include 'partials/jsincludes/filelist.htm' %}
 		<script src="{{fileroot}}core/js/app.js"></script>
+        <script>
+		gsap.registerPlugin(Flip, ScrollTrigger, ScrollToPlugin);
+	    </script>
 		<script src="{{fileroot}}core/js/animations.js"></script>
+
+
 	</body>
 </html>
 {% endif %}

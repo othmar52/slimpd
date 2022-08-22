@@ -47,8 +47,7 @@
                 duration: this.nowPlayingDuration,
                 currentPosPerc: 100,
                 ease: window.Linear.easeNone,
-                onUpdate: this.updateSlider,
-                onUpdateScope: this
+                onUpdate: this.updateSlider
             });
 
             if(this.nowPlayingState === "play") {

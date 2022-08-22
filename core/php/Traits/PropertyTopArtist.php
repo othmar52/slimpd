@@ -18,7 +18,7 @@ namespace Slimpd\Traits;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 trait PropertyTopArtist {
-    protected $topArtistUids;
+    protected $topArtistUids = "";
 
     public function getTopArtistUids() {
         return $this->topArtistUids;

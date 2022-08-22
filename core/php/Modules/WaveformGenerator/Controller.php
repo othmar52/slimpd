@@ -53,6 +53,7 @@ class Controller extends \Slimpd\BaseController {
         $WaveformGenerator = new \Slimpd\Modules\WaveformGenerator\WaveformGenerator($this->container);
         $valid = $this->validateInput($args['itemParams'], $WaveformGenerator);
         if(($valid) === FALSE) {
+            return "{}"; // dirty fix for radio streams
             throw new \Exception("Unable to handle invalid file path", 1481873246);
         }
         $WaveformGenerator->prepare($response);

@@ -24,7 +24,7 @@ class Label extends \Slimpd\Models\AbstractModel {
     use \Slimpd\Traits\PropertyTopGenre;  // topGenreUids
     use \Slimpd\Traits\PropertyYearRange; // yearRange
 
-    protected $az09;
+    protected $az09 = "";
 
     public static $tableName = 'label';
     public static $repoKey = 'labelRepo';

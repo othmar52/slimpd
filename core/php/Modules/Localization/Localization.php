@@ -43,6 +43,9 @@ class Localization {
             if(is_null($vars) === TRUE) {
                 return $this->lang[$langkey . '.' . $itemkey];
             }
+            if(is_array($vars) === FALSE) {
+                return $this->lang[$langkey . '.' . $itemkey];
+            }
             return vsprintf($this->lang[$langkey . '.' . $itemkey], $vars);
         }
         return 'TRNSLT:' . $itemkey;
