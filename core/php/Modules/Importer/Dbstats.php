@@ -27,15 +27,24 @@ namespace Slimpd\Modules\Importer;
  * [artist|genre].topLabelUids (TODO: not finished for all models)
  */
 class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
+
+    // helpers for batch insert to increase performance
+    protected $instances = [];
+    protected $treshold = 500;
+
     public function updateCounterCache() {
         $this->jobPhase = 7;
         $this->beginJob(array(
             'currentItem' => "counting items to process for displaying progressbar ..."
         ), __FUNCTION__);
         cliLog("clearing stats in databasetables", 2, "yellow");
+        // reset all top<artist|genre|label>Uids properties
+        $this->db->query("UPDATE artist SET topLabelUids='', topGenreUids='' ");
+        $this->db->query("UPDATE label SET topArtistUids='', topGenreUids='' ");
+        $this->db->query("UPDATE genre SET topArtistUids='', topLabelUids='' ");
+
         foreach(array('artist', 'genre', 'label') as $table) {
             // reset all counters
-            // TODO: reset topArtistUids, topGenreUids, topLabelUids
             $this->db->query("UPDATE " . $table . " SET trackCount=0, albumCount=0, yearRange='' ");
             // get total amount for displaying progress
             $query = "SELECT count(uid) AS itemsTotal FROM " . $table;
@@ -71,6 +80,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
         $this->processCollectedData($tables);
         unset($tables);
         unset($all);
+        unset($instances);
         $this->deleteOrphans();
         $this->finishJob(array(), __FUNCTION__);
         return;
@@ -147,16 +157,16 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
                 $classPath = "\\Slimpd\\Models\\" . $className;
                 $item = new $classPath();
                 $item->setUid($itemUid)
-                    ->setTrackCount( $data['tracks'] ? count($data['tracks']) : 0 )
-                    ->setAlbumCount( $data['albums'] ? count($data['albums']) : 0 );
+                    ->setTrackCount( count($data['tracks'] ?? []))
+                    ->setAlbumCount( count($data['albums'] ?? []));
 
                 $this->setTopArtistUids($item, $className, $data);
                 $this->setTopGenreUids($item, $className, $data);
                 $this->setTopLabelUids($item, $className, $data);
                 $this->setYearRange($item, $data);
 
-                $repoKey = $item::$repoKey;
-                $this->container->$repoKey->update($item);
+                $this->que($item);
+
                 $this->itemsProcessed++;
                 // 2nd half is proccessing collected data
                 $this->itemsChecked += 0.5;
@@ -169,6 +179,7 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
                 cliLog($msg, 7);
             }
         }
+        $this->finishBatchInsert();
     }
 
     protected function setTopArtistUids(&$item, $className, $data) {
@@ -271,6 +282,92 @@ class Dbstats extends \Slimpd\Modules\Importer\AbstractImporter {
             $query = "DELETE FROM " . $tableName . " WHERE trackCount=0 AND albumCount=0 AND uid>" . $defaultUid;
             cliLog("deleting ".$tableName."s  with trackCount=0 AND albumCount=0", 2, "yellow");
             $this->db->query($query);
+        }
+    }
+
+    public function que(&$instance) {
+        $className = get_class($instance);
+        $tableName = $className::$tableName;
+        $this->instances[$tableName][$instance->getUid()] = $instance;
+        $this->checkQueue($tableName);
+        return $instance;
+    }
+
+    protected function checkQueue($tableName) {
+        if(count($this->instances[$tableName]) >= $this->treshold) {
+            $this->insertBatch($tableName);
+        }
+    }
+
+    public function insertBatch($tableName) {
+        if(isset($this->instances[$tableName]) === FALSE) {
+            return;
+        }
+        if(count($this->instances[$tableName]) === 0) {
+            return;
+        }
+        $query = "INSERT INTO " . $tableName . " ";
+        $counter = 0;
+        foreach($this->instances[$tableName] as $instance) {
+            $mapped = [];
+            switch ($tableName) {
+                case 'artist':
+                    $mapped = [
+                        'uid' => $instance->getUid(),
+                        'albumCount' => $instance->getAlbumCount(),
+                        'trackCount' => $instance->getTrackCount(),
+                        'topGenreUids' => $instance->getTopGenreUids(),
+                        'topLabelUids' => $instance->getTopLabelUids(),
+                        'yearRange' => $instance->getYearRange()
+                    ];
+                    break;
+                case 'label':
+                    $mapped = [
+                        'uid' => $instance->getUid(),
+                        'albumCount' => $instance->getAlbumCount(),
+                        'trackCount' => $instance->getTrackCount(),
+                        'topGenreUids' => $instance->getTopGenreUids(),
+                        'topArtistUids' => $instance->getTopArtistUids(),
+                        'yearRange' => $instance->getYearRange()
+                    ];
+                    break;
+                case 'genre':
+                    $mapped = [
+                        'uid' => $instance->getUid(),
+                        'albumCount' => $instance->getAlbumCount(),
+                        'trackCount' => $instance->getTrackCount(),
+                        'topArtistUids' => $instance->getTopArtistUids(),
+                        'topLabelUids' => $instance->getTopLabelUids(),
+                        'yearRange' => $instance->getYearRange()
+                    ];
+                    break;
+            }
+
+            if($counter === 0) {
+                $query .= "(" . join(",", array_keys($mapped)) . ") VALUES ";
+            }
+            $counter++;
+            $query .= "(";
+            foreach($mapped as $value) {
+                $query .= "\"" . $this->db->real_escape_string($value) . "\",";
+            }
+            $query = substr($query,0,-1) . "),";
+        }
+        $query = substr($query,0,-1);
+        $query .= " AS tableAlias(".join(",",array_keys($mapped)).") ON DUPLICATE KEY UPDATE ";
+        foreach (array_keys($mapped) as $k) {
+            $query .= "$k=tableAlias.$k,";
+        }
+        $query = substr($query,0,-1) . ";";
+        cliLog("batch-insert " . $tableName . "s (" . $counter . " records)" , 2, "lightblue");
+        $this->db->query($query);
+
+        $this->instances[$tableName] = array();
+    }
+
+    protected function finishBatchInsert() {
+        foreach(array_keys($this->instances) as $tableName) {
+            $this->insertBatch($tableName);
         }
     }
 }
