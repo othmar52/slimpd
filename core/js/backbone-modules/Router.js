@@ -26,6 +26,9 @@
     window.sliMpd = $.extend(true, window.sliMpd, {
         modules : {}
     });
+
+    var routeKey1 = window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/:albumUid";
+    var routeKey2 = window.sliMpd.conf.backboneRoot + "auth/:subroute";
     window.sliMpd.modules.Router = window.Backbone.Router.extend({
 
         rendered : false,
@@ -38,8 +41,8 @@
 
         routes : {
             "" : "generic",
-            [window.sliMpd.conf.backboneRoot + "maintainance/albumdebug/:albumUid"] : "editAlbum",
-            [window.sliMpd.conf.backboneRoot + "auth/:subroute"] : "auth",
+            routeKey1 : "editAlbum",
+            routeKey2 : "auth",
             "*generic" : "generic",
         },
 

@@ -192,6 +192,9 @@
                     this.deckViews[i].timelineSetValue(data[i].percent);
                 }
                 this.deckViews[i].updateStateIcons();
+                if (typeof data[i].item === 'undefined') {
+                    continue;
+                }
                 if(this.lastDeckTracks[i] !== data[i].path) {
                     this.lastDeckTracks[i] = data[i].path;
                     this.deckViews[i].nowPlayingItem = data[i].path;
