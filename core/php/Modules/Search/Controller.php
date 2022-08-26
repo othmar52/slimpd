@@ -105,7 +105,11 @@ class Controller extends \Slimpd\BaseController {
                 GROUP BY itemuid,type
                     ".$sortQuery."
                     LIMIT :offset,:max
-                OPTION ranker=proximity, max_matches=".$args["search"][$resultType]["total"].";
+                OPTION ranker=proximity, max_matches=".(
+                    ($args["search"][$resultType]["total"] > 0)
+                        ? $args["search"][$resultType]["total"]
+                        : 1
+                    ) .";
             ");
             $stmt->bindValue(":offset", ($args['currentPage']-1)*$itemsPerPage , \PDO::PARAM_INT);
             $stmt->bindValue(":max", $itemsPerPage, \PDO::PARAM_INT);
