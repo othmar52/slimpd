@@ -264,9 +264,12 @@ $(document).ready(function() {
     });
 
     window.sliMpd.drawFavicon();
+    console.log("rrrrrr", $(".fileModeToggle a").length);
 
     /* toggle between display tags and display filepath */
-    $(".fileModeToggle a").on("click", function(e) {
+    // $(".fileModeToggle a").on("click", function(e) {
+    $(document).delegate(".fileModeToggle a", "click", function(e) {
+        console.log("dsxfbgdf");
         e.preventDefault();
         $("body").toggleClass("ffn");
         $(this).find("i").toggleClass("fa-toggle-off").toggleClass("fa-toggle-on");
