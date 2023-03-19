@@ -525,9 +525,9 @@ class BaseRepository {
             while (TRUE) {
                 $try = $this->db->query(
                     "SELECT uid FROM `". self::getTableName() ."` WHERE uid = " . mt_rand(1, $highestUid)
-                )->fetch_assoc()['uid'];
+                )->fetch_assoc();
                 if($try !== NULL) {
-                    return $this->getInstanceByAttributes(['uid' => $try] );
+                    return $this->getInstanceByAttributes(['uid' => $try['uid']] );
                 }
                 if($counter > $maxAttempts) {
                     throw new \Exception("OOPZ! couldn't fetch random instance of " . self::getTableName(), 1);

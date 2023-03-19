@@ -52,7 +52,7 @@ class Systemcheck {
             'fsCache'          => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
             'fsEmbedded'       => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
             'fsPeakfiles'      => array('status' => 'warning', 'hide' => FALSE, 'skip' => FALSE),
-            // TODO: perform checks for optional configuration [mpd]alternative_musicdir
+            // TODO: perform checks for optional configuration [mpd]alternative_musicdirs
 
             // database
             'dbConn'           => array('status' => 'success', 'hide' => FALSE, 'skip' => FALSE),

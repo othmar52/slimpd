@@ -226,9 +226,14 @@ class ConfigLoaderINI {
         try {
             // append trailing slash if missing
             $config["mpd"]["musicdir"] = appendTrailingSlash($config["mpd"]["musicdir"]);
-            if($config["mpd"]["alternative_musicdir"] !== "") {
-                $config["mpd"]["alternative_musicdir"] = appendTrailingSlash($config["mpd"]["alternative_musicdir"]);
+            $alternativeMusicDirs = [];
+            foreach (trimExplode(",", $config["mpd"]["alternative_musicdirs"]) as $altDir) {
+                if($altDir !== "") {
+                  $alternativeMusicDirs[] = appendTrailingSlash($altDir);
+                }
             }
+            $config["mpd"]["alternative_musicdirs"] = $alternativeMusicDirs;
+
         } catch(\Exception $e) { }
         try {
             if($config['destructiveness']['disable-all'] !== '1') {

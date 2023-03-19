@@ -28,7 +28,13 @@ class TrackRepo extends \Slimpd\Repositories\BaseRepository {
      * does not begin with mpd-music dir try to fix the path...
      */
     public function getInstanceByPath($pathString, $createDummy = FALSE) {
+        $pathString = str_replace(
+            '/MUSIC18T/18T/',
+            '/MUSIC/mu/18T/',
+            $pathString
+        );
         $pathString = $this->container->filesystemUtility->trimAltMusicDirPrefix($pathString);
+        
         $instance = $this->getInstanceByAttributes(
             array('relPathHash' => getFilePathHash($pathString))
         );

@@ -17,10 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * removes [mpd]alternative_musicdir prefix in case it is configured and present
- */
-
 function appendTrailingSlash($pathString) {
     return removeTrailingSlash($pathString) . DS;
 }

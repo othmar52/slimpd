@@ -117,9 +117,11 @@ class Controller extends \Slimpd\BaseController {
 
         $args['renderitems'] = $this->getRenderItems($args['item']);
 
+        return;
+
         // TODO: remove external liking as soon we have implemented a proper functionality
         $args['temp_likerurl'] = 'http://ixwax/filesystem/plusone?f=' .
-            urlencode($this->conf['mpd']['alternative_musicdir'] . $args['item']->getRelPath());
+            urlencode($this->conf['mpd']['alternative_musicdirs'][0] . $args['item']->getRelPath());
 
         return;
     }

@@ -75,6 +75,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
             new \Twig_SimpleFilter('formatSeconds', function ($seconds) {
                 $format = "G:i:s";
                 $suffix = "h";
+                $seconds = (int)$seconds;
                 if($seconds < 3600) {
                     $format = "i:s";
                     $suffix = "min";
@@ -95,6 +96,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
             }),
 
             new \Twig_SimpleFilter('shorty', function ($number) {
+                $number = (int)$number;
                 if($number < 990) {
                     return $number;
                 }

@@ -31,12 +31,13 @@ class FilesystemUtility {
         if(stripos($pathString, $this->conf['mpd']['musicdir']) === 0) {
             return substr($pathString, strlen($this->conf['mpd']['musicdir']));
         }
-        $altMusicDir = $this->conf['mpd']['alternative_musicdir'];
-        if(trim($altMusicDir) === "") {
+        if (array_key_exists('alternative_musicdirs', $this->conf['mpd']) === false) {
             return $pathString;
         }
-        if(stripos($pathString, $altMusicDir) === 0) {
-            return substr($pathString, strlen($altMusicDir));
+        foreach($this->conf['mpd']['alternative_musicdirs'] as $altDir) {
+            if(stripos($pathString, $altDir) === 0) {
+                return substr($pathString, strlen($altDir));
+            }
         }
         return $pathString;
     }
@@ -48,10 +49,12 @@ class FilesystemUtility {
     }
 
     function getFileRealPath($pathString) {
-        $mpdConf = $this->conf['mpd'];
-        foreach(["alternative_musicdir", "musicdir"] as $confName) {
-            if(file_exists($mpdConf[$confName] . $pathString) === TRUE) {
-                return realpath($mpdConf[$confName] . $pathString);
+        if(file_exists($this->conf['mpd']["musicdir"] . $pathString) === TRUE) {
+            return realpath($this->conf['mpd']["musicdir"] . $pathString);
+        }
+        foreach($this->conf['mpd']['alternative_musicdirs'] as $altDir) {
+            if(file_exists($altDir . $pathString) === TRUE) {
+                return realpath($altDir . $pathString);
             }
         }
         return FALSE;
@@ -64,13 +67,13 @@ class FilesystemUtility {
         if($this->conf['filebrowser']['restrict-to-musicdir'] === "0") {
             return TRUE;
         }
-        $mpdConf = $this->conf['mpd'];
         $realPath = $this->getFileRealPath($itemPath);
-        foreach(["alternative_musicdir", "musicdir"] as $confName) {
-            if(stripos($realPath, $mpdConf[$confName]) === 0) {
-                return TRUE;
-            }
-            if($realPath . DS === $mpdConf[$confName]) {
+
+        if(stripos($realPath, $this->conf['mpd']["musicdir"]) === 0) {
+            return TRUE;
+        }
+        foreach($this->conf['mpd']['alternative_musicdirs'] as $altDir) {
+            if(stripos($realPath, $altDir) === 0) {
                 return TRUE;
             }
         }

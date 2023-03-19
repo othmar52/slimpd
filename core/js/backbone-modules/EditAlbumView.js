@@ -34,10 +34,12 @@
         localSortable : null,
 
         initialize : function(options) {
+            console.log('EditAlbumView.initialize()');
             window.sliMpd.modules.PageView.prototype.initialize.call(this, options);
         },
 
         render : function(renderMarkup) {
+            console.log('EditAlbumView.render()');
             if (this.rendered) {
                 return;
             }
