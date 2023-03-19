@@ -42,7 +42,9 @@
         routes : {
             "" : "generic",
             routeKey1 : "editAlbum",
+            "maintainance/albumdebug/:albumUid" : "editAlbum",
             routeKey2 : "auth",
+            "auth/:subroute" : "auth",
             "*generic" : "generic",
         },
 
