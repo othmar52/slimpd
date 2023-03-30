@@ -220,8 +220,17 @@
             // create a few filter links in autocomplete widget
             this.tabAutocomplete._renderMenu = function( ul, items, type ) {
                 var $markup = $("<div>").attr("class", "nav nav-pills ac-nav type-nav ");
-                var filterLinks = ["all", "artist", "album", "label", "dirname"];
+                var filterLinks = ["all", "artist", "album", "label", "dirname", "track", "genre"];
                 var cat = this.options.sourceCategory;
+                switch (that.searchfield.val().slice(0, 3)) {
+                    case '-a ': cat = 'artist'; break;
+                    case '-l ': cat = 'label'; break;
+                    case '-r ': cat = 'album'; break;
+                    case '-d ': cat = 'dirname'; break;
+                    case '-t ': cat = 'track'; break;
+                    default: break;
+                }
+
                 filterLinks.forEach(function(filter){
                     $("<button>").attr("type", "button")
                     .attr("class", "btn uc btn-primary" + ((cat === filter)?"active":""))

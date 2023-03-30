@@ -299,6 +299,23 @@ class Controller extends \Slimpd\BaseController {
         # TODO: evaluate if modifying searchterm makes sense
         // "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
         $originalTerm = $request->getParam("q");
+
+
+        $stripPrefix = FALSE;
+        switch (substr($originalTerm,0, 3)) {
+            case '-a ': $args["currentType"] = 'artist'; $stripPrefix = TRUE; break;
+            case '-l ': $args["currentType"] = 'label'; $stripPrefix = TRUE; break;
+            case '-t ': $args["currentType"] = 'track'; $stripPrefix = TRUE; break;
+            case '-d ': $args["currentType"] = 'dirname'; $stripPrefix = TRUE; break;
+            case '-r ': $args["currentType"] = 'album'; $stripPrefix = TRUE; break;
+            case '-g ': $args["currentType"] = 'genre'; $stripPrefix = TRUE; break;
+            default: break;
+        }
+        if ($stripPrefix === TRUE) {
+            $originalTerm = substr($originalTerm, 3);
+        }
+
+
         $term = cleanSearchterm($originalTerm);
         $args['useExactMatch'] = (preg_match("/^\".*\"$/", trim($originalTerm))) ? TRUE : FALSE;
 
@@ -345,6 +362,25 @@ class Controller extends \Slimpd\BaseController {
 
         $originalTerm = ($request->getParam("qo")) ? $request->getParam("qo") : $term;
 
+        $stripPrefix = FALSE;
+        $fieldWeights = "title=50, display=40, artist=30, allchunks=1";
+        switch (substr($originalTerm,0, 3)) {
+            case '-a ': $args["type"] = 'artist'; $stripPrefix = TRUE;
+                $fieldWeights = "title=20, display=40, artist=90, allchunks=1"; break;
+            case '-l ': $args["type"] = 'label'; $stripPrefix = TRUE; break;
+            case '-t ': $args["type"] = 'track'; $stripPrefix = TRUE; break;
+                $fieldWeights = "title=90, display=40, artist=20, allchunks=1"; break;
+            case '-d ': $args["type"] = 'dirname'; $stripPrefix = TRUE; break;
+            case '-r ': $args["type"] = 'album'; $stripPrefix = TRUE;
+                $fieldWeights = "title=90, display=30, artist=20, allchunks=1"; break;
+            case '-g ': $args["type"] = 'genre'; $stripPrefix = TRUE; break;
+            default: break;
+        }
+        if ($stripPrefix === TRUE) {
+            $term = substr($originalTerm, 3);
+            $originalTerm = $term;
+        }
+
         # TODO: evaluate if modifying searchterm makes sense
         // "Artist_-_Album_Name-(CAT001)-WEB-2015" does not match without this modification
 
@@ -363,7 +399,7 @@ class Controller extends \Slimpd\BaseController {
             LIMIT " . $start . "," . $offset . "
             OPTION
             ranker = wordcount,
-                field_weights=(title=50, display=40, artist=30, allchunks=1);");
+                field_weights=(" . $fieldWeights . ");");
 
         if(($args["type"] !== "all")) {
             $stmt->bindValue(":type", $this->filterTypeMapping[$args["type"]], \PDO::PARAM_INT);
