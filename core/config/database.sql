@@ -224,6 +224,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   `catalogNr` varchar(64) NOT NULL DEFAULT '',
   `comment` text NOT NULL,
   `year` smallint(4) unsigned DEFAULT NULL,
+  `bpm` varchar(11) NOT NULL DEFAULT '',
   
   `isMixed` smallint(1) unsigned DEFAULT NULL,
   `discogsId` varchar(64) NOT NULL DEFAULT '',
@@ -245,6 +246,7 @@ CREATE TABLE IF NOT EXISTS `track` (
   KEY `importStatus` (`importStatus`),
   KEY `genreUid` (`genreUid`),
   KEY `labelUid` (`labelUid`),
+  KEY `bpm` (`bpm`),
   KEY `error` (`error`),
   KEY `transcoded` (`transcoded`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

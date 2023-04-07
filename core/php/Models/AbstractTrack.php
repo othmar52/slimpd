@@ -29,6 +29,7 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
     protected $year;
     protected $comment;
     protected $trackNumber;
+    protected $bpm;
 
     // getter
     public function getYear() {
@@ -39,6 +40,9 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
     }
     public function getTrackNumber() {
         return $this->trackNumber;
+    }
+    public function getBpm() {
+        return $this->bpm;
     }
 
 
@@ -53,6 +57,10 @@ abstract class AbstractTrack extends \Slimpd\Models\AbstractFilesystemItem {
     }
     public function setTrackNumber($value) {
         $this->trackNumber = $value;
+        return $this;
+    }
+    public function setBpm($value) {
+        $this->bpm = $value;
         return $this;
     }
 }

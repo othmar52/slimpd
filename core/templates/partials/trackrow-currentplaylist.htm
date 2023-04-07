@@ -21,6 +21,7 @@
 	<div class="ffn-hidden">
 		<div class="col-md-3 vcenter darker-links">
 			<div class="vcinner">
+				{% include 'partials/track/bpm.htm' with { 'item': item } %}
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 				<br />
 				{% include 'partials/album/link.htm' with { 'item': renderitems.albums[item.albumUid] } %}

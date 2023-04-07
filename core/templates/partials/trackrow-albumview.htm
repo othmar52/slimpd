@@ -13,6 +13,7 @@
 	<div class="ffn-hidden">
 		<div class="col-xs-2 col-sm-3 vcenter">
 			<div class="vcinner">
+				{% include 'partials/track/bpm.htm' with { 'item': item } %}
 				{% include 'partials/track/title.htm' with { 'titlestring': item.title, 'filepath': item.relPath  } %}
 			</div>
 		</div>
@@ -35,6 +36,7 @@
 	<div class="ffn-show">
 		<div class="col-md-8 vcenter">
 			<div class="vcinner">
+				{% include 'partials/track/bpm.htm' with { 'item': item } %}
 				{{ item.relPath|split('/')|last }}
 				<br>
 				<span class="darker-links small">{% include 'partials/filebrowser/breadcrumb.htm' with {
