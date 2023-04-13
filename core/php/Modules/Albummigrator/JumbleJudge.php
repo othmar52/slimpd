@@ -57,6 +57,7 @@ class JumbleJudge {
             ->runTest("SchemaTests\\Filename\\BeginsWithNumber", $fileName)
             ->runTest("SchemaTests\\Filename\\HasSceneSuffix", $fileName)
             ->runTest("SchemaTests\\Filename\\ArtistAlbumYearNumberTitleExt", $fileName)
+            ->runTest("SchemaTests\\Filename\\NumberAlbumArtistTitleExt", $fileName)
             ->runTest("SchemaTests\\Filename\\TitleExt", $fileName)
             ->runTest("EqualTagTests\\Artist", $trackContext->getArtist())
             ->runTest("EqualTagTests\\Genre", $trackContext->getGenre())
