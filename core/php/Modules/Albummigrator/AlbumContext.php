@@ -128,7 +128,7 @@ class AlbumContext extends \Slimpd\Models\Album {
                 ))
             )*/
             ->setTrackCount(count($trackContextItems));
-
+        $this->addAudioProperties($album, $trackContextItems);
         if($useBatcher === TRUE) {
             $this->container->batcher->que($album);
         } else {
@@ -141,6 +141,22 @@ class AlbumContext extends \Slimpd\Models\Album {
         $this->setArtistUid($album->getArtistUid());
 
         $this->setUid($album->getUid())->updateAlbumIndex($useBatcher);
+    }
+
+    protected function addAudioProperties($album, $trackContextItems) {
+        $lowestBitrate = 99999999999;
+        $formats = [];
+        foreach ($trackContextItems as $trackItem) {
+            if ($trackItem->getAudioBitrate() < $lowestBitrate) {
+                $lowestBitrate = $trackItem->getAudioBitrate();
+            }
+            $formats[$trackItem->getAudioDataformat()] = NULL;
+        }
+        if (count($formats) !== 1 || $lowestBitrate === 99999999999) {
+            return;
+        }
+        $album->setAudioBitrate($lowestBitrate);
+        $album->setAudioDataformat($trackContextItems[0]->getAudioDataformat());
     }
 
     protected function updateAlbumIndex($useBatcher) {

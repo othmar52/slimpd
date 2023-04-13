@@ -30,6 +30,8 @@ class Schema extends AbstractSchema
       . "  `beatportId` varchar(64) NOT NULL DEFAULT '',\r"
       . "  `junoId` varchar(64) NOT NULL DEFAULT '',\r"
       . "  `catalogNr` varchar(64) NOT NULL DEFAULT '',\r"
+      . "  `audioBitrate` int(10) unsigned NOT NULL DEFAULT '0',\r"
+      . "  `audioDataformat` varchar(64) NOT NULL DEFAULT '',\r"
       . "  PRIMARY KEY (`uid`),\r"
       . "  KEY `artistUid` (`artistUid`),\r"
       . "  KEY `year` (`year`,`month`),\r"

@@ -37,6 +37,8 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
     protected $isJumble;
     protected $isLive;
 
+    protected $audioBitrate;
+    protected $audioDataformat;
 
     public static $tableName = 'album'; // TODO remove this as its part of the repo
     public static $repoKey = 'albumRepo';
@@ -71,6 +73,14 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
         $this->isLive = $value;
         return $this;
     }
+    public function setAudioBitrate($value) {
+        $this->audioBitrate = $value;
+        return $this;
+    }
+    public function setAudioDataformat($value) {
+        $this->audioDataformat = $value;
+        return $this;
+    }
 
 
     // getter
@@ -95,5 +105,11 @@ class Album extends \Slimpd\Models\AbstractFilesystemItem {
     }
     public function getIsLive() {
         return $this->isLive;
+    }
+    public function getAudioBitrate() {
+        return $this->audioBitrate;
+    }
+    public function getAudioDataformat() {
+        return $this->audioDataformat;
     }
 }
