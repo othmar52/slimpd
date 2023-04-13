@@ -115,6 +115,12 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
         if(strlen($keyword) < 2) {
             return FALSE;
         }
+        if(is_numeric($keyword) === TRUE) {
+            return FALSE;
+        }
+        if(preg_match('/^[a-f0-9]{32}$/', $keyword)) {
+            return FALSE;
+        }
         if(isset($usedKeywords[$keyword]) === TRUE ) {
             return FALSE;
         }

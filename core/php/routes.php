@@ -97,6 +97,9 @@ $ctrlRoutes = [
         ['/audiosvg/width/{width}/[{itemParams:.*}]', 'svgAction'],
         ['/audiojson/resolution/{width}/[{itemParams:.*}]', 'jsonAction'],
     ],
+    'BpmReader' => [
+        ['/getbpm/[{itemParams:.*}]', 'getBpmAction'],
+    ],
     'Mpd' => [
         ['/mpdstatus[/]', 'mpdstatusAction'],
         ['/mpdctrl/{cmd}', 'cmdAction'],

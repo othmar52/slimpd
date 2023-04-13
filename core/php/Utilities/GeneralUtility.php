@@ -273,6 +273,12 @@ function renderCliHelp($ll) {
     cliLog("  remigrate", 1, "cyan");
     cliLog("    " . $ll->str("cli.args.remigrate.line1"));
     cliLog("    " . $ll->str("cli.args.remigrate.line2"));
+    cliLog("  remigratealbum <album-id>", 1, "cyan");
+    cliLog("    " . $ll->str("cli.args.remigratealbum.line1"));
+    cliLog("    " . $ll->str("cli.args.remigratealbum.line2"));
+    cliLog("  bpmdetect", 1, "cyan");
+    cliLog("    " . $ll->str("cli.args.bpmdetect.line1"));
+    cliLog("    " . $ll->str("cli.args.bpmdetect.line2"));
     cliLog("  hard-reset", 1, "cyan");
     cliLog("    " . $ll->str("cli.args.hard-reset.line1"));
     cliLog("    " . $ll->str("cli.args.hard-reset.line2"));

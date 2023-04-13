@@ -3,11 +3,11 @@
 <div class="row">
 	<div class="col-md-2 vcenter">
 		<div class="vcinner">
-			<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/album/{{item.albumUid}}">
+			<a href="{{root}}album/{{ item.albumUid }}" class="ajax-link trigger-hide-modal" data-trigger="hover" data-toggle="popover" title="show album" data-html="true" data-image-url="{{root}}image-300/track/{{item.uid}}">
 				{% include 'partials/image.htm' with {
 					'width': 50,
-					'type': 'album',
-					'itemUid': item.albumUid,
+					'type': 'track',
+					'itemUid': item.uid,
 					'attrs': 'class="icon-50"'
 				} %}
 			</a>

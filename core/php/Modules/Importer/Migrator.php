@@ -215,8 +215,10 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
             $counter++;
             $this->prevAlb->addTrack($record);
         }
-        $this->prevAlb->useBatcher = FALSE;
-        $this->prevAlb->run();
+        if ($this->prevAlb) {
+            $this->prevAlb->useBatcher = FALSE;
+            $this->prevAlb->run();
+        }
         $this->container->batcher->finishAll();
         return $this->prevAlb;
     }

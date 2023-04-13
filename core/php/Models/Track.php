@@ -117,6 +117,31 @@ class Track extends \Slimpd\Models\AbstractTrack {
     }
 
 
+    public function isHighTempo($genreRepo) {
+
+        // we need to tweak min/max if we have drum and bass to avoid invalid tempo detection
+        $drum = FALSE;
+        $bass = FALSE;
+        foreach( trimExplode(",", $this->getGenreUid(), TRUE) as $genreUid) {
+            $genre = $genreRepo->getInstanceByAttributes(['uid' => $genreUid]);
+            if($genre->getAz09() === 'drumbass'
+            || $genre->getAz09() === 'jungle'
+            || $genre->getAz09() === 'freetek'
+            || $genre->getAz09() === 'hardcore') {
+                return TRUE;
+            }
+            if($genre->getAz09() === 'drum') {
+                $drum = TRUE;
+            }
+            if($genre->getAz09() === 'bass') {
+                $bass = TRUE;
+            }
+        }
+        if ($drum === TRUE && $bass === TRUE) {
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     /* Testdata for development/debuggung only
 

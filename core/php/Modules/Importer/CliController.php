@@ -61,6 +61,79 @@ class CliController extends \Slimpd\BaseController {
         return $response;
     }
 
+    public function bpmdetectForceAction(Request $request, Response $response, $args) {
+        self::deleteLockFile();
+        return $this->bpmdetectAction($request, $response, $args);
+    }
+
+    public function bpmdetectAction(Request $request, Response $response, $args) {
+        useArguments($request, $args);
+        if($this->abortOnLockfile($this->ll) === TRUE) {
+            return $response;
+        }
+        
+        self::touchLockFile();
+
+        $query = "
+            SELECT
+                uid,
+                relPath
+            FROM  track
+            WHERE bpm=''
+            AND miliseconds < 900000
+            LIMIT 1000";
+        $result = $this->db->query($query);
+        $i = 0;
+        while ($record = $result->fetch_assoc()) {
+            $i++;
+            $bpmController = new \Slimpd\Modules\BpmReader\Controller($this->container);
+            try {
+                $tempo = $bpmController->getBpmAction(
+                    $request,
+                    $response,
+                    ['itemParams' => $record['relPath']]
+                );
+            } catch (\Exception $e) {
+                cliLog("ERROR " . $record['relPath'], 1);
+                continue;
+            }
+            cliLog("#" . $i . " " . $tempo . " " . $record['relPath'], 1);
+            $query = "
+            UPDATE track
+            SET
+                bpm = '".$this->db->real_escape_string($tempo)."'
+            WHERE
+                uid = ". (int)$record['uid'];
+            $this->db->query($query);
+        }
+        self::deleteLockFile();
+        return $response;
+    }
+
+    public function remigrateDirectoryAction(Request $request, Response $response, $args) {
+        useArguments($request);
+        if($this->abortOnLockfile($this->ll) === TRUE) {
+            return $response;
+        }
+        self::touchLockFile();
+        $path = $this->filesystemUtility->trimAltMusicDirPrefix($args['directory']);
+        $query = "
+            SELECT
+                uid,
+                relPath
+            FROM  album
+            WHERE relPath LIKE '".$this->db->real_escape_string($path)."%'
+        ";
+        $result = $this->db->query($query);
+        $i = 0;
+        while ($record = $result->fetch_assoc()) {
+            $migrator = new \Slimpd\Modules\Importer\Migrator($this->container);
+            $args['migrator'] = $migrator->migrateSingleAlbum($record['uid']);
+        }
+        self::deleteLockFile();
+        return $response;
+    }
+
     public function remigratealbumAction(Request $request, Response $response, $args) {
         useArguments($request);
         if($this->abortOnLockfile($this->ll) === TRUE) {

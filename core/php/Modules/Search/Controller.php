@@ -215,7 +215,7 @@ class Controller extends \Slimpd\BaseController {
             LIMIT :offset,:max
             OPTION
             ranker = wordcount,
-                field_weights=(title=50, display=40, artist=30, allchunks=1),
+                field_weights=(title=50, display=70, artist=30, allchunks=1),
                 max_matches=1000000;"); // TODO: move max_matches to sliMpd conf
         $stmt->bindValue(":match", getSphinxMatchSyntax([$term], $args['useExactMatch']), \PDO::PARAM_STR);
         $stmt->bindValue(":offset", ($args['currentPage']-1)*$itemsPerPage , \PDO::PARAM_INT);
@@ -363,7 +363,7 @@ class Controller extends \Slimpd\BaseController {
         $originalTerm = ($request->getParam("qo")) ? $request->getParam("qo") : $term;
 
         $stripPrefix = FALSE;
-        $fieldWeights = "title=50, display=40, artist=30, allchunks=1";
+        $fieldWeights = "title=50, display=70, artist=30, allchunks=1";
         switch (substr($originalTerm,0, 3)) {
             case '-a ': $args["type"] = 'artist'; $stripPrefix = TRUE;
                 $fieldWeights = "title=20, display=40, artist=90, allchunks=1"; break;

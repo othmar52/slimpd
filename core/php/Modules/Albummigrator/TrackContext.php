@@ -98,12 +98,12 @@ class TrackContext extends \Slimpd\Models\Track {
 
         if(!$this->getAudioProfile()) {
             $this->setAudioProfile(
-                $this->getAudioBitrateMode() . " " . round($this->getAudioBitrate()/ 1000, 1) . " kbps"
+                (string)$this->getAudioBitrateMode() . " " . round((int)$this->getAudioBitrate()/ 1000, 1) . " kbps"
             );
         }
 
         // integer in database
-        $this->setAudioBitrate(round($this->getAudioBitrate()));
+        $this->setAudioBitrate(round((float)$this->getAudioBitrate()));
 
         // override description of audiocodec
         // @see: https://github.com/othmar52/slimpd/issues/25
@@ -158,6 +158,12 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->setLabel($this->getMostScored('setLabel'));
         $this->setYear($this->getMostScored('setYear'));
         $this->setTrackNumber($this->getMostScored('setTrackNumber'));
+
+        // TODO: ensure we have a valid bpm value
+        // SELECT uid, bpm FROM track WHERE bpm != '' AND bpm NOT REGEXP '^[0-9\.]+$'
+        // UPDATE track set bpm = replace(bpm, ',', '.');
+        // UPDATE `track` SET `bpm` = '' WHERE bpm != '' AND bpm NOT REGEXP '^[0-9\.]+$'; 
+
     }
 
     /**
