@@ -12,7 +12,11 @@
             {% else %}
             	{# replace placeholder with random-link #}
 	            {% if page.num == '...'%}
-	            	<li><a href="{{ paginator.urlPattern|replace({'(:num)': random(paginator.numPages) }) }}" class="ajax-link"><i class="fa fa-random"></i></a></li>
+                    {% set randomNumber = random(paginator.numPages) + 1 %}
+                    {% if randomNumber > paginator.numPages %}
+                        {% set randomNumber = paginator.numPages %}
+                    {% endif %}
+	            	<li><a href="{{ paginator.urlPattern|replace({'(:num)': randomNumber }) }}" class="ajax-link"><i class="fa fa-random"></i></a></li>
 	            {% else %}
                 	<li class="disabled"><span>{{ page.num }}</span></li>
                 {% endif %}
