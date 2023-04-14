@@ -43,11 +43,16 @@
             this.rendered = true;
         },
 
+        openModal : function(markup='LOADING...') {
+            this.$modal.find(".modal-content").html(markup);
+            this.$modal.modal("show");
+        },
+
         renderModalContent : function(markup) {
             this.$modal.find(".modal-content").html(markup);
             this.rendered = false;
             this.render();
-            this.$modal.modal("show");
+            // this.$modal.modal("show");
         },
 
         addMarkupToModal : function(markup) {

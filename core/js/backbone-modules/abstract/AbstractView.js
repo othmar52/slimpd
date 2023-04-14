@@ -309,6 +309,8 @@
         triggerModalClickListener : function(e) {
             e.preventDefault();
             var $el = $(e.currentTarget);
+            // open immediatly - dont wait for ajax response
+            window.sliMpd.modal.openModal();
             $.ajax({
                 url: $el.attr("data-href")
             }).done(function(response){
