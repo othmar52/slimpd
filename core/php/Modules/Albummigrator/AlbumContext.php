@@ -127,6 +127,8 @@ class AlbumContext extends \Slimpd\Models\Album {
                         : $this->getMostScored("setLabel")    // only 1 label
                 ))
             )*/
+
+            ->setDiscogsId($this->getMostScored('setDiscogsId'))
             ->setTrackCount(count($trackContextItems));
         $this->addAudioProperties($album, $trackContextItems);
         if($useBatcher === TRUE) {

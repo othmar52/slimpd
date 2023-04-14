@@ -158,6 +158,8 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->setLabel($this->getMostScored('setLabel'));
         $this->setYear($this->getMostScored('setYear'));
         $this->setTrackNumber($this->getMostScored('setTrackNumber'));
+        $this->setDiscogsId($this->getMostScored('setDiscogsId'));
+        $this->setCatalogNr($this->getMostScored('setCatalogNr'));
 
         // TODO: ensure we have a valid bpm value
         // SELECT uid, bpm FROM track WHERE bpm != '' AND bpm NOT REGEXP '^[0-9\.]+$'

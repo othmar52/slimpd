@@ -69,6 +69,10 @@ body {
     color: #CCC;
 }
 
+.label-320k {
+    background-color: #134c13;
+}
+
 *::selection {
   background-color: #FFF;
   color: #000;

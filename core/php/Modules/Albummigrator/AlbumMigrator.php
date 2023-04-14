@@ -125,7 +125,7 @@ class AlbumMigrator {
             cliLog("=== collecting end for " . basename($trackContext->getRelPath()) . " " . $trackContext->getRelPathHash() . " ===", 10, "yellow");
             cliLog("=== collecting begin for album ===", 10, "yellow");
             foreach($editorials as $editorial) {
-                if(in_array($editorial->getColumn(), ['setAlbum', 'setYear', 'setLabel', 'setCatalogNr']) === FALSE) {
+                if(in_array($editorial->getColumn(), ['setAlbum', 'setYear', 'setLabel', 'setCatalogNr', 'setDiscogsId']) === FALSE) {
                     continue;
                 }
                 $setter = ($editorial->getColumn() === 'setAlbum') ? 'setTitle' : $editorial->getColumn();

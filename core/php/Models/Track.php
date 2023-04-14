@@ -127,6 +127,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
             if($genre->getAz09() === 'drumbass'
             || $genre->getAz09() === 'jungle'
             || $genre->getAz09() === 'freetek'
+            || $genre->getAz09() === 'breakcore'
             || $genre->getAz09() === 'hardcore') {
                 return TRUE;
             }

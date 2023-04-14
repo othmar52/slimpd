@@ -1,4 +1,9 @@
-
+{% if album.discogsId %}
+<a
+ title="Open discogs album page"
+ class="discogs-link discogs-color"
+ href="https://www.discogs.com/release/{{album.discogsId}}" target="_blank"></a>
+{% else %}
 {# TODO: which attributes should be passed to discogs search (especially when we do not have much info) #}
 {% set searchstring = renderitems.artists[album.artistUid].title ~ ' ' ~ album.title %}
 <a
@@ -7,3 +12,4 @@
  href="http://www.discogs.com/search/?{{
  {'q': searchstring , 'type': 'all' }|url_encode
 }}" target="_blank"></a>
+{% endif %}
