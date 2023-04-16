@@ -29,6 +29,7 @@ class AlbumContext extends \Slimpd\Models\Album {
         $this->db = $container->db;
         $this->ll = $container->ll;
         $this->conf = $container->conf;
+        $this->config = \Slimpd\Modules\Albummigrator\AlbumMigrator::parseConfig();
     }
 
     /*

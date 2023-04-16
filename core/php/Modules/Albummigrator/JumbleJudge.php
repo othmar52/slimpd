@@ -75,6 +75,12 @@ class JumbleJudge {
             ->runTest("SchemaTests\\TrackNumber\\LeadingZero", $trackContext->getTrackNumber())
             ->runTest("SchemaTests\\TrackNumber\\CombinedWithTotal", $trackContext->getTrackNumber())
             ->runTest("SchemaTests\\Album\\HasCatalogNr", $trackContext->getAlbum());
+
+        // inherit from tracks to album
+        $this->albumContext->setRecommendationEntry("setDiscogsId", $trackContext->getDiscogsId(), 1);
+        $this->albumContext->setRecommendationEntry("setYear", $trackContext->getYear(), 1);
+        $this->albumContext->setRecommendationEntry("setArtist", $trackContext->getArtist(), 1);
+        $this->albumContext->setRecommendationEntry("setTitle", $trackContext->getAlbum(), 1);
     }
 
     protected function runTest($className, $input) {
