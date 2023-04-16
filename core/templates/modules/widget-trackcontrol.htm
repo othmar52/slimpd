@@ -62,13 +62,16 @@
 		</button>
 	</div>
 	<div id="trackwidget-techspecs" style="display:none;">
-		<div class="nfo">{{item.relPath}}</div>
+		<div class="nfo">{{item.relPath}}<br>
+{{item.fingerprint}}
+		</div>
 		{% if item.uid %}
 		<div class="row">
 			<div class="col-md-3">
 				<div>Format: {{item.audioDataFormat}}</div>
 				<div>Profile: {{item.audioProfile}}</div>
 				<div>Filesize: {{item.filesize|formatBytes}}</div>
+				<div>BPM: {% include 'partials/track/bpm.htm' with { 'item': item } %}</div>
 			</div>
 
 			<div class="col-md-3">
