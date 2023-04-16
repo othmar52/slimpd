@@ -130,6 +130,11 @@ class WaveformGenerator {
 
         $peaks = file_get_contents($this->peakValuesFilePath);
         if($peaks === 'generating') {
+            $now = new \DateTimeImmutable();
+            if ($now->getTimestamp() - filemtime($this->peakValuesFilePath) > 100) {
+                // obviously we have had a stuck process
+                $this->container->filesystemUtility->rmfile($this->peakValuesFilePath);
+            }
             $this->fireRetryHeaderAndExit($response);
             return NULL;
         }
