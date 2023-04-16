@@ -73,7 +73,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
         $this->updateCounterCache();
 
         // phase 8: add fingerprint to rawtagdata+track table
-        $this->extractAllMp3FingerPrints();
+        $this->extractAllFingerPrints();
 
         // update the wrapper entry for all import phases
         $this->finishBatch();
@@ -400,7 +400,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
         return;
     }
 
-    public function extractAllMp3FingerPrints() {
+    public function extractAllFingerPrints() {
         $this->jobPhase = 8;
 
         if($this->conf['modules']['enable_fingerprints'] !== '1') {
@@ -408,19 +408,19 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
         }
 
         $this->beginJob(array(
-            'currentItem' => "fetching mp3 files with missing fingerprint attribute"
+            'currentItem' => "fetching files with missing fingerprint attribute"
         ), __FUNCTION__);
 
         $query = "
             SELECT count(uid) AS itemsTotal
             FROM rawtagdata
-            WHERE extension='mp3' AND fingerprint='';";
+            WHERE fingerprint='';";
         $this->itemsTotal = (int) $this->db->query($query)->fetch_assoc()['itemsTotal'];
 
         $query = "
             SELECT uid, relPath
             FROM rawtagdata
-            WHERE extension='mp3' AND fingerprint='';";
+            WHERE fingerprint='';";
 
         $result = $this->db->query($query);
 
