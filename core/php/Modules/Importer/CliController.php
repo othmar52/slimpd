@@ -98,6 +98,10 @@ class CliController extends \Slimpd\BaseController {
                 continue;
             }
             cliLog("#" . $i . " " . $tempo . " " . $record['relPath'], 1);
+            if ($tempo === 'generating') {
+                // dont persist running/stuck process
+                continue;
+            }
             $query = "
             UPDATE track
             SET
