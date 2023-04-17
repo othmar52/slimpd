@@ -149,8 +149,10 @@ class TrackContext extends \Slimpd\Models\Track {
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteNumericArtists($this);
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteGenericTrackTitles($this);
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteUnknownArtists($this);
+        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteArtistsContainsDomain($this);
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removePrefixedArtistFromTitle($this);
         \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removeSuffixedTitleFromArtist($this);
+        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::processBpm($this);
         $this->setArtist($this->getMostScored('setArtist'));
         $this->setTitle($this->getMostScored('setTitle'));
         $this->setAlbum($this->getMostScored('setAlbum'));
@@ -160,6 +162,11 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->setTrackNumber($this->getMostScored('setTrackNumber'));
         $this->setDiscogsId($this->getMostScored('setDiscogsId'));
         $this->setCatalogNr($this->getMostScored('setCatalogNr'));
+        $bpm = $this->getMostScored('setBpm');
+        if ($bpm !== '') {
+            // TODO: already persisted bpmdetect or bpmtap values may get overwritten by tag value :/
+            $this->setBpm($bpm);
+        }
 
         // TODO: ensure we have a valid bpm value
         // SELECT uid, bpm FROM track WHERE bpm != '' AND bpm NOT REGEXP '^[0-9\.]+$'

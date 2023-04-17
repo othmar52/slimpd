@@ -81,6 +81,8 @@ class JumbleJudge {
         $this->albumContext->setRecommendationEntry("setYear", $trackContext->getYear(), 1);
         $this->albumContext->setRecommendationEntry("setArtist", $trackContext->getArtist(), 1);
         $this->albumContext->setRecommendationEntry("setTitle", $trackContext->getAlbum(), 1);
+        $this->albumContext->setRecommendationEntry("setCatalogNr", $trackContext->getCatalogNr(), 1);
+        $this->albumContext->setRecommendationEntry("setGenre", $trackContext->getGenre(), 1);
     }
 
     protected function runTest($className, $input) {
@@ -94,7 +96,7 @@ class JumbleJudge {
     public function judge() {
         // get decisions for each single test
         foreach($this->tests as $testname => $tests) {
-            $result = array();
+            $result = [];
             foreach($tests as $test) {
                 $result[] = $test->result;
             }
@@ -116,7 +118,6 @@ class JumbleJudge {
         }
         // use each single test result to get the final decision;
         $finalValue = array_sum($this->testResults)/count($this->testResults);
-        #var_dump($finalValue); die;
         $this->handleAsAlbum = ($finalValue < $this->isAlbumTreshold) ? 1 : 0;
         //var_dump($this->handleAsAlbum); die;
     }

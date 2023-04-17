@@ -59,10 +59,7 @@ trait MigratorContext {
                 // getRemixArtists() can be an array or string
                 $propertyValue = join(", ", $propertyValue);
             }
-            if(strlen($propertyValue) === 0) {
 
-                $this->$setterName($foundValue);
-            }
             if(
                 $setterName === "setMimeType" ||
                 $setterName === "setMiliseconds" ||
@@ -76,6 +73,7 @@ trait MigratorContext {
                 $setterName === "setAudioLossless" ||
                 $setterName === "setAudioSamplerate"
             ) {
+                $this->$setterName($foundValue);
                 continue;
             }
             cliLog("configBasedSetter: " . $setterName, 10, "purple");
@@ -134,22 +132,32 @@ trait MigratorContext {
     }
 
 
-    public function getMostScored($setterName) {
+    public function getMostScored($setterName, $includeNegativeScore = FALSE) {
         // without recommendations return instance property
         if(array_key_exists($setterName, $this->recommendations) === FALSE) {
             $getterName = "g" . substr($setterName, 1);
             return $this->$getterName();
         }
 
-        $highestScore = array_keys($this->recommendations[$setterName], max($this->recommendations[$setterName]));
+        $highestScore = array_keys(
+            $this->recommendations[$setterName],
+            max($this->recommendations[$setterName])
+        );
 
         // there is only one item with highscore
         if(count($highestScore) === 1) {
-            return $highestScore[0];
+            $highestScoredValue = trim($highestScore[0]);
+            if ($includeNegativeScore === TRUE) {
+                return $highestScoredValue;
+            }
+            return $this->recommendations[$setterName][$highestScoredValue] >= 0
+                ? $highestScoredValue
+                : '';
         }
 
         // hard to decide what to take if we have same score for different values
         // lets take the longest string :)
+        // TODO respect $includeNegativeScore argument in return value
         $lengths = array_map('strlen', $highestScore);
         $maxLength = max($lengths);
         $index = array_search($maxLength, $lengths);

@@ -296,6 +296,52 @@ class TrackRecommendationsPostProcessor {
     }
 
     /**
+     * this function checks all artist recommendations for beeing a domain
+     * to avoid this situation
+     *      most scored artist: "www.downloadming.com"
+     */
+    public static function downVoteArtistsContainsDomain(&$contextItem) {
+        cliLog(__FUNCTION__, 9, "purple");
+        if(array_key_exists("setArtist", $contextItem->recommendations) === FALSE) {
+            cliLog("  no recommendations for setArtist. skipping...", 10, "darkgray");
+            return;
+        }
+        foreach(array_keys($contextItem->recommendations["setArtist"]) as $artistRecommendation) {
+            if(preg_match("/(.*)www\.([a-z0-9\.]*)\.(.*){2,3}(.*)/i", $artistRecommendation) === 0) {
+                cliLog("  no need to downvote: " . $artistRecommendation, 10, "darkgray");
+                continue;
+            }
+            cliLog("  found setArtist recommendation for downvoting", 9);
+            $contextItem->setRecommendationEntry("setArtist", $artistRecommendation, -3);
+        }
+    }
+
+    /**
+     * this function checks all bpm recommendations for beeing useless
+     * to avoid this situation
+     *      most scored bpm: "Www.Monstermixtapes.Net"
+     */
+    public static function processBpm(&$contextItem) {
+        cliLog(__FUNCTION__, 9, "purple");
+        if(array_key_exists("setBpm", $contextItem->recommendations) === FALSE) {
+            cliLog("  no recommendations for setBpm. skipping...", 10, "darkgray");
+            return;
+        }
+        foreach(array_keys($contextItem->recommendations["setBpm"]) as $bpmRecommendation) {
+            $bpmRecommendation = trim(str_ireplace('bpm', '', $bpmRecommendation));
+            $bpmRecommendation = trim(str_replace(',', '.', $bpmRecommendation));
+            if(is_numeric($bpmRecommendation) === TRUE) {
+                cliLog("  no need to downvote: " . $bpmRecommendation, 10, "darkgray");
+                continue;
+            }
+            // TODO try to extract a bpm-ish number from input string
+            // for example "Abm - 123 BPM"
+            cliLog("  found setBpm recommendation for downvoting", 9);
+            $contextItem->setRecommendationEntry("setBpm", $bpmRecommendation, -3);
+        }
+    }
+
+    /**
      * this function checks all title recommendations like
      * "Track 01"
      * "CD 02 track12"

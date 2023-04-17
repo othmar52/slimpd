@@ -51,11 +51,12 @@ class AlbumMigrator {
             cliLog("=== collecting end for " . basename($rawTagItem['relPath']) . " " . $rawTagItem['relPathHash'] . " ===", 10, "yellow");
             $this->handleTrackFilemtime($rawTagItem["added"]);
         }
-        // decide if bunch should be treated as album or as loose tracks
-        $this->jumbleJudge->judge();
 
         // make sure manually edited track+album-properties gets applied
         $this->fetchEditorials();
+
+        // decide if bunch should be treated as album or as loose tracks
+        $this->jumbleJudge->judge();
 
         if($this->conf["modules"]["enable_guessing"] == "1") {
             // do some voting for each attribute
@@ -125,14 +126,19 @@ class AlbumMigrator {
             cliLog("=== collecting end for " . basename($trackContext->getRelPath()) . " " . $trackContext->getRelPathHash() . " ===", 10, "yellow");
             cliLog("=== collecting begin for album ===", 10, "yellow");
             foreach($editorials as $editorial) {
-                if(in_array($editorial->getColumn(), ['setAlbum', 'setYear', 'setLabel', 'setCatalogNr', 'setDiscogsId']) === FALSE) {
+                if(in_array($editorial->getColumn(), ['setAlbum', 'setYear', 'setLabel', 'setCatalogNr', 'setDiscogsId', 'setGenre', 'setArtist', 'setAlbumArtist']) === FALSE) {
                     continue;
                 }
-                $setter = ($editorial->getColumn() === 'setAlbum') ? 'setTitle' : $editorial->getColumn();
+                $score = 100;
+                switch ($editorial->getColumn()) {
+                    case 'setAlbum': $setter = 'setTitle'; break;
+                    #case 'setAlbumArtist': $setter = 'setArtist'; $score = 200; break;
+                    default: $setter = $editorial->getColumn(); break;
+                }
                 $this->albumContextItem->setRecommendationEntry(
                     $setter,
                     $editorial->getValue(),
-                    100
+                    $score
                 );
             }
             cliLog("=== collecting end for album ===", 10, "yellow");
@@ -141,9 +147,25 @@ class AlbumMigrator {
     /**
      * TODO: how to handle albums/compilations where album artist does not appear on any track?
      * example compilation: "Sly & Robbie - LateNightTales"
+     * or https://www.discogs.com/de/release/2902692-Wolf-Lamb-vs-Soul-Clap-DJ-KiCKS-Exclusives-EP1
      */
     protected function albumArtistViceVersaCorrection() {
         cliLog(__FUNCTION__, 10, "purple");
+
+        // check if we have a single albumArtist
+        // this will disable fetching artists from tracks
+        // this will avoid "Various Artists" as well...
+        if (array_key_exists('setAlbumArtist', $this->albumContextItem->recommendations)) {
+            if (count($this->albumContextItem->recommendations['setAlbumArtist']) === 1) {
+                $artistString = array_key_first($this->albumContextItem->recommendations['setAlbumArtist']);
+                cliLog('forcing single AlbumArtist: ' . $artistString, 10, "yellow");
+                $this->injectAlbumArtistUid(
+                    $this->container->artistRepo->getUidsByString($artistString)
+                );
+                return;
+            }
+        }
+
         // collect all final artist-uids of each album-track
         $trackArtistUids = "";
         foreach($this->trackContextItems as $trackContextItem) {
