@@ -73,7 +73,9 @@ class Controller extends \Slimpd\BaseController {
             : $this->filesystemUtility->getFileRealPath($track->getRelPath());
 
         $WaveformGenerator->setAbsolutePath($absolutePath);
-        $WaveformGenerator->setExt($track->getAudioDataformat());
+        $WaveformGenerator->setExt(
+            $this->filesystemUtility->getFileExt($track->getRelPath())
+        );
         $WaveformGenerator->setFingerprint($track->getFingerprint());
         if(isValidFingerprint($WaveformGenerator->getFingerprint()) === 1) {
             return TRUE;

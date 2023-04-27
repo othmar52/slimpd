@@ -53,7 +53,9 @@ class Controller extends \Slimpd\BaseController {
         $BpmReader->setMin($isHighTempo === TRUE ? 150 : 70);
         $BpmReader->setMax($isHighTempo === TRUE ? 200 : 156);
         $BpmReader->setAbsolutePath($absolutePath);
-        $BpmReader->setExt($track->getAudioDataformat());
+        $BpmReader->setExt(
+            $this->filesystemUtility->getFileExt($track->getRelPath())
+        );
         $BpmReader->setFingerprint($track->getFingerprint());
         if(isValidFingerprint($BpmReader->getFingerprint()) === 1) {
             return TRUE;
