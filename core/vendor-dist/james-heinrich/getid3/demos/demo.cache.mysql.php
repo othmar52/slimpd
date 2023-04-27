@@ -1,4 +1,9 @@
 <?php
+
+use JamesHeinrich\GetID3;
+
+require __DIR__ . "/../vendor/autoload.php";
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at https://github.com/JamesHeinrich/getID3       //
@@ -14,12 +19,7 @@
 
 die('For security reasons, this demo has been disabled. It can be enabled by removing line '.__LINE__.' in demos/'.basename(__FILE__));
 
-
-require_once('../getid3/getid3.php');
-require_once('../getid3/getid3.lib.php');
-getid3_lib::IncludeDependency(GETID3_INCLUDEPATH.'extension.cache.mysql.php', __FILE__, true);
-
-$getID3 = new getID3_cached_mysql('localhost', 'database', 'username', 'password');
+$getID3 = new GetID3\Cache\Mysql('localhost', 'database', 'username', 'password');
 
 $r = $getID3->analyze('/path/to/files/filename.mp3');
 

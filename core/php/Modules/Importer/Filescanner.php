@@ -82,10 +82,14 @@ class Filescanner extends \Slimpd\Modules\Importer\AbstractImporter {
             $this->createTagBlobEntry($record['uid'], array());
             return;
         }
-        $getID3 = new \getID3;
-        $tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $record['relPath']);
-        \getid3_lib::CopyTagsToComments($tagData);
-
+        $getID3 = new \JamesHeinrich\GetID3\GetID3;
+        try {
+            $tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $record['relPath']);
+            $getID3->CopyTagsToComments($tagData);
+        } catch (\ValueError $e) {
+            cliLog("ERROR reading tags", 10, "red");
+            $tagData = [];
+        }
 
         // Write tagdata-array into sparata database table, gzipcompressed, serialized
         $this->createTagBlobEntry($record['uid'], $tagData);

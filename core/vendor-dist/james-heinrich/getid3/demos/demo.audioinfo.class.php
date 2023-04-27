@@ -1,4 +1,9 @@
 <?php
+
+use JamesHeinrich\GetID3;
+
+require __DIR__ . "/../vendor/autoload.php";
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at https://github.com/JamesHeinrich/getID3       //
@@ -36,16 +41,6 @@
 // +----------------------------------------------------------------------+
 
 
-
-/**
-* getID3() settings
-*/
-
-require_once('../getid3/getid3.php');
-
-
-
-
 /**
 * Class for extracting information from audio files with getID3().
 */
@@ -67,7 +62,7 @@ class AudioInfo {
 	function __construct() {
 
 		// Initialize getID3 engine
-		$this->getID3 = new getID3;
+		$this->getID3 = new GetID3\GetID3;
 		$this->getID3->option_md5_data        = true;
 		$this->getID3->option_md5_data_source = true;
 		$this->getID3->encoding               = 'UTF-8';

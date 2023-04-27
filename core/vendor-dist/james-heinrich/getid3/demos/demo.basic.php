@@ -1,4 +1,9 @@
 <?php
+
+use JamesHeinrich\GetID3;
+
+require __DIR__ . "/../vendor/autoload.php";
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at https://github.com/JamesHeinrich/getID3       //
@@ -14,11 +19,9 @@
 die('For security reasons, this demo has been disabled. It can be enabled by removing line '.__LINE__.' in demos/'.basename(__FILE__));
 
 
-// include getID3() library (can be in a different directory if full path is specified)
-require_once('../getid3/getid3.php');
 
 // Initialize getID3 engine
-$getID3 = new getID3;
+$getID3 = new GetID3\GetID3;
 
 // Analyze file and store returned data in $ThisFileInfo
 $ThisFileInfo = $getID3->analyze($filename);

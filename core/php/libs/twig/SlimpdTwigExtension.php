@@ -143,7 +143,7 @@ class SlimpdTwigExtension extends \Twig_Extension {
 
             new \Twig_SimpleFilter("dumpImagestream", function ($input, $mimeType) {
                 $imageinfo = array();
-                if ($imagechunkcheck = \getid3_lib::GetDataImageSize($input, $imageinfo)) {
+                if ($imagechunkcheck = \JamesHeinrich\GetID3\Utils::GetDataImageSize($input, $imageinfo)) {
                     $streamString = "data:" .$mimeType.";base64,".base64_encode($input);
                     $width = $imagechunkcheck[0];
                     $height = $imagechunkcheck[1];

@@ -59,10 +59,17 @@ class Controller extends \Slimpd\BaseController {
     public function dumpid3Action(Request $request, Response $response, $args) {
         useArguments($request, $response, $args);
         $args['action'] = 'trackid3';
-        $getID3 = new \getID3;
-        $tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $args['itemParams']);
-        \getid3_lib::CopyTagsToComments($tagData);
-        \getid3_lib::ksort_recursive($tagData);
+        $getID3 = new \JamesHeinrich\GetID3\GetID3;
+        try {
+            $tagData = $getID3->analyze($this->conf['mpd']['musicdir'] . $args['itemParams']);
+            $getID3->CopyTagsToComments($tagData);
+            \JamesHeinrich\GetID3\Utils::ksort_recursive($tagData);
+        } catch (\ValueError $e) {
+            echo "ID3 lib has a problem with this file...<br>";
+            echo $this->conf['mpd']['musicdir'] . $args['itemParams'] . "<br>";
+            echo $e->getMessage();
+            exit;
+        }
         $args['dumpvar'] = $tagData;
         $args['getid3version'] = $getID3->version();
         $this->view->render($response, 'appless.htm', $args);

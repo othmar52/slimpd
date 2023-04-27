@@ -8,7 +8,7 @@
     "require": {
         "slim/slim": "3.*",
         "twig/twig": "1.*",
-        "james-heinrich/getid3": "^1.9",
+        "james-heinrich/getid3": "^2.0",
         "components/jquery": "2.*",
         "james-heinrich/phpthumb": "^1.7",
         "twbs/bootstrap": "^3.3",

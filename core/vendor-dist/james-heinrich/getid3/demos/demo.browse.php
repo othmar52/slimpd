@@ -1,4 +1,9 @@
 <?php
+
+use JamesHeinrich\GetID3;
+
+require __DIR__ . "/../vendor/autoload.php";
+
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at https://github.com/JamesHeinrich/getID3       //
@@ -19,29 +24,15 @@ define('GETID3_DEMO_BROWSE_ALLOW_EDIT_LINK',   false); // if enabled, shows "edi
 define('GETID3_DEMO_BROWSE_ALLOW_DELETE_LINK', false); // if enabled, shows "delete" links to delete files from the browse interface
 define('GETID3_DEMO_BROWSE_ALLOW_MD5_LINK',    false); // if enabled, shows "enable" link for MD5 hashes for file/data/source
 
-/////////////////////////////////////////////////////////////////
-// die if magic_quotes_runtime or magic_quotes_gpc are set
-if (version_compare(PHP_VERSION, '7.4.0', '<')) { // get_magic_quotes_runtime / get_magic_quotes_gpc functions give deprecation warnings in PHP v7.4
-	if (function_exists('get_magic_quotes_runtime') && get_magic_quotes_runtime()) {
-		die('magic_quotes_runtime is enabled, getID3 will not run.');
-	}
-	if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
-		die('magic_quotes_gpc is enabled, getID3 will not run.');
-	}
-}
-/////////////////////////////////////////////////////////////////
-
-require_once('../getid3/getid3.php');
-
-$PageEncoding       = 'UTF-8';
-$FileSystemEncoding = ((GETID3_OS_ISWINDOWS && version_compare(PHP_VERSION, '7.1.0', '<')) ? 'Windows-1252' : 'UTF-8');
+$PageEncoding = 'UTF-8';
+$FileSystemEncoding = ((GetID3\Utils::isWindows() && version_compare(PHP_VERSION, '7.1.0', '<')) ? 'Windows-1252' : 'UTF-8');
 $writescriptfilename = 'demo.write.php';
 
 // Needed for windows only. Leave commented-out to auto-detect, only define here if auto-detection does not work properly
 //define('GETID3_HELPERAPPSDIR', 'C:\\helperapps\\');
 
 // Initialize getID3 engine
-$getID3 = new getID3;
+$getID3 = new GetID3\GetID3;
 $getID3->setOption(array(
 	'encoding' => $PageEncoding,
 	'options_audiovideo_quicktime_ReturnAtomData' => true,
@@ -88,7 +79,7 @@ if (isset($_REQUEST['deletefile']) && GETID3_DEMO_BROWSE_ALLOW_DELETE_LINK) {
 if (isset($_REQUEST['filename'])) {
 
 	if (!file_exists($_REQUEST['filename']) || !is_file($_REQUEST['filename'])) {
-		die(getid3_lib::iconv_fallback($FileSystemEncoding, $PageEncoding, $_REQUEST['filename'].' does not exist'));
+		die(GetID3\Utils::iconv_fallback($FileSystemEncoding, $PageEncoding, $_REQUEST['filename'].' does not exist'));
 	}
 	$starttime = microtime(true);
 
@@ -110,7 +101,7 @@ if (isset($_REQUEST['filename'])) {
 	$listdirectory = dirname($_REQUEST['filename']);
 	$listdirectory = realpath($listdirectory); // get rid of /../../ references
 
-	if (GETID3_OS_ISWINDOWS) {
+	if (GetID3\Utils::isWindows()) {
 		// this mostly just gives a consistant look to Windows and *nix filesystems
 		// (windows uses \ as directory seperator, *nix uses /)
 		$listdirectory = str_replace(DIRECTORY_SEPARATOR, '/', $listdirectory.'/');
@@ -119,10 +110,10 @@ if (isset($_REQUEST['filename'])) {
 	if (preg_match('#^(ht|f)tp://#', $_REQUEST['filename'])) {
 		echo '<i>Cannot browse remote filesystems</i><br>';
 	} else {
-		echo 'Browse: <a href="'.htmlentities($_SERVER['PHP_SELF'].'?listdirectory='.urlencode($listdirectory), ENT_QUOTES | ENT_SUBSTITUTE, $PageEncoding).'">'.getid3_lib::iconv_fallback($FileSystemEncoding, $PageEncoding, $listdirectory).'</a><br>';
+		echo 'Browse: <a href="'.htmlentities($_SERVER['PHP_SELF'].'?listdirectory='.urlencode($listdirectory), ENT_QUOTES | ENT_SUBSTITUTE, $PageEncoding).'">' . GetID3\Utils::iconv_fallback($FileSystemEncoding, $PageEncoding, $listdirectory) . '</a><br>';
 	}
 
-	getid3_lib::ksort_recursive($ThisFileInfo);
+	GetID3\Utils::ksort_recursive($ThisFileInfo);
 	echo table_var_dump($ThisFileInfo, false, $PageEncoding);
 	$endtime = microtime(true);
 	echo 'File parsed in '.number_format($endtime - $starttime, 3).' seconds.<br>';
@@ -130,7 +121,7 @@ if (isset($_REQUEST['filename'])) {
 } else {
 
 	$listdirectory = (isset($_REQUEST['listdirectory']) ? $_REQUEST['listdirectory'] : '.');
-	$listdirectory = getid3_lib::truepath($listdirectory); // get rid of /../../ references
+	$listdirectory = GetID3\Utils::truepath($listdirectory); // get rid of /../../ references
 	$currentfulldir = str_replace(DIRECTORY_SEPARATOR, '/', $listdirectory).'/'; // this mostly just gives a consistant look to Windows and *nix filesystems: (Windows uses \ as directory seperator, *nix uses /)
 
 	ob_start();
@@ -160,7 +151,7 @@ if (isset($_REQUEST['filename'])) {
 			switch ($file) {
 				case '..':
 					$ParentDir = realpath($file.'/..').'/';
-					if (GETID3_OS_ISWINDOWS) {
+					if (GetID3\Utils::isWindows()) {
 						$ParentDir = str_replace(DIRECTORY_SEPARATOR, '/', $ParentDir);
 					}
 					$DirectoryContents[$currentfulldir]['dir'][$file]['filename'] = $ParentDir;
@@ -225,7 +216,7 @@ if (isset($_REQUEST['filename'])) {
 		$columnsintable = 14;
 		echo '<table class="table" cellspacing="0" cellpadding="3">';
 
-		echo '<tr bgcolor="#'.$getID3checkColor_Head.'"><th colspan="'.$columnsintable.'">Files in '.getid3_lib::iconv_fallback($FileSystemEncoding, $PageEncoding, $currentfulldir).'</th></tr>';
+		echo '<tr bgcolor="#'.$getID3checkColor_Head.'"><th colspan="'.$columnsintable.'">Files in ' . GetID3\Utils::iconv_fallback($FileSystemEncoding, $PageEncoding, $currentfulldir) . '</th></tr>';
 		$rowcounter = 0;
 		foreach ($DirectoryContents as $dirname => $val) {
 			if (isset($DirectoryContents[$dirname]['dir']) && is_array($DirectoryContents[$dirname]['dir'])) {
@@ -237,7 +228,7 @@ if (isset($_REQUEST['filename'])) {
 						echo '<form action="'.htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES | ENT_SUBSTITUTE, $PageEncoding).'" method="get">';
 						echo 'Parent directory: ';
 						echo '<input type="text" name="listdirectory" size="50" style="background-color: '.$getID3checkColor_DirectoryDark.';" value="';
-						if (GETID3_OS_ISWINDOWS) {
+						if (GetID3\Utils::isWindows()) {
 							echo htmlentities(str_replace(DIRECTORY_SEPARATOR, '/', realpath($dirname.$filename)), ENT_QUOTES | ENT_SUBSTITUTE, $PageEncoding);
 						} else {
 							echo htmlentities(realpath($dirname.$filename), ENT_QUOTES | ENT_SUBSTITUTE, $PageEncoding);
@@ -380,7 +371,7 @@ if (isset($_REQUEST['filename'])) {
 			echo '<td><b>Average:</b></td>';
 			echo '<td align="right">'.number_format($TotalScannedFilesize / max($TotalScannedKnownFiles, 1)).'</td>';
 			echo '<td>&nbsp;</td>';
-			echo '<td align="right">'.getid3_lib::PlaytimeString($TotalScannedPlaytime / max($TotalScannedPlaytimeFiles, 1)).'</td>';
+			echo '<td align="right">' . GetID3\Utils::PlaytimeString($TotalScannedPlaytime / max($TotalScannedPlaytimeFiles, 1)) . '</td>';
 			echo '<td align="right">'.BitrateText(round(($TotalScannedBitrate / 1000) / max($TotalScannedBitrateFiles, 1))).'</td>';
 			echo '<td rowspan="2" colspan="'.($columnsintable - 5).'"><table class="table" border="0" cellspacing="0" cellpadding="2"><tr><th align="right">Identified Files:</th><td align="right">'.number_format($TotalScannedKnownFiles).'</td><td>&nbsp;&nbsp;&nbsp;</td><th align="right">Errors:</th><td align="right">'.number_format($FilesWithErrors).'</td></tr><tr><th align="right">Unknown Files:</th><td align="right">'.number_format($TotalScannedUnknownFiles).'</td><td>&nbsp;&nbsp;&nbsp;</td><th align="right">Warnings:</th><td align="right">'.number_format($FilesWithWarnings).'</td></tr></table>';
 			echo '</tr>';
@@ -388,7 +379,7 @@ if (isset($_REQUEST['filename'])) {
 			echo '<td><b>Total:</b></td>';
 			echo '<td align="right">'.number_format($TotalScannedFilesize).'</td>';
 			echo '<td>&nbsp;</td>';
-			echo '<td align="right">'.getid3_lib::PlaytimeString($TotalScannedPlaytime).'</td>';
+			echo '<td align="right">' . GetID3\Utils::PlaytimeString($TotalScannedPlaytime) . '</td>';
 			echo '<td>&nbsp;</td>';
 			echo '</tr>';
 		}
@@ -484,7 +475,7 @@ function table_var_dump($variable, $wrap_in_td=false, $encoding='') {
 				//if (($key == 'data') && isset($variable['image_mime']) && isset($variable['dataoffset'])) {
 				if (($key == 'data') && isset($variable['image_mime'])) {
 					$imageinfo = array();
-					if ($imagechunkcheck = getid3_lib::GetDataImageSize($value, $imageinfo)) {
+					if ($imagechunkcheck = GetID3\Utils::GetDataImageSize($value, $imageinfo)) {
 						$returnstring .= '</td>'."\n".'<td><img src="data:'.$variable['image_mime'].';base64,'.base64_encode($value).'" width="'.$imagechunkcheck[0].'" height="'.$imagechunkcheck[1].'"></td></tr>'."\n";
 					} else {
 						$returnstring .= '</td>'."\n".'<td><i>invalid image data</i></td></tr>'."\n";
@@ -522,7 +513,7 @@ function table_var_dump($variable, $wrap_in_td=false, $encoding='') {
 
 		default:
 			$imageinfo = array();
-			if (($imagechunkcheck = getid3_lib::GetDataImageSize($variable, $imageinfo)) && ($imagechunkcheck[2] >= 1) && ($imagechunkcheck[2] <= 3)) {
+			if (($imagechunkcheck = GetID3\Utils::GetDataImageSize($variable, $imageinfo)) && ($imagechunkcheck[2] >= 1) && ($imagechunkcheck[2] <= 3)) {
 				$returnstring .= ($wrap_in_td ? '<td>' : '');
 				$returnstring .= '<table class="dump" cellspacing="0" cellpadding="2">';
 				$returnstring .= '<tr><td><b>type</b></td><td>'.image_type_to_mime_type($imagechunkcheck[2]).'</td></tr>'."\n";

@@ -83,9 +83,8 @@ james-heinrich/phpthumb/phpthumb.ico.php
 james-heinrich/phpthumb/phpThumb.php
 james-heinrich/phpthumb/phpthumb.unsharp.php
 
-james-heinrich/getid3/licenses
-james-heinrich/getid3/license.txt
-james-heinrich/getid3/getid3
+james-heinrich/getid3
+james-heinrich/getid3
 
 components/font-awesome/fonts
 components/font-awesome/css/font-awesome.min.css
