@@ -31,6 +31,7 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'OAuth\\' => array($vendorDir . '/lusitanian/oauth/src/OAuth'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'JamesHeinrich\\GetID3\\' => array($vendorDir . '/james-heinrich/getid3/src'),
     'Illuminate\\Support\\' => array($vendorDir . '/illuminate/collections', $vendorDir . '/illuminate/conditionable', $vendorDir . '/illuminate/macroable', $vendorDir . '/illuminate/support'),
     'Illuminate\\Database\\' => array($vendorDir . '/illuminate/database'),
     'Illuminate\\Contracts\\' => array($vendorDir . '/illuminate/contracts'),
@@ -45,5 +46,6 @@ return array(
     'Doctrine\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib/Doctrine/Inflector'),
     'ColorThief\\' => array($vendorDir . '/ksubileau/color-thief-php/src/ColorThief'),
     'Carbon\\' => array($vendorDir . '/nesbot/carbon/src/Carbon'),
+    'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     '' => array($vendorDir . '/bryanjhv/slim-session/src'),
 );

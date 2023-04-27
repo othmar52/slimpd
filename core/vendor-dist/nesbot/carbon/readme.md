@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/nesbot/carbon.svg?style=flat-square)](https://packagist.org/packages/nesbot/carbon)
 [![Total Downloads](https://img.shields.io/packagist/dt/nesbot/carbon.svg?style=flat-square)](https://packagist.org/packages/nesbot/carbon)
-[![GitHub Actions](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbriannesbitt%2FCarbon%2Fbadge&style=flat-square&label=Build&logo=none)](https://actions-badge.atrox.dev/briannesbitt/Carbon/goto)
+[![GitHub Actions](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fbriannesbitt%2FCarbon%2Fbadge&style=flat-square&label=Build&logo=none)](https://github.com/briannesbitt/Carbon/actions)
 [![codecov.io](https://img.shields.io/codecov/c/github/briannesbitt/Carbon.svg?style=flat-square)](https://codecov.io/github/briannesbitt/Carbon?branch=master)
 [![Tidelift](https://tidelift.com/badges/github/briannesbitt/Carbon)](https://tidelift.com/subscription/pkg/packagist-nesbot-carbon?utm_source=packagist-nesbot-carbon&utm_medium=referral&utm_campaign=readme)
 
@@ -120,7 +120,13 @@ This project exists thanks to all the people who contribute.
 Support this project by becoming a sponsor. Your logo will show up here with a link to your website.
 
 <a href="https://tidelift.com/subscription/pkg/packagist-nesbot-carbon?utm_source=packagist-nesbot-carbon&utm_medium=referral&utm_campaign=readme" target="_blank"><img src="https://carbon.nesbot.com/tidelift-brand.png" width="256" height="64"></a>
-<a href="https://onlinecasinohex.ca/?utm_source=opencollective&amp;utm_medium=github&amp;utm_campaign=Carbon" target="_blank"><img src="https://images.opencollective.com/hexcasinoca/2da3af2/logo/256.png" width="85" height="64"></a>
+<a href="https://casinohex.org/canada/?utm_source=opencollective&amp;utm_medium=github&amp;utm_campaign=Carbon" target="_blank"><img src="https://images.opencollective.com/hexcasinoca/2da3af2/logo/256.png" width="85" height="64"></a>
+
+<a href="https://github.com/taylorotwell" target="_blank"><img src="https://avatars.githubusercontent.com/u/463230?s=128&v=4" width="64" height="64"></a>
+<a href="https://github.com/usefathom" target="_blank"><img src="https://avatars.githubusercontent.com/u/38684088?s=128&v=4" width="64" height="64"></a>
+<a href="https://github.com/tobischulz" target="_blank"><img src="https://avatars.githubusercontent.com/u/576014?s=128&v=4" width="64" height="64"></a>
+<a href="https://w3guy.com/" target="_blank"><img src="https://avatars.githubusercontent.com/u/4140659?v=4" width="64" height="64"></a>
+
 <a href="https://opencollective.com/Carbon/sponsor/0/website" target="_blank"><img src="https://opencollective.com/Carbon/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/Carbon/sponsor/1/website" target="_blank"><img src="https://opencollective.com/Carbon/sponsor/1/avatar.svg"></a>
 <a href="https://opencollective.com/Carbon/sponsor/2/website" target="_blank"><img src="https://opencollective.com/Carbon/sponsor/2/avatar.svg"></a>

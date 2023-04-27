@@ -448,8 +448,12 @@ class ColorThief
         $nIterations = 0;
 
         while ($nIterations < self::MAX_ITERATIONS) {
-            ++$nIterations;
             if ($nColors >= $target) {
+                return;
+            }
+
+            if ($nIterations++ > self::MAX_ITERATIONS) {
+                // echo "infinite loop; perhaps too few pixels!"."\n";
                 return;
             }
 
@@ -461,6 +465,7 @@ class ColorThief
 
             if (!$vBox->count()) { /* just put it back */
                 $priorityQueue->push($vBox);
+                ++$nIterations;
                 continue;
             }
             // do the cut
