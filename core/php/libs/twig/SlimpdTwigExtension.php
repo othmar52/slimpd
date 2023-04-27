@@ -87,6 +87,12 @@ class SlimpdTwigExtension extends \Twig_Extension {
                 if($seconds < 1) {
                     return(round($seconds*1000)) . ' ms';
                 }
+                if($seconds > 60*60*24) {
+                    $days = floor($seconds/(60*60*24));
+                    $remainingSeconds = $seconds - ($days * 60*60*24);
+                    $hours = floor($remainingSeconds / 3600);
+                    return $days . 'd ' . $hours . 'h';
+                }
                 // remove leading zero
                 return removeLeadingZeroes(gmdate($format, $seconds) . ' ' . $suffix);
             }),
