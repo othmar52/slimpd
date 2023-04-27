@@ -170,7 +170,15 @@ class Filebrowser {
             return FALSE;
         }
 
-        if($systemdir === TRUE && in_array($path, ["localdata/cache/", "localdata/embedded/", "localdata/peakfiles/"]) === TRUE) {
+        $appDirs = [
+            'localdata/cache/',
+            'localdata/embedded/',
+            'localdata/peakfiles/',
+            'localdata/bpmdetect/',
+            'localdata/bpmtap/'
+        ];
+
+        if($systemdir === TRUE && in_array($path, $appDirs) === TRUE) {
             $return['base'] = APP_ROOT;
             $realpath = realpath(APP_ROOT . $path) . DS;
         }
