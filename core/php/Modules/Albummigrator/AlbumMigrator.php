@@ -45,7 +45,9 @@ class AlbumMigrator {
         // create TrackContext for each input item
         foreach($this->rawTagItems as $idx => $rawTagItem) {
             cliLog("=== collecting begin for " . basename($rawTagItem['relPath']) . " " . $rawTagItem['relPathHash'] . " ===", 10, "yellow");
-            $this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext($rawTagItem, $idx, $this->migratorConf, $this->container);
+            $this->trackContextItems[$idx] = new \Slimpd\Modules\Albummigrator\TrackContext(
+                $rawTagItem, $idx, $this->migratorConf, $this->container, $this->albumContextItem
+            );
             // do some characteristics analysis for each "track"
             $this->jumbleJudge->collect($this->trackContextItems[$idx], $this->albumContextItem);
             cliLog("=== collecting end for " . basename($rawTagItem['relPath']) . " " . $rawTagItem['relPathHash'] . " ===", 10, "yellow");
@@ -266,7 +268,7 @@ class AlbumMigrator {
         foreach($this->trackContextItems as $trackContextItem) {
             cliLog("=== postprocessing begin for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
             #$trackContextItem->initScorer($this->albumContextItem, $this->jumbleJudge);
-            $trackContextItem->postProcessProperties();
+            $trackContextItem->postProcessProperties($this->albumContextItem);
             cliLog("=== postprocessing end for " . basename($trackContextItem->getRelPath()) . " " . $trackContextItem->getRelPathHash() . " ===", 10, "yellow");
         }
     }

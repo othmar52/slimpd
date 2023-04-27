@@ -190,7 +190,11 @@ class TrackRecommendationsPostProcessor {
 
         // avoid doing useless stuff for "albums" with thousands of tracks
         if(count($artistRecommendations) > 50 || count($titleRecommendations) > 50) {
-            cliLog("  far too much recommendations. skipping...", 10, "darkgray");
+            cliLog("  far too much recommendations. upvoting directory name instead...", 10, "darkgray");
+            if ($contextItem::class === \Slimpd\Modules\Albummigrator\AlbumContext::class) {
+                $dirName = unifyHyphens(unifyBraces(basename($contextItem->getRelPath())));
+                $contextItem->setRecommendationEntry("setTitle", $dirName, 20);
+            }
             return;
         }
         foreach($artistRecommendations as $artist) {
@@ -355,7 +359,7 @@ class TrackRecommendationsPostProcessor {
             return;
         }
         foreach(array_keys($contextItem->recommendations["setTitle"]) as $titleRecommendation) {
-            if(preg_match("/^(cd(?:\d+))?pistaaudio|audiotrack|track|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
+            if(preg_match("/^(cd(?:\d+))?pistaaudio|audiotrack|track|spur|titel(?:\d+)$/", az09($titleRecommendation)) === 0) {
                 cliLog("  no need to downvote: " . $titleRecommendation, 10, "darkgray");
                 continue;
             }

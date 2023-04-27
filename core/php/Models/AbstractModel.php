@@ -52,6 +52,12 @@ abstract class AbstractModel {
         $calledClass = get_called_class();
         #echo $calledClass; die();
         foreach(array_keys(get_class_vars($calledClass)) as $classVar) {
+            if($calledClass === \Slimpd\Models\Track::class && $classVar === 'relDirPath') {
+                if (in_array($classVar, ['relDirPath', 'disc'])) {
+                    // TODO: check if can remove the getter from track. we have no db field
+                    continue;
+                }
+            }
             $getter = 'get'.ucfirst($classVar);
             if(in_array($classVar, ['tableName', 'repoKey']) === TRUE) {
                 continue;

@@ -23,7 +23,7 @@ class RegexHelper {
     const NUM    = "(\d{1,3})";
 
     #TODO: "AB-" should not match at all but currently matches with "B-"
-    const VINYL  = "([A-Ma-m]{1}\2?(?:\d{1,2})?)"; // a1, AA2, but not AB1, N4, 01A
+    const VINYL  = "([A-Ma-m]{1,2}\2?(?:\d{1,2})?)"; // a1, AA2, but not AB1, N4, 01A
     const VINYL_STRICT = "((?:[A-Ma-m]){1}(?:\d){1,2})"; // a1, B2,C03, but not A, AA1, C001
     const GLUE   = "[ .\-_\|]{1,4}"; // "_-_", ". ", "-",
     const GLUE_NO_WHITESPACE   = "(?:[\\.\-_]{1,4})"; // "_-_", ". ", "-",
@@ -31,7 +31,7 @@ class RegexHelper {
     const SCENE  = "-([^\s\-]+)";
     const YEAR   = "(?<!\d)(?:\D)?([12]{1}[0-9]{3})(?:\D)?";
     const CATNR  = "(?:[\(\[]{1})?([A-Za-z]{2,14}[0-9]{1,}(?:[A-Za-z]{2,7})?)(?:[\)\]]{1})?";
-    const SOURCE  = "((?:[\(\[]{1})?[vinylVINYLwebWEBCDMScdms]{2,5}(?:[\)\]]{1})?)"; // (cd, cdm, cds, vinyl, web)
+    const SOURCE  = "((?:[\(\[]{1})?[vinylVINYLwebWEBCDMScdms]{2,5}(?:[\)\]]{1})?)"; // (cd, cdm, cds, vinyl, web, vls)
     const NO_MINUS= "([^-]+)";
     const ANYTHING= "(.*)";
     const MAY_BRACKET = "(?:[\(\)\[\]]{0,1})?";
@@ -40,7 +40,7 @@ class RegexHelper {
     const VARIOUS = "(va|v\.a\.|various|various\ artists|various\ artist)";
 
     const ARTIST_GLUE = ",|&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/|\.and\.|\ aka\ |\ b2b\ |\/";
-    const REMIX1 = "(.*)(?:\(|\ -\ )(.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ vip|\ remake|\ instrumental|\ radio\ edit|\ edit)";
+    const REMIX1 = "(.*)(?:\(|\ -\ )(.*)(\ vip\ mix|\ remix|\ mix|\ rework|\ rmx|\ re-edit|\ re-lick|\ re-set|\ re-work|\ vip|\ remake|\ instrumental|\ radio\ edit|\ edit)";
     const REMIX2 = "(.*)(remix\ by\ |rmx\ by\ |remixed\ by\ |remixedby\ |mixed\ by\ |compiled\ by\ |arranged\ by\ )(.*)\)?";
 
     public static function seemsYeary($input) {
@@ -75,7 +75,9 @@ class RegexHelper {
             'artists',
             'originalmix',
             'unknownartist',
-            'unbekannterinterpret'
+            'unbekannterinterpret',
+            'unbekannterkunstler',
+            'ost'
         );
         if(isset($blacklist[az09($input)]) === TRUE) {
             return FALSE;
@@ -112,7 +114,8 @@ class RegexHelper {
             'unbekannterkuenstler' => NULL,
             'unbekannterkunstler' => NULL,
             'unbekannterknstler' => NULL,
-            'inbekannterinterpret' => NULL
+            'unbekannterinterpret' => NULL,
+            'ost' => NULL
         );
         return array_key_exists(az09($input), $compare);
     }
@@ -123,9 +126,9 @@ class RegexHelper {
      */
     public static function seemsVinyly($input) {
         $blacklist = array(
-            'dj',
-            'mc',
-            'i'
+            'dj' => NULL,
+            'mc' => NULL,
+            'i' => NULL
         );
         if(isset($blacklist[az09($input)]) === TRUE) {
             return FALSE;

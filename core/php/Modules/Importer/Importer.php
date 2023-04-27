@@ -66,6 +66,7 @@ class Importer extends \Slimpd\Modules\Importer\AbstractImporter {
 
                 // phase 6: get images
                 // TODO: extend directory scan with additional relevant files
+                // TODO: delete images from table:bitmap that do not exist anymore
                 $this->searchImagesInFilesystem();
         }
 

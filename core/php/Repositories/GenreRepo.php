@@ -42,6 +42,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         $return = array();
         foreach($genres as $az09 => $genreString) {
             $return[az09($genreString)] = $genreString;
+            $return[strtolower($genreString)] = $genreString;
             $return[$az09] = $genreString;
             $return[$az09 . az09($genreString)] = $genreString;
             if(is_numeric($az09) === FALSE) {
@@ -136,6 +137,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
     public function parseGenreStringPhase3(&$itemString, &$finalGenres, &$badChunk) {
         cliLog(" Phase 3: check if we do have multiple cached genres", 6);
         $classPath = self::$classPath;
+
         $tmpGlue = "tmpGlu3";
         $chunks = trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE);
         foreach($chunks as $chunk) {
@@ -172,7 +174,7 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         #print_r($this->conf['genre-replace-chunks']); die();
         // phase 4: tiny chunks
         # TODO: would camel-case splitting make sense?
-        $splitBy = array_merge($this->conf['genre-glue'], array(" ", "-", ".", "_", ""));
+        $splitBy = array_merge($this->conf['genre-glue'], array("-", ".", "_", ""));
         $badChunk = FALSE;
         $chunks = trimExplode($tmpGlue, str_ireplace($splitBy, $tmpGlue, $itemString), TRUE);
         foreach($chunks as $chunk) {
@@ -290,15 +292,25 @@ class GenreRepo extends \Slimpd\Repositories\BaseRepository {
         $this->buildPreserveCache(self::$classPath);
 
         $genreStringArray = [];
-        $tmpGlue = "tmpGlu3";
-        foreach(trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
-            // activate parser
-            $genreStringArray = array_merge($genreStringArray, $this->parseGenreStringAdvanced($itemPart));
+
+        $az09 = az09($itemString);
+        $itemUid = $this->cacheRead(self::$classPath, $az09);
+        if($itemUid !== FALSE) {
+            return [$itemUid];
+        }
+
+        if(isset($this->importerCache[self::$classPath]["unified"][$az09])) {
+            $genreStringArray[] = $this->importerCache[self::$classPath]["unified"][$az09];
+        } else {
+            $tmpGlue = "tmpGlu3";
+            foreach(trimExplode($tmpGlue, str_ireplace($this->conf['genre-glue'], $tmpGlue, $itemString), TRUE) as $itemPart) {
+                // activate parser
+                $genreStringArray = array_merge($genreStringArray, $this->parseGenreStringAdvanced($itemPart));
+            }
         }
 
         // string beautyfying & 1 workaround for a parser bug
         $genreStringArray = self::cleanUpGenreStringArray($genreStringArray);
-
 
         #echo "input: $itemString\nresul: " . join(' || ', $genreStringArray) . "\n-------------------\n";
         #ob_flush();

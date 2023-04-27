@@ -43,9 +43,13 @@ class Batcher {
         return $instance;
     }
 
+    /**
+     * commit modification to an item that hasn't been inserted yet...
+     */
     public function modifyQueuedInstanceProperty($tableName, $uid, $setterName, $value) {
         if(isset($this->instances[$tableName][$uid]) === FALSE) {
             cliLog('BATCHER: failed to modify instance property', 1, "red");
+            // TODO: does it make sense to check if item is already in db and modify it there?
             return;
         }
         $this->instances[$tableName][$uid]->$setterName($value);

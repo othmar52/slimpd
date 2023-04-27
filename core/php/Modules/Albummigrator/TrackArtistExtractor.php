@@ -107,7 +107,7 @@ trait TrackArtistExtractor {
         $this->regexArtist = "/".RGX::ARTIST_GLUE."/i";
 
         // assign all string-parts to category
-        $this->groupFeat1 = "([\ \(])(featuring|ft(?:\.?)|feat(?:\.?)|w|w\.)\ ";
+        $this->groupFeat1 = "([\ \(])(featuring|ft(?:\.?)|feat(?:\.?)|w|w\.|with)\ ";
         $this->groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.|f\/)"; // without trailing whitespace
 
         # TODO: verify that this unused variable $groupGlue can be deleted and remove this line
@@ -124,12 +124,19 @@ trait TrackArtistExtractor {
             if(substr($sFeat, -1) == ')') {
                 $sFeat = substr($sFeat,0,-1);
             }
+            if ($sFeat === '') {
+                cliLog("  no matches for featured artists " , 10, "darkgray");
+                return;
+            }
             if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
                 cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
                 return;
             }
             $this->$artistOrTitle = str_ireplace(
-                $matches[2] .$matches[3] . ' ' . $matches[4],
+                [
+                    $matches[2] .$matches[3] . ' ' . $matches[4],
+                    $matches[2] .$matches[3] . $matches[4],
+                ],
                 " ",
                 $this->$artistOrTitle
             );
@@ -158,15 +165,14 @@ trait TrackArtistExtractor {
                 if(preg_match("/^(.*)'s(?:\ )?/", $foundRemixer, $matches2)) {
                     $foundRemixer = $matches2[1];
                 }
+
+                if(isset($this->artistBlacklist[strtolower($foundRemixer)]) === TRUE) {
+                    cliLog("  found ". $foundRemixer ." on blacklist. aborting..." , 10);
+                    continue;
+                }
                 cliLog("  found remix artists: " . $foundRemixer, 10, "cyan");
                 $this->remixArtists[] = $foundRemixer;
             }
-
-            #if(isset($this->artistBlacklist[strtolower($sFeat)]) === TRUE) {
-            #    cliLog("  found ". $sFeat ." on blacklist. aborting..." , 10);
-            #    return;
-            #}
-
             return;
         }
         cliLog("  no matches for remix artists " , 10, "darkgray");
@@ -211,6 +217,7 @@ trait TrackArtistExtractor {
 
         $this->regularArtists = array_unique(array_filter(array_map('trim', $this->regularArtists)));
         $this->featArtists = array_unique(array_map('trim', $this->featArtists));
+        cliLog('FEAT ARTISTS FINAL:' . print_r($this->featArtists, 1), 10);
         $this->remixArtists = array_unique(array_map('trim', $this->remixArtists));
 
         cliLog("drop duplicates of regularArtists/featArtists", 10, "purple");

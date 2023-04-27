@@ -147,7 +147,7 @@ class FilesystemReader extends \Slimpd\Modules\Importer\AbstractImporter {
      * @param $dir (string): Directory to search
      * @param $ext (string): fileextension or name of configured fileextension group
      * @param $addFilePath (boolean): prefix every matching file with input-dir in output array-entries
-     * @param $checkMimeType (boolean): perform a mimetype check and skip file if mimetype dous not match configuration
+     * @param $checkMimeType (boolean): perform a mimetype check and skip file if mimetype does not match configuration
      * 
      * @return (array) : filename-strings
      */

@@ -2,6 +2,8 @@
 namespace Slimpd\Modules\Albummigrator;
 use \Slimpd\Models\Artist;
 use \Slimpd\Utilities\RegexHelper as RGX;
+use \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor;
+
 /* Copyright (C) 2016 othmar52 <othmar52@users.noreply.github.com>
  *
  * This file is part of sliMpd - a php based mpd web client
@@ -33,8 +35,9 @@ class TrackContext extends \Slimpd\Models\Track {
     public $mostScored;
     protected $totalTracks;
     protected $audioBitrateMode;
+    protected $albumContext;
 
-    public function __construct($rawTagArray, $idx, $config, $container) {
+    public function __construct($rawTagArray, $idx, $config, $container, &$albumContext) {
         $this->config = $config;
         $this->idx = $idx;
         $this->rawTagRecord = $rawTagArray;
@@ -43,6 +46,7 @@ class TrackContext extends \Slimpd\Models\Track {
         $this->container = $container;
         $this->db = $container->db;
         $this->ll = $container->ll;
+        $this->albumContext = $albumContext;
 
         $rawTagBlob = $this->container->rawtagblobRepo->getInstanceByAttributes([ "uid" => $rawTagArray['uid'] ]);
         if($rawTagBlob === NULL) {
@@ -89,6 +93,10 @@ class TrackContext extends \Slimpd\Models\Track {
             $this->setAudioChannels(2);
         }
 
+        $this->setAudioLossless((int)$this->getAudioLossless());
+        $this->setVideoResolutionX((int)$this->getVideoResolutionX());
+        $this->setVideoResolutionY((int)$this->getVideoResolutionY());
+        $this->setVideoFramerate((int)$this->getVideoFramerate());
         if($this->getAudioLossless()) {
             $this->setAudioProfile('Lossless compression');
             if($this->getAudioComprRatio() === "1") {
@@ -144,15 +152,15 @@ class TrackContext extends \Slimpd\Models\Track {
         }
     }
 
-    public function postProcessProperties() {
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteVariousArtists($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteNumericArtists($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteGenericTrackTitles($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteUnknownArtists($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::downVoteArtistsContainsDomain($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removePrefixedArtistFromTitle($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::removeSuffixedTitleFromArtist($this);
-        \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::processBpm($this);
+    public function postProcessProperties(&$albumContext) {
+        TrackRecommendationsPostProcessor::downVoteVariousArtists($this);
+        TrackRecommendationsPostProcessor::downVoteNumericArtists($this);
+        TrackRecommendationsPostProcessor::downVoteGenericTrackTitles($this);
+        TrackRecommendationsPostProcessor::downVoteUnknownArtists($this);
+        TrackRecommendationsPostProcessor::downVoteArtistsContainsDomain($this);
+        TrackRecommendationsPostProcessor::removePrefixedArtistFromTitle($this);
+        TrackRecommendationsPostProcessor::removeSuffixedTitleFromArtist($this);
+        TrackRecommendationsPostProcessor::processBpm($this);
         $this->setArtist($this->getMostScored('setArtist'));
         $this->setTitle($this->getMostScored('setTitle'));
         $this->setAlbum($this->getMostScored('setAlbum'));
@@ -223,7 +231,7 @@ class TrackContext extends \Slimpd\Models\Track {
         }
 
         $this->container->trackRepo->ensureRecordUidExists($track->getUid());
-        $this->container->trackRepo->update($track);
+        $this->container->trackRepo->update($track, FALSE);
     }
 
     public function updateTrackIndex($useBatcher) {

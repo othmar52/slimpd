@@ -41,14 +41,14 @@ class BitmapRepo extends \Slimpd\Repositories\BaseRepository {
         return;
     }
 
-    public function update(&$instance) {
+    public function update(&$instance, $ignoreEmpty = TRUE) {
         $this->searchUidBeforeInsert($instance);
         if($instance->getUid() < 1) {
             return $this->insert($instance);
         }
 
         $query = 'UPDATE '.self::$tableName .' SET ';
-        foreach($instance->mapInstancePropertiesToDatabaseKeys() as $dbfield => $value) {
+        foreach($instance->mapInstancePropertiesToDatabaseKeys($ignoreEmpty) as $dbfield => $value) {
             $query .= $dbfield . '="' . $this->db->real_escape_string($value) . '",';
         }
         $query = substr($query,0,-1) . ' WHERE uid=' . (int)$instance->getUid() . ";";

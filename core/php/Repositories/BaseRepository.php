@@ -303,7 +303,7 @@ class BaseRepository {
         $instance->setUid($this->db->insert_id);
     }
 
-    public function update(&$instance) {
+    public function update(&$instance, $ignoreEmpty = TRUE) {
         $repoName = get_called_class();
         $repo = new $repoName($this->container);
         $repo->searchExistingUid($instance);
@@ -312,7 +312,7 @@ class BaseRepository {
             return $this->insert($instance);
         }
         $query = 'UPDATE `'. self::getTableName() . '` SET ';
-        foreach($instance->mapInstancePropertiesToDatabaseKeys() as $dbField => $value) {
+        foreach($instance->mapInstancePropertiesToDatabaseKeys($ignoreEmpty) as $dbField => $value) {
             $query .= '`' . $dbField . '`="' . $this->db->real_escape_string($value) . '",';
         }
         $query = substr($query,0,-1) . ' WHERE uid=' . (int)$instance->getUid() . ";";

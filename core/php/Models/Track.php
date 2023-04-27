@@ -25,10 +25,10 @@ class Track extends \Slimpd\Models\AbstractTrack {
     protected $remixerUid;
     protected $albumUid;
 
-    protected $disc;
-    protected $transcoded;
-    protected $isMixed;
-    protected $dynRange;
+    protected $disc = 0;
+    protected $transcoded = 0;
+    protected $isMixed = 0;
+    protected $dynRange = 0;
 
     public static $tableName = 'track';
     public static $repoKey = 'trackRepo';
@@ -125,6 +125,7 @@ class Track extends \Slimpd\Models\AbstractTrack {
         foreach( trimExplode(",", $this->getGenreUid(), TRUE) as $genreUid) {
             $genre = $genreRepo->getInstanceByAttributes(['uid' => $genreUid]);
             if($genre->getAz09() === 'drumbass'
+            || $genre->getAz09() === 'drumandbass'
             || $genre->getAz09() === 'jungle'
             || $genre->getAz09() === 'freetek'
             || $genre->getAz09() === 'breakcore'

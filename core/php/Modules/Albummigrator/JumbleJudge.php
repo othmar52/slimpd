@@ -83,6 +83,7 @@ class JumbleJudge {
         $this->albumContext->setRecommendationEntry("setTitle", $trackContext->getAlbum(), 1);
         $this->albumContext->setRecommendationEntry("setCatalogNr", $trackContext->getCatalogNr(), 1);
         $this->albumContext->setRecommendationEntry("setGenre", $trackContext->getGenre(), 1);
+        $this->albumContext->setRecommendationEntry("setLabel", $trackContext->getLabel(), 1);
     }
 
     protected function runTest($className, $input) {

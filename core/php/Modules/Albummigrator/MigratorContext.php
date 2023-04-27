@@ -80,6 +80,21 @@ trait MigratorContext {
 
             // but add to recommendations in any case (higher scoring for real tag attributes)
             $this->recommend([$setterName => $foundValue], 2);
+
+            if (\Slimpd\Modules\Albummigrator\TrackContext::class !== get_called_class()) {
+                continue;
+            }
+
+            if ($setterName === 'setAlbum') {
+                cliLog("configBasedSetterAlbum: " . $setterName, 10, "purple");
+                $this->albumContext->recommend(['setTitle' => $foundValue], 2, TRUE);
+                continue;
+            }
+            if ($setterName === 'setDiscogsId' || $setterName === 'setLabel' || $setterName === 'setGenre' || $setterName === 'setYear') {
+                cliLog("configBasedSetterAlbum: " . $setterName, 10, "purple");
+                $this->albumContext->recommend([$setterName => $foundValue], 0.5, TRUE);
+            }
+
         }
     }
 
@@ -94,7 +109,7 @@ trait MigratorContext {
         return unifyAll(strip_tags($out));
     }
 
-    public function recommend($properties, $score = 1) {
+    public function recommend($properties, $score = 1, $disablePostProcess = FALSE) {
         cliLog("  " .get_called_class() . " recommendations", 10, "purple");
         foreach($properties as $setterName => $value) {
             if(trim($value) === "") {
@@ -102,7 +117,9 @@ trait MigratorContext {
                 continue;
             }
             $this->setRecommendationEntry($setterName, $value, $score);
-            \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $value, $this, $score);
+            if ($disablePostProcess === FALSE) {
+                \Slimpd\Modules\Albummigrator\TrackRecommendationsPostProcessor::postProcess($setterName, $value, $this, $score);
+            }
         }
         cliLog(" ", 10);
     }
