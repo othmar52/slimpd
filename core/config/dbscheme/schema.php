@@ -170,7 +170,8 @@ class Schema extends AbstractSchema
       . "  `relPath` text NOT NULL,\r"
       . "  PRIMARY KEY (`uid`),\r"
       . "  KEY `jobStart` (`jobStart`),\r"
-      . "  KEY `jobEnd` (`jobEnd`)\r"
+      . "  KEY `jobEnd` (`jobEnd`),\r"
+      . "  KEY `idx_importer` (`batchUid`, `jobStatistics`(20))\r"
       . ") ENGINE=MyISAM DEFAULT CHARSET=utf8",
       "DROP TABLE IF EXISTS `label`",
       "CREATE TABLE `label` (\r"
@@ -322,7 +323,7 @@ class Schema extends AbstractSchema
       . "  KEY `fingerprint` (`fingerprint`),\r"
       . "  KEY `audioDataformat` (`audioDataformat`),\r"
       . "  KEY `videoDataformat` (`videoDataformat`),\r"
-      . "  KEY `albumUid` (`albumUid`,`disc`),\r"
+      . "  KEY `albumUid` (`albumUid`),\r"
       . "  KEY `importStatus` (`importStatus`),\r"
       . "  KEY `genreUid` (`genreUid`),\r"
       . "  KEY `labelUid` (`labelUid`),\r"
