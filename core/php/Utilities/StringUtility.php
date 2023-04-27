@@ -370,6 +370,8 @@ function nfostring2html($inputstring) {
     }
     $str = str_replace(" ", "&nbsp;", $str);
     $str = nl2br($str);
+    // replace double linebreaks with single linebreak
+    $str = str_replace("<br />\r<br />", "<br />", $str);
     return $str;
 }
 
