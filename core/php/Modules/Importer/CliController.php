@@ -67,13 +67,8 @@ class CliController extends \Slimpd\BaseController {
     }
 
     public function bpmdetectAction(Request $request, Response $response, $args) {
+        // TODO: consider to introduce a separate lock file
         useArguments($request, $args);
-        if($this->abortOnLockfile($this->ll) === TRUE) {
-            return $response;
-        }
-        
-        self::touchLockFile();
-
         $query = "
             SELECT
                 uid,
@@ -81,7 +76,7 @@ class CliController extends \Slimpd\BaseController {
             FROM  track
             WHERE bpm=''
             AND miliseconds < 900000
-            LIMIT 1000";
+            LIMIT 100000";
         $result = $this->db->query($query);
         $i = 0;
         while ($record = $result->fetch_assoc()) {
@@ -110,7 +105,6 @@ class CliController extends \Slimpd\BaseController {
                 uid = ". (int)$record['uid'];
             $this->db->query($query);
         }
-        self::deleteLockFile();
         return $response;
     }
 
