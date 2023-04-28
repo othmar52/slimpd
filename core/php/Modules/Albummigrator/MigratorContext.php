@@ -173,12 +173,9 @@ trait MigratorContext {
         }
 
         // hard to decide what to take if we have same score for different values
-        // lets take the longest string :)
+        // lets take the first entry
         // TODO respect $includeNegativeScore argument in return value
-        $lengths = array_map('strlen', $highestScore);
-        $maxLength = max($lengths);
-        $index = array_search($maxLength, $lengths);
-        return $highestScore[$index];
+        return $highestScore[0];
     }
 
     public function getAllRecommendations($setterName) {

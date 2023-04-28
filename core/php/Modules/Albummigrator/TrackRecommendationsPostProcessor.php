@@ -50,6 +50,13 @@ class TrackRecommendationsPostProcessor {
             $contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
             $contextItem->setRecommendationEntry("setArtist", $value, $score*-2);
         }
+        foreach(trimExplode("\n", $contextItem->container->conf['artist-blocklist']['blocklist']) as $artist) {
+            if (stripos($value, $artist) === FALSE) {
+                continue;
+            }
+            $contextItem->setRecommendationEntry("setArtist", str_ireplace($artist, '', $value), $score);
+            $contextItem->setRecommendationEntry("setArtist", $value, $score*-1);
+        }
     }
 
     public static function setTitle($value, &$contextItem, $score) {
@@ -68,6 +75,8 @@ class TrackRecommendationsPostProcessor {
                 $contextItem->setRecommendationEntry("setTitle", $value, $score*-2);
             }
         }
+        /*
+        // disable for now...
         // "Saban Saulic-Mogu Da Te Kunu (BH-Remix)"
         $chunks = trimExplode("-", $value, TRUE, 2);
         if(count($chunks) === 2) {
@@ -78,6 +87,7 @@ class TrackRecommendationsPostProcessor {
             }
             $contextItem->setRecommendationEntry("setArtist", $chunks[0], $score);
         }
+        */
     }
 
     public static function setTrackNumber($value, &$contextItem, $score) {

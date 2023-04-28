@@ -107,8 +107,9 @@ trait TrackArtistExtractor {
         $this->regexArtist = "/".RGX::ARTIST_GLUE."/i";
 
         // assign all string-parts to category
-        $this->groupFeat1 = "([\ \(])(featuring|ft(?:\.?)|feat(?:\.?)|w|w\.|with)\ ";
+        $this->groupFeat1 = "([\ \(])(featuring|ft(?:\.?)|feat(?:\.?)|w|w\.)\ ";
         $this->groupFeat2 = "([\ \(\.])(feat\.|ft\.|f\.|f\/)"; // without trailing whitespace
+        $this->groupFeat3 = "([\(])(with)\ ";
 
         # TODO: verify that this unused variable $groupGlue can be deleted and remove this line
         #$groupGlue = "/&amp;|\ &\ |\ and\ |&|\ n\'\ |\ vs(.?)\ |\ versus\ |\ with\ |\ meets\ |\  w\/\ /i";
@@ -203,6 +204,10 @@ trait TrackArtistExtractor {
 
         cliLog("parse TITLE string for featured artists REGEX 2", 10, "purple");
         $this->parseStringForFeat("titleString", $this->groupFeat2);
+        cliLog(" ", 10);
+
+        cliLog("parse TITLE string for featured artists REGEX 3", 10, "purple");
+        $this->parseStringForFeat("titleString", $this->groupFeat3);
         cliLog(" ", 10);
 
         cliLog("parse TITLE string for remix artists REGEX 1", 10, "purple");
