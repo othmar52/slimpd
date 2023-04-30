@@ -25,6 +25,7 @@ $ctrlRoutes = [
     ['/remigrate', 'remigrateAction'],
     ['/remigrate/--force', 'remigrateForceAction'],
     ['/remigratealbum/{albumUid}', 'remigratealbumAction'],
+    ['/remigrateartist/{artistUid}', 'remigrateArtistAction'],
     ['/remigratedirectory/[{directory:.*}]', 'remigrateDirectoryAction'],
     ['/bpmdetect', 'bpmdetectAction'],
     ['/bpmdetect/--force', 'bpmdetectForceAction'],

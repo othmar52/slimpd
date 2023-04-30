@@ -144,6 +144,53 @@ class CliController extends \Slimpd\BaseController {
         return $response;
     }
 
+    /**
+     * currently only a single artist-uid as argument is supported
+     * 
+     */
+    public function remigrateArtistAction(Request $request, Response $response, $args) {
+        useArguments($request);
+        self::touchLockFile();
+        $migrator = new \Slimpd\Modules\Importer\Migrator($this->container);
+        cliLog("searching albums with artists ", 1);
+        $query = "
+            SELECT
+                DISTINCT(albumUid) AS albumUid
+            FROM
+                track
+            WHERE
+                FIND_IN_SET(".(int)$args['artistUid'].", artistUid)
+                OR
+                FIND_IN_SET(".(int)$args['artistUid'].", featuringUid)
+                OR
+                FIND_IN_SET(".(int)$args['artistUid'].", remixerUid)
+        ";
+        $result = $this->db->query($query);
+
+        // in case we have only a few albums migrate them one by one
+        // otherwise run the migrateRawtagdataTable method which checks the whole collection
+        if ($result->num_rows < 20) {
+            cliLog('single migrate ' . $result->num_rows . ' albums', 1);
+            while ($record = $result->fetch_assoc()) {
+                $args['migrator'] = $migrator->migrateSingleAlbum($record['albumUid']);
+            }
+            self::deleteLockFile();
+            return $response;
+        }
+
+        cliLog('full migrate ' . $result->num_rows . ' albums', 1);
+        while ($record = $result->fetch_assoc()) {
+            cliLog('resetting timestamp for album ' . $record['albumUid'], 1);
+            $query = "UPDATE track SET filemtime = 0 WHERE albumUid='" . (int)$record['albumUid'] . "'";
+            $this->db->query($query);
+        }
+        cliLog('starting migration phase', 1);
+        $importer = new \Slimpd\Modules\Importer\Importer($this->container);
+        $importer->migrateRawtagdataTable(FALSE);
+        self::deleteLockFile();
+        return $response;
+    }
+
     public function updateForceAction(Request $request, Response $response, $args) {
         self::deleteLockFile();
         return $this->updateAction($request, $response, $args);
