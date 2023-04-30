@@ -37,7 +37,7 @@ class TrackRecommendationsPostProcessor {
             // TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
             if(RGX::seemsVinyly($matches[1]) === TRUE) {
                 $contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
-                $contextItem->setRecommendationEntry("setArtist", $matches[2], $score);
+                $contextItem->setRecommendationEntry("setArtist", $matches[2], $score*1.1);
                 $contextItem->setRecommendationEntry("setArtist", $value, $score*-1.5);
             }
         }
@@ -64,7 +64,7 @@ class TrackRecommendationsPostProcessor {
             // TODO: remove this condition as soon as RGX::VINYL is capable for stuff like this
             if(RGX::seemsVinyly($matches[1]) === TRUE) {
                 $contextItem->setRecommendationEntry("setTrackNumber", strtoupper($matches[1]), $score*0.1);
-                $contextItem->setRecommendationEntry("setTitle", $matches[2], $score*0.1);
+                $contextItem->setRecommendationEntry("setTitle", $matches[2], 1.1);
                 $contextItem->setRecommendationEntry("setTitle", $value, $score*-0.2);
             }
         }
@@ -224,6 +224,14 @@ class TrackRecommendationsPostProcessor {
                 //$contextItem->recommend(["setTitle" => $title], -0.5);
                 cliLog("  downvoting title which has prefixed artist", 10);
                 $contextItem->setRecommendationEntry("setTitle", $title, -0.5);
+                /*
+                cliLog("  upvoting title with stripped artist", 10);
+                $contextItem->setRecommendationEntry(
+                    "setTitle",
+                    str_ireplace($artist, "", $title),
+                    0.2
+                );
+                */
             }
         }
     }

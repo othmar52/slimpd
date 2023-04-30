@@ -76,7 +76,7 @@ trait MigratorContext {
                 $this->$setterName($foundValue);
                 continue;
             }
-            cliLog("configBasedSetter: " . $setterName, 10, "purple");
+            cliLog("configBasedSetter (".$rawTagPath."): " . $setterName, 10, "purple");
 
             // but add to recommendations in any case (higher scoring for real tag attributes)
             $this->recommend([$setterName => $foundValue], 2);
@@ -149,7 +149,7 @@ trait MigratorContext {
     }
 
 
-    public function getMostScored($setterName, $includeNegativeScore = FALSE) {
+    public function getMostScored($setterName, $includeNegativeScore = TRUE) {
         // without recommendations return instance property
         if(array_key_exists($setterName, $this->recommendations) === FALSE) {
             $getterName = "g" . substr($setterName, 1);

@@ -168,7 +168,7 @@ trait TrackArtistExtractor {
                 }
 
                 if(isset($this->artistBlacklist[strtolower($foundRemixer)]) === TRUE) {
-                    cliLog("  found ". $foundRemixer ." on blacklist. aborting..." , 10);
+                    cliLog("  found '". $foundRemixer ."' on blacklist. aborting..." , 10);
                     continue;
                 }
                 cliLog("  found remix artists: " . $foundRemixer, 10, "cyan");
