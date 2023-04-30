@@ -177,6 +177,9 @@ function cliLog($msg, $verbosity = 1, $color = "default", $fatal = FALSE) {
         $colors[$color] = ["", ""];
     }
 
+    # drop escape sequences that may hide the stdout
+    $msg = str_replace(["\302\220", "\302\230"], "", $msg);
+
     echo $colors[$color][0] . $msg . $colors[$color][1] . "\n";
     if (ob_get_length()) {
         ob_end_flush();
