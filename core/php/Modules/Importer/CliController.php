@@ -55,8 +55,20 @@ class CliController extends \Slimpd\BaseController {
             return $response;
         }
         self::touchLockFile();
+
         $importer = new \Slimpd\Modules\Importer\Importer($this->container);
         $importer->triggerImport(TRUE);
+
+        cliLog("check indices...", 1, "red");
+        $result = $this->db->query("SHOW INDEX FROM track;");
+        if ($result->num_rows < 3) {
+            cliLog("re-adding all indices...", 1, "red");
+            foreach(\Slimpd\Modules\Importer\DatabaseStuff::getQueriesForRemigrateAfter() as $query) {
+                cliLog($query, 1, "purple");
+                $this->db->query($query);
+            }
+        }
+        
         self::deleteLockFile();
         return $response;
     }

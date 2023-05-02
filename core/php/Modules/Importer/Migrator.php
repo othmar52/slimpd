@@ -36,6 +36,11 @@ class Migrator extends \Slimpd\Modules\Importer\AbstractImporter {
         foreach(\Slimpd\Modules\Importer\DatabaseStuff::getInitialDatabaseQueries($this->ll) as $query) {
             $this->db->query($query);
         }
+
+        cliLog("removing database indices for faster imports", 1, "red");
+        foreach(\Slimpd\Modules\Importer\DatabaseStuff::getQueriesForRemigrateBefore($this->ll) as $query) {
+            $this->db->query($query);
+        }
         $this->useBatcher = TRUE;
     }
 

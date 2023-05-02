@@ -74,6 +74,47 @@ class DatabaseStuff extends \Slimpd\Modules\Importer\AbstractImporter {
     }
 
 
+    public static function getQueriesForRemigrateBefore() {
+        return [
+            "DROP INDEX `artistUid` ON `track`;",
+            "DROP INDEX `featuringUid` ON `track`;",
+            "DROP INDEX `title` ON `track`;",
+            "DROP INDEX `remixerUid` ON `track`;",
+            "DROP INDEX `fingerprint` ON `track`;",
+            "DROP INDEX `audioDataformat` ON `track`;",
+            "DROP INDEX `videoDataformat` ON `track`;",
+            "DROP INDEX `albumUid` ON `track`;",
+            "DROP INDEX `genreUid` ON `track`;",
+            "DROP INDEX `labelUid` ON `track`;",
+            "DROP INDEX `bpm` ON `track`;",
+            "DROP INDEX `error` ON `track`;",
+            "DROP INDEX `transcoded` ON `track`;",
+            "DROP INDEX `relPath` ON `track`;",
+            "DROP INDEX `relPath` ON `track`;",
+            "DROP INDEX `allchunks` ON `trackindex`;"
+        ];
+    }
+
+    public static function getQueriesForRemigrateAfter() {
+        return [
+            "ALTER TABLE `track` ADD INDEX `artistUid` (`artistUid`);",
+            "ALTER TABLE `track` ADD INDEX `featuringUid` (`featuringUid`);",
+            "ALTER TABLE `track` ADD INDEX `title` (`title`);",
+            "ALTER TABLE `track` ADD INDEX `remixerUid` (`remixerUid`);",
+            "ALTER TABLE `track` ADD INDEX `fingerprint` (`fingerprint`);",
+            "ALTER TABLE `track` ADD INDEX `audioDataformat` (`audioDataformat`);",
+            "ALTER TABLE `track` ADD INDEX `videoDataformat` (`videoDataformat`);",
+            "ALTER TABLE `track` ADD INDEX `albumUid` (`albumUid`);",
+            "ALTER TABLE `track` ADD INDEX `genreUid` (`genreUid`);",
+            "ALTER TABLE `track` ADD INDEX `labelUid` (`labelUid`);",
+            "ALTER TABLE `track` ADD INDEX `bpm` (`bpm`);",
+            "ALTER TABLE `track` ADD INDEX `error` (`error`);",
+            "ALTER TABLE `track` ADD INDEX `transcoded` (`transcoded`);",
+            "ALTER TABLE `track` ADD FULLTEXT `relPath` (`relPath`);",
+            "ALTER TABLE `trackindex` ADD FULLTEXT `allchunks` (`allchunks`);"
+        ];
+    }
+
     public function buildDictionarySql() {
         \Slimpd\Modules\sphinx\Sphinx::defineSphinxConstants($this->conf['sphinx']);
 
